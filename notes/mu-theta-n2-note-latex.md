@@ -32,11 +32,27 @@ The upper bound is trivial: $\mu(n) \le \binom{n}{2}$, since a single u-orbital 
 
 > $$q,\qquad dq+1,\qquad n-dq-1 \ (n \text{ even}) \quad\text{or}\quad (n-dq-1)/2 \ (n \text{ odd}),$$
 
-required to be simultaneously prime. A linear polynomial has at most one root mod $\ell$, so the local count $\omega(\ell)$ never exceeds 3; an obstruction needs $\omega(\ell)$ ≥ ℓ, so **only $\ell = 2$ and $\ell = 3$ can obstruct**, and no higher power of either can, since the local condition is non-divisibility by ℓ and that is decided mod $\ell$. The two conditions on n are therefore a condition mod 4 and a condition mod 3 — that is, mod 12 — and this is exactly what the four permitted values of d are for:
+required to be simultaneously prime. A linear polynomial has at most one root mod $\ell$, so the local count $\omega(\ell)$ never exceeds 3; an obstruction needs $\omega(\ell)$ ≥ ℓ, so **only $\ell = 2$ and $\ell = 3$ can obstruct**, and no higher power of either can, since the local condition is non-divisibility by ℓ and that is decided mod $\ell$. The two conditions on n are therefore a condition mod 4 and a condition mod 3 — that is, mod 12. (Mod 4 rather than mod 2 because of a change of variable, explained just below.) This is exactly what the four permitted values of d are for:
 
 > | n mod 12 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
 > |---|---|---|---|---|---|---|---|---|---|---|---|---|
 > | admissible d | all | 2 | 6, 12 | 4, 12 | 2, 4 | 6 | all | 4 | 6, 12 | 2, 6 | 2, 4 | 12 |
+
+**Why the list runs to 12 and not to 6.** A reader expecting one factor for $\ell = 2$ and one for $\ell = 3$ would predict d ≤ 6. The extra factor of 2 comes from a change of variable, and is worth spelling out since it is easy to notice and not easy to guess.
+
+Write $d = 2e$. The leading 2 is forced immediately: q is an odd prime, so $r = dq+1$ is odd only if d is even. That is the first appearance of $\ell = 2$, and it fixes the leading factor.
+
+Now r mod 4 is determined by d mod 4, since q is odd: $d \equiv 2 \pmod 4$ gives $r \equiv 3 \pmod 4$, and $d \equiv 0 \pmod 4$ gives $r \equiv 1 \pmod 4$. For **even** n this is irrelevant — $c = n-r$ is odd automatically, being even minus odd. For **odd** n it is not, because the third polynomial is **$(n-dq-1)/2$**, not $n-dq-1$. That halving is the change of variable. It means the parity of c — which is what $\ell = 2$ controls — depends on n − r modulo **4** rather than modulo 2:
+
+> $$c = (n-r)/2 \text{ is odd} \iff n - r \equiv 2 \pmod 4,$$,
+
+so $d \equiv 2 \pmod 4$, i.e. $d \in \{2,6\}$, serves odd $n \equiv 1 \pmod 4$, while $d \equiv 0 \pmod 4$, i.e. $d \in \{4,12\}$, serves odd $n \equiv 3 \pmod 4$. This is $\ell = 2$ biting a **second** time, and it costs a second factor of 2 — but only in the odd case.
+
+With $\ell = 3$ contributing a factor 3 independently, the pattern is exactly
+
+> **$$d = 2e$$ with $e \mid 6$**, so $e \in \{1,2,3,6\}$ and $d \in \{2,4,6,12\}$,
+
+the leading 2 making r odd, the 2 in e fixing n mod 4, and the 3 in e fixing n mod 3. Hence max d = 2 × 6 = 12. Had we needed only even n, $d \in \{2,6\}$ would suffice and the list would stop at 6.
 
 Every class has at least one admissible d, so (H) is locally soluble at every n; the singular series of the corresponding system is positive, and the heuristic count of valid q is $\asymp n/\log^3 n$. Two classes are worth noting. At $n \equiv 11 \pmod{12}$ — the only class obstructed at both 2 and 3 — **$d = 12$ is forced**, which is why the list must run that far. And d must always be even, since q is odd and r = dq + 1 must be an odd prime.
 
