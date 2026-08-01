@@ -125,7 +125,9 @@ A companion computation, which we do not reproduce here since it rests on a clas
 
 > min { δ(n) : n ≤ 10⁶, n composite, not a prime power } = 0.02611…,
 
-attained at n = 3239. Read as a lower bound — which is all the present argument needs — this says the true density constant is about **9 times** the δ₀ = 1/350 proved above, with no downward drift across the range.
+attained at n = 3239. Read as a lower bound — which is all the present argument needs — this says the true density constant is about **9 times** the δ₀ = 1/350 proved above.
+
+The comparison is worth making carefully, because the two statements have different quantifiers and the computation is the stronger of the two on that axis. The Theorem gives δ(n) ≥ 1/350 **for all sufficiently large n**, and says nothing about any particular n. The computation gives δ(n) ≥ 0.0261 for **every** composite non-prime-power n in [6, 10⁶] — a global statement over its range, with no exceptional set: the minimum is attained in the middle of the range, at n = 3239, and small n are comfortably above it (δ = 0.400 at n = 6, 0.273 at n = 12). So 1/350 is conservative not merely as an eventual constant but as a global one, and no n is currently known at which δ is small.
 
 ## 5. Comparison with BBKN
 

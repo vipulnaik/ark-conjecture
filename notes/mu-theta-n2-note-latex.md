@@ -100,7 +100,9 @@ The constant $\delta_0$ above is deliberately crude. Optimising the block sizes 
 
 A companion computation, which we do not reproduce here since it rests on a classification of the possible orbit structures rather than on constructions, evaluates $\mu(n)$ exactly for all composite non-prime-power $n \le 2298$ and gives
 $$\min\{\, \delta(n) \;:\; n \le 10^6,\ n \text{ composite, not a prime power} \,\} \;=\; 0.02611\ldots,$$
-attained at $n = 3239$. Read as a lower bound — which is all the present argument needs — this says the true density constant is about $9$ times the $\delta_0 = 1/350$ proved above, with no downward drift across the range.
+attained at $n = 3239$. Read as a lower bound — which is all the present argument needs — this says the true density constant is about $9$ times the $\delta_0 = 1/350$ proved above.
+
+The comparison is worth making carefully, because the two statements have different quantifiers and the computation is the stronger of the two on that axis. The Theorem gives $\delta(n) \ge 1/350$ \emph{for all sufficiently large $n$}, and says nothing about any particular $n$. The computation gives $\delta(n) \ge 0.0261$ for \emph{every} composite non-prime-power $n \in [6, 10^6]$ — a global statement over its range, with no exceptional set: the minimum is attained in the middle of the range, at $n = 3239$, and small $n$ are comfortably above it ($\delta = 0.400$ at $n = 6$, $0.273$ at $n = 12$). So $1/350$ is conservative not merely as an eventual constant but as a global one, and no $n$ is currently known at which $\delta$ is small.
 
 ## 5. Comparison with BBKN
 

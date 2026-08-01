@@ -707,3 +707,23 @@ But (H) is an eventual hypothesis, so the conclusion inherits it. Corrected in b
 Added a short paragraph making the distinction explicit, since it is exactly the kind of thing a reader will trip on: **Proposition 1 is exact at every n** — it says nothing conditional, and given a group with all orbitals large it gives evasiveness at that n outright. What is eventual is the *supply* of such a group, which is what (H) provides. So the two statements have genuinely different logical shapes, and the note now says so rather than leaving it to be inferred.
 
 Also quantified BBKN's own result where the note quotes it (μ(n) ≥ n^(3/2−ε) for all sufficiently large n), since their conclusions are eventual for the same reason and quoting them unquantified alongside a now-quantified Theorem would invite the wrong contrast. §5's closing sentence already said "eventually evasive" and needed no change.
+
+---
+
+## The computational comparison was underselling itself
+
+δ₀ = 1/350 is an **eventual** bound; the computed minimum 0.026117 is a **global** one over [6, 10⁶]. The note and bridge compared them as if they were the same kind of statement, which loses the more interesting half of the comparison.
+
+The computation is stronger on the quantifier axis. It gives δ(n) ≥ 0.0261 for *every* composite non-prime-power n in its range, with no exceptional set — verified by noting that the smallest n appearing in the worklist at all is 575, so every such n below 575 has lower bound above 0.05, and the small values are far above the minimum (δ = 0.400 at n = 6, 0.273 at n = 12). The minimum sits in the middle of the range, at n = 3239, not at either end.
+
+So **1/350 is conservative not merely as an eventual constant but as a global one**, and no n is currently known at which δ is small. Both notes now say this where the comparison is made.
+
+The bridge's bracket 1/350 < 0.026117 < 0.05051 is now annotated with the three logical types, since they differ in every respect:
+
+| term | conditionality | quantifier | source |
+|---|---|---|---|
+| 1/350 | conditional on (H) | eventual | proved |
+| 0.026117 | unconditional | global over [6, 10⁶] | computed |
+| 0.05051 | — | asymptotic | ceiling of one family in one class |
+
+The middle term is the strongest in quantifier and the weakest in range, which is what makes it a useful sanity check on both flanks: the proved eventual constant is conservative even measured against a global minimum, and the asymptotic ceiling is not approached anywhere in the computed range.
