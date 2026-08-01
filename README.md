@@ -37,9 +37,10 @@ structure of the work.
     number theory part.
 
 * [note-to-framework-bridge.md](notes/note-to-bridge-framework.md) is
-  a bridge document between the short note of the preceding bullet
-  point and the full notes, explaining the translation between them as
-  well as the aspects the short note omits.
+  a bridge document between the short note (first bullet point above)
+  and full notes (second bullet point above), explaining the
+  translation between them as well as the aspects the short note
+  omits.
 
 * [pending-checks.md](notes/pending-checks.md) covers the next steps,
   including scripts to run and portions of the proof to review.
@@ -53,6 +54,8 @@ The notes reference individual files in the rest of the repository
 where relevant, but often without full folder paths (this is a defect
 we might remedy eventually, as we settle on the folder structure). The
 folder structure is described below:
+
+* [notes](notes), already covered above.
 
 * [scripts](scripts) contains all scripts, most of them being Python
   scripts, with a few GAP and shell scripts.
