@@ -2,6 +2,61 @@
 
 Work on the Aanderaa-Rosenberg-Karp conjecture.
 
-Copied over from the [original
+Kickstarted by copying over from the [original
 location](https://github.com/vipulnaik/working-drafts/tree/master/ark)
 which carries the original commit history before the copying.
+
+## Notes as a starting point
+
+The [notes](notes) folder is the place to start to understand the
+structure of the work.
+
+* A short two-page note proving the core result, available in either
+  of two equivalent versions:
+
+  * [mu-theta-n2-note.md](notes/mu-theta-n2-note.md), written in
+    markdown friendly to GitHub's markdown rendering, so ideal for
+    viewing online on GitHub.
+
+  * [mu-theta-n2-note-latex.md](notes/mu-theta-n2-note-latex.md),
+    written with LaTeX, so ideal to use as a starting point for a
+    formal paper.
+
+* A much longer document along with two supplements, all written in
+  markdown friendly to GitHub's markdown rendering.
+
+  * [orbital-evasiveness-notes.md](notes/orbital-evasiveness-notes.md)
+    is the full document.
+
+  * [enumeration-proof.md](notes/enumeration-proof.md) covers the
+    proofs of the group theory portion, translating the problem of
+    finding Oliver groups to an arithmetic search.
+
+  * [arithmetic-of-density.md](notes/arithmetic-of-density.md) covers
+    the arithmetic conjectures and empirical evidence around the
+    number theory part.
+
+* [note-to-framework-bridge.md](notes/note-to-bridge-framework.md) is
+  a bridge document between the short note of the preceding bullet
+  point and the full notes, explaining the translation between them as
+  well as the aspects the short note omits.
+
+* [pending-checks.md](notes/pending-checks.md) covers the next steps,
+  including scripts to run and portions of the proof to review.
+
+There are also other files with logs / running notes of changes, that
+are only relevant for historical understanding.
+
+## The folder structure of the repository
+
+The notes reference individual files in the rest of the repository
+where relevant, but often without full folder paths (this is a defect
+we might remedy eventually, as we settle on the folder structure). The
+folder structure is described below:
+
+* [scripts](scripts) contains all scripts, most of them being Python
+  scripts, with a few GAP and shell scripts.
+
+* [outputs](outputs) contains outputs of scripts. Top-level stuff here
+  is generic-n, and there are subfolders for individual n values (n10
+  for n = 10, n12 for n = 12).

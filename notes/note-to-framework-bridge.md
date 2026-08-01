@@ -1,6 +1,6 @@
 # From the short note to the full framework
 
-*A bridge. Reads alongside `mu-theta-n2-note.md` (referred to as **the note**) and the three working documents: `orbital-evasiveness-notes.md`, `enumeration-proof.md`, `arithmetic-of-density.md`. Its purposes are to say what the note omits, to express the omitted material in the note's own vocabulary, and — by doing both — to check that the note is consistent with what the fuller work actually establishes.*
+*A bridge. Reads alongside `mu-theta-n2-note.md` — or its LaTeX-markup twin `mu-theta-n2-note-latex.md`, identical in content — referred to below as **the note**; it also reads alongside the three working documents: `orbital-evasiveness-notes.md`, `enumeration-proof.md`, `arithmetic-of-density.md`. Its purposes are to say what the note omits, to express the omitted material in the note's own vocabulary, and — by doing both — to check that the note is consistent with what the fuller work actually establishes.*
 
 ---
 
