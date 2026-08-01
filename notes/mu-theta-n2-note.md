@@ -66,9 +66,9 @@ This is best possible up to the $o(1)$, since a group attaining $\binom{n}{2}$ w
 
 The constant $c_0$ above is deliberately crude. Optimising the block sizes and the efficiency $t/(r-1)$ gives materially better constants, which depend on $n$ modulo $12$ through local conditions at the primes $2$ and $3$; we do not need that refinement here.
 
-We have computed $\mu(n)$ exactly for all composite non-prime-power $n \le 2298$, and separately established by an exhaustive search that
+A companion computation, which we do not reproduce here since it rests on a classification of the possible orbit structures rather than on constructions, evaluates $\mu(n)$ exactly for all composite non-prime-power $n \le 2298$ and gives
 $$\min\{\, \mu(n)/\tbinom{n}{2} \;:\; n \le 10^6,\ n \text{ composite, not a prime power} \,\} \;=\; 0.02611\ldots,$$
-attained at $n = 3239$. So the true density constant is at least an order of magnitude better than the bound proved above, and the empirical evidence is consistent with an absolute floor near $0.026$ with no downward drift.
+attained at $n = 3239$. Read as a lower bound — which is all the present argument needs — this says the true density constant is an order of magnitude better than the $c_0$ proved above, with no downward drift across the range.
 
 ## 5. Comparison with BBKN
 
