@@ -676,3 +676,34 @@ The remaining question in §8 is no longer "finish the search" but "extend it pa
 - **Part J item 2** of the proof document: its "alternative route" paragraph proposed raising δ₀^odd above 1/9, which is exactly what was refuted. Now says so.
 - **Part J item 4** notes that two cheaper computations already reach much further than extending the table — the collapse certificate to 10⁵ and the branch-and-bound to 10⁶ — so extending is not the best use of compute.
 - **`pending-checks.md`** now names the two remaining *proof* gaps (promote E.3(ii); bound s = 4 and s = 5) and records the branch-and-bound as finished rather than pending.
+
+---
+
+## Units fixed in the short note: everything is now δ = μ(n)/C(n,2)
+
+The note mixed two units. Its construction bounds arrive naturally as m\*/n², while every constant elsewhere in the corpus is a density relative to C(n,2) — a factor 2 apart. Symptom: the note claimed the observed minimum 0.026117 was "an order of magnitude better" than c₀ = 1/700, comparing a C(n,2)-density against an n²-density. In matched units the ratio is 9, not 18.
+
+The bridge carried the same slip, in the chain "1/700 < 0.026117 < 0.05051" — the first term n²-relative, the other two C(n,2)-relative.
+
+**Resolved by adopting δ = μ(n)/C(n,2) throughout the note**, defined in §1 immediately after μ, with the n²-form given once by explicit conversion ("since C(n,2) ~ n²/2, a density δ is about δn²/2 edges"). Consequences:
+
+- the Theorem now reads δ(n) ≥ δ₀, with evasiveness for properties under δ₀·C(n,2) edges;
+- the trivial upper bound is δ(n) ≤ 1 rather than μ(n) ≤ C(n,2);
+- **δ₀ = 1/350** replaces c₀ = 1/700, with "roughly n²/700 edges" stated alongside;
+- the worst cases are **1/48 (even) and 1/300 (odd)**, not 1/96 and 1/599 — the same numbers in the other unit, and the factor 2 in the minimisation is now written explicitly;
+- the unconditional family reads δ(n) = 1/2 − o(1);
+- the computational comparison is "about 9 times δ₀", correct in matched units.
+
+Bridge updated to match: the bracket is now 1/350 < 0.026117 < 0.05051, all three in C(n,2) units, and the improvement factor 18× rather than 35×. Its list of constant re-derivations now runs to three, with the third recorded as a units slip rather than an arithmetic error — a distinct failure mode worth naming, since the arithmetic was right each time.
+
+---
+
+## Quantifier fix in the short note: evasive vs eventually evasive
+
+The Theorem read "μ(n) = Θ(n²), conditionally on (H) — equivalently δ(n) ≥ δ₀ for all large n. Consequently every nontrivial monotone graph property … is evasive." The "for all large n" attached only to the δ clause; the evasiveness conclusion carried no quantifier, so it read as a claim about every n.
+
+But (H) is an eventual hypothesis, so the conclusion inherits it. Corrected in both versions: the Theorem now says "for all sufficiently large n, every nontrivial monotone graph property … is evasive — in BBKN's terminology, such properties are **eventually evasive**."
+
+Added a short paragraph making the distinction explicit, since it is exactly the kind of thing a reader will trip on: **Proposition 1 is exact at every n** — it says nothing conditional, and given a group with all orbitals large it gives evasiveness at that n outright. What is eventual is the *supply* of such a group, which is what (H) provides. So the two statements have genuinely different logical shapes, and the note now says so rather than leaving it to be inferred.
+
+Also quantified BBKN's own result where the note quotes it (μ(n) ≥ n^(3/2−ε) for all sufficiently large n), since their conclusions are eventual for the same reason and quoting them unquantified alongside a now-quantified Theorem would invite the wrong contrast. §5's closing sentence already said "eventually evasive" and needed no change.

@@ -9,17 +9,23 @@ $$1 \trianglelefteq \Gamma_2 \trianglelefteq \Gamma_1 \trianglelefteq \Gamma$$
 with $\Gamma_2$ a $p$-group, $\Gamma_1/\Gamma_2$ cyclic, and $\Gamma/\Gamma_1$ a $q$-group, for some primes $p,q$. These are exactly the groups to which Oliver's fixed-point theorem applies. Define
 $$\mu(n) \;=\; \max\{\, m^*(\Gamma) \;:\; \Gamma \le S_n \text{ an Oliver group} \,\}.$$
 
+Throughout we measure $\mu$ against the number of pairs, writing
+$$\delta(n) \;=\; \mu(n)\big/\tbinom{n}{2}$$
+for the *density*. All constants below are stated in this unit; since $\binom{n}{2} \sim n^2/2$, a density $\delta$ corresponds to about $\delta n^2/2$ edges.
+
 The relevance is the standard orbital-annihilation argument, which we recall to fix conventions. Let $P$ be a nontrivial monotone-decreasing graph property on $n$ vertices, and $\Delta(P)$ its simplicial complex on the vertex set $E(K_n)$. If $P$ is nonevasive then $\Delta(P)$ is collapsible, hence $\mathbb{Z}$-acyclic; Oliver's theorem then gives $\chi(\Delta(P)^\Gamma) = 1$ for any Oliver group $\Gamma$. But $\Delta(P)^\Gamma$ consists of the $\Gamma$-invariant graphs in $P$, and every such graph is a union of u-orbitals. So if every u-orbital of $\Gamma$ exceeds the edge budget of $P$, the only invariant member is the empty graph, $\chi(\Delta(P)^\Gamma) = 0$, and we have a contradiction. Hence:
 
 > **Proposition 1.** If every graph in $P$ has fewer than $\mu(n)$ edges, then $P$ is evasive.
 
-BBKN's Theorem 1.4 is exactly this route with $\mu(n) \ge n^{3/2-\varepsilon}$, obtained under Chowla's conjecture on the least Dirichlet prime. Our object here is the growth rate of $\mu(n)$ itself.
+BBKN's Theorem 1.4 is exactly this route with $\mu(n) \ge n^{3/2-\varepsilon}$ for all sufficiently large $n$, obtained under Chowla's conjecture on the least Dirichlet prime; their conclusions are likewise eventual. Our object here is the growth rate of $\mu(n)$ itself.
 
 ## 2. The result
 
-**Theorem.** $\mu(n) = \Theta(n^2)$, conditionally on Hypothesis (H) below. Consequently every nontrivial monotone graph property on $n$ vertices whose members have at most $c_0 n^2$ edges is evasive, for an absolute constant $c_0 > 0$ and all sufficiently large $n$.
+**Theorem.** Assume Hypothesis (H) below. Then $\mu(n) = \Theta(n^2)$ — equivalently, $\delta(n) \ge \delta_0$ for an absolute constant $\delta_0 > 0$ and **all sufficiently large $n$**. Consequently, for all sufficiently large $n$, every nontrivial monotone graph property on $n$ vertices whose members have fewer than $\delta_0\binom{n}{2}$ edges is evasive — in BBKN's terminology, such properties are **eventually evasive**.
 
-The upper bound is trivial: $\mu(n) \le \binom{n}{2}$, since a single u-orbital cannot exceed the number of pairs. Everything below concerns the lower bound.
+The "sufficiently large" is inherited from (H) and is not an artefact of the argument: Proposition 1 is exact at every $n$, but it is (H) that supplies a suitable group at a given $n$, and (H) is an eventual hypothesis. For any particular $n$ one can of course check directly whether a construction exists, and §4 records one infinite family for which no hypothesis is needed at all.
+
+The upper bound is trivial: $\delta(n) \le 1$, since a single u-orbital cannot exceed the number of pairs. Everything below concerns the lower bound.
 
 > **Hypothesis (H).** Every sufficiently large n admits primes q, r, c with
 >
@@ -69,7 +75,7 @@ where the first factor acts on $A$ by all affine maps $x \mapsto \lambda x + \be
 *Oliver's condition.* Take $\Gamma_2 = \mathbb{Z}/c$ (translations of $A$), a $c$-group; $\Gamma_1 = \Gamma_2 \times (\mathbb{Z}/r) \times C_{c-1}$; and $\Gamma/\Gamma_1 = C_t$, a $q$-group. Then $\Gamma_1/\Gamma_2 \cong C_{c-1} \times C_r$, which is cyclic precisely because $\gcd(c-1, r) = 1$ — this is what condition 4 of (H) secures.
 
 *Orbitals.* Within $A$: the translations make pairs equivalent to their differences and $(\mathbb{Z}/c)^\times$ acts transitively on those, so all $\binom{c}{2}$ pairs form one orbital. Within $B$: differences are scaled by $C_t$, giving orbitals of size $rt/2$ if $t$ is even and $rt$ if odd, capped at $\binom{r}{2}$. Across: all $cr$ mixed pairs form one orbital. Hence
-$$m^*(\Gamma) \;=\; \min\Bigl\{\tbinom{c}{2},\; \tfrac{r t}{2},\; cr\Bigr\} \;\ge\; \min\Bigl\{\tbinom{c}{2},\; \tfrac{r(r-1)}{24},\; cr\Bigr\} \;\ge\; \frac{n^2}{700}$$
+$$m^*(\Gamma) \;=\; \min\Bigl\{\tbinom{c}{2},\; \tfrac{r t}{2},\; cr\Bigr\} \;\ge\; \min\Bigl\{\tbinom{c}{2},\; \tfrac{r(r-1)}{24},\; cr\Bigr\} \;\ge\; \tfrac{1}{350}\tbinom{n}{2}$$
 for $n$ large, using $c, r \ge n/5$.
 
 **Odd $n = 2c + r$.** Now take two blocks $A_1, A_2$ of size $c$ and one block $B$ of size $r$, and let
@@ -80,21 +86,21 @@ with $(\mathbb{Z}/c)^2$ translating $A_1$ and $A_2$ independently and $C_{c-1}$ 
 
 *Orbitals.* $\binom{c}{2}$ within each $A_i$; $c^2$ between $A_1$ and $A_2$; the $B$-orbitals as before; $cr$ from each $A_i$ to $B$. Hence
 $$m^*(\Gamma) \;=\; \min\Bigl\{\tbinom{c}{2},\; c^2,\; \tfrac{rt}{2},\; cr\Bigr\} \;\ge\; \frac{n^2}{700}$$
-again. This proves the Theorem with $c_0 = 1/700$. Both bounds come from minimising $\min\{x^2/2,\ y^2/24,\ xy\}$ (respectively $\min\{x^2/2,\ x^2,\ y^2/24,\ xy\}$) over the window $x = c/n,\ y = r/n \in [1/5, 1/2]$, and both are slack: the true worst cases are $1/48$ and $1/300$.
+again. This proves the Theorem with $\delta_0 = 1/350$, i.e. roughly $n^2/700$ edges. Both bounds come from minimising $2\min\{x^2/2,\ y^2/24,\ xy\}$ (respectively $2\min\{x^2/2,\ x^2,\ y^2/24,\ xy\}$) over the window $x = c/n,\ y = r/n \in [1/5, 1/2]$, the factor $2$ converting from $n^2$ to $\binom{n}{2}$; both are slack, the true worst densities being $1/48$ (even) and $1/300$ (odd).
 
 *Verification.* Both constructions have been checked by direct computation of the permutation groups and their orbit decompositions on pairs — e.g. for $n = 12 = 5 + 7$ with $t = 3$, $|\Gamma| = 420$ and the orbitals are $\{10, 21, 35\}$; for $n = 17 = 2\cdot 5 + 7$, $|\Gamma| = 2100$ and the orbitals are $\{10, 10, 21, 25, 35, 35\}$.
 
 ## 4. What is unconditional, and what the constant is
 
 One infinite family needs no hypothesis. For $n = 2m$ with $m$ an odd prime power, take two blocks of size $m$ with the diagonal twist and a block swap; the resulting group is Oliver with $q = 2$, its orbitals are $m(m-1)$ and $m^2$, and so
-$$\mu(2m) \;\ge\; m(m-1) \;=\; \bigl(\tfrac{1}{2} - o(1)\bigr)\tbinom{n}{2}.$$
-This is best possible up to the $o(1)$, since a group attaining $\binom{n}{2}$ would be $2$-homogeneous, hence primitive, hence of prime-power degree.
+$$\mu(2m) \;\ge\; m(m-1), \qquad \text{i.e. } \delta(n) = \tfrac12 - o(1).$$
+This is best possible up to the $o(1)$, since $\delta(n) = 1$ would force $2$-homogeneity, hence primitive, hence of prime-power degree.
 
-The constant $c_0$ above is deliberately crude. Optimising the block sizes and the efficiency $t/(r-1)$ gives materially better constants, which depend on $n$ modulo $12$ through local conditions at the primes $2$ and $3$; we do not need that refinement here.
+The constant $\delta_0$ above is deliberately crude. Optimising the block sizes and the efficiency $t/(r-1)$ gives materially better constants, which depend on $n$ modulo $12$ through local conditions at the primes $2$ and $3$; we do not need that refinement here.
 
 A companion computation, which we do not reproduce here since it rests on a classification of the possible orbit structures rather than on constructions, evaluates $\mu(n)$ exactly for all composite non-prime-power $n \le 2298$ and gives
-$$\min\{\, \mu(n)/\tbinom{n}{2} \;:\; n \le 10^6,\ n \text{ composite, not a prime power} \,\} \;=\; 0.02611\ldots,$$
-attained at $n = 3239$. Read as a lower bound — which is all the present argument needs — this says the true density constant is an order of magnitude better than the $c_0$ proved above, with no downward drift across the range.
+$$\min\{\, \delta(n) \;:\; n \le 10^6,\ n \text{ composite, not a prime power} \,\} \;=\; 0.02611\ldots,$$
+attained at $n = 3239$. Read as a lower bound — which is all the present argument needs — this says the true density constant is about $9$ times the $\delta_0 = 1/350$ proved above, with no downward drift across the range.
 
 ## 5. Comparison with BBKN
 

@@ -12,17 +12,25 @@ with Γ₂ a p-group, Γ₁/Γ₂ cyclic, and Γ/Γ₁ a q-group, for some prime
 
 > **μ(n) = max { m\*(Γ) : Γ ≤ S_n an Oliver group }.**
 
+Throughout we measure μ against the number of pairs, writing
+
+> **δ(n) = μ(n) / C(n,2)**
+
+for the *density*. All constants below are stated in this unit; since C(n,2) ~ n²/2, a density δ corresponds to about δn²/2 edges.
+
 The relevance is the standard orbital-annihilation argument, which we recall to fix conventions. Let P be a nontrivial monotone-decreasing graph property on n vertices, and Δ(P) its simplicial complex on the vertex set E(K_n). If P is nonevasive then Δ(P) is collapsible, hence ℤ-acyclic; Oliver's theorem then gives χ(Δ(P)^Γ) = 1 for any Oliver group Γ. But Δ(P)^Γ consists of the Γ-invariant graphs in P, and every such graph is a union of u-orbitals. So if every u-orbital of Γ exceeds the edge budget of P, the only invariant member is the empty graph, χ(Δ(P)^Γ) = 0, and we have a contradiction. Hence:
 
 > **Proposition 1.** If every graph in P has fewer than μ(n) edges, then P is evasive.
 
-BBKN's Theorem 1.4 is exactly this route with μ(n) ≥ n^(3/2−ε), obtained under Chowla's conjecture on the least Dirichlet prime. Our object here is the growth rate of μ(n) itself.
+BBKN's Theorem 1.4 is exactly this route with μ(n) ≥ n^(3/2−ε) for all sufficiently large n, obtained under Chowla's conjecture on the least Dirichlet prime; their conclusions are likewise eventual. Our object here is the growth rate of μ(n) itself.
 
 ## 2. The result
 
-> **Theorem.** μ(n) = Θ(n²), conditionally on Hypothesis (H) below. Consequently every nontrivial monotone graph property on n vertices whose members have at most c₀·n² edges is evasive, for an absolute constant c₀ > 0 and all sufficiently large n.
+> **Theorem.** Assume Hypothesis (H) below. Then μ(n) = Θ(n²) — equivalently, δ(n) ≥ δ₀ for an absolute constant δ₀ > 0 and **all sufficiently large n**. Consequently, for all sufficiently large n, every nontrivial monotone graph property on n vertices whose members have fewer than δ₀·C(n,2) edges is evasive — in BBKN's terminology, such properties are **eventually evasive**.
 
-The upper bound is trivial: μ(n) ≤ C(n,2), since a single u-orbital cannot exceed the number of pairs. Everything below concerns the lower bound.
+The "sufficiently large" is inherited from (H) and is not an artefact of the argument: Proposition 1 is exact at every n, but it is (H) that supplies a suitable group at a given n, and (H) is an eventual hypothesis. For any particular n one can of course check directly whether a construction exists, and §4 records one infinite family for which no hypothesis is needed at all.
+
+The upper bound is trivial: δ(n) ≤ 1, since a single u-orbital cannot exceed the number of pairs. Everything below concerns the lower bound.
 
 > **Hypothesis (H).** Every sufficiently large n admits primes q, r, c with
 >
@@ -81,7 +89,7 @@ which is cyclic precisely because gcd(c−1, r) = 1 — this is what condition 4
 
 **Orbitals.** Within A: the translations make pairs equivalent to their differences, and (ℤ/c)\* acts transitively on those, so all C(c,2) pairs form one orbital. Within B: differences are scaled by C_t, giving orbitals of size rt/2 if t is even and rt if t is odd, capped at C(r,2). Across: all cr mixed pairs form one orbital. Hence
 
-> m\*(Γ) = min { C(c,2), rt/2, cr } ≥ min { C(c,2), r(r−1)/24, cr } ≥ n²/700
+> m\*(Γ) = min { C(c,2), rt/2, cr } ≥ min { C(c,2), r(r−1)/24, cr } ≥ C(n,2)/350
 
 for n large, using c, r ≥ n/5.
 
@@ -97,9 +105,9 @@ with (ℤ/c)² translating A₁ and A₂ independently and C_(c−1) acting **di
 
 **Orbitals.** C(c,2) within each A_i; c² between A₁ and A₂; the B-orbitals as before; cr from each A_i to B. Hence
 
-> m\*(Γ) = min { C(c,2), c², rt/2, cr } ≥ n²/700
+> m\*(Γ) = min { C(c,2), c², rt/2, cr } ≥ C(n,2)/350
 
-again. This proves the Theorem with **c₀ = 1/700**. Both bounds come from minimising min{ x²/2, y²/24, xy } — respectively min{ x²/2, x², y²/24, xy } — over the window x = c/n, y = r/n ∈ [1/5, 1/2], and both are slack: the true worst cases are 1/96 and 1/599.
+again. This proves the Theorem with **δ₀ = 1/350**, i.e. roughly n²/700 edges. Both bounds come from minimising 2·min{ x²/2, y²/24, xy } — respectively 2·min{ x²/2, x², y²/24, xy } — over the window x = c/n, y = r/n ∈ [1/5, 1/2], the factor 2 converting from n² to C(n,2); both are slack, the true worst densities being **1/48** (even) and **1/300** (odd).
 
 **Verification.** Both constructions have been checked by direct computation of the permutation groups and their orbit decompositions on pairs. For n = 12 = 5 + 7 with t = 3: |Γ| = 420 and the orbitals are {10, 21, 35}. For n = 17 = 2·5 + 7: |Γ| = 2100 and the orbitals are {10, 10, 21, 25, 35, 35}.
 
@@ -107,17 +115,17 @@ again. This proves the Theorem with **c₀ = 1/700**. Both bounds come from mini
 
 One infinite family needs no hypothesis. For n = 2m with m an odd prime power, take two blocks of size m with the diagonal twist and a block swap; the resulting group is Oliver with q = 2, its orbitals are m(m−1) and m², and so
 
-> μ(2m) ≥ m(m−1) = (1/2 − o(1))·C(n,2).
+> μ(2m) ≥ m(m−1), i.e. δ(n) = 1/2 − o(1).
 
-This is best possible up to the o(1), since a group attaining C(n,2) would be 2-homogeneous, hence primitive, hence of prime-power degree.
+This is best possible up to the o(1), since δ(n) = 1 would force 2-homogeneity, hence primitivity, hence prime-power degree.
 
-The constant c₀ above is deliberately crude. Optimising the block sizes and the efficiency t/(r−1) gives materially better constants, which depend on n modulo 12 through local conditions at the primes 2 and 3; we do not need that refinement here.
+The constant δ₀ above is deliberately crude. Optimising the block sizes and the efficiency t/(r−1) gives materially better constants, which depend on n modulo 12 through local conditions at the primes 2 and 3; we do not need that refinement here.
 
 A companion computation, which we do not reproduce here since it rests on a classification of the possible orbit structures rather than on constructions, evaluates μ(n) exactly for all composite non-prime-power n ≤ 2298 and gives
 
-> min { μ(n)/C(n,2) : n ≤ 10⁶, n composite, not a prime power } = 0.02611…,
+> min { δ(n) : n ≤ 10⁶, n composite, not a prime power } = 0.02611…,
 
-attained at n = 3239. Read as a lower bound — which is all the present argument needs — this says the true density constant is an order of magnitude better than the c₀ proved above, with no downward drift across the range.
+attained at n = 3239. Read as a lower bound — which is all the present argument needs — this says the true density constant is about **9 times** the δ₀ = 1/350 proved above, with no downward drift across the range.
 
 ## 5. Comparison with BBKN
 

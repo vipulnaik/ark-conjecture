@@ -12,7 +12,7 @@ Computing $\mu(n)$ **exactly** requires an upper bound — a proof that no Olive
 
 So on its own contents the note is entitled to $\mu(n) \ge \ldots$, not $\mu(n) = \ldots$. Either cite the classification as a companion result, or restate those two sentences as lower bounds. **Restating costs nothing**, since the Theorem only needs $\Omega(n^2)$ — the exactness is a separate and much larger claim that a short note cannot carry.
 
-Writing this bridge also turned up two errors in earlier drafts of the note, both now fixed there: Hypothesis (H)'s condition 3 permitted too small a range of $d$ (it stopped at 6, and $d = 12$ is needed at $n \equiv 11$), and the constant $c_0$ was twice claimed with too little margin. Both are recorded in §4. Nothing else is inconsistent.
+Writing this bridge also turned up several errors in earlier drafts of the note, all now fixed there: Hypothesis (H)'s condition 3 permitted too small a range of $d$ (it stopped at 6, and $d = 12$ is needed at $n \equiv 11$), the constant was twice claimed with too little margin, on top of a units slip between $n^2$ and $\binom{n}{2}$; and the Theorem's evasiveness conclusion was stated without the "sufficiently large $n$" that (H) forces on it. Proposition 1 is exact at every $n$; the Theorem is eventual, in BBKN's sense, because (H) is. Both are recorded in §4. Nothing else is inconsistent.
 
 ---
 
@@ -61,8 +61,8 @@ maximised at $x^* = \sqrt{\eta}/(1 + k\sqrt{\eta})$ with value $\eta/(1+k\sqrt\e
 
 Balance points span $[0.2247, 0.5]$, so the note's $[0.2, 0.5]$ contains all six with room. **That is not a coincidence and is the cleanest consistency check available**: the note's window was chosen for convenience, and it turns out to be exactly what the optimised analysis needs.
 
-**The note's $c_0 = 1/700$ against the full $\delta_0$.** The full analysis is $35\times$ better in the worst class, and the two bracket the observed minimum correctly:
-$$\underbrace{1/700 = 0.00143}_{\text{note's } c_0} \;<\; \underbrace{0.026117}_{\text{observed min, } n \le 10^6} \;<\; \underbrace{0.05051}_{\delta_0 \text{ at } n \equiv 11}$$
+**The note's $\delta_0 = 1/350$ against the full $\delta_0$.** Both are densities relative to $\binom{n}{2}$ — the note now fixes that unit explicitly, since its construction bounds arrive naturally in units of $n^2$ and the factor 2 is easy to drop. The full analysis is $18\times$ better in the worst class, and the two bracket the observed minimum correctly:
+$$\underbrace{1/350 = 0.00286}_{\text{note's } \delta_0} \;<\; \underbrace{0.026117}_{\text{observed min, } n \le 10^6} \;<\; \underbrace{0.05051}_{\delta_0 \text{ at } n \equiv 11}$$
 The middle term lying between the two is the arithmetic check that both are right: the proved constant must be below the observed minimum, and the observed minimum must be below the best any single class guarantees.
 
 **The note's Hypothesis (H) is one disjunct of a covering statement.** In full, a density-$\delta_0$ bound corresponds to a finite set of configuration *shapes* — 31 of them at $\delta_0 = 1/9$, 117 at $1/16$ — each of which is a Bateman–Horn system in $n$. The correct implication is that *at least one* is solvable at each large $n$. (H) picks a small explicit subfamily — two block patterns, each with four permitted values of $d$ — and asserts that one of the eight always works. That is stronger than the framework needs, and far easier to state; the price is that it could in principle fail while the framework's conclusion survives, if some $n$ were covered only by a shape outside the eight.
@@ -83,11 +83,11 @@ The middle term lying between the two is the arithmetic check that both are righ
 
 1. **Both constructions built as explicit permutation groups** and their orbit decompositions on pairs computed, at four parameter choices each. Even: $n = 12 = 5+7$ gives $|\Gamma| = 420$, orbitals $\{10, 21, 35\}$. Odd: $n = 17 = 2\cdot5+7$ gives $|\Gamma| = 2100$, orbitals $\{10, 10, 21, 25, 35, 35\}$. All match the closed forms.
 2. **The Oliver chain verified symbolically** in both cases, including that $\Gamma_1/\Gamma_2 \cong C_{c-1} \times C_r$ is cyclic exactly under condition 4 of (H), and that the diagonal action of $C_{c-1}$ in the odd construction is what keeps it cyclic.
-3. **The constant $c_0$ re-derived numerically, twice.** A first draft claimed $1/(50K)$ against a true worst case of $0.003340$ — safe by $0.2\%$, too tight to circulate. A second used $\eta \ge 1/6$, the correct worst-case efficiency but not what condition 3 conservatively guarantees. With $\eta \ge 1/12$ — taking $\mathrm{orb}(r,t) \ge rt/2$ regardless of the parity of $t$ — the worst cases are $1/96$ (even) and $1/599$ (odd), and $c_0 = 1/700$ is safe with room.
+3. **The constant re-derived numerically, three times.** A first draft claimed $1/(50K)$ against a true worst case of $0.003340$ — safe by $0.2\%$, too tight to circulate. A second used $\eta \ge 1/6$, the correct worst-case efficiency but not what condition 3 conservatively guarantees. With $\eta \ge 1/12$ — taking $\mathrm{orb}(r,t) \ge rt/2$ regardless of the parity of $t$ — the worst densities are $1/48$ (even) and $1/300$ (odd), and $\delta_0 = 1/350$ is safe with room. The third correction was a units slip rather than an arithmetic one: the construction bounds arrive as $m^*/n^2$ while every constant elsewhere is a density relative to $\binom{n}{2}$, a factor 2 apart. The note now fixes the unit in §1 and states the conversion where the bounds are derived.
 4. **The window $[1/5, 1/2]$ checked to contain all six balance points**, $[0.2247, 0.5]$.
 4a. **The change of variable checked explicitly.** For odd $n$ the third polynomial is $(n-dq-1)/2$, so the parity of $c$ is governed by $n-r \bmod 4$, not $\bmod 2$; with $q$ odd, $d \equiv 2 \pmod 4$ forces $r \equiv 3$ and $d \equiv 0 \pmod 4$ forces $r \equiv 1$, verified over $q = 3, \ldots, 19$. This is why $\ell = 2$ contributes **two** factors of 2 in the odd case — one to make $r$ odd, one to fix $n \bmod 4$ — and hence why $d$ runs to $2 \times 6 = 12$ rather than to 6. The note now states this; it is the detail most likely to be queried and least likely to be reconstructed.
 4b. **The admissible-$d$ table computed exhaustively**: for each $n \bmod 12$ and each $d \in \{2,4,6,12\}$, whether the system $\{q,\ dq+1,\ \ldots\}$ has $\omega(\ell) < \ell$ at $\ell = 2, 3$. Every class has at least one admissible $d$; $d = 12$ is needed, and needed only at $n \equiv 11$.
-5. **$1/700 < 0.026117 < 0.05051$** verified, as above.
+5. **$1/350 < 0.026117 < 0.05051$** verified, all three in units of $\binom{n}{2}$.
 6. **The unconditional family cross-checked**: $n = 2m$, $m$ an odd prime power, gives orbitals $m(m-1)$ and $m^2$, density $(m-1)/(2m-1) \to 1/2$, which is Theorem 2.1 of the notes.
 
 ---
@@ -95,7 +95,7 @@ The middle term lying between the two is the arithmetic check that both are righ
 ## 5. What a fuller paper would add, in order of value
 
 1. **The exactness claim**, which needs the classification and the collapse — the largest single addition, and the one that turns "$\mu = \Omega(n^2)$" into "$\mu(n)$ is computable".
-2. **The mod 12 constants**, replacing $c_0 = 1/700$ with $\delta_0(n \bmod 12) \ge 0.05051$, a 35-fold improvement stated in closed form.
+2. **The mod 12 constants**, replacing $\delta_0 = 1/350$ with $\delta_0(n \bmod 12) \ge 0.05051$, an 18-fold improvement stated in closed form.
 3. **The covering formulation of (H)**, which weakens the hypothesis from "these two shapes always work" to "some shape in a finite list works" — more robust and more likely to be provable.
 4. **The reverse implication**, that lower bounds on $\mu$ yield additive prime statements, which is what makes the connection two-way rather than a one-off application.
 5. **The unconditional infinite family** at density $\to 1/2$, already in the note but worth expanding, since it is the only part needing no hypothesis at all.
