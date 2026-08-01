@@ -24,20 +24,30 @@ BBKN's Theorem 1.4 is exactly this route with μ(n) ≥ n^(3/2−ε), obtained u
 
 The upper bound is trivial: μ(n) ≤ C(n,2), since a single u-orbital cannot exceed the number of pairs. Everything below concerns the lower bound.
 
-> **Hypothesis (H).** There is a constant K such that every sufficiently large n admits primes c, r with
+> **Hypothesis (H).** Every sufficiently large n admits primes q, r, c with
 >
 > 1. n = c + r if n is even, and n = 2c + r if n is odd;
 > 2. n/5 ≤ c, r ≤ n/2;
-> 3. r − 1 has a divisor q^a ≥ (r−1)/K with q prime;
+> 3. r = d·q + 1 for some d ∈ {2, 4, 6, 12};
 > 4. r ∤ c − 1.
 
-(H) is a Hardy–Littlewood / Bateman–Horn statement of binary-Goldbach type: for fixed n it asks for a prime r in a fixed proportional window such that n − r (or (n−r)/2) is prime and r − 1 has a large prime-power divisor. The heuristic count of such r is ≍ n/log³n. Condition 4 is a divisibility side condition excluding a set of r of density O(1/n).
+**(H) is squarely a Bateman–Horn statement, and it has no modular obstruction.** Substituting condition 3, the system becomes three **linear** polynomials in the single variable q:
 
-Two remarks on the shape of (H). It is a *disjunctive* hypothesis over two families, so it does not require any single Bateman–Horn system to be solvable for all large n. And condition 3 is deliberately weaker than "r is a safe prime" (r − 1 = 2s with s prime): demanding the latter would impose congruence conditions mod 4 and mod 3 on n that fail for some residue classes, whereas condition 3 with K ≥ 6 is satisfiable in every class.
+> q,  dq + 1,  and  n − dq − 1  (n even)   or   (n − dq − 1)/2  (n odd),
+
+required to be simultaneously prime. A linear polynomial has at most one root mod ℓ, so the local count ω(ℓ) never exceeds 3; an obstruction needs ω(ℓ) ≥ ℓ, so **only ℓ = 2 and ℓ = 3 can obstruct**, and no higher power of either can, since the local condition is non-divisibility by ℓ and that is decided mod ℓ. The two conditions on n are therefore a condition mod 4 and a condition mod 3 — that is, mod 12 — and this is exactly what the four permitted values of d are for:
+
+> | n mod 12 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
+> |---|---|---|---|---|---|---|---|---|---|---|---|---|
+> | admissible d | all | 2 | 6, 12 | 4, 12 | 2, 4 | 6 | all | 4 | 6, 12 | 2, 6 | 2, 4 | 12 |
+
+Every class has at least one admissible d, so (H) is locally soluble at every n; the singular series of the corresponding system is positive, and the heuristic count of valid q is ≍ n/log³n. Two classes are worth noting. At n ≡ 11 (mod 12) — the only class obstructed at both 2 and 3 — **d = 12 is forced**, which is why the list must run that far. And d must always be even, since q is odd and r = dq + 1 must be an odd prime.
+
+Condition 3 is deliberately weaker than "r is a safe prime" (d = 2). Demanding d = 2 throughout would restrict n to the classes in which 2 is admissible above — 0, 1, 4, 6, 9, 10 — and fail outright on the other six. Condition 4 is a divisibility side condition excluding a set of q of density O(1/n), and does not interact with the local analysis.
 
 ## 3. The constructions
 
-Fix c, r and t := q^a as in (H).
+Fix q, r, c and set t := q = (r−1)/d, as in (H).
 
 ### Even n = c + r
 
@@ -55,7 +65,7 @@ which is cyclic precisely because gcd(c−1, r) = 1 — this is what condition 4
 
 **Orbitals.** Within A: the translations make pairs equivalent to their differences, and (ℤ/c)\* acts transitively on those, so all C(c,2) pairs form one orbital. Within B: differences are scaled by C_t, giving orbitals of size rt/2 if t is even and rt if t is odd, capped at C(r,2). Across: all cr mixed pairs form one orbital. Hence
 
-> m\*(Γ) = min { C(c,2), rt/2, cr } ≥ min { C(c,2), r(r−1)/2K, cr } ≥ n²/60K
+> m\*(Γ) = min { C(c,2), rt/2, cr } ≥ min { C(c,2), r(r−1)/24, cr } ≥ n²/700
 
 for n large, using c, r ≥ n/5.
 
@@ -71,9 +81,9 @@ with (ℤ/c)² translating A₁ and A₂ independently and C_(c−1) acting **di
 
 **Orbitals.** C(c,2) within each A_i; c² between A₁ and A₂; the B-orbitals as before; cr from each A_i to B. Hence
 
-> m\*(Γ) = min { C(c,2), c², rt/2, cr } ≥ n²/60K
+> m\*(Γ) = min { C(c,2), c², rt/2, cr } ≥ n²/700
 
-again. This proves the Theorem with **c₀ = 1/(60K)**; taking K = 6 gives **c₀ = 1/360**. Both bounds come from minimising min{ x²/2, y²/2K, xy } — respectively min{ x²/2, x², y²/2K, xy } — over the window x = c/n, y = r/n ∈ [1/5, 1/2], and both are slack: the true worst cases are 1/48 and 1/300.
+again. This proves the Theorem with **c₀ = 1/700**. Both bounds come from minimising min{ x²/2, y²/24, xy } — respectively min{ x²/2, x², y²/24, xy } — over the window x = c/n, y = r/n ∈ [1/5, 1/2], and both are slack: the true worst cases are 1/96 and 1/599.
 
 **Verification.** Both constructions have been checked by direct computation of the permutation groups and their orbit decompositions on pairs. For n = 12 = 5 + 7 with t = 3: |Γ| = 420 and the orbitals are {10, 21, 35}. For n = 17 = 2·5 + 7: |Γ| = 2100 and the orbitals are {10, 10, 21, 25, 35, 35}.
 

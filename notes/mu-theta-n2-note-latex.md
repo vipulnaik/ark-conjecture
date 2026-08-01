@@ -21,20 +21,30 @@ BBKN's Theorem 1.4 is exactly this route with $\mu(n) \ge n^{3/2-\varepsilon}$, 
 
 The upper bound is trivial: $\mu(n) \le \binom{n}{2}$, since a single u-orbital cannot exceed the number of pairs. Everything below concerns the lower bound.
 
-> **Hypothesis (H).** There is a constant $K$ such that every sufficiently large $n$ admits primes $c, r$ with
+> **Hypothesis (H).** Every sufficiently large n admits primes q, r, c with
 >
-> 1. $n = c + r$ if $n$ is even, and $n = 2c + r$ if $n$ is odd;
+> 1. $n = c+r$ if $n$ is even, and $n = 2c+r$ if $n$ is odd;
 > 2. $n/5 \le c, r \le n/2$;
-> 3. $r - 1$ has a divisor $q^a \ge (r-1)/K$ with $q$ prime;
-> 4. $r \nmid c - 1$.
+> 3. $r = d\cdot q + 1$ for some $d \in \{2,4,6,12\}$;
+> 4. $r \nmid c-1$.
 
-(H) is a Hardy–Littlewood/Bateman–Horn statement of binary-Goldbach type: for fixed $n$ it asks for a prime $r$ in a fixed proportional window such that $n - r$ (or $(n-r)/2$) is prime and $r-1$ has a large prime-power divisor. The heuristic count of such $r$ is $\asymp n/\log^3 n$. Condition 4 is a divisibility side condition excluding a set of $r$ of density $O(1/n)$.
+**(H) is squarely a Bateman–Horn statement, and it has no modular obstruction.** Substituting condition 3, the system becomes three **linear** polynomials in the single variable q:
 
-Two remarks on the shape of (H). It is a *disjunctive* hypothesis over two families, so it does not require any single Bateman–Horn system to be solvable for all large $n$. And condition 3 is deliberately weaker than "$r$ is a safe prime" ($r - 1 = 2s$, $s$ prime): demanding the latter would impose congruence conditions mod 4 and mod 3 on $n$ that fail for some residue classes, whereas condition 3 with $K \ge 6$ is satisfiable in every class.
+> $$q,\qquad dq+1,\qquad n-dq-1 \ (n \text{ even}) \quad\text{or}\quad (n-dq-1)/2 \ (n \text{ odd}),$$
+
+required to be simultaneously prime. A linear polynomial has at most one root mod $\ell$, so the local count $\omega(\ell)$ never exceeds 3; an obstruction needs $\omega(\ell)$ ≥ ℓ, so **only $\ell = 2$ and $\ell = 3$ can obstruct**, and no higher power of either can, since the local condition is non-divisibility by ℓ and that is decided mod $\ell$. The two conditions on n are therefore a condition mod 4 and a condition mod 3 — that is, mod 12 — and this is exactly what the four permitted values of d are for:
+
+> | n mod 12 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
+> |---|---|---|---|---|---|---|---|---|---|---|---|---|
+> | admissible d | all | 2 | 6, 12 | 4, 12 | 2, 4 | 6 | all | 4 | 6, 12 | 2, 6 | 2, 4 | 12 |
+
+Every class has at least one admissible d, so (H) is locally soluble at every n; the singular series of the corresponding system is positive, and the heuristic count of valid q is $\asymp n/\log^3 n$. Two classes are worth noting. At $n \equiv 11 \pmod{12}$ — the only class obstructed at both 2 and 3 — **$d = 12$ is forced**, which is why the list must run that far. And d must always be even, since q is odd and r = dq + 1 must be an odd prime.
+
+Condition 3 is deliberately weaker than "r is a safe prime" ($d = 2$). Demanding $d = 2$ throughout would restrict n to the classes in which 2 is admissible above — 0, 1, 4, 6, 9, 10 — and fail outright on the other six. Condition 4 is a divisibility side condition excluding a set of q of density $O(1/n)$, and does not interact with the local analysis.
 
 ## 3. The constructions
 
-Fix $c, r, q^a =: t$ as in (H).
+Fix $q, r, c$ and set $t := q = (r-1)/d$, as in (H).
 
 **Even $n = c + r$.** Partition $[n]$ into blocks $A$ of size $c$ and $B$ of size $r$, identified with $\mathbb{Z}/c$ and $\mathbb{Z}/r$. Let
 $$\Gamma \;=\; \mathrm{AGL}(1,c) \;\times\; \bigl(\mathbb{Z}/r \rtimes C_t\bigr),$$
@@ -43,7 +53,7 @@ where the first factor acts on $A$ by all affine maps $x \mapsto \lambda x + \be
 *Oliver's condition.* Take $\Gamma_2 = \mathbb{Z}/c$ (translations of $A$), a $c$-group; $\Gamma_1 = \Gamma_2 \times (\mathbb{Z}/r) \times C_{c-1}$; and $\Gamma/\Gamma_1 = C_t$, a $q$-group. Then $\Gamma_1/\Gamma_2 \cong C_{c-1} \times C_r$, which is cyclic precisely because $\gcd(c-1, r) = 1$ — this is what condition 4 of (H) secures.
 
 *Orbitals.* Within $A$: the translations make pairs equivalent to their differences and $(\mathbb{Z}/c)^\times$ acts transitively on those, so all $\binom{c}{2}$ pairs form one orbital. Within $B$: differences are scaled by $C_t$, giving orbitals of size $rt/2$ if $t$ is even and $rt$ if odd, capped at $\binom{r}{2}$. Across: all $cr$ mixed pairs form one orbital. Hence
-$$m^*(\Gamma) \;=\; \min\Bigl\{\tbinom{c}{2},\; \tfrac{r t}{2},\; cr\Bigr\} \;\ge\; \min\Bigl\{\tbinom{c}{2},\; \tfrac{r(r-1)}{2K},\; cr\Bigr\} \;\ge\; \frac{n^2}{60K}$$
+$$m^*(\Gamma) \;=\; \min\Bigl\{\tbinom{c}{2},\; \tfrac{r t}{2},\; cr\Bigr\} \;\ge\; \min\Bigl\{\tbinom{c}{2},\; \tfrac{r(r-1)}{24},\; cr\Bigr\} \;\ge\; \frac{n^2}{700}$$
 for $n$ large, using $c, r \ge n/5$.
 
 **Odd $n = 2c + r$.** Now take two blocks $A_1, A_2$ of size $c$ and one block $B$ of size $r$, and let
@@ -53,8 +63,8 @@ with $(\mathbb{Z}/c)^2$ translating $A_1$ and $A_2$ independently and $C_{c-1}$ 
 *Oliver's condition.* As before, with $\Gamma_2 = (\mathbb{Z}/c)^2$ and $\Gamma_1/\Gamma_2 \cong C_{c-1} \times C_r$ cyclic. The diagonal action is essential: two independent copies of $C_{c-1}$ would make $\Gamma_1/\Gamma_2$ non-cyclic and destroy the chain.
 
 *Orbitals.* $\binom{c}{2}$ within each $A_i$; $c^2$ between $A_1$ and $A_2$; the $B$-orbitals as before; $cr$ from each $A_i$ to $B$. Hence
-$$m^*(\Gamma) \;=\; \min\Bigl\{\tbinom{c}{2},\; c^2,\; \tfrac{rt}{2},\; cr\Bigr\} \;\ge\; \frac{n^2}{60K}$$
-again. This proves the Theorem with $c_0 = 1/(60K)$; taking $K = 6$ gives $c_0 = 1/360$. Both bounds come from minimising $\min\{x^2/2,\ y^2/2K,\ xy\}$ (respectively $\min\{x^2/2,\ x^2,\ y^2/2K,\ xy\}$) over the window $x = c/n,\ y = r/n \in [1/5, 1/2]$, and both are slack: the true worst cases are $1/48$ and $1/300$.
+$$m^*(\Gamma) \;=\; \min\Bigl\{\tbinom{c}{2},\; c^2,\; \tfrac{rt}{2},\; cr\Bigr\} \;\ge\; \frac{n^2}{700}$$
+again. This proves the Theorem with $c_0 = 1/700$. Both bounds come from minimising $\min\{x^2/2,\ y^2/24,\ xy\}$ (respectively $\min\{x^2/2,\ x^2,\ y^2/24,\ xy\}$) over the window $x = c/n,\ y = r/n \in [1/5, 1/2]$, and both are slack: the true worst cases are $1/48$ and $1/300$.
 
 *Verification.* Both constructions have been checked by direct computation of the permutation groups and their orbit decompositions on pairs — e.g. for $n = 12 = 5 + 7$ with $t = 3$, $|\Gamma| = 420$ and the orbitals are $\{10, 21, 35\}$; for $n = 17 = 2\cdot 5 + 7$, $|\Gamma| = 2100$ and the orbitals are $\{10, 10, 21, 25, 35, 35\}$.
 

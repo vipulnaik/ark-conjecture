@@ -35,11 +35,13 @@ The exponent $2$ in the note's Theorem needs none of this. What the omitted mate
 
 ## 2. Dictionary
 
-**The note's $K$ is the reciprocal of the efficiency $\eta$.** In the full framework, a *foreign* block of prime size $r$ under top prime $q$ has efficiency
+**The note's $d$ is the reciprocal of the efficiency $\eta$, up to a factor 2.** In the full framework, a *foreign* block of prime size $r$ under top prime $q$ has efficiency
 $$\eta \;=\; \frac{\mathrm{orb}(r,t)}{\binom{r}{2}}, \qquad t = q\text{-part of } r-1,$$
 the fraction of that block's full 2-homogeneous capacity its twist can reach. Condition 3 of Hypothesis (H) — that $r-1$ has a prime-power divisor $\ge (r-1)/K$ — is exactly $\eta \ge 1/K$. So:
 
-> **$K = 6$ in the note $\iff$ $\eta \ge 1/6$, the worst case in the full analysis, which occurs exactly at $n \equiv 11 \pmod{12}$.**
+> **$d = 12$ in the note $\iff$ $\eta = 1/6$, the worst case in the full analysis, which occurs exactly at $n \equiv 11 \pmod{12}$ — and the note's own table of admissible $d$ shows $d = 12$ forced at precisely that class.**
+
+This is the sharpest correspondence between the two documents. The note derives its list $\{2,4,6,12\}$ from a local analysis of a three-linear-polynomial Bateman–Horn system; the framework derives its six $\eta$ values from the structure of $r-1$ under Lemma B′; the two land on the same partition of the residue classes mod 12.
 
 **The note's window $[n/5,\, n/2]$ is the convex hull of the six balance points.** Writing $x = c/n$ and $k = 1$ (even) or $2$ (odd), the density of the note's construction is
 $$\delta(x) \;=\; \min\{\,x^2,\ 2x(1-kx),\ \eta(1-kx)^2\,\},$$
@@ -56,8 +58,8 @@ maximised at $x^* = \sqrt{\eta}/(1 + k\sqrt{\eta})$ with value $\eta/(1+k\sqrt\e
 
 Balance points span $[0.2247, 0.5]$, so the note's $[0.2, 0.5]$ contains all six with room. **That is not a coincidence and is the cleanest consistency check available**: the note's window was chosen for convenience, and it turns out to be exactly what the optimised analysis needs.
 
-**The note's $c_0 = 1/360$ against the full $\delta_0$.** The full analysis is $18\times$ better in the worst class, and the two bracket the observed minimum correctly:
-$$\underbrace{1/360 = 0.00278}_{\text{note's } c_0} \;<\; \underbrace{0.026117}_{\text{observed min, } n \le 10^6} \;<\; \underbrace{0.05051}_{\delta_0 \text{ at } n \equiv 11}$$
+**The note's $c_0 = 1/700$ against the full $\delta_0$.** The full analysis is $35\times$ better in the worst class, and the two bracket the observed minimum correctly:
+$$\underbrace{1/700 = 0.00143}_{\text{note's } c_0} \;<\; \underbrace{0.026117}_{\text{observed min, } n \le 10^6} \;<\; \underbrace{0.05051}_{\delta_0 \text{ at } n \equiv 11}$$
 The middle term lying between the two is the arithmetic check that both are right: the proved constant must be below the observed minimum, and the observed minimum must be below the best any single class guarantees.
 
 **The note's Hypothesis (H) is one disjunct of a covering statement.** In full, a density-$\delta_0$ bound corresponds to a finite set of configuration *shapes* — 31 of them at $\delta_0 = 1/9$, 117 at $1/16$ — each of which is a Bateman–Horn system in $n$. The correct implication is that *at least one* is solvable at each large $n$. (H) picks two specific shapes and asserts one of them always works, which is stronger than the framework needs but far easier to state.
@@ -68,7 +70,7 @@ The middle term lying between the two is the arithmetic check that both are righ
 
 **The two engines.** The note's constructions are all *additive*: disjoint blocks whose sizes sum to $n$, with density capped at $1/k^2$ for $k$ blocks. The framework has a second, *multiplicative* engine — a single class of $F$ blocks of size $c$ fused by the top group, $n = Fc$, with density $1/F$. The note uses it exactly once, in §4 at $n = 2m$, without naming it: that is $F = 2$, giving $1/2$. The engine requires $n$ to have at most two distinct prime factors and so covers a density-zero set of $n$, which is why the note is right to treat it as a special family rather than a general method.
 
-**The mod 12 analysis, stated as the note would.** Condition 3 of (H) cannot be strengthened to "$r$ is a safe prime" ($r-1 = 2s$, $s$ prime), because that forces $r \equiv 3 \pmod 4$, and then $c = (n-r)/2$ is odd only when $n \equiv 1 \pmod 4$; separately, writing $r = 2s+1$ makes the system $\{s,\, 2s+1,\, (n-1)/2 - s\}$, whose three roots mod 3 collide exactly when $n \equiv 2 \pmod 3$. Those two obstructions cost a factor of 2 and a factor of 3 in $\eta$ respectively, and both together — $n \equiv 11 \pmod{12}$ — cost 6. **This is the entire content of "$K \ge 6$ is satisfiable in every class."** The note states the conclusion; the framework derives it.
+**The mod 12 analysis is now carried by the note itself**, as the table of admissible $d$; the framework's derivation of the same partition runs differently and is worth comparing. Condition 3 of (H) cannot be strengthened to "$r$ is a safe prime" ($d = 2$ throughout): that would restrict $n$ to the six classes in which $d=2$ is admissible and fail outright on the rest. In the framework the same fact appears as an efficiency loss — a factor 2 at $\ell = 2$, a factor 3 at $\ell = 3$, and 6 when both bite, at $n \equiv 11 \pmod{12}$.
 
 Two further facts the note could cite in one line each. Only $\ell = 2$ and $\ell = 3$ can obstruct, because each system is three *linear* polynomials so $\omega(\ell) \le 3 < \ell$ for $\ell \ge 5$; and no higher power of 2 or 3 obstructs, because the local condition is non-divisibility by $\ell$, which is decided mod $\ell$.
 
@@ -80,9 +82,10 @@ Two further facts the note could cite in one line each. Only $\ell = 2$ and $\el
 
 1. **Both constructions built as explicit permutation groups** and their orbit decompositions on pairs computed, at four parameter choices each. Even: $n = 12 = 5+7$ gives $|\Gamma| = 420$, orbitals $\{10, 21, 35\}$. Odd: $n = 17 = 2\cdot5+7$ gives $|\Gamma| = 2100$, orbitals $\{10, 10, 21, 25, 35, 35\}$. All match the closed forms.
 2. **The Oliver chain verified symbolically** in both cases, including that $\Gamma_1/\Gamma_2 \cong C_{c-1} \times C_r$ is cyclic exactly under condition 4 of (H), and that the diagonal action of $C_{c-1}$ in the odd construction is what keeps it cyclic.
-3. **The constant $c_0$ re-derived numerically.** The note's first draft claimed $1/(50K)$; the true worst case over the window is $0.003340$ against a claimed $0.003333$ — safe by $0.2\%$, too tight to circulate. Relaxed to $1/(60K) = 1/360$.
+3. **The constant $c_0$ re-derived numerically, twice.** A first draft claimed $1/(50K)$ against a true worst case of $0.003340$ — safe by $0.2\%$, too tight to circulate. A second used $\eta \ge 1/6$, the correct worst-case efficiency but not what condition 3 conservatively guarantees. With $\eta \ge 1/12$ — taking $\mathrm{orb}(r,t) \ge rt/2$ regardless of the parity of $t$ — the worst cases are $1/96$ (even) and $1/599$ (odd), and $c_0 = 1/700$ is safe with room.
 4. **The window $[1/5, 1/2]$ checked to contain all six balance points**, $[0.2247, 0.5]$.
-5. **$1/360 < 0.026117 < 0.05051$** verified, as above.
+4a. **The admissible-$d$ table computed exhaustively**: for each $n \bmod 12$ and each $d \in \{2,4,6,12\}$, whether the system $\{q,\ dq+1,\ \ldots\}$ has $\omega(\ell) < \ell$ at $\ell = 2, 3$. Every class has at least one admissible $d$; $d = 12$ is needed, and needed only at $n \equiv 11$.
+5. **$1/700 < 0.026117 < 0.05051$** verified, as above.
 6. **The unconditional family cross-checked**: $n = 2m$, $m$ an odd prime power, gives orbitals $m(m-1)$ and $m^2$, density $(m-1)/(2m-1) \to 1/2$, which is Theorem 2.1 of the notes.
 
 ---
@@ -90,7 +93,7 @@ Two further facts the note could cite in one line each. Only $\ell = 2$ and $\el
 ## 5. What a fuller paper would add, in order of value
 
 1. **The exactness claim**, which needs the classification and the collapse — the largest single addition, and the one that turns "$\mu = \Omega(n^2)$" into "$\mu(n)$ is computable".
-2. **The mod 12 constants**, replacing $c_0 = 1/360$ with $\delta_0(n \bmod 12) \ge 0.05051$, an 18-fold improvement stated in closed form.
+2. **The mod 12 constants**, replacing $c_0 = 1/700$ with $\delta_0(n \bmod 12) \ge 0.05051$, a 35-fold improvement stated in closed form.
 3. **The covering formulation of (H)**, which weakens the hypothesis from "these two shapes always work" to "some shape in a finite list works" — more robust and more likely to be provable.
 4. **The reverse implication**, that lower bounds on $\mu$ yield additive prime statements, which is what makes the connection two-way rather than a one-off application.
 5. **The unconditional infinite family** at density $\to 1/2$, already in the note but worth expanding, since it is the only part needing no hypothesis at all.
