@@ -35,7 +35,7 @@ The upper bound is trivial: δ(n) ≤ 1, since a single u-orbital cannot exceed 
 > **Hypothesis (H).** Every sufficiently large n admits primes q, r, c with
 >
 > 1. n = c + r if n is even, and n = 2c + r if n is odd;
-> 2. n/5 ≤ c, r ≤ n/2;
+> 2. c ≥ n/5 and r ≥ n/5 (which, with condition 1, bounds both above too: c, r ≤ 4n/5 for even n, and c ≤ 2n/5, r ≤ 3n/5 for odd n);
 > 3. r = d·q + 1 for some d ∈ {2, 4, 6, 12};
 > 4. r ∤ c − 1.
 
@@ -113,7 +113,7 @@ with (ℤ/c)² translating A₁ and A₂ independently and C_(c−1) acting **di
 
 > m\*(Γ) = min { C(c,2), c², rt/2, cr } ≥ C(n,2)/350
 
-again. This proves the Theorem with **δ₀ = 1/350**, i.e. roughly n²/700 edges. Both bounds come from minimising 2·min{ x²/2, y²/24, xy } — respectively 2·min{ x²/2, x², y²/24, xy } — over the window x = c/n, y = r/n ∈ [1/5, 1/2], the factor 2 converting from n² to C(n,2); both are slack, the true worst densities being **1/48** (even) and **1/300** (odd).
+again. This proves the Theorem with **δ₀ = 1/350**, i.e. roughly n²/700 edges. Both bounds come from minimising 2·min{ x²/2, y²/24, xy } — respectively 2·min{ x²/2, x², y²/24, xy } — over the region cut out by condition 2 — x = c/n and y = r/n both at least 1/5, with x + y = 1 (even) or 2x + y = 1 (odd) — the factor 2 converting from n² to C(n,2). The worst density is **1/300** in each case, attained at the corner where the foreign block is smallest, so 1/350 is slack but not by much.
 
 **Verification.** Both constructions have been checked by direct computation of the permutation groups and their orbit decompositions on pairs. For n = 12 = 5 + 7 with t = 3: |Γ| = 420 and the orbitals are {10, 21, 35}. For n = 17 = 2·5 + 7: |Γ| = 2100 and the orbitals are {10, 10, 21, 25, 35, 35}.
 

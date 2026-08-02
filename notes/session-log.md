@@ -741,3 +741,17 @@ Raghav's objection, and it is correct. The working documents called our systems 
 **Changes.** New §3.5 of `arithmetic-of-density.md` sets all of this out with a table of what Bateman–Horn does and does not license; the old §3.5 became §3.6, and its opening now follows from the new section. Two loose attributions in §§3.1–3.2 rescoped to the local analysis. Section 3's title changed from "The Hardy–Littlewood conditions" to "The arithmetic conditions". The short note now separates *what is routine* (the modular classification) from *what is not* (the existence claim), says explicitly that (H) is **not** a Bateman–Horn statement, and states the Goldbach comparison including the one-variable-three-conditions point. The bridge gains an omissions-table row for the distinction.
 
 This is the second time a framing in these documents has been more confident than the mathematics warranted — the first was the "μ(n) computed exactly" claim in the note. Both were found by someone asking what a specific phrase was doing.
+
+---
+
+## Condition 2 of (H) was nearly vacuous, and why the checking missed it
+
+It read "n/5 ≤ c, r ≤ n/2". For even n = c + r that forces **c = r = n/2**. The hypothesis was asserting almost nothing.
+
+**Fixed** to "c ≥ n/5 and r ≥ n/5", with the induced upper bounds spelled out (c, r ≤ 4n/5 for even n; c ≤ 2n/5, r ≤ 3n/5 for odd). The constant survives: over the correct region the worst density is **1/300** for both parities, so δ₀ = 1/350 remains safe — slack, but by less than the earlier text implied.
+
+**Why it survived.** Every verification swept x = c/n over the range encoded **in the script** — [0.2, 0.5] for even n, which correctly expresses "c is the smaller block" — and compared the resulting constant against the note's claimed δ₀. That check passes whether or not the prose describes the same region. Nothing ever compared the note's *statement* of condition 2 against the script's window; the two diverged at the moment the prose was written and never met again.
+
+The bridge's own consistency check made it worse rather than better. It verified that the six balance points lie in [0.2247, 0.5] and concluded "the note's window [1/5, 1/2] contains all six" — which reads as confirmation but is only about x = c/n, and so silently endorsed the impossible reading of the same interval as a bound on both variables.
+
+**The general lesson, now recorded in the bridge:** the consistency machinery here is numerical, and a numerical check re-runs a derivation and compares outputs. It cannot catch an error in the *statement* of a hypothesis, because the statement is not an input to the computation. Hypothesis statements have to be read against the derivation by hand. Of the errors found in this note — the exactness overclaim, the too-small d range, two constant-margin slips, a units slip, a missing quantifier, and now this — this is the first that no amount of re-running could have caught.
