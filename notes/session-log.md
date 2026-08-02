@@ -727,3 +727,17 @@ The bridge's bracket 1/350 < 0.026117 < 0.05051 is now annotated with the three 
 | 0.05051 | — | asymptotic | ceiling of one family in one class |
 
 The middle term is the strongest in quantifier and the weakest in range, which is what makes it a useful sanity check on both flanks: the proved eventual constant is conservative even measured against a global minimum, and the asymptotic ceiling is not approached anywhere in the computed range.
+
+---
+
+## Parametric versus fixed systems: the distinction now stated rather than blurred
+
+Raghav's objection, and it is correct. The working documents called our systems "Bateman–Horn systems" throughout. Bateman–Horn concerns a **fixed** system of polynomials, counting x ≤ X with all f_i(x) prime as X → ∞ — twin primes is the model. Ours are **parametric**: writing r = dq + 1, the third polynomial (n − dq − 1)/2 carries n in its coefficients, so the system moves with n; and q is confined to roughly [1, n/d], so at fixed n there is no limit to take. What is wanted is positivity of the representation count at each large n. That is the Goldbach shape, and the circle method rather than Bateman–Horn is the tradition.
+
+**The split that matters, and it is clean.** The *local* analysis — which residue classes are obstructed, the singular series, ω(ℓ) < ℓ — is computed from the polynomials' roots mod ℓ with n entering only as a residue, and is identical whether the system is fixed or parametric. That part is properly attributable to the Bateman–Horn/Hardy–Littlewood formalism, and it is all §3.3 needs. The *existence* claim is not, and was being attributed to the wrong conjecture.
+
+**Difficulty, placed by comparison.** Ternary Goldbach is a theorem (Vinogradov, then Helfgott) because it has two free variables and the minor arcs can be controlled. Binary Goldbach has one free variable and is open. Ours has **one free variable carrying three primality conditions**, so per shape it demands strictly more than binary Goldbach. Cutting the other way: it is a disjunction over eight shapes needing only one success, and positivity rather than an asymptotic would follow from an exceptional-set bound of the kind known for binary Goldbach (Montgomery–Vaughan, Pintz). Also recorded: Friedlander–Granville rules out simply assuming uniformity across the family.
+
+**Changes.** New §3.5 of `arithmetic-of-density.md` sets all of this out with a table of what Bateman–Horn does and does not license; the old §3.5 became §3.6, and its opening now follows from the new section. Two loose attributions in §§3.1–3.2 rescoped to the local analysis. Section 3's title changed from "The Hardy–Littlewood conditions" to "The arithmetic conditions". The short note now separates *what is routine* (the modular classification) from *what is not* (the existence claim), says explicitly that (H) is **not** a Bateman–Horn statement, and states the Goldbach comparison including the one-variable-three-conditions point. The bridge gains an omissions-table row for the distinction.
+
+This is the second time a framing in these documents has been more confident than the mathematics warranted — the first was the "μ(n) computed exactly" claim in the note. Both were found by someone asking what a specific phrase was doing.

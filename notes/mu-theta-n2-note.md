@@ -39,7 +39,9 @@ The upper bound is trivial: δ(n) ≤ 1, since a single u-orbital cannot exceed 
 > 3. r = d·q + 1 for some d ∈ {2, 4, 6, 12};
 > 4. r ∤ c − 1.
 
-**(H) is squarely a Bateman–Horn statement, and it has no modular obstruction.** Substituting condition 3, the system becomes three **linear** polynomials in the single variable q:
+**(H) is a parametric Hardy–Littlewood hypothesis, of Goldbach rather than twin-prime type.** Two things need separating, since they have different status: the classification of modular obstructions, which is routine, and the existence claim itself, which is not.
+
+*What is routine.* Substituting condition 3, the system becomes three **linear** polynomials in the single variable q:
 
 > q,  dq + 1,  and  n − dq − 1  (n even)   or   (n − dq − 1)/2  (n odd),
 
@@ -65,7 +67,11 @@ With ℓ = 3 contributing a factor 3 independently, the pattern is exactly
 
 the leading 2 making r odd, the 2 in e fixing n mod 4, and the 3 in e fixing n mod 3. Hence max d = 2 × 6 = 12. Had we needed only even n, d ∈ {2, 6} would suffice and the list would stop at 6.
 
-Every class has at least one admissible d, so (H) is locally soluble at every n; the singular series of the corresponding system is positive, and the heuristic count of valid q is ≍ n/log³n. Two classes are worth noting. At n ≡ 11 (mod 12) — the only class obstructed at both 2 and 3 — **d = 12 is forced**, which is why the list must run that far. And d must always be even, since q is odd and r = dq + 1 must be an odd prime.
+Every class has at least one admissible d, so (H) is locally soluble at every n, the singular series of the corresponding system is positive, and the heuristic count of valid q is ≍ n/log³n. This local analysis is the standard singular-series computation and is insensitive to the system being parametric — the local densities at each prime ℓ are read off the polynomials in the usual way, with n entering only as a residue.
+
+*What is not routine.* (H) is **not** a Bateman–Horn statement, and we do not claim it as one. Bateman–Horn concerns a **fixed** system of polynomials, counting x ≤ X with all fᵢ(x) prime as X → ∞; twin primes is the model case. Here the polynomials move with n, the variable q is confined to roughly [1, n/d], and at fixed n there is no limit to take. What (H) asserts is that the representation count is **positive for every large n** — a statement about a family of systems indexed by n, in the tradition of the Hardy–Littlewood circle method as applied to Goldbach, not of the fixed-system asymptotics.
+
+The comparison with Goldbach is close enough to be worth stating plainly. Binary Goldbach has one free variable and two primality conditions; our system has one free variable and three, so per shape it is a strictly stronger demand. Against that, (H) is a **disjunction** over eight shapes — two block patterns and four values of d — and needs only one of them to succeed. (H) is therefore of broadly Goldbach difficulty: it is not implied by any published result, and we do not expect it to be provable by current methods. Two classes are worth noting. At n ≡ 11 (mod 12) — the only class obstructed at both 2 and 3 — **d = 12 is forced**, which is why the list must run that far. And d must always be even, since q is odd and r = dq + 1 must be an odd prime.
 
 Condition 3 is deliberately weaker than "r is a safe prime" (d = 2). Demanding d = 2 throughout would restrict n to the classes in which 2 is admissible above — 0, 1, 4, 6, 9, 10 — and fail outright on the other six. Condition 4 is a divisibility side condition excluding a set of q of density O(1/n), and does not interact with the local analysis.
 

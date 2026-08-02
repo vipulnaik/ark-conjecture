@@ -28,6 +28,7 @@ Writing this bridge also turned up several errors in earlier drafts of the note,
 | the part-count bound $k < 1/\sqrt\delta$ | Prop. F.1 | only needed to make the *search* finite |
 | prime-power block sizes $c = p^e$ | throughout | the note takes $c$ prime for self-containedness |
 | the reverse implication, $\mu \Rightarrow$ prime statements | `arithmetic-of-density.md` §6 | not needed for evasiveness |
+| the parametric-vs-fixed-system distinction, and where Bateman–Horn does and does not apply | `arithmetic-of-density.md` §3.5 | the note states the conclusion — (H) is of Goldbach type, not a Bateman–Horn statement — without the full comparison |
 
 The exponent $2$ in the note's Theorem needs none of this. What the omitted material buys is a much better constant, exact values, and the reverse direction.
 
