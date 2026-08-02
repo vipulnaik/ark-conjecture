@@ -39,13 +39,21 @@ The upper bound is trivial: δ(n) ≤ 1, since a single u-orbital cannot exceed 
 > 3. r = d·q + 1 for some d ∈ {2, 4, 6, 12};
 > 4. r ∤ c − 1.
 
-**(H) is a parametric Hardy–Littlewood hypothesis, of Goldbach rather than twin-prime type.** Two things need separating, since they have different status: the classification of modular obstructions, which is routine, and the existence claim itself, which is not.
+**(H) is a parametric Hardy–Littlewood hypothesis, combining a Goldbach-type split with a Sophie Germain condition on the same variable.** Two things need separating, since they have different status: the classification of modular obstructions, which is routine, and the existence claim itself, which is not.
 
 *What is routine.* Substituting condition 3, the system becomes three **linear** polynomials in the single variable q:
 
 > q,  dq + 1,  and  n − dq − 1  (n even)   or   (n − dq − 1)/2  (n odd),
 
-required to be simultaneously prime. A linear polynomial has at most one root mod ℓ, so the local count ω(ℓ) never exceeds 3; an obstruction needs ω(ℓ) ≥ ℓ, so **only ℓ = 2 and ℓ = 3 can obstruct**, and no higher power of either can, since the local condition is non-divisibility by ℓ and that is decided mod ℓ. The two conditions on n are therefore a condition mod 4 and a condition mod 3 — that is, mod 12. (Mod 4 rather than mod 2 because of a change of variable, explained just below.) This is exactly what the four permitted values of d are for:
+required to be simultaneously prime. Write L1, L2, L3 for the three and ω(ℓ) for the number of residues q mod ℓ at which L1·L2·L3 vanishes; an obstruction is ω(ℓ) = ℓ, meaning ℓ divides one of the three for *every* q. Two mechanisms can produce one, and the split between them is what confines the analysis:
+
+> **ℓ ∤ d.** Each form is genuinely linear mod ℓ, so contributes at most one root, and ω(ℓ) ≤ 3 < ℓ for ℓ ≥ 5.
+>
+> **ℓ | d.** Now L2 = dq + 1 ≡ 1 never vanishes, but L3 **degenerates to a constant**, which vanishes identically when ℓ | (n−1) — resp. ℓ | (n−1)/2 — giving ω(ℓ) = ℓ outright. The bound from the first mechanism does not apply here.
+
+Since every permitted d has only 2 and 3 as prime factors, **both mechanisms are confined to ℓ ≤ 3**. That is also the real reason the list is {2, 4, 6, 12}: these are exactly the even d whose prime factors lie in {2, 3}, which keeps the local analysis finite and the table indexed mod 12 — a d with a larger prime factor, 10 say, would open a degeneration channel at 5. No higher power of 2 or 3 obstructs either, since the local condition is non-divisibility by ℓ and that is decided mod ℓ.
+
+The degeneration is not a corner case: it is precisely what excludes d ∈ {6, 12} at n ≡ 1 (mod 3). With d = 6 and n = 100, the form L3 = 99 − 6q is identically 0 mod 3, since 3 divides both 99 and 6. The two conditions on n are therefore a condition mod 4 and a condition mod 3 — that is, mod 12. (Mod 4 rather than mod 2 because of a change of variable, explained just below.) This is exactly what the four permitted values of d are for:
 
 > | n mod 12 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
 > |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -67,13 +75,17 @@ With ℓ = 3 contributing a factor 3 independently, the pattern is exactly
 
 the leading 2 making r odd, the 2 in e fixing n mod 4, and the 3 in e fixing n mod 3. Hence max d = 2 × 6 = 12. Had we needed only even n, d ∈ {2, 6} would suffice and the list would stop at 6.
 
-Every class has at least one admissible d, so (H) is locally soluble at every n, the singular series of the corresponding system is positive, and the heuristic count of valid q is ≍ n/log³n. This local analysis is the standard singular-series computation and is insensitive to the system being parametric — the local densities at each prime ℓ are read off the polynomials in the usual way, with n entering only as a residue.
+Every class has at least one admissible d, so (H) is locally soluble at every n. But more than *positivity* of the singular series S(n, d) is needed, and more is available: ℓ cannot divide both n and n−1, so at most one root coincidence occurs at each ℓ ≥ 5, and a coincidence *raises* the corresponding factor above 1 — the bad primes only help. Hence
+
+> **S(n, d) ≥ 4 · (9/8) · C0 = 2.858249…,   where C0 = ∏ over ℓ ≥ 5 of (1 − 3/ℓ)(1 − 1/ℓ)⁻³ = 0.635166…,**
+
+uniformly in n and d, the two leading factors coming from ω(2) = 1 and ω(3) ≤ 2. The uniformity is what the hypothesis needs, not just positivity: pointwise positivity would leave open a sequence of n along which S decays and the predicted count falls below 1. With the uniform bound, the heuristic count of valid q is ≫ n/log³n — a lower bound with an absolute constant, which is all (H) requires. It is not a two-sided ≍: the upper side carries a log log n from the primes dividing n(n−1). This local analysis is the standard singular-series computation and is insensitive to the system being parametric — the local densities at each prime ℓ are read off the polynomials in the usual way, with n entering only as a residue.
 
 *What is not routine.* (H) is **not** a Bateman–Horn statement, and we do not claim it as one. Bateman–Horn concerns a **fixed** system of polynomials, counting x ≤ X with all fᵢ(x) prime as X → ∞; twin primes is the model case. Here the polynomials move with n, the variable q is confined to roughly [1, n/d], and at fixed n there is no limit to take. What (H) asserts is that the representation count is **positive for every large n** — a statement about a family of systems indexed by n, in the tradition of the Hardy–Littlewood circle method as applied to Goldbach, not of the fixed-system asymptotics.
 
-The comparison with Goldbach is close enough to be worth stating plainly. Binary Goldbach has one free variable and two primality conditions; our system has one free variable and three, so per shape it is a strictly stronger demand. Against that, (H) is a **disjunction** over eight shapes — two block patterns and four values of d — and needs only one of them to succeed. (H) is therefore of broadly Goldbach difficulty: it is not implied by any published result, and we do not expect it to be provable by current methods. Two classes are worth noting. At n ≡ 11 (mod 12) — the only class obstructed at both 2 and 3 — **d = 12 is forced**, which is why the list must run that far. And d must always be even, since q is odd and r = dq + 1 must be an odd prime.
+The comparison with Goldbach is close enough to be worth stating plainly, but (H) is not of Goldbach type *alone*: n = c + r with both prime is Goldbach-like, while r = dq + 1 with both prime is a Sophie Germain condition, independently twin-prime-hard. Neither implies the other, and (H) demands both simultaneously on the same variable. Binary Goldbach has one free variable and two primality conditions; our system has one free variable and three, so per shape it is a strictly stronger demand. Against that, (H) is a **disjunction** over eight shapes — two block patterns and four values of d — and needs only one of them to succeed. (H) is therefore of broadly Goldbach difficulty: it is not implied by any published result, and we do not expect it to be provable by current methods. Two classes are worth noting. At n ≡ 11 (mod 12) — the only class obstructed at both 2 and 3 — **d = 12 is forced**, which is why the list must run that far. And d must always be even, since q is odd and r = dq + 1 must be an odd prime.
 
-Condition 3 is deliberately weaker than "r is a safe prime" (d = 2). Demanding d = 2 throughout would restrict n to the classes in which 2 is admissible above — 0, 1, 4, 6, 9, 10 — and fail outright on the other six. Condition 4 is a divisibility side condition excluding a set of q of density O(1/n), and does not interact with the local analysis.
+Condition 3 is deliberately weaker than "r is a safe prime" (d = 2). Demanding d = 2 throughout would restrict n to the classes in which 2 is admissible above — 0, 1, 4, 6, 9, 10 — and fail outright on the other six. Condition 4 is a divisibility side condition, and a very weak one: since 0 < c − 1 < n and r ≥ n/5, r | c − 1 forces c − 1 ∈ {0, r, 2r, 3r, 4r}, so it excludes at most five values of q — O(1), not a set of positive density — and it does not interact with the local analysis.
 
 ## 3. The constructions
 

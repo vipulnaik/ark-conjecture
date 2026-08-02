@@ -99,6 +99,16 @@ python3 probe_backbone.py --classes <the 54 CAP ids> --nodecap 20000000
 - **A4**'s class list is not recorded anywhere machine-readable; it must be re-extracted from the probe record before the command above can be run.
 - **A5** is a design decision about how to compute S at n = 12, not a run — **and it now gates A1**, because it determines whether stage 3 is needed at all.
 
+## Literature checks, deferred to paper-shaping
+
+These came from a co-author's review and are **not** fixes to the current documents; they bear on how the eventual paper is framed and on whether the result is novel. Shelved deliberately so the short note stays short.
+
+- **BBKN Section 5, and this one is decisive.** It reportedly defines f(n) = max min{p²k, pkr, qr} over n = kp + r with r ≡ 1 (mod q), k general. If so, our even construction is k = 1 and our odd is k = 2, and §3 of the note is a parameter choice inside their framework rather than a new construction — which makes the contribution the number theory, and a different paper. **Unverified; needs the actual paper opened.** Everything about framing waits on it.
+- **Shparlinski 2013** (*Theoret. Comput. Sci.* 547, 117–121) gives an unconditional version of BBKN's ERH result plus a stronger estimate for almost all n. Our §5 compares against the 2010 baseline. Note the nuance in our favour: his all-large-n figure is n^(5/4+o(1)), so on that quantifier row we are not undercut — the honest comparison table has two quantifier columns. The suggested reframing, as **the γ = 1 endpoint** of his ladder (γ = how large a prime-power divisor of r − 1 one can guarantee; Baker–Harman gives 0.677 unconditionally), is more informative about (H)'s cost than a barrier claim.
+- **Rivest–Vuillemin (1976):** every non-constant monotone graph property has D(P) = Ω(n²) unconditionally. So Θ(n²) is not an advance on *weak* evasiveness; ours is about *exact* evasiveness on sparse properties. A referee asks this immediately and §5 does not currently address it. Scheidweiler–Triesch (SIAM JDM 27, 2013) belongs in the same citation block.
+- **Black's orbit-augmentation "spacing" parameter** may subsume m*(Γ) or vice versa; he restricts to p-groups where Oliver groups are more general, which would be a point in our favour if confirmed.
+- **Erdős covering congruences** reportedly give a *positive density* of odd n with no 2^k + p representation — stronger than our O(log n)-sparse claim about the 2-power escapes in §3.3, and would close that route rather than thin it. Worth verifying.
+
 ## Open mathematical questions
 
 Not repeated here. The two arithmetic residues are Open Problem 8 of the notes and Part J items 1–2 of `enumeration-proof.md`; the largest epistemic risk is Part J item 3 — an independent reading of Lemma B′, Lemma C and G.2, none of which has had any.
