@@ -8,6 +8,8 @@
 
 ## Quick reference: commands
 
+*The priority-ordered version of this list is §D at the end; this section is the raw command reference.*
+
 *Flags below are checked against the scripts as they stand. Where a run needs code that does not exist yet, that is said explicitly rather than papered over with a plausible-looking flag.*
 
 **Routine, after any new batch of table values:**
@@ -157,7 +159,7 @@ The practical corollary of the theorem — probe one representative per compleme
 
 > **Promoted: this now gates A1.** The 2026-07 run showed stage 3 of `consume_gap.py` — the containment-order matrix — projecting to 22–41 days at the corrected battery size. Stage 3 exists to supply that order matrix. So the question is not merely *how* to compute S but **whether the order matrix is needed at all**: if the §8.4 EGF route computes χ without it, weeks of stage 3 are avoidable. Decide this before relaunching A1, and if the EGF route wins, consider whether `consume_gap.py` should gain a `--stop-after 2` flag so the battery can be built without entering stage 3.
 
-**A6. Rerun `fallback_cert.py` whenever the table extends.** It is a per-n check, not a theorem: `python3 fallback_cert.py mu_table_safe_v2.csv` belongs in the routine after every batch of new values. It currently certifies all 1,848 values at n ≤ 2212 with 0 inconclusive cases, and reports how many are settled by the δ > 1/9 theorem alone (1,390, i.e. 75.2%) versus by the exhaustive search (458, every one of them because δ ≤ 1/9 rather than because a Mersenne cap binds). **It has not been rerun since the table passed 2212**, which is the immediate action. Two things would retire it: a proof that δ is bounded below (the ladder does this conditionally, which forces s = 1 and lets the Cap(a) argument finish), or a general domination argument for the fallback.
+**A6. Rerun `fallback_cert.py` whenever the table extends.** It is a per-n check, not a theorem: `python3 fallback_cert.py mu_table_safe_v2.csv` belongs in the routine after every batch of new values. Rerun 2026-08 on the 2,008-row table (n up to 3239): **0 values where any fallback configuration could reach B(n)**, so CERTIFIED throughout. 1,503 of 2,008 (74.9%) settled by theorem alone; per s-branch, 2,062 of 2,572 (80.2%). Theorem-side residue: 505 branches where E.3(ii) is pairwise only, 4 at s = 4, 1 at s = 5. Largest permitted s over the range is 5. Two things would retire it: a proof that δ is bounded below (the ladder does this conditionally, which forces s = 1 and lets the Cap(a) argument finish), or a general domination argument for the fallback.
 
 **A7. Verify the dedup-collision audit at n = 10.** The measurement in §8.7′ was made at n = 12 because `groups_out.txt` for n = 12 was to hand. The same audit at n = 10 would say how much the *published* n = 10 SAT was affected, which matters for how the skeleton and the χ kill should be described. Requires the n = 10 `groups_out.txt`.
 
@@ -217,9 +219,79 @@ The practical corollary of the theorem — probe one representative per compleme
 - **…but B_safe does not use Lemma C.** In SAFE mode `value()` scores every p-characteristic part at F·C(c,2) regardless of stripping, since orb(c, c−1) = C(c,2) identically. Confirmed by experiment: deleting the Lemma C stripping from `value()` reproduces the table exactly at every n ≤ 400. So a failure of Lemma C could not invalidate the published upper bound; the exposure is to B_refined, to attainment, and hence to μ(n) = B(n). Worth carrying prominently — it substantially narrows what the largest unscrutinised lemma is actually load-bearing for.
 - **G.2 — the conclusion holds, the reason given does not.** "Each level's block count is a power of q (a transitive q-group has q-power degree)" does not follow: if the image of Γ₂ in the block action is nontrivial it contains that action's socle, forcing the block count to be a **p**-power. The conclusion survives by cases — a p-power block count over a p-characteristic finest block makes the orbit a prime power, already enumerated at (F, c) = (1, |O|); over a *foreign* finest block it is dominated by the same diagonal-cross argument that kills q-fusion of foreign parts. Repair written in.
 
-**C10. Not done in this pass, and worth doing.**
+**C11. `fb_common.py` read; the Part E′ theorems turn out not to be load-bearing.** The certificate passes theorem-settled s-branches to the search as a `skip` set, so an error in E.1, E.3(iii) or E.4 — or in the hardcoded `MERSENNE`/`REPUNIT3` tables — would silently drop a real candidate. Tested rather than argued: **re-running with `skip_settled` disabled entirely returns 0 candidates at all 2,008 values in 3 s**, and disabling the `e3ii_resolves` discard as well gives the same. So over the certified range μ(n) = B(n) rests **only** on the eight necessary conditions being necessary; every clause of Part E′ is commentary there. This is the single largest reduction in the trusted base found in this review. Written into Part E′.
 
-- **Rerun `fallback_cert.py`** on the extended table (item A6). Every "1,921 of 1,921" claim in `enumeration-proof.md` has been demoted to "1,848 at n ≤ 2212" until it is.
+Two implementation notes, neither affecting a result. *(i)* In the `q = '*'` generic branch (top prime not dividing r − 1, trivial foreign twist) the F loop and `multi_part_ok`'s p-candidate list run at F = 1 only; F should range over prime powers, and this is the **anti**-permissive direction. Vacuous over the table — the branch is gated on r ≥ B and the only n with n ≥ B(n) is n = 6 — but worth fixing. *(ii)* `e3ii_resolves` justifies the (r, r) re-reading's cyclic layer by "gcd(r − 1, c) = 1", which does not follow; gcd(r − 1, 2r + 1) = gcd(r − 1, 3), and it is 1 only because r ≡ 1 (mod 3) would make 3 | 2r + 1, killing the safe prime. True, but for an unstated reason.
+
+The rest of the conditions read sound and permissive as claimed: `s_max` is used only for reporting (`pair_candidates` never prunes on it, so a wrong s_max cannot skip a branch); the Cap tables reproduce the document's 6/21/155/1143 and Cap′(3) = 39; `intra_floor` is exact on every B tested to 3000 and at 10⁶, 10⁸; `leftover_ok`'s `need` correctly takes the max of the cross floor and the intra floor; `multi_part_ok` treats foreign primes as distinct and p-parts as repeatable, and returns `None` (survive) when the candidate set exceeds its limit.
+
+**C12. Priority-ordered queue.** Superseding the earlier "not done in this pass" list. Ranked by expected reduction in residual risk per unit of effort, which is *not* the order these appear in section A. Rationale in §D.
+
+**C13. Where the residual risk now sits, ranked.** Recorded so the queue below has a stated basis.
+
+1. **Lemma B′.** The only unscrutinised lemma that `B_safe` actually depends on. An error inflates B(n) and breaks attainment everywhere at once. One close read (C9) found it sound with a skipped branch; that same read found a genuine gap in Lemma C and a wrong justification in G.2, so one read is weak evidence.
+2. **Exhaustiveness of the GAP stages (B5).** The subdirect-product hole is real and undischarged. It degrades the *evidence* rather than creating an error — a missed group could only have larger m\*, i.e. it would be a counterexample, not a silent corruption — but it is the only non-circular check in the framework. Note this is a §8 item mainly; for §§1–6 it bears only on the Part I validation table and the Lemma B/C spot-check.
+3. **Part E's realisability construction.** Attainment's other leg, argued in general and spot-checked at eight configurations from n = 12 to 315. Unlike the certificate, this has no per-n verification at all.
+4. **`wide_cert.py`.** Extends the collapse to 10⁵ and has not been read. It shares `fb_common.py`'s conditions, which are now reviewed, but its B_lo pass is its own code.
+5. ~~`fallback_cert.py`'s necessary conditions~~ — reviewed (C11), and the theorems shown not load-bearing.
+6. ~~Lemma C~~ — gap found, but shown to affect neither endpoint (C9).
+
+---
+
+## D. The queue, in priority order
+
+*Commands are checked against the scripts as they stand. Items needing code that does not exist say so.*
+
+**D1. Rerun the two certificates after every table extension.** Cheap, and both are per-n statements that do not extend themselves.
+
+```bash
+python3 scripts/fallback_cert.py outputs/mu_table_safe_v2.csv --verbose
+python3 scripts/wide_cert.py 100000
+```
+
+**D2. Make the `skip_settled` bypass a permanent option.** C11 established by hand that the certificate passes with every Part E′ theorem switched off, which shrinks the trusted base enormously — but it was a throwaway script. Add a `--no-theorems` flag to `fallback_cert.py` that passes `skip_settled=None` and never calls `theorem_report`, and run it alongside D1 each time. If it ever starts failing while the normal run passes, that is an error in E.1/E.3(iii)/E.4 or their tables, localised immediately.
+
+```bash
+python3 scripts/fallback_cert.py outputs/mu_table_safe_v2.csv --no-theorems   # needs the flag
+```
+
+**D3. Fix the two `fb_common.py` defects.** Neither affects a result today (C11), but (i) is anti-permissive and the gate that makes it vacuous is `r >= B`, which loosens if B ever drops to O(n).
+
+- in `pair_candidates`, let F range over prime powers in the `q == '*'` branch rather than F = 1 only; likewise `multi_part_ok`'s `pcands` loop;
+- add the missing step to `e3ii_resolves`'s docstring: gcd(r − 1, 2r + 1) = gcd(r − 1, 3), and 3 | r − 1 would force 3 | c, so c = 2r + 1 prime already gives coprimality.
+
+**D4. Extend the naive-enumerator comparison.** The strongest available test of `mu_enumerate.py`'s pruning, since it re-derives B(n) from the Part G.3 spec with no pruning, seed or part pool. Currently 79 values at n ≤ 120, 0 mismatches. `brute.py` accompanies this file; n ≤ 260 is roughly an overnight run and doubles the coverage.
+
+```bash
+python3 brute_compare.py --nmax 260 outputs/mu_table_safe_v2.csv   # needs a driver
+```
+
+**D5. Read `wide_cert.py`.** Item 4 above. Its shared conditions are now reviewed; what is unread is the B_lo pass, the caching, and the outward-from-balance-point scan whose absence collapsed the weakest density from 0.020 to 0.000007. That sensitivity is a sign the pass is delicate.
+
+**D6. Close the subdirect-product hole in the GAP stages (B5).** For §§1–6 this only weakens the Part I validation; for §8 it gates any verdict. Two sub-questions: whether stage B's blockwise direct products plus B2's wreaths cover proper subdirect products, and whether stage C's `ConjugacyClassesSubgroups(SylowSubgroup(S_12, 2))` actually completed — check the logs.
+
+**D7. Count the Lemma C exposure after each extension.** Now zero: of the 2,178 p-characteristic parts in a computed winner, 1,903 have prime size and none has both a > 1 and a foreign prime dividing c − 1. Since Lemma C's proof only covers prime c (C9), this count is the live measure of whether the gap has started to bite.
+
+**D8. Independent reading of Lemma B′.** Not a run. Item 1 above, and the highest-value thing on this page that no amount of compute substitutes for.
+
+**D9. Rerun `check_doc_figures.py`, and teach it prose markers.** The C5/C6 drift classes are prose as much as arithmetic — "one value remains", "27 survivors", "every computed value has δ ≥", "the search is complete". Add a scope audit alongside it: *which arguments assumed δ ≥ x?* That question alone would have caught C4 immediately.
+
+```bash
+python3 check_doc_figures.py outputs/mu_table_safe_v2.csv *.md
+```
+
+**D10. Extend `ladder_verify.py` past 10⁶.** Lowest priority of the computational items and explicitly optional: O(N²/log N), so 10⁷ is multi-day, and the running minimum has not moved since 10⁴. Expected return is confirmation.
+
+---
+
+## E. Section A items, rescoped
+
+*Everything in section A below is §8-and-later — the GAP battery, the CSP, the n = 12 campaign — with one exception. **B5 is the only section-A item that touches §§1–6**, and only through the Part I validation table and the Lemma B/C spot-check at n = 10; see D6. **A6 has been absorbed into D1.** The rest can be ignored entirely while the arithmetic programme is the active thread.*
+
+*Residual items from the earlier list, now placed:*
+
+- ~~Rerun `fallback_cert.py`~~ — **done** (A6, D1); all figures in `enumeration-proof.md` quote the 2,008-value run.
+- ~~Read `fallback_cert.py`'s necessary conditions~~ — **done** (C11), and the theorems shown not load-bearing.
 - **Close the Lemma C gap at a > 1** — but note this is now a question about the *sharpness* of the search, not about the results. Dropping Lemma C can only enlarge the configuration space, and in SAFE mode the parts it would cut are already scored at their unconditional maximum, so B_safe cannot rise; Part E's construction uses the lemma only as a sufficient condition, so attainment is unaffected; and the exposure was measured at **zero** — of the 2,178 p-characteristic parts appearing in a computed winner, 1,903 have prime size and **none** has both a > 1 and a foreign prime dividing c − 1, so Lemma C is vacuous on every winning configuration in the table. What it is load-bearing for is `--refined`, the `fallback` bookkeeping, and the reasoning inside E′. Worth closing, but it is no longer the risk it looked like.
 - **Independent scrutiny is still the top item.** One close read found a genuine gap in Lemma C and a wrong justification in G.2, which is evidence for how much a *second* read would return, not against it.
 - **A scope audit rather than a figure audit.** C1 and C4 are both cases of an *argument* whose scope silently expired — C4 because the floor moved, C1 because the class table was never re-derived from the η formula. `check_doc_figures.py` catches neither. Worth asking, after each extension, "which arguments assumed δ ≥ x?" and "which claims are derived from a formula rather than measured?" as a separate pass. C4 would have been caught immediately by the first question.
