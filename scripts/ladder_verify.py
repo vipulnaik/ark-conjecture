@@ -116,7 +116,14 @@ LO_X, HI_X = 0.10, 0.55        # contains every class's balance point
 def achieved(n, stop_at=None):
     """Best density over the three families.  With stop_at set, returns as soon
     as that is exceeded; most n clear it at once, which is what makes the scan
-    affordable."""
+    affordable.
+
+    NOTE on stop_at: when it fires, the value returned is NOT the family maximum
+    -- it is merely some value above stop_at.  Callers pass 0.9*CAP[class], so
+    any reported figure at or just below 0.9*CAP is a truncation artefact rather
+    than a real minimum.  This is why the per-block 'floor' lines in a long run
+    keep reporting 0.04546 = 0.9 * 0.05051.  Everything the script asserts is a
+    lower bound, so the truncation is safe; it just must not be read as a max."""
     C = n * (n - 1) / 2
     best = 0.0
     F = 2
@@ -138,14 +145,19 @@ def achieved(n, stop_at=None):
         c = PPs[k]
         bp = base[c]
         r = n - c                                  # two parts
-        if 3 <= r <= N and sieve[r] and bp != r:
+        # Lemma C: the p-block's twist must be coprime to every foreign prime,
+        # so the full twist c-1 (and hence the full capacity C(c,2)) is only
+        # available when r does not divide c-1.  In this window that can only
+        # happen at c = r+1, i.e. n = 2r+1 with r Mersenne-like, but without the
+        # guard the score would not be a lower bound on delta(n) there.
+        if 3 <= r <= N and sieve[r] and bp != r and (c - 1) % r:
             v = min(comb(c, 2), EFF[r] * comb(r, 2), c * r)
             if v > best * C:
                 best = v / C
                 if stop_at and best > stop_at:
                     return best
         r = n - 2 * c                              # three parts, two equal blocks
-        if 3 <= r <= N and sieve[r] and bp != r:
+        if 3 <= r <= N and sieve[r] and bp != r and (c - 1) % r:   # Lemma C, as above
             v = min(comb(c, 2), EFF[r] * comb(r, 2), c * c, c * r)
             if v > best * C:
                 best = v / C
