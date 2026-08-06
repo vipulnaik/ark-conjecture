@@ -1,6 +1,6 @@
 # The arithmetic of the density ladder
 
-*Supplement to `orbital-evasiveness-notes.md` and `enumeration-proof.md`. Where those two ask what μ(n) is and prove that the enumeration computes it, this one asks **which arithmetic conditions on n control the answer**, sets up the Hardy–Littlewood and Bateman–Horn machinery that governs them, and checks the predictions against the 1,848 exactly computed values. Written after the exact values became available, which changes the picture: statements that used to be conjectures about a construction menu can now be tested against μ itself.*
+*Supplement to `orbital-evasiveness-notes.md` and `enumeration-proof.md`. Where those two ask what μ(n) is and prove that the enumeration computes it, this one asks **which arithmetic conditions on n control the answer**, sets up the Hardy–Littlewood and Bateman–Horn machinery that governs them, and checks the predictions against the computed table. **Read subject to the 2026-08 defect** recorded in `enumeration-proof.md`: the enumeration's shape space is known incomplete, so a tabulated value is not μ(n). Over the certified range it equals B_refined, which *is* a lower bound on μ; the tabulated quantity B_safe is an over-count per configuration, so in general it is incomparable with μ rather than below it. Everything below that compares families against one another, or that reads a family's cap, is unaffected; everything that treats a tabulated value as μ(n) needs the qualifier.*
 
 **Status labels as in the other documents.** *Verified* — an independent computation agreed. *Sound* — argued and read, no independent computation. *Heuristic* — a singular-series prediction, i.e. conditional on Hardy–Littlewood or Bateman–Horn.
 
@@ -19,7 +19,7 @@ Everything else in this document elaborates that split. Five consequences set th
 1. **The density ladder's thresholds are the engine caps, not artefacts.** 1/2 and 1/3 are fused-class values at F = 2 and F = 3; **1/4 is the two-part cap; 1/9 is the three-part cap; 1/16 is the four-part cap.** The thresholds that appear throughout the other two documents — δ₀^even = 1/4, Theorem E.1's 1/9, Corollary F.3's 1/16 — are all the same quantity read at different k.
 2. **The parity asymmetry is multiplicative in origin, not additive.** Even n has 2 | n, so F = 2 is available whenever n/2 is a prime power, giving density 1/2. Odd n has F ≥ 3, capping the multiplicative engine at 1/3; and its two-part route needs the *even* part to be a power of 2, which is scarce. So odd n loses on both engines at once — and the loss is a matter of caps, not of representation counts: both parametric systems supply ~n/log³n representations where they are soluble at all (§§3.1–3.3).
 3. **The ceiling splits by residue class mod 12, for both parities**, from local obstructions at ℓ = 2 and ℓ = 3 — and those are the only two moduli that can obstruct, because each system is three linear polynomials so ω(ℓ) ≤ 3 < ℓ for ℓ ≥ 5. Six distinct constants result, from 1/4 down to 0.05051, each met by the constructions to within 2% (§3.3).
-4. **One global floor covers everything.** Conjecturally **δ(n) ≥ 0.02 for every composite non-prime-power n** — and below 10⁶ this is now settled by an exhaustive branch-and-bound rather than assumed: the true minimum is **0.026117 at n = 3239**, with the extremal class n ≡ 11 (mod 12) at every stage (§5).
+4. **One global floor covers everything.** Conjecturally **δ(n) ≥ 0.02 for every composite non-prime-power n** — and below 10⁶ the branch-and-bound establishes **δ(n) ≥ 0.026117** unconditionally, since every step used the table only as a lower bound (§5). What it does *not* establish, after the 2026-08 defect, is where the minimum sits: at n = 3239 the corrected shape space raises δ to 0.043570, so the argmin has moved and the bound is no longer tight. The extremal class was n ≡ 11 (mod 12) at every stage.
 5. **The multiplicative engine covers a density-zero set, so asymptotically the additive engine is everything.** The fraction of n with ω(n) = 2 thins like log log n / log n — measured at 52% below 2000 but 29% near 10⁶. So the asymptotic behaviour of μ is governed entirely by the Hardy–Littlewood side, and the observed density floor should be expected to drift downward as the fused family's reach recedes.
 
 ---
@@ -162,7 +162,8 @@ The ℓ = 2 obstruction forces a ≥ 2, and hence η ≤ 1/2 **provided u > 1**;
 >
 > - the ℓ=3 classes when (r−1)/2 or c is a power of 3;
 > - the ℓ=2 classes when c is a power of 2 (which turns the shape into the two-part 2^a + r\*);
-> - **the ℓ=2 classes when r is a Fermat prime**, where u = 1 defeats the a ≥ 2 argument outright — see the boxed note above.
+> - **the ℓ=2 classes when r is a Fermat prime**, where u = 1 defeats the a ≥ 2 argument outright — see the boxed note above;
+> - **the odd classes when a cyclic-layer-fused class of F = 3 blocks is available**, which needs c a power of 2 at odd n and so is again O(log n)-sparse — the S7 route, boxed below.
 >
 > For the first two, in range these occur at 30, 49, 24 and 5 values in classes 2, 8, 5, 11 respectively and at none in classes 3 and 7; each pins n near 2·3^k, 4·3^k or 2^k, so they are available at O(log n) values of n. The third occurs at 20 values, all in classes 3 and 7, all with r = 257; being tied to the five known Fermat primes it is O(1)-sparse. None of the three affects the asymptotic constants.
 
@@ -174,6 +175,25 @@ The ℓ = 2 obstruction forces a ≥ 2, and hence η ≤ 1/2 **provided u > 1**;
 >
 > Fusion at F = 2 forces q = 2, which pins the foreign efficiency to the 2-part of r − 1 — full **exactly** at a Fermat prime. So cap_2(1) is reachable only with r ∈ {5, 17, 257, 65537}, which is why all 20 of the winners attaining it use r = 257, and why they sit in classes 3 and 7 where the table says η ≤ 1/2. The two facts are the same fact.
 >
+> **A third fusion route, found 2026-08, which the class table also misses.** The paragraph above assumes the F blocks are fused by the **top** q-group, which is why F must be a q-power and why F = 2 forces q = 2. That is not the only option. The block-permuting group may instead sit in the **cyclic layer**, where the only requirement is that Γ₁/Γ₂ stay cyclic — so F may be any prime power sharing no factor with the twists or the foreign primes. `enumeration-proof.md` calls this **S7** and its Part 0 has the structural argument; the consequences here are the ones that matter for the density story.
+>
+> **The cap formula is the same, with F now unconstrained by q.** For a class of F blocks of size c plus one foreign prime, the intra term is F·C(c,2) ≈ Fx², the within-class cross is (F or F/2)c² ≥ Fx², and the foreign intra is η(1−Fx)². Balancing gives the same
+>
+> > **x\* = √η/(√F + F√η),  cap_F(η) = Fη/(√F + F√η)²**
+>
+> but now at odd F as well. **F = 3 gives 0.13397, 0.10102, 0.08333, 0.05719** at η = 1, ½, ⅓, ⅙; F = 5 gives 0.09549, 0.07505, 0.06351, 0.04555. F = 5 is uniformly worse than F = 3, and larger fusion primes worse still — F·C(c,2) shrinks faster than the foreign term can compensate — so this is effectively an F = 3 phenomenon, and only F = 3 and F = 5 occur in range at all.
+>
+> **Every one of those F = 3 figures exceeds the corresponding odd-n entry in the table above.** Against 1/9, 0.08579, 0.0718 and 0.05051 for classes {1,9}, {3,7}, {5} and {11}, the F = 3 route reaches 0.13397 at full efficiency and 0.05719 even at η = ⅙. **So the odd-n rows of the δ₀ table are not ceilings on this family**, and the failure is not confined to the computed range.
+>
+> **But the supply is thin, and the reason splits by parity.** Write n = F·c + r with r an odd prime.
+>
+> - **n odd** forces F·c even, so with F odd, **c must be a power of 2**. There are O(log n) such c, so this is a sparse escape of exactly the same order as the 2^a + r\* route already listed above — not a competing family. All 12 odd-n instances in range have c ∈ {32, 128}, at n = 143, 551, 611, 731, 767, 851, 903, 987, …
+> - **n even** forces c odd, and the supply is then a full Hardy–Littlewood system of the same tier as §3.5's. But even n already have the two-class route at cap 1/4, well above 0.13397, so the F = 3 route can only win where the *local* supply of (prime power, prime) pairs near n/2 fails. All 45 even-n instances are of this kind, at n = 308, 416, 518, 530, 572, 620, 638, 644, …
+>
+> So the asymptotic constants of §5 survive: on odd n the escape is O(log n)-sparse, and on even n it is confined to the exceptional set where the two-class supply fails, which the same conjectures make thin. What does **not** survive is the reading of the odd-n rows as ceilings — they are ceilings for the unfused shape only, and the sparse set where they are exceeded now has three sources rather than two.
+>
+> *Measured:* 57 values of n ≤ 2400 where this route beats the tabulated B(n), median ratio 1.141, worst 2.387 at n = 2375. That count allows a single such class per configuration and does not check the cyclic layer's coprimality budget against other classes' twists, so it moves in both directions under a full treatment.
+
 > **Consequence for how the table should be read.** Against the current data, **194 of the 1,108 two- and three-class one-foreign winners exceed their own class's tabulated δ₀** — 57 via the documented 2^a + r\* route, 43 via the fused 2×c + r\* route above, and 94 via an η above the class's generic value (mostly the 3-power escapes). In class 11 the *median* winner sits at 1.24× the tabulated cap and 28 of 39 exceed it, with a maximum of 3.99×. The δ₀ are therefore best read strictly as **guarantees for one specific unfused shape**, not as generic behaviour — the wording "generic ceiling" overstates how typical they are inside the computed range. What *is* an upper bound, and holds without exception, is cap_F(η) evaluated at the configuration's own F and η: **0 of 1,108 rows exceed it.**
 
 *How this is validated, and why the maximum alone would not do it.* A class maximum meeting its cap only shows the cap is **attainable**; it is met whenever some n in the class happens to have a good representation, and would go on being met even if a further condition were quietly suppressing most of the class. Two stronger checks are therefore needed, and both pass.
@@ -274,7 +294,7 @@ The hypothesis is parametric, then, and of Goldbach difficulty. It remains in ad
 | | range | status |
 |---|---|---|
 | μ(n) known exactly | contiguous to n = 2,376, plus n = 3,059 and 3,239 | computed (2,008 rows) |
-| collapse μ(n) = B(n) certified | n ≤ 100,000 | computed, from lower bounds (Part E″), at all but two values — n = 50,817 and n = 89,697 |
+| collapse B_refined = B_safe certified | n ≤ 100,000 | computed, from lower bounds (Part E″), at all but two values — n = 50,817 and n = 89,697. *Certifies the enumeration's two endpoints agree; no longer gives μ(n) = B(n), since the shape space is incomplete.* |
 | global floor δ ≥ 0.02504 | n ≤ 10⁶ | computed (§5) |
 | global floor δ ≥ 0.02 | n > 10⁶ | conjectural, ineffectively |
 
@@ -347,11 +367,13 @@ The constant 1/50 is deliberately loose: the scan's floor is 0.02504, so 1/50 ca
 >
 > Those are the successive record minima, in increasing n. The order in which candidates are examined changes which get *recorded* — a value can set the running floor and then be superseded by a smaller n examined later — but not the final result, since the floor only falls and pruning is sound at every stage.
 
-> **The branch-and-bound is complete.** Exactly two of the 48,729 candidates have a lower bound below 0.026117: n = 3239 (0.02504), which attains it, and n = 8927 (0.02516), which rejects at K = 3. Every other n ≤ 10⁶ is pruned. Hence
+> **The branch-and-bound is complete, and survives the 2026-08 defect as a bound.** Exactly two of the 48,729 candidates have a lower bound below 0.026117: n = 3239 (0.02504) and n = 8927 (0.02516), which rejects at K = 3. Every other n ≤ 10⁶ is pruned. Every step used the table from below — `ladder_verify.py` scores explicit constructions, and μ(n) ≥ B(n) holds whatever the shape space omits — so
 >
-> **min { μ(n)/C(n,2) : n ≤ 10⁶ composite, not a prime power } = 136957/5243941 = 0.0261166…, attained at n = 3239.**
+> **min { μ(n)/C(n,2) : n ≤ 10⁶ composite, not a prime power } ≥ 136957/5243941 = 0.0261166…**
+>
+> remains proved. It is **no longer attained at n = 3239**: the corrected shape space gives that n a configuration of density 0.043570 (7 copies of a 256-block plus an outside 1447-block, twist 241), and n = 3059 rises to 0.083906. So the true minimum below 10⁶ is somewhere at or above 0.037524, the next candidate being n = 2291, and locating it requires rerunning the search on the repaired enumerator.
 
-*Why the closure is sound, tier by tier.* Values absent from the worklist have a bound of at least (5 − 2√6)/2 by construction; values present with bound at least 0.026117 are pruned on it. In both cases the bound is a lower bound on μ(n)/C(n,2) — `ladder_verify.py` scores explicit constructions — so no collapse assumption is needed and the pruning is valid across the whole range, including [10⁵, 10⁶] where the collapse is not certified. For the two values actually resolved, the direction matters the other way, since B(n) bounds μ(n) from above: both are below 10⁵, where `wide_cert.py` certifies μ(n) = B(n), so 0.026117 is a value of μ rather than of B, and 8927's rejection really does place μ(8927) above the floor.
+*Why the closure is sound, tier by tier.* Values absent from the worklist have a bound of at least (5 − 2√6)/2 by construction; values present with bound at least 0.026117 are pruned on it. In both cases the bound is a lower bound on μ(n)/C(n,2) — `ladder_verify.py` scores explicit constructions — so no collapse assumption is needed and the pruning is valid across the whole range, including [10⁵, 10⁶]. **This is the direction that survives the defect**, and it is why the floor stands as an inequality: `ladder_verify.py` scores explicit constructions — the Lemma C guard added in the same review is what makes that literally true, since without it the script could credit a twist Lemma C strips — and the two survivors both lie below 10⁵ where E″ certifies B_safe = B_refined, so their values are ≤ μ as well. What does *not* survive is the reading of 0.026117 as a value of μ: that step used B(n) as an upper bound at the two resolved values via `wide_cert.py`, and with the shape space incomplete the certificate no longer delivers μ(n) = B(n).
 
 **This settles the finite half of the conjecture below.** The observed minimum is 0.0261, against the conjectured floor of 0.02 — a margin of 1.31, narrower than the 25% quoted when the scan's weaker bound 0.02504 was the best available, but still clear.
 
@@ -378,7 +400,7 @@ The reason is the two-sided squeeze the middle range sits in. Below it, small n 
 
 That range is **entirely computable**. It is where every floor-lowering value has been found (935, 2291, 3059, 3239), where the branch-and-bound's last survivor sits (8927), and it is comfortably inside what `mu_enumerate.py` can reach. So the middle range is not a gap in the argument; it is the part of the argument that gets *checked* rather than assumed.
 
-**What the current minimum is.** n = 3239 = 1511 + 907 + 821, witness `1x1511* + 1x907* + 1x821`, δ = **0.026117**, superseding n = 3059 = 1511 + 907 + 641 at 0.029282. Note that the two share a *foreign pair*: both have B = 136,957, binding on orb(907, 151), and differ only in the p-block, 641 against 821. So a single pair of foreign primes sharing the top prime q = 151 supplies the two lowest densities known, at whichever n has no better configuration — the family n = 2418 + c does not extend, since its other members do have better configurations and never enter the worklist at all.
+**What the enumeration's minimum is** — *not* μ's minimum, see above. n = 3239 = 1511 + 907 + 821, witness `1x1511* + 1x907* + 1x821`, δ = **0.026117**, superseding n = 3059 = 1511 + 907 + 641 at 0.029282. Under the corrected shape space both rise sharply, to 0.043570 and 0.083906, so neither is extremal any more and the observations below about their shared foreign pair describe the old enumeration rather than μ. Note that the two share a *foreign pair*: both have B = 136,957, binding on orb(907, 151), and differ only in the p-block, 641 against 821. So a single pair of foreign primes sharing the top prime q = 151 supplies the two lowest densities known, at whichever n has no better configuration — the family n = 2418 + c does not extend, since its other members do have better configurations and never enter the worklist at all.
 
 Both are the **(one p-characteristic block, two foreign primes)** shape, which occurs only twice in the whole computed table — at these two n — yet supplies the global minimum. So that shape is not merely rare, it is *concentrated at the extremes*: it appears exactly where nothing else is available.
 
@@ -433,7 +455,7 @@ Read this way η = 2/d is not an efficiency knob but **the price of using blocks
 
 **Open Problem 8(a) (k ≤ 3)** is the statement that the four-class cap 1/16 is never the best available, which needs ω(n) ≥ 3 together with no good two- or three-class representation. It has never occurred: no winner in the computed table uses four classes, and the δ ≤ 1/16 tail is 45 of 1,921 values. The branch-and-bound of §5 adds a little: it examined every n ≤ 10⁶ whose lower bound fell below the running floor, and none of them wanted a fourth class either.
 
-**Open Problem 8(b)** lives where the three-class family is the best available. With the above-1/9 route refuted, the only path is the direct one. It has also **grown harder as the density floor fell**: s ≤ 1/√δ − 1, so at the current floor 0.026117 the branches s = 4 and s = 5 are both reachable, and neither has a theorem — unlike s = 3, which E.4 collapses to a single dead pair.
+**Open Problem 8(b)** lives where the three-class family is the best available. With the above-1/9 route refuted, the only path is the direct one. It also **grew harder as the density floor fell**: s ≤ 1/√δ − 1, so at 0.026117 the branches s = 4 and s = 5 are both reachable, and neither has a theorem — unlike s = 3, which E.4 collapses to a single dead pair. *This may partly reverse under the repair*: the corrected shape space lifts both former record-holders well above 1/25, so the number of values admitting s ≥ 4 should be recounted once the enumerator is fixed.
 
 **The §4 barrier at exponent 3/2** is untouched: both engines give density Θ(1) where they apply, and the barrier concerns lower bounds on the least prime in an arithmetic progression. The two obstructions are independent.
 

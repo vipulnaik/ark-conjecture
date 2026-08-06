@@ -22,6 +22,16 @@ THE FAMILIES (all scored in SAFE mode, so each is a genuine lower bound)
   fused        n = F*c,      F a q-power, c a prime power        -> ~1/F
   two parts    n = c + r,    c a prime power, r prime            -> <= 1/4
   three parts  n = 2c + r,   two equal c-blocks plus a foreign   -> <= 1/9
+  S7 (2026-08) n = F*c + r,  F=3 or 5 blocks fused in the CYCLIC layer
+                             plus a foreign prime                -> <= 0.13397
+
+THE S7 FAMILY, AND WHY IT WAS MISSING.  Until 2026-08 the enumeration required
+the block-permuting group to sit in the top q-group, so F had to be a q-power.
+It may instead sit in the cyclic layer, where the only requirement is that
+Gamma_1/Gamma_2 stay cyclic -- so F may be any prime power coprime to the
+twists and the foreign primes.  See enumeration-proof.md Part 0.  Adding it here
+can only RAISE the reported floor, since this script takes a max over families
+and every family is a genuine construction.
 
 BALANCE POINTS, and hence the window.  With x = c/n and eta the foreign block's
 efficiency, delta(x) = min(x^2, 2x(1-kx), eta(1-kx)^2) for k = 1 (two parts) or
@@ -108,6 +118,38 @@ for r in range(3, N + 1, 2):
         best = max(best, y)
     EFF[r] = max((2 ** a) / m, 2 * best / m)
 
+# S7 needs the foreign efficiency maximised over top primes q OTHER than the
+# fusion prime, since the two cannot coincide.  Using the unrestricted EFF would
+# overstate whenever the best q is the fusion prime, which would break the
+# lower-bound guarantee -- so these are computed separately.
+EFF_EX = {}
+for q0 in (3, 5, 7):
+    arr = [0.0] * (N + 1)
+    for r in range(3, N + 1, 2):
+        if not sieve[r]:
+            continue
+        m = r - 1
+        best_e = 0.0
+        mm = m
+        a_, x_ = 0, mm
+        while x_ % 2 == 0:
+            x_ //= 2; a_ += 1
+        if q0 != 2:
+            best_e = max(best_e, (2 ** a_) / m)          # q = 2 branch
+        y, d = x_, 3
+        while d * d <= y:
+            if y % d == 0:
+                e2 = 1
+                while y % d == 0:
+                    y //= d; e2 += 1
+                if d != q0:
+                    best_e = max(best_e, 2 * (d ** (e2 - 1)) / m)
+            d += 2
+        if y > 1 and y != q0:
+            best_e = max(best_e, 2 * y / m)
+        arr[r] = best_e
+    EFF_EX[q0] = arr
+
 PPs = [c for c in range(2, N + 1) if ispp[c]]
 print(f"sieve and efficiencies to {N:,} in {time.time()-t:.1f}s")
 
@@ -139,6 +181,28 @@ def achieved(n, stop_at=None):
         F += 1
     if stop_at and best > stop_at:
         return best
+    # S7: F blocks of c fused in the cyclic layer, plus a foreign prime.
+    # F must be a prime power, coprime to c-1 and to r so the cyclic layer stays
+    # cyclic; and the foreign twist's prime q must differ from F's prime.
+    for Fp, qF in ((3, 3), (9, 3), (5, 5), (25, 5), (7, 7)):
+        EFFx = EFF_EX[qF]
+        for c in PPs:
+            m = Fp * c
+            if m >= n:
+                break
+            r = n - m
+            if r < 3 or r > N or not sieve[r]:
+                continue
+            if base[c] == r or (c - 1) % qF == 0 or r % qF == 0:
+                continue
+            e = EFFx[r]
+            if e <= 0:
+                continue
+            v = min(Fp * comb(c, 2), Fp * c * c, m * r, e * comb(r, 2))
+            if v > best * C:
+                best = v / C
+                if stop_at and best > stop_at:
+                    return best
     lo = bisect.bisect_left(PPs, int(LO_X * n))
     hi = bisect.bisect_right(PPs, int(HI_X * n))
     for k in range(lo, hi):
@@ -233,13 +297,13 @@ print(f"values with delta < {FLOOR}: {len(below)}"
 print()
 print(f"values below the asymptotic bound {ASYMPTOTIC:.6f} = 5/2 - sqrt(6): {len(weak)}")
 if weak:
-    print("  NOT counterexamples.  This script searches three families over a window,")
-    print("  so it computes a LOWER BOUND on delta(n); the true value comes from")
-    print("  mu_enumerate.py and is often larger -- where both are known it agrees")
-    print("  exactly at 1700 of 1848 values and is otherwise low by up to a factor of")
-    print("  2, the fused-plus-foreign family not being modelled here.  So this is a")
-    print("  worklist: computing B(n) at these n would tighten the global floor of")
-    print("  arithmetic-of-density.md section 5.  Written to ladder_weak.txt.")
+    print("  NOT counterexamples.  This script searches four families over a window,")
+    print("  so it computes a LOWER BOUND on delta(n).  It is a worklist: computing")
+    print("  B(n) at these n would tighten the global floor of section 5 of")
+    print("  arithmetic-of-density.md.  Written to ladder_weak.txt.")
+    print("  NOTE (2026-08): mu_enumerate.py does NOT yet model the S7 family, so at")
+    print("  some n THIS script now reports a larger value than the table does.  That")
+    print("  is the defect of enumeration-proof.md J0, not an error here.")
     with open("ladder_weak.txt", "w") as fh:
         for n, d in weak:
             fh.write(f"{n} {d}\n")

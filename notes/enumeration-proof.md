@@ -1,12 +1,18 @@
 # Bounding μ(n) by enumeration of Oliver configurations
 
-*Companion to `orbital-evasiveness-notes.md` §2. Establishes an upper bound on μ(n) by classifying the possible orbit-and-twist structures of an Oliver group and enumerating them. Implemented in `mu_enumerate.py`.*
+*Companion to `orbital-evasiveness-notes.md` §2. Classifies the possible orbit-and-twist structures of an Oliver group and enumerates them. Was intended to establish an upper bound on μ(n); as of 2026-08 the classification is known incomplete and the enumeration gives a **lower** bound. Implemented in `mu_enumerate.py`.*
 
 **Status — read this first.** *A defect was found on 2026-08 and the upper-bound half of the framework does not currently hold.* Parts A–D and F–H are proved as stated; Part E proves realisability; but **G.2 is false**, and with it the claim that the enumeration is complete. A configuration realisable by an Oliver group is missing from the shape space, so `B_safe(n)` is **not** an upper bound on μ(n). Concretely, at n = 308 an Oliver group achieves 4134 against B(308) = 3775. Part 0 below sets out the corrected shape space and the six lemmas the repair needs.
 
-What survives unchanged:
+What survives, stated carefully — the three quantities are no longer totally ordered:
 
-> **B_refined(n) ≤ B_safe(n) ≤ μ(n)** — every configuration the enumeration finds is realised by Part E's construction, so the table is a valid **lower** bound throughout. Every construction, every "μ(n) ≥ …" statement, and every result of the form "the minimum of B/C(n,2) over a range is at least x" is unaffected, because those only ever used B from below.
+> - **B_refined(n) ≤ μ(n)**, unconditionally, from Part E's explicit construction. This is the inequality that survives everything.
+> - **B_refined(n) ≤ B_safe(n)** by design: `B_safe` deliberately over-counts a p-characteristic part at F·C(c,2) even where Lemma C reduces its twist, precisely so that no assumption is made about which configuration is realisable.
+> - **B_safe(n) versus μ(n): incomparable.** It falls below at n = 308, where the missing shape reaches 4134 against 3775. It may sit above wherever a fallback configuration is the optimum — which is what the over-count was *for*.
+>
+> **But B_safe = B_refined wherever the collapse is certified**, which is the point of E′: at all 2,008 tabulated values, and via E″ at all but two composite non-prime-power n ≤ 10⁵, no fallback configuration attains B(n). On that range the endpoints coincide and **B_safe = B_refined ≤ μ** genuinely holds. Every construction, every "μ(n) ≥ …" statement, and §5's floor rest on that.
+
+**The repair restores the original inequality rather than replacing it.** Once the enumeration covers the enlarged shape space, define B_safe as the same over-count taken over the corrected space; then **μ(n) ≤ B_safe(n)** holds again for the original reason, that F·C(c,2) caps any point stabiliser whatever. The over-count was never the problem — the incomplete space was.
 
 What does not survive: **μ(n) = B(n)**, the tables as exact values, the completeness half of Theorem 2.3, and both collapse certificates — the latter because they certify a property of B against a shape space that is now known to be too small.
 
@@ -144,9 +150,9 @@ Five deferrals above, plus one that whittles step 1 rather than steps 2–3. Thi
 
 **Lemma D1 — bottom-layer copies of a matching block are absorbed.** *Must show:* the chunk's size is then again a power of the home prime, so the chunk appears on the list already, as a single block with no copies; and that the single-block reading never scores lower. **Status: an absorption, statable exactly. Two copies of a 4-block score 2 × 6 = 12; the same chunk read as one 8-block scores 28. Needs writing down; no difficulty expected.**
 
-**Lemma D2 — bottom-layer copies of an outside block are dominated.** *Must show:* the points sitting at the same position in different copies form a family of about (copies) × (block size), which the twist cannot enlarge, and that this is below the alternatives. **Status: the weakest link. The family is linear in the chunk size where the alternatives are quadratic, so it bites at scale — but at chunk size 15 the family has 15 pairs against an alternative of 10, so the domination is false at small sizes. The lemma needs an explicit threshold, not an "obviously dominated". A search found no counterexample for n ≤ 1200, which is evidence but not a proof, and this is the third argument of this shape I have written in this review, the first two of which were wrong.**
+**Lemma D2 — an outside block is never fused, by any layer.** *Must show:* its translations must be diagonal across the copies, because independent copies would put a non-cyclic group into the middle layer; and that the same-position pairs then form a class of at most half the orbit. **Status: proved (Part D2), and more strongly than first conjectured — the bound is m\* ≤ n/2 outright, so no threshold is needed and the earlier "false at small sizes" worry was an error in the comparison, not in the lemma.**
 
-**Theorem 2.3 — the chunk count is bounded.** Whittles step 1. *Must show:* splitting into many chunks never beats splitting into few. **Status: conclusion true by brute force to n = 1200; the justification given elsewhere appeals to a quantity that is not monotone and does not establish it. The real reason is the cross-chunk terms, which shrink as the chunks do.**
+**Theorem 2.3 — B₀ bounds μ, and the chunk count is at most two.** Whittles step 1. *Must show:* the two per-chunk bounds (Part A), and that splitting into many chunks never beats splitting into few. **Status: the bound μ ≤ B₀ is proved (Part C). The two-part reduction is *not* proved — cap is not monotone, so merging parts can lower the cap term — and is verified by exhaustive comparison to n = 1200. Only the O(n) cost claim for B₀ depends on it.** Proof now in Part C rather than the companion document.
 
 
 ### Index: where each lemma is stated and proved
@@ -157,11 +163,15 @@ Five deferrals above, plus one that whittles step 1 rather than steps 2–3. Thi
 | **B′** — an outside block has prime size | Part B, under *foreign characteristic* | same place | the upper bound, and only this |
 | **C** — a middle-layer twist avoids outside primes | Part D, opening box | Part D, opening box | `--refined` and attainment; **not** B_safe |
 | **D1** — bottom-layer copies of a matching block absorb | Part D2 | Part D2, proved | the repair of G.2 |
-| **D2** — bottom-layer copies of an outside block die | Part D2 | Part D2, **stated only** | the repair of G.2 |
-| **2.3** — the chunk count is bounded | Part C, C.1 (restated) | `orbital-evasiveness-notes.md` §2 | Part F's search bounds |
+| **D2** — outside blocks are never fused, by any layer | Part D2 | Part D2, **proved** | the repair of G.2 |
+| **2.3** — B₀ bounds μ; chunk count ≤ 2 | Part C, opening box | Part C — bound **proved**, two-part reduction **verified to n = 1200 only** | Part F's search bounds |
 | **E.1–E.4** — the fallback branches | Part E′ | Part E′ | the collapse, not the bound |
 
-Two entries are not proofs yet. **D2 has no proof anywhere** — it is asserted in Part D2 with a counterexample at small size and a search to n = 1200. **Theorem 2.3's proof is in the companion document** and its stated justification is wrong there; only its statement is used here.
+**One entry is not a complete proof.** Theorem 2.3 has two halves. The bound μ(n) ≤ B₀(n) is proved in Part C. The **two-part reduction** — that the maximising partition never needs three or more parts — is *not* proved: the justification used in earlier drafts is false, since cap is not monotone (cap(127) = 8001 against cap(129) = 2709), and the gap has not been closed. It is verified exhaustively to n = 1200, and nothing depends on it except the O(n) cost claim for B₀; the inequality μ ≤ B₀ quantifies over all partitions regardless.
+
+**Lemma C is proved only for prime blocks**, the prime-power case being open — but B_safe does not use it at all, so this bears on attainment rather than on the bound.
+
+Everything else in the table is proved. **Lemma B′ is the one to scrutinise**: it is the only entry the upper bound genuinely rests on, and it has had one reading and no independent check.
 
 ### Six worked cases
 
@@ -175,15 +185,41 @@ Each isolates one phenomenon. All figures recomputed.
 
 **D. Absorption (Lemma D1).** Home prime 2, two copies of a 4-block fused by the bottom layer. As copies: 2 × C(4,2) = 12. As a single 8-block: C(8,2) = **28**. The coarser reading scores higher and is the one already listed, so refusing bottom-layer copies here loses nothing.
 
-**E. The linear death (Lemma D2), and where it fails.** Home prime 3, three copies of a 5-block fused by the bottom layer. Same-position pairs across copies: 3 × 5 = **15**. Against a single 5-block at full twist: 10. At this size the "domination" runs the wrong way. The argument is asymptotic and needs its threshold stated.
+**E. Why an outside block cannot be fused (Lemma D2).** Home prime 2, two copies of a 19-block plus a 32-block, n = 70. The twist of order 9 on the 19-blocks is the quadratic residues mod 19; since 19 ≡ 3 (mod 4), −1 is a non-residue, so the twist together with the block swap generates all of 𝔽₁₉ˣ and the offset classes have 18 elements. The between-block pairs of nonzero offset therefore form a class of 19 × 18 = 342. But the **offset-zero pairs form a class of just 19** — the translations are diagonal, so no shuffle can move a same-position pair to a different-position one. So m\* ≤ 19, against B(70) = 301. *A draft of this document scored the between-block term as (F/2)·r² = 361 and reported this configuration as a counterexample to the whole framework; the diagonal class is what kills it.*
 
 **F. n = 3239 — the record holder moves.** Old witness scored 136,957, density 0.026117. New: seven copies of a 256-block plus an outside block of 1447 with twist 241. Terms 228,480 / 458,752 / 2,593,024 / 348,727 → score **228,480**, density **0.043570**. Seven is a power of neither the home prime 2 nor the top prime 241. The bound "minimum ≥ 0.026117 over n ≤ 10⁶" stays valid but stops being tight, and the argument for where the minimum sits has to be redone.
+
+### The configuration census
+
+*Every shape the framework admits or excludes, in one place. Winner counts are over n ≤ 2298 (1,921 values); S7 is measured to n = 2400. "Trend" is the winner share across thirds of the range.*
+
+| # | Shape | Status | Winners | Trend | Asymptotic guess | δ behaviour |
+|---|---|---|---|---|---|---|
+| **S1** | one matching block, no copies | part only | — | — | — | never a whole configuration |
+| **S2** | fused matching class, **top**-layer copies, n = F·c | enumerated | **754** (39.3%) | 49.1 → 36.2 → **32.6%** | **→ 0** (needs ω(n) = 2 with both factors prime powers) | clusters at **1/F**: 0.4995, 0.3326, 0.2492, 0.1992, 0.1420, 0.1103. Holds every δ > 1/4 |
+| **S3** | matching + outside, n = c + r\* | enumerated | **851** (44.3%) | 41.2 → 45.8 → **45.9%** | **→ ~50%**: essentially all even n | → class cap. Medians 0.220/0.221/0.218/0.213 at n ≡ 0,4,6,10 (cap **1/4**); 0.1265/0.1272 at 2,8 (cap **0.13397**) |
+| **S4** | two matching + outside, n = 2c + r\* | enumerated | **257** (13.4%) | 6.1 → 13.9 → **20.0%** | **→ ~50%**: essentially all odd n | → class cap. Medians 0.1033/0.0997 at 1,9 (**1/9**); 0.0782/0.0765 at 3,7 (**0.08579**); 0.0695 at 5 (**0.0718**); 0.052 at 11 (**0.05051**) |
+| **S5** | fused matching + outside; forces q = 2 | enumerated | **58** (3.0%) | 3.6 → 3.9 → **1.6%** | **→ 0** | cap₂(η) = 0.17157 at η = 1, but η = 1 needs a **Fermat** prime; at η = 1/3 it is 0.10102, already below S4's 1/9. Max seen 0.1614 (n = 639) |
+| **S6** | two outside blocks | enumerated | **1** (0.05%) | 0 → 0.2 → 0% | **→ 0** | ceiling is 1/4, so it is *supply*-limited not cap-limited: needs r₁ + r₂ = n with both rᵢ − 1 = 2qᵉ for a **common** q |
+| **S7** | **middle**-layer-fused matching + outside | **MISSING** | 57 values beat B | 2.7 → 2.3 → **3.4%** | **→ 0**, but for two different reasons by parity — see below | cap_F(η) = Fη/(√F + F√η)². F = 3: **0.13397 / 0.10102 / 0.08333** at η = 1, ½, ⅓. F = 5 is uniformly worse (0.09549 at η = 1) |
+| **S8** | bottom-layer-fused matching | killed, **D1** | — | — | — | F·C(c,2) < C(F·c,2) strictly |
+| **S9** | fused outside block, any layer | killed, **D2** | — | — | — | translations forced diagonal ⇒ a class of at most \|O\|/2 |
+| **S10** | outside block with r = q | killed | — | — | — | normality kills the twist ⇒ the block is worth r |
+
+**Why S7 vanishes, and why the reason differs by parity.** Write the shape as n = F·c + r with r an odd prime.
+
+- **n odd** forces F·c even. With F = 3 or 5 this forces **c to be a power of 2**, so there are only O(log n) choices of c and the supply is as thin as the existing 2^a escapes. All 12 odd-n instances in range have c ∈ {32, 128}.
+- **n even** forces c odd, and the supply is a full Hardy–Littlewood system. But even n already have S3 available with cap 1/4, comfortably above S7's ceiling of 0.13397, so S7 can only win at even n where S3's *local supply* fails. All 45 even-n instances are of this kind. Under the conjectures that give S3 its supply, this set is thin.
+
+So S7 is a sparse escape rather than a competing family — but it is a genuine one, it raises the odd-n class ceilings where it applies, and it is not currently enumerated. Only F = 3 and F = 5 occur at all: larger fusion primes shrink F·C(c,2) faster than the foreign term can compensate.
 
 ### What the corrected shape space is
 
 A class is F blocks of size c with **F = F_mid · F_top**, where F_top is a power of the top prime and F_mid is subject only to the middle layer remaining single-generated. F_bottom = 1 by D1 and D2. The middle layer's order is then a single product of pairwise-coprime factors drawn from: every F_mid, every twist in the middle layer, and every outside block size, across the whole arrangement at once.
 
 The enumeration therefore cannot stay "pick parts, then check constraints". The natural order is to choose the middle layer's factorisation first and distribute it, which is a restructure of `best_with_k` rather than an extra branch.
+
+*Case E below is superseded by the proof of D2 and is retained only because the error it records is instructive.*
 
 *Two axes deliberately absent from the trees.* The **twist's shape** never gets a branch, because the safe scoring credits every matching block with every pair inside it — the most it could contribute — so no assumption about the twist can inflate the bound. This is also why a question noticed during this review, whether the twist must come from field arithmetic at all rather than being any irreducible linear group, does not threaten the upper bound; it bears on attainment. And **nesting**: a chunk with block systems at several depths splits its cross-families further, so it scores no higher than the flattened reading.
 
@@ -238,11 +274,11 @@ Three consequences.
 
    *What this does and does not license saying.* It shows orb(c, d) is not an upper bound on the minimum intra-orbital of an arbitrary admissible group on that block. It does **not** exhibit an n with μ(n) > B_refined(n), and no such n is known. The reason is that the under-statement is confined to configurations of negligible density: driving d well below c−1 requires the *small* prime factors of c−1 stripped, hence *small foreign blocks*, and a foreign block of size r caps m\* at r(n−r), hence the density at 2r/n. Both under-statement rows need 3 as a foreign prime, and the configurations 343+3+19 and 343+2+3+19 have smallest cross classes 57 and 6 — densities 0.00086 and 0.00009. At n = 365, for instance, the winner is `5x73` with B = 13,140, and 343+3+19 (the same n) has m\* ≤ 57, losing by a factor of 231; the exotic group is capped by that same cross class and so does not beat B_refined(365) either. Since B_refined(n) = Ω(n log n) unconditionally and any configuration exhibiting the under-statement has m\* = O(n), the mechanism cannot produce μ(n) > B_refined(n) for large n.
 
-   *The right frame is a sandwich.* Part E constructs, for every admitted configuration W, an explicit Oliver group with orbital data exactly the enumeration's terms at twist d — so m\*(Γ_W) = REFINED-score(W), whence B_refined is a **construction lower bound**. And F·C(c,2) caps any point stabiliser whatsoever, so B_safe is an upper bound. Hence, unconditionally,
+   *The frame was a sandwich, and one side has gone.* Part E constructs, for every admitted configuration W, an explicit Oliver group with orbital data exactly the enumeration's terms at twist d — so m\*(Γ_W) = REFINED-score(W), whence B_refined is a **construction lower bound**. F·C(c,2) does cap any point stabiliser whatsoever, so B_safe would be an upper bound *if the configurations enumerated were all of them*. Since G.2 is false they are not, and what remains unconditionally is
 
-   > **B_refined(n) ≤ μ(n) ≤ B_safe(n)**,
+   > **B_refined(n) ≤ μ(n)**, and **B_refined(n) ≤ B_safe(n)**, with B_safe and μ incomparable in general,
 
-   and the two collapse exactly when the SAFE optimum is fallback-free, since orb(c, c−1) = C(c,2) identically and the foreign and cross terms are mode-independent. `--refined` is therefore best read as computing the lower endpoint, not as a rival upper bound.
+   the second inequality by design and the incomparability because B_safe over-counts per configuration while the shape space under-counts configurations — two effects in opposite directions. The two endpoints still collapse onto each other exactly when the SAFE optimum is fallback-free, since orb(c, c−1) = C(c,2) identically and the foreign and cross terms are mode-independent; **on the certified range that collapse gives B_safe = B_refined ≤ μ**. Restoring μ ≤ B_safe in general needs the repair of J0, after which the original argument works unchanged.
 
 **Why the endpoints meet, and why the Singer failure cannot reach B(n).** When Lemma C does not bite, d = c−1 and **orb(c, c−1) = C(c,2)** exactly — in characteristic 2 because −1 = 1, in odd characteristic because c−1 is even. So on any configuration the fallback does not touch, the refined and unconditional scores are *identical*, and the collapse B_refined(n) = B_safe(n) is equivalent to the statement that the optimum is fallback-free. That statement is not left to measurement: Part E′ gives two structural bounds and a per-n certificate, both proved and both checked over the whole computed range. The refined formula is therefore only ever strictly below C(c,2) on configurations that lose anyway.
 
@@ -251,10 +287,26 @@ Three consequences.
 - The intra-orbitals are the classes ±δ·T for T the twist group, and the minimum intra-orbital is **orb(s, t) = s·t/2 if t is even or p₀ = 2, else s·t**, where t = |T|.
 > **Lemma B′.** Let O be an orbit whose finest block has size s = p₀^a with p₀ ≠ p (an *outside block*). Then a = 1 — the block size is that prime exactly — and its twist order t divides s − 1 and is a power of the top prime q.
 
-*Proof.* π_O(Γ₂) is a normal p-subgroup of a primitive group, hence trivial — a nontrivial normal subgroup of a primitive group contains the socle, which here is elementary abelian of order p₀^a with p₀ ≠ p; π_O(Γ₁) is cyclic normal, so likewise contains the socle, forcing a = 1; being cyclic it centralises the socle, so by C_Γ(V) = V in an affine primitive group it *equals* it; hence the entire twist lies in Γ/Γ₁, a q-group. So s is prime and t is a power of q. ∎
+*Proof.* By Lemma B the action on O is affine: O ≅ V = 𝔽_{p₀}^a and Γ|_O = V ⋊ H with H ≤ GL(a, p₀) **irreducible**. Write G = Γ|_O.
+
+> **Step 0 (every nontrivial normal subgroup of G contains V).** This is the step the earlier draft asserted, and it does *not* hold for primitive groups in general — a normal subgroup need only be transitive, and where there are two minimal normal subgroups it can contain one and meet the other trivially. What makes it true here is that the group is affine, so V is the *unique* minimal normal subgroup, and the argument needs irreducibility rather than mere primitivity.
+>
+> Let N ⊴ G. Then N ∩ V ⊴ G, and N ∩ V is an H-submodule of V, so by irreducibility of H it is 1 or V. Suppose N ∩ V = 1. Since N and V are both normal, [N, V] ≤ N ∩ V = 1, so N ≤ C_G(V) = V; with N ∩ V = 1 this forces N = 1. Hence every nontrivial normal subgroup of G contains V. ∎ *(Step 0)*
+
+Now π_O(Γ₂) is a normal p-subgroup of G. If it were nontrivial it would contain V by Step 0, and V is elementary abelian of order p₀^a with p₀ ≠ p — impossible in a p-group. So **π_O(Γ₂) = 1**.
+
+Next π_O(Γ₁) is normal in G, and is cyclic: with π_O(Γ₂) = 1 it is a quotient of the cyclic group Γ₁/Γ₂.
+
+*Case 1: π_O(Γ₁) ≠ 1.* By Step 0 it contains V ≅ C_{p₀}^a, and a cyclic group has cyclic subgroups, so **a = 1**. Being cyclic it is abelian, hence centralises V, so π_O(Γ₁) ≤ C_G(V) = V; containing V as well, it *equals* V. So the image of Γ₁ in G is exactly the translations, the point stabiliser of Γ₁ on O is trivial, and the entire twist H ≅ G/V lies in the image of Γ/Γ₁, a q-group.
+
+*Case 2: π_O(Γ₁) = 1.* Then G is a quotient of the q-group Γ/Γ₁, so G is a transitive q-group and has q-power degree; a transitive p-group acting primitively is regular of prime degree, so s = q and the twist is trivial — a q-power vacuously.
+
+In both cases **s is prime and t is a power of q**. ∎
+
+> **Two dependencies worth naming, since the compressed version hid them.** The proof uses *irreducibility* of H, which is part of Lemma B's conclusion, so B′ genuinely rests on B and not merely on primitivity. And it uses **C_G(V) = V** twice — once in Step 0 to kill the N ∩ V = 1 alternative, and once in Case 1 to upgrade "contains V" to "equals V". The earlier write-up invoked it only in the second place, which is part of why the first step read as a leap.
   > *One case the sketch skips, with the same conclusion.* The step "π_O(Γ₁) contains the socle" assumes π_O(Γ₁) ≠ 1. If instead π_O(Γ₁) = 1 then Γ|_O is a quotient of the q-group Γ/Γ₁, so a transitive q-group, so of q-power degree; and a transitive **p**-group acting primitively is regular of prime degree. Hence s = q is prime and the twist is trivial — a q-power. The lemma's conclusion holds in this branch too, but it needs saying rather than assuming.
   >
-  > *Verified structurally.* Unlike Lemma C (see Part D), **B_safe does depend on Lemma B′**: it is what stops a foreign part being valued at C(s,2). Removing it would raise the bound, so an error here would make B(n) too large — the safe direction for an upper bound, but it would break attainment.
+  > *Verified structurally.* Unlike Lemma C (see Part D), **B_safe does depend on Lemma B′**: it is what stops a foreign part being valued at C(s,2). Removing it would raise B, which breaks attainment and hence the lower bound — the direction that now matters, since B is currently a lower bound on μ. This is why J0 puts B′ first in the repair order.
 - *Own characteristic (p₀ = p).* t may be any divisor of s−1, realised by a subgroup of the Singer cycle inside the cyclic layer.
 
 **(B2) Imprimitive.** There is a block system; taking a coarsest one, the induced action on blocks is primitive solvable, hence affine of prime-power degree — and it must be a **q**-group action for the chain, so the number of blocks is a power of q. The block stabiliser acts transitively on a block, again inheriting the chain, and the intra-block orbital valencies are its suborbit sizes. Recurse.
@@ -273,7 +325,19 @@ and cap(s; p,q) = s·V(s; p,q)/2. Induction on s using Part B gives M_i ≤ cap(
 
 > **Pitfall.** Restricting b to q-powers is essential. A recursion over arbitrary block counts implicitly maximises the twist prime independently at each level, whereas the group has a single q; the resulting quantity bounds nothing. 
 
-**C.1 The recursion has a closed form.** The chain-free version of V — the one in Theorem 2.3 of the notes, where b ranges over all prime-power divisors rather than q-powers — collapses:
+> **Theorem 2.3 (the chunk count is bounded, and B₀ is an upper bound).** Let Γ be an Oliver group on n points with orbit sizes s₁, …, s_k, and let cap(s) = s·(L(s) − 1)/2 where L(s) is the largest prime-power divisor of s. Then
+>
+> > m\*(Γ) ≤ min( min_i cap(s_i), min_{i<j} s_i s_j ),
+>
+> and consequently μ(n) ≤ B₀(n) := max over partitions n = Σ s_i of that quantity, **where the maximum is attained at a partition into at most two parts.**
+
+*Proof.* The two bounds are Part A: an orbit of size s_i has a class of at most cap(s_i) pairs by the valency recursion of C.1 below, and the pairs between orbits i and j form classes totalling s_i s_j, so some class among them has at most s_i s_j pairs. Every Oliver group therefore determines a partition whose value is at least m\*(Γ), giving μ(n) ≤ B₀(n).
+
+For the two-part claim, suppose a partition has k ≥ 3 parts, ordered s₁ ≤ s₂ ≤ ⋯ ≤ s_k. Its value is at most s₁s₂, the smallest cross term. Now compare with the two-part partition (s₁, n − s₁): its value is min(cap(s₁), cap(n − s₁), s₁(n − s₁)). We have s₁(n − s₁) ≥ s₁(s₂ + ⋯ + s_k) ≥ s₁s₂, and cap(s₁) is unchanged. So the two-part partition is worse only if cap(n − s₁) < s₁s₂. Since n − s₁ ≥ s₂ + s₃ ≥ 2s₂ and cap(m) ≥ m/2 for every m ≥ 2 (as L(m) ≥ 2), we get cap(n − s₁) ≥ (n − s₁)/2 ≥ s₂, which does not yet suffice. **This is where the argument is currently incomplete:** cap is not monotone in its argument — cap(127) = 8001 while cap(129) = 2709 — so merging the top k − 1 parts can lower the cap term, and no general inequality closes the gap. ∎ *(for the first two claims; the two-part reduction is verified rather than proved — see below)*
+
+> **Status of the two-part reduction.** The conclusion is true throughout the range checked: an exhaustive comparison of one-, two- and three-part partitions finds **no n ≤ 1200 at which a three-part partition beats the best one- or two-part one**. The justification offered in earlier drafts — "more parts only shrink min_i cap(s_i)" — is false as stated, because cap is not monotone. What is actually doing the work is the *cross* terms, which shrink as the parts do; the missing step is a bound on how far cap(n − s₁) can fall below cap of the parts it absorbs. **Nothing in this document depends on the two-part reduction except the cost claim** that B₀ is computable in O(n) per value; the inequality μ(n) ≤ B₀(n) itself quantifies over all partitions and is unaffected.
+
+**C.1 The recursion has a closed form.** The chain-free version of V — the one in Theorem 2.3 above, where b ranges over all prime-power divisors rather than q-powers — collapses:
 
 > **V(s) = L(s) − 1**, where **L(s)** is the largest prime-power divisor of s; hence **cap(s) = s(L(s) − 1)/2**.
 >
@@ -285,7 +349,7 @@ Verified against the recursion for every s < 4000, with no exceptions. This is w
 
 > **B₀(n) = max over partitions n = Σ sᵢ into parts ≥ 2 of min( minᵢ cap(sᵢ), min_{i<j} sᵢsⱼ )**,
 
-the right-hand side of the notes' Theorem 2.3. Since more parts only shrink minᵢ cap(sᵢ), the maximum is over one- and two-part splits, so B₀ costs **O(n) per value** after a sieve — B₀(200,000) takes a quarter of a second, against the enumeration's measured n^2.9. And **μ(n) ≤ B(n) ≤ B₀(n)**: every configuration determines a partition whose parts are valued at least as highly by cap.
+the right-hand side of Theorem 2.3 above. Taking the maximum over one- and two-part splits only — which is the unproved half of Theorem 2.3, verified to n = 1200 — B₀ costs **O(n) per value** after a sieve, B₀(200,000) taking a quarter of a second against the enumeration's measured n^2.9. And **μ(n) ≤ B₀(n)** and **B(n) ≤ B₀(n)** both hold: every Oliver group, and every enumerated configuration, determines a partition whose parts are valued at least as highly by cap. (The middle inequality μ ≤ B is what G.2's failure removed; B₀ is unaffected, since its proof never used the block-count classification. That is what makes it the robust fallback described below.)
 
 The second inequality is typically strict, and the reason is structural rather than a per-part over-valuation: **B₀'s optimising partition frequently supports no admissible configuration at all.** B₀ ranges over partitions with parts of any size; a configuration additionally fixes chain primes (p, q), requires each part to be Fᵢcᵢ with Fᵢ a q-power and cᵢ a prime power, types each part as p-characteristic or foreign, constrains twists by Lemma B′ and Lemma C, and carries a within-class cross term that B₀ has no notion of.
 
@@ -323,13 +387,21 @@ Twists on distinct p-characteristic parts carry **no** mutual constraint: a sing
 
 *Worked instance.* Home prime 2, two copies of a 4-block: 2 × C(4,2) = 12, against the same chunk read as one 8-block, C(8,2) = 28.
 
-> **Lemma D2 (the outside-block case). NOT PROVED. STATED AS A TARGET.** Let O be an orbit whose finest block is an outside block of prime size r, with F copies permuted by a subgroup of Γ₂, so F is a power of p. Then for |O| above some threshold the configuration is dominated — its minimum family is at most about F·r, linear in |O|, where a competing configuration on the same points achieves a quantity quadratic in its block size.
+> **Lemma D2 (outside blocks are never fused, by any layer).** Let O be an orbit whose finest block is an outside block of prime size r, with F ≥ 2 copies permuted transitively by some subgroup of Γ. Then O carries a class of at most (F/2)·r pairs if F is even and F·r if F is odd. Hence **m\* ≤ |O|/2 ≤ n/2**, linear in n, and the configuration is beaten by any configuration of density bounded below.
 
-*What a proof must supply.* Two things. First, that the family containing the pairs sitting at the same position in different copies has size at most about F·r and that the twist cannot enlarge it — this is the same diagonal-translation argument the document already uses to rule out q-fusion of foreign parts (Part E, reduction R1), and it should transfer. Second, **an explicit threshold**, which is the part that does not currently exist.
+*Proof.* The block has prime size r ≠ p, so its translation group C_r cannot lie in Γ₂, which is a p-group; nor in Γ/Γ₁, which is a q-group, unless r = q, and that case is separate (see below). So the translations lie in Γ₁/Γ₂. If the F blocks carried independent translation groups, Γ₁/Γ₂ would contain C_r^F, which is not cyclic for F ≥ 2 — contradiction. **The translations are therefore diagonal:** a single element g of order r translates every block simultaneously. Identify each block with ℤ_r so that g acts as +1 on each.
 
-*Why the threshold is needed, with a counterexample below it.* Home prime 3, three copies of a 5-block: the same-position family has 3 × 5 = 15 pairs, against a single 5-block at full twist scoring orb(5, 4) = 10. At this size the claimed domination runs the wrong way. The asymptotic reasoning is sound — linear loses to quadratic eventually — but "eventually" has to be located, and until it is, D2 covers only large orbits and the small ones must be enumerated or handled separately.
+For a pair of points in two different blocks, the *offset* y − x ∈ ℤ_r is invariant under g. The same-position pairs are those of offset 0, and every element of Γ preserves offset 0: a diagonal twist sends (x, x) to (λx, λx); a block permutation sends (x, x) in blocks (i, j) to (x′, x′) in blocks (σi, σj). So the offset-0 pairs form a union of classes, and the class of a single such pair has size (number of block-pairs in its orbit) × r. The block-permuting group is transitive on F blocks, and the minimum pair-orbital of a transitive group of prime-power degree F is F/2 for even F and F for odd F — the divisibility argument of Part E applies verbatim. Hence a class of at most (F/2)·r or F·r pairs, and since |O| = F·r this is at most |O|/2. ∎
 
-*Evidence, not proof.* A search over configurations of this shape found none beating B(n) for n ≤ 1200. This is the third argument of this shape written during the 2026-08 review; the first two were wrong, so the search result should be weighted accordingly.
+*Why no threshold is needed, contrary to an earlier draft.* An earlier version of this lemma claimed only an asymptotic domination and produced an apparent counterexample at chunk size 15 (three copies of a 5-block, same-position family 15 against an alternative of 10). That comparison was against the wrong alternative: 10 is the score of a *different* configuration on 5 points, not of this one, and this one's own score is 15 out of an orbit of 15 — a density of 1, but on an orbit that is a vanishing fraction of any n where it competes. The lemma as now stated bounds m\* by n/2 outright, which beats every configuration of density bounded below at every n where the bound is nontrivial. No threshold appears.
+
+*The error that produced the false alarm, recorded because it recurred.* A search written while drafting this lemma scored the between-block class as (F or F/2)·r², the formula used for *matching* blocks, and duly reported 16 configurations beating B(n) — the largest at n = 518 with ratio 1.50. That formula presumes independent translations per block, which is exactly what cyclicity forbids here. Rescoring with the diagonal class gives **0 configurations beating B(n) for n ≤ 1500**. The asymmetry is the whole content of the lemma: Γ₂ can hold F independent copies of a p-group, so matching blocks may be fused; Γ₁/Γ₂ cannot hold F independent copies of C_r, so outside blocks may not.
+
+*The case r = q.* If the block size equals the top prime, the translations may lie in Γ/Γ₁ instead. Then the twist cannot lie in Γ₁/Γ₂, because Γ₁ ⊳ Γ would require the translations to normalise the twist, and in AGL(1, r) translations do not normalise a point stabiliser. So the twist is trivial and the block is worth orb(r, 1) = r — again linear. The conclusion is unchanged.
+
+> **Corollary D2′.** Fusion is available to matching blocks only. Combined with D1, the block count of any class is F = F_mid · F_top, with no contribution from Γ₂ for matching blocks (D1) and no fusion at all for outside blocks (D2).
+
+*This supersedes reduction (R1) of Part E*, which asserted the same conclusion for fusion by the top q-group only. The argument never used the fusing layer, so it holds for all three.
 
 ## Part E. Completeness of the enumeration, and realisability
 
@@ -660,7 +732,7 @@ Fermat primes achieve this at q = 2, safe primes with t = q odd and 2t = r−1, 
 
 **J0a. The stabiliser question, noticed during the same review.** The framework assumes a matching block's twist lies in the multiplicative group of the field. The stabiliser of a primitive affine group of degree p^a may be any irreducible subgroup of GL(a, p), which is larger. This cannot inflate B_safe — the safe scoring already credits C(c,2) — but it is an unstated assumption bearing on attainment, and it should be either justified or scoped.
 
-*What is established, and where — read subject to J0, which suspends the upper-bound half. Realisability: Part E. The sandwich B_refined ≤ B_safe ≤ μ, Theorem E.1, and the collapse certificate: Part E′. The search bounds and why counting cannot sharpen them further: Part F. All measurements: Part I. This section lists only what remains.*
+*What is established, and where — read subject to J0, which suspends the upper-bound half. Realisability: Part E. The relation between B_refined, B_safe and μ, Theorem E.1, and the collapse certificate: Part E′. The search bounds and why counting cannot sharpen them further: Part F. All measurements: Part I. This section lists only what remains.*
 
 1. **Minimality: k ≤ 3 in the low-density tail.** Corollary F.3 makes this free wherever δ > 1/16 — 97.7% of the computed table — so what is open is the tail below that threshold, measured in Part I at 45 of 1,921 values. (How much of n beyond the computed range lies below 1/16 is itself governed by the open density questions, so this is a per-n statement, not a global one.)
 

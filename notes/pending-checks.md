@@ -8,11 +8,27 @@
 
 ---
 
+## The open defect
+
+**G.2 is false and the upper bound does not currently hold.** The block-permuting group of an orbit may sit in the cyclic layer rather than the top q-group, so the block count need not be a q-power. Smallest witness n = 308. Full account in `enumeration-proof.md` Part 0; the density consequences in `arithmetic-of-density.md` §3.3.
+
+**What survives:** `B_refined ≤ μ` unconditionally, and `B_safe = B_refined` wherever the collapse certificate applies — the whole computed table and all but two composite non-prime-power n ≤ 10⁵ — so on that range the tabulated value is ≤ μ. Every construction stands, and §5's global floor holds as an inequality (`δ ≥ 0.026117` over n ≤ 10⁶).
+
+*Do not restate this as `B_safe ≤ μ`.* `B_safe` deliberately over-counts per configuration, scoring a p-characteristic part at F·C(c,2) even where Lemma C reduces the twist. That over-count and the incomplete shape space push in opposite directions, so B_safe and μ are **incomparable** in general.
+
+**What does not survive:** μ(n) = B(n), the table as exact values, and the argmin of the floor — at n = 3239 the corrected space gives 0.043570.
+
+**The repair restores the original inequality.** Redefining B_safe as the same over-count over the corrected shape space gives back `μ ≤ B_safe`, for the original reason that F·C(c,2) caps any point stabiliser. The over-count was never the defect.
+
+Everything in §1 and §2 below is subordinate to **R0**.
+
 ## Where the residual risk sits
 
 Ranked, so the sections below have a stated basis. This is not the order the items appear in.
 
-1. **Lemma B′.** The only unscrutinised lemma that `B_safe` actually depends on. An error inflates B(n) and breaks attainment everywhere at once. One close read found it sound with a skipped branch — but that same read found a genuine gap in Lemma C and a wrong justification in G.2, so one read is weak evidence. → **T1**
+1. **Lemma B′.** The only unscrutinised lemma either bound rests on. An error inflates B(n) and breaks attainment — and since B is now a *lower* bound, that is the direction that matters. One close read found it sound with a skipped branch; that same read found a gap in Lemma C and a **false** step in G.2, so one read is weak evidence. → **T1**
+
+1a. **The repair itself.** Until R0 lands, there is no upper bound on μ(n) at all. Lemmas D1 and D2 are proved (`enumeration-proof.md` Part D2) and D2 came out stronger than conjectured — m\* ≤ n/2 outright, no threshold — so the whittling is in hand; what is missing is the enumerator.
 2. **Exhaustiveness of the GAP stages.** The subdirect-product hole is real and undischarged. It degrades *evidence* rather than creating an error — a missed group could only have larger m\*, i.e. it would be a counterexample, not a silent corruption — but it is the only non-circular check in the framework. → `small-degree-verification.md` item 5
 3. **Part E's realisability construction.** Attainment's other leg, argued in general and spot-checked at eight configurations from n = 12 to 315. Unlike the certificate, this has no per-n verification at all. → **T2**
 4. **The eight necessary conditions of `fb_common.py`.** Both certificates now rest on these and nothing else — the Part E′ theorems were shown to be optimisations in each. They have had one read. Their being *necessary* is what makes an empty candidate list a proof, and two of them have been corrected in the permissive direction historically. → **T3**
@@ -25,6 +41,32 @@ Closed in the 2026-08 pass and no longer risks: `fallback_cert.py` and `wide_cer
 
 *Can be launched in the background. Flags are checked against the scripts as they stand; where a run needs code that does not exist, that is said rather than papered over with a plausible-looking flag.*
 
+## R0. Repair the shape space — everything else waits on this
+
+In dependency order. Steps 1 and 2 are authoring; 3 onward are runs.
+
+1. **Restructure `mu_enumerate.py`** around the cyclic layer's factorisation rather than around parts. The coprimality budget is global — every fusion count, every cyclic-layer twist and every foreign prime competes for one shared generator — so "pick parts, then check" cannot express it. Note the correction both adds configurations and forbids some previously counted, so B is **not** uniformly larger and the table must be recomputed rather than adjusted.
+2. **Re-examine Lemma B′ first, not last** (T1). It is now the only structural lemma either bound rests on; the rest of the repair is wasted if it has the same shape of hole.
+3. **Recompute the table**, then rerun everything in R1.
+4. **Rebuild the branch-and-bound worklist.** It was pruned against a floor that has moved.
+
+```bash
+python3 s7_scan.py mu_table_safe_v2.csv --nmax 2400 --out s7_weak.txt   # the worklist
+```
+
+`s7_scan.py` is new. It reports every n where the missing family beats the table — 57 values to n = 2400, worst ratio 2.387, fusion counts only 3 and 5 — and writes them with their witnesses. Rerun after any table extension to see whether the defect's reach grows; exits nonzero when it finds anything, so it can gate a commit.
+
+## R0a. `ladder_verify.py` now models the S7 family
+
+Already done, and it changes results. The floor to n = 20,000 rises from 0.02504 (at n = 3239) to **0.02516 (at n = 8927)**, and the sub-asymptotic worklist shrinks from 572 entries to **509**. Since the script takes a max over families and every family is an explicit construction, adding one can only raise the floor — so the §5 bound improves rather than weakens.
+
+**Consequence to watch:** `ladder_verify.py` now models a family `mu_enumerate.py` does not, so at some n the ladder reports a *larger* value than the table. That is the defect, not an inconsistency, and the script says so in its output. Rerun to 10⁶ once the enumerator is repaired.
+
+```bash
+python3 ladder_verify.py 20000        # 4 families, ~30 s
+python3 ladder_verify.py 1000000      # ~70 min; do this after R0 step 3
+```
+
 ## R1. Routine, after any new batch of table values
 
 Every one of these is a per-n statement that does not extend itself.
@@ -35,7 +77,8 @@ python3 mu_enumerate.py --nmax 2600 --fill-gaps --out mu_table_safe_v2.csv   # c
 python3 fallback_cert.py mu_table_safe_v2.csv --verbose                      # collapse cert vs true B(n)
 python3 wide_cert.py 100000                                                  # same, from lower bounds; pass 1 cached
 python3 check_doc_figures.py mu_table_safe_v2.csv *.md                       # figures, scope, prose, hygiene
-python3 ladder_verify.py 200000                                              # ladder floor, all 12 classes (87 s)
+python3 ladder_verify.py 200000                                              # ladder floor, all 12 classes, 4 families
+python3 s7_scan.py mu_table_safe_v2.csv --nmax 2600                          # does the defect reach further?
 ```
 
 `check_doc_figures.py` takes `--quiet` for findings only and `--pass {figures,scope,prose,hygiene}` to run one pass. It exits nonzero when anything is flagged, so it can gate a commit. Not every finding is an error — historical citations are legitimate — but each should be a decision.
@@ -112,6 +155,10 @@ Start from the current floor 0.026117, not from the asymptotic constant. `--out`
 
 ### T1. Independent reading of Lemma B′ ★
 
+*Partly discharged 2026-08.* A reader queried the step "a nontrivial cyclic normal subgroup contains the socle" — correctly, since for primitive groups in general a normal subgroup need only be *transitive*, and with two minimal normal subgroups it can contain one and meet the other trivially. The conclusion holds because the group is **affine**, where V is the unique minimal normal subgroup, but the proof needs two lines that were missing: for N ⊴ G = V ⋊ H, the intersection N ∩ V is an H-submodule so irreducibility makes it 1 or V; and if it is 1 then [N, V] = 1 puts N ≤ C_G(V) = V, forcing N = 1. Written into Part B as Step 0. Two dependencies are now explicit: the proof uses **irreducibility of H**, so B′ rests on Lemma B and not merely on primitivity, and it uses C_G(V) = V twice where the old text invoked it once.
+
+The rest of B′ still wants an independent read.
+
 **The highest-value item on this page, and no amount of compute substitutes for it.** B′ is the only unscrutinised lemma `B_safe` depends on. It has now had one close read, which found it sound with one skipped branch — but that same read found a genuine gap in Lemma C and a wrong justification in G.2. Two defects in three arguments is the relevant base rate, and it argues for a second reader rather than against one.
 
 Specifically worth attacking: the step "π_O(Γ₁) is cyclic normal, so contains the socle, forcing a = 1". This is where the argument does real work, and the analogous step in the original Part B ΓL(1) argument is the one that turned out false.
@@ -169,6 +216,10 @@ Not attempted in the literature pass — it is a mathematical check, not a frami
 ### A4. Reconstruct or retire the filtered per-class table in §3.3
 
 Its row counts sum to 887 and the filter that produced them was not reconstructed. The unfiltered version now in the document supersedes it in content, but the document carries both, which is worse than carrying either. Either reproduce the filter or delete the table. **Partly unverified.**
+
+### A4a. Prove Theorem 2.3's two-part reduction
+
+The only gap left in the whittling. That the maximising partition never needs three or more parts is verified exhaustively to n = 1200 but not proved; the old justification is false because cap is not monotone (cap(127) = 8001 against cap(129) = 2709). My attempt reaches "the merged partition is worse only if cap(n − s₁) < s₁s₂" and stalls there. Nothing depends on it except the O(n) cost claim for B₀ — the inequality μ ≤ B₀ quantifies over all partitions — so this is low priority but self-contained.
 
 ### A5. Sweep for other expired-scope arguments
 
