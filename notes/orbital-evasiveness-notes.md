@@ -261,7 +261,7 @@ What follows is the measurement against μ itself.
 
 The question the menu could not settle was whether odd n are genuinely poorer or merely poorly served. Since μ(n) = B(n) is known exactly for n ≤ 2212 (§2.6), it can be asked of μ directly, and the answer is **both, in measurable proportions**.
 
-*Odd n are genuinely poorer.* Over the 1,921 computed values the median density is **0.2249 for even n against 0.1100 for odd** — a factor of two in the truth, not in the template. So the parity split is a fact about μ, and the three-block mechanism's weakness is not merely a failure of imagination.
+*Odd n are genuinely poorer.* Over the 2,008 computed values the median density is **0.2248 for even n against 0.1098 for odd** — a factor of two in the truth, not in the template. So the parity split is a fact about μ, and the three-block mechanism's weakness is not merely a failure of imagination.
 
 *But the menu overstated it about threefold.* Against the 1/12 diagnostic, the menu put 0.5% of even and **65.4%** of odd composites below the line; μ puts 1.0% of even and **22.2%** of odd. Roughly two thirds of the apparent odd deficit was the menu's shortfall rather than μ's. Likewise the "widening with n" that §5.5 reports (36.5% → 53.9% → 65.4%) is much gentler at the level of μ: odd median density runs 0.1413, 0.1086, 0.1024 across thirds of the range while the even median stays flat — a real decline, but flattening rather than accelerating.
 

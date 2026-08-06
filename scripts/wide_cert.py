@@ -23,12 +23,14 @@ true B(n) to settle and is NOT a counterexample.
 
 Usage: python3 wide_cert.py NMAX
 """
-import importlib.util, sys, time, bisect
+import importlib.util, os, sys, time, bisect, hashlib
 from math import comb
 import fb_common as fb
 
 _A = list(sys.argv); sys.argv = ['x']
-spec = importlib.util.spec_from_file_location("me", "/home/claude/ark/mu_enumerate.py")
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_ME = os.environ.get("MU_ENUMERATE", os.path.join(_HERE, "mu_enumerate.py"))
+spec = importlib.util.spec_from_file_location("me", _ME)
 me = importlib.util.module_from_spec(spec); me.__name__ = "me"
 spec.loader.exec_module(me)
 
@@ -122,8 +124,18 @@ def fused_lo(n):
 # (and hence pass 2) small.
 WEAK = 0.02
 t1 = time.time()
-CACHE = f"/home/claude/blo_{NMAX}.txt"          # pass 1 is the expensive half
-import os
+# Pass 1 is the expensive half, so it is cached -- but the cache MUST be keyed on
+# everything that determines B_lo, not just on NMAX.  Keying on NMAX alone means
+# that changing SCAN_CAP, WEAK, or any of the family functions silently reuses a
+# stale bound and the run "certifies" against old data.  --refresh exists but
+# relies on remembering; this does not.
+_SIG = hashlib.sha1("|".join([
+    str(SCAN_CAP), str(WEAK),
+    three_part_lo.__doc__ or "", two_part_lo.__doc__ or "", fused_lo.__doc__ or "",
+    str(three_part_lo.__code__.co_code), str(two_part_lo.__code__.co_code),
+    str(fused_lo.__code__.co_code), str(near.__code__.co_code),
+]).encode()).hexdigest()[:10]
+CACHE = os.path.join(os.environ.get("WIDE_CERT_CACHE", _HERE), f"blo_{NMAX}_{_SIG}.txt")
 if os.path.exists(CACHE) and '--refresh' not in _A:
     Blo = [0] * (NMAX + 2); ns = []
     for line in open(CACHE):
@@ -230,4 +242,11 @@ print()
 ok = tot - len(res)
 print(f"COLLAPSE CERTIFIED at {ok} of {tot} values ({100*ok/tot:.2f}%) in [6, {NMAX}]")
 print("from proven lower bounds alone.  Unresolved values need the true B(n) and")
-print("are not counterexamples; at every n <= 2007 the true-table certificate agrees.")
+print("are NOT counterexamples.  Over the range where both certificates run, the")
+print("true-table certificate (fallback_cert.py, 2008 values to n = 3239) agrees.")
+print()
+print("The theorem dispatch in pass 2 is an optimisation, not part of the proof:")
+print("with `branch_settled` stubbed to False the run gives identical output at")
+print("NMAX = 10^4 and 10^5, including the same two unresolved values.  So this")
+print("certificate, like fallback_cert.py, rests only on the necessary conditions")
+print("of fb_common.py being necessary.")

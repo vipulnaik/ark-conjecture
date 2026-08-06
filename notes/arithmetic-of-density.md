@@ -38,7 +38,7 @@ To maximise, take F to be the **smallest prime-power cofactor** of n — the lea
 
 > *Verified.* Over all 754 one-part winners in the table, the predicted density 1/F agrees with the computed value to O(1/n), with no exceptions. By F: 205 rows at F = 2 with median density 0.4995, 151 at F = 3 with median 0.3326, 116 at F = 4 with 0.2492, 97 at F = 5 with 0.1992, 68 at F = 7 with 0.1420, 44 at F = 9 with 0.1103. Maxima 0.49978, 0.33304, 0.24967, 0.19965, 0.14247, 0.11072 against 1/F = 0.5, 0.3333, 0.25, 0.2, 0.1429, 0.1111. (The remaining 73 sit at F = 8, 11, 13, 17, 19, 23.)
 
-> *Verified.* All 754 one-part winners have ω(n) = 2, and **no** value with ω(n) ≥ 3 has a one-part winner. Of the 1,077 table values with ω(n) = 2, 754 are one-part winners and the other 323 do better with a split.
+> *Verified.* All one-part winners have ω(n) = 2, and **no** value with ω(n) ≥ 3 has a one-part winner. Over the current 2,008-row table: of the 1,118 values with ω(n) = 2, 780 are one-part winners and the other 338 do better with a split. (Over the n ≤ 2,298 slice the figures were 754 and 323 — the counts below in §2.1 and §2.3 are for that slice unless stated.)
 
 **Why fusion is worth a factor of F.** F *unfused* equal parts of size c give min(C(c,2), c²) = C(c,2) ≈ n²/(2F²), density 1/F². Fusing them replaces the mutual capping by a single intra term F·C(c,2), density 1/F. So fusion buys exactly F, which is why reduction (R1) of the proof document — merge equal-size classes when F₁ + F₂ is a q-power — is the single most valuable simplification in the search, and why the enumeration's winners are so often a single fused class.
 
@@ -273,7 +273,7 @@ The hypothesis is parametric, then, and of Goldbach difficulty. It remains in ad
 
 | | range | status |
 |---|---|---|
-| μ(n) known exactly | n ≤ 2,298 | computed |
+| μ(n) known exactly | contiguous to n = 2,376, plus n = 3,059 and 3,239 | computed (2,008 rows) |
 | collapse μ(n) = B(n) certified | n ≤ 100,000 | computed, from lower bounds (Part E″), at all but two values — n = 50,817 and n = 89,697 |
 | global floor δ ≥ 0.02504 | n ≤ 10⁶ | computed (§5) |
 | global floor δ ≥ 0.02 | n > 10⁶ | conjectural, ineffectively |
@@ -300,7 +300,7 @@ Two effects, not one. The ω(n) = 2 population thins, as predicted; and **among 
 
 Two consequences, and both should temper how the computed range is read.
 
-**The observed density floor should drift downward.** Fully 56.1% of the current table has ω(n) = 2, so more than half the computed values are served by an engine whose reach halves over the next few decades of n. The floor of 0.0418 at n = 575, and the median of 0.1995, are both propped up by a population that thins.
+**The observed density floor should drift downward.** Fully 55.7% of the current table has ω(n) = 2, so more than half the computed values are served by an engine whose reach halves over the next few decades of n. The median of 0.1994 is propped up by a population that thins — and the prediction has already been borne out: the floor was 0.0418 at n = 575 when the table reached 1,540, then 0.041107, then 0.037524 at n = 2,291, and it now stands at 0.026117.
 
 **The asymptotic question is entirely Hardy–Littlewood.** Since the multiplicative engine vanishes in density, the asymptotic behaviour of μ(n) for almost all n is set by the additive families, whose caps are 1/4 and 1/9 and whose availability is a Bateman–Horn question. In particular the ladder constants of §5 of the notes — the §3.3 constants — are the right asymptotic quantities, and the fused family's 1/2 and 1/3 are not, however dominant they look in the table.
 
@@ -451,6 +451,6 @@ Read this way η = 2/d is not an efficiency knob but **the price of using blocks
 
 5. **Do the ℓ = 3 escapes behave as the O(log n) heuristic says?** §3.3 settles local solubility by class; what is assumed rather than argued is that the power-of-3 escapes are too sparse to affect the asymptotic constants. The model for the check is §5's own covering-system analysis, which found two of its candidate chains locally dead.
 
-6. **The fused family at ω(n) = 2 but bad splitting.** **323 of the 1,077** values with ω(n) = 2 do better with a split than with fusion, which happens when the smallest prime-power cofactor F is large. The distribution of F over ω(n) = 2 integers is classical, so predicting the 754/323 division is a clean test.
+6. **The fused family at ω(n) = 2 but bad splitting.** **338 of the 1,118** values with ω(n) = 2 do better with a split than with fusion, which happens when the smallest prime-power cofactor F is large. The distribution of F over ω(n) = 2 integers is classical, so predicting the 754/323 division is a clean test.
 
 7. **Efficiency below 1.** The distribution of the largest prime-power divisor of r − 1 over primes r is a shifted-prime question of Erdős type; the known results should be imported rather than re-derived, since η is what fixes every constant in §3.3.

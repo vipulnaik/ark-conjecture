@@ -1,298 +1,175 @@
 # Pending checks
 
-*What is left to run or verify. Companion to `orbital-evasiveness-notes.md` and `enumeration-proof.md`. This file is deliberately forward-looking: completed work and its figures live in the two documents, and the session history is in `session-log.md`.*
+*What is left to run or verify, for the arithmetic programme — `orbital-evasiveness-notes.md` §§1–6, `enumeration-proof.md`, `arithmetic-of-density.md`.*
+
+**Companion files.** Completed work and its figures live in the three documents; the review record is in `session-log-2.md` (2026-08 pass) and `session-log.md` (earlier). Findings from the literature review — which bear on framing, not correctness, and have deliberately **not** been folded into the primary documents — are in `literature-findings.md`. Everything pursued at a single small degree — the GAP battery, the SAT/CSP machinery, the backbone probes, the template enumerator — is in `small-degree-verification.md`, which touches §§1–6 only through the n = 10 and n = 12 exhaustive comparisons cited in Part I.
 
 **Status labels.** *Verified* — an independent computation agreed. *Sound* — an argument was read and found correct, with no independent computation. *Unverified* — neither.
 
 ---
 
-## Quick reference: commands
+## Where the residual risk sits
 
-*The priority-ordered version of this list is §D at the end; this section is the raw command reference.*
+Ranked, so the sections below have a stated basis. This is not the order the items appear in.
 
-*Flags below are checked against the scripts as they stand. Where a run needs code that does not exist yet, that is said explicitly rather than papered over with a plausible-looking flag.*
+1. **Lemma B′.** The only unscrutinised lemma that `B_safe` actually depends on. An error inflates B(n) and breaks attainment everywhere at once. One close read found it sound with a skipped branch — but that same read found a genuine gap in Lemma C and a wrong justification in G.2, so one read is weak evidence. → **T1**
+2. **Exhaustiveness of the GAP stages.** The subdirect-product hole is real and undischarged. It degrades *evidence* rather than creating an error — a missed group could only have larger m\*, i.e. it would be a counterexample, not a silent corruption — but it is the only non-circular check in the framework. → `small-degree-verification.md` item 5
+3. **Part E's realisability construction.** Attainment's other leg, argued in general and spot-checked at eight configurations from n = 12 to 315. Unlike the certificate, this has no per-n verification at all. → **T2**
+4. **The eight necessary conditions of `fb_common.py`.** Both certificates now rest on these and nothing else — the Part E′ theorems were shown to be optimisations in each. They have had one read. Their being *necessary* is what makes an empty candidate list a proof, and two of them have been corrected in the permissive direction historically. → **T3**
 
-**Routine, after any new batch of table values:**
+Closed in the 2026-08 pass and no longer risks: `fallback_cert.py` and `wide_cert.py` (both read; both shown to pass with every Part E′ theorem disabled), Lemma C (gap found, shown to affect neither endpoint), `mu_enumerate.py` (read; two independent checks).
+
+---
+
+# §1. Script runs
+
+*Can be launched in the background. Flags are checked against the scripts as they stand; where a run needs code that does not exist, that is said rather than papered over with a plausible-looking flag.*
+
+## R1. Routine, after any new batch of table values
+
+Every one of these is a per-n statement that does not extend itself.
 
 ```bash
-python3 mu_enumerate.py --nmin 2299 --nmax 2600 --out mu_table_safe_v2.csv   # extend the table (~n^2.9/value)
-python3 mu_enumerate.py --nlist ladder_weak.txt --floor 0.050510 --adaptive \
-                        --out mu_table_safe_v2.csv                          # global floor; see below
-python3 mu_enumerate.py --nmax 2600 --fill-gaps --out mu_table_safe_v2.csv   # then close any gaps a targeted run left
-python3 fallback_cert.py mu_table_safe_v2.csv                               # collapse certificate vs the true B(n)
-python3 wide_cert.py 100000                                                 # same, from lower bounds; pass 1 cached
-python3 check_doc_figures.py mu_table_safe_v2.csv *.md                      # catch prose figures the extension made stale
-python3 ladder_verify.py 200000                                             # ladder floor, all 12 classes (87 s)
+python3 mu_enumerate.py --nmin 2377 --nmax 2600 --out mu_table_safe_v2.csv   # extend (~n^2.9/value)
+python3 mu_enumerate.py --nmax 2600 --fill-gaps --out mu_table_safe_v2.csv   # close gaps a targeted run left
+python3 fallback_cert.py mu_table_safe_v2.csv --verbose                      # collapse cert vs true B(n)
+python3 wide_cert.py 100000                                                  # same, from lower bounds; pass 1 cached
+python3 check_doc_figures.py mu_table_safe_v2.csv *.md                       # figures, scope, prose, hygiene
+python3 ladder_verify.py 200000                                              # ladder floor, all 12 classes (87 s)
 ```
 
-## The global-floor branch-and-bound: one command
+`check_doc_figures.py` takes `--quiet` for findings only and `--pass {figures,scope,prose,hygiene}` to run one pass. It exits nonzero when anything is flagged, so it can gate a commit. Not every finding is an error — historical citations are legitimate — but each should be a decision.
+
+`mu_enumerate.py` also takes `--nlist FILE` (one n per line; a second field read as a lower bound on δ, the form `ladder_verify.py` writes), `--n` for a single value, `--check` to validate without extending, `--quiet`, and `--refined` (the lower endpoint B_refined — read Part C.2 first). `--fill-gaps` matters because plain resume continues after the *last* row, so holes a targeted run left would never be filled. `wide_cert.py` takes `--menu` to add the family-menu lower bound as a cross-check and `--refresh` to discard the cached pass 1.
+
+**Do not extend the table without rerunning R1 in full.** Three consecutive extensions each left a *different* subset of the documents behind, because updates were done by ad-hoc string replacement rather than a sweep.
+
+## R2. Add a `--no-theorems` flag to `fallback_cert.py`, then run it alongside R1
+
+**The highest-value cheap run on this page.** It was established by hand that the certificate passes with every Part E′ theorem switched off — `skip_settled=None`, never calling `theorem_report` — giving 0 candidates at all 2,008 values in 3 seconds. That shrinks the trusted base for μ(n) = B(n) enormously: over the certified range the result rests only on the eight necessary conditions being necessary, not on E.1, E.3(ii), E.3(iii), E.4, Lemma E.2's bound, or the hardcoded `MERSENNE`/`REPUNIT3` tables.
+
+But it was a throwaway script. Making it a flag means the guarantee is re-established on every extension instead of being a one-off claim in a log. If it ever starts failing while the normal run passes, that localises an error to E.1/E.3(iii)/E.4 or their tables immediately.
+
+The same now holds for `wide_cert.py` out to 10⁵ — stubbing its `branch_settled` call gives identical output at 10⁴ and 10⁵, including the same two unresolved values. Both deserve the flag, and both should run with it in the routine.
 
 ```bash
-python3 mu_enumerate.py --nlist ladder_weak.txt --floor 0.050510 --adaptive \
+python3 fallback_cert.py mu_table_safe_v2.csv --no-theorems    # NEEDS THE FLAG
+python3 wide_cert.py 100000 --no-theorems                      # NEEDS THE FLAG
+```
+
+## R3. Extend the naive-enumerator comparison to n ≤ 260
+
+The strongest available test of `mu_enumerate.py`'s pruning, because it re-derives B(n) from the Part G.3 spec with no pruning, seed or part pool — so it tests the pruning rather than re-running it. Now at **n ≤ 175, 0 mismatches**. `brute.py` (the naive enumerator) and `brute_compare.py` (the driver) accompany these files. `--resume` appends a JSONL and flushes per value, so a long run survives interruption and rerunning skips what is done. Roughly an overnight run to 260.
+
+```bash
+python3 brute_compare.py mu_table_safe_v2.csv --nmax 260 --resume runs/brute.jsonl
+```
+
+The direction that matters is stated in the output: *naive higher than table* would mean `mu_enumerate.py` prunes away a real configuration, i.e. B(n) too small and the upper bound broken. *Naive lower* would only mean the naive enumerator misses a shape.
+
+## R4. Count the Lemma C exposure after each extension
+
+Currently **zero**: of the 2,178 p-characteristic parts appearing in a computed winner, 1,903 have prime size and none has both a > 1 and a foreign prime dividing c − 1. Since Lemma C's proof only covers prime c, this count is the live measure of whether the gap has started to bite. A dozen lines against the CSV; worth folding into `check_doc_figures.py` rather than keeping as a separate script.
+
+## R5. Fix the two `fb_common.py` defects
+
+*(The two `wide_cert.py` defects found alongside these — a pass-1 cache keyed on NMAX alone, so a changed `SCAN_CAP` or `WEAK` silently reused a stale B_lo; and hardcoded absolute paths — are already fixed in the shipped file.)*
+
+Neither affects a result today, but (i) is in the anti-permissive direction and the gate that makes it vacuous could loosen.
+
+- **(i)** In `pair_candidates`, let F range over prime powers in the `q == '*'` branch rather than F = 1 only; likewise `multi_part_ok`'s `pcands` loop. F must be a q-power and q is unconstrained in that branch, so restricting to F = 1 could discard a real candidate. Vacuous over the table because the branch is gated on `r >= B` and the only n with n ≥ B(n) is **n = 6** — but that gate loosens if B ever drops to O(n).
+- **(ii)** Add the missing step to `e3ii_resolves`'s docstring: it justifies the (r, r) re-reading's cyclic layer by "gcd(r − 1, c) = 1", which does not follow, since gcd(r − 1, 2r + 1) = gcd(r − 1, 3). It is always 1, because r ≡ 1 (mod 3) would force 3 | 2r + 1 and kill the safe prime. True conclusion, unstated reason.
+
+## R6. Maintain `check_doc_figures.py`'s two whitelists
+
+The script was rewritten in the 2026-08 pass into four passes — figures, scope, prose, hygiene — and now reports 21 findings, all deliberate historical citations. What it needs is upkeep, not development, and both items are two-minute edits that must not be skipped:
+
+- **`CHECKPOINTS`.** Pass 1 recomputes every quantity at each listed checkpoint so a figure can be reported as "correct for n ≤ 2212" rather than merely wrong. **Append the old maximum whenever the table is extended**, or figures written against the superseded range will report as unexplained instead of as historical.
+- **`SCOPE`.** Pass 2's patterns are a *whitelist*, so silence means "nothing recognised", not "nothing to find". **Add a pattern whenever a new range assertion is written** — anything of the form "every computed value has δ ≥ x", "no computed value falls below x", "δ > 1/k forces". This pass is what catches the failure mode that produced the two worst defects of the 2026-08 pass, and it is only as good as its list.
+
+Also worth knowing: Pass 3 exempts files matching `session-log|pending-checks|README` from the contradiction check, since describing a superseded state is what a log is for. If a fourth document is added that is genuinely a log, add it to `ARCHIVE`.
+
+## R7. Extend `ladder_verify.py` past 10⁶ *(optional)*
+
+Lowest priority here and explicitly optional. O(N²/log N) — 33 s to 10⁵, 4,062 s to 10⁶ — so 10⁷ is multi-day. The running minimum has not moved since 10⁴ and the lower envelope has risen monotonically since [10³, 10⁴), so the expected return is confirmation rather than a new minimum. The value is in how far the pattern can be pushed.
+
+If it *is* extended, the branch-and-bound must be rerun on the new `ladder_weak.txt`:
+
+```bash
+python3 mu_enumerate.py --nlist ladder_weak.txt --floor 0.026117 --adaptive \
                         --out mu_table_safe_v2.csv
 ```
 
-That is the whole procedure. Pass the **full** `ladder_weak.txt`, not a pre-filtered subset, and start from the honest asymptotic constant (5 − 2√6)/2 = 0.050510 rather than a floor derived elsewhere.
-
-**Is `--out mu_table_safe_v2.csv` safe?** Yes, and it is required. Specifically:
-
-- **Existing rows are never rewritten, reordered or removed.** Decision mode only ever appends.
-- **The table is read** for the δ of any n already computed, and those values feed the floor directly. This is what makes the run fast — see below — so omitting `--out` is the difference between a few minutes and a very long night.
-- **Newly computed exact values are appended** in the normal schema, so the expensive work is kept. Only survivors trigger an exact computation; rejected and pruned n compute nothing and write nothing. Verified: an appended row is byte-identical to what a plain `--nmin/--nmax` run produces for the same n.
-- **Everything is computed in the default UNCONDITIONAL (safe) mode**, so appended rows are the same B(n) the table already holds. The run prints `mode  UNCONDITIONAL (safe)` as its first line; check it. `--refined` is now refused outright in combination with `--floor`/`--adaptive`, because it computes the *lower* endpoint B_refined rather than B(n), the schema records no mode, and a refined row appended to an unconditional table would be undetectable.
-
-A targeted run like this leaves gaps below its own maximum, so close them later with `--fill-gaps` before quoting the table as a contiguous range.
-
-**Why the full list costs nothing.** Over all 48,729 entries, starting at 0.050510 in LB-ascending order: **48,700 pruned on their bound, 2 read from the table, 27 actually tested.** In the file's natural ascending-n order it is 48,696 / 6 / 27. The mechanism is that LB(n) ≥ floor proves δ(n) ≥ floor, so a single float comparison eliminates a candidate; and the two table lookups (n = 935, then n = 2291) drop the floor from 0.050510 to 0.037524, which is what makes the other 48,700 prunable.
-
-The three outcomes per candidate:
-
-| | what happens | cost |
-|---|---|---|
-| **pruned** | its lower bound has risen above the running floor | one comparison |
-| **rejected** | some configuration beats the floor; stops at the first one found | usually K = 1 or 2 |
-| **survivor** | nothing beats the floor, so B(n) is computed exactly, adopted as the new floor if lower, and appended to `--out` | full n^2.9 |
-
-Each new floor also tightens Proposition F.1's part-count cap ⌊1/√floor⌋, so the run gets cheaper as it succeeds.
-
-**Outcome — this run is finished.** The 27 survivors were all n ≡ 11 (mod 12), between 2915 and 17363. Most rejected rather than survived, each success pruning more of what remained. The floor fell 0.037524 → 0.029282 (n = 3059) → **0.026117 (n = 3239)**, and the last candidate, n = 8927, rejected without B(8927) ever being computed — the run aborts a candidate as soon as some configuration beats the running minimum:
-
-```
-[193/48729] n=8927    B/C(n,2) > 0.02612  rejected at K=3   (9398.0s cumulative)
-```
-
-So `min { μ(n)/C(n,2) : n ≤ 10⁶ composite, not a prime power } = 136957/5243941 = 0.026117`, attained at n = 3239. Rerun this only if `ladder_verify.py` is extended past 10⁶.
-
-**`ladder_verify.py` computes the global floor of `arithmetic-of-density.md` §5.** For each n and over all twelve residue classes it finds the best density the three families achieve, scanning the block size over x ∈ [0.10, 0.55] — a window wide enough to hold every class's balance point, which matters because the low-efficiency classes balance near x = 0.22, not x = 1/3. The value is a *lower bound* on δ(n): it does not model the fused-plus-foreign shape (F, c) + r\*, so where both are known it agrees exactly at 1,700 of 1,921 values and is otherwise low by up to a factor of 2.
-
-Result to 10⁶ (68 minutes): **floor 0.02504 at n = 3239, zero values below 0.02**, per-class minima of δ/cap between 0.33 and 0.72.
-
-It also writes **`ladder_weak.txt`** — every n whose bound falls below the asymptotic constant (5 − 2√6)/2, which is 48,729 values below 10⁶. These are *not* counterexamples; they were the worklist for the branch-and-bound of §5, which reduced them to **27 candidates** using table lookups alone and then decided all 27 (see above). `mu_enumerate.py --floor M` decides each without computing B(n) exactly.
-
-Cost is O(N²/log N) — 33 s to 10⁵, 4,062 s to 10⁶ — so 10⁷ is multi-day and not worth it: the running minimum has not moved since n = 10⁴.
-
-Since the run is long enough to want watching, it prints a **checkpoint every 10,000** — timestamp, elapsed, throughput, the running floor and its n, a flag if anything has fallen below the floor, and an ETA scaled by N²/log N rather than linearly — and a **cumulative summary every 100,000** giving that block's own minimum alongside the global one. The block minima are worth reading on their own: 0.02504 over the first 10⁵ and 0.04125 over the second, which is the floor-rises-with-n effect of §5 visible as the scan proceeds.
-
-**Run `check_doc_figures.py` after every extension.** Three consecutive extensions each left a *different* subset of the documents behind, because the updates were done by ad-hoc string replacement rather than a sweep. The script recomputes every range-dependent figure the prose quotes — row count, n max, density floor and peak, median, part counts, `certified_K` distribution, the 1/4 and 1/9 shares, the δ ≤ 1/16 tail, the ω(n) = 2 count — and flags occurrences that no longer match. It deliberately does not edit: several of these numbers sit in sentences whose wording has to change with them (the density floor moved off n = 575 at n ≤ 2212, and the surrounding claim that it was "stable rather than eroding" had to go). Some flagged figures are legitimate historical citations — the `mu_fast.py` menu table's row count, a sample size, a "then-N" reference — so the output is a checklist, not a diff.
-
-`mu_enumerate.py` takes **`--nlist FILE`** (one n per line; a second field is read as a lower bound on δ, which is the form `ladder_verify.py` writes and which `--adaptive` prunes on) and **`--fill-gaps`**, which go together: a targeted `--nlist` run leaves holes below its own maximum, and plain resume continues after the *last* row, so those holes would never be filled. `--fill-gaps` rescans from `--nmin` and relies on the already-present check to skip what is done, costing only a loop over n. For `--floor` and `--adaptive` see the section below. It also takes `--n` for a single value, `--check` to validate an existing table without extending it, `--quiet`, and `--refined` (the lower endpoint B_refined — see Part C.2 of the proof document before using it). `wide_cert.py` takes `--menu` to add the family-menu lower bound as a cross-check and `--refresh` to discard the cached pass 1. `fallback_cert.py` takes `--verbose` to list every surviving candidate rather than stopping at the first.
-
-**Outstanding one-off runs.** These operate on the GAP battery and read `ckpt_groups.pkl`, `ckpt_catalog.pkl`, `ckpt_order.pkl` from the working directory; `n` is implicit in `groups_out.txt` rather than a flag.
-
-```bash
-# A1 + A2  rebuild the n = 12 battery with the corrected dedup key.
-#   --maxgroups IS REQUIRED.  It defaults to 200 and silently truncates: the run of
-#   2026-07 found 203 distinct Oliver conditions and kept only 200 (see A1 below).
-#   Stage-3 VF2 sampling is automatic (--verify, default 3000), so A2 needs no separate run.
-#   No manual cleanup: changing any flag changes the selection signature and stage 1
-#   deletes ckpt_groups/catalog/order itself.  Do NOT pre-delete them.
-#   READ A5 FIRST -- stage 3 at full size is a multi-week run and may not be needed at all.
-python3 consume_gap.py --infile groups_out.txt --maxgroups 1000 --maxt 8 --procs 8
-
-# check whether groups_out.txt predates the multi-top-prime change to ark_gap.g:
-awk -F'|' '$3 ~ /\+/' groups_out.txt | wc -l     # 0 => either pre-change, or no group has two usable q
-
-# A3  involution pressure points. Needs the complements of 393, 401, 405 (38 edges) and of the
-#     five 8-edge forced-IN classes; 108 is the only 7-edge class probed so far and came back free.
-python3 probe_backbone.py --classes 393,401,405,108,437,439,457,493
-
-# A4  the 54 CAP classes at a larger budget. --auto N probes the N highest-value unprobed classes;
-#     there is no flag that selects "the CAP classes", so the list must be passed explicitly.
-python3 probe_backbone.py --classes <the 54 CAP ids> --nodecap 20000000
-```
-
-**Needs code that does not exist:**
-
-- **A7** (dedup-collision audit at n = 10) has no CLI entry point — the n = 12 measurement was ad hoc. It also needs `groups_out.txt` for n = 10, which is not in the working set.
-- **A4**'s class list is not recorded anywhere machine-readable; it must be re-extracted from the probe record before the command above can be run.
-- **A5** is a design decision about how to compute S at n = 12, not a run — **and it now gates A1**, because it determines whether stage 3 is needed at all.
-
-## Literature checks, deferred to paper-shaping
-
-These came from a co-author's review and are **not** fixes to the current documents; they bear on how the eventual paper is framed and on whether the result is novel. Shelved deliberately so the short note stays short.
-
-- **BBKN Section 5, and this one is decisive.** It reportedly defines f(n) = max min{p²k, pkr, qr} over n = kp + r with r ≡ 1 (mod q), k general. If so, our even construction is k = 1 and our odd is k = 2, and §3 of the note is a parameter choice inside their framework rather than a new construction — which makes the contribution the number theory, and a different paper. **Unverified; needs the actual paper opened.** Everything about framing waits on it.
-- **Shparlinski 2013** (*Theoret. Comput. Sci.* 547, 117–121) gives an unconditional version of BBKN's ERH result plus a stronger estimate for almost all n. Our §5 compares against the 2010 baseline. Note the nuance in our favour: his all-large-n figure is n^(5/4+o(1)), so on that quantifier row we are not undercut — the honest comparison table has two quantifier columns. The suggested reframing, as **the γ = 1 endpoint** of his ladder (γ = how large a prime-power divisor of r − 1 one can guarantee; Baker–Harman gives 0.677 unconditionally), is more informative about (H)'s cost than a barrier claim.
-- **Rivest–Vuillemin (1976):** every non-constant monotone graph property has D(P) = Ω(n²) unconditionally. So Θ(n²) is not an advance on *weak* evasiveness; ours is about *exact* evasiveness on sparse properties. A referee asks this immediately and §5 does not currently address it. Scheidweiler–Triesch (SIAM JDM 27, 2013) belongs in the same citation block.
-- **Black's orbit-augmentation "spacing" parameter** may subsume m*(Γ) or vice versa; he restricts to p-groups where Oliver groups are more general, which would be a point in our favour if confirmed.
-- **Erdős covering congruences** reportedly give a *positive density* of odd n with no 2^k + p representation — stronger than our O(log n)-sparse claim about the 2-power escapes in §3.3, and would close that route rather than thin it. Worth verifying.
-
-## Open mathematical questions
-
-Not repeated here. The two arithmetic residues are Open Problem 8 of the notes and Part J items 1–2 of `enumeration-proof.md`; the largest epistemic risk is Part J item 3 — an independent reading of Lemma B′, Lemma C and G.2, none of which has had any.
-
-Two items are concrete work rather than heuristics, and both are gaps in a *proof*:
-
-- **Promote E.3(ii) past the bare pair.** With the above-1/9 route refuted (a majority of odd n have δ < 1/9 outright), this is the only path left to Part J item 2.
-- **Bound the s = 4 and s = 5 branches.** Opened by the density floor falling to 0.026117; neither is thin enough for an E.4-style collapse.
-
-The branch-and-bound itself is **finished**: the global minimum of μ(n)/C(n,2) over all composite non-prime-power n ≤ 10⁶ is 0.026117 at n = 3239. `arithmetic-of-density.md` §8 lists its remaining questions, all heuristic-vs-measurement comparisons.
+Start from the current floor 0.026117, not from the asymptotic constant. `--out` is required, not optional: existing rows are never rewritten, the table is read for the δ of any already-computed n (which is what makes the run fast), and newly computed exact values are appended in the normal schema. `--refined` is refused in combination with `--floor`/`--adaptive`. Check the first line reads `mode  UNCONDITIONAL (safe)`. Follow with `--fill-gaps` before quoting the table as a contiguous range.
 
 ---
 
-## A. Runs pending
+# §2. Thinking work
 
-**A1. Rebuild the n = 12 battery with the corrected dedup key.** `consume_gap.py`'s stage-1 key was an incomplete invariant that merged inequivalent orbital partitions; the corrected key is a pynauty canonical form on a layered graph. The battery must be rebuilt before any n = 12 verdict is quoted.
+## §2a. Needs human thought
 
-*State as of the 2026-07 run (log and checkpoints on file).* Stage 1 rebuilt correctly on the signature change with no manual cleanup, and stage 2 completed: **2,293 raw → 230 distinct (partition, prime) conditions → 227 kept (200 Oliver + 27 p-groups), 2,212 catalogue classes**. μ(12) = 18 survives: m\* = 18 is attained by **3 distinct conditions**, which is the previously reported 8 groups collapsing under the corrected dedup. Stage 3 then reported **1,018,719 of 4,890,732 ordered pairs needing VF2 (20.8%)**.
+*Judgement calls, independent scrutiny, or things requiring materials Claude cannot obtain.*
 
-> **Two problems with that run, both to fix before repeating it.**
->
-> **(i) The battery was truncated.** `--maxgroups` defaults to **200** and stage 1 found **203** distinct Oliver conditions, so `sel = ol[:maxgroups] + pg` silently dropped **3**. The sort is `(-mstar, t)`, so the casualties are the lowest-m\* conditions — harmless for μ(12) = 18, which reads off the top, but the battery feeds the Smith/χ computation where every condition is a constraint. Dropping constraints makes the system easier to satisfy, so a negative verdict would survive but a positive one would not be quotable. **Always pass `--maxgroups 1000`.**
->
-> **(ii) Stage 3 at full size is a multi-week run.** The old 600-class battery needed 74,213 VF2 pairs; the new 2,212-class battery needs **1,018,719 — 13.7×**. Measured from the logs across three resumed sessions: **2,176 VF2 calls, 30,002 s, 16,061 pairs resolved → 7.4 pairs/call at 13.8 s/call**, with the yield decaying as the easy pairs go first (13.5 → 3.6 → 5.4). Extrapolating: **22 days** at the early rate, **33–41 days** at the late rate. For reference the *old* battery never finished either — four sessions took it from 74,213 to 58,152, about 22% through.
->
-> Levers, in order of preference: **settle A5 first**, since the EGF route may make stage 3 unnecessary; failing that, `--maxt 6` drops the t = 7 and t = 8 groups (44 + 58 of 227) and cuts pairs to roughly 30%, still about a week and a weaker battery.
+### T1. Independent reading of Lemma B′ ★
 
-**A2. Stage-3 sample verification at n = 12** — *now automatic, folded into the A1 run.* Now automatic (`--verify`, default 3000 random ordered pairs re-decided by VF2). The n = 10 acceptance test was bit-identical agreement with an archived full-VF2 reference; there is no such reference at any other degree, and roughly 80% of ordered pairs are settled by inference alone. Until this passes, the n = 12 order matrix is an unchecked implementation of checked rules.
+**The highest-value item on this page, and no amount of compute substitutes for it.** B′ is the only unscrutinised lemma `B_safe` depends on. It has now had one close read, which found it sound with one skipped branch — but that same read found a genuine gap in Lemma C and a wrong justification in G.2. Two defects in three arguments is the relevant base rate, and it argues for a second reader rather than against one.
 
-**A3. Settle the duality involution empirically.** `probe_backbone.py` now computes the complement class of every forced class and reports violations plus the specific unprobed complements the theorem predicts. Three pressure points exist in the current n = 10 record and all are cheap to close:
-- the three forced-OUT classes at 38 edges (393, 401, 405) require three forced-IN classes at 7 edges, and the only 7-edge class probed (**class 108**) came back **free**. If 108 is the complement of any of the three, **the theorem is contradicted**; if not, the partners are unprobed.
-- the five forced-IN classes at 8 edges require five forced-OUT at 37 edges; no 37-edge class has been probed.
-- the forced-IN class at 2 edges requires a forced-OUT at 43; no 43-edge class has been probed.
+Specifically worth attacking: the step "π_O(Γ₁) is cyclic normal, so contains the socle, forcing a = 1". This is where the argument does real work, and the analogous step in the original Part B ΓL(1) argument is the one that turned out false.
 
-The practical corollary of the theorem — probe one representative per complement pair, halving the sweep — is currently being relied on without this check.
+*Human, because the value is in the independence.* A second pass by the same reader on the same evidence is worth much less than a first pass by someone else.
 
-**A4. Re-probe the 54 CAP classes at a larger node budget.** They sit at 12–36 edges, concentrated at 24, 28, 30, 33, 34, i.e. through the middle of the free band. A CAP class is *not* free. The log shows `--nodecap` was already raised from 5×10⁶ to 2×10⁷ partway through the sweep, so the earlier CAPs may resolve without a new idea. Until then no statement of the form "the band is free from 11 to 34 edges" is supported.
+### T2. Verify Part E's realisability construction per-n
 
-**A5. Decide how S will be computed at n = 12 before the CSP verdict arrives.** `chi_test.py` enumerates the full down-closure with a canonicalisation per node: 64,333 classes and about 60 s at n = 10, against `--cap 5000000`. At n = 12 the ambient count is 1.65 × 10¹¹ iso classes and the closure of an 18-edge-or-larger generator set may well exceed the cap. The global χ test is the only test that has actually killed anything, so losing it at n = 12 would be a real loss. The alternative is the §8.4 route — exponential formula over signed connected-component weights, two-sort EGF for bipartite components — which computes S without enumerating the closure. This is a design decision, not a bug.
+Attainment's other leg. Argued in general and spot-checked at eight configurations from n = 12 to 315; unlike the collapse certificate it has no per-n verification. The question is whether a per-n check is even the right shape here, or whether the general argument should be strengthened instead — that is a decision about where to spend effort, not a computation. **If** a per-n check is wanted, it is buildable and moves to §1.
 
-> **Promoted: this now gates A1.** The 2026-07 run showed stage 3 of `consume_gap.py` — the containment-order matrix — projecting to 22–41 days at the corrected battery size. Stage 3 exists to supply that order matrix. So the question is not merely *how* to compute S but **whether the order matrix is needed at all**: if the §8.4 EGF route computes χ without it, weeks of stage 3 are avoidable. Decide this before relaunching A1, and if the EGF route wins, consider whether `consume_gap.py` should gain a `--stop-after 2` flag so the battery can be built without entering stage 3.
+### T3. A second read of the eight necessary conditions
 
-**A6. Rerun `fallback_cert.py` whenever the table extends.** It is a per-n check, not a theorem: `python3 fallback_cert.py mu_table_safe_v2.csv` belongs in the routine after every batch of new values. Rerun 2026-08 on the 2,008-row table (n up to 3239): **0 values where any fallback configuration could reach B(n)**, so CERTIFIED throughout. 1,503 of 2,008 (74.9%) settled by theorem alone; per s-branch, 2,062 of 2,572 (80.2%). Theorem-side residue: 505 branches where E.3(ii) is pairwise only, 4 at s = 4, 1 at s = 5. Largest permitted s over the range is 5. Two things would retire it: a proof that δ is bounded below (the ladder does this conditionally, which forces s = 1 and lets the Cap(a) argument finish), or a general domination argument for the fallback.
+Now the whole trusted base for μ(n) = B(n), since both certificates were shown to pass with every Part E′ theorem disabled. The conditions have had exactly one read, which found two defects (both anti-permissive, both vacuous in range) and no soundness error. But the history is that getting them right took two prior corrections, *both in the permissive direction* — and a permissive error is the one that silently removes a real candidate.
 
-**A7. Verify the dedup-collision audit at n = 10.** The measurement in §8.7′ was made at n = 12 because `groups_out.txt` for n = 12 was to hand. The same audit at n = 10 would say how much the *published* n = 10 SAT was affected, which matters for how the skeleton and the χ kill should be described. Requires the n = 10 `groups_out.txt`.
+The specific question is not "is each condition true" but **"is each condition necessary"** — i.e. does every fallback configuration attaining B(n) really satisfy it. That is a different reading from the one already done, and it is the reading that matters.
 
----
+*Human, for the same reason as T1: the value is in the independence.*
 
-## B. Unchecked assumptions in the scripts
+### T4. Literature checks — mostly resolved; see `literature-findings.md`
 
-**B1. `Catalog.classify` is a mutating lookup used as a pure query.** In `stage4_fast.py`, `probe_backbone.py` and `chi_test.py` the idiom `x[cat.classify(set())] = 1` assumes the empty graph is already in the catalog. If it were not, `classify` would **append**, silently extending `cat.reps` and desynchronising `V` from the order matrix. The same hazard applies to the complement lookups in the new involution check, which is why that block asserts the catalog did not grow. Status: **unverified, latent.** A `classify_or_fail` variant used everywhere the catalog is meant to be read-only would close it permanently.
+Worked through in the 2026-08 pass. Findings are in **`literature-findings.md`**; none of the primary documents was edited on the strength of them, deliberately, since they bear on framing rather than correctness.
 
-**B2. `mono` is only ever called on representatives with the same vertex count.** The complement trick in `ark_intersect.mono` rests on the identity σ(E_H) ⊆ E_G ⟺ σ⁻¹(E_Ḡ) ⊆ E_H̄, which requires σ to be a **bijection** — true when H and G both carry all n vertices, false for a genuine injection. Every catalog representative does carry all n vertices, so the call sites are fine. Status: **sound, but undefended.** An assertion on the vertex counts inside `mono` would make it safe against reuse.
+**The decisive one came back against us and should be absorbed before more writing happens.** BBKN §5.1 does define the max-min our §3 optimises — m\* = Ω(min{p²k, pkr, qr}) over n = pk + r with r ≡ 1 (mod q) — and Shparlinski (2014) has already isolated it as a named function f(n) (his eq. (1), Lemma 5). Our even and odd constructions are k = 1 and k = 2 in that family. B(n) is nonetheless strictly larger than f(n) (prime powers not just primes, prime-power twists not just prime, and the fused-only configurations that are 39% of the table and which W_n cannot express), and neither paper claims a maximum over *all* Oliver groups or studies f(n) at fixed n at all. But §3 is a parameter choice inside a published family and should not be presented as a new construction.
 
-**B3. Purely-foreign configurations are reachable.** `best_with_k` skipped a prime p when no power of p landed in the pruning window, which is justified only for configurations containing a p-characteristic part. Configurations with a trivial bottom layer (all parts foreign) are legitimate Oliver groups, and reaching them relied on some *other* p surviving the skip and happening to make every part foreign — true in practice, unproven in general. Status: **corrected** — an explicit sentinel `p = 0` meaning "trivial bottom layer" is now enumerated and never skipped. The correction did not change B(n) on any of the 85 regression values.
+Four items remain, listed at the end of `literature-findings.md`:
 
-**B4. The refined intra-orbital formula — resolved in range; only the asymptotic statement is open.** Formerly the one place where the code computed something the proof did not license. Now closed: Parts E′–E″ of `enumeration-proof.md` prove the collapse by theorem above density 1/9 and certify it elsewhere out to n = 100,000. **What is pending here is only the routine rerun (A6) and one open case** — s = 2 with c a safe prime and a nonzero leftover, whose two unresolved values below 100,000 are n = 50,817 and n = 89,697. Status: **closed in range, open as an asymptotic statement.** Details in Part J item 2, not repeated here.
+- **Read Black's spacing definition.** The only item that could not be settled from abstracts. Spacing is restricted to p-groups and concludes weak evasiveness, so it looks incomparable to m\* rather than subsuming it — but the definition is in the paper body.
+- **Check whether Shparlinski's Theorem 2 survives the prime-power version of α.** His ladder is parameterised by the largest *prime* divisor of r − 1; our η uses the largest prime *power* divisor of the odd part, plus the 2-part. If the ladder transfers, "(H) is the γ = 1 endpoint" is a clean framing; if not, we need another.
+- **Read Scheidweiler–Triesch and Korneffel–Triesch properly.** The current best unconditional weak bound is n²/3 − o(n²), which is a factor of 25 above our density floor. Not a defect in the result — a weak bound on all properties and an exact result on a restricted class are different in kind — but §5 does not currently say so, and will read as competing and losing.
+- **Decide the framing.** No longer a literature question. It determines whether §3 is a contribution or a recap, and it should be settled before more writing.
+- **Read Angel–Borja, arXiv:1603.04412**, before writing anything about n = 10. Surfaced incidentally: they use Oliver groups to bound the dimension of a non-evasive complex on 2p vertices and apply it at ten vertices. Same degree, same tool, same target as `small-degree-verification.md`; overlap unknown, and they are not in our reference list.
 
-**B5. Exhaustiveness of the four GAP stages.** *Partially discharged — read this session, see below.* Only the Oliver-condition test and the emission logic of `ark_gap.g` have been read. `IsOliverTop` is **sound** — taking Γ₂ = `PCore(N,p)` is WLOG since any normal p-subgroup with cyclic quotient lies in O_p(N) and the quotient is then a quotient of a cyclic group; and normality in Γ is automatic because O_p(N) is characteristic in N with N ◁ Γ. What has *not* been checked is whether stages A–D together are exhaustive over the intended families (transitive groups, direct products over partitions, imprimitive wreaths, p-subgroups up to Sylow-conjugacy). The n = 10 and n = 12 exhaustive comparisons are evidence that they are, at those degrees.
+*Also settled:* the Θ(n²) / Hardy–Littlewood reframing was searched for in Lovász–Young (ruled out on dates — 1990 lectures), Kulkarni's ITCS 2013 circuit-lens paper, Shparlinski's §5 comments, BBKN §2.4, and the Csernák survey, plus direct topic searches. **No trace.** There is a structural reason: every tool in that literature is an existence-of-one-prime tool and so cannot produce a Θ statement. Negative searches cannot rule out talks or referee reports, so the note should present the heuristic as the natural reading of the data rather than as a new observation.
 
-> *Read-through, this session.* The four stages are: **A** every transitive group of degree N, by `TransitiveGroup(N,k)` over the full range of k; **B** every partition of N, with each part carrying an independently chosen transitive group, generators embedded blockwise; **B2** every wreath product T(d,k) ≀ T(r,j) with dr = N; **C** for each prime p ≤ N, the conjugacy classes of subgroups of a Sylow p-subgroup of S_N. Two observations. The union is **not** obviously exhaustive over intransitive imprimitive groups: stage B builds direct products of transitive constituents, so an intransitive group whose projections are transitive but which is a *proper subdirect* product — a fibre product over a common quotient — is generated by neither B nor B2, and C only reaches it if it happens to be a p-group. That is the concrete gap to close or refute. Second, stage C's `ConjugacyClassesSubgroups(SylowSubgroup(S_N, 2))` is the expensive step and is explicitly noted in the file as non-checkpointable at N = 10, so any claim of completeness at N = 12 depends on that call having finished, which the logs should be checked for. Status: **stages enumerated and their shapes understood; exhaustiveness still unproved, with subdirect products the identified hole.**
+### T5. Decide whether to close the Lemma C gap at all
 
-**B6. The lcm strengthening is implemented but unexercised.** `IsOliverTop` now returns every usable top prime as a `+`-separated tag and the solvers enforce χ ≡ 1 mod lcm. Single-prime tags parse identically, so old files behave exactly as before — which also means **the new path has never run**. It needs one GAP re-emission and a check that some group actually receives a multi-prime tag before the strengthening can be claimed.
+Now a question about the *sharpness* of the search rather than about the results — dropping Lemma C can only enlarge the configuration space, B_safe does not use it, Part E's construction uses it only as a sufficient condition, and the measured exposure is zero. What it is load-bearing for is `--refined`, the `fallback` bookkeeping, and the reasoning inside E′. So the call is whether the E′ argument is worth repairing at a > 1 or whether it should simply be scoped to prime c. **A priorities decision.**
 
----
+## §2b. Claude can pick these off
 
-**B7. `TemplateGroup` places the block rotation in the cyclic middle layer, and that is the real template bug.** §2.4's implementation note describes the defect as a spurious gcd(d, k) = 1 filter plus a prime-only k, and both symptoms are visible in `candidate_groups`. They are not the cause. `TemplateGroup`'s own chain model puts the rotation in Γ₁/Γ₂ — its docstring requires d, the foreign primes and s pairwise coprime — and separately enforces k = s with s prime. Theorem 2.4 places the rotation in the top q-group, whence any d | c−1 is admissible and k need only be a prime power. Consequence: the template misses μ(10) = 20 (k = 2, d = 10) and μ(12) = 18 (k = 4).
+*Self-contained analysis against the existing files. No new materials needed.*
 
-**Do not repair this in the enumerator alone.** I tried; relaxing the filter builds groups that `TemplateGroup` marks invalid, and an unconditional `break` over the twist candidates then discards the smaller d that had been working — **n = 22 fell from 110 to 55**. The change was reverted and the defect documented in place. The `break` bug is genuine and independent and has been fixed (break only after a valid group is actually produced); with it fixed and the filter restored, the template reproduces Run 1 exactly at n = 6, 10, 12, 15, 18, 21, 22, 26 (6, 10, 10, 30, 36, 28, 110, 78). The real repair is to move the rotation into the top layer inside `TemplateGroup`, updating its Oliver validity check and `desc_parts`, which also changes what `top_prime` parses. Status: **open, deliberately deferred** — the GAP path has no such restriction and supersedes this enumerator, so the value is in correctness of the record rather than in better μ bounds.
+### A1. Bound the s = 4 and s = 5 branches
 
----
+Opened by the density floor falling to 0.026117, which puts four computed values below 1/25 (n = 2291, 2303, 3059, 3239) and one below 1/36. Neither branch is thin enough for an E.4-style collapse — c − 1 = 4r and c − 1 = 5r carry no parity or congruence forcing — so an absolute cap would have to come from the foreign block's twist, as in E.1 and E.3(iii). The search clears both at every computed n, so nothing is unproved; the gap is theorem-side and widens as the floor falls. Currently 4 branches at s = 4 and 1 at s = 5 over the certified range.
 
-## C. Review pass of 2026-08 (cold read of the three documents)
+### A2. Promote E.3(ii) past the bare pair
 
-*What that pass changed in place, and what it left open. The distinguishing feature of the first two items is that they are wrong **derivations**, not stale figures, so `check_doc_figures.py` would never have caught them.*
+The largest theorem-side residue: **505 branches** over the certified range where E.3(ii) is pairwise only and the global promotion is open. With the above-1/9 route refuted (a majority of odd n have δ < 1/9 outright), this is the only path left to Part J item 2. The obstruction is known and specific: with a leftover the (r, r) re-reading must also re-type the leftover parts, and the commonest case L = c fails outright because two blocks of the same prime c would be two equal foreign parts, which Part E forbids.
 
-**C1. The ℓ = 2 efficiency claim was false; corrected in place.** Both `arithmetic-of-density.md` §3.3 and `orbital-evasiveness-notes.md` §5.3 characterised η = 1 as "a = 1 and u a prime power" and concluded that 4 | r − 1 caps η at 1/2. The characterisation omits **u = 1**: at a Fermat prime r − 1 = 2^a is a pure 2-power, so η = 1 for every a. This is not hypothetical — fusing the two equal c-blocks of the three-class family forces q = 2, and the foreign twist is then full exactly at Fermat primes, producing **20 winners of shape `2×c + 257*`, all in classes 3 and 7 mod 12, at densities up to 0.16138** against those classes' tabulated 0.08579. `enumeration-proof.md` Part I already said the right thing (Fermat primes at q = 2, the 257 binding orbital at n = 777 and n = 1175), so the two documents were in direct contradiction. Corrected in all three places, with the escape added to the §3.3 inventory. Status: **fixed; asymptotically harmless** (five known Fermat primes is O(1)-sparse), but two things remain:
+### A3. Erdős covering congruences vs the 2-power escape claim
 
-- **Done: the unfiltered version of the "Lower: uniform across classes" check has now been run**, and it is much more informative than the filtered one. Over all 1,108 two- and three-class one-foreign winners, normalised by **cap(own η)**: every class lands in 0.28–0.998, none exceeds 1. Normalised by the **class cap**, 194 rows exceed it — 57 via the 2^a + r\* route, 43 via the fused 2×c + r\* route, 94 via an η above the class generic — and class 11 has a *median* of 1.236 with 28 of 39 over. Written into §3.3. Two things followed: the fused-class cap cap_F(η) = Fη/(√F + F√η)² was missing from the document entirely (§3.3 now derives it; 0 of 58 fused winners exceed it, max 0.16138 = 94% of cap_2(1)), and the phrase "generic ceiling" was overstating how typical the δ₀ are inside the computed range.
-- the per-class row counts in the filtered table (summing to 887) were **not** recomputed and the filter that produced them was not reconstructed; the unfiltered table above supersedes it in content but the document still carries both. **Partly unverified.**
+Not attempted in the literature pass — it is a mathematical check, not a framing question, which is why it sits here rather than in T4. Reportedly give a *positive density* of odd n with no 2^k + p representation — stronger than the O(log n)-sparse claim about 2-power escapes in §3.3, and would close that route rather than thin it. Checkable from the literature plus a direct computation over the table. Sits here rather than in T4 because it is a mathematical check, not a framing question.
 
-**C2. `ladder_verify.py` did not enforce Lemma C; guard added.** Both families scored the p-characteristic block at `comb(c,2)`, i.e. twist d = c − 1, without checking gcd(c−1, r) = 1. Where r | c − 1 the twist is stripped and the true family value collapses, so the output was not strictly the lower bound on δ(n) that the docstring and both documents claim. The window forces this to c = r + 1, hence n = 2r + 1 (two parts) or n = 3r + 2 (three parts) with r Mersenne-like — n = 15, 63, 255, 65535 and n = 11, 23, 95, 383, 24575. None of them appears in `ladder_weak.txt` and none is ever the argmax, so **no published number changes**; a rerun to 20,000 reproduces the original per-class minima, floor and weak list exactly. Status: **fixed, no effect on results.**
+### A4. Reconstruct or retire the filtered per-class table in §3.3
 
-**C3. `stop_at` truncation is now documented in the script.** `achieved(n, stop_at=0.9*CAP[a])` returns as soon as it clears the threshold, so the value is not the family maximum. That is why the long run's per-block "floor" lines keep reporting 0.04546 = 0.9 × 0.05051. Everything asserted is still a lower bound, but the block minima should not be read as maxima, and the sentence in this file that recommends reading them "on their own" should be taken narrowly. Status: **documented; harmless.**
+Its row counts sum to 887 and the filter that produced them was not reconstructed. The unfiltered version now in the document supersedes it in content, but the document carries both, which is worse than carrying either. Either reproduce the filter or delete the table. **Partly unverified.**
 
-**C4. Part E′'s Corollary had been falsified by the falling floor; rewritten.** It asserted "δ > 1/25 forces s ≤ 3 — and every computed value has δ ≥ 0.0418 > 1/25", which contradicted the s = 4 box immediately above it once n = 2291, 3059 and 3239 came in below 1/25. Rewritten to scope the reduction to δ > 1/25 and to say plainly that s = 4 and s = 5 are open below it. A matching open item **2a** was added to Part J. Status: **fixed in the prose; the underlying gap is real and is the s = 4/s = 5 item below.**
+### A5. Sweep for other expired-scope arguments
 
-**C5. Stale range-dependent figures, corrected.** All of these were live-looking because 1,848 (n ≤ 2212) and 1,921 (n ≤ 2298) both still occur legitimately. Fixed: the F-breakdown of one-part winners in a-o-d §2.1 (was 184/137/105/88/62/39, now 205/151/116/97/68/44); the §2.3 shape table (was 678/793/201, now 754/909/258); the three-part median (0.0915 → 0.0889); "200 of the 258 three-part winners" → 255; "all but two have equal p-parts" → all but three, **n = 2015 = 1024 + 512 + 479\* being a second instance of the n = 551 distinct-2-powers shape**; fused-winner share 42.3% → 39.3%; ω(n) = 2 share 57% → 56.1%; the 1/16 tail 28 → 45 values (2.3%, not 1.7%); "1,390 … 458 … those 397" reconciled to 1,390 + 458 = 1,848 at 75.2%; the even/odd 1/4 shortfall (80.7/81.0 → 81.3/81.7); the odd-median thirds (0.1434/0.1101/0.1037 → 0.1413/0.1086/0.1024); three duplicated sentence fragments; and one dangling clause in the §5 heading of the notes.
-
-**C6. The branch-and-bound status was recorded in three different states; reconciled.** `arithmetic-of-density.md` simultaneously said the search terminates, that one value remains, and that "completing these three" would settle it; this file carried both the pre-run "expected outcome" and the post-run "finished". All now record the finished state, with the n = 8927 rejection log quoted.
-
-**C7. The fused-class cap was missing from §3.3.** Falls out of the unfiltered check above. The δ₀ table derives its odd-n caps for the **unfused** shape 2c + r\*, but when q = 2 the two equal c-blocks can be fused, and (R1) says they should be. The fused cap is **cap_F(η) = Fη/(√F + F√η)²**, attained at x\* = √η/(√F + F√η); it reduces to the table's k = 1 row at F = 1 and gives 0.17157 (η = 1) and 0.10102 (η = 1/3) at F = 2, against the tabulated 1/9 and 0.0718. Verified: 0 of 58 fused-class-plus-foreign winners exceed it, max 0.16138 at n = 639 (94% of cap_2(1)). This subsumes C1: fusion at F = 2 forces q = 2, which makes η = 1 available exactly at a Fermat prime — the Fermat escape and the fusion gap are one phenomenon. Written into §3.3. Status: **derived, verified, documented.**
-
-**C8. `mu_enumerate.py` read in full; two checks run.** Recorded as Part J item 4 of `enumeration-proof.md`. The pruning is conservative in the right direction throughout (the `cmin` bound, the seed, the cross-term prune, the `p = 0` sentinel), and nothing was found that could inflate B(n). Checks: 61 values ≤ 700 re-run with the shipped code (0 mismatches), and 79 values at n ≤ 120 against a **separately written naive enumerator** with no pruning, seed or part pool (0 mismatches) — the latter being the one that actually tests the pruning. Status: **read and spot-verified; the naive comparison is worth extending to n ≤ 260, which is an overnight run.**
-
-**C9. Lemma review: B′ sound, Lemma C proved only at prime c, G.2's stated reason wrong.** All three read closely and annotated in place.
-
-- **Lemma B′ — sound.** One branch the sketch skips: if π_O(Γ₁) = 1 then Γ|_O is a transitive q-group, hence primitive of prime degree q with trivial twist, so the conclusion still holds. Added. **B_safe does depend on B′**, so this one matters for the published bound — though an error would inflate B(n) rather than deflate it.
-- **Lemma C — a real gap at c = p^a with a > 1.** The load-bearing clause "on part i the top group induces the identity" is provable when c_i is prime (the normaliser of the twist in AGL(1, c) centralises it), but when c_i = p^a a top-group element may act through the **Galois** part of ΓL(1, p^a), sending ζ ↦ ζ^{p^k}. That power map has q-power order, and so does the twist multiplier on part j, so the two are not obviously incompatible and the argument does not close. This is the same failure mode as the ΓL(1) step that turned out false.
-- **…but B_safe does not use Lemma C.** In SAFE mode `value()` scores every p-characteristic part at F·C(c,2) regardless of stripping, since orb(c, c−1) = C(c,2) identically. Confirmed by experiment: deleting the Lemma C stripping from `value()` reproduces the table exactly at every n ≤ 400. So a failure of Lemma C could not invalidate the published upper bound; the exposure is to B_refined, to attainment, and hence to μ(n) = B(n). Worth carrying prominently — it substantially narrows what the largest unscrutinised lemma is actually load-bearing for.
-- **G.2 — the conclusion holds, the reason given does not.** "Each level's block count is a power of q (a transitive q-group has q-power degree)" does not follow: if the image of Γ₂ in the block action is nontrivial it contains that action's socle, forcing the block count to be a **p**-power. The conclusion survives by cases — a p-power block count over a p-characteristic finest block makes the orbit a prime power, already enumerated at (F, c) = (1, |O|); over a *foreign* finest block it is dominated by the same diagonal-cross argument that kills q-fusion of foreign parts. Repair written in.
-
-**C11. `fb_common.py` read; the Part E′ theorems turn out not to be load-bearing.** The certificate passes theorem-settled s-branches to the search as a `skip` set, so an error in E.1, E.3(iii) or E.4 — or in the hardcoded `MERSENNE`/`REPUNIT3` tables — would silently drop a real candidate. Tested rather than argued: **re-running with `skip_settled` disabled entirely returns 0 candidates at all 2,008 values in 3 s**, and disabling the `e3ii_resolves` discard as well gives the same. So over the certified range μ(n) = B(n) rests **only** on the eight necessary conditions being necessary; every clause of Part E′ is commentary there. This is the single largest reduction in the trusted base found in this review. Written into Part E′.
-
-Two implementation notes, neither affecting a result. *(i)* In the `q = '*'` generic branch (top prime not dividing r − 1, trivial foreign twist) the F loop and `multi_part_ok`'s p-candidate list run at F = 1 only; F should range over prime powers, and this is the **anti**-permissive direction. Vacuous over the table — the branch is gated on r ≥ B and the only n with n ≥ B(n) is n = 6 — but worth fixing. *(ii)* `e3ii_resolves` justifies the (r, r) re-reading's cyclic layer by "gcd(r − 1, c) = 1", which does not follow; gcd(r − 1, 2r + 1) = gcd(r − 1, 3), and it is 1 only because r ≡ 1 (mod 3) would make 3 | 2r + 1, killing the safe prime. True, but for an unstated reason.
-
-The rest of the conditions read sound and permissive as claimed: `s_max` is used only for reporting (`pair_candidates` never prunes on it, so a wrong s_max cannot skip a branch); the Cap tables reproduce the document's 6/21/155/1143 and Cap′(3) = 39; `intra_floor` is exact on every B tested to 3000 and at 10⁶, 10⁸; `leftover_ok`'s `need` correctly takes the max of the cross floor and the intra floor; `multi_part_ok` treats foreign primes as distinct and p-parts as repeatable, and returns `None` (survive) when the candidate set exceeds its limit.
-
-**C12. Priority-ordered queue.** Superseding the earlier "not done in this pass" list. Ranked by expected reduction in residual risk per unit of effort, which is *not* the order these appear in section A. Rationale in §D.
-
-**C13. Where the residual risk now sits, ranked.** Recorded so the queue below has a stated basis.
-
-1. **Lemma B′.** The only unscrutinised lemma that `B_safe` actually depends on. An error inflates B(n) and breaks attainment everywhere at once. One close read (C9) found it sound with a skipped branch; that same read found a genuine gap in Lemma C and a wrong justification in G.2, so one read is weak evidence.
-2. **Exhaustiveness of the GAP stages (B5).** The subdirect-product hole is real and undischarged. It degrades the *evidence* rather than creating an error — a missed group could only have larger m\*, i.e. it would be a counterexample, not a silent corruption — but it is the only non-circular check in the framework. Note this is a §8 item mainly; for §§1–6 it bears only on the Part I validation table and the Lemma B/C spot-check.
-3. **Part E's realisability construction.** Attainment's other leg, argued in general and spot-checked at eight configurations from n = 12 to 315. Unlike the certificate, this has no per-n verification at all.
-4. **`wide_cert.py`.** Extends the collapse to 10⁵ and has not been read. It shares `fb_common.py`'s conditions, which are now reviewed, but its B_lo pass is its own code.
-5. ~~`fallback_cert.py`'s necessary conditions~~ — reviewed (C11), and the theorems shown not load-bearing.
-6. ~~Lemma C~~ — gap found, but shown to affect neither endpoint (C9).
-
----
-
-## D. The queue, in priority order
-
-*Commands are checked against the scripts as they stand. Items needing code that does not exist say so.*
-
-**D1. Rerun the two certificates after every table extension.** Cheap, and both are per-n statements that do not extend themselves.
-
-```bash
-python3 scripts/fallback_cert.py outputs/mu_table_safe_v2.csv --verbose
-python3 scripts/wide_cert.py 100000
-```
-
-**D2. Make the `skip_settled` bypass a permanent option.** C11 established by hand that the certificate passes with every Part E′ theorem switched off, which shrinks the trusted base enormously — but it was a throwaway script. Add a `--no-theorems` flag to `fallback_cert.py` that passes `skip_settled=None` and never calls `theorem_report`, and run it alongside D1 each time. If it ever starts failing while the normal run passes, that is an error in E.1/E.3(iii)/E.4 or their tables, localised immediately.
-
-```bash
-python3 scripts/fallback_cert.py outputs/mu_table_safe_v2.csv --no-theorems   # needs the flag
-```
-
-**D3. Fix the two `fb_common.py` defects.** Neither affects a result today (C11), but (i) is anti-permissive and the gate that makes it vacuous is `r >= B`, which loosens if B ever drops to O(n).
-
-- in `pair_candidates`, let F range over prime powers in the `q == '*'` branch rather than F = 1 only; likewise `multi_part_ok`'s `pcands` loop;
-- add the missing step to `e3ii_resolves`'s docstring: gcd(r − 1, 2r + 1) = gcd(r − 1, 3), and 3 | r − 1 would force 3 | c, so c = 2r + 1 prime already gives coprimality.
-
-**D4. Extend the naive-enumerator comparison.** The strongest available test of `mu_enumerate.py`'s pruning, since it re-derives B(n) from the Part G.3 spec with no pruning, seed or part pool. Currently 79 values at n ≤ 120, 0 mismatches. `brute.py` accompanies this file; n ≤ 260 is roughly an overnight run and doubles the coverage.
-
-```bash
-python3 brute_compare.py --nmax 260 outputs/mu_table_safe_v2.csv   # needs a driver
-```
-
-**D5. Read `wide_cert.py`.** Item 4 above. Its shared conditions are now reviewed; what is unread is the B_lo pass, the caching, and the outward-from-balance-point scan whose absence collapsed the weakest density from 0.020 to 0.000007. That sensitivity is a sign the pass is delicate.
-
-**D6. Close the subdirect-product hole in the GAP stages (B5).** For §§1–6 this only weakens the Part I validation; for §8 it gates any verdict. Two sub-questions: whether stage B's blockwise direct products plus B2's wreaths cover proper subdirect products, and whether stage C's `ConjugacyClassesSubgroups(SylowSubgroup(S_12, 2))` actually completed — check the logs.
-
-**D7. Count the Lemma C exposure after each extension.** Now zero: of the 2,178 p-characteristic parts in a computed winner, 1,903 have prime size and none has both a > 1 and a foreign prime dividing c − 1. Since Lemma C's proof only covers prime c (C9), this count is the live measure of whether the gap has started to bite.
-
-**D8. Independent reading of Lemma B′.** Not a run. Item 1 above, and the highest-value thing on this page that no amount of compute substitutes for.
-
-**D9. Rerun `check_doc_figures.py`, and teach it prose markers.** The C5/C6 drift classes are prose as much as arithmetic — "one value remains", "27 survivors", "every computed value has δ ≥", "the search is complete". Add a scope audit alongside it: *which arguments assumed δ ≥ x?* That question alone would have caught C4 immediately.
-
-```bash
-python3 check_doc_figures.py outputs/mu_table_safe_v2.csv *.md
-```
-
-**D10. Extend `ladder_verify.py` past 10⁶.** Lowest priority of the computational items and explicitly optional: O(N²/log N), so 10⁷ is multi-day, and the running minimum has not moved since 10⁴. Expected return is confirmation.
-
----
-
-## E. Section A items, rescoped
-
-*Everything in section A below is §8-and-later — the GAP battery, the CSP, the n = 12 campaign — with one exception. **B5 is the only section-A item that touches §§1–6**, and only through the Part I validation table and the Lemma B/C spot-check at n = 10; see D6. **A6 has been absorbed into D1.** The rest can be ignored entirely while the arithmetic programme is the active thread.*
-
-*Residual items from the earlier list, now placed:*
-
-- ~~Rerun `fallback_cert.py`~~ — **done** (A6, D1); all figures in `enumeration-proof.md` quote the 2,008-value run.
-- ~~Read `fallback_cert.py`'s necessary conditions~~ — **done** (C11), and the theorems shown not load-bearing.
-- **Close the Lemma C gap at a > 1** — but note this is now a question about the *sharpness* of the search, not about the results. Dropping Lemma C can only enlarge the configuration space, and in SAFE mode the parts it would cut are already scored at their unconditional maximum, so B_safe cannot rise; Part E's construction uses the lemma only as a sufficient condition, so attainment is unaffected; and the exposure was measured at **zero** — of the 2,178 p-characteristic parts appearing in a computed winner, 1,903 have prime size and **none** has both a > 1 and a foreign prime dividing c − 1, so Lemma C is vacuous on every winning configuration in the table. What it is load-bearing for is `--refined`, the `fallback` bookkeeping, and the reasoning inside E′. Worth closing, but it is no longer the risk it looked like.
-- **Independent scrutiny is still the top item.** One close read found a genuine gap in Lemma C and a wrong justification in G.2, which is evidence for how much a *second* read would return, not against it.
-- **A scope audit rather than a figure audit.** C1 and C4 are both cases of an *argument* whose scope silently expired — C4 because the floor moved, C1 because the class table was never re-derived from the η formula. `check_doc_figures.py` catches neither. Worth asking, after each extension, "which arguments assumed δ ≥ x?" and "which claims are derived from a formula rather than measured?" as a separate pass. C4 would have been caught immediately by the first question.
-- **Prose markers, not just numbers.** `check_doc_figures.py` could usefully flag phrases like "one value remains", "27 survivors", "every computed value has δ ≥", "the search is complete" — the C6 class of drift is prose, not arithmetic.
+The two worst defects of the 2026-08 pass were arguments whose scope silently expired — one because the density floor moved, one because a class table was never re-derived from the formula that superseded it. A systematic backward pass — every claim of the form "for all computed n, X", every derivation that fixes a parameter the data has since moved — would say whether there are more. Distinct from R6, which automates detection going forward.
