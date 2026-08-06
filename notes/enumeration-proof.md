@@ -2,45 +2,179 @@
 
 *Companion to `orbital-evasiveness-notes.md` §2. Establishes an upper bound on μ(n) by classifying the possible orbit-and-twist structures of an Oliver group and enumerating them. Implemented in `mu_enumerate.py`.*
 
-**Status.** Parts A–D and F–H are proved, and Part E proves completeness together with realisability. What Part E does not prove is *minimality*, which costs running time only. The framework now gives a two-sided statement:
+**Status — read this first.** *A defect was found on 2026-08 and the upper-bound half of the framework does not currently hold.* Parts A–D and F–H are proved as stated; Part E proves realisability; but **G.2 is false**, and with it the claim that the enumeration is complete. A configuration realisable by an Oliver group is missing from the shape space, so `B_safe(n)` is **not** an upper bound on μ(n). Concretely, at n = 308 an Oliver group achieves 4134 against B(308) = 3775. Part 0 below sets out the corrected shape space and the six lemmas the repair needs.
 
-> **B_refined(n) ≤ μ(n) ≤ B_safe(n)**, unconditionally — the lower bound from Part E's explicit construction, the upper bound because F·C(c,2) caps any point stabiliser whatever — with the two endpoints coinciding exactly when the optimum does not invoke the unconditional fallback.
+What survives unchanged:
+
+> **B_refined(n) ≤ B_safe(n) ≤ μ(n)** — every configuration the enumeration finds is realised by Part E's construction, so the table is a valid **lower** bound throughout. Every construction, every "μ(n) ≥ …" statement, and every result of the form "the minimum of B/C(n,2) over a range is at least x" is unaffected, because those only ever used B from below.
+
+What does not survive: **μ(n) = B(n)**, the tables as exact values, the completeness half of Theorem 2.3, and both collapse certificates — the latter because they certify a property of B against a shape space that is now known to be too small.
 
 **Notation, since three related quantities appear throughout.** A *configuration* is what the enumeration ranges over: a choice of chain primes (p, q) and orbit sizes n = Σ Fᵢcᵢ with twists, admissible in the sense of Parts B–D. Each configuration has a *score* — the minimum over its intra-orbital, within-class-cross and between-orbit terms (Part E) — and the two scorings differ on exactly one kind of part, a p-characteristic part whose twist Lemma C strictly reduces:
 
 > **B_safe(n)** = max over admissible configurations of the score with such a part valued at F·C(c,2), the unconditional capacity. This is what `mu_enumerate.py` computes by default and what the `mu_bound` column of the table holds.
 > **B_refined(n)** = the same max with such a part valued at F·orb(c, d) instead, which is what the Part E construction actually realises.
-> **B(n)** := **B_safe(n)**, written without a subscript wherever the distinction is not at issue — which is everywhere the two are known to agree, and so everywhere in the computed range.
+> **B(n)** := **B_safe(n)**, written without a subscript wherever the distinction is not at issue.
 
-Since C(c,2) ≥ orb(c, d) always, B_refined ≤ B_safe; the point of E′ is that they are equal wherever it certifies, so B(n) is unambiguous there and equals μ(n).
+Since C(c,2) ≥ orb(c, d) always, B_refined ≤ B_safe. The *collapse* results below (E′, E″, the two certificates) show the two endpoints coincide over the computed range. They remain valid as statements about B; they no longer combine with a completeness theorem to give μ(n), because there is no such theorem at present.
 
-That collapse is proved at every value it has been run on (`fallback_cert.py`: 2,008 of 2,008, 0 inconclusive — and, per the note in Part E′, still 0 with every Part E′ theorem switched off, so the per-n proof rests only on the necessary conditions), and — since the certificate is sound against any proven *lower* bound on B(n) — at **every composite non-prime-power n ≤ 10,000**, and at all but two such n ≤ **100,000**, without needing the table at all (`wide_cert.py`: 90,297 of 90,299, Part E″). By theorem rather than search it holds **unconditionally** on the infinite family n = 2·(prime power) and wherever δ > 1/9, **conditionally** for even n; the one branch still lacking a theorem is s = 2 with c a safe prime, at odd n of low density. Numerical validation of B(n) itself reaches **n = 2298**, 1,921 composite values. Open items are collected at the end.
-
-**On the word "proved", and on what the numerical checks are for.** The statuses above mean *an argument has been written down that appears complete*, not *the argument has been verified by anyone else*. The distinction is not academic here: the ΓL(1) step of Part B was asserted as a plausible sketch and is false, which was established only by deliberately looking for a counterexample. Lemma B′'s socle argument, Lemma C's conjugation argument and the tower absorption of G.2 are of comparable intricacy and have had no independent scrutiny.
-
-The numerical work therefore serves three distinct purposes, which are easy to conflate:
-
-1. **Implementation fidelity.** Internal consistency, the Proposition F.1 stopping rule, and monotonicity of the certified maxima test whether `mu_enumerate.py` computes what Parts A–H specify. This validates code against a specification and is not evidence for any theorem.
-2. **Tightness.** μ(n) ≤ B_safe(n) is a consequence of the classification. The *equality* needs the two endpoints of the sandwich to meet, which is now a proved statement per n (Part E′) rather than a case-by-case observation — so this purpose has largely been discharged, and what the numbers add here is coverage of the range rather than evidence for the equality.
-3. **A hedge against errors in the arguments themselves.** If Lemma B′, Lemma C or the block recursion were wrong in a direction that made the bound too small, violations would be expected. None appears at any computed value, nor in either exhaustive battery, where the bound is not merely respected but attained. This is real evidence — for the correctness of the reasoning, rather than for filling a gap in reasoning already known to be sound.
-
-**Which uncertainties are uniform in n, and which are range-limited.** These are easy to confuse, and the distinction determines what further computation buys.
-
-*Uniform in n — the dominant risk.* Every simplification the search relies on (Proposition F.1's orbit bound, block counts restricted to q-powers, Lemma B′, Lemma C, the absorption of tower depth into F) is a consequence of an argument that either holds for every n or for none. There is no mechanism by which such a constraint could hold below some threshold and fail above it. So the residual doubt is not whether the trimmings continue but whether the arguments are correct — and if one is not, the computed values are wrong at small n as much as at large.
-
-*Range-limited, and affecting tightness rather than validity.* μ(n) ≤ B_safe(n) follows from the classification. The equality needs the two endpoints of the sandwich to meet, and that is no longer a case-by-case check: it is a proved statement per n (Part E′), settled by Theorem E.1 at about 75% of computed values and by the exhaustive certificate at the rest. So the items genuinely limited by range are now narrower than they were, and worth listing exactly.
-
-- **The certificate's coverage.** It is a per-n proof, not a theorem about all n. Each new batch of values needs it rerun, and nothing in it bounds the exceptional set as n → ∞. This is the main range-limited item.
-- **Part E's construction spot-checks.** Realisability is argued in general, but the orbit computations confirming that the built group's orbital sizes equal the enumeration's terms cover eight configurations from n = 12 to n = 315. A shape not represented there would still be covered by the argument, but its arithmetic would want a separate check (Part J item 3). All five winning shapes are now represented in the computed range — the fifth, two foreign primes, appears exactly once, at n = 1175 — so the "a fifth shape at larger n" caveat earlier versions carried has been discharged rather than deferred.
-- **The empirical narrowings behind minimality.** That no winner uses more than three parts (Part I) is a statement about the range examined, as are the sub-narrowings it implies. Unlike the two items above, this one has no per-n certificate: it is pure observation, verified in Part I to be about optima rather than about tie-breaking, but not proved anywhere.
-
-*What this implies for effort.* Extending the numerical range tests the implementation and extends the certificate's coverage — the latter being a genuine per-n mathematical statement rather than only a code check — but it does not test the classification, whose consequences do not vary with n. Extending the *exhaustive* comparison to further n tests the classification itself, and is therefore worth more per unit of compute — but exhaustive enumeration of Oliver groups is only feasible at small degrees, so the supply of such tests is short. Independent reading of Lemma B′, Lemma C and G.2 would be worth more than either.
-
-Read that way, the exhaustive checks at n = 10 and n = 12 are the most valuable of the three, because they are independent of both the code and the families: the groups were enumerated by GAP with no reference to any of this, and the optimum they exhibit matches the predicted construction exactly, orbital sizes included.
+**On the word "proved", and on what the numerical checks are for.** The statuses here mean *an argument has been written down that appears complete*, not *the argument has been verified by anyone else*. The distinction is not academic: the ΓL(1) step of Part B was asserted as a plausible sketch and is false; the block-count step of G.2 was asserted as a plausible sketch and is false; and a repair to G.2 written in this same review was itself incomplete. Three of the framework's compact structural steps have now failed on inspection. Lemma B′'s socle argument has had one reading and no independent scrutiny.
 
 ---
 
+## Part 0. The picture proof
+
+*Self-contained, and deliberately free of the vocabulary used elsewhere in this document, so it can be checked without cross-referencing. Every place it defers to a lemma is marked, and the lemma inventory at the end says exactly what each lemma must establish. Terms are defined where first used.*
+
+**What we are bounding.** We shuffle n labelled points. A *shuffling group* is a set of shuffles closed under composition. The **three-layer condition** (Oliver's condition) requires the group to break into a bottom layer in which every element's order is a power of one prime — the **home prime** — a middle layer generated by a single element, and a top layer in which every order is a power of a second prime, the **top prime**. Only such groups are usable.
+
+Given such a group, look at the pairs of points. A **family** is a set of pairs that the shuffles carry onto one another. The **score** of a group is the number of pairs in its smallest family. We want μ(n): the largest score any usable group on n points achieves.
+
+### Step 1 — splitting into chunks
+
+A **chunk** is a set of points that shuffle among themselves and never mix with the rest.
+
+```
+                  the n points split into chunks
+                                |
+                every pair of points is one of two kinds
+                                |
+              +-----------------+-----------------+
+              |                                   |
+     both points in one chunk            points in two chunks
+     (the hard case -- step 2)           family holds at most
+              |                          (size A) x (size B) pairs
+              |                                   |
+              +-----------------+-----------------+
+                                |
+                 score = the smallest family of all
+          over-stating any one family over-states the score,
+                    and over-stating is the safe direction
+```
+
+**But the chunks are not independent.** The middle layer is a *single* generator serving the whole arrangement, so anything any chunk needs from it competes with everything every other chunk needs from it. Writing the n = 308 arrangement out:
+
+```
+  +--------------------------------------------------------------------+
+  |  the middle layer: ONE generator, shared by the whole arrangement   |
+  |  its order factors into prime powers -- each prime available ONCE   |
+  +--------------------------------------------------------------------+
+        ^                        ^                        ^
+        | demands 3 and 52       | demands 149            | may demand
+        |                        |                        | none of 2,3,13,149
+   +---------------+      +----------------+      +--------------------+
+   | chunk of 159  |      | chunk of 149   |      | any further chunk  |
+   | 3 copies of a |      | one outside    |      |                    |
+   | 53-block      |      | block; its     |      |                    |
+   |               |      | twist is up top|      |                    |
+   +---------------+      +----------------+      +--------------------+
+                                |
+             allowed only if every demanded prime is distinct
+             here 3, 52 and 149 share nothing, so it stands
+```
+
+This coupling is new. It was absent while copy-counts came from the top layer, where nothing competes — which is why the older presentation treated chunks separately and got away with it.
+
+### Step 2 — inside one chunk
+
+*No minimality assumption is made anywhere: this applies to every chunk, since the score is a minimum over the whole arrangement and a skipped chunk could hold it.*
+
+A **block** is the smallest repeating unit the shuffles never split apart. The **twist** is the extra shuffling inside a block, beyond sliding every point along by a fixed amount and wrapping round (the **sliding step**).
+
+```
+       a chunk is several identical copies of one block
+       chunk size = (number of copies) x (block size)
+                            |
+       the block size is one prime raised to a power     [Lemma B]
+                            |
+            +---------------+----------------+
+            |                                |
+      MATCHING block                   OUTSIDE block
+      size is a power of the           size is a prime other than
+      home prime; the bottom           the home prime -- and then it
+      layer shuffles points            is that prime EXACTLY, never
+      around inside it                 a power of it        [Lemma B']
+            |                                |
+            +---------------+----------------+
+                            |
+            two kinds of pair live inside a chunk
+                            |
+            +---------------+----------------+
+            |                                |
+     both in the same block          in two different blocks
+     at most                         at most
+     copies x (pairs in a block)     copies x (block size) squared
+```
+
+### Step 3 — where the copies come from
+
+```
+   copies = (bottom-layer factor) x (middle-layer factor) x (top-layer factor)
+                                |
+        +-----------------------+-----------------------+
+        |                       |                       |
+   BOTTOM layer            MIDDLE layer             TOP layer
+        |                       |                       |
+   matching block:         the only requirement    this factor is a
+     the chunk becomes     is that the middle      power of the top
+     one bigger block      layer keeps a single    prime
+         [Lemma D1]        generator                   |
+   outside block:              |                       |
+     a family drops to     so this factor must         |
+     about copies x r      share no prime with         |
+         [Lemma D2]        any twist or outside        |
+        |                  block ANYWHERE in the       |
+        v                  arrangement                 |
+   factor = 1                  |                       v
+   nothing is lost             v                 enumerated today
+                        *** NO LEMMA KILLS THIS ***
+                        n = 308 realises it
+                        the program omits it entirely
+```
+
+### The lemma inventory
+
+Five deferrals above, plus one that whittles step 1 rather than steps 2–3. This is the whole list of what has to be checked.
+
+**Lemma B — the block size is one prime raised to a power.** *Must show:* the shuffles acting on a single block, with no smaller repeating unit inside it, are of the kind arising from arithmetic in a finite field. The three-layer condition forces solvability; a classical theorem then gives affine structure of prime-power degree. **Status: sound. The settled step.**
+
+**Lemma B′ — an outside block has prime size, never a prime power.** *Must show:* the middle layer's image on such a block is non-trivial and single-generated, which forces the block to prime size; and that the whole twist then lies in the top layer, so it is a power of the top prime. **Status: read once, found sound, one skipped sub-case added (the branch where the middle layer acts trivially, which gives a block of top-prime size and trivial twist — same conclusion). This is the single lemma the upper bound genuinely rests on, and it has had no independent scrutiny.**
+
+**Lemma C — a twist in the middle layer shares no prime with any outside block.** *Must show:* the top layer's conjugation acts as the identity on the twist but with the twist's own order on the outside block, which is impossible if they share a prime. **Status: proved when the block has prime size. Open when the block is a prime power, because the top layer may then act through a field automorphism whose order is also a power of the top prime, so the two are not obviously incompatible. Does not affect B_safe, which credits every matching block with every pair inside it regardless.**
+
+**Lemma D1 — bottom-layer copies of a matching block are absorbed.** *Must show:* the chunk's size is then again a power of the home prime, so the chunk appears on the list already, as a single block with no copies; and that the single-block reading never scores lower. **Status: an absorption, statable exactly. Two copies of a 4-block score 2 × 6 = 12; the same chunk read as one 8-block scores 28. Needs writing down; no difficulty expected.**
+
+**Lemma D2 — bottom-layer copies of an outside block are dominated.** *Must show:* the points sitting at the same position in different copies form a family of about (copies) × (block size), which the twist cannot enlarge, and that this is below the alternatives. **Status: the weakest link. The family is linear in the chunk size where the alternatives are quadratic, so it bites at scale — but at chunk size 15 the family has 15 pairs against an alternative of 10, so the domination is false at small sizes. The lemma needs an explicit threshold, not an "obviously dominated". A search found no counterexample for n ≤ 1200, which is evidence but not a proof, and this is the third argument of this shape I have written in this review, the first two of which were wrong.**
+
+**Theorem 2.3 — the chunk count is bounded.** Whittles step 1. *Must show:* splitting into many chunks never beats splitting into few. **Status: conclusion true by brute force to n = 1200; the justification given elsewhere appeals to a quantity that is not monotone and does not establish it. The real reason is the cross-chunk terms, which shrink as the chunks do.**
+
+### Six worked cases
+
+Each isolates one phenomenon. All figures recomputed.
+
+**A. n = 10 — copies from the top layer.** Two copies of a 5-block, copies from the top prime 2. Inside one block 2 × C(5,2) = 20; across the two blocks 2 × 5² / 2 = 25. Score **20** = B(10). The shape the program already knows. The halving on the across-blocks term happens exactly when the fusing prime is 2.
+
+**B. n = 308 — copies from the middle layer.** Three copies of a 53-block, plus an outside block of 149 with twist 37 from the top layer. Terms 4134 / 8427 / 23691 / 5513, score **4134**, against B(308) = **3775**. The defect. The chain: bottom layer = three copies of the additive group of the 53-element field, a 53-group; middle layer = C₅₂ × C₃ × C₁₄₉, cyclic since pairwise coprime; top layer = C₃₇. Home prime 53, top prime 37, and 3 is a power of neither.
+
+**C. A collision.** Three copies of a 7-block. The twist on a 7-block divides 6. Were the twist 6, the inside-one-block family would be 3 × 21 = 63; but the copies have already spent the prime 3 in the middle layer, so the twist may only divide 2 and the family is 3 × 7 = **21**. A factor of three lost. The coupling is not merely bookkeeping: it can cost more than the new branch gains, so the corrected B is **not** uniformly larger and the table must be recomputed rather than adjusted upward.
+
+**D. Absorption (Lemma D1).** Home prime 2, two copies of a 4-block fused by the bottom layer. As copies: 2 × C(4,2) = 12. As a single 8-block: C(8,2) = **28**. The coarser reading scores higher and is the one already listed, so refusing bottom-layer copies here loses nothing.
+
+**E. The linear death (Lemma D2), and where it fails.** Home prime 3, three copies of a 5-block fused by the bottom layer. Same-position pairs across copies: 3 × 5 = **15**. Against a single 5-block at full twist: 10. At this size the "domination" runs the wrong way. The argument is asymptotic and needs its threshold stated.
+
+**F. n = 3239 — the record holder moves.** Old witness scored 136,957, density 0.026117. New: seven copies of a 256-block plus an outside block of 1447 with twist 241. Terms 228,480 / 458,752 / 2,593,024 / 348,727 → score **228,480**, density **0.043570**. Seven is a power of neither the home prime 2 nor the top prime 241. The bound "minimum ≥ 0.026117 over n ≤ 10⁶" stays valid but stops being tight, and the argument for where the minimum sits has to be redone.
+
+### What the corrected shape space is
+
+A class is F blocks of size c with **F = F_mid · F_top**, where F_top is a power of the top prime and F_mid is subject only to the middle layer remaining single-generated. F_bottom = 1 by D1 and D2. The middle layer's order is then a single product of pairwise-coprime factors drawn from: every F_mid, every twist in the middle layer, and every outside block size, across the whole arrangement at once.
+
+The enumeration therefore cannot stay "pick parts, then check constraints". The natural order is to choose the middle layer's factorisation first and distribute it, which is a restructure of `best_with_k` rather than an extra branch.
+
+*Two axes deliberately absent from the trees.* The **twist's shape** never gets a branch, because the safe scoring credits every matching block with every pair inside it — the most it could contribute — so no assumption about the twist can inflate the bound. This is also why a question noticed during this review, whether the twist must come from field arithmetic at all rather than being any irreducible linear group, does not threaten the upper bound; it bears on attainment. And **nesting**: a chunk with block systems at several depths splits its cross-families further, so it scores no higher than the flattened reading.
+
 ## Part A. Reduction to orbits and crosses
+
+> *Unaffected by the G.2 defect: this part is about how a given group's score decomposes, not about which groups exist. But see Part 0 step 1 — the chunks are **not** independent once block counts may come from the cyclic layer, because the cyclic layer is one shared generator. Any argument here that treats parts as freely combinable now needs the coprimality budget attached.*
 
 Let Γ have vertex orbits O₁, …, O_k with |O_i| = s_i. A pair inside O_i has its whole Γ-orbital inside O_i, and a pair between O_i and O_j has its orbital inside O_i × O_j. Hence
 
@@ -106,6 +240,8 @@ Three consequences.
 
 ## Part C. The valency recursion
 
+> *Unaffected: a statement about one block's twist, independent of how blocks are counted.*
+
 Define, for chain primes (p, q),
 
 > V(s; p, q) = s − 1 if s is a power of p;
@@ -155,6 +291,8 @@ Against that, B₀ is **loose exactly where it would matter**. Its density floor
 Twists on distinct p-characteristic parts carry **no** mutual constraint: a single cyclic generator surjects onto each, which is exactly what the diagonal constructions exploit.
 
 ## Part E. Completeness of the enumeration, and realisability
+
+> **The completeness half of this Part is false as it stands**, since it rests on G.2. The realisability half — that every enumerated configuration is achieved by an explicit group — is unaffected, and is what keeps B(n) a valid lower bound. Read every "completeness" claim below as scoped to the shape space *as currently defined*, which Part 0 shows is too small.
 
 Completeness is proved below and realisability with it; what is *not* proved is minimality, which costs running time only (Part J item 1).
 
@@ -251,9 +389,13 @@ Since orb(c, c−1) = C(c,2) identically (Part B), the two endpoints coincide ex
 
 > **Theorem E.4 (the s = 3 branch is a single pair, and dead).** Let (c, r) be an s = 3 fallback pair: c − 1 = 3r. If r = 2 the foreign block holds one pair and SAFE ≤ 1. If r is odd then c = 3r + 1 is even, so c = 2^a with r = (2^a − 1)/3 and a = 2b even; then 2^{2b} − 1 = (2^b − 1)(2^b + 1) with exactly one factor divisible by 3, and after dividing that factor by 3 both factors exceed 1 — except at b = 2, where 2^b − 1 = 3 collapses to 1. Hence r is prime **only for (c, r) = (16, 5)** (verified by scan to a = 200). For that pair, t = qpart(4, q) gives orb(5, t) = 10 at q = 2 and 5 otherwise, so **SAFE ≤ 10 absolutely**. The pair fits only at n ≥ 21, where every computed B(n) is at least 63; beyond the table B(n) ≥ μ-constructions → ∞, so the branch never attains B(n) anywhere. **s = 3 is closed.**
 
-> **Corollary (the fallback question below 1/9, reduced).** Since s ≤ 1/√δ − 1, **δ > 1/25 forces s ≤ 3**, **δ > 1/36 forces s ≤ 4**, and so on. This used to cover the whole table; it no longer does. The density floor has fallen to 0.026117 (n = 3239), so the three values n = 2291 (0.037524), 3059 (0.029282) and 3239 (0.026117) sit below 1/25, admitting s ≤ 4, 5 and 5 respectively.
+> **Corollary (the fallback question below 1/9, reduced).** Since s ≤ 1/√δ − 1, **δ > 1/25 forces s ≤ 3**, **δ > 1/36 forces s ≤ 4**, and so on. This used to cover the whole table; it no longer does. The density floor has fallen to 0.026117 (n = 3239), so **four** values now sit below 1/25 — n = 2291 (0.037524), 2303 (0.039633), 3059 (0.029282) and 3239 (0.026117) — admitting s ≤ 4, 4, 5 and 5 respectively, and n = 3239 is also below 1/36. Recount this after every extension; it is what `check_doc_figures.py --pass scope` exists for.
 >
-> So at a computed n with δ > 1/25 the fallback question reduces by theorem to: s = 1 (Mersenne, Cap(a)); s = 2 with a ≥ 2 (repunit, Cap′(a)); s = 2 with a = 1 (safe prime; bare pair resolved by E.3(ii)); s = 3 (dead by E.4) — and there the **only branch without an absolute cap is s = 2, a = 1**, where E.3(ii) resolves the bare pair outright and only the leftover cases remain. At the three values below 1/25 the branches **s = 4 and s = 5 are also reachable and neither has a theorem** (see the box above); the search clears them, so nothing is unproved, but the theorem-side reduction is no longer complete anywhere below 1/25. Together with the leftover case, that is the theorem-side residue of Part J item 2.
+> So at a computed n with δ > 1/25 the fallback question reduces by theorem to: s = 1 (Mersenne, Cap(a)); s = 2 with a ≥ 2 (repunit, Cap′(a)); s = 2 with a = 1 (safe prime; bare pair resolved by E.3(ii)); s = 3 (dead by E.4) — and there the **only branch without an absolute cap is s = 2, a = 1**, where E.3(ii) resolves the bare pair outright and only the leftover cases remain. At the four values below 1/25 the branches **s = 4 and s = 5 are also reachable and neither has a theorem** (see the box above); the search clears them, so nothing is unproved, but the theorem-side reduction is no longer complete anywhere below 1/25. Together with the leftover case, that is the theorem-side residue of Part J item 2.
+
+> **The same holds for `wide_cert.py` out to 10⁵.** Its pass 2 calls `branch_settled` and skips the dispatched branches, so the same worry applies there. Tested the same way: with the dispatch stubbed out, the run gives **identical output at NMAX = 10⁴ and 10⁵**, including the same two unresolved values. So the collapse out to 100,000 also rests only on the necessary conditions.
+>
+> **The two unresolved values are the documented open case, not a mystery.** Both n = 50,817 = 2·20327 + 10163 and n = 89,697 = 2·35879 + 17939 are the shape 2c + r\* with c a safe prime, r = (c−1)/2, s = 2, and a leftover L = c. That is exactly the case E.3(ii) declines to cover: the (r, r) re-reading would re-type the leftover block of size c as a *second* foreign part equal to the first, which Part E forbids. So they are instances of Part J item 2 rather than independent gaps, and closing that item closes them.
 
 > **The theorems are not part of the trusted base over the certified range.** `fallback_cert.py` passes each n's theorem-settled s-branches to the search as a `skip` set, so a branch dispatched by E.1, E.3(iii) or E.4 is never searched — which means an error in one of those theorems, or in its implementation, would silently remove a real candidate. That worry is now closed by experiment rather than by argument. Re-running the certificate with **`skip_settled` disabled entirely** — every s-branch searched, no theorem consulted — still returns **0 surviving candidates at all 2,008 values**, in 3 seconds. Disabling the E.3(ii) resolution as well, so that not one clause of Part E′ is used, gives the same answer.
 >
@@ -261,7 +403,7 @@ Since orb(c, c−1) = C(c,2) identically (Part B), the two endpoints coincide ex
 
 *The certificate.* `fallback_cert.py` enumerates the tuples (p, q, F, c, r) satisfying eight necessary conditions for a fallback configuration to score B(n) — c a p-power; r prime with r | c−1 and r ≠ p; F a q-power with Fc + r ≤ n; each of the p-part intra, foreign intra, cross and within-class-cross terms at least B; and the leftover L = n − Fc − r either 0 or large enough to be a legal part carrying an intra-orbital of size B. Further parts only lower the minimum, so the conditions are necessary and an empty list is a proof at that n. Cost O(n log n) per value. It also reports which values Theorem E.1 settles outright.
 
-> Over the current table — **2,008 values, n up to 3239** — **no candidate at any value, 0 inconclusive**, with **1,503 (74.9%) settled by theorem alone across all branches**. Counted per s-branch rather than per n, **2,062 of 2,572 branches (80.2%) are dispatched by theorem** and the rest go to the search. The theorem-side residue is now explicit and small: **505** branches where E.3(ii) is pairwise only and the global promotion is open, **4** at s = 4 and **1** at s = 5, neither of which has a theorem. Largest permitted s over the range: **5**. So μ(n) = B(n) is proved at each of these n, independently of tie-breaking. (Rerunning after each extension is item A6 of `pending-checks.md`.) So μ(n) = B(n) is proved at each computed n, independently of tie-breaking, and B_refined = B_safe follows rather than being separately measured.
+> Over the current table — **2,008 values, n up to 3239** — **no candidate at any value, 0 inconclusive**, with **1,503 (74.9%) settled by theorem alone across all branches**. Counted per s-branch rather than per n, **2,062 of 2,572 branches (80.2%) are dispatched by theorem** and the rest go to the search. The theorem-side residue is now explicit and small: **505** branches where E.3(ii) is pairwise only and the global promotion is open, **4** at s = 4 and **1** at s = 5, neither of which has a theorem. Largest permitted s over the range: **5**. So μ(n) = B(n) is proved at each computed n, independently of tie-breaking, and B_refined = B_safe follows rather than being separately measured. (Rerunning after each extension is item R1 of `pending-checks.md`.)
 
 > **Two implementation notes from a read of `fb_common.py` (2026-08), neither affecting any result.** *(i)* In the generic branch `q = '*'` — the case where the top prime does not divide r − 1, so the foreign twist is trivial and the block is worth only r — the F loop runs at F = 1 only, and `multi_part_ok`'s p-characteristic candidate list likewise. F should range over all prime powers there, since q is unconstrained, so this is a restriction in the **anti**-permissive direction: a real candidate could be discarded. It is vacuous over the whole table, because the branch is gated on r ≥ B and the only n with max(r) = n ≥ B(n) is **n = 6**. Worth fixing anyway, since the gate loosens if B ever drops to O(n). *(ii)* `e3ii_resolves`'s justification asserts that the (r, r) re-reading has cyclic layer "since gcd(r − 1, c) = 1", which does not follow from anything stated: gcd(r − 1, 2r + 1) = gcd(r − 1, 3). It is nonetheless always 1, for a reason the docstring omits — r ≡ 1 (mod 3) forces 3 | 2r + 1, so c = 2r + 1 is not prime unless c = 3. A one-line addition.
 
@@ -286,6 +428,8 @@ The survivors at 10⁴ before the multi-part check were themselves informative: 
 *A free diagnostic.* **B_safe − B_refined is exactly the width of the interval containing μ(n)**, computable by running both modes. It is zero wherever the certificate passes, and if the certificate ever fails nothing becomes wrong — both endpoints stay valid and the sandwich merely opens.
 
 ## Part F. The search is bounded
+
+> *The counting arguments here are unaffected, but the part-count cap is derived from a density floor that will move once the shape space is corrected. Re-derive before relying on the numbers.*
 
 The enumeration needs no number-theoretic input to be finite, and the bound is small.
 
@@ -345,16 +489,15 @@ The part that could escape to the top is precisely the part that was never at ri
 
 **G.2 Every orbit is F·c with F a q-power and c a prime power.** Iterate Part B on an orbit O: each level of the tower has a block count that is a power of q (a transitive q-group has q-power degree), and the recursion terminates at the finest blocks, which are **primitive**, hence affine of prime-power degree.
 
-> **The q-power block count is asserted rather than proved, and needs a different argument.** At a coarsest block system the block action is primitive solvable with socle elementary abelian of order b = p₀^a. If the image of Γ₂ there is nontrivial it contains that socle, forcing p₀ = p — so **b can be a p-power rather than a q-power**, and the one-line reason given above does not exclude it. The conclusion survives, by cases:
+> **G.2 IS FALSE. This is the defect.** The claim "each level's block count is a power of q" does not follow from the reason given, and does not follow at all. The block-permuting group need not sit in the top q-group: it may sit in the **cyclic layer**, where the only constraint is that Γ₁/Γ₂ stay cyclic — so the block count may be any prime power coprime to everything else the cyclic layer carries. Part 0 sets this out in full.
 >
-> - *Finest block p-characteristic.* Then |O| = p^k·p^a is itself a **prime power**, so the orbit is enumerated as the single part (F, c) = (1, |O|), and SAFE mode values it at C(|O|,2) — an over-estimate of what the imprimitive structure can actually reach, hence safe for an upper bound.
-> - *Finest block foreign.* Then |O| = p^k·r with r a foreign prime, and the p-power block count fuses r-blocks. But fusion of foreign blocks is dominated for a reason that has nothing to do with which layer does the fusing: independent translations give C_r^{p^k}, not cyclic, and diagonal translations preserve differences, so the equal-coordinate pairs form a cross class of size ≈ p^k·r/2 that the twist cannot merge. That class binds, leaving the fused foreign class worth ≈ |O|/2 — linear in n, hence dominated at every n where B(n) = ω(n). This is exactly the argument already made in Part E for q-fusion of foreign parts.
+> **Counterexample.** n = 308. Take Γ = Γ₀(53, Z₃) × Γ(149, 37) — BBKN's own construction, §5.1 of their paper. Γ₂ = (F⁺₅₃)³ is a 53-group; Γ₁/Γ₂ = C₅₂ × C₃ × C₁₄₉ is cyclic because the three orders are pairwise coprime; Γ/Γ₁ = C₃₇. Oliver's condition holds with p = 53, q = 37. Its terms are 3·C(53,2) = 4134, 3·53² = 8427, 159·149 = 23691 and orb(149, 37) = 5513, so m\*(Γ) = **4134**, against B(308) = **3775**. The block count 3 is a power of neither p nor q.
 >
-> So the enumeration's shape space is not enlarged, but the reason is domination rather than the degree count. Flagged because it is a second step, alongside Lemma C, that reads as routine and is not. Writing the successive block counts b₁, …, b_t and the finest block size c,
-
-> |O| = b₁·b₂ ⋯ b_t · c = **q^a · c**, with c a prime power.
-
-The finest block is either p-characteristic (c a p-power, twist any divisor of c−1) or foreign, in which case Lemma B′ forces c prime with a q-power twist. **The tower depth t plays no further role: it is absorbed entirely into F = q^a.** A three-level tower and a one-level tower with the same F and c have the same orbital data.
+> **A repair written earlier in this review was also wrong.** It argued by cases on whether the finest block is p-characteristic or foreign and concluded the statement survived. It never considered a block count that is neither a q-power nor a p-power — a third prime living in the cyclic layer, which is exactly what happens here. The case analysis was incomplete.
+>
+> **What does survive.** The bottom-layer branch is genuinely dead, by two lemmas now stated as D1 and D2 in Part 0: p-power block counts over a p-characteristic block make the orbit a prime power, already enumerated as (F, c) = (1, |O|) and scored higher that way; over a foreign block they leave a family linear in the orbit size. So the corrected block count is F_mid · F_top, and only F_mid is missing.
+>
+> **Scale.** 57 values of n ≤ 2400 have a cyclic-layer-fused configuration beating B(n), median ratio 1.141, worst 2.387 at n = 2375. That count allows only one cyclic-fused class per configuration, so it understates what is reachable; it also does not check the coprimality budget against other classes' twists, so some of those 57 may not survive a full consistency check. Both directions need redoing together.
 
 **G.3 The general configuration, in final form.** Combining G.2 with Parts A–D, an Oliver group on n points is described by a choice of chain primes (p, q) and orbits O₁, …, O_k with
 
@@ -400,6 +543,8 @@ with the self-certifying iteration of Part F guaranteeing that the correct K is 
 **Forward pointer.** This is where the number-theoretic conjectures re-enter, and in a role distinct from the one they play in §§4–5 of the notes. There they bound μ(n) from below; here the *same* bound bounds the **running time of the search**, because δ appears in the exponent. Under the ladder — δ ≥ 1/4 for even n, δ ≥ 0.049 for odd n with 3 ∤ n, δ ≥ 0.028 for 3 | n — the orbit count falls to k ≤ 2, 4, 5 respectively (1/√0.25 = 2, 1/√0.049 = 4.52, 1/√0.028 = 5.98) and the search becomes **polynomial of fixed degree** in n. So a Hardy–Littlewood-type hypothesis buys two things at once: the value of μ(n), and a guarantee that the certified enumeration terminates in polynomial rather than n^{O(√n)} time. That is worth stating explicitly in the number-theory sections, since it is a consequence of those conjectures that has nothing to do with what they were introduced for.
 
 ## Part I. Measurements
+
+> *Every figure below is a measurement of the current table, hence of B_safe over the too-small shape space. They remain accurate as descriptions of what the program computes, and are not descriptions of μ(n). The n = 10 and n = 12 GAP comparisons are the exception and are now more valuable than before: they are the only check that would have caught a missing shape, and they did not fire at those degrees — which says the missing shape needs a larger n to appear, consistent with the smallest known instance being n = 143.*
 
 From `mu_table_safe_v2.csv` — n = 6 … 2298, unconditional mode, 1,921 rows (the table has since been extended; figures below are for this range unless said otherwise):
 
@@ -464,7 +609,17 @@ Fermat primes achieve this at q = 2, safe primes with t = q odd and 2t = r−1, 
 
 ## Part J. Open items
 
-*What is established, and where. Completeness and realisability: Part E. The sandwich B_refined ≤ μ ≤ B_safe, Theorem E.1, and the collapse certificate: Part E′. The search bounds and why counting cannot sharpen them further: Part F. All measurements: Part I. This section lists only what remains.*
+**J0. Repair the shape space — everything else waits on this.** G.2 is false and the enumeration is incomplete; see Part 0. The work, in the order it has to happen:
+
+1. **Write down D1 and D2 properly**, with D2's threshold made explicit. D2 is currently an asymptotic claim used at all sizes and is false at small ones (Part 0, case E).
+2. **Restructure the enumerator** around the middle layer's factorisation rather than around parts. The coprimality budget is global, so "pick parts then check" cannot express it. Note that the correction both adds configurations and forbids some previously counted (Part 0, case C), so B is not uniformly larger.
+3. **Recompute the table**, then rerun `ladder_verify.py` — its three families need the new shapes too — then rebuild the branch-and-bound worklist, which was pruned against a floor that has moved.
+4. **Rerun both certificates.** They certify a property of B against the shape space; a larger space means more fallback configurations to rule out.
+5. **Re-examine Lemma B′ first, not last.** It is now the only structural lemma the upper bound rests on, and it is the one with no independent reading.
+
+**J0a. The stabiliser question, noticed during the same review.** The framework assumes a matching block's twist lies in the multiplicative group of the field. The stabiliser of a primitive affine group of degree p^a may be any irreducible subgroup of GL(a, p), which is larger. This cannot inflate B_safe — the safe scoring already credits C(c,2) — but it is an unstated assumption bearing on attainment, and it should be either justified or scoped.
+
+*What is established, and where — read subject to J0, which suspends the upper-bound half. Realisability: Part E. The sandwich B_refined ≤ B_safe ≤ μ, Theorem E.1, and the collapse certificate: Part E′. The search bounds and why counting cannot sharpen them further: Part F. All measurements: Part I. This section lists only what remains.*
 
 1. **Minimality: k ≤ 3 in the low-density tail.** Corollary F.3 makes this free wherever δ > 1/16 — 97.7% of the computed table — so what is open is the tail below that threshold, measured in Part I at 45 of 1,921 values. (How much of n beyond the computed range lies below 1/16 is itself governed by the open density questions, so this is a per-n statement, not a global one.)
 
@@ -482,7 +637,7 @@ Fermat primes achieve this at q = 2, safe primes with t = q odd and 2t = r−1, 
 
    Two things to keep in view. The per-n frontier now stands at n ≤ 100,000 and extends cheaply, since E″'s lower-bound pass dominates the cost and is cached. And "almost all n" is the wrong target — the density thresholds of Part I show δ ≥ 1/4 at only 18.5% of computed values, so density-1/4 is a minority property; proving thinness of the exceptional set would land on the same shifted-prime condition, a Hardy–Littlewood-type statement of the tier this framework is trying to avoid depending on.
 
-2a. **Bound the s = 4 and s = 5 branches.** Opened by the density floor falling to 0.026117, which puts three computed values below 1/25 and one below 1/36. Neither branch is thin enough for an E.4-style collapse — c − 1 = 4r and c − 1 = 5r carry no parity or congruence forcing — so an absolute cap would have to come from the foreign block's twist, as in E.1 and E.3(iii). The search clears both at every computed n, so nothing is unproved; the gap is theorem-side and widens as the floor falls.
+2a. **Bound the s = 4 and s = 5 branches.** *Recount this after J0: at n = 3239 and 3059 the density rises to 0.043570 and 0.083906 under the corrected shape space, so both leave the sub-1/25 set and the branch may narrow on its own.* As computed today the floor 0.026117 puts four values below 1/25 (n = 2291, 2303, 3059, 3239) and one below 1/36. Neither branch is thin enough for an E.4-style collapse — c − 1 = 4r and c − 1 = 5r carry no parity or congruence forcing — so an absolute cap would have to come from the foreign block's twist, as in E.1 and E.3(iii). The search clears both at every computed n, so nothing is unproved; the gap is theorem-side and widens as the floor falls.
 
 3. **More non-circular confirmation.** The two exhaustive comparisons (Part I) both sit at small degree, where few configurations are available, so they cannot establish exhaustiveness in general. A third degree would be worth more per unit of compute than any extension of the numerical range — but exhaustive enumeration of Oliver groups is only feasible at small degrees, so the supply is short.
 
