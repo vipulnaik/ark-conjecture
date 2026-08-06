@@ -148,6 +148,21 @@ Five deferrals above, plus one that whittles step 1 rather than steps 2–3. Thi
 
 **Theorem 2.3 — the chunk count is bounded.** Whittles step 1. *Must show:* splitting into many chunks never beats splitting into few. **Status: conclusion true by brute force to n = 1200; the justification given elsewhere appeals to a quantity that is not monotone and does not establish it. The real reason is the cross-chunk terms, which shrink as the chunks do.**
 
+
+### Index: where each lemma is stated and proved
+
+| Lemma | Statement | Proof | Rests on it |
+|---|---|---|---|
+| **B** — block size is a prime power | Part B, opening box | Part B, opening box | everything |
+| **B′** — an outside block has prime size | Part B, under *foreign characteristic* | same place | the upper bound, and only this |
+| **C** — a middle-layer twist avoids outside primes | Part D, opening box | Part D, opening box | `--refined` and attainment; **not** B_safe |
+| **D1** — bottom-layer copies of a matching block absorb | Part D2 | Part D2, proved | the repair of G.2 |
+| **D2** — bottom-layer copies of an outside block die | Part D2 | Part D2, **stated only** | the repair of G.2 |
+| **2.3** — the chunk count is bounded | Part C, C.1 (restated) | `orbital-evasiveness-notes.md` §2 | Part F's search bounds |
+| **E.1–E.4** — the fallback branches | Part E′ | Part E′ | the collapse, not the bound |
+
+Two entries are not proofs yet. **D2 has no proof anywhere** — it is asserted in Part D2 with a counterexample at small size and a search to n = 1200. **Theorem 2.3's proof is in the companion document** and its stated justification is wrong there; only its statement is used here.
+
 ### Six worked cases
 
 Each isolates one phenomenon. All figures recomputed.
@@ -184,9 +199,13 @@ where M_i is the minimum intra-orbital of the transitive group Γ|_{O_i}. Both t
 
 ## Part B. Per-orbit classification
 
-By Lemma A, Γ|_{O} inherits the chain with the same (p, q). Since Oliver's condition forces solvability, Γ|_O is solvable and transitive, so exactly one of:
+> **Lemma B.** Let O be an orbit of an Oliver group and let the action on its finest block system be primitive. Then that block has size p₀^a for a single prime p₀, and the action on it is affine: the block carries the structure of 𝔽_{p₀}^a with the group acting as 𝔽_{p₀}^a ⋊ H, H ≤ GL(a, p₀) irreducible.
 
-**(B1) Primitive.** A solvable primitive group is affine: O carries the structure of 𝔽_{p₀}^a and Γ|_O = 𝔽_{p₀}^a ⋊ H with H ≤ GL(a, p₀) irreducible.
+*Proof.* By Lemma A, Γ|_{O} inherits the chain with the same (p, q). Oliver's condition forces solvability, so Γ|_O is solvable and transitive; a solvable primitive group is affine by the classical theorem, giving the stated structure and prime-power degree. ∎
+
+*The rest of this Part works out what H can be, which is where the ΓL(1) failure lives.* Γ|_O is solvable and transitive, so exactly one of:
+
+**(B1) Primitive.** The affine case just established: Γ|_O = 𝔽_{p₀}^a ⋊ H with H ≤ GL(a, p₀) irreducible.
 
 - *H is cyclic-by-q.* H inherits the chain, so it is p-by-cyclic-by-q; its normal p-subgroup is unipotent, and a normal unipotent subgroup of an irreducible linear group has a nonzero invariant fixed space, contradicting irreducibility unless trivial.
 - *The point stabiliser need not lie in ΓL(1, p₀^a).* The tempting argument runs: let C ◁ H be cyclic with H/C a q-group; if C acts *irreducibly* then 𝔽_{p₀}[C] is a division algebra by Schur and a field by Wedderburn, so O is one-dimensional over it, C lies in a Singer cycle, and H ≤ N_{GL}(C) = ΓL(1, p₀^a). That is valid **only when C acts irreducibly**. C need not be, and when it is not the conclusion fails:
@@ -230,7 +249,9 @@ Three consequences.
 *When the stabiliser IS of ΓL(1) type* — which Lemma B′ makes automatic for foreign parts, and which is the case the constructions of Part E realise — the per-part formulas are exact:
 
 - The intra-orbitals are the classes ±δ·T for T the twist group, and the minimum intra-orbital is **orb(s, t) = s·t/2 if t is even or p₀ = 2, else s·t**, where t = |T|.
-- *Foreign characteristic (p₀ ≠ p).* Lemma B′: π_O(Γ₂) is a normal p-subgroup of a primitive group, hence trivial — a nontrivial normal subgroup of a primitive group contains the socle, which here is elementary abelian of order p₀^a with p₀ ≠ p; π_O(Γ₁) is cyclic normal, so likewise contains the socle, forcing a = 1; being cyclic it centralises the socle, so by C_Γ(V) = V in an affine primitive group it *equals* it; hence the entire twist lies in Γ/Γ₁, a q-group. **So s is prime and t is a power of q.**
+> **Lemma B′.** Let O be an orbit whose finest block has size s = p₀^a with p₀ ≠ p (an *outside block*). Then a = 1 — the block size is that prime exactly — and its twist order t divides s − 1 and is a power of the top prime q.
+
+*Proof.* π_O(Γ₂) is a normal p-subgroup of a primitive group, hence trivial — a nontrivial normal subgroup of a primitive group contains the socle, which here is elementary abelian of order p₀^a with p₀ ≠ p; π_O(Γ₁) is cyclic normal, so likewise contains the socle, forcing a = 1; being cyclic it centralises the socle, so by C_Γ(V) = V in an affine primitive group it *equals* it; hence the entire twist lies in Γ/Γ₁, a q-group. So s is prime and t is a power of q. ∎
   > *One case the sketch skips, with the same conclusion.* The step "π_O(Γ₁) contains the socle" assumes π_O(Γ₁) ≠ 1. If instead π_O(Γ₁) = 1 then Γ|_O is a quotient of the q-group Γ/Γ₁, so a transitive q-group, so of q-power degree; and a transitive **p**-group acting primitively is regular of prime degree. Hence s = q is prime and the twist is trivial — a q-power. The lemma's conclusion holds in this branch too, but it needs saying rather than assuming.
   >
   > *Verified structurally.* Unlike Lemma C (see Part D), **B_safe does depend on Lemma B′**: it is what stops a foreign part being valued at C(s,2). Removing it would raise the bound, so an error here would make B(n) too large — the safe direction for an upper bound, but it would break attainment.
@@ -276,7 +297,9 @@ Against that, B₀ is **loose exactly where it would matter**. Its density floor
 
 ## Part D. Coherence across parts
 
-**Lemma C (corrected justification).** Let O_i be a p-characteristic part with twist order d_i, and O_j a foreign prime part of size r_j whose translations lie in Γ₁ (Part B). The images of Γ₁/Γ₂ in the two parts are C_{d_i} and C_{r_j}. The top q-group acts on the cyclic group Γ₁/Γ₂ by conjugation; on part j it induces the twist, of order t_j > 1, and on part i it induces the identity (it acts trivially there). If r_j | d_i, the r_j-primary component of Γ₁/Γ₂ surjects onto both images, so the conjugation action cannot be simultaneously trivial on one and of order t_j on the other. Hence **gcd(d_i, r_j) = 1**.
+> **Lemma C.** Let O_i be a p-characteristic part whose twist of order d_i lies in the cyclic layer Γ₁/Γ₂, and let O_j be an outside part of prime size r_j. Then gcd(d_i, r_j) = 1.
+
+*Proof.* Let O_i be a p-characteristic part with twist order d_i, and O_j a foreign prime part of size r_j whose translations lie in Γ₁ (Part B). The images of Γ₁/Γ₂ in the two parts are C_{d_i} and C_{r_j}. The top q-group acts on the cyclic group Γ₁/Γ₂ by conjugation; on part j it induces the twist, of order t_j > 1, and on part i it induces the identity (it acts trivially there). If r_j | d_i, the r_j-primary component of Γ₁/Γ₂ surjects onto both images, so the conjugation action cannot be simultaneously trivial on one and of order t_j on the other. Hence gcd(d_i, r_j) = 1. ∎
 
 > **Pitfall.** The weaker argument — "independent pieces generate a direct product, which must be cyclic" — does **not** establish this. A single generator can act as a twist on one part and a translation on another, in which case cyclicity alone imposes nothing. The conjugation action is what forces coprimality.
 
@@ -289,6 +312,24 @@ Against that, B₀ is **loose exactly where it would matter**. Its density floor
 > *What would close it.* Either a proof that a q-element of Γ inducing a Galois automorphism on a p^a-block is incompatible with the chain, or a demonstration that such configurations are dominated (as the fused-foreign case is). The case a = 1 — every foreign part, and 1,903 of the 2,178 p-characteristic parts appearing in a computed winner — is already unconditional.
 
 Twists on distinct p-characteristic parts carry **no** mutual constraint: a single cyclic generator surjects onto each, which is exactly what the diagonal constructions exploit.
+
+## Part D2. The bottom-layer lemmas
+
+*These two are new, introduced by the repair of G.2 (Part G). They are what rules out the bottom layer as a source of block copies, leaving copies = F_mid · F_top. Nothing older in this document depends on them; everything in the repair does.*
+
+> **Lemma D1 (absorption).** Let O be an orbit whose finest block is p-characteristic of size c = p^a, and suppose the F copies of that block are permuted by a subgroup of Γ₂, so that F is a power of p. Then |O| = F·c is itself a power of p, the orbit is already enumerated as the single part (F, c) = (1, |O|), and the single-part reading scores at least as high.
+
+*Proof.* F = p^b and c = p^a give |O| = p^{a+b}, a prime power, so (1, |O|) is an admissible part and appears in the enumeration. Its SAFE intra-orbital is C(|O|, 2). The F-copy reading's intra-orbital is at most F·C(c, 2) = p^b·p^a(p^a − 1)/2 < p^{a+b}(p^{a+b} − 1)/2 = C(|O|, 2), since p^a − 1 < p^{a+b} − 1. The within-class cross term of the F-copy reading only lowers its minimum further, and the between-orbit terms depend on |O| alone and so are identical. Hence the single-part reading scores at least as high, and no configuration is lost by refusing bottom-layer copies of a matching block. ∎
+
+*Worked instance.* Home prime 2, two copies of a 4-block: 2 × C(4,2) = 12, against the same chunk read as one 8-block, C(8,2) = 28.
+
+> **Lemma D2 (the outside-block case). NOT PROVED. STATED AS A TARGET.** Let O be an orbit whose finest block is an outside block of prime size r, with F copies permuted by a subgroup of Γ₂, so F is a power of p. Then for |O| above some threshold the configuration is dominated — its minimum family is at most about F·r, linear in |O|, where a competing configuration on the same points achieves a quantity quadratic in its block size.
+
+*What a proof must supply.* Two things. First, that the family containing the pairs sitting at the same position in different copies has size at most about F·r and that the twist cannot enlarge it — this is the same diagonal-translation argument the document already uses to rule out q-fusion of foreign parts (Part E, reduction R1), and it should transfer. Second, **an explicit threshold**, which is the part that does not currently exist.
+
+*Why the threshold is needed, with a counterexample below it.* Home prime 3, three copies of a 5-block: the same-position family has 3 × 5 = 15 pairs, against a single 5-block at full twist scoring orb(5, 4) = 10. At this size the claimed domination runs the wrong way. The asymptotic reasoning is sound — linear loses to quadratic eventually — but "eventually" has to be located, and until it is, D2 covers only large orbits and the small ones must be enumerated or handled separately.
+
+*Evidence, not proof.* A search over configurations of this shape found none beating B(n) for n ≤ 1200. This is the third argument of this shape written during the 2026-08 review; the first two were wrong, so the search result should be weighted accordingly.
 
 ## Part E. Completeness of the enumeration, and realisability
 
