@@ -181,28 +181,6 @@ def achieved(n, stop_at=None):
         F += 1
     if stop_at and best > stop_at:
         return best
-    # S7: F blocks of c fused in the cyclic layer, plus a foreign prime.
-    # F must be a prime power, coprime to c-1 and to r so the cyclic layer stays
-    # cyclic; and the foreign twist's prime q must differ from F's prime.
-    for Fp, qF in ((3, 3), (9, 3), (5, 5), (25, 5), (7, 7)):
-        EFFx = EFF_EX[qF]
-        for c in PPs:
-            m = Fp * c
-            if m >= n:
-                break
-            r = n - m
-            if r < 3 or r > N or not sieve[r]:
-                continue
-            if base[c] == r or (c - 1) % qF == 0 or r % qF == 0:
-                continue
-            e = EFFx[r]
-            if e <= 0:
-                continue
-            v = min(Fp * comb(c, 2), Fp * c * c, m * r, e * comb(r, 2))
-            if v > best * C:
-                best = v / C
-                if stop_at and best > stop_at:
-                    return best
     lo = bisect.bisect_left(PPs, int(LO_X * n))
     hi = bisect.bisect_right(PPs, int(HI_X * n))
     for k in range(lo, hi):
@@ -227,6 +205,40 @@ def achieved(n, stop_at=None):
                 best = v / C
                 if stop_at and best > stop_at:
                     return best
+    # S7 (added 2026-08): F blocks of c fused in the CYCLIC layer, plus a
+    # foreign prime.  This is the family enumeration-proof.md G.2 wrongly ruled
+    # out -- the block-permuting group need not sit in the top q-group, so F need
+    # not be a q-power, only coprime to everything else the cyclic layer carries
+    # (the twist c-1 and the foreign prime r).  The foreign twist's prime must
+    # also differ from F's prime, which is why EFF_EX rather than EFF is used.
+    #
+    # Ordering note.  `achieved` early-returns once stop_at is cleared, so with a
+    # naive stop_at a family placed FIRST can truncate the scan at its own value
+    # and report less than the three-family version did -- still a valid lower
+    # bound, but non-monotone.  The caller now passes
+    # stop_at = max(0.9*cap, ASYMPTOTIC), which removes the truncation exactly on
+    # the values that form the worklist, so order no longer changes the result.
+    # S7 is kept last anyway: it is the most expensive family and the one most
+    # often irrelevant.
+    for Fp, qF in ((3, 3), (9, 3), (5, 5), (25, 5), (7, 7)):
+        EFFx = EFF_EX[qF]
+        for c in PPs:
+            m = Fp * c
+            if m >= n:
+                break
+            r = n - m
+            if r < 3 or r > N or not sieve[r]:
+                continue
+            if base[c] == r or (c - 1) % qF == 0 or r % qF == 0:
+                continue
+            e = EFFx[r]
+            if e <= 0:
+                continue
+            v = min(Fp * comb(c, 2), Fp * c * c, m * r, e * comb(r, 2))
+            if v > best * C:
+                best = v / C
+                if stop_at and best > stop_at:
+                    return best
     return best
 
 TICK, SUMMARY = 10_000, 100_000
@@ -246,7 +258,12 @@ print(f"{stamp()}  scanning to {N:,}; checkpoint every {TICK:,}, "
 for n in range(6, N + 1):
     if not ispp[n]:
         a = n % 12
-        d = achieved(n, stop_at=0.9 * CAP[a])
+        # Never early-return while the value is still below the asymptotic
+        # bound: those n are exactly the worklist, and truncating them there
+        # both lengthens the list and makes the family order matter.  Only
+        # class 11 is affected -- every other class has 0.9*cap > ASYMPTOTIC
+        # already -- so the extra work is negligible.
+        d = achieved(n, stop_at=max(0.9 * CAP[a], ASYMPTOTIC))
         ratio = d / CAP[a]
         if ratio < per[a][0]:
             per[a][0], per[a][1] = ratio, n
