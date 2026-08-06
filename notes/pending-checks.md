@@ -26,14 +26,13 @@ Everything in §1 and §2 below is subordinate to **R0**.
 
 Ranked, so the sections below have a stated basis. This is not the order the items appear in.
 
-1. **Lemma B′.** The only unscrutinised lemma either bound rests on. An error inflates B(n) and breaks attainment — and since B is now a *lower* bound, that is the direction that matters. One close read found it sound with a skipped branch; that same read found a gap in Lemma C and a **false** step in G.2, so one read is weak evidence. → **T1**
+1. **The repair itself.** Until R0 lands there is no upper bound on μ(n) at all. The whittling lemmas are in hand — D1 and D2 both proved, D2 more strongly than conjectured (m\* ≤ n/2 outright, no threshold) — so what is missing is the enumerator, not an argument. → **R0**
 
-1a. **The repair itself.** Until R0 lands, there is no upper bound on μ(n) at all. Lemmas D1 and D2 are proved (`enumeration-proof.md` Part D2) and D2 came out stronger than conjectured — m\* ≤ n/2 outright, no threshold — so the whittling is in hand; what is missing is the enumerator.
 2. **Exhaustiveness of the GAP stages.** The subdirect-product hole is real and undischarged. It degrades *evidence* rather than creating an error — a missed group could only have larger m\*, i.e. it would be a counterexample, not a silent corruption — but it is the only non-circular check in the framework. → `small-degree-verification.md` item 5
 3. **Part E's realisability construction.** Attainment's other leg, argued in general and spot-checked at eight configurations from n = 12 to 315. Unlike the certificate, this has no per-n verification at all. → **T2**
 4. **The eight necessary conditions of `fb_common.py`.** Both certificates now rest on these and nothing else — the Part E′ theorems were shown to be optimisations in each. They have had one read. Their being *necessary* is what makes an empty candidate list a proof, and two of them have been corrected in the permissive direction historically. → **T3**
 
-Closed in the 2026-08 pass and no longer risks: `fallback_cert.py` and `wide_cert.py` (both read; both shown to pass with every Part E′ theorem disabled), Lemma C (gap found, shown to affect neither endpoint), `mu_enumerate.py` (read; two independent checks).
+Closed in the 2026-08 pass and no longer risks: **Lemma B′** (proved in full, socle step supplied, read in detail by a second reader), **Lemmas D1 and D2** (both proved), `fallback_cert.py` and `wide_cert.py` (both read; both shown to pass with every Part E′ theorem disabled), Lemma C (gap found, shown to affect neither endpoint), `mu_enumerate.py` (read; two independent checks).
 
 ---
 
@@ -46,7 +45,7 @@ Closed in the 2026-08 pass and no longer risks: `fallback_cert.py` and `wide_cer
 In dependency order. Steps 1 and 2 are authoring; 3 onward are runs.
 
 1. **Restructure `mu_enumerate.py`** around the cyclic layer's factorisation rather than around parts. The coprimality budget is global — every fusion count, every cyclic-layer twist and every foreign prime competes for one shared generator — so "pick parts, then check" cannot express it. Note the correction both adds configurations and forbids some previously counted, so B is **not** uniformly larger and the table must be recomputed rather than adjusted.
-2. **Re-examine Lemma B′ first, not last** (T1). It is now the only structural lemma either bound rests on; the rest of the repair is wasted if it has the same shape of hole.
+2. **Re-check the lemma inventory against the enlarged shape space** (T1). The repair changes which configurations exist, so B, B′, C, D1 and D2 each want re-reading for whether their hypotheses still cover every case — not because any is in doubt, but because the space they quantify over is moving.
 3. **Recompute the table**, then rerun everything in R1.
 4. **Rebuild the branch-and-bound worklist.** It was pruned against a floor that has moved.
 
@@ -153,17 +152,13 @@ Start from the current floor 0.026117, not from the asymptotic constant. `--out`
 
 *Judgement calls, independent scrutiny, or things requiring materials Claude cannot obtain.*
 
-### T1. Independent reading of Lemma B′ ★
+### T1. A second reading of the structural arguments
 
-*Partly discharged 2026-08.* A reader queried the step "a nontrivial cyclic normal subgroup contains the socle" — correctly, since for primitive groups in general a normal subgroup need only be *transitive*, and with two minimal normal subgroups it can contain one and meet the other trivially. The conclusion holds because the group is **affine**, where V is the unique minimal normal subgroup, but the proof needs two lines that were missing: for N ⊴ G = V ⋊ H, the intersection N ∩ V is an H-submodule so irreducibility makes it 1 or V; and if it is 1 then [N, V] = 1 puts N ≤ C_G(V) = V, forcing N = 1. Written into Part B as Step 0. Two dependencies are now explicit: the proof uses **irreducibility of H**, so B′ rests on Lemma B and not merely on primitivity, and it uses C_G(V) = V twice where the old text invoked it once.
+*Not a single-lemma item any more.* Lemma B′ has now been read in detail by a second reader and is settled: the socle step — which does **not** follow from primitivity alone, since a normal subgroup of a primitive group need only be transitive — is proved via irreducibility of H plus C_G(V) = V, and the degenerate branch π_O(Γ₁) = 1 is handled separately. Both were assertions in earlier drafts.
 
-The rest of B′ still wants an independent read.
+What that leaves is a general point rather than a specific worry. Of the compact structural steps in this framework, one was false and shipped (the ΓL(1) step), one was false and shipped (G.2), one was under-argued and is now fixed (B′), and one is proved only in a special case (C). The pattern is that a step compressed to a clause tends not to survive being written out. So the item is: **work through the parts that have had no close reading**, in the same way — Part A's orbit decomposition, Part E's realisability construction, and Part F's counting bounds — and expect roughly one finding per three arguments.
 
-**The highest-value item on this page, and no amount of compute substitutes for it.** B′ is the only unscrutinised lemma `B_safe` depends on. It has now had one close read, which found it sound with one skipped branch — but that same read found a genuine gap in Lemma C and a wrong justification in G.2. Two defects in three arguments is the relevant base rate, and it argues for a second reader rather than against one.
-
-Specifically worth attacking: the step "π_O(Γ₁) is cyclic normal, so contains the socle, forcing a = 1". This is where the argument does real work, and the analogous step in the original Part B ΓL(1) argument is the one that turned out false.
-
-*Human, because the value is in the independence.* A second pass by the same reader on the same evidence is worth much less than a first pass by someone else.
+*Human, because the value is in independence.* A second pass by the same reader on the same evidence is worth much less than a first pass by someone else, which is exactly what the B′ reading demonstrated.
 
 ### T2. Verify Part E's realisability construction per-n
 

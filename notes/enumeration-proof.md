@@ -144,7 +144,7 @@ Five deferrals above, plus one that whittles step 1 rather than steps 2–3. Thi
 
 **Lemma B — the block size is one prime raised to a power.** *Must show:* the shuffles acting on a single block, with no smaller repeating unit inside it, are of the kind arising from arithmetic in a finite field. The three-layer condition forces solvability; a classical theorem then gives affine structure of prime-power degree. **Status: sound. The settled step.**
 
-**Lemma B′ — an outside block has prime size, never a prime power.** *Must show:* the middle layer's image on such a block is non-trivial and single-generated, which forces the block to prime size; and that the whole twist then lies in the top layer, so it is a power of the top prime. **Status: read once, found sound, one skipped sub-case added (the branch where the middle layer acts trivially, which gives a block of top-prime size and trivial twist — same conclusion). This is the single lemma the upper bound genuinely rests on, and it has had no independent scrutiny.**
+**Lemma B′ — an outside block has prime size, never a prime power.** *Must show:* that every nontrivial normal subgroup of the block's primitive affine group contains the socle; that the middle layer's image is then cyclic containing it, forcing prime size; and that the whole twist lands in the top layer. **Status: proved in full (Part B), including the socle step and the degenerate branch where the middle layer acts trivially. Read in detail by a second reader 2026-08.**
 
 **Lemma C — a twist in the middle layer shares no prime with any outside block.** *Must show:* the top layer's conjugation acts as the identity on the twist but with the twist's own order on the outside block, which is impossible if they share a prime. **Status: proved when the block has prime size. Open when the block is a prime power, because the top layer may then act through a field automorphism whose order is also a power of the top prime, so the two are not obviously incompatible. Does not affect B_safe, which credits every matching block with every pair inside it regardless.**
 
@@ -171,7 +171,7 @@ Five deferrals above, plus one that whittles step 1 rather than steps 2–3. Thi
 
 **Lemma C is proved only for prime blocks**, the prime-power case being open — but B_safe does not use it at all, so this bears on attainment rather than on the bound.
 
-Everything else in the table is proved. **Lemma B′ is the one to scrutinise**: it is the only entry the upper bound genuinely rests on, and it has had one reading and no independent check.
+Everything else in the table is proved, Lemma B′ included — its socle step and its degenerate branch were both written out and checked in detail after an earlier draft asserted them.
 
 ### Six worked cases
 
@@ -285,7 +285,9 @@ Three consequences.
 *When the stabiliser IS of ΓL(1) type* — which Lemma B′ makes automatic for foreign parts, and which is the case the constructions of Part E realise — the per-part formulas are exact:
 
 - The intra-orbitals are the classes ±δ·T for T the twist group, and the minimum intra-orbital is **orb(s, t) = s·t/2 if t is even or p₀ = 2, else s·t**, where t = |T|.
-> **Lemma B′.** Let O be an orbit whose finest block has size s = p₀^a with p₀ ≠ p (an *outside block*). Then a = 1 — the block size is that prime exactly — and its twist order t divides s − 1 and is a power of the top prime q.
+> **Lemma B′.** *Setting: this is the **primitive** branch (B1) of the case analysis above. O is an orbit on which Γ acts primitively — the imprimitive branch (B2) is peeled off first by passing to the finest block system, so "O" here is a single block with the group the primitive action on it.* Let that block have size s = p₀^a with **p₀ ≠ p**, the home prime — an *outside block*. Then **a = 1**, so the block size is the prime p₀ itself, and its twist order t divides s − 1 and is a power of the top prime **q**.
+>
+> *Three primes are in play and it is worth fixing them before the proof: **p** is the home prime, the one governing Γ₂; **q** is the top prime, governing Γ/Γ₁; and **p₀** is the characteristic of the block, which by hypothesis differs from p. The conclusion is that p₀ ends up being the block size outright, and in the degenerate Case 2 below it turns out to equal q.*
 
 *Proof.* By Lemma B the action on O is affine: O ≅ V = 𝔽_{p₀}^a and Γ|_O = V ⋊ H with H ≤ GL(a, p₀) **irreducible**. Write G = Γ|_O.
 
@@ -299,7 +301,11 @@ Next π_O(Γ₁) is normal in G, and is cyclic: with π_O(Γ₂) = 1 it is a quo
 
 *Case 1: π_O(Γ₁) ≠ 1.* By Step 0 it contains V ≅ C_{p₀}^a, and a cyclic group has cyclic subgroups, so **a = 1**. Being cyclic it is abelian, hence centralises V, so π_O(Γ₁) ≤ C_G(V) = V; containing V as well, it *equals* V. So the image of Γ₁ in G is exactly the translations, the point stabiliser of Γ₁ on O is trivial, and the entire twist H ≅ G/V lies in the image of Γ/Γ₁, a q-group.
 
-*Case 2: π_O(Γ₁) = 1.* Then G is a quotient of the q-group Γ/Γ₁, so G is a transitive q-group and has q-power degree; a transitive p-group acting primitively is regular of prime degree, so s = q and the twist is trivial — a q-power vacuously.
+*Case 2: π_O(Γ₁) = 1.* Then G is a quotient of Γ/Γ₁, so G is a **q-group** — a group of q-power order — acting transitively on O. A transitive group of q-power order has q-power degree, so s = q^a and in particular **p₀ = q**: the block's characteristic coincides with the top prime.
+
+> *Why such a G is forced to have s = q.* A nontrivial group of prime-power order has a nontrivial centre, so pick a central subgroup Z of order q. Being central it is normal in G, and the orbits of a normal subgroup form a block system. Primitivity leaves only the two trivial block systems, and Z ≠ 1 rules out singleton blocks, so Z is transitive on O. A transitive group of order q therefore has |O| = q, and it acts regularly. Hence **s = q**.
+
+The point stabiliser is then trivial, so the twist is trivial — a power of q vacuously. Note this case has a = 1 as well, so the lemma's conclusion holds here for a different reason than in Case 1.
 
 In both cases **s is prime and t is a power of q**. ∎
 
@@ -728,7 +734,7 @@ Fermat primes achieve this at q = 2, safe primes with t = q odd and 2t = r−1, 
 2. **Restructure the enumerator** around the middle layer's factorisation rather than around parts. The coprimality budget is global, so "pick parts then check" cannot express it. Note that the correction both adds configurations and forbids some previously counted (Part 0, case C), so B is not uniformly larger.
 3. **Recompute the table**, then rerun `ladder_verify.py` — its three families need the new shapes too — then rebuild the branch-and-bound worklist, which was pruned against a floor that has moved.
 4. **Rerun both certificates.** They certify a property of B against the shape space; a larger space means more fallback configurations to rule out.
-5. **Re-examine Lemma B′ first, not last.** It is now the only structural lemma the upper bound rests on, and it is the one with no independent reading.
+5. **Re-check the lemma inventory against the enlarged shape space.** The repair changes which configurations exist, so each of B, B′, C, D1 and D2 should be re-read for whether its hypotheses still cover every case — not because any is in doubt, but because the space they quantify over is changing.
 
 **J0a. The stabiliser question, noticed during the same review.** The framework assumes a matching block's twist lies in the multiplicative group of the field. The stabiliser of a primitive affine group of degree p^a may be any irreducible subgroup of GL(a, p), which is larger. This cannot inflate B_safe — the safe scoring already credits C(c,2) — but it is an unstated assumption bearing on attainment, and it should be either justified or scoped.
 
@@ -754,7 +760,7 @@ Fermat primes achieve this at q = 2, safe primes with t = q odd and 2t = r−1, 
 
 3. **More non-circular confirmation.** The two exhaustive comparisons (Part I) both sit at small degree, where few configurations are available, so they cannot establish exhaustiveness in general. A third degree would be worth more per unit of compute than any extension of the numerical range — but exhaustive enumeration of Oliver groups is only feasible at small degrees, so the supply is short.
 
-   *Status of the reading itself (2026-08).* Lemma B′, Lemma C and G.2 have now had one close read, recorded in place: **B′ is sound**, with one branch (π_O(Γ₁) = 1) skipped by the sketch and giving the same conclusion; **Lemma C is proved only for prime c_i**, the a > 1 case being open for exactly the Galois reason that sank the ΓL(1) step — but B_safe does not use it, so the published upper bound is unaffected and the exposure is to attainment; **G.2's q-power block count does not follow from the reason given**, and the conclusion needs the domination argument now written into it. Independent scrutiny remains the highest-value item; one careful read is not it, particularly since the failure it turned up in Lemma C is the same failure mode as the one already found by adversarial search.
+   *Status of the reading itself (2026-08).* Lemma B′, Lemma C and G.2 were each read closely, with results recorded in place. **B′ is proved**, after two gaps in the sketch were filled: the socle step, which does not follow from primitivity alone and needs irreducibility plus C_G(V) = V; and the degenerate branch π_O(Γ₁) = 1. It has since been checked in detail by a second reader. **Lemma C is proved only for prime c_i**, the a > 1 case being open for the Galois reason that sank the ΓL(1) step — B_safe does not use it, so the exposure is to attainment. **G.2 is false**, which is the defect of J0. The lesson is that compact structural steps in this framework have a poor track record and every one of them repays being written out; the reading is worth continuing across the parts that have not had it.
 
 4. **Implementation review of `mu_enumerate.py`.** Read in full (2026-08). The pruning bounds are sound in the conservative direction: `cmin = 2·floor/n + 1` follows from F·C(c,2) ≤ n(c−1)/2 and is applied with integer floor division, so it keeps too many parts rather than too few; `seed_value` never over-estimates (its p-power-plus-foreign branch uses the *refined* score, which is ≤ SAFE); the cross-term prune compares against the smallest selected part, which is the binding one; ties are recorded so a witness always exists; the `p = 0` sentinel for a trivial bottom layer is strictly more permissive than any p > 0 all-foreign reading, so it covers those configurations. Two checks were run: recomputing B(n) at 61 values ≤ 700 with the shipped code (0 mismatches), and against a **separately written naive enumerator** with no pruning, no seed and no part pool — 79 values at n ≤ 120, **0 mismatches**. The naive check is the informative one, since it tests the pruning rather than re-running it; extending it is O(n) parts choose k and gets expensive fast, but n ≤ 260 is reachable overnight. One cosmetic edge remains: in decision mode `seed = int(floor·C(n,2))` truncates, so an n whose density exactly equals the floor could be reported as rejected; it cannot arise for the record holder, which is read from the table instead.
 
