@@ -41,8 +41,8 @@ Everything else in this document elaborates that split. Five consequences set th
 | **S1** | one matching block, no copies | — | every prime power | **→ 0**: prime powers up to N number π(N) + O(√N) = O(N/log N). Trivial where it applies: δ = 1, and the only shape there | §2.1 |
 | **S2** | fused matching class, **top**-layer copies, n = F·c | multiplicative | 40.4% (v3) | **→ 0**: needs ω(n) = 2 with both factors prime powers | §4 |
 | **S3** | matching + outside, n = c + r\* | additive | 37.8% (v3) | **→ ~50%**, essentially all even n | §3.1 |
-| **S4** | two matching + outside, n = 2c + r\* | additive | 2 winners to n = 360 (v4); **0** in v3, an over-credit artefact | **→ ≈ 3.7%** outright, plus ≈ 6.8% tied with S5. Confined to residues 7, 15, 23 mod 24 | §3.2 |
-| **S5** | fused matching + outside; forces q = 2 | hybrid | 21.8% (v3) | **→ ≈ 39.6%** outright, plus the ≈ 6.8% tied with S4. Sole winner at the nine rung-B residues | §3.2 |
+| **S4** | two matching + outside, n = 2c + r\* | additive | 2 winners to n = 360 (v4); **0** in v3, an over-credit artefact | **→ 1/24 ≈ 4.2%** outright, plus 1/24 tied with S5. Confined to residues 7, 15, 23 mod 24 | §3.2 |
+| **S5** | fused matching + outside; forces q = 2 | hybrid | 21.8% (v3) | **→ 10/24 ≈ 41.7%** outright, plus the 1/24 tied with S4. Sole winner at the nine rung-B residues | §3.2 |
 | **S6** | two outside blocks | additive | 0% | **→ 0**: supply-limited, needs two coordinated safe primes | §4.3 |
 | **S7** | **middle**-layer-fused matching + outside | hybrid | — | an escape, not a family; see §4.1 | §4.1 |
 | **S8** | bottom-layer-fused matching | — | never | excluded (Lemma D1) | — |
@@ -117,11 +117,11 @@ The exponent is what matters: **three log factors, so ~n/log³n representations.
 
 ### 3.2 Three parts at odd n (S4 and S5): the family, and its ceilings
 
-Odd n cannot use a balanced two-part split: c + r odd forces one part even, and an even prime foreign part must be 2, which is useless. So the even part would have to be the p-characteristic one, i.e. c = 2^a, leaving only ~log₂n candidate splits. That route is genuinely scarce.
+Odd n cannot use a balanced two-part split: c + r odd forces one part even, and an even prime foreign part must be 2, which is useless. So the even part would have to be the p-characteristic one, i.e. c = 2^a, leaving only ~log₂n candidate splits — the route counted at O(n/log n) in §4.1.
 
-The route that avoids it is **three parts with two equal p-characteristic blocks**: n = 2c + r with c an odd prime power and r an odd prime, all parts odd. This is what the enumeration overwhelmingly finds — **255 of the 258 three-part winners** have exactly this shape — and it is *not* the family §5 of the notes analyses (see §3.3). Balancing gives the cap 1/9 at c ≈ r ≈ n/3.
+The route that avoids it is **three parts with two equal p-characteristic blocks**: n = 2c + r with c an odd prime power and r an odd prime, all parts odd. At full efficiency, balancing x² against η(1−2x)² gives the cap **1/9 at x\* = 1/3**; the ceilings at reduced efficiency, and the rung structure that raises them, are §3.3.
 
-**Two shapes realise this family, and they divide the range by c mod 8.** The two equal c-blocks may be left unfused (S4 in the census) or fused into one class of two (S5). Fusing doubles the intra term to 2·orb(c, d) but puts C₂ in the cyclic layer, so d must be the **odd part of c − 1** — against the unfused C(c,2) at the full twist. Over all primes c < 20000 the comparison is exceptionless:
+**Two shapes realise this family, and which is better depends on c mod 8.** The two equal c-blocks may be left unfused (**S4**) or fused into one class of two (**S5**). Fusing doubles the intra term to 2·orb(c, d), but puts C₂ in the cyclic layer, so d must be the **odd part of c − 1** — against the unfused C(c,2) at the full twist. Over all primes c < 20000 the comparison is exceptionless:
 
 | c mod 8 | c − 1 | fused intra | verdict | primes < 20000 |
 |---|---|---|---|---|
@@ -129,35 +129,9 @@ The route that avoids it is **three parts with two equal p-characteristic blocks
 | 5 | 4·odd | C(c,2) | exact tie | 569 |
 | 1 | 8 \| c−1 | ≤ C(c,2)/2 | **unfused (S4) strictly better** | 556 |
 
-So each verdict holds on a quarter of all c. **The proportion of *n* is a different question, and it is settled by congruence rather than by that quarter-split**: for a given n we take the best c available near the balance point, so S5 wins wherever *some* c ≡ 3 (mod 4) works, and S4 gets the rest. Reachability of such a c is exactly the rung-B condition of §3.3, which is a congruence on n mod 24 — so at the nine rung-B residues S5 wins outright, and only 7, 15 and 23 mod 24 are left. Measured over odd n in [2×10⁵, 2.06×10⁵]:
+So the two are **co-carriers of the odd-n asymptotics**, not rivals with one dominating: each verdict holds on a quarter of all c.
 
-| n mod 24 | S5 wins | S4 wins | tie |
-|---|---|---|---|
-| 1, 3, 5, 9, 11, 13, 17, 19, 21 | **100%** | 0% | 0% |
-| 7 | 24.0% | 24.8% | 51.2% |
-| 15 | 26.8% | 18.8% | 54.4% |
-| 23 | 0% | 44.0% | 56.0% |
-| **all odd n** | **79.2%** | **7.3%** | **13.5%** |
-
-**Why 7 and 15 behave differently from 23, though all three are rung-C residues.** All three are n ≡ 7 (mod 8), and there c ≡ 3 (mod 4) forces 2c ≡ 6 (mod 8), hence r ≡ 1 (mod 8) and 8 | r − 1. With r − 1 = D·t and t odd that forces 8 | D — so the fused reading is not *unavailable* at these residues, only pushed to a lower efficiency: D = 8, i.e. **η = 1/4**, instead of the residue's own η = 1/2.
-
-That would normally lose. It does not, because the two ceilings coincide **exactly**:
-
-> cap_C(1/2) = (1/2)/(1+√2)² = **(3 − 2√2)/2** = cap_B(1/4) = (1/4)/(1+1/√2)².
-
-This is not an instance of the ladder identity; solving cap_B(η/2) = cap_C(η) gives 2η = 1, so it holds at **η = 1/2 alone** — precisely the efficiency of residues 7 and 15. The two shapes therefore have the same ceiling there, and among the n where the *balanced family* decides the outcome, which one wins is settled by supply rather than structure: hence the near-even 24.8% / 24.0% split at residue 7.
-
-At **23 mod 24** the mod-3 obstruction caps η at 1/6, so the fused reading needs D = 24, η = 1/12, and its ceiling **0.042020 falls below** S4's 0.050510. S5 can never win there — the measured 0%.
-
-> **The ties are a separate phenomenon, and not the one the coincidence explains.** A tie means the two readings return the same *value*, which happens whenever the winning configuration's binding term is one that fusion does not touch. Diagnosed over tied n at residue 7: the binding term is the **foreign block** in 43 of 65 cases and the intra term in 22 — and the winning configurations sit at a median of **1.21× the residue's ceiling**, so at these sizes they are escape configurations (§4.1) rather than the balanced family. Fusing changes only the intra term, so wherever an escape wins on its foreign block the two readings agree identically. Consistently, at 23 mod 24 — where escapes are weaker — the tied values sit *at* the ceiling (median 0.989×) rather than above it.
-
-> **What the probabilistic model predicts, and why the computed range cannot yet show it.** Under the model of §3.7, each c-class supplies candidates near the balance point at a rate given by its own singular series, and the winner is the configuration closest to the ceiling. Two things then follow asymptotically. The escape-driven ties **thin at O(n/log n)** (§4.1), so eventually the outcome at every n is decided by the balanced family alone. And within that family the candidate count near the balance point grows like n/log³n, so every class becomes dense enough that its best candidate is essentially *at* the ceiling — at which point choosing the maximum is effectively drawing from the pool, and the probability the argmax lands in a class tends to that class's share of the pool. So the outcome split **should converge to the singular-series proportions**, with a residual tie fraction converging to the c ≡ 5 (mod 8) share rather than to zero, since fused and unfused give literally the same value there.
->
-> The computed range is too small to see this. Counting solutions by c-class gives 32% / 32% / 36% for the S4-favoured, tied and S5-favoured classes, against an observed 24.8 / 51.2 / 24.0 at residue 7 — but the observed figures do not move monotonically across bands either (28.0/26.4/45.6 at 2×10⁴, 23.5/50.0/26.5 at 2×10⁵, 32.7/41.3/26.0 at 10⁶), and those bands hold only 100–250 values apiece. A drift of order 1/log n falls from about 10% to 7% across that range, well inside the sampling noise. **The measurement is underpowered by roughly an order of magnitude, not in tension with the model.** Settling it wants the predicted class shares computed directly from the three singular series — which differ by the condition on r, not only by the density of c — against a single band of a few thousand values.
->
-> *Does Friedlander–Granville threaten this?* Their result defeats strong uniformity for primes in progressions to moduli growing almost as fast as x, so it is the right thing to worry about whenever a heuristic leans on equidistribution across many classes at once. It does not bite here: **every modulus in play is bounded** — 8 and 24 for the residue bookkeeping, D ≤ 24 for the efficiency condition — and the windows have length Θ(n), so what is being assumed is equidistribution in a *fixed* finite set of classes over a long interval, which is a far weaker demand than anything their construction disturbs. The genuinely non-trivial assumption is elsewhere and is §3.5's: that the Bateman–Horn count holds **uniformly in n** as the singular series varies with n, rather than pointwise for each fixed system. That is where the conjectural weight sits, and no amount of bounded-modulus equidistribution supplies it.
-
-i.e. **≈ 39.6% of all n to S5 outright, ≈ 3.7% to S4, ≈ 6.8% tied.** The nine-residue block is congruence-forced and so stable; the internal split at 7, 15 and 23 is empirical and may drift. So the two shapes are co-carriers, but very unequally: S4's outright share is an order of magnitude smaller and confined to three residues. Which of them the enumeration *reports* as the winner is a separate question, sensitive to how the SAFE cap treats a fused class — see §2.0.
+*How that translates into a proportion of n is a separate question — for a given n one takes the best c available near the balance point, not a random one — and it is answered in §3.8.*
 
 **Full efficiency is obstructed locally, and the obstructions split the ceiling by residue class.** Write **η** for a foreign block's efficiency, η = orb(r, t)/C(r,2) with t the q-part of r − 1 — the fraction of full 2-homogeneous capacity its twist reaches. (η rather than e, to keep clear of Euler's number.) Efficiency η = 1 requires the foreign twist to have order (r−1)/2, which Lemma B′ forces to be a power of q — so (r−1)/2 must be a prime power, the clean case being r a safe prime. Which n admit it, and at what efficiency, is settled in §3.3. Re-optimising δ(x) at reduced efficiency gives the other ceilings in closed form:
 
@@ -437,6 +411,56 @@ with sd falling like n^{−1/2} throughout. Slow approach to an asymptotic const
 
 **What this establishes.** The local analysis and the singular series are confirmed at every residue mod 24, in both families, each at the balance point its own ceiling is derived from — the count matches, and the vanishing predictions vanish. It says nothing about §3.5's global question, whether solutions exist for *every* large n, which is where the conjecture lives. What it removes is the possibility that the constants are right but the model is wrong.
 
+### 3.8 Which of S4 and S5 wins, and how often
+
+*The two shapes of §3.2 have overlapping ceilings, so the question of which realises the family at a given n is not settled by the ceiling table. It is settled — asymptotically — by the relative supply of the three underlying systems, which is a singular-series computation of the same kind as §§3.1–3.3.*
+
+**The predicted shares, from the singular series.** The three outcomes correspond to three systems, distinguished by the class of c and hence by the condition on r:
+
+| outcome | c mod 8 | system | ceiling |
+|---|---|---|---|
+| S4 wins | 1 | q, Dq+1, (n−r)/2 all prime, D = 4 (res 7, 15) or 12 (res 23) | 0.085786 / 0.050510 |
+| tie | 5 | same system | same |
+| S5 wins | 3, 7 | same with **D doubled** — 8 or 24 — since c ≡ 3 (mod 4) forces 8 \| r − 1 | 0.085786 / **0.042020** |
+
+Three facts settle the split. **The two singular series agree**: computed over n in a test band, 𝔖(D) and 𝔖(2D) match to four decimals at all three residues, since the systems differ only in a coefficient and ω(ℓ) = 3 generically for both. **The log factors agree** to within a percent, since the balance points differ but the arguments are all Θ(n). And **c mod 8 is decided by q mod 4** — from c = (n−1)/2 − (D/2)q with q odd — so the D-system's solutions split 1:1 between c ≡ 1 and c ≡ 5, i.e. between S4-wins and ties, by Dirichlet.
+
+Hence at residues 7 and 15 the shares are **1 : 1 : 2** — S4 1/4, tie 1/4, S5 1/2 — the last class being two residues of c rather than one. At residue 23 the doubled system's ceiling **0.042020 falls below** 0.050510, so it never wins and the split is 1/2 : 1/2 : 0. Over all n:
+
+> **S5 → 9/24 + 1/24 = 10/24 ≈ 41.7% outright; S4 → 1/24 ≈ 4.2%; tied → 1/24 ≈ 4.2%**, with S3 taking the even 12/24. The four sum to 1.
+
+*These are model predictions.* What is actually observed at computed sizes follows, and it agrees on one of the three shares and not the other two. The nine-residue block is congruence-forced and so stable; the internal split at 7, 15 and 23 is empirical and may drift. So the two shapes are co-carriers, but very unequally: S4's outright share is an order of magnitude smaller and confined to three residues. Which of them the enumeration *reports* as the winner is a separate question, sensitive to how the SAFE cap treats a fused class — see §2.0.
+
+**The observed split, by residue.** For a given n one takes the best c near the balance point, so S5 wins wherever *some* c ≡ 3 (mod 4) works — which is exactly the rung-B condition of §3.3, a congruence on n mod 24. At the nine rung-B residues S5 therefore wins outright, and only 7, 15 and 23 are in question. Measured over odd n in [2×10⁵, 2.06×10⁵]:
+
+| n mod 24 | S5 wins | S4 wins | tie |
+|---|---|---|---|
+| 1, 3, 5, 9, 11, 13, 17, 19, 21 | **100%** | 0% | 0% |
+| 7 | 24.0% | 24.8% | 51.2% |
+| 15 | 26.8% | 18.8% | 54.4% |
+| 23 | 0% | 44.0% | 56.0% |
+| **all odd n** | **79.2%** | **7.3%** | **13.5%** |
+
+Against the predicted 25 / 25 / 50 at residues 7 and 15: **the S4 share is already right** (24.8 and 18.8 against 25), while the tie and S5 shares are transposed — ties running at ~50% where S5 was predicted to. The next two boxes explain that, and the explanation is one the model itself predicts.
+
+**Why 7 and 15 behave differently from 23, though all three are rung-C residues.** All three are n ≡ 7 (mod 8), and there c ≡ 3 (mod 4) forces 2c ≡ 6 (mod 8), hence r ≡ 1 (mod 8) and 8 | r − 1. With r − 1 = D·t and t odd that forces 8 | D — so the fused reading is not *unavailable* at these residues, only pushed to a lower efficiency: D = 8, i.e. **η = 1/4**, instead of the residue's own η = 1/2.
+
+That would normally lose. It does not, because the two ceilings coincide **exactly**:
+
+> cap_C(1/2) = (1/2)/(1+√2)² = **(3 − 2√2)/2** = cap_B(1/4) = (1/4)/(1+1/√2)².
+
+This is not an instance of the ladder identity; solving cap_B(η/2) = cap_C(η) gives 2η = 1, so it holds at **η = 1/2 alone** — precisely the efficiency of residues 7 and 15. The two shapes therefore have the same ceiling there, and among the n where the *balanced family* decides the outcome, which one wins is settled by supply rather than structure: hence the near-even 24.8% / 24.0% split at residue 7.
+
+At **23 mod 24** the mod-3 obstruction caps η at 1/6, so the fused reading needs D = 24, η = 1/12, and its ceiling **0.042020 falls below** S4's 0.050510. S5 can never win there — the measured 0%.
+
+> **The ties are a separate phenomenon, and not the one the coincidence explains.** A tie means the two readings return the same *value*, which happens whenever the winning configuration's binding term is one that fusion does not touch. Diagnosed over tied n at residue 7: the binding term is the **foreign block** in 43 of 65 cases and the intra term in 22 — and the winning configurations sit at a median of **1.21× the residue's ceiling**, so at these sizes they are escape configurations (§4.1) rather than the balanced family. Fusing changes only the intra term, so wherever an escape wins on its foreign block the two readings agree identically. Consistently, at 23 mod 24 — where escapes are weaker — the tied values sit *at* the ceiling (median 0.989×) rather than above it.
+
+> **Why the computed range does not yet show the predicted split.** The prediction above assumes the winner is drawn from the pool of near-optimal candidates in proportion to each class's supply. Two things have to happen for that to be the operative regime, and both are asymptotic. The escape-driven ties **thin at O(n/log n)** (§4.1), so eventually the outcome at every n is decided by the balanced family alone. And within that family the candidate count near the balance point grows like n/log³n, so every class becomes dense enough that its best candidate is essentially *at* the ceiling — at which point choosing the maximum is effectively drawing from the pool, and the probability the argmax lands in a class tends to that class's share of the pool. So the outcome split **should converge to the singular-series proportions**, with a residual tie fraction converging to the c ≡ 5 (mod 8) share rather than to zero, since fused and unfused give literally the same value there.
+>
+> The computed range is too small for either. The observed figures do not move monotonically across bands (28.0/26.4/45.6 at 2×10⁴, 23.5/50.0/26.5 at 2×10⁵, 32.7/41.3/26.0 at 10⁶), and those bands hold only 100–250 values apiece. A drift of order 1/log n falls from about 10% to 7% across that range, well inside the sampling noise. **The measurement is underpowered by roughly an order of magnitude, not in tension with the model.** Settling it wants the predicted class shares computed directly from the three singular series — which differ by the condition on r, not only by the density of c — against a single band of a few thousand values.
+>
+> *Does Friedlander–Granville threaten this?* Their result defeats strong uniformity for primes in progressions to moduli growing almost as fast as x, so it is the right thing to worry about whenever a heuristic leans on equidistribution across many classes at once. It does not bite here: **every modulus in play is bounded** — 8 and 24 for the residue bookkeeping, D ≤ 24 for the efficiency condition — and the windows have length Θ(n), so what is being assumed is equidistribution in a *fixed* finite set of classes over a long interval, which is a far weaker demand than anything their construction disturbs. The genuinely non-trivial assumption is elsewhere and is §3.5's: that the Bateman–Horn count holds **uniformly in n** as the singular series varies with n, rather than pointwise for each fixed system. That is where the conjectural weight sits, and no amount of bounded-modulus equidistribution supplies it.
+
 ## 4. Asymptotics: which configurations survive, and why the others do not
 
 *§3 handles the configurations that carry the asymptotics — S3 for even n, and **S4 and S5 jointly** for odd n, which split the range by a congruence on c. This section covers everything else in the census: **S1 and S2**, the multiplicative engine, which thins; **S6**, present but supply-limited; **S7 and the escapes**, which reach only O(n/log n) values; and **S8–S10**, excluded by theorem. Each subsection says which of three fates applies, and on what evidence.*
@@ -546,8 +570,8 @@ Both fall, consistent with the O(1/log n) bound and if anything faster — the 3
 |---|---|---|
 | S2 | (i) thins | ω(n) = 2 with both factors prime powers has density 0 |
 | S3 | carries even n — **≈ 50% of n** | §3.1; the counting check of §3.7 |
-| S5 | carries odd n — **≈ 39.6%** outright, sole winner at the nine rung-B residues | §3.2 |
-| S4 | co-carries odd n — **≈ 3.7%** outright, ≈ 6.8% tied with S5, only at 7, 15, 23 mod 24 | §3.2 |
+| S5 | carries odd n — **10/24** outright, sole winner at the nine rung-B residues | §3.2 |
+| S4 | co-carries odd n — **1/24** outright, 1/24 tied with S5, only at 7, 15, 23 mod 24 | §3.2 |
 | S6 | (ii), plausibly (i) | supply-limited by a coupled two-efficiency system; 1 winner in range |
 | S7, the escapes | (iii) permanent at a small proportion | measured in §4.1 for two of three routes |
 | S1 | (i) thins | prime powers are O(N/log N); δ = 1 there, known exactly |
