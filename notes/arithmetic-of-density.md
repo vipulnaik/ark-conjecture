@@ -139,6 +139,22 @@ So each verdict holds on a quarter of all c. **The proportion of *n* is a differ
 | 23 | 0% | 44.0% | 56.0% |
 | **all odd n** | **79.2%** | **7.3%** | **13.5%** |
 
+**Why 7 and 15 behave differently from 23, though all three are rung-C residues.** All three are n ≡ 7 (mod 8), and there c ≡ 3 (mod 4) forces 2c ≡ 6 (mod 8), hence r ≡ 1 (mod 8) and 8 | r − 1. With r − 1 = D·t and t odd that forces 8 | D — so the fused reading is not *unavailable* at these residues, only pushed to a lower efficiency: D = 8, i.e. **η = 1/4**, instead of the residue's own η = 1/2.
+
+That would normally lose. It does not, because the two ceilings coincide **exactly**:
+
+> cap_C(1/2) = (1/2)/(1+√2)² = **(3 − 2√2)/2** = cap_B(1/4) = (1/4)/(1+1/√2)².
+
+This is not an instance of the ladder identity; solving cap_B(η/2) = cap_C(η) gives 2η = 1, so it holds at **η = 1/2 alone** — precisely the efficiency of residues 7 and 15. The two shapes therefore have the same ceiling there, and among the n where the *balanced family* decides the outcome, which one wins is settled by supply rather than structure: hence the near-even 24.8% / 24.0% split at residue 7.
+
+At **23 mod 24** the mod-3 obstruction caps η at 1/6, so the fused reading needs D = 24, η = 1/12, and its ceiling **0.042020 falls below** S4's 0.050510. S5 can never win there — the measured 0%.
+
+> **The ties are a separate phenomenon, and not the one the coincidence explains.** A tie means the two readings return the same *value*, which happens whenever the winning configuration's binding term is one that fusion does not touch. Diagnosed over tied n at residue 7: the binding term is the **foreign block** in 43 of 65 cases and the intra term in 22 — and the winning configurations sit at a median of **1.21× the residue's ceiling**, so they are escape configurations (§4.1) rather than the balanced family at all. Fusing changes only the intra term, so wherever an escape wins on its foreign block the two readings agree identically.
+>
+> This also predicts the pattern across residues, and matches it: at 23, where escapes are weaker, the tied values sit *at* the ceiling (median 0.989×) rather than above it, and the tie fraction comes from the balanced family binding on its foreign block instead.
+>
+> *A density-proportional model does not reproduce the split.* Counting solutions by c-class over the full range gives 32% / 32% / 36% for the S4-favoured, tied and S5-favoured classes at every one of the three residues — nothing like the observed 24.8 / 51.2 / 24.0. The reason is that winning is not about *having* a solution: every n has thousands in each class, so the outcome is decided by which class gets closest to its ceiling, not by how many solutions it supplies. Relative singular-series densities are the wrong statistic for this question.
+
 i.e. **≈ 39.6% of all n to S5 outright, ≈ 3.7% to S4, ≈ 6.8% tied.** The nine-residue block is congruence-forced and so stable; the internal split at 7, 15 and 23 is empirical and may drift. So the two shapes are co-carriers, but very unequally: S4's outright share is an order of magnitude smaller and confined to three residues. Which of them the enumeration *reports* as the winner is a separate question, sensitive to how the SAFE cap treats a fused class — see §2.0.
 
 **Full efficiency is obstructed locally, and the obstructions split the ceiling by residue class.** Write **η** for a foreign block's efficiency, η = orb(r, t)/C(r,2) with t the q-part of r − 1 — the fraction of full 2-homogeneous capacity its twist reaches. (η rather than e, to keep clear of Euler's number.) Efficiency η = 1 requires the foreign twist to have order (r−1)/2, which Lemma B′ forces to be a power of q — so (r−1)/2 must be a prime power, the clean case being r a safe prime. Which n admit it, and at what efficiency, is settled in §3.3. Re-optimising δ(x) at reduced efficiency gives the other ceilings in closed form:
