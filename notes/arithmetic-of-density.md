@@ -38,12 +38,12 @@ Everything else in this document elaborates that split. Five consequences set th
 
 | # | shape | engine | winners | asymptotic verdict | where |
 |---|---|---|---|---|---|
-| **S1** | one matching block, no copies | — | every prime power | **→ 0**: prime powers up to N number π(N) + O(√N) = O(N/log N). Trivial where it applies: δ = 1, and the only shape there | §2.1 |
-| **S2** | fused matching class, **top**-layer copies, n = F·c | multiplicative | 40.4% (v3) | **→ 0**: needs ω(n) = 2 with both factors prime powers | §4 |
+| **S1** | one matching block, no copies | — | every prime power | **→ 0**: prime powers up to N number π(N) + O(√N) = O(N/log N). Trivial where it applies: δ = 1, and the only shape there | §2.1, §4.1 |
+| **S2** | fused matching class, **top**-layer copies, n = F·c | multiplicative | 40.4% (v3) | **→ 0**: needs ω(n) = 2 with both factors prime powers | §2.1, §4.1 |
 | **S3** | matching + outside, n = c + r\* | additive | 37.8% (v3) | **→ ~50%**, essentially all even n | §3.1 |
 | **S4** | two matching + outside, n = 2c + r\* | additive | 2 winners to n = 360 (v4); **0** in v3, an over-credit artefact | **→ 1/24 ≈ 4.2%** outright, plus 1/24 tied with S5. Confined to residues 7, 15, 23 mod 24 | §3.2, §3.9 |
 | **S5** | fused matching + outside; forces q = 2 | hybrid | 21.8% (v3) | **→ 10/24 ≈ 41.7%** outright, plus the 1/24 tied with S4. Sole winner at the nine rung-B residues | §3.2, §3.9 |
-| **S6** | two outside blocks | additive | 0% | **→ 0**: supply-limited, needs two coordinated safe primes | §4.4 |
+| **S6** | two outside blocks | additive | 0% | **→ 0**: supply-limited, needs two coordinated safe primes | §4.2 |
 | **S7** | **middle**-layer-fused matching + outside | hybrid | — | an escape, not a family; see §4.3 | §4.3 |
 | **S8** | bottom-layer-fused matching | — | never | excluded (Lemma D1) | — |
 | **S9** | fused outside block, any layer | — | never | excluded (Lemma D2) | — |
