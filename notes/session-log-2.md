@@ -311,3 +311,18 @@ Second omission: only the odd three-part family was covered. Added `--parts 2` f
 **All twelve residue classes now agree**, in both families, each at its own D. The class↔D pairing turns out to be forced — class 1 vanishes at D ≥ 4 because (n−1)/2 is even there, class 11 vanishes at D = 2 by ω(3) = 3 — and every vanishing prediction is confirmed with zero observed solutions, so §3.3's obstruction analysis is now verified from the counting side as well as the root side.
 
 **The D = 12 shortfall was slow convergence, not a wrong series.** 0.88 at 2×10⁵ but **0.9974 with sd 0.0375 at 10⁷**. The sd falls like n^{−1/2} throughout. A window-integral refinement replaced the midpoint evaluation of the log factors — theoretically right, since the constant-relative-width window makes q sweep a factor of 1.86 and 1/log q is convex, with the bias growing in D — but it moves the ratios by well under a percent and was not the cause.
+
+
+---
+
+## L23. A3 resolved: the 2-power escape is not sparse
+
+§3.3 described the ℓ = 2 escape at odd n — the two-part shape 2^a + r\* — as "available at O(log n) values of n". That conflates representations per n with values of n. **Romanov (1934)**: {2^k + p} has positive lower density. **Erdős (1950)**: a positive density of odd n admit no such representation. Both directions positive density; neither sparse.
+
+Measured over odd n in [10⁶, 1.05×10⁶]: the route is **available at 86–99%** by class, and **exceeds the class cap at 0–4.7%**. The aggregate availability declines slowly (0.9342 → 0.9134 from 10⁴ to 2×10⁶), consistent with Erdős's positive-density complement.
+
+The distinction that matters is availability versus effectiveness. The route reaches the cap only when 2^a lands near the balance point, and since log₂(n/2^a) is equidistributed mod 1 that is a fixed-width window — a positive but small proportion, not thinning.
+
+**§5's floor is untouched**, and the reason is general: every escape *raises* δ(n), and a floor is a minimum, so a route that lifts values above the cap cannot lower it however common it is. What changes is the reading of the δ₀ table — the ceilings are for one unfused shape and are exceeded by a few percent of n in each obstructed class permanently, which is what the 194-of-1,108 measurement in §3.3 was already showing.
+
+Written up as §4.1. The 3-power and S7 escapes have *not* been measured this way; their O(log n) description is now an untested claim rather than one shared with a refuted case.

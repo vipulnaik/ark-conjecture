@@ -196,11 +196,7 @@ Opened by the density floor falling to 0.026117, which puts four computed values
 
 The largest theorem-side residue: **505 branches** over the certified range where E.3(ii) is pairwise only and the global promotion is open. With the above-1/9 route refuted (a majority of odd n have δ < 1/9 outright), this is the only path left to Part J item 2. The obstruction is known and specific: with a leftover the (r, r) re-reading must also re-type the leftover parts, and the commonest case L = c fails outright because two blocks of the same prime c would be two equal foreign parts, which Part E forbids.
 
-### A3. Erdős covering congruences vs the 2-power escape claim
-
-Not attempted. Reportedly give a *positive density* of odd n with no 2^k + p representation — stronger than the O(log n)-sparse claim about 2-power escapes in §3.3, and would close that route rather than thin it. Checkable from the literature plus a direct computation over the table.
-
-### A3b. Fold the twist-prime obstruction into §3.3's inventory
+### A3. Fold the twist-prime obstruction into §3.3's inventory
 
 Found by `count_check.py` when the twist prime was varied: the congruence r ≡ 1 (mod q) pins c to the class (n−1)/2 (mod q), and when that class is 0 the family is empty. Fires for one n in q. Already written into §3.7; what is open is whether it belongs in §3.3's obstruction table proper, and whether "blocked at one q, available at another" can be made a theorem rather than an observation.
 
