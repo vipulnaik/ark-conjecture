@@ -215,7 +215,7 @@ The ℓ = 2 obstruction forces a ≥ 2, and hence η ≤ 1/2 **provided u > 1**;
 > | **B** | two c-blocks **fused** + foreign | 2x² | 2η/(√2+2√η)² | √η/(√2+2√η) |
 > | **C** | two c-classes **unfused** + foreign | x² | η/(1+2√η)² | √η/(1+2√η) |
 >
-> with **A > B > C** in every class, and each rung at its **own** balance point — 0.2247 for C at η = 1/6, 0.1830 for B. The cross term binds at none of them, so all three derivations are valid; only the choice of answer was wrong. Behind the ladder is a change of variable. Since (√F + F√η)² = F(1 + √(Fη))², the fused cap simplifies to
+> with **A > B > C** in every class, and each rung at its **own** balance point — (√6 − 2)/2 = 0.22474 for C at η = 1/6, (√3 − 1)/4 = 0.18301 for B. The cross term binds at none of them, so all three derivations are valid; only the choice of answer was wrong. Behind the ladder is a change of variable. Since (√F + F√η)² = F(1 + √(Fη))², the fused cap simplifies to
 >
 > > **cap_F(η) = η/(1 + √(Fη))²**,
 >
@@ -225,16 +225,20 @@ The ℓ = 2 obstruction forces a ≥ 2, and hence η ≤ 1/2 **provided u > 1**;
 >
 > **The corrected ceiling table.**
 >
-> | n mod 24 | rung | η | cap, closed form | cap | vs mod-12 |
-> |---|---|---|---|---|---|
-> | 0, 4, 6, 10, 12, 16, 18, 22 | even, k = 1 | 1 | **1/4** | 0.25000 | — |
-> | 2, 8, 14, 20 | even, k = 1 | 1/3 | **(2 − √3)/2** | 0.13397 | — |
-> | 1, 9, 13, 21 | B, k = √2 | 1 | **3 − 2√2** | 0.17157 | ×1.54 |
-> | 3, 19 | B, k = √2 | 1/2 | **1/8** | 0.12500 | ×1.46 |
-> | 5, 17 | B, k = √2 | 1/3 | **5 − 2√6** | 0.10102 | ×1.41 |
-> | 7, 15 | C, k = 2 | 1/2 | **(3 − 2√2)/2** | 0.08579 | — |
-> | 11 | B, k = √2 | 1/6 | **(2 − √3)/4** | 0.06699 | ×1.33 |
-> | **23** | **C, k = 2** | 1/6 | **(5 − 2√6)/2** | 0.05051 | — |
+> | n mod 24 | rung | η | **x\* = c/n** | x\* | cap, closed form | cap | vs mod-12 |
+> |---|---|---|---|---|---|---|---|
+> | 0, 4, 6, 10, 12, 16, 18, 22 | even, k = 1 | 1 | **1/2** | 0.50000 | **1/4** | 0.25000 | — |
+> | 2, 8, 14, 20 | even, k = 1 | 1/3 | **(√3 − 1)/2** | 0.36603 | **(2 − √3)/2** | 0.13397 | — |
+> | 1, 9, 13, 21 | B, k = √2 | 1 | **(2 − √2)/2** | 0.29289 | **3 − 2√2** | 0.17157 | ×1.54 |
+> | 3, 19 | B, k = √2 | 1/2 | **1/4** | 0.25000 | **1/8** | 0.12500 | ×1.46 |
+> | 5, 17 | B, k = √2 | 1/3 | **(√6 − 2)/2** | 0.22474 | **5 − 2√6** | 0.10102 | ×1.41 |
+> | 7, 15 | C, k = 2 | 1/2 | **(2 − √2)/2** | 0.29289 | **(3 − 2√2)/2** | 0.08579 | — |
+> | 11 | B, k = √2 | 1/6 | **(√3 − 1)/4** | 0.18301 | **(2 − √3)/4** | 0.06699 | ×1.33 |
+> | **23** | **C, k = 2** | 1/6 | **(√6 − 2)/2** | 0.22474 | **(5 − 2√6)/2** | 0.05051 | — |
+>
+> **x\* is the fraction of n in a *single block***, so it is what `count_check.py --centre` wants and what the balanced window of §3.4 is centred on. For a fused rung the whole class occupies F·x\*, not x\*.
+>
+> **Read the x\* column against 1/(k+1), the equal split.** They agree only at η = 1 — the even unobstructed rows, where x\* = 1/2. Everywhere else they differ, and at (C, η = 1/6) the equal split 1/3 sits **0.109 away** from x\* = 0.22474, which is more than twice the half-width of the standard window. That is exactly the error §3.7's counting check made: it centred on the equal split and so counted representations in a region that cannot reach the ceiling at all.
 >
 > Every entry is a unit in ℤ[√d] over 1, 2 or 4 — the same shape as the mod-12 table, as it must be, since only k and η changed. The pairings are worth noticing: **3 − 2√2** at (B, 1) against **(3 − 2√2)/2** at (C, 1/2), and **5 − 2√6** at (B, 1/3) against **(5 − 2√6)/2** at (C, 1/6). That is cap_F(η) = cap₁(Fη)/F in the table.
 >
