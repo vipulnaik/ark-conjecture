@@ -4,6 +4,8 @@
 
 **Status labels as in the other documents.** *Verified* — an independent computation agreed. *Sound* — argued and read, no independent computation. *Heuristic* — a singular-series prediction, i.e. conditional on Hardy–Littlewood or Bateman–Horn.
 
+**Prime powers are kept, not excluded.** At n = p^a the group AGL(1, n) is 2-transitive, so μ(n) = C(n,2) and δ(n) = 1 — the maximum. That is the trivial case of the framework rather than an exception to it, and it is S1 in the census. Tables and scans skip prime powers because the answer is already known, in the way one might skip n = 1 in a factorisation routine; nothing here treats μ as undefined there. "Composite non-prime-power n" in the floor statements means *the cases still to be determined*, not *the cases where μ exists*.
+
 ---
 
 ## 1. The thesis, in one page
@@ -19,7 +21,7 @@ Everything else in this document elaborates that split. Five consequences set th
 1. **The density ladder's thresholds are the engine caps, not artefacts.** 1/2 and 1/3 are fused-class values at F = 2 and F = 3; **1/4 is the two-part cap; 1/9 is the three-part cap; 1/16 is the four-part cap.** The thresholds that appear throughout the other two documents — δ₀^even = 1/4, Theorem E.1's 1/9, Corollary F.3's 1/16 — are all the same quantity read at different k.
 2. **The parity asymmetry is multiplicative in origin, not additive.** Even n has 2 | n, so F = 2 is available whenever n/2 is a prime power, giving density 1/2. Odd n has F ≥ 3, capping the multiplicative engine at 1/3; and its two-part route needs the *even* part to be a power of 2, which is scarce. So odd n loses on both engines at once — and the loss is a matter of caps, not of representation counts: both parametric systems supply ~n/log³n representations where they are soluble at all (§§3.1–3.3).
 3. **The ceiling splits by residue class mod 12, for both parities**, from local obstructions at ℓ = 2 and ℓ = 3 — and those are the only two moduli that can obstruct, because each system is three linear polynomials so ω(ℓ) ≤ 3 < ℓ for ℓ ≥ 5. Six distinct constants result, from 1/4 down to 0.05051, each met by the constructions to within 2% (§3.3).
-4. **One global floor covers everything.** Conjecturally **δ(n) ≥ 0.02 for every composite non-prime-power n** — and below 10⁶ the branch-and-bound establishes **δ(n) ≥ 0.026117** unconditionally, since every step used the table only as a lower bound (§5). What it does *not* establish, after the 2026-08 defect, is where the minimum sits: at n = 3239 the corrected shape space raises δ to 0.043570, so the argmin has moved and the bound is no longer tight. The extremal class was n ≡ 11 (mod 12) at every stage.
+4. **One global floor covers everything.** Conjecturally **δ(n) ≥ 0.02 for every composite non-prime-power n** — and below 10⁶ the branch-and-bound establishes **δ(n) ≥ 0.026117** unconditionally, since every step used the table only as a lower bound (§5). What it does *not* establish, after the 2026-08 defect, is where the minimum sits: at n = 3239 the corrected shape space raises δ to 0.043570, so the argmin has moved and the bound is no longer tight. The extremal residue is **n ≡ 23 (mod 24)** (§3.3), and every stage of the search has landed in n ≡ 11 (mod 12), which contains it, at every stage.
 5. **The multiplicative engine covers a density-zero set, so asymptotically the additive engine is everything.** The fraction of n with ω(n) = 2 thins like log log n / log n — measured at 52% below 2000 but 29% near 10⁶. So the asymptotic behaviour of μ is governed entirely by the Hardy–Littlewood side, and the observed density floor should be expected to drift downward as the fused family's reach recedes.
 
 ---
@@ -36,30 +38,22 @@ Everything else in this document elaborates that split. Five consequences set th
 
 | # | shape | engine | winners | asymptotic verdict | where |
 |---|---|---|---|---|---|
-| **S1** | one matching block, no copies | — | never | n itself a prime power, so out of scope entirely | §2.1 |
+| **S1** | one matching block, no copies | — | every prime power | **→ 0**: prime powers up to N number π(N) + O(√N) = O(N/log N). Trivial where it applies: δ = 1, and the only shape there | §2.1 |
 | **S2** | fused matching class, **top**-layer copies, n = F·c | multiplicative | 40.4% (v3) | **→ 0**: needs ω(n) = 2 with both factors prime powers | §4 |
 | **S3** | matching + outside, n = c + r\* | additive | 37.8% (v3) | **→ ~50%**, essentially all even n | §3.1 |
-| **S4** | two matching + outside, n = 2c + r\* | additive | 2 winners to n = 360 (v4); **0** in v3, an over-credit artefact | carries odd n jointly with S5, splitting by c mod 8 | §3.2, §4.2 |
-| **S5** | fused matching + outside; forces q = 2 | hybrid | 21.8% (v3) | carries the odd-n additive engine; see §4.2 | §3.2, §4.2 |
+| **S4** | two matching + outside, n = 2c + r\* | additive | 2 winners to n = 360 (v4); **0** in v3, an over-credit artefact | carries odd n jointly with S5, splitting by c mod 8 | §3.2 |
+| **S5** | fused matching + outside; forces q = 2 | hybrid | 21.8% (v3) | carries odd n jointly with S4, splitting by c mod 8 | §3.2 |
 | **S6** | two outside blocks | additive | 0% | **→ 0**: supply-limited, needs two coordinated safe primes | §4.3 |
 | **S7** | **middle**-layer-fused matching + outside | hybrid | — | an escape, not a family; see §4.1 | §4.1 |
 | **S8** | bottom-layer-fused matching | — | never | excluded (Lemma D1) | — |
 | **S9** | fused outside block, any layer | — | never | excluded (Lemma D2) | — |
 | **S10** | outside block with r = q | — | never | excluded: normality kills the twist | — |
 
-> **S4 and S5 divide the odd-n range between them, by c mod 8.** Both need the same split n = 2c + r with c, r prime, so they draw on the same supply and neither thins. Which wins is decided by the intra term: fusing doubles it to 2·orb(c, d) but forces d to be the **odd part of c − 1**, against the unfused C(c,2) at the full twist. Over all primes c < 20000, exceptionless:
+> **S4 and S5 are co-carriers, not rivals.** Both realise the same family n = 2c + r; whether fusing the two equal blocks helps depends on c mod 8, and each verdict holds on a quarter of all c. The analysis is in §3.2.
 >
-> | c mod 8 | c − 1 | fused intra | verdict |
-> |---|---|---|---|
-> | 3, 7 | 2·odd | 2·C(c,2) | **S5 strictly better** |
-> | 5 | 4·odd | C(c,2) | **exact tie** |
-> | 1 | 8 \| c−1 | ≤ C(c,2)/2 | **S4 strictly better** |
->
-> So S4 wins outright on a quarter of all c and ties on another quarter — a co-carrier of the odd-n asymptotics, not an also-ran.
->
-> *An earlier version of this box reported S4 at 0 winners and called it a domination.* That was an artefact: SAFE credited every p-characteristic part F·C(c,2) regardless of the twist, inflating fused shapes specifically — the one place its over-count was not shape-neutral. The scoring has since been tightened, using the fact that the cyclic part of the twist must be coprime to Fmid (a proven necessary condition, so usable in SAFE), and **S4 reappears at exactly the predicted residues**: both instances below n = 360 have c ≡ 1 (mod 8).
+> **What the winner column reports is sensitive to the SAFE cap.** Crediting a fused class F·C(c,2) regardless of its twist inflates fused shapes specifically — the one place SAFE's over-count is not shape-neutral — and under that scoring S4 vanishes from the census entirely. The cap now accounts for the constraint (the cyclic part of the twist must be coprime to Fmid, a proven necessary condition and so usable in SAFE), and **S4 reappears at exactly the predicted residues**: both instances below n = 360 have c ≡ 1 (mod 8). Winner counts from v3 and earlier are affected; structural columns are not.
 
-**The engine dichotomy is a simplification, and the hybrids are where the action is.** S2 is purely multiplicative and S3, S4, S6 purely additive, but **S5 and S7 are neither** — a fused class supplying the multiplicative factor F alongside a foreign block supplying the additive one. That is not a defect of the taxonomy; it is where the two interesting phenomena live. S5's full efficiency requires a Fermat prime (§3.3), and S7 exists only because block fusion can come from the cyclic layer (§4.1). Both were missed by earlier drafts precisely because the two-engine framing had no slot for them.
+**The engine dichotomy is a simplification, and the hybrids are where the action is.** S1 and S2 are purely multiplicative and S3, S4, S6 purely additive, but **S5 and S7 are neither** — a fused class supplying the multiplicative factor F alongside a foreign block supplying the additive one. That is not a defect of the taxonomy; it is where the two interesting phenomena live. S5's full efficiency requires a Fermat prime (§3.3), and S7 exists only because block fusion can come from the cyclic layer (§4.1). Both were missed by earlier drafts precisely because the two-engine framing had no slot for them.
 
 ### 2.1 The multiplicative engine: density 1/F
 
@@ -93,9 +87,11 @@ So the ladder of thresholds is one sequence: 1/4, 1/9, 1/16 at k = 2, 3, 4. The 
 
 ### 2.3 What the engines cover, and what that implies
 
-**Density above 1/4 is a purely multiplicative phenomenon.** S2 is the only shape that can exceed 1/4, since every additive or hybrid shape has at least two classes and Proposition F.2 caps k classes at 1/k². Everything at or below 1/4 is additive or hybrid, and therefore Hardy–Littlewood-conditional. The two engines cover complementary sets in the sense that matters: S2 needs ω(n) ≤ 2 with both factors prime powers, a condition of density zero, while S3–S5 need only that n admit a suitable split, which is conjecturally almost always.
+**Density above 1/4 is a purely multiplicative phenomenon.** Only **S1 and S2** can exceed 1/4 — S1 trivially, at δ = 1 on the prime powers, and S2 by fusion. Every additive or hybrid shape has at least two classes, and Proposition F.2 caps k classes at 1/k², so everything at or below 1/4 is additive or hybrid and therefore Hardy–Littlewood-conditional.
 
-So the asymptotic picture is entirely §3's: **S3 for even n and S5 for odd n**, at the class caps of §3.3, with S2 a thinning exception (§4) and S6, S7 and the escapes contributing at densities that §4 measures rather than assumes.
+**The two engines cover complementary sets in the sense that matters.** S1 needs n itself a prime power and S2 needs ω(n) = 2 with both factors prime powers; both are conditions of density zero, and both count O(n/log n). S3–S5 need only that n admit a suitable split, which is conjecturally almost always. So the multiplicative side is where the density is high and the supply is thin, and the additive side is the reverse.
+
+So the asymptotic picture is entirely §3's: **S3 for even n, and S4 and S5 jointly for odd n** (splitting by c mod 8, §3.2), at the ceilings of §3.3 — with S1 and S2 thinning exceptions (§4) and S6, S7 and the escapes contributing at densities §4 measures rather than assumes.
 
 ## 3. The arithmetic conditions, family by family
 
@@ -103,7 +99,7 @@ The additive families need simultaneous prime and prime-power values. The system
 
 > 𝔖(f₁,…,f_k) = ∏_p (1 − ω_f(p)/p)·(1 − 1/p)^{−k},  ω_f(p) = #{a mod p : f(a) ≡ 0}.
 
-### 3.1 Two parts at even n, and why 1/4 needs a safe prime
+### 3.1 Two parts at even n (S3), and why 1/4 needs a safe prime
 
 To reach the two-part cap the configuration needs c ≈ r ≈ n/2 with the foreign block at **full efficiency**: cap(r) = C(r,2) requires the twist to have order (r−1)/2 or r−1, and Lemma B′ forces it to be a power of the top prime q. So r − 1 = 2qᵉ or qᵉ. The clean case is **r a safe prime** — r = 2s + 1 with s prime, so q = s, e = 1 — which is why safe primes are the objects the notes keep returning to.
 
@@ -119,11 +115,21 @@ The exponent is what matters: **three log factors, so ~n/log³n representations.
 
 > **Even n carries an ℓ = 3 obstruction.** Substituting r = 2s+1, the system is {s, 2s+1, n−2s−1}, with roots mod 3 at s ≡ 0, 1 and 2(n−1). These are distinct — so ω(3) = 3 and the singular series vanishes — exactly when **n ≡ 2 (mod 3)**. Re-optimising at the reduced efficiency gives x² = (1−x)²/3, hence x = 1/(1+√3) and **cap = 1/(1+√3)² ≈ 0.13397**. So δ₀^even = 1/4 holds for n ≢ 2 (mod 3), and 0.13397 otherwise.
 
-### 3.2 Three parts at odd n: the family, and its ceilings
+### 3.2 Three parts at odd n (S4 and S5): the family, and its ceilings
 
 Odd n cannot use a balanced two-part split: c + r odd forces one part even, and an even prime foreign part must be 2, which is useless. So the even part would have to be the p-characteristic one, i.e. c = 2^a, leaving only ~log₂n candidate splits. That route is genuinely scarce.
 
 The route that avoids it is **three parts with two equal p-characteristic blocks**: n = 2c + r with c an odd prime power and r an odd prime, all parts odd. This is what the enumeration overwhelmingly finds — **255 of the 258 three-part winners** have exactly this shape — and it is *not* the family §5 of the notes analyses (see §3.3). Balancing gives the cap 1/9 at c ≈ r ≈ n/3.
+
+**Two shapes realise this family, and they divide the range by c mod 8.** The two equal c-blocks may be left unfused (S4 in the census) or fused into one class of two (S5). Fusing doubles the intra term to 2·orb(c, d) but puts C₂ in the cyclic layer, so d must be the **odd part of c − 1** — against the unfused C(c,2) at the full twist. Over all primes c < 20000 the comparison is exceptionless:
+
+| c mod 8 | c − 1 | fused intra | verdict | primes < 20000 |
+|---|---|---|---|---|
+| 3, 7 | 2·odd | 2·C(c,2) | **fused (S5) strictly better** | 570 / 565 |
+| 5 | 4·odd | C(c,2) | exact tie | 569 |
+| 1 | 8 \| c−1 | ≤ C(c,2)/2 | **unfused (S4) strictly better** | 556 |
+
+So each verdict holds on a quarter of all c, and the two shapes are co-carriers of the odd-n asymptotics rather than one dominating the other. Which of them the enumeration *reports* as the winner is a separate question, sensitive to how the SAFE cap treats a fused class — see §2.0.
 
 **Full efficiency is obstructed locally, and the obstructions split the ceiling by residue class.** Write **η** for a foreign block's efficiency, η = orb(r, t)/C(r,2) with t the q-part of r − 1 — the fraction of full 2-homogeneous capacity its twist reaches. (η rather than e, to keep clear of Euler's number.) Efficiency η = 1 requires the foreign twist to have order (r−1)/2, which Lemma B′ forces to be a power of q — so (r−1)/2 must be a prime power, the clean case being r a safe prime. Which n admit it, and at what efficiency, is settled in §3.3. Re-optimising δ(x) at reduced efficiency gives the other ceilings in closed form:
 
@@ -136,7 +142,7 @@ Where the family is locally soluble the predicted representation count is ~𝔖�
 
 so ω(p) = 3 for p ∤ n(n−2) and smaller on the divisors, with the 2-adic and 3-adic factors as computed in §3.3. *Heuristic*, and unproven — a ternary system with two conditions on the same variable, out of reach for the same reasons as binary Goldbach.
 
-### 3.3 Local solubility, and the ceiling by residue class
+### 3.3 Local solubility, and the ceiling by residue class (S3, S4, S5)
 
 Full efficiency needs (r−1)/2 to be a prime power, so with r prime and c = (n−r)/2 a prime power the requirement is a system of three conditions in one variable,
 
@@ -185,14 +191,14 @@ The ℓ = 2 obstruction forces a ≥ 2, and hence η ≤ 1/2 **provided u > 1**;
 >
 > and each rationalises to an integer denominator as tabulated. The class-5 value is a perfect square, (2 − √3)² = 7 − 4√3. In every case the cross term 2x\*(1 − kx\*) exceeds the cap, so the minimum is genuinely the intra/foreign balance and not the cross class.
 >
-> The obstructed classes admit **sparse escapes**, of three kinds, which lift individual n to the unobstructed cap:
+> **Four routes lift individual n above the ceiling for their residue**, each by supplying a block whose size is a power of a fixed small prime, so that the divisibility which kills primality is harmless:
 >
-> - the ℓ=3 classes when (r−1)/2 or c is a power of 3;
-> - the ℓ=2 classes when c is a power of 2 (which turns the shape into the two-part 2^a + r\*);
-> - **the ℓ=2 classes when r is a Fermat prime**, where u = 1 defeats the a ≥ 2 argument outright — see the boxed note above;
-> - **the odd classes when a cyclic-layer-fused class of F = 3 blocks is available**, which needs c a power of 2 at odd n — the S7 route. Like the other two it is O(log n) in representations per n and **not** sparse in n; §4.1 measures it at ~100% availability, effective at 5.6% and 14.0% of residues 11 and 23 mod 24.
+> - the ℓ = 3 residues when (r−1)/2 or c is a power of 3;
+> - the ℓ = 2 residues when c is a power of 2, which turns the shape into the two-part 2^a + r\*;
+> - the ℓ = 2 residues when r is a **Fermat** prime, where u = 1 defeats the a ≥ 2 argument outright — the boxed note above. Tied to the five known Fermat primes, so O(1) in total; 20 instances in range, all with r = 257, all in residues 3 and 7 mod 12;
+> - the odd residues when a cyclic-layer-fused class of F = 3 blocks is available — the S7 route.
 >
-> For the first two, in range these occur at 30, 49, 24 and 5 values in classes 2, 8, 5, 11 respectively and at none in classes 3 and 7. **The 2-power route is not sparse in n** — it is available at 86–99% of odd n and exceeds the class cap at a few percent of them, permanently; see §4.1, which corrects an earlier claim here. The 3-power route pins n near 2·3^k or 4·3^k and is plausibly O(log n)-sparse, but that has not been measured. The third occurs at 20 values, all in classes 3 and 7, all with r = 257; being tied to the five known Fermat primes it is O(1)-sparse. None of the three affects the asymptotic constants.
+> **All four are O(n/log n) in n, and §4.1 proves it.** Each supplies O(1) usable block sizes per n, because the ceiling itself confines the block to a bounded ratio range; the remaining freedom is one prime, and that is where the log comes from. So they lift a vanishing proportion of n and leave the asymptotic constants untouched — but the proportion vanishes only logarithmically, so at any computed range they are visible rather than negligible.
 
 > **The table omits fusion, and that is why the caps are exceeded so often.** The δ₀ above are derived for **unfused** classes: k = 1 (one p-block + one foreign) or k = 2 (two equal p-blocks + one foreign). But when q = 2 the two equal p-blocks *can* be fused, and reduction (R1) says they should be — fusion is worth a factor of F. For a fused class of F blocks of size c plus one foreign prime r the terms are F·C(c,2) ≈ Fx², the within-class cross (F or F/2)c² ≥ Fx², the foreign intra η(1−Fx)², and the cross 2Fx(1−Fx). Balancing the first against the third,
 >
@@ -206,11 +212,11 @@ The ℓ = 2 obstruction forces a ≥ 2, and hence η ≤ 1/2 **provided u > 1**;
 >
 > **(a) The shapes form a ladder and the table takes its bottom rung.** For odd n = (c-part) + r\*, with x = c/n:
 >
-> | rung | shape | intra density | cap | balance point |
-> |---|---|---|---|---|
-> | **A** | one c-block + foreign | x² | η/(1+√η)² | √η/(1+√η) |
-> | **B** | two c-blocks **fused** + foreign | 2x² | 2η/(√2+2√η)² | √η/(√2+2√η) |
-> | **C** | two c-classes **unfused** + foreign | x² | η/(1+2√η)² | √η/(1+2√η) |
+> | rung | shape | census | intra density | cap | balance point |
+> |---|---|---|---|---|---|
+> | **A** | one c-block + foreign | **S3** at odd n, needing c = 2^a | x² | η/(1+√η)² | √η/(1+√η) |
+> | **B** | two c-blocks **fused** + foreign | **S5** | 2x² | 2η/(√2+2√η)² | √η/(√2+2√η) |
+> | **C** | two c-classes **unfused** + foreign | **S4** | x² | η/(1+2√η)² | √η/(1+2√η) |
 >
 > with **A > B > C** in every class, and each rung at its **own** balance point — (√6 − 2)/2 = 0.22474 for C at η = 1/6, (√3 − 1)/4 = 0.18301 for B. The cross term binds at none of them, so all three derivations are valid; only the choice of answer was wrong. Behind the ladder is a change of variable. Since (√F + F√η)² = F(1 + √(Fη))², the fused cap simplifies to
 >
@@ -253,7 +259,7 @@ The ℓ = 2 obstruction forces a ≥ 2, and hence η ≤ 1/2 **provided u > 1**;
 
 *Lower: the distribution is uniform across classes.* An unmodelled obstruction acting on some residue would show as that residue failing to reach its cap, or as its bulk sitting systematically lower than its siblings'. The right version of this check normalises by the **mod-24** cap and does **not** pre-filter by efficiency — an earlier version restricted to winners at their class's generic efficiency, which is exactly the filter that hides the escape rows, so it could not have detected an error in the class → η map at all. Over the whole table, normalised by cap(own η): every residue lands in 0.28–0.998, none exceeds 1. Normalised by the residue cap, the escapes push a minority above 1, quantified in §4.1. The per-residue δ/cap minima from `ladder_verify.py` currently run **0.327–0.653**, which is the spread expected from representation availability alone.
 
-**The ℓ = 3 obstruction has an escape — common, not sparse (§4.1).** If (r−1)/2 or c is itself a power of 3, full efficiency returns, because the divisibility that kills primality is harmless for prime powers. In range this lifts n ≡ 5 (mod 12) to a maximum of 0.10975 — but 22 of those 35 rows use the *same* foreign prime r = 487, with (r−1)/2 = 243 = 3⁵, and the others use r = 163 with 81 = 3⁴ or c = 243, 729. Candidates of the form r = 2·3^k + 1 are as thin as any other exponential family, so the escape supplies O(log n) candidates rather than n/log³n and should be read as a feature of the computed range. **The generic ceiling 0.0718 is the one to quote asymptotically.**
+**The ℓ = 3 obstruction has an escape, reaching O(n/log n) values (§4.1).** If (r−1)/2 or c is itself a power of 3, full efficiency returns, because the divisibility that kills primality is harmless for prime powers. In range this lifts n ≡ 5 (mod 12) to a maximum of 0.10975 — but 22 of those 35 rows use the *same* foreign prime r = 487, with (r−1)/2 = 243 = 3⁵, and the others use r = 163 with 81 = 3⁴ or c = 243, 729. Candidates of the form r = 2·3^k + 1 are as thin as any other exponential family, so the escape supplies O(log n) candidates rather than n/log³n and should be read as a feature of the computed range. **The generic ceiling 0.0718 is the one to quote asymptotically.**
 
 ### 3.4 The balanced window, and why it leaves the singular series intact
 
@@ -405,13 +411,19 @@ with sd falling like n^{−1/2} throughout. Slow approach to an asymptotic const
 
 ## 4. Asymptotics: which configurations survive, and why the others do not
 
-*§3 handles the configurations that carry the asymptotics — S3 for even n, and **S4 and S5 jointly** for odd n, which split the range by a congruence on c. This section covers everything else in the census: S2, which thins; S6, which is present but supply-limited; S7 and the escapes, which are neither families nor sparse. Each subsection says which of three fates applies, and on what evidence.*
+*§3 handles the configurations that carry the asymptotics — S3 for even n, and **S4 and S5 jointly** for odd n, which split the range by a congruence on c. This section covers everything else in the census: **S1 and S2**, the multiplicative engine, which thins; **S6**, present but supply-limited; **S7 and the escapes**, which reach only O(n/log n) values; and **S8–S10**, excluded by theorem. Each subsection says which of three fates applies, and on what evidence.*
 
-> **Three fates, and they are different.** A configuration can (i) require a condition on n of density zero, so it *thins*; (ii) remain available at a positive density of n but be beaten by a better shape, so it *stops winning*; or (iii) remain available and keep winning at a positive but small proportion. Earlier drafts collapsed (i) and (iii) under "O(log n)-sparse", which is what §4.1 corrects. The distinction matters because only (i) removes a shape from the asymptotic picture.
+> **Three fates, and they are different.** A configuration can (i) require a condition on n of density zero, so it *thins*; (ii) remain available at a positive density of n but be beaten by a better shape, so it *stops winning*; or (iii) remain available while reaching only a vanishing proportion of n. The distinction matters because (i) and (iii) both remove a shape from the asymptotic picture while (ii) does not, and because a fate-(iii) shape can still be conspicuous at computed sizes when the vanishing is only logarithmic — which §4.1 shows is the case for all four escapes.
 
-### 4.0 S2, the multiplicative engine: fate (i), it thins
+### 4.0 The multiplicative engine (S1 and S2): fate (i), it thins
 
-The fused family requires ω(n) ≤ 2, which is a **density-zero condition**: the count of n ≤ N with exactly two distinct prime factors is ~N log log N / log N.
+*Both shapes of the multiplicative engine live or die on the same condition. A fused class needs n = F·c with F and c both prime powers, i.e. **ω(n) ≤ 2**, and the two values of ω split the engine in two: ω(n) = 1 is **S1**, the trivial case at δ = 1, and ω(n) = 2 is **S2**, the fused family proper. Both thin, S1 the faster.*
+
+ω(n) ≤ 2 is a **density-zero condition**. The count of n ≤ N with exactly two distinct prime factors is ~N log log N / log N; the prime powers are smaller still, at **π(N) + O(√N) = O(N/log N)**. So S1 vanishes fastest, S2 next, and neither survives into the asymptotic picture.
+
+**S1 is the cleanest instance of fate (i), and the most extreme.** At n = p^a the group AGL(1, n) is 2-transitive, so μ(n) = C(n,2) and δ = 1 — the maximum possible density, achieved on a set of density zero. It is kept in the census for the same reason one keeps the trivial group: the degenerate member of the family, not an exception to it. Its O(N/log N) count is, incidentally, the same order as the escapes of §4.1, though for a far more elementary reason. The tables skip prime powers because the answer is known, not because μ is undefined there.
+
+**The rest of this subsection is about S2**, where the thinning is slower and has a second mechanism on top of it.
 
 > *Verified.* Fraction of composite non-prime-power n with ω(n) = 2, by dyadic block: **52.3%** on [10³, 2·10³), 43.1% on [5·10³, 10⁴), 35.0% on [5·10⁴, 10⁵), 29.8% on [5·10⁵, 10⁶), 28.5% on [10⁶, 2·10⁶).
 
@@ -423,78 +435,80 @@ The fused family requires ω(n) ≤ 2, which is a **density-zero condition**: th
 | [800, 1500) | 53.6% | 5 | 0.04229 |
 | [1500, 2298) | 50.0% | **7** | **0.03752** |
 
-Two effects, not one. The ω(n) = 2 population thins, as predicted; and **among the values that remain, the smallest prime-power cofactor grows**, so the 1/F the multiplicative engine delivers shrinks even where the engine applies. n = 2183 = 37·59 illustrates the mechanism: ω(n) = 2, so a fused class exists, but only at F = 37, worth 1/37 ≈ 0.027 — which loses to the three-class configuration 1297\* + 443 + 443 at 0.041107, itself unbalanced at x = 0.2029 against its class's 0.2247. The current floor n = 2291 = 29·79 is the same story one step further: F = 29 gives only 1/29 ≈ 0.034, and the winner `2x761 + 1x769*` is a mixed shape — a fused pair plus a foreign prime — reaching 0.037524. Both are values where **both engines are weak at once**, and both are n ≡ 11 (mod 12), the doubly-obstructed class.
+Two effects, not one. The ω(n) = 2 population thins, as predicted; and **among the values that remain, the smallest prime-power cofactor grows**, so the 1/F the multiplicative engine delivers shrinks even where the engine applies. n = 2183 = 37·59 illustrates the mechanism: ω(n) = 2, so a fused class exists, but only at F = 37, worth 1/37 ≈ 0.027 — which loses to the three-class configuration 1297\* + 443 + 443 at 0.041107, itself unbalanced at x = 0.2029 against its residue's 0.2247. The current floor n = 2291 = 29·79 is the same story one step further: F = 29 gives only 1/29 ≈ 0.034, and the winner `2x761 + 1x769*` is a mixed shape — a fused pair plus a foreign prime — reaching 0.037524. Both are values where **both engines are weak at once**, and both are n ≡ 11 (mod 12), the doubly-obstructed class.
 
 Two consequences, and both should temper how the computed range is read.
 
 **The observed density floor should drift downward.** Fully 55.7% of the current table has ω(n) = 2, so more than half the computed values are served by an engine whose reach halves over the next few decades of n. The median of 0.1994 is propped up by a population that thins — and the prediction has already been borne out: the floor was 0.0418 at n = 575 when the table reached 1,540, then 0.041107, then 0.037524 at n = 2,291, and it now stands at 0.026117.
 
-### 4.1 The escapes: fate (iii), permanent at a small proportion
+### 4.1 The escapes: O(n/log n), and why the log is the whole story
 
-*§3.3 lists three escapes from the class ceilings and calls each "O(log n)-sparse". That description conflates two different things and is wrong for the first one. Settling it was item A3.*
+*§3.3 lists four routes by which an individual n exceeds its residue's ceiling. Each supplies a block whose size is a power of a fixed small prime; this section counts how many n they reach.*
 
-**The 2-power route is not sparse in n.** The escape at odd n takes the two-part shape 2^a + r\*, and §3.3 argued it is available at O(log n) values of n because there are O(log n) powers of 2 below n. That is a count of *representations per n*, not of *values of n*. The correct statement is classical: **Romanov (1934)** proved the set {2^k + p} has positive lower density, and **Erdős (1950)** proved by covering congruences that a positive density of odd n admit *no* such representation. Both directions are positive density; neither is sparse.
+*They are routes **within** families, not families of their own, which is why they have no S-number and why they are gathered here rather than under §4.0 or §4.2:*
 
-Measured over odd n in [10⁶, 1.05×10⁶], the fraction admitting n = 2^a + r with r prime:
+| route | the family it sits inside |
+|---|---|
+| c a power of 2, giving the two-part 2^a + r\* | **S3** at odd n |
+| (r − 1)/2 or c a power of 3 | **S4 / S5** |
+| r a Fermat prime | **S5** |
+| a cyclic-layer-fused class of F = 3 blocks | **S7** |
 
-| n mod 12 | 1 | 3 | 5 | 7 | 9 | 11 |
-|---|---|---|---|---|---|---|
-| route available | 88.7% | 98.7% | 86.9% | 89.3% | 99.0% | 86.2% |
-| **exceeds its class cap** | 2.35% | 0% | 0% | 4.66% | 0% | **4.61%** |
+*What they share is the mechanism, not the family: a block pinned to a power of a fixed small prime. That is also what bounds them, since it leaves O(1) choices per n.*
 
-The ~9–14% with no representation at all is Erdős's set, and the aggregate over all odd n falls slowly — 0.9342, 0.9282, 0.9146, 0.9134 across [10⁴,2·10⁴], [10⁵,1.1·10⁵], [10⁶,1.05·10⁶], [1.9·10⁶,2·10⁶] — consistent with a positive-density complement rather than a vanishing one.
+**The ceiling confines the block to a bounded ratio range.** Take the 2^a + r\* route, at a residue with ceiling δ₀. Its density is min(x², η(1−x)², 2x(1−x)) at x = 2^a/n, so reaching δ₀ needs **both** x² > δ₀ and η(1−x)² > δ₀, and since η ≤ 1 the second forces (1−x)² > δ₀. Hence
 
-**Availability and effectiveness are different, and the second is what §3.3 meant.** A route being available says nothing about whether it reaches the cap. The 2-power route achieves min(x², η(1−x)², 2x(1−x)) at x = 2^a/n, and 2^a is only near the balance point when n/2^a happens to fall near the balance ratio. Since log₂(n/2^a) is equidistributed mod 1, that is a fixed-width window — so it happens at a **positive but small proportion**, the 0–4.7% in the table above, and it does not thin as n grows.
+> **√δ₀ < x < 1 − √δ₀.**
 
-**None of this touches §5's floor, and the reason is worth stating.** Every escape *raises* δ(n). A floor is a minimum over n, so a route that lifts some values above the class cap cannot lower it, however common the route is. The asymptotic floor claim of §5 is therefore untouched by this correction.
+The interval has ratio (1 − √δ₀)/√δ₀, which is largest at the smallest ceiling. At δ₀ = 0.050510, the value at n ≡ 23 (mod 24), the range is (0.2247, 0.7753) — ratio **3.45 < 4**, so it holds **at most two powers of 2**. At the unobstructed odd residues, δ₀ = 0.171573, the range is (0.4142, 0.5858) with ratio 1.41, holding at most one.
 
-**What the correction does change is how the δ₀ table should be read.** The class ceilings are not "ceilings with O(log n) exceptions" but **ceilings for one specific unfused shape, exceeded permanently by a few percent of n in most obstructed classes and by a quarter of them in classes 5 and 11**. In the computed range that shows up as the 194 of 1,108 winners recorded in §3.3. The right summary is that δ₀ is the value the *balanced* family guarantees, not a bound on what any family achieves — which is how §5 uses it, so nothing downstream needs revising.
+**Counting by a rather than by n.** Fix the block size 2^a and ask which n it can serve. The constraint above inverts to n ∈ (1.290·2^a, 4.449·2^a), so r = n − 2^a runs over an interval of length at most 3.16·2^a, and the number of primes in it is at most
 
-**The 3-power escape is not sparse either, and it is far larger.** Measured the same way, over odd n in [2×10⁵, 2.1×10⁵], for the route with c a power of 3 or (r−1)/2 a power of 3:
+> 3.16·2^a / log(0.290·2^a)  ≤  (3.16/log 2)·2^a/a  for a ≥ 3.
 
-| n mod 12 | 1 | 3 | 5 | 7 | 9 | 11 |
-|---|---|---|---|---|---|---|
-| route available | 96.9% | 0% | 99.3% | 94.1% | 85.5% | 96.4% |
-| **exceeds its class cap** | 0% | 0% | **25.9%** | 4.1% | 0% | **26.0%** |
+*The shape of the answer is visible before any care is taken.* Substituting x = 2^a turns the sum into a Riemann sum for an integral: da = dx/(x log 2) and the summand is x·log 2/log x, so the term times da is dx/log x, and the sum looks like **li(N)** — that is, N/log N. (Equivalently, parametrising by x = 2^{a/2} gives ∫x dx/log x, which u = x² returns to ∫du/log u.) This gets the order right and the constant wrong: because the sum runs over a geometric sequence rather than a continuum, S(A)/li(2^A) tends to about **1.38**, not to 1. So the picture is right and the bookkeeping still has to be done.
 
-It lands hardest exactly where the caps are lowest: **a quarter of all n in classes 5 and 11 exceed their tabulated δ₀ by this route alone**, permanently. And the supply really is thin in the naive sense — there are only seven primes r = 2·3^k + 1 below 2.2×10⁵, namely 3, 7, 19, 163, 487, 1459, 39367 — which is precisely how the O(log n) reading arises and why it is wrong: few *representations per n*, but a high proportion of n admitting one.
+Summing over a ≤ A := ⌊log₂(N/1.290)⌋ needs care: there are A ≈ log₂N terms and the largest is already of order 2^A/A ≈ N/log N, so a term-by-term bound would only give O(N). What saves it is that the terms decay geometrically going down, so the sum is a constant multiple of its last term. Explicitly, split at m := ⌈log₂A⌉:
 
-**The S7 escape completes the pattern.** Measured over odd n in [2×10⁵, 2.06×10⁵], by mod-24 residue, for a cyclic-layer-fused class of F ∈ {3, 5, 7, 9, 25} blocks plus a foreign prime:
+> **tail** Σ_{A−m < a ≤ A} 2^a/a ≤ (A−m)⁻¹ Σ_{a ≤ A} 2^a < 2^{A+1}/(A−m),
+> **head** Σ_{a ≤ A−m} 2^a/a ≤ Σ_{a ≤ A−m} 2^a < 2^{A−m+1} ≤ 2^{A+1}/A,
 
-| n mod 24 | 1 | 3 | 5 | 7 | 9 | 11 | 13 | 15 | 17 | 19 | 21 | 23 |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| available | 100% | 97.2% | 100% | 100% | 96.8% | 100% | 100% | 97.2% | 100% | 100% | 97.2% | 100% |
-| exceeds cap | 0 | 0 | 0 | 0 | 0 | **5.6%** | 0 | 0 | 0 | 0 | 0 | **14.0%** |
+the head bound using 2^m ≥ A. Adding,
 
-Available essentially always, and effective **only at the two lowest-cap residues** — 11 and 23 mod 24, the doubly-obstructed ones. At n ≡ 23 (mod 24), the residue that sets the global floor, 14% of values exceed their ceiling by this route.
+> **Σ_{a ≤ A} 2^a/a < 2^{A+1}(1/(A−m) + 1/A) = (4 + o(1))·2^A/A.**
 
-> **The general shape of the error, now confirmed on all three escapes.** Every escape in §3.3 is O(log n) in representations *per n*, because each pins one part to a power of a fixed small prime. **None is thereby sparse in n.** All three are available at 85–100% of odd n; where they are *effective* tracks how low the residue's ceiling is, from 0% at the unobstructed residues to a quarter at classes 5 and 11 mod 12. There is no sign of thinning in any of them.
->
-> This does not move §5's floor, for the reason given above — escapes only raise δ(n), and a floor is a minimum. What it means is that the ceilings are ceilings for one shape, exceeded permanently by a measurable fraction of n at the obstructed residues.
+The head is crude — it throws away the 1/a entirely — but it is applied only where the geometric factor has already made the terms negligible, which is what makes the crudeness harmless. (The true ratio Σ/(2^A/A) tends to 2, so the constant 4 is safe with room.) With 2^A ≤ N/1.290 and A = log₂N − O(1),
 
+> **#{n ≤ N reachable by this route} = O(N/log N),**
 
+with an explicit constant of about 20 as bounded here. The direct sum evaluates to ≈ 3.7·N/log N, so the bound is loose but unconditional.
 
-### 4.2 S4 shares the odd-n asymptotics with S5; S6 is fate (ii)
+The same argument covers the other three routes verbatimThe same argument covers the other three routes verbatim — powers of 3 instead of 2 (at most two in a ratio-3.45 window, at most one once the ceiling exceeds 0.086), and for the Fermat route only five block sizes exist at all. **So every escape reaches a vanishing proportion of n, and the asymptotic constants of §5 stand.**
 
-**S4 does not stop winning — it and S5 divide the odd-n range between them, by c mod 8.** Both need the same split n = 2c + r with c, r prime, so they draw on the same Hardy–Littlewood supply and neither thins. Which one wins is decided by the intra term alone: fusing doubles it to 2·orb(c, d) but forces d to be the **odd part of c − 1**, against the unfused C(c,2) at the full twist. Comparing the two over all primes c < 20000:
+**But the vanishing is logarithmic, which is why they are conspicuous at computed sizes.** Measured against the mod-24 ceilings, the fraction of odd n whose ceiling the route exceeds:
 
-| c mod 8 | c − 1 | fused intra | verdict |
+| n ≈ | 1.3×10⁴ | 1.0×10⁵ | 1.0×10⁶ |
 |---|---|---|---|
-| 3, 7 | 2·odd | 2·C(c,2) | **S5 strictly better** |
-| 5 | 4·odd | C(c,2) | **exact tie** |
-| 1 | 8 \| c−1 | ≤ C(c,2)/2 | **S4 strictly better** |
+| 2-power route | 3.73% | 2.20% | 1.20% |
+| 3-power route | 2.48% | 1.00% | 0.00% |
 
-with 570 / 565 / 569 / 556 primes in the four classes below 20000 — so each verdict holds on a quarter of all c, with no exceptions in that range. S4 therefore carries the odd-n asymptotics at c ≡ 1 (mod 8) and ties at c ≡ 5, and belongs with §3's families rather than with the also-rans. The SAFE census's 0 winners for S4 is an artefact of the over-count, not a fact about μ — see the box in §2.0.
+Both fall, consistent with the O(1/log n) bound and if anything faster — the 3-power route is already empty by 10⁶, since once a residue's ceiling exceeds 0.086 its window admits at most one power of 3 and usually none.
+
+**Availability and effectiveness are different quantities, and only the second thins.** A route being *available* — some 2^a + r\* representation existing at all — is a much weaker condition than its reaching the ceiling, and it does not thin: Romanov (1934) gives {2^k + p} positive lower density, and Erdős (1950) gives a positive density of odd n with no such representation, so availability sits at 86–99% of odd n and stays there. What the count above measures is effectiveness, and that is what the ceiling analysis needs.
+
+**None of this moves §5's floor**, and the reason is general: every escape *raises* δ(n), a floor is a minimum over n, so a route lifting some values above their ceiling cannot lower it however common it is. What the escapes change is the reading of the ceiling table — δ₀ is what the *balanced* shape guarantees at that residue, not a bound on what any shape achieves there.
+
+### 4.2 S6: fate (ii), present but supply-limited
+
+*S4 needs no entry here. It and S5 both realise the family of §3.2 and draw on the same Hardy–Littlewood supply, so neither thins; they divide the range by c mod 8, and the analysis is in §3.2. Both carry the odd-n asymptotics.*
 
 **S6 — two outside blocks and no matching class.** Its ceiling is 1/4, the same as S3's, so it is not cap-limited; it is **supply**-limited. It needs r₁ + r₂ = n with both rᵢ − 1 = 2qᵉ for a *common* q, which is a system with two efficiency conditions coupled through a shared parameter rather than the single condition of §3.2. That is strictly harder than anything §3 analyses, and it is why S6 has exactly one winner in the whole computed range (n = 1175). Expected fate (ii) tending to (i), but the singular series for the coupled system has not been written down.
 
 ### 4.3 What is left over
 
-**S1** never occurs: n = c means n is a prime power, which is outside the scope of μ entirely.
-
 **S8, S9, S10** are excluded by theorem, not by rarity — D1, D2, and the normality argument respectively. They cannot occur at any n, so they have no asymptotics.
 
-**S7** is an escape rather than a family, and §4.1 covers it with the other two. Its parity structure is the one thing here that genuinely restricts n: at odd n it forces c to be a power of 2. Whether that makes it fate (i) or fate (iii) has **not been measured** — both other escapes turned out to be (iii) after being assumed (i), so it should be assumed (iii) until checked. `pending-checks.md` item A4b.
+**S7** is an escape rather than a family, and §4.1 counts it with the other three at O(n/log n). Its parity structure is the one thing here that genuinely restricts n: at odd n it forces c to be a power of 2, which is what puts it in that class.
 
 ### 4.4 The asymptotic question is entirely Hardy–Littlewood
 
@@ -504,11 +518,12 @@ with 570 / 565 / 569 / 556 primes in the four classes below 20000 — so each ve
 |---|---|---|
 | S2 | (i) thins | ω(n) = 2 with both factors prime powers has density 0 |
 | S3 | carries even n | §3.1; the counting check of §3.7 |
-| S5 | carries odd n at c ≡ 3, 7 (mod 8) | §3.2; §4.2 for the split with S4 |
-| S4 | carries odd-n jointly with S5 | wins at c ≡ 1 (mod 8), ties at 5, loses at 3 and 7 — §4.2 |
+| S5 | carries odd n at c ≡ 3, 7 (mod 8) | §3.2 |
+| S4 | carries odd n jointly with S5 | wins at c ≡ 1 (mod 8), ties at 5, loses at 3 and 7 — §3.2 |
 | S6 | (ii), plausibly (i) | supply-limited by a coupled two-efficiency system; 1 winner in range |
 | S7, the escapes | (iii) permanent at a small proportion | measured in §4.1 for two of three routes |
-| S1, S8, S9, S10 | cannot occur | out of scope, or excluded by D1, D2, normality |
+| S1 | (i) thins | prime powers are O(N/log N); δ = 1 there, known exactly |
+| S8, S9, S10 | cannot occur | excluded by D1, D2, normality |
 
 Since the multiplicative engine vanishes in density, the asymptotic behaviour of μ(n) for almost all n is set by the additive families, whose caps are 1/4 and 1/9 and whose availability is a Bateman–Horn question. In particular the ladder constants of §5 of the notes — the §3.3 constants — are the right asymptotic quantities, and the fused family's 1/2 and 1/3 are not, however dominant they look in the table.
 
@@ -538,7 +553,7 @@ This is a *lower* bound on δ(n), not δ(n) itself, since it uses only four fami
 
 > **These are now real minima.** An earlier version of the script exited as soon as it cleared 0.9 × the class cap, so six consecutive blocks all reported the same 0.04546 = 0.9 × 0.05051 — an artefact sitting exactly where the signal is. With the cutoff raised to the asymptotic constant, nothing below 0.050510 is truncated, and the rise above is the first direct evidence for §4's prediction that the envelope climbs as the ω(n) = 2 population thins.
 
-So the low-density dips are a small-n phenomenon and the asymptotic floor is the class-11 cap.
+So the low-density dips are a small-n phenomenon and the asymptotic floor is the ceiling at **n ≡ 23 (mod 24)**.
 
 > **The constant is right and the extremal residue is now stated correctly below.** §3.3 derives the ceilings mod 24 rather than mod 12: nine of the twelve odd residues rise by 33–54% because a fused rung is reachable there, and three do not — **7, 15 and 23 mod 24**. The minimum over all residues is unchanged at **0.050510**, attained at **n ≡ 23 (mod 24)** alone, half of the old n ≡ 11 (mod 12).
 
@@ -613,7 +628,7 @@ That is a covering statement, and it is strictly weaker than any single system b
 **Why conditionality is unavoidable once ω(n) ≥ 3: a dichotomy.** Every block must have size ≍ n, so there are boundedly many. A p-characteristic block of size c contributes C_{c−1} to the cyclic middle layer, and Oliver's chain requires that layer to be cyclic. Two blocks of *different* odd prime-power sizes c, c′ contribute C_{c−1} × C_{c′−1}, and both orders are even, so the product is never cyclic. That leaves exactly three escapes:
 
 - **all blocks the same size** — one diagonal C_{c−1}, cyclic, with the top q-group coming free from permuting the blocks. This is n = F·c, the multiplicative engine, and it is unconditional — but it needs ω(n) ≤ 2;
-- **a block of 2-power size** — then c − 1 is odd and can sit cyclically beside C_{r−1} without demotion. This is what n = 551 = 256 + 167\* + 128 exploits, and §3.3 records it as O(log n)-sparse;
+- **a block of 2-power size** — then c − 1 is odd and can sit cyclically beside C_{r−1} without demotion. This is what n = 551 = 256 + 167\* + 128 exploits, and §4.1 counts at O(n/log n) values;
 - **demote one block's multiplicative group into the top q-group** — then Γ/Γ₁ = C_t must be a q-group, so t = (r−1)/d must be a prime power. That is the Sophie Germain condition, and it is where the conditionality enters.
 
 Read this way η = 2/d is not an efficiency knob but **the price of using blocks of unequal size at all**, and the dichotomy explains why no unconditional family with ω(n) ≥ 3 has ever appeared in the computed table: from constructions of this shape, none can.
@@ -650,7 +665,7 @@ Read this way η = 2/d is not an efficiency knob but **the price of using blocks
 
 4. **Is the four-class family ever optimal?** Equivalently, does the triple coincidence of §6 ever occur? *Partial answer, measured 2026-08.* Over odd n in [2×10⁵, 2.012×10⁵], the necessary condition — both the two- and three-class families below the four-class cap of 1/16 — holds at **95 of 600 values**, so it is far from rare. But at every one of those the three-class family still reaches 0.046–0.050, and a four-class family would have to beat that while capped at 1/16 = 0.0625 and needing **four** simultaneous prime conditions rather than three. The margin is a factor of only 1.25–1.35, against a supply penalty of one more log. So the answer is very likely no, and the reason is a squeeze rather than an obstruction — which also means it will not yield to a local-solubility argument. A proper heuristic estimate would compare the four-condition singular series against that margin directly; the machinery for it is `count_check.py` with a fourth form.
 
-5. ~~**Do the ℓ = 3 escapes behave as the O(log n) heuristic says?**~~ **Resolved, negatively (§4.1).** They do not, and neither do the other two: all three are O(log n) in representations *per n* but positive-density in *n*, available at 85–100% of odd n and effective wherever the residue's ceiling is low — up to a quarter at classes 5 and 11 mod 12, and 14% at n ≡ 23 (mod 24). The heuristic conflated representations per n with values of n. No effect on §5's floor, since escapes only raise δ.
+5. ~~**Do the ℓ = 3 escapes behave as the sparsity heuristic says?**~~ **Resolved (§4.1), and now proved rather than assumed.** All four escape routes reach **O(n/log n)** values of n: the residue's own ceiling confines the block to a ratio range of width under 4, which admits O(1) block sizes, leaving one prime's worth of freedom. Measured, the 2-power route's effectiveness falls 3.73% → 2.20% → 1.20% across n ≈ 10⁴, 10⁵, 10⁶ and the 3-power route reaches zero by 10⁶. The asymptotic constants are untouched; the escapes are conspicuous at computed sizes only because a log vanishes slowly.
 
 6. **The fused family at ω(n) = 2 but bad splitting.** **338 of the 1,118** values with ω(n) = 2 do better with a split than with fusion, which happens when the smallest prime-power cofactor F is large. The distribution of F over ω(n) = 2 integers is classical, so predicting the 754/323 division is a clean test.
 

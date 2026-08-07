@@ -195,7 +195,7 @@ Each isolates one phenomenon. All figures recomputed.
 
 | # | Shape | Status | Winners | Trend | Asymptotic guess | δ behaviour |
 |---|---|---|---|---|---|---|
-| **S1** | one matching block, no copies | part only | — | — | — | never a whole configuration |
+| **S1** | one matching block, no copies | enumerated | every prime power | — | **→ 0**: prime powers are O(N/log N) | trivial where it applies: n = c, AGL(1, n) 2-transitive, δ = 1 |
 | **S2** | fused matching class, **top**-layer copies, n = F·c | enumerated | **754** (39.3%) | 49.1 → 36.2 → **32.6%** | **→ 0** (needs ω(n) = 2 with both factors prime powers) | clusters at **1/F**: 0.4995, 0.3326, 0.2492, 0.1992, 0.1420, 0.1103. Holds every δ > 1/4 |
 | **S3** | matching + outside, n = c + r\* | enumerated | **851** (44.3%) | 41.2 → 45.8 → **45.9%** | **→ ~50%**: essentially all even n | → class cap. Medians 0.220/0.221/0.218/0.213 at n ≡ 0,4,6,10 (cap **1/4**); 0.1265/0.1272 at 2,8 (cap **0.13397**) |
 | **S4** | two matching + outside, n = 2c + r\* | enumerated | v2 **257** (13.4%); v3 **0**, an over-credit artefact; v4 restores it at c ≡ 1 (mod 8) | 6.1 → 13.9 → **20.0%** | **carries odd n jointly with S5**, splitting by c mod 8 — see `arithmetic-of-density.md` §4.2 | → class cap. Medians 0.1033/0.0997 at 1,9 (**1/9**); 0.0782/0.0765 at 3,7 (**0.08579**); 0.0695 at 5 (**0.0718**); 0.052 at 11 (**0.05051**) |
