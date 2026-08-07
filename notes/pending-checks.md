@@ -56,6 +56,34 @@ python3 scripts/mu_enumerate_v2.py --nmax 2600 --out outputs/mu_table_safe_v3.cs
 
 **Do not quote figures from the old table once the rebuild starts.** The improvement rate is ~15% at median ratio 1.26, so the density picture shifts materially.
 
+## R0c. Rerun the winner census under `--refined`
+
+The SAFE census over-credits fused shapes, because a matching part is scored F·C(c,2) regardless of the twist while the fused reading's twist must be odd. At c ≡ 1 (mod 4) the realisable fused value is up to half the SAFE one, so **S4 is reported at 0 winners when it should win for a positive proportion of c** — 7,431 (c, r) pairs below n = 3000 have the fused reading scoring strictly less. See §2.0 of `arithmetic-of-density.md`.
+
+This is the one place where SAFE's over-count is not shape-neutral: it changes which shape wins, not just the value. Until the census is rerun, the S2/S3/S5 percentages are SAFE's preferences rather than μ's and should not be quoted as a shape distribution.
+
+```bash
+python3 scripts/mu_enumerate_v2.py --nmax 2600 --refined --out outputs/mu_table_refined_v3.csv
+```
+
+## R0d. Re-derive the class caps as a max over rungs, and redo the counting check
+
+**Two compounding errors, found 2026-08, both understating δ₀.**
+
+1. **§3.3 optimised one shape.** For odd n the shapes form a ladder with caps A > B > C — one c-block + foreign, two fused + foreign, two unfused + foreign — and §3.3 tabulated **C**, the bottom. Generic reachability picks **B** (needs c ≡ 3 mod 4, half of all primes); A needs c = 2^a and is the thing §3.3 miscalls an "escape". Class 11 becomes **0.06699** not 0.05051, a factor 1.33, and the same factor propagates to §5's asymptotic floor and to `ladder_verify.py`'s `ASYMPTOTIC`.
+
+2. **§3.7 validated the wrong window.** It used the equal-split centre 1/(k+1), which is the balance point only at η = 1. The true balance point is √η/(1+k√η), and the 0.05-half-width window **misses it entirely** in classes 2, 8, 5 and 11 — including class 11, which sets the floor. Each rung also carries its own congruence on c, so the singular series differs, not just the centre.
+
+Order: re-derive the caps first, since they set the centres the counting check needs. `--centre` is already a flag, so (2) is a rerun rather than a code change.
+
+```bash
+# per class, at that class's own rung-B balance point
+python3 count_check.py --nmin 200000 --nmax 230000 --maxn 99999999 \
+        --residue 11 --modulus 12 --dq 12 --centre 0.18301
+```
+
+**Do not quote 0.050510 as the asymptotic constant** until this is settled; it is conservative by a third.
+
 ## R1. Routine, after any new batch of table values
 
 Every one of these is a per-n statement that does not extend itself.
@@ -207,6 +235,10 @@ Its row counts sum to 887 and the filter that produced them was not reconstructe
 ### A4a. Prove Theorem 2.3's two-part reduction
 
 The only gap left in the whittling. That the maximising partition never needs three or more parts is verified exhaustively to n = 1200 but not proved; the old justification is false because cap is not monotone (cap(127) = 8001 against cap(129) = 2709). My attempt reaches "the merged partition is worse only if cap(n − s₁) < s₁s₂" and stalls there. Nothing depends on it except the O(n) cost claim for B₀ — the inequality μ ≤ B₀ quantifies over all partitions — so this is low priority but self-contained.
+
+### A4b. Measure the S7 escape's density in n
+
+The last unmeasured escape. Both the 2-power and 3-power routes turned out to be O(log n) in *representations per n* but positive-density in *n* — available at 85–99% and effective at a few percent to a quarter (§4.1). S7 is described the same way and should be assumed to behave the same way until measured. Same method: availability and cap-exceedance by residue class over a band around 2×10⁵.
 
 ### A5. Sweep for other expired-scope arguments
 

@@ -326,3 +326,18 @@ The distinction that matters is availability versus effectiveness. The route rea
 **§5's floor is untouched**, and the reason is general: every escape *raises* δ(n), and a floor is a minimum, so a route that lifts values above the cap cannot lower it however common it is. What changes is the reading of the δ₀ table — the ceilings are for one unfused shape and are exceeded by a few percent of n in each obstructed class permanently, which is what the 194-of-1,108 measurement in §3.3 was already showing.
 
 Written up as §4.1. The 3-power and S7 escapes have *not* been measured this way; their O(log n) description is now an untested claim rather than one shared with a refuted case.
+
+
+---
+
+## L24. The class caps are the bottom rung of a ladder
+
+Two compounding errors, both understating δ₀, found by a co-author asking whether the S4/S5 result should have changed the cap analysis.
+
+**The caps optimise one shape.** For odd n the shapes form a ladder: A = one c-block + foreign (cap η/(1+√η)²), B = two fused + foreign (2η/(√2+2√η)²), C = two unfused + foreign (η/(1+2√η)²), with **A > B > C** in every class. §3.3 tabulated C. The identity **cap_F(η) = F·cap₁(η/F)** explains the ladder: fusing F ways trades a factor F on the intra term against the same factor on the effective efficiency, which is why one class's fused optimum lands on the next class's unfused optimum. The cross term binds at none of them, so all three derivations are valid and only the choice of answer was wrong.
+
+Reachability decides which rung is the real cap. A needs c even, so c = 2^a at odd n — ~log₂n choices, balance point rarely available. **That is exactly the "2^a + r\* escape"**: not an escape from the cap but the top rung, usually out of reach. B needs c ≡ 3 (mod 4) so the odd part of c − 1 is (c−1)/2 — half of all primes, generically reachable. So the generic cap is **B**, and class 11 is **0.06699**, not 0.05051.
+
+**The counting check validated the wrong window.** §3.7 used the equal-split centre 1/(k+1). The balance point is √η/(1+k√η), equal to the equal split only at η = 1. With a 0.05 half-width the window **misses the balance point entirely** at classes 2, 8, 5 and 11 — including the class that sets the global floor. At c = n/3 with η = 1/6 the achievable density is η/9 = 0.0185 against a cap of 0.05051, so the check counted representations in a region that cannot reach the cap at all. Sound for the system posed; silent on attainment at the optimum.
+
+Both are conservative errors: δ₀ is larger than claimed and the floor rises. Recorded as R0d.

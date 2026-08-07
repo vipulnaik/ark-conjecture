@@ -205,24 +205,28 @@ The ℓ = 2 obstruction forces a ≥ 2, and hence η ≤ 1/2 **provided u > 1**;
 >
 > Fusion at F = 2 forces q = 2, which pins the foreign efficiency to the 2-part of r − 1 — full **exactly** at a Fermat prime. So cap_2(1) is reachable only with r ∈ {5, 17, 257, 65537}, which is why all 20 of the winners attaining it use r = 257, and why they sit in classes 3 and 7 where the table says η ≤ 1/2. The two facts are the same fact.
 >
-> **A third fusion route, found 2026-08, which the class table also misses.** The paragraph above assumes the F blocks are fused by the **top** q-group, which is why F must be a q-power and why F = 2 forces q = 2. That is not the only option. The block-permuting group may instead sit in the **cyclic layer**, where the only requirement is that Γ₁/Γ₂ stay cyclic — so F may be any prime power sharing no factor with the twists or the foreign primes. `enumeration-proof.md` calls this **S7** and its Part 0 has the structural argument; the consequences here are the ones that matter for the density story.
+> **2026-08: the odd-n caps are the bottom rung of a three-rung ladder, and §3.3 tabulated the bottom one.** The derivation below optimises **one** shape and calls the result the class cap. The cap is a max over shapes, each with **its own balance point**, and the shapes form a ladder. Writing x = c/n and η for the foreign efficiency, for odd n = (c-part) + r\*:
 >
-> **The cap formula is the same, with F now unconstrained by q.** For a class of F blocks of size c plus one foreign prime, the intra term is F·C(c,2) ≈ Fx², the within-class cross is (F or F/2)c² ≥ Fx², and the foreign intra is η(1−Fx)². Balancing gives the same
+> | rung | shape | intra density | cap | balance point |
+> |---|---|---|---|---|
+> | **A** | one c-block + foreign | x² | η/(1+√η)² | √η/(1+√η) |
+> | **B** | two c-blocks **fused** + foreign | 2x² | 2η/(√2+2√η)² | √η/(√2+2√η) |
+> | **C** | two c-classes **unfused** + foreign | x² | η/(1+2√η)² | √η/(1+2√η) |
 >
-> > **x\* = √η/(√F + F√η),  cap_F(η) = Fη/(√F + F√η)²**
+> and the caps run **A > B > C** in every class:
 >
-> but now at odd F as well. **F = 3 gives 0.13397, 0.10102, 0.08333, 0.05719** at η = 1, ½, ⅓, ⅙; F = 5 gives 0.09549, 0.07505, 0.06351, 0.04555. F = 5 is uniformly worse than F = 3, and larger fusion primes worse still — F·C(c,2) shrinks faster than the foreign term can compensate — so this is effectively an F = 3 phenomenon, and only F = 3 and F = 5 occur in range at all.
+> | class | η | A | B | **C (tabulated below)** | B/C |
+> |---|---|---|---|---|---|
+> | 1, 9 | 1 | 0.25000 | 0.17157 | 0.11111 | 1.54 |
+> | 3, 7 | 1/2 | 0.17157 | 0.12500 | 0.08579 | 1.46 |
+> | 5 | 1/3 | 0.13397 | 0.10102 | 0.07180 | 1.41 |
+> | 11 | 1/6 | 0.08404 | **0.06699** | 0.05051 | 1.33 |
 >
-> **Every one of those F = 3 figures exceeds the corresponding odd-n entry in the table above.** Against 1/9, 0.08579, 0.0718 and 0.05051 for classes {1,9}, {3,7}, {5} and {11}, the F = 3 route reaches 0.13397 at full efficiency and 0.05719 even at η = ⅙. **So the odd-n rows of the δ₀ table are not ceilings on this family**, and the failure is not confined to the computed range.
+> The cross term does not bind at any of these optima, so all three derivations are internally valid; the error is in taking C for the answer. There is a tidy identity behind the ladder: **cap_F(η) = F·cap₁(η/F)**, so fusing F ways trades a factor F on the intra term against the same factor on the effective efficiency — which is why the fused optimum for one class lands exactly on the unfused optimum of the next class down.
 >
-> **But the supply is thin, and the reason splits by parity.** Write n = F·c + r with r an odd prime.
+> **Which rung is reachable is the whole question, and it is not the one §3.3 assumed.** Rung A needs c even, hence c = 2^a at odd n — only ~log₂n choices, so its balance point is rarely available. **That is precisely the "2^a + r\* escape" listed below.** It is not an escape from the cap; it is the *top rung*, usually out of reach, which is why it beats the tabulated value whenever it does land near the optimum. Rung B needs the twist on the c-blocks to be odd, i.e. the odd part of c − 1 to be (c−1)/2, i.e. **c ≡ 3 (mod 4)** — half of all primes, so its balance point *is* generically reachable. Rung C needs nothing extra and is always available.
 >
-> - **n odd** forces F·c even, so with F odd, **c must be a power of 2**. There are O(log n) such c *per n* — which, as §4.1 shows for the 2^a + r\* route, does not by itself make the escape sparse in n; what makes it thin here is measured rather than assumed, at 12 instances in the computed range. All 12 odd-n instances in range have c ∈ {32, 128}, at n = 143, 551, 611, 731, 767, 851, 903, 987, …
-> - **n even** forces c odd, and the supply is then a full Hardy–Littlewood system of the same tier as §3.5's. But even n already have the two-class route at cap 1/4, well above 0.13397, so the F = 3 route can only win where the *local* supply of (prime power, prime) pairs near n/2 fails. All 45 even-n instances are of this kind, at n = 308, 416, 518, 530, 572, 620, 638, 644, …
->
-> So the asymptotic constants of §5 survive: on odd n the escape is O(log n)-sparse, and on even n it is confined to the exceptional set where the two-class supply fails, which the same conjectures make thin. What does **not** survive is the reading of the odd-n rows as ceilings — they are ceilings for the unfused shape only, and the sparse set where they are exceeded now has three sources rather than two.
->
-> *Measured:* 57 values of n ≤ 2400 where this route beats the tabulated B(n), median ratio 1.141, worst 2.387 at n = 2375. That count allows a single such class per configuration and does not check the cyclic layer's coprimality budget against other classes' twists, so it moves in both directions under a full treatment.
+> **So the generic odd-n cap is rung B, and §3.3 understates it by 33–54%.** The class-11 value becomes **0.06699** rather than 0.05051, which raises the asymptotic floor of §5 by the same factor. Two things follow that have not been done: the ladder must be re-derived per class as a max over rungs subject to reachability, and §3.7's counting check must be redone at each rung's *own* balance point with its *own* congruence condition on c — the check as run used the equal-split centre 1/(k+1), which is rung C's optimum only when η = 1 and misses the balance point entirely in classes 2, 8, 5 and 11.
 
 > **Consequence for how the table should be read.** Against the current data, **194 of the 1,108 two- and three-class one-foreign winners exceed their own class's tabulated δ₀** — 57 via the documented 2^a + r\* route, 43 via the fused 2×c + r\* route above, and 94 via an η above the class's generic value (mostly the 3-power escapes). In class 11 the *median* winner sits at 1.24× the tabulated cap and 28 of 39 exceed it, with a maximum of 3.99×. The δ₀ are therefore best read strictly as **guarantees for one specific unfused shape**, not as generic behaviour — the wording "generic ceiling" overstates how typical they are inside the computed range. What *is* an upper bound, and holds without exception, is cap_F(η) evaluated at the configuration's own F and η: **0 of 1,108 rows exceed it.**
 
@@ -511,6 +515,8 @@ This is a *lower* bound on δ(n), not δ(n) itself, since it uses only four fami
 > **These are now real minima.** An earlier version of the script exited as soon as it cleared 0.9 × the class cap, so six consecutive blocks all reported the same 0.04546 = 0.9 × 0.05051 — an artefact sitting exactly where the signal is. With the cutoff raised to the asymptotic constant, nothing below 0.050510 is truncated, and the rise above is the first direct evidence for §4's prediction that the envelope climbs as the ω(n) = 2 population thins.
 
 So the low-density dips are a small-n phenomenon and the asymptotic floor is the class-11 cap.
+
+> **The asymptotic constant below is under revision.** It is stated as the class-11 value of rung C — the unfused shape — which §3.3 now records as the bottom of a three-rung ladder. The generically reachable rung is B, at **0.06699**, a factor 1.33 higher. Every occurrence of (5 − 2√6)/2 in this document, in `orbital-evasiveness-notes.md`, and in `ladder_verify.py`'s `ASYMPTOTIC` constant is the rung-C value. The conjecture is therefore **conservative, not wrong** — but it is not the sharp statement, and 47 of the 49 class-11 rows in the rebuilt table already exceed 0.06699.
 
 > **Conjecture (global density floor).** For every composite non-prime-power n,
 >
