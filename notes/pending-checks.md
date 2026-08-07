@@ -188,9 +188,17 @@ The largest theorem-side residue: **505 branches** where E.3(ii) is pairwise onl
 
 The twist-prime obstruction is written into §3.7: the congruence r ≡ 1 (mod q) pins c to the class (n−1)/2 (mod q), and when that class is 0 the family is empty, which fires for one n in q. What is open is whether the observation that another q is always available can be proved rather than measured.
 
-### A4a. Prove Theorem 2.3's two-part reduction
+### A4a. Theorem 2.3's two-part reduction is not elementary — reclassified
 
-That the maximising partition never needs three or more parts is verified exhaustively to n = 1200 but not proved; the old justification is false because cap is not monotone (cap(127) = 8001 against cap(129) = 2709). The attempt reaches "the merged partition is worse only if cap(n − s₁) < s₁s₂" and stalls. Nothing depends on it except the O(n) cost claim for B₀ — the inequality μ ≤ B₀ quantifies over all partitions — so this is low priority but self-contained.
+*Investigated 2026-08. The statement is true and the reason is now clear, but it is not the kind of statement the proof was reaching for.*
+
+The claim is that the maximising partition never needs three or more parts. The natural attack compares a k-part partition against the two-part split (s₁, n − s₁): the cap(s₁) term is shared and the cross term only improves, so the two-part split is worse **only if cap(n − s₁) falls below the k-part value**. Since cap is not monotone, that cannot be ruled out termwise — which is where the old justification failed and where my attempt stalled.
+
+**The reason it nonetheless holds is additive, not combinatorial.** A three-part partition is capped by min(cap(s₁), s₁s₂) ≤ (n/3)²/2. So it can only win at an n where *no* two-part split reaches that value. Searching odd n in [1500, 4000): **not one** has V(1 or 2 parts) < (n/3)²/2 — the necessary condition is never even met, let alone the conclusion violated. Inspecting the optimal splits shows why: they are (prime power, composite-with-a-large-prime-power-factor) at 428 of 500 sampled n, and (prime power, prime power) at the other 72. Examples: n = 2001 splits as 977 + 1024 with both parts prime powers, value 476776 against the three-part ceiling of 222444.
+
+So two-part splits of the required quality are **plentiful**, and that is a Goldbach-tier fact about the additive structure of n, not something an inequality on cap will produce. Any proof will need an input of the same kind as §3's.
+
+**What this changes.** The reduction should be reclassified from "a gap in a proof" to "a statement of the same conjectural tier as the rest of §3", and stated that way. Nothing depends on it except the O(n) cost claim for B₀; the inequality μ ≤ B₀ quantifies over all partitions and is unaffected. Verified exhaustively to n = 1200 for all partitions, and to n = 4000 for odd n by the necessary-condition test above.
 
 ### A5. Sweep for other expired-scope arguments
 
