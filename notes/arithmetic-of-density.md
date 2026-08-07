@@ -47,20 +47,17 @@ Everything else in this document elaborates that split. Five consequences set th
 | **S9** | fused outside block, any layer | — | never | excluded (Lemma D2) | — |
 | **S10** | outside block with r = q | — | never | excluded: normality kills the twist | — |
 
-> **S4's disappearance is an artefact of SAFE scoring, not a domination.** In the old table, two equal unfused matching blocks plus a foreign prime was 13% of winners; in the rebuilt table all **79** such winners are reported as S5, with the value rising at 77. That looks like fusion dominating, and it is not.
+> **S4 and S5 divide the odd-n range between them, by c mod 8.** Both need the same split n = 2c + r with c, r prime, so they draw on the same supply and neither thins. Which wins is decided by the intra term: fusing doubles it to 2·orb(c, d) but forces d to be the **odd part of c − 1**, against the unfused C(c,2) at the full twist. Over all primes c < 20000, exceptionless:
 >
-> Fusing two equal classes doubles the intra term and the cross-to-foreign term and leaves the within-class cross alone — but it puts C₂ in the cyclic layer, so the twist on the c-blocks must be **odd**, i.e. the largest odd divisor of c − 1. When c ≡ 3 (mod 4) that is (c−1)/2 and the doubling is clean; when 4 | c − 1 the odd part is smaller and the doubling does not recover it. The split is exactly by **c mod 8** (§4.2):
+> | c mod 8 | c − 1 | fused intra | verdict |
+> |---|---|---|---|
+> | 3, 7 | 2·odd | 2·C(c,2) | **S5 strictly better** |
+> | 5 | 4·odd | C(c,2) | **exact tie** |
+> | 1 | 8 \| c−1 | ≤ C(c,2)/2 | **S4 strictly better** |
 >
-> | c | c mod 4 | odd twist | fused 2·orb(c,d) | unfused C(c,2) |
-> |---|---|---|---|---|
-> | 83 | 3 | 41 | 6806 | 3403 |
-> | 89 | 1 | 11 | **1958** | 3916 |
-> | 101 | 1 | 25 | 5050 | 5050 |
-> | 103 | 3 | 51 | 10506 | 5253 |
+> So S4 wins outright on a quarter of all c and ties on another quarter — a co-carrier of the odd-n asymptotics, not an also-ran.
 >
-> The split is exactly by **c mod 8** and is exceptionless over all primes c < 20000: S5 strictly better at c ≡ 3, 7; exact tie at c ≡ 5; S4 strictly better at c ≡ 1. Each class holds a quarter of the primes, so **S4 wins outright on a quarter of all c and ties on another quarter** — it is not an also-ran but a co-carrier of the odd-n asymptotics. §4.2 has the table.
->
-> **What the table is actually showing** is that SAFE credits every matching part F·C(c,2) *whatever the twist*, so the fused reading is scored at 2·C(c,2) even where the realisable value is half that. This is the one place found so far where SAFE's over-count is **not shape-neutral**: elsewhere it inflates a value, here it changes which shape wins. The winner percentages in the census are therefore SAFE's preferences, not μ's, and the census wants rerunning under `--refined` before the shape distribution is quoted anywhere.
+> *An earlier version of this box reported S4 at 0 winners and called it a domination.* That was an artefact: SAFE credited every p-characteristic part F·C(c,2) regardless of the twist, inflating fused shapes specifically. The scoring has since been tightened — the cyclic part of the twist must be coprime to Fmid, which is a proven necessary condition and so usable in SAFE — and **S4 reappears at exactly the predicted residues**, both instances below n = 360 having c ≡ 1 (mod 8). The winner percentages quoted in the census are from before that fix and are being recomputed.
 
 **The engine dichotomy is a simplification, and the hybrids are where the action is.** S2 is purely multiplicative and S3, S4, S6 purely additive, but **S5 and S7 are neither** — a fused class supplying the multiplicative factor F alongside a foreign block supplying the additive one. That is not a defect of the taxonomy; it is where the two interesting phenomena live. S5's full efficiency requires a Fermat prime (§3.3), and S7 exists only because block fusion can come from the cyclic layer (§4.1). Both were missed by earlier drafts precisely because the two-engine framing had no slot for them.
 

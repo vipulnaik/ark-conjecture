@@ -209,6 +209,25 @@ def _fusions(fmax, q):
     return out
 
 
+def _coprime_part(m, F):
+    """Largest divisor of m coprime to F.  Used to cap the cyclic-layer part of
+    a twist when the class is fused there."""
+    if F <= 1:
+        return m
+    x, d = F, 2
+    while d * d <= x:
+        if x % d == 0:
+            while m % d == 0:
+                m //= d
+            while x % d == 0:
+                x //= d
+        d += 1 if d == 2 else 2
+    if x > 1:
+        while m % x == 0:
+            m //= x
+    return m
+
+
 def _coprime_ok(vals):
     """Every listed order must be pairwise coprime: they all sit inside the one
     cyclic group Gamma_1/Gamma_2, and a cyclic group has a unique subgroup of
@@ -277,7 +296,7 @@ def parts_for(n, p, q, spf, floor):
 SAFE = True     # default: unconditional.  See --refined to disable.
 
 
-def value(sel, p, spf):
+def value(sel, p, spf, q=None):
     """exact m* of a chosen configuration (list of Part), applying Lemma C.
     Returns None if the configuration is inadmissible."""
     foreigns = [t.c for t in sel if t.foreign]
@@ -298,12 +317,23 @@ def value(sel, p, spf):
         if t.foreign:
             terms.append(t.cap)
         else:
-            d = strip(t.c - 1, foreigns)             # Lemma C
             char2 = (p == 2)
-            if SAFE and d < t.c - 1:
-                terms.append(t.F * comb(t.c, 2))     # unconditional fallback
+            # The twist splits as d = d_cyc * d_q, one factor per layer that can
+            # hold it: d_q a q-power in Gamma/Gamma_1, d_cyc in the cyclic layer.
+            # Only d_cyc has to be coprime to Fmid -- they sit in the SAME cyclic
+            # group, which has a unique subgroup of each order.  This is a proven
+            # necessary condition, not a Lemma C-style conjecture, so SAFE mode
+            # may use it: the unconditional cap on the part becomes
+            # F*orb(c, dmax) rather than F*C(c,2), which is strictly tighter
+            # whenever Fmid > 1 and still bounds any admissible stabiliser.
+            dq = qpart(t.c - 1, q) if q else 1
+            dmax = dq * _coprime_part((t.c - 1) // dq, t.Fmid)
+            d = strip(t.c - 1, foreigns)             # Lemma C
+            if SAFE:
+                terms.append(t.F * orb(t.c, dmax, char2))
             else:
-                terms.append(t.F * orb(t.c, d, char2))
+                terms.append(t.F * orb(t.c, min(d, dmax) if d <= dmax
+                                       else _coprime_part(d, t.Fmid) * dq, char2))
         if t.cb is not None:
             terms.append(t.cb)
     for i in range(len(sel)):
@@ -349,7 +379,7 @@ def best_with_k(n, K, spf, seed=0):
                 if rem == 0:
                     if not sel:
                         return
-                    v = value(sel, p, spf)
+                    v = value(sel, p, spf, q)
                     # record a witness on a tie too: the fast seed may already
                     # have reached the maximum, in which case nothing ever
                     # strictly improves and the witness would stay empty

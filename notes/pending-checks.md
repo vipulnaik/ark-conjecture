@@ -56,34 +56,25 @@ python3 scripts/mu_enumerate_v2.py --nmax 2600 --out outputs/mu_table_safe_v3.cs
 
 **Do not quote figures from the old table once the rebuild starts.** The improvement rate is ~15% at median ratio 1.26, so the density picture shifts materially.
 
-## R0c. Rerun the winner census under `--refined`
+## R0c. SAFE no longer over-credits fusion — DONE; table wants rebuilding
 
-The SAFE census over-credits fused shapes, because a matching part is scored F·C(c,2) regardless of the twist while the fused reading's twist must be odd. At c ≡ 1 (mod 4) the realisable fused value is up to half the SAFE one, so **S4 is reported at 0 winners when it should win for a positive proportion of c** — 7,431 (c, r) pairs below n = 3000 have the fused reading scoring strictly less. See §2.0 of `arithmetic-of-density.md`.
+The SAFE score for a p-characteristic part was F·C(c,2) regardless of the twist, so a fused class was credited the full intra term even where the twist must be odd. That inflated fused shapes specifically, which is why S4 vanished from the census — the one place SAFE's over-count was not shape-neutral.
 
-This is the one place where SAFE's over-count is not shape-neutral: it changes which shape wins, not just the value. Until the census is rerun, the S2/S3/S5 percentages are SAFE's preferences rather than μ's and should not be quoted as a shape distribution.
+**Fixed without leaving SAFE mode.** The constraint is a proven necessary condition, not a Lemma C-style conjecture: C_Fmid and the cyclic part of the twist sit in the *same* cyclic group, which has a unique subgroup of each order, so they must be coprime. The twist splits as d = d_cyc · d_q, one factor per layer that can hold it, and only d_cyc is constrained. So the unconditional cap becomes
+
+> **F · orb(c, dmax)**,  dmax = (q-part of c−1) × (largest divisor of the rest coprime to Fmid)
+
+which still bounds any admissible stabiliser and is strictly tighter whenever Fmid > 1. At Fmid = 1 it reduces to F·C(c,2), so unfused parts are unaffected.
+
+**Verified over n ≤ 360:** 15 values tightened, **0 raised**, and **0 fall below the pre-repair v2 table** — the values still dominate the original everywhere.
+
+**S4 is back, at exactly the predicted residues.** The census now reads S2 158, S3 91, S5 18, **S4 2**, and both S4 winners have **c ≡ 1 (mod 8)** — n = 247 (c = 73) and n = 285 (c = 89). That is §4.2's prediction, produced by an enumerator that has no knowledge of it. The S4/S5 attribution is now correct without escalating to SAFE.
+
+**Consequence: `mu_table_safe_v3.csv` is superseded.** Every row computed before this fix may be over-credited on a fused shape. The rebuild should restart.
 
 ```bash
-python3 scripts/mu_enumerate_v2.py --nmax 2600 --refined --out outputs/mu_table_refined_v3.csv
+python3 scripts/mu_enumerate_v2.py --nmax 2600 --out outputs/mu_table_safe_v4.csv
 ```
-
-## R0d. Ceilings mod 24 and the counting check — DONE
-
-**Ceilings rederived.** The old table optimised one shape (the unfused rung) and was keyed mod 12. For odd n the shapes form a ladder A > B > C; reachability of the fused rung forces n ≡ 3 (mod 8), so the ceilings are a **mod-24** phenomenon — eight distinct values across 24 residues. Nine of the twelve odd residues rise by 33–54%; **7, 15 and 23 do not**. Table with closed forms and balance points in `arithmetic-of-density.md` §3.3. `ladder_verify.py`'s `CAP` rekeyed mod 24.
-
-The global constant **0.050510 is unchanged**, its extremal class halved to **n ≡ 23 (mod 24)**. The 20,000 ladder run puts the floor at n = 8927 ≡ 23 (mod 24), as predicted.
-
-**Counting check redone at the correct centres, and it passes.** At each rung's own x\*, separated mod 24:
-
-| residue | rung | x\* | [2×10⁵, 2.3×10⁵] | [10⁶, 1.03×10⁶] |
-|---|---|---|---|---|
-| 11 mod 24 | B | 0.18301 | 1.1007 | **1.0025** |
-| 23 mod 24 | C | 0.224745 | 1.0427 | **1.0033** |
-
-sd falling like n^{−1/2}, no n without a solution. The approach to 1 is **from above**, where the equal-split runs approached from below — evidence that the centre was the variable that mattered.
-
-**Two independent confirmations worth recording.** The four suspicious closed forms — including the rational-looking (B, η = 1/2) row at cap 1/8, x\* = 1/4 — were re-derived by direct numerical optimisation over x including all cross terms, and all four reproduce. And the extra congruence c ≡ 3 (mod 4) that rung B needs turns out to be **automatic** given n ≡ 11 (mod 24) and r = 12q + 1, which is why the mod-24 split is exactly the split between rungs.
-
-**Left over:** rerun `ladder_verify.py` to 10⁶ with the mod-24 ceilings. The worklist is driven by `ASYMPTOTIC` = 0.050510, unchanged, so the 41,584 entries should be stable — but the per-residue `min delta/cap` diagnostics all shift, and those are what would reveal a residue behaving anomalously. Current spread at 20,000 is 0.327–0.653.
 
 ## R1. Routine, after any new batch of table values
 
