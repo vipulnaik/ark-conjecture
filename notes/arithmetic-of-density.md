@@ -41,8 +41,8 @@ Everything else in this document elaborates that split. Five consequences set th
 | **S1** | one matching block, no copies | — | every prime power | **→ 0**: prime powers up to N number π(N) + O(√N) = O(N/log N). Trivial where it applies: δ = 1, and the only shape there | §2.1 |
 | **S2** | fused matching class, **top**-layer copies, n = F·c | multiplicative | 40.4% (v3) | **→ 0**: needs ω(n) = 2 with both factors prime powers | §4 |
 | **S3** | matching + outside, n = c + r\* | additive | 37.8% (v3) | **→ ~50%**, essentially all even n | §3.1 |
-| **S4** | two matching + outside, n = 2c + r\* | additive | 2 winners to n = 360 (v4); **0** in v3, an over-credit artefact | carries odd n jointly with S5, splitting by c mod 8 | §3.2 |
-| **S5** | fused matching + outside; forces q = 2 | hybrid | 21.8% (v3) | carries odd n jointly with S4, splitting by c mod 8 | §3.2 |
+| **S4** | two matching + outside, n = 2c + r\* | additive | 2 winners to n = 360 (v4); **0** in v3, an over-credit artefact | **→ ≈ 3.7%** outright, plus ≈ 6.8% tied with S5. Confined to residues 7, 15, 23 mod 24 | §3.2 |
+| **S5** | fused matching + outside; forces q = 2 | hybrid | 21.8% (v3) | **→ ≈ 39.6%** outright, plus the ≈ 6.8% tied with S4. Sole winner at the nine rung-B residues | §3.2 |
 | **S6** | two outside blocks | additive | 0% | **→ 0**: supply-limited, needs two coordinated safe primes | §4.3 |
 | **S7** | **middle**-layer-fused matching + outside | hybrid | — | an escape, not a family; see §4.1 | §4.1 |
 | **S8** | bottom-layer-fused matching | — | never | excluded (Lemma D1) | — |
@@ -129,7 +129,17 @@ The route that avoids it is **three parts with two equal p-characteristic blocks
 | 5 | 4·odd | C(c,2) | exact tie | 569 |
 | 1 | 8 \| c−1 | ≤ C(c,2)/2 | **unfused (S4) strictly better** | 556 |
 
-So each verdict holds on a quarter of all c, and the two shapes are co-carriers of the odd-n asymptotics rather than one dominating the other. Which of them the enumeration *reports* as the winner is a separate question, sensitive to how the SAFE cap treats a fused class — see §2.0.
+So each verdict holds on a quarter of all c. **The proportion of *n* is a different question, and it is settled by congruence rather than by that quarter-split**: for a given n we take the best c available near the balance point, so S5 wins wherever *some* c ≡ 3 (mod 4) works, and S4 gets the rest. Reachability of such a c is exactly the rung-B condition of §3.3, which is a congruence on n mod 24 — so at the nine rung-B residues S5 wins outright, and only 7, 15 and 23 mod 24 are left. Measured over odd n in [2×10⁵, 2.06×10⁵]:
+
+| n mod 24 | S5 wins | S4 wins | tie |
+|---|---|---|---|
+| 1, 3, 5, 9, 11, 13, 17, 19, 21 | **100%** | 0% | 0% |
+| 7 | 24.0% | 24.8% | 51.2% |
+| 15 | 26.8% | 18.8% | 54.4% |
+| 23 | 0% | 44.0% | 56.0% |
+| **all odd n** | **79.2%** | **7.3%** | **13.5%** |
+
+i.e. **≈ 39.6% of all n to S5 outright, ≈ 3.7% to S4, ≈ 6.8% tied.** The nine-residue block is congruence-forced and so stable; the internal split at 7, 15 and 23 is empirical and may drift. So the two shapes are co-carriers, but very unequally: S4's outright share is an order of magnitude smaller and confined to three residues. Which of them the enumeration *reports* as the winner is a separate question, sensitive to how the SAFE cap treats a fused class — see §2.0.
 
 **Full efficiency is obstructed locally, and the obstructions split the ceiling by residue class.** Write **η** for a foreign block's efficiency, η = orb(r, t)/C(r,2) with t the q-part of r − 1 — the fraction of full 2-homogeneous capacity its twist reaches. (η rather than e, to keep clear of Euler's number.) Efficiency η = 1 requires the foreign twist to have order (r−1)/2, which Lemma B′ forces to be a power of q — so (r−1)/2 must be a prime power, the clean case being r a safe prime. Which n admit it, and at what efficiency, is settled in §3.3. Re-optimising δ(x) at reduced efficiency gives the other ceilings in closed form:
 
@@ -517,9 +527,9 @@ Both fall, consistent with the O(1/log n) bound and if anything faster — the 3
 | shape | fate | evidence |
 |---|---|---|
 | S2 | (i) thins | ω(n) = 2 with both factors prime powers has density 0 |
-| S3 | carries even n | §3.1; the counting check of §3.7 |
-| S5 | carries odd n at c ≡ 3, 7 (mod 8) | §3.2 |
-| S4 | carries odd n jointly with S5 | wins at c ≡ 1 (mod 8), ties at 5, loses at 3 and 7 — §3.2 |
+| S3 | carries even n — **≈ 50% of n** | §3.1; the counting check of §3.7 |
+| S5 | carries odd n — **≈ 39.6%** outright, sole winner at the nine rung-B residues | §3.2 |
+| S4 | co-carries odd n — **≈ 3.7%** outright, ≈ 6.8% tied with S5, only at 7, 15, 23 mod 24 | §3.2 |
 | S6 | (ii), plausibly (i) | supply-limited by a coupled two-efficiency system; 1 winner in range |
 | S7, the escapes | (iii) permanent at a small proportion | measured in §4.1 for two of three routes |
 | S1 | (i) thins | prime powers are O(N/log N); δ = 1 there, known exactly |
