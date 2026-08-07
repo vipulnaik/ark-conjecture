@@ -348,6 +348,8 @@ with K = 1 for the even family n = c + r of §3.1 and K = 2 for the odd family n
 
 **Testing at the right centre is the whole point.** The count is taken over a window centred on x\*, and x\* = √η/(1 + k√η) equals the equal split 1/(k+1) **only at η = 1**. At the obstructed residues they diverge sharply — at (C, η = 1/6) the equal split sits 0.109 from x\* = 0.22474, more than twice the window half-width — so a window centred on the equal split covers a region that cannot reach the ceiling at all, and a count taken there says nothing about attainment. Each row below uses its own residue's x\*, taken from the table in §3.3.
 
+**How the prediction is computed.** The window has a fixed *relative* width, so the three log factors are not constant across it — at D = 12 the parameter q sweeps a factor of about 1.9 from one end to the other. The predicted count is therefore the integral of 𝔖(n)/(log q · log r · log c) across the window rather than its value at the midpoint. The two differ by well under a percent, and by more at larger D since log q ≈ log(n/(3D)) is smaller there, so nothing below turns on the choice; the integral is simply the quantity the heuristic actually predicts.
+
 **Results.** Exhaustive over n ∈ [2×10⁵, 2.15×10⁵], ratio of actual count to predicted.
 
 | n mod 24 | K | D | x\* | mean | sd |
