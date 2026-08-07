@@ -60,10 +60,14 @@ ap.add_argument("--seed", type=int, default=0)
 ap.add_argument("--maxn", type=int, default=400, help="cap on how many n are tested")
 ap.add_argument("--window", type=float, default=0.05,
                 help="half-width of the c/n window around the balance point")
-ap.add_argument("--centre", type=float, default=1/3.0,
+ap.add_argument("--centre", type=float, default=None,
                 help="balance point x* = c/n; 1/3 for the three-part family, 1/2 for two-part")
 ap.add_argument("--q", type=int, default=3, help="the twist prime for the r = 1 mod q condition")
 ap.add_argument("--no-q", action="store_true", help="drop the congruence: two-condition calibration")
+ap.add_argument("--parts", type=int, default=3, choices=(2, 3),
+                help="3 = the odd family n = 2c + r of section 3.2 (default); "
+                     "2 = the even family n = c + r of section 3.1.  Sets the "
+                     "default balance point to 1/3 or 1/2 respectively.")
 ap.add_argument("--dq", type=int, default=0, metavar="D",
                 help="test SECTION 3.3's own system at efficiency eta = 2/D: "
                      "q prime, r = D*q + 1 prime, c = (n - r)/2 prime.  D must be even. "
@@ -72,6 +76,9 @@ ap.add_argument("--dq", type=int, default=0, metavar="D",
                      "classes.  D = 12 is the one that matters for n = 11 (mod 12).")
 ap.add_argument("--quiet", action="store_true")
 A = ap.parse_args()
+K = A.parts - 1                      # c = (n - 1 - D*q) / K
+if A.centre is None:
+    A.centre = 1 / (K + 1.0)         # 1/2 for two parts, 1/3 for three
 
 LO, HI = A.centre - A.window, A.centre + A.window
 if LO <= 0 or HI >= 1:
@@ -134,7 +141,11 @@ def singular(n, q):
 # its efficiency is eta = 2t/(r-1) for odd t.  So eta = 2/D exactly when
 # r - 1 = D*t.  Taking t = q prime, the three forms are
 #
-#     f1 = q,   f2 = D*q + 1  (= r),   f3 = (n-1)/2 - (D/2)*q  (= c)
+#     f1 = q,   f2 = D*q + 1  (= r),   f3 = (n - 1 - D*q)/K  (= c)
+#
+# with K = 1 for the even two-part family n = c + r of section 3.1 and K = 2
+# for the odd three-part family n = 2c + r of section 3.2.  K = 2 was the only
+# case the script covered until 2026-08.
 #
 # and a solution is a q making all three prime.  D = 2 is the safe-prime
 # endpoint, eta = 1.  The obstructed classes cap out lower and need larger D:
@@ -149,18 +160,19 @@ def singular(n, q):
 
 def roots_mod(n, l, D):
     """#{q mod l : f1 f2 f3 = 0 mod l}, or l itself if f3 vanishes identically."""
-    h = ((n - 1) // 2) % l
+    h = ((n - 1) // K) % l                      # c = h - (D/K) q
+    g = (D // K) % l
     rs = {0}                                    # f1 = q
     if D % l:                                   # f2 = Dq+1
         rs.add((-pow(D % l, -1, l)) % l)
-    if (D // 2) % l:                            # f3 = h - (D/2) q
-        rs.add((h * pow((D // 2) % l, -1, l)) % l)
+    if g:                                       # f3 = h - (D/K) q
+        rs.add((h * pow(g, -1, l)) % l)
     elif h % l == 0:
         return l                                # f3 == 0 identically: no solutions
     return len(rs)
 
 def singular_dq(n, D):
-    if n % 2 == 0:
+    if (n - 1) % K:            # three-part family needs n odd; two-part does not
         return 0.0
     s = 1.0
     for p in SPRIMES:
@@ -170,17 +182,35 @@ def singular_dq(n, D):
         s *= (1 - w / p) / (1 - 1 / p) ** 3
     return s
 
+def _density_integral(n, D, steps=64):
+    """sum over q in the window of 1/(log q * log r * log c), by Simpson."""
+    h = (n - 1) // K
+    qlo = (h - int(HI * n)) / (D / float(K))
+    qhi = (h - int(LO * n)) / (D / float(K))
+    if qhi <= qlo or qlo < 2:
+        return 0.0
+    tot, dq = 0.0, (qhi - qlo) / steps
+    for i in range(steps + 1):
+        qv = qlo + i * dq
+        r = D * qv + 1.0
+        c = h - (D / float(K)) * qv
+        if qv < 2 or r < 2 or c < 2:
+            continue
+        w = 1 if i in (0, steps) else (4 if i % 2 else 2)
+        tot += w / (math.log(qv) * math.log(r) * math.log(c))
+    return tot * dq / 3.0
+
+
 def count_dq(n, D):
     """q in the window (measured on c) with q, D*q+1 and (n-1)/2-(D/2)q all prime."""
-    h = (n - 1) // 2
     lo, hi = int(LO * n), int(HI * n)
     k = 0
     for c in primes:
         if c < lo: continue
         if c > hi: break
-        num = h - c
-        if num <= 0 or num % (D // 2): continue
-        q = num // (D // 2)
+        num = n - 1 - K * c
+        if num <= 0 or num % D: continue
+        q = num // D
         if q < 2 or q not in PRIMESET: continue
         r = D * q + 1
         if r > N or r not in PRIMESET: continue
@@ -215,8 +245,9 @@ if truncated:
 q = None if A.no_q else A.q
 
 if A.dq:
-    print(f"system: q prime, r = {A.dq}q+1 prime, c = (n-r)/2 prime   "
-          f"(section 3.3's own, at eta = 2/{A.dq} = {2/A.dq:.4g})")
+    fam = "n = c + r  (section 3.1, even)" if K == 1 else "n = 2c + r  (section 3.2, odd)"
+    print(f"system: q prime, r = {A.dq}q+1 prime, c = (n-r)/{K} prime   "
+          f"[{fam}, eta = 2/{A.dq} = {2/A.dq:.4g}]")
 else:
     print(f"system: c prime, r = n - 2c prime"
           + ("" if q is None else f", r = 1 (mod {q})"))
@@ -239,11 +270,16 @@ rows, zero, degen = [], 0, []
 for n in cands:
     if A.dq:
         D = A.dq
+        if (n - 1) % K: continue
         a = count_dq(n, D)
-        W = HI - LO
-        denom = (math.log(A.centre * n) * math.log((1 - 2 * A.centre) * n / D)
-                 * math.log((1 - 2 * A.centre) * n))
-        pred = singular_dq(n, D) * (W * n * 2 / D) / max(denom, 1e-9)
+        # Integrate the density across the window rather than evaluating it at
+        # the midpoint.  The window is a CONSTANT relative width, so q sweeps a
+        # factor of (h - LO*n)/(h - HI*n) across it -- 1.86 at the default
+        # settings -- and 1/log q is convex, so the midpoint value is not the
+        # mean.  The error is D-dependent: log q ~ log(n/(3D)), so the same
+        # relative sweep in q is a larger fractional swing in 1/log q the larger
+        # D is.  At D = 2 it is under a percent; at D = 12 it is several.
+        pred = singular_dq(n, D) * _density_integral(n, D)
         if pred <= 0:
             degen.append((n, a)); continue
         if a == 0: zero += 1

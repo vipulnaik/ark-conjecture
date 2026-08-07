@@ -200,12 +200,6 @@ The largest theorem-side residue: **505 branches** over the certified range wher
 
 Not attempted. Reportedly give a *positive density* of odd n with no 2^k + p representation — stronger than the O(log n)-sparse claim about 2-power escapes in §3.3, and would close that route rather than thin it. Checkable from the literature plus a direct computation over the table.
 
-### A3a. Settle the η = 1/6 counting check at D = 12
-
-The class ceilings are tested by counting solutions to q prime, r = Dq+1 prime, c = (n−r)/2 prime, with D = 2/η. At D = 2 and D = 4 the ratio sits at 1 to within 4%. At **D = 12 — the class-11 case, and the one that sets the global floor** — band means scatter by ±12% with no trend, while the sd falls cleanly like n^{−1/2}. Nearby n share the window's primes, so the samples are correlated and the effective sample size is far below the count; that explains the scatter but does not confirm the series.
-
-Options, cheapest first: widen the bands so each mean averages over more decorrelated n; compute a variance estimate that accounts for the correlation; or test D = 12 on a class where it is not simultaneously the extremal case. Until one of these is done, §3.7's η = 1/6 row should be read as "verified to about 12%", not as agreement.
-
 ### A3b. Fold the twist-prime obstruction into §3.3's inventory
 
 Found by `count_check.py` when the twist prime was varied: the congruence r ≡ 1 (mod q) pins c to the class (n−1)/2 (mod q), and when that class is 0 the family is empty. Fires for one n in q. Already written into §3.7; what is open is whether it belongs in §3.3's obstruction table proper, and whether "blocked at one q, available at another" can be made a theorem rather than an observation.

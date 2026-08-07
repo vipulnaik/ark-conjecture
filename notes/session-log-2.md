@@ -202,3 +202,112 @@ Live figures corrected as a result: ω(n) = 2 count 1,077 → 1,118 and the spli
 **Prose drifts as much as numbers.** L13's failure class is entirely prose: "one value remains", "27 survivors", "the search is complete". A figure sweep will never see it.
 
 **Two of three lemmas read this session had defects.** That is the relevant base rate for the unread material, and it is the argument *for* a second independent reading rather than against it.
+
+
+---
+
+## L18. `ladder_verify.py` S7 run and the `stop_at` fix
+
+
+Run to 10⁶ completed 2026-08 (78 min under `cpulimit -l 1`). Results: floor **0.02516 at n = 8927**, worklist **41,584** entries, down 14.7% from 48,729. Verified a strict subset of the old list with no value fallen — which is forced, since the script maxes over explicit constructions, and is worth checking after any family is added.
+
+Two findings from the run:
+
+- **A first patch was buggy and the check caught it.** Placing S7 before the other families let it trigger `achieved`'s early return and truncate the scan at its own value, so 132 class-11 entries reported *lower* than the three-family version and 2 spurious entries appeared. All 132 sat just above 0.9 × 0.05051, which is the early-return threshold. Fixed by raising the threshold to `max(0.9*cap, ASYMPTOTIC)` so nothing on the worklist is ever truncated; that was worth more than the family itself (7,145 removed against 2,642).
+- **The per-block floors are now real.** They rise 0.04625 → … → 0.04810 across the last six decades, where the old run reported a constant artefact. First direct evidence for §4's envelope prediction.
+
+*Note the ladder floor 0.02516 is weaker than the 0.026117 the branch-and-bound already proved; the gain here is the worklist, not the bound.*
+
+
+
+---
+
+## L19. Counting check against the singular series
+
+
+New script `count_check.py`. The tables verify that the Hardy–Littlewood system of §3.2 **has** a solution; this tests the far stronger claim that the **number** of solutions matches the singular series, which is what the heuristic actually predicts. It is independent of the G.2 defect — it concerns the additive families, not completeness — so it cannot be invalidated by R0.
+
+System: `c` prime, `r = n − 2c` prime, `r ≡ 1 (mod q)`, with `c/n` in a window around the balance point 1/3. The third condition is the one carrying the efficiency and the one §3.5 identifies as making this strictly harder than binary Goldbach.
+
+Results, ratio of actual to predicted over n ≡ 11 (mod 12):
+
+| band | values | mean | sd |
+|---|---|---|---|
+| [2×10⁴, 6×10⁴] | 3,334 (exhaustive) | 0.9831 | 0.0737 |
+| [2×10⁵, 4×10⁵] | 16,667 (exhaustive) | 0.9923 | 0.0352 |
+| [8×10⁵, 10⁶] | 16,667 (exhaustive) | 0.9974 | 0.0209 |
+| [1.5×10⁶, 2×10⁶] | 60 (10% sample, capped) | 0.9989 | 0.0145 |
+
+Mean → 1 and sd falling like the expected n^−1/2. **Zero values with no solution in the window** at any band.
+
+*Quote these and not the earlier figures.* The first three rows were originally reported from `--maxn 100` subsamples. The means were fine (0.9830 against the exhaustive 0.9831) but the sds were noisy by ~7%, and the script printed "exhaustive" regardless because it only checked `--sample`. Fixed: `--maxn` truncation is now announced explicitly, with a warning that the sd from a small subsample should not be quoted. **The sd is the informative statistic here** — it is what should fall like n^−1/2 — so subsampling costs precisely the number that matters. Also passes at q = 5 (0.9875) and q = 7 (0.9837), and against the two-condition calibration with the congruence dropped (0.9923).
+
+**One real finding along the way.** The congruence pins `c` to the single class `(n−1)/2 (mod q)`; when that class is 0 the system is **degenerate** — `q | c` forces `c = q` and the count is O(1), not of order n/log³n. The first draft omitted this and reported a spurious shortfall at q = 5 (mean 0.85, sd 0.35, 11 apparent zeros). It fires for one n in q, and never at q = 3 with n ≡ 11 (mod 12), which is why the omission survived the first round of testing. Now detected, reported separately, and verified: observed count is 0 at every degenerate value, as predicted.
+
+```bash
+python3 count_check.py --nmin 1000 --nmax 1000000 --residue 11 --modulus 12
+python3 count_check.py --nmin 1000000 --nmax 10000000 --residue 11 --modulus 12 --sample 0.1 --seed 7
+python3 count_check.py --nmin 200000 --nmax 400000 --residue 1 --modulus 2 --no-q --centre 0.25
+```
+
+`--sample` draws a random subset, which is what makes the high end reachable — the claim is distributional, so a sample confirms it as well as a census. `--residue/--modulus` set the class, `--q` the twist prime, `--window/--centre` the balance window.
+
+
+
+---
+
+## L20. The enumerator restructure
+
+
+**Step 1 is done.** `mu_enumerate_v2.py` restructures the block count around the layer that supplies it:
+
+> **F = Fmid · Ftop**, with `Ftop` a power of the top prime q (from Γ/Γ₁, the only case the old code allowed) and **Fmid any integer** (from the cyclic layer Γ₁/Γ₂). `Fbot = 1` by Lemmas D1 and D2.
+
+`Fmid` is unrestricted *locally* — a transitive subgroup of a cyclic group is cyclic of that order — so the constraint is **global** and lives in `value()`: the cyclic layer carries every foreign part's translation group C_r and every fused class's C_Fmid at once, and a cyclic group has a unique subgroup of each order, so all of them must be pairwise coprime. That is the condition the old enumeration never needed, because with every block count a q-power there was nothing for the foreign primes to collide with. Two foreign parts of the same prime was the special case already excluded.
+
+Also corrected: the within-class cross coefficient now keys on the parity of **F**, not of q. The relevant fact is the minimum pair-orbital of a transitive group of degree F, which is F/2 for even F and F for odd — nothing to do with which layer supplies it.
+
+**Validation, n ≤ 570 (444 values):**
+
+- **0 regressions.** No value fell, which is the required direction.
+- **66 improved (14.9%)**, median ratio 1.258, max 2.000.
+- Every n that `s7_scan.py` flagged was improved, and **60 more besides** — `s7_scan` only tried prime-power `Fmid` with one fused class.
+- Fusion counts in the improved witnesses: **F = 2 (42×), 3 (13×), 4 (8×), 6 (3×)**. The composite F = 6 = 2·3, meaning `Fmid = 3` with `Ftop = 2`, is a shape neither the old enumerator nor `s7_scan` could express.
+- n = 308 now gives **5671**, better than the 4134 of the hand-worked BBKN group — the enumerator finds `3×67 + 1×107*` instead.
+- **Runtime is flat** (n = 308: 1.3 s new against 1.5 s old). The larger pool is paid for by the higher running `best` pruning harder.
+
+**Still pending: steps 2–4.** Rebuild the table with `mu_enumerate_v2.py` (this is the expensive part, ~n^2.9 per value), then rerun everything in R1, then rebuild the branch-and-bound worklist. The improvement rate of ~15% at median ratio 1.26 means the density picture will shift materially, so do not quote figures from the old table once the rebuild starts.
+
+```bash
+python3 scripts/mu_enumerate_v2.py --nmax 2600 --out outputs/mu_table_safe_v3.csv
+```
+
+
+
+---
+
+## L21. `brute.py` rewritten for the corrected shape space
+
+The naive enumerator had to be redone once `mu_enumerate_v2.py` enlarged the shape space, or the independent check would have covered the old space only. Rewritten from `enumeration-proof.md` Part 0, and deliberately as a *different* program: pairwise-gcd coprimality rather than a shared set of prime factors, fusion counts by trial division rather than a q-power ladder.
+
+Reproduces B(10) = 20, B(12) = 18, and the new B(78) = 468. Against a table built by `mu_enumerate_v2.py`: **81 values to n = 123, 0 mismatches.**
+
+Two lossless reductions, both verified bit-identical against the unoptimised version at n ≤ 90 and worth 2.3× at n = 150:
+
+- **One pool entry per (F, c).** The score depends only on F, but admissibility depends on Fmid, which must be coprime to the rest of the cyclic layer. So among all splittings F = Fmid·Ftop the one with the smallest Fmid is weakly the most permissive and the rest can never win. Taking Ftop = the q-part of F leaves one entry per (F, c). This is the reduction that makes the enlarged pool affordable at all — without it the pool grows by a factor of log_q F.
+- **Sort by size, break on overflow** instead of scanning the tail.
+
+Neither is borrowed from `mu_enumerate.py`, so the independence of the check is preserved.
+
+
+---
+
+## L22. The counting check, corrected twice
+
+First version fixed the twist prime at q = 3, giving η ≈ 6/(r−1) → 0 — a system with no relation to any ceiling. Corrected to test **η = 2/D** via q prime, r = Dq+1 prime, c = (n−r)/K prime, so each class is tested at the D that sets its own cap: D = 2, 4, 6, 12 for η = 1, 1/2, 1/3, 1/6.
+
+Second omission: only the odd three-part family was covered. Added `--parts 2` for §3.1's even family (K = 1). A parity guard left over from the odd case was zeroing the even singular series outright.
+
+**All twelve residue classes now agree**, in both families, each at its own D. The class↔D pairing turns out to be forced — class 1 vanishes at D ≥ 4 because (n−1)/2 is even there, class 11 vanishes at D = 2 by ω(3) = 3 — and every vanishing prediction is confirmed with zero observed solutions, so §3.3's obstruction analysis is now verified from the counting side as well as the root side.
+
+**The D = 12 shortfall was slow convergence, not a wrong series.** 0.88 at 2×10⁵ but **0.9974 with sd 0.0375 at 10⁷**. The sd falls like n^{−1/2} throughout. A window-integral refinement replaced the midpoint evaluation of the log factors — theoretically right, since the constant-relative-width window makes q sweep a factor of 1.86 and 1/log q is convex, with the bias growing in D — but it moves the ratios by well under a percent and was not the cause.

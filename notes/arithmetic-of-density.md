@@ -334,19 +334,28 @@ Testing a class at the wrong D tests a system with nothing to do with its ceilin
 
 Every command is `python3 count_check.py` with `--maxn 99999999` to force an exhaustive run — the default `--maxn 400` subsamples, which leaves the mean sound but the sd noisy.
 
-**The unobstructed classes agree; the heavily obstructed ones are not yet settled.** D = 2 lands at 0.993 and 1.004. As D grows the scatter grows with it, and at D = 12 the band means do **not** sit at 1 in a stable way:
+**The even two-part family too.** §3.1's family is n = c + r, the same three forms with c = (n − 1 − Dq)/K at K = 1 rather than K = 2. Its ceilings are 1/4 at η = 1 (D = 2) for n ≢ 2 mod 3, and 0.13397 at η = 1/3 (D = 6) for n ≡ 2 mod 3. Over [2×10⁵, 2.12×10⁵], exhaustive:
 
-| class 11, D = 12 | mean | sd |
-|---|---|---|
-| [2×10⁴, 5×10⁴] | 1.0043 | 0.2782 |
-| [10⁵, 1.3×10⁵] | 1.0546 | 0.1953 |
-| [2×10⁵, 2.4×10⁵] | 0.8787 | 0.1473 |
-| [3×10⁵, 3.3×10⁵] | 0.9722 | 0.1314 |
-| [7×10⁵, 7.3×10⁵] | 1.0477 | 0.0997 |
+| class | D | mean | sd |
+|---|---|---|---|
+| 0 | 2 | 0.9855 | 0.1551 |
+| 4 | 2 | 0.9894 | 0.1485 |
+| 6 | 2 | 1.0119 | 0.1547 |
+| 10 | 2 | 0.9918 | 0.1657 |
+| 2 | 6 | 1.0766 | 0.1954 |
+| 8 | 6 | 1.0533 | 0.2082 |
 
-The **sd falls cleanly** — 0.278 → 0.195 → 0.147 → 0.131 → 0.0997, close to n^{−1/2} — which is the right behaviour and says the per-n prediction is the right size. The **band means scatter by ±12%** with no trend, and by far more than the standard error of the mean would allow if the values were independent. They are not: nearby n share the primes in the window, so the effective sample size is much smaller than the count. **This is consistent with the singular series being correct and the check being underpowered at D = 12, but it does not demonstrate it**, and the honest statement is that the η = 1/6 system is verified only to within about 12%. See the open item in `pending-checks.md`.
+`python3 count_check.py --nmin 200000 --nmax 212000 --residue R --modulus 12 --parts 2 --dq D --maxn 99999999`
 
-**What this establishes.** The local analysis and the singular series are confirmed at η = 1 and η = 1/2 to about 4%, with all four vanishing predictions confirmed exactly. It says nothing about §3.5's global question — whether solutions exist for *every* large n — which is where the conjecture lives. What it removes is the possibility that the constants are right but the model is wrong.
+**Convergence is slow, and that is the whole story at D = 12.** At [2×10⁵, 2.4×10⁵] the class-11 ratio sits near 0.88, which looked like a wrong singular series. It is not. At **[10⁷, 1.1×10⁷] a 1,000-value sample gives mean 0.9974, sd 0.0375**, with no n lacking a solution:
+
+`python3 count_check.py --residue 11 --modulus 12 --dq 12 --maxn 1000 --nmin 10000000 --nmax 11000000`
+
+The sd falls like n^{−1/2} throughout — 0.278 at 2×10⁴, 0.146 at 2×10⁵, 0.0375 at 10⁷ — and the mean converges from below. Slow approach to an asymptotic constant, sometimes oscillating, is normal in this territory; π(x) − li(x) is the standard cautionary example. The earlier band-to-band scatter is the same effect seen through too small a window: nearby n share the primes in the window, so the samples are correlated and the effective sample size is far below the count.
+
+*One refinement made along the way, which turned out not to be the cause.* The prediction evaluated the three log factors at the window midpoint, but the window is a constant relative width, so q sweeps a factor of 1.86 across it, and 1/log q is convex — a D-dependent bias, since log q ≈ log(n/(3D)) is smaller for larger D. Replaced by a Simpson integral across the window. It moves the ratios by well under a percent and does not explain the gap, but it is the correct quantity and costs nothing.
+
+**What this establishes.** The local analysis and the singular series are confirmed for **every residue class mod 12, in both families, at the efficiency that sets its own ceiling** — to about 1% where the range is large enough to have converged, and to a few percent elsewhere. All the vanishing predictions are confirmed exactly. It says nothing about §3.5's global question — whether solutions exist for *every* large n — which is where the conjecture lives. What it removes is the possibility that the constants are right but the model is wrong.
 
 > **A local obstruction indexed by the twist prime.** Distinct from the above, and found by varying q in the weaker system c prime, r = n − 2c prime, r ≡ 1 (mod q): the congruence pins c to the class (n−1)/2 (mod q), and when that class is 0 the family is empty, since q | c forces c = q. It fires for one n in q. Verified: observed count 0 at every such n. It belongs in §3.3's inventory alongside ℓ = 2 and ℓ = 3, being an obstruction indexed by the twist prime rather than by a fixed small prime.
 
