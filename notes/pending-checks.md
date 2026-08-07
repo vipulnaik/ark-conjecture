@@ -91,7 +91,14 @@ python3 wide_cert.py 100000 --no-theorems                      # NEEDS THE FLAG
 
 ## R3. Extend the naive-enumerator comparison
 
-`brute.py` was rewritten for the corrected shape space and now agrees with `mu_enumerate_v2.py` at every n ≤ 100. That coverage is thinner than the n ≤ 175 the old pair reached, because the enlarged pool makes the naive enumeration slower — so this wants pushing again once the table rebuild settles.
+`brute.py` has been rewritten for the corrected shape space and agrees with `mu_enumerate_v2.py` at every n ≤ 123 checked so far (81 values, 0 mismatches). This is the only check that tests the restructure rather than re-running it, so it is worth pushing further before the full table rebuild is trusted.
+
+Two lossless reductions were added to make that affordable, both verified to give bit-identical output against the unoptimised version at n ≤ 90:
+
+- **One entry per (F, c).** Among all splittings F = Fmid·Ftop the smallest Fmid is weakly the most permissive, since Fmid is what must be coprime to the rest of the cyclic layer while F alone determines the score. Taking Ftop to be the full q-part of F leaves exactly one pool entry per (F, c).
+- **Sort the pool by size and break** rather than scanning past oversized entries.
+
+Together 2.3× at n = 150. Cost still grows like n^4.5, so n = 200 is roughly an hour of wall time; `--resume` appends per value and survives interruption.
 
 ```bash
 python3 brute_compare.py outputs/mu_table_safe_v3.csv --nmax 200 --resume runs/brute.jsonl
