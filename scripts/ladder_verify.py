@@ -166,6 +166,13 @@ for q0 in (3, 5, 7):
         arr[r] = best_e
     EFF_EX[q0] = arr
 
+def orb_ld(c, t, char2):
+    """Minimum intra-orbital of a c-block with cyclic twist of order t, capped
+    at C(c,2).  Same rule as mu_enumerate's orb()."""
+    raw = c * t // 2 if (char2 or t % 2 == 0) else c * t
+    return min(raw, comb(c, 2))
+
+
 PPs = [c for c in range(2, N + 1) if ispp[c]]
 print(f"sieve and efficiencies to {N:,} in {time.time()-t:.1f}s")
 
@@ -250,7 +257,20 @@ def achieved(n, stop_at=None):
             e = EFFx[r]
             if e <= 0:
                 continue
-            v = min(Fp * comb(c, 2), Fp * c * c, m * r, e * comb(r, 2))
+            # The fused class sits in the cyclic layer alongside the twist, and
+            # a cyclic group has a unique subgroup of each order, so the twist
+            # must be coprime to Fp.  Scoring the intra term at Fp*C(c,2)
+            # regardless -- as an earlier version did -- credits a twist the
+            # configuration cannot have, which would make this an UPPER bound on
+            # that family rather than a lower one.  The correct cap is
+            # Fp * orb(c, dmax) with dmax the largest divisor of c-1 coprime to
+            # Fp.  (No q-part exemption here: the family fixes the top prime to
+            # qF's partner, and the twist we are bounding is the cyclic one.)
+            dmax = c - 1
+            while dmax % qF == 0:
+                dmax //= qF
+            intra = Fp * orb_ld(c, dmax, base[c] == 2)
+            v = min(intra, Fp * c * c, m * r, e * comb(r, 2))
             if v > best * C:
                 best = v / C
                 if stop_at and best > stop_at:

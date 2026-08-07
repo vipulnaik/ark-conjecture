@@ -32,15 +32,15 @@ Everything else in this document elaborates that split. Five consequences set th
 
 ### 2.0 The census
 
-*Winner counts are from `mu_table_safe_v3.csv` and are **provisional** — the table rebuild under the corrected shape space is still in flight. Structural columns and asymptotic verdicts are stable.*
+> **Provenance of every measured figure in this document.** Three tables have been in play. **v2** predates the shape-space repair (G.2). **v3** has the repair but predates the SAFE tightening, so it over-credits fused shapes. **v4** is current and in flight. Structural columns, closed forms and asymptotic verdicts are stable; **winner counts, percentages and per-shape medians are not**, and are marked with their table where it matters. Anything below quoting a count without a table attribution is v2- or v3-era and should be recomputed against v4 before being cited.
 
 | # | shape | engine | winners | asymptotic verdict | where |
 |---|---|---|---|---|---|
 | **S1** | one matching block, no copies | — | never | n itself a prime power, so out of scope entirely | §2.1 |
-| **S2** | fused matching class, **top**-layer copies, n = F·c | multiplicative | 40.4% | **→ 0**: needs ω(n) = 2 with both factors prime powers | §4 |
-| **S3** | matching + outside, n = c + r\* | additive | 37.8% | **→ ~50%**, essentially all even n | §3.1 |
-| **S4** | two matching + outside, n = 2c + r\* | additive | **0%** under SAFE | carries odd n jointly with S5, splitting by c mod 8 | §3.2, §4.2 |
-| **S5** | fused matching + outside; forces q = 2 | hybrid | 21.8% | carries the odd-n additive engine; see §4.2 | §3.2, §4.2 |
+| **S2** | fused matching class, **top**-layer copies, n = F·c | multiplicative | 40.4% (v3) | **→ 0**: needs ω(n) = 2 with both factors prime powers | §4 |
+| **S3** | matching + outside, n = c + r\* | additive | 37.8% (v3) | **→ ~50%**, essentially all even n | §3.1 |
+| **S4** | two matching + outside, n = 2c + r\* | additive | 2 winners to n = 360 (v4); **0** in v3, an over-credit artefact | carries odd n jointly with S5, splitting by c mod 8 | §3.2, §4.2 |
+| **S5** | fused matching + outside; forces q = 2 | hybrid | 21.8% (v3) | carries the odd-n additive engine; see §4.2 | §3.2, §4.2 |
 | **S6** | two outside blocks | additive | 0% | **→ 0**: supply-limited, needs two coordinated safe primes | §4.3 |
 | **S7** | **middle**-layer-fused matching + outside | hybrid | — | an escape, not a family; see §4.1 | §4.1 |
 | **S8** | bottom-layer-fused matching | — | never | excluded (Lemma D1) | — |
@@ -57,7 +57,7 @@ Everything else in this document elaborates that split. Five consequences set th
 >
 > So S4 wins outright on a quarter of all c and ties on another quarter — a co-carrier of the odd-n asymptotics, not an also-ran.
 >
-> *An earlier version of this box reported S4 at 0 winners and called it a domination.* That was an artefact: SAFE credited every p-characteristic part F·C(c,2) regardless of the twist, inflating fused shapes specifically. The scoring has since been tightened — the cyclic part of the twist must be coprime to Fmid, which is a proven necessary condition and so usable in SAFE — and **S4 reappears at exactly the predicted residues**, both instances below n = 360 having c ≡ 1 (mod 8). The winner percentages quoted in the census are from before that fix and are being recomputed.
+> *An earlier version of this box reported S4 at 0 winners and called it a domination.* That was an artefact: SAFE credited every p-characteristic part F·C(c,2) regardless of the twist, inflating fused shapes specifically — the one place its over-count was not shape-neutral. The scoring has since been tightened, using the fact that the cyclic part of the twist must be coprime to Fmid (a proven necessary condition, so usable in SAFE), and **S4 reappears at exactly the predicted residues**: both instances below n = 360 have c ≡ 1 (mod 8).
 
 **The engine dichotomy is a simplification, and the hybrids are where the action is.** S2 is purely multiplicative and S3, S4, S6 purely additive, but **S5 and S7 are neither** — a fused class supplying the multiplicative factor F alongside a foreign block supplying the additive one. That is not a defect of the taxonomy; it is where the two interesting phenomena live. S5's full efficiency requires a Fermat prime (§3.3), and S7 exists only because block fusion can come from the cyclic layer (§4.1). Both were missed by earlier drafts precisely because the two-engine framing had no slot for them.
 
@@ -504,9 +504,9 @@ Since the multiplicative engine vanishes in density, the asymptotic behaviour of
 
 ## 5. A single global lower bound
 
-The residue analysis gives six different δ₀, one per class. It is worth collapsing them into a single number that should hold everywhere, even at the cost of being loose.
+The residue analysis gives eight different δ₀ across the 24 residue classes (§3.3). It is worth collapsing them into a single number that should hold everywhere, even at the cost of being loose.
 
-**Where the floor lives.** The worst class is **n ≡ 11 (mod 12)**, the only one carrying both local obstructions, with δ₀ = 0.05051 — and every value that has ever set a running floor has been in it. `ladder_verify.py` computes, for each n, the best density achievable by four explicit families, scanning the block size over a window wide enough to contain every balance point, x ∈ [0.10, 0.55]. Over all composite non-prime-power **n ≤ 10⁶** (78 minutes) the smallest value is
+**Where the floor lives.** The worst residue is **n ≡ 23 (mod 24)** — the only one carrying both local obstructions *and* unable to reach the fused rung — with δ₀ = 0.05051. Every value that has ever set a running floor has been in n ≡ 11 (mod 12), which contains it; 8 of the 11 are ≡ 23 (mod 24) and the other three are ≡ 11, which is not a contradiction, since finite-n record holders are low from *supply* failure rather than from a low ceiling. `ladder_verify.py` computes, for each n, the best density achievable by four explicit families, scanning the block size over a window wide enough to contain every balance point, x ∈ [0.10, 0.55]. Over all composite non-prime-power **n ≤ 10⁶** (78 minutes) the smallest value is
 
 > **δ ≥ 0.02516, at n = 8927.**
 
@@ -528,7 +528,7 @@ This is a *lower* bound on δ(n), not δ(n) itself, since it uses only four fami
 
 So the low-density dips are a small-n phenomenon and the asymptotic floor is the class-11 cap.
 
-> **The constant is right; the class it names is twice too large.** §3.3 now derives the ceilings mod 24 rather than mod 12, and nine of the twelve odd residues rise by 33–54% because a fused rung is reachable there. Three do not: **7, 15 and 23 mod 24**. The minimum over all residues is unchanged at **0.050510**, attained at **n ≡ 23 (mod 24)** alone — half of the n ≡ 11 (mod 12) named below. So the conjecture stands as stated, but the sentence identifying the extremal class needs narrowing, and the six-value ceiling table it refers to has become eight values.
+> **The constant is right and the extremal residue is now stated correctly below.** §3.3 derives the ceilings mod 24 rather than mod 12: nine of the twelve odd residues rise by 33–54% because a fused rung is reachable there, and three do not — **7, 15 and 23 mod 24**. The minimum over all residues is unchanged at **0.050510**, attained at **n ≡ 23 (mod 24)** alone, half of the old n ≡ 11 (mod 12).
 
 > **Conjecture (global density floor).** For every composite non-prime-power n,
 >

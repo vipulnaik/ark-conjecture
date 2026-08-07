@@ -30,7 +30,8 @@ WHAT A CONFIGURATION IS (Part 0, corrected shape space)
 
 SCORING (SAFE mode, so a matching block always gets the unconditional F*C(c,2))
 
-      matching class      F * C(c,2)
+      matching class      F * orb(c, dmax),  dmax = (q-part of c-1) times the
+                          largest divisor of the rest coprime to Fmid
       outside class       orb(c, q-part of c-1)
       within-class cross  (F or F/2) * c^2, by the parity of F, when F > 1
       between classes     size_i * size_j
@@ -70,6 +71,18 @@ def orb(c, t, char2):
     return min(raw, comb(c, 2))
 
 
+def coprime_part(m, F):
+    """Largest divisor of m coprime to F.  Deliberately by repeated trial
+    division rather than by a shared factor set, to stay a different program
+    from `mu_enumerate_v2.py`."""
+    if F <= 1:
+        return m
+    for b in factorint(F):
+        while m % b == 0:
+            m //= b
+    return m
+
+
 def pairwise_coprime(vals):
     """Deliberately the naive O(k^2) gcd test rather than a factor-set sieve."""
     vs = [v for v in vals if v > 1]
@@ -94,7 +107,14 @@ def score(n, p, q, classes):
         if o:
             terms.append(orb(c, qpart(c - 1, q), False))
         else:
-            terms.append(F * comb(c, 2))              # SAFE
+            # SAFE, but not blind: the fused class C_Fmid and the cyclic part of
+            # the twist live in the SAME cyclic group, so they must be coprime.
+            # Crediting F*C(c,2) regardless would score a twist the group cannot
+            # have.  The twist splits by layer, d = d_cyc * d_q, and only d_cyc
+            # is constrained; d_q may be any q-power dividing c-1.
+            dq = qpart(c - 1, q)
+            dmax = dq * coprime_part((c - 1) // dq, fm)
+            terms.append(F * orb(c, dmax, p == 2))
         if F > 1:
             terms.append((F if F % 2 else F // 2) * c * c)
     sizes = [fm * ft * c for fm, ft, c, _ in classes]
@@ -117,14 +137,16 @@ def classes_for(n, p, q):
                 continue
             out.append((1, 1, c, True))   # Lemma D2: never fused
             continue
-        fmax = n // c
-        ft = 1
-        while ft <= fmax:
-            for fm in range(1, fmax // ft + 1):
-                out.append((fm, ft, c, False))
-            if q < 2:
-                break
-            ft *= q
+        # For a given block count F the score depends only on F, but the
+        # ADMISSIBILITY depends on Fmid, which must be coprime to everything
+        # else in the cyclic layer.  So among all splittings F = Fmid*Ftop the
+        # one with the smallest Fmid is weakly the most permissive and the
+        # others can never win.  Taking Ftop to be the full q-part of F leaves
+        # exactly one entry per (F, c), which is both correct and the reason
+        # this enumeration is affordable at all.
+        for F in range(1, n // c + 1):
+            ft = qpart(F, q)
+            out.append((F // ft, ft, c, False))
     return out
 
 
@@ -135,7 +157,9 @@ def B(n, kmax=4):
     for p in [0] + primes:                # 0 = trivial bottom layer
         for q in primes:
             pool = classes_for(n, p, q)
-            pool = [t for t in pool if t[0] * t[1] * t[2] <= n]
+            pool = sorted((t for t in pool if t[0] * t[1] * t[2] <= n),
+                          key=lambda t: t[0] * t[1] * t[2])
+            sizes = [t[0] * t[1] * t[2] for t in pool]
 
             def rec(start, rem, chosen):
                 nonlocal best
@@ -148,9 +172,10 @@ def B(n, kmax=4):
                 if len(chosen) >= kmax:
                     return
                 for k in range(start, len(pool)):
-                    sz = pool[k][0] * pool[k][1] * pool[k][2]
-                    if sz <= rem:
-                        rec(k, rem - sz, chosen + [pool[k]])
+                    sz = sizes[k]
+                    if sz > rem:
+                        break            # pool is sorted by size ascending
+                    rec(k, rem - sz, chosen + [pool[k]])
 
             rec(0, n, [])
     return best

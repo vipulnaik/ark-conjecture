@@ -18,15 +18,13 @@
 
 **What does not survive:** μ(n) = B(n), the table as exact values, and the argmin of the floor — at n = 3239 the corrected space gives 0.043570.
 
-**The repair restores the original inequality.** Redefining B_safe as the same over-count over the corrected shape space gives back `μ ≤ B_safe`, for the original reason that F·C(c,2) caps any point stabiliser. The over-count was never the defect.
-
-Everything in §1 and §2 below is subordinate to **R0**.
+**The repair is done in the enumerator and restores the original inequality.** `mu_enumerate_v2.py` covers the corrected shape space, so `μ ≤ B_safe` holds again for the original reason — F·orb(c, dmax) caps any admissible stabiliser. What remains is to propagate it: rebuild the table (R0), and fix the two scripts still using the old scoring (R7, R3).
 
 ## Where the residual risk sits
 
 Ranked, so the sections below have a stated basis. This is not the order the items appear in.
 
-1. **The repair itself.** Until R0 lands there is no upper bound on μ(n) at all. The whittling lemmas are in hand — D1 and D2 both proved, D2 more strongly than conjectured (m\* ≤ n/2 outright, no threshold) — so what is missing is the enumerator, not an argument. → **R0**
+1. **The rebuild.** The enumerator is repaired, `ladder_verify.py` and `brute.py` now carry the same tightening, and the table rebuild is in flight (v4, 210 rows). Everything downstream waits on it. → **R0**
 
 2. **Exhaustiveness of the GAP stages.** The subdirect-product hole is real and undischarged. It degrades *evidence* rather than creating an error — a missed group could only have larger m\*, i.e. it would be a counterexample, not a silent corruption — but it is the only non-circular check in the framework. → `small-degree-verification.md` item 5
 3. **Part E's realisability construction.** Attainment's other leg, argued in general and spot-checked at eight configurations from n = 12 to 315. Unlike the certificate, this has no per-n verification at all. → **T2**
@@ -40,95 +38,61 @@ Closed in the 2026-08 pass and no longer risks: **Lemma B′** (proved in full, 
 
 *Can be launched in the background. Flags are checked against the scripts as they stand; where a run needs code that does not exist, that is said rather than papered over with a plausible-looking flag.*
 
-## R0. Rebuild the table with the restructured enumerator
+## R0. Rebuild the table, then rerun everything downstream
 
-Step 1 is **done** — `mu_enumerate_v2.py` splits the block count as F = Fmid · Ftop and enforces the cyclic layer's global coprimality condition in `value()`. Validated at 0 regressions and 66 improvements over n ≤ 570, and independently cross-checked against the rewritten `brute.py` at n ≤ 100 with 0 mismatches. Details in `session-log-2.md`.
+The enumerator is repaired and the rebuild is **in flight** (`mu_table_safe_v4.csv`). What is left:
 
-What remains is the expensive part and the reruns that follow it:
-
-1. **Rebuild the table.** ~n^2.9 per value.
-2. **Rerun everything in R1** against the new table.
+1. **Finish the rebuild.** ~n^2.9 per value.
+2. **Rerun everything in R1** against it.
 3. **Rebuild the branch-and-bound worklist**, which was pruned against a floor that has moved.
-
-```bash
-python3 scripts/mu_enumerate_v2.py --nmax 2600 --out outputs/mu_table_safe_v3.csv
-```
-
-**Do not quote figures from the old table once the rebuild starts.** The improvement rate is ~15% at median ratio 1.26, so the density picture shifts materially.
-
-## R0c. SAFE no longer over-credits fusion — DONE; table wants rebuilding
-
-The SAFE score for a p-characteristic part was F·C(c,2) regardless of the twist, so a fused class was credited the full intra term even where the twist must be odd. That inflated fused shapes specifically, which is why S4 vanished from the census — the one place SAFE's over-count was not shape-neutral.
-
-**Fixed without leaving SAFE mode.** The constraint is a proven necessary condition, not a Lemma C-style conjecture: C_Fmid and the cyclic part of the twist sit in the *same* cyclic group, which has a unique subgroup of each order, so they must be coprime. The twist splits as d = d_cyc · d_q, one factor per layer that can hold it, and only d_cyc is constrained. So the unconditional cap becomes
-
-> **F · orb(c, dmax)**,  dmax = (q-part of c−1) × (largest divisor of the rest coprime to Fmid)
-
-which still bounds any admissible stabiliser and is strictly tighter whenever Fmid > 1. At Fmid = 1 it reduces to F·C(c,2), so unfused parts are unaffected.
-
-**Verified over n ≤ 360:** 15 values tightened, **0 raised**, and **0 fall below the pre-repair v2 table** — the values still dominate the original everywhere.
-
-**S4 is back, at exactly the predicted residues.** The census now reads S2 158, S3 91, S5 18, **S4 2**, and both S4 winners have **c ≡ 1 (mod 8)** — n = 247 (c = 73) and n = 285 (c = 89). That is §4.2's prediction, produced by an enumerator that has no knowledge of it. The S4/S5 attribution is now correct without escalating to SAFE.
-
-**Consequence: `mu_table_safe_v3.csv` is superseded.** Every row computed before this fix may be over-credited on a fused shape. The rebuild should restart.
 
 ```bash
 python3 scripts/mu_enumerate_v2.py --nmax 2600 --out outputs/mu_table_safe_v4.csv
 ```
 
+**Do not quote figures from v2 or v3.** v3 predates the SAFE over-credit fix and is over-credited on fused shapes; v2 predates the shape-space repair. Against v4 so far (n ≤ 288): 14 values lower than v3, 0 higher, and **0 below v2** — the expected signature.
+
 ## R1. Routine, after any new batch of table values
 
-Every one of these is a per-n statement that does not extend itself.
+Every one of these is a per-n statement that does not extend itself. Point them all at **v4**.
 
 ```bash
-python3 mu_enumerate.py --nmin 2377 --nmax 2600 --out mu_table_safe_v2.csv   # extend (~n^2.9/value)
-python3 mu_enumerate.py --nmax 2600 --fill-gaps --out mu_table_safe_v2.csv   # close gaps a targeted run left
-python3 fallback_cert.py mu_table_safe_v2.csv --verbose                      # collapse cert vs true B(n)
-python3 wide_cert.py 100000                                                  # same, from lower bounds; pass 1 cached
-python3 check_doc_figures.py mu_table_safe_v2.csv *.md                       # figures, scope, prose, hygiene
-python3 ladder_verify.py 200000                                              # ladder floor, all 12 classes, 4 families
-python3 s7_scan.py mu_table_safe_v2.csv --nmax 2600                          # does the defect reach further?
+python3 mu_enumerate_v2.py --nmax 2600 --fill-gaps --out mu_table_safe_v4.csv
+python3 fallback_cert.py mu_table_safe_v4.csv --verbose
+python3 wide_cert.py 100000
+python3 check_doc_figures.py mu_table_safe_v4.csv *.md
+python3 ladder_verify.py 200000
+python3 s7_scan.py mu_table_safe_v4.csv --nmax 2600
 ```
 
-`check_doc_figures.py` takes `--quiet` for findings only and `--pass {figures,scope,prose,hygiene}` to run one pass. It exits nonzero when anything is flagged, so it can gate a commit. Not every finding is an error — historical citations are legitimate — but each should be a decision.
+`check_doc_figures.py`: `--quiet` for findings only, `--pass {figures,scope,prose,hygiene,census}` for one pass; exits nonzero when anything is flagged. `mu_enumerate_v2.py`: `--nlist FILE`, `--n`, `--check`, `--quiet`, `--refined`. `--fill-gaps` matters because plain resume continues after the *last* row, so holes a targeted run left are never filled. `wide_cert.py`: `--menu`, `--refresh`.
 
-`mu_enumerate.py` also takes `--nlist FILE` (one n per line; a second field read as a lower bound on δ, the form `ladder_verify.py` writes), `--n` for a single value, `--check` to validate without extending, `--quiet`, and `--refined` (the lower endpoint B_refined — read Part C.2 first). `--fill-gaps` matters because plain resume continues after the *last* row, so holes a targeted run left would never be filled. `wide_cert.py` takes `--menu` to add the family-menu lower bound as a cross-check and `--refresh` to discard the cached pass 1.
+**Do not extend the table without rerunning R1 in full.** Three consecutive extensions each left a different subset of the documents behind.
 
-**Do not extend the table without rerunning R1 in full.** Three consecutive extensions each left a *different* subset of the documents behind, because updates were done by ad-hoc string replacement rather than a sweep.
+## R2. Add a `--no-theorems` flag to `fallback_cert.py` and `wide_cert.py`
 
-## R2. Add a `--no-theorems` flag to `fallback_cert.py`, then run it alongside R1
+Both certificates were shown by hand to pass with every Part E′ theorem switched off — so over the certified range μ(n) = B(n) rests only on the eight necessary conditions, not on E.1, E.3(ii), E.3(iii), E.4, Lemma E.2's bound, or the hardcoded `MERSENNE`/`REPUNIT3` tables. That is a large reduction in the trusted base and it should be re-established on every extension rather than living in a log.
 
-**The highest-value cheap run on this page.** It was established by hand that the certificate passes with every Part E′ theorem switched off — `skip_settled=None`, never calling `theorem_report` — giving 0 candidates at all 2,008 values in 3 seconds. That shrinks the trusted base for μ(n) = B(n) enormously: over the certified range the result rests only on the eight necessary conditions being necessary, not on E.1, E.3(ii), E.3(iii), E.4, Lemma E.2's bound, or the hardcoded `MERSENNE`/`REPUNIT3` tables.
-
-But it was a throwaway script. Making it a flag means the guarantee is re-established on every extension instead of being a one-off claim in a log. If it ever starts failing while the normal run passes, that localises an error to E.1/E.3(iii)/E.4 or their tables immediately.
-
-The same now holds for `wide_cert.py` out to 10⁵ — stubbing its `branch_settled` call gives identical output at 10⁴ and 10⁵, including the same two unresolved values. Both deserve the flag, and both should run with it in the routine.
+If it ever starts failing while the normal run passes, that localises an error to E.1/E.3(iii)/E.4 or their tables immediately.
 
 ```bash
-python3 fallback_cert.py mu_table_safe_v2.csv --no-theorems    # NEEDS THE FLAG
+python3 fallback_cert.py mu_table_safe_v4.csv --no-theorems    # NEEDS THE FLAG
 python3 wide_cert.py 100000 --no-theorems                      # NEEDS THE FLAG
 ```
 
 ## R3. Extend the naive-enumerator comparison
 
-`brute.py` has been rewritten for the corrected shape space and agrees with `mu_enumerate_v2.py` at every n ≤ 123 checked so far (81 values, 0 mismatches). This is the only check that tests the restructure rather than re-running it, so it is worth pushing further before the full table rebuild is trusted.
+The only check that tests the restructure rather than re-running it. `brute.py` now carries the same SAFE tightening as the enumerator — the twist's cyclic part must be coprime to Fmid — implemented by repeated trial division rather than a shared factor set, so it stays a different program. Reproduces B(10) = 20, B(12) = 18, B(78) = 465, and agrees with `mu_enumerate_v2.py` against **v4** at every n ≤ 110 (0 mismatches).
 
-Two lossless reductions were added to make that affordable, both verified to give bit-identical output against the unoptimised version at n ≤ 90:
-
-- **One entry per (F, c).** Among all splittings F = Fmid·Ftop the smallest Fmid is weakly the most permissive, since Fmid is what must be coprime to the rest of the cyclic layer while F alone determines the score. Taking Ftop to be the full q-part of F leaves exactly one pool entry per (F, c).
-- **Sort the pool by size and break** rather than scanning past oversized entries.
-
-Together 2.3× at n = 150. Cost still grows like n^4.5, so n = 200 is roughly an hour of wall time; `--resume` appends per value and survives interruption.
+Cost grows like n^4.5, so n = 200 is about an hour; `--resume` appends per value and survives interruption.
 
 ```bash
-python3 brute_compare.py outputs/mu_table_safe_v3.csv --nmax 200 --resume runs/brute.jsonl
+python3 brute_compare.py mu_table_safe_v4.csv --nmax 200 --resume runs/brute.jsonl
 ```
-
-Point it at the **new** table; against the old one it reports mismatches at roughly one n in seven, which is the defect rather than a bug.
 
 ## R4. Count the Lemma C exposure after each extension
 
-Currently **zero**: of the 2,178 p-characteristic parts appearing in a computed winner, 1,903 have prime size and none has both a > 1 and a foreign prime dividing c − 1. Since Lemma C's proof only covers prime c, this count is the live measure of whether the gap has started to bite. A dozen lines against the CSV; worth folding into `check_doc_figures.py` rather than keeping as a separate script.
+Currently **zero**: of the p-characteristic parts appearing in a computed winner, none has both a > 1 and a foreign prime dividing c − 1. Since Lemma C is proved only for prime c, this count is the live measure of whether the gap has started to bite. A dozen lines against the CSV; worth folding into `check_doc_figures.py`. Recount against v4.
 
 ## R5. Fix the two `fb_common.py` defects
 
@@ -148,14 +112,16 @@ The script was rewritten in the 2026-08 pass into four passes — figures, scope
 
 Also worth knowing: Pass 3 exempts files matching `session-log|pending-checks|README` from the contradiction check, since describing a superseded state is what a log is for. If a fourth document is added that is genuinely a log, add it to `ARCHIVE`.
 
-## R7. Rerun `ladder_verify.py` after the table rebuild
+## R7. Rerun `ladder_verify.py` to 10⁶
 
-The 10⁶ run is done (floor 0.02516 at n = 8927, worklist 41,584). It needs redoing only if the family menu changes again — and it should, since `ladder_verify.py` models S7 as `F` a prime power with one fused class, while the enumerator now allows any `Fmid` and composite `F` such as 6 = 2·3. Bringing the two into line would shorten the worklist further.
+**The SAFE over-credit is fixed.** Its S7 family scored the fused class at `F·comb(c,2)` regardless of the twist's parity, which credited a twist the configuration cannot have and made the reported value an upper bound on that family rather than a lower one. Now `F·orb(c, dmax)` with dmax the largest divisor of c − 1 coprime to the fusion prime. Verified over n ≤ 20,000: **no value rose, none fell, the worklist is unchanged at 436** — the term was never binding in this window, so no published number moves, but the script is sound now rather than accidentally right.
 
-Going past 10⁶ remains optional: O(N²/log N), so 10⁷ is multi-day, and the lower envelope has risen monotonically since [10³, 10⁴).
+One gap remains, and it only loses coverage rather than soundness: **the S7 family is narrower than the enumerator's**, modelling prime-power `F` with one fused class where the enumerator allows any `Fmid` and composite `F` such as 6 = 2·3. Widening it would shorten the worklist.
+
+The 10⁶ run then wants redoing. `ASYMPTOTIC` = 0.050510 is unchanged, so the 41,584 entries should be roughly stable — but every per-residue `min delta/cap` diagnostic shifts under the mod-24 ceilings, and those are what would reveal a residue behaving anomalously. Current spread at 20,000 is 0.327–0.653.
 
 ```bash
-python3 scripts/ladder_verify.py 1000000
+python3 ladder_verify.py 1000000
 ```
 
 # §2. Thinking work
@@ -166,11 +132,11 @@ python3 scripts/ladder_verify.py 1000000
 
 ### T1. A second reading of the structural arguments
 
-*Not a single-lemma item any more.* Lemma B′ has now been read in detail by a second reader and is settled: the socle step — which does **not** follow from primitivity alone, since a normal subgroup of a primitive group need only be transitive — is proved via irreducibility of H plus C_G(V) = V, and the degenerate branch π_O(Γ₁) = 1 is handled separately. Both were assertions in earlier drafts.
+Of this framework's compact structural steps, two were false and shipped (the ΓL(1) step, G.2), one was under-argued and is now fixed (B′), and one is proved only in a special case (C). A step compressed to a clause tends not to survive being written out.
 
-What that leaves is a general point rather than a specific worry. Of the compact structural steps in this framework, one was false and shipped (the ΓL(1) step), one was false and shipped (G.2), one was under-argued and is now fixed (B′), and one is proved only in a special case (C). The pattern is that a step compressed to a clause tends not to survive being written out. So the item is: **work through the parts that have had no close reading**, in the same way — Part A's orbit decomposition, Part E's realisability construction, and Part F's counting bounds — and expect roughly one finding per three arguments.
+So: **work through the parts that have had no close reading** — Part A's orbit decomposition, Part E's realisability construction, Part F's counting bounds — and expect roughly one finding per three arguments.
 
-*Human, because the value is in independence.* A second pass by the same reader on the same evidence is worth much less than a first pass by someone else, which is exactly what the B′ reading demonstrated.
+*Human, because the value is in the independence.* A second pass by the same reader on the same evidence is worth much less than a first pass by someone else, which is what the B′ reading demonstrated.
 
 ### T2. Verify Part E's realisability construction per-n
 
@@ -184,21 +150,14 @@ The specific question is not "is each condition true" but **"is each condition n
 
 *Human, for the same reason as T1: the value is in the independence.*
 
-### T4. Literature checks — mostly resolved; see `literature-findings.md`
+### T4. Literature checks — four items left; see `literature-findings.md`
 
-Worked through in the 2026-08 pass. Findings are in **`literature-findings.md`**; none of the primary documents was edited on the strength of them, deliberately, since they bear on framing rather than correctness.
+The decisive one is settled and unfavourable: BBKN §5.1 defines the max-min our §3 optimises, Shparlinski (2014) names it f(n), and our even/odd constructions are k = 1 and k = 2 in that family. B(n) is nonetheless strictly larger and nobody has studied f(n) at fixed n. What remains:
 
-**The decisive one came back against us and should be absorbed before more writing happens.** BBKN §5.1 does define the max-min our §3 optimises — m\* = Ω(min{p²k, pkr, qr}) over n = pk + r with r ≡ 1 (mod q) — and Shparlinski (2014) has already isolated it as a named function f(n) (his eq. (1), Lemma 5). Our even and odd constructions are k = 1 and k = 2 in that family. B(n) is nonetheless strictly larger than f(n) (prime powers not just primes, prime-power twists not just prime, and the fused-only configurations that are 39% of the table and which W_n cannot express), and neither paper claims a maximum over *all* Oliver groups or studies f(n) at fixed n at all. But §3 is a parameter choice inside a published family and should not be presented as a new construction.
-
-Four items remain, listed at the end of `literature-findings.md`:
-
-- **Read Black's spacing definition.** The only item that could not be settled from abstracts. Spacing is restricted to p-groups and concludes weak evasiveness, so it looks incomparable to m\* rather than subsuming it — but the definition is in the paper body.
-- **Check whether Shparlinski's Theorem 2 survives the prime-power version of α.** His ladder is parameterised by the largest *prime* divisor of r − 1; our η uses the largest prime *power* divisor of the odd part, plus the 2-part. If the ladder transfers, "(H) is the γ = 1 endpoint" is a clean framing; if not, we need another.
-- **Read Scheidweiler–Triesch and Korneffel–Triesch properly.** The current best unconditional weak bound is n²/3 − o(n²), which is a factor of 25 above our density floor. Not a defect in the result — a weak bound on all properties and an exact result on a restricted class are different in kind — but §5 does not currently say so, and will read as competing and losing.
-- **Decide the framing.** No longer a literature question. It determines whether §3 is a contribution or a recap, and it should be settled before more writing.
-- **Read Angel–Borja, arXiv:1603.04412**, before writing anything about n = 10. Surfaced incidentally: they use Oliver groups to bound the dimension of a non-evasive complex on 2p vertices and apply it at ten vertices. Same degree, same tool, same target as `small-degree-verification.md`; overlap unknown, and they are not in our reference list.
-
-*Also settled:* the Θ(n²) / Hardy–Littlewood reframing was searched for in Lovász–Young (ruled out on dates — 1990 lectures), Kulkarni's ITCS 2013 circuit-lens paper, Shparlinski's §5 comments, BBKN §2.4, and the Csernák survey, plus direct topic searches. **No trace.** There is a structural reason: every tool in that literature is an existence-of-one-prime tool and so cannot produce a Θ statement. Negative searches cannot rule out talks or referee reports, so the note should present the heuristic as the natural reading of the data rather than as a new observation.
+- **Read Angel–Borja, arXiv:1603.04412**, before writing anything about n = 10. Oliver groups, dimension bounds, applied at ten vertices — same degree, same tool, unknown overlap, not in our reference list.
+- **Read Black's spacing definition.** Restricted to p-groups and concluding weak evasiveness, so probably incomparable to m\*, but the definition is in the paper body.
+- **Check whether Shparlinski's Theorem 2 survives the prime-power version of α.** His ladder uses the largest *prime* divisor of r − 1; our η uses the largest prime *power* divisor of the odd part. If it transfers, "(H) is the γ = 1 endpoint" is a clean framing.
+- **Read Scheidweiler–Triesch and Korneffel–Triesch properly.** The current best unconditional weak bound is n²/3 − o(n²); §5 will read as competing and losing unless it says why the statements differ in kind.
 
 ### T5. Decide whether to close the Lemma C gap at all
 
