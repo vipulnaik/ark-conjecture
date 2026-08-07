@@ -198,7 +198,11 @@ The largest theorem-side residue: **505 branches** over the certified range wher
 
 ### A3. Erdős covering congruences vs the 2-power escape claim
 
-Not attempted in the literature pass — it is a mathematical check, not a framing question, which is why it sits here rather than in T4. Reportedly give a *positive density* of odd n with no 2^k + p representation — stronger than the O(log n)-sparse claim about 2-power escapes in §3.3, and would close that route rather than thin it. Checkable from the literature plus a direct computation over the table. Sits here rather than in T4 because it is a mathematical check, not a framing question.
+Not attempted. Reportedly give a *positive density* of odd n with no 2^k + p representation — stronger than the O(log n)-sparse claim about 2-power escapes in §3.3, and would close that route rather than thin it. Checkable from the literature plus a direct computation over the table.
+
+### A3a. Fold the twist-prime obstruction into §3.3's inventory
+
+Found by `count_check.py` when the twist prime was varied: the congruence r ≡ 1 (mod q) pins c to the class (n−1)/2 (mod q), and when that class is 0 the family is empty. Fires for one n in q. Already written into §3.7; what is open is whether it belongs in §3.3's obstruction table proper, and whether "blocked at one q, available at another" can be made a theorem rather than an observation.
 
 ### A4. Reconstruct or retire the filtered per-class table in §3.3
 

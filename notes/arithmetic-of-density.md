@@ -302,6 +302,41 @@ The hypothesis is parametric, then, and of Goldbach difficulty. It remains in ad
 
 **What would be worth proving instead.** Given that per-n computation is cheap and the asymptotic is ineffective, the statement that would actually add something is an **exceptional-set bound**: not "every large n admits a representation" but "all but O(x^θ) of n ≤ x do", for some θ < 1. Results of that shape are known for binary Goldbach (Montgomery–Vaughan, and subsequently Pintz, with θ well below 1) and are sometimes effective. Combined with verification up to N, an effective exceptional-set bound would give a genuine unconditional density statement about the ladder, which no amount of asymptotic Bateman–Horn can.
 
+### 3.7 The prediction, tested by counting
+
+*Everything above computes a singular series and then uses its **positivity** — that a solution exists near the balance point. That is much weaker than what the heuristic asserts, which is a **count**. This section tests the count. `count_check.py`; independent of the enumeration defect, since it concerns the additive families rather than completeness.*
+
+**The system of §3.3, at the η = 1 endpoint.** Writing s = (r−1)/2 and c = (n−r)/2, full efficiency needs all three of
+
+> f₁ = s,  f₂ = 2s + 1,  f₃ = (n−1)/2 − s
+
+prime, with c in the balanced window of §3.4. Predicted count = 𝔖(n)·W·n / (log c · log s · log r) with 𝔖 the three-form singular series. Over the unobstructed odd classes, ratio of actual to predicted:
+
+| class | band | values | mean | sd |
+|---|---|---|---|---|
+| 1 mod 12 | [5×10⁴, 10⁵] | exhaustive | 0.9843 | 0.1353 |
+| 1 mod 12 | [2×10⁵, 2.6×10⁵] | exhaustive | 1.0032 | 0.0930 |
+| 1 mod 12 | [4×10⁵, 5×10⁵] | exhaustive | 1.0137 | 0.0714 |
+| 9 mod 12 | [2×10⁵, 2.6×10⁵] | exhaustive | 1.0061 | 0.0922 |
+
+Mean at 1 to within a percent, sd falling like n^{−1/2}, and **no n with zero solutions in the window** anywhere. So the family does not merely have a solution; it has the number of solutions the singular series predicts.
+
+**The obstruction check runs the other way, and passes.** At **n ≡ 11 (mod 12)** the three-form singular series vanishes identically — 834 of 834 values in a test band — because ω(3) = 3 there, which is §3.3's own n ≡ 2 (mod 3) condition arrived at from the count rather than from the root analysis. Observed count is **0 at every one**. So the local obstruction is confirmed as an obstruction, not merely predicted as one.
+
+**A weaker relative, useful as a ladder rung.** Replacing the third primality condition by a congruence — c prime, r = n − 2c prime, r ≡ 1 (mod q) for a fixed q — tests a point *below* the η = 1 endpoint, where the foreign block's twist has order only q. This is the system that survives in the doubly-obstructed class, and it behaves:
+
+| band, n ≡ 11 (mod 12) | values | mean | sd |
+|---|---|---|---|
+| [2×10⁴, 6×10⁴] | 3,334 | 0.9831 | 0.0737 |
+| [2×10⁵, 4×10⁵] | 16,667 | 0.9923 | 0.0352 |
+| [8×10⁵, 10⁶] | 16,667 | 0.9974 | 0.0209 |
+
+Also passes at q = 5 and q = 7, and against the two-condition calibration with the congruence dropped.
+
+> **A local obstruction the root analysis of §3.3 does not list.** The congruence r ≡ 1 (mod q) pins c to the single class (n−1)/2 (mod q). When *that* class is 0 the family is empty: q | c forces c = q, so the count is O(1) rather than of order n/log³n. It fires for one n in q — never at q = 3 with n ≡ 11 (mod 12), which is why it went unnoticed until the twist prime was varied. Verified: observed count 0 at every such n. This does not affect the ceilings, since a family blocked at one q is generally available at another, but it belongs in the inventory of §3.3 alongside the ℓ = 2 and ℓ = 3 obstructions: **it is an obstruction indexed by the twist prime rather than by a fixed small prime.**
+
+**What this does and does not establish.** It confirms the local analysis and the singular series, at both the full-efficiency endpoint and a lower rung, in the classes where each applies. It does **not** touch the global question of §3.5 — whether these parametric systems have solutions for *every* large n — which is where the conjecture actually lives. What it removes is the possibility that the constants are right but the model is wrong.
+
 ## 4. Asymptotics: the multiplicative engine is a thinning exception
 
 The fused family requires ω(n) ≤ 2, which is a **density-zero condition**: the count of n ≤ N with exactly two distinct prime factors is ~N log log N / log N.

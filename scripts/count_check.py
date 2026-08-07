@@ -64,6 +64,11 @@ ap.add_argument("--centre", type=float, default=1/3.0,
                 help="balance point x* = c/n; 1/3 for the three-part family, 1/2 for two-part")
 ap.add_argument("--q", type=int, default=3, help="the twist prime for the r = 1 mod q condition")
 ap.add_argument("--no-q", action="store_true", help="drop the congruence: two-condition calibration")
+ap.add_argument("--safe-prime", action="store_true",
+                help="test SECTION 3.3's own system instead: s prime, r = 2s+1 prime, "
+                     "c = (n-1)/2 - s prime.  This is the eta = 1 endpoint, where the "
+                     "foreign block runs at full efficiency, and is the system the "
+                     "density ceilings are actually derived from.")
 ap.add_argument("--quiet", action="store_true")
 A = ap.parse_args()
 
@@ -79,6 +84,7 @@ for i in range(2, int(N ** 0.5) + 1):
     if sieve[i]:
         sieve[i * i::i] = bytearray(len(sieve[i * i::i]))
 primes = [i for i in range(2, N + 1) if sieve[i]]
+PRIMESET = set(primes)
 print(f"sieved to {N:,}: {len(primes):,} primes", file=sys.stderr)
 
 def pdivs(x):
@@ -120,6 +126,53 @@ def singular(n, q):
         s *= (q / (q - 1)) ** 2
     return s
 
+# ---------------------------------------------------------------------------
+# Section 3.3's own system.  The efficiency of a foreign block r is carried by
+# a prime-power divisor of r-1; the ceiling is derived at the eta = 1 endpoint,
+# where (r-1)/2 is itself prime -- r is a SAFE prime.  Writing s = (r-1)/2 and
+# c = (n-r)/2, the three forms are
+#
+#     f1 = s,    f2 = 2s+1,    f3 = (n-1)/2 - s
+#
+# and a solution is an s making all three prime.  This is a genuinely different
+# system from the r = 1 (mod q) one above: three primality conditions rather
+# than two plus a congruence, so a third factor of log and a different singular
+# series.  It is what section 3.3 needs and what should be quoted there.
+
+def roots_mod(n, l):
+    """#{s mod l : f1 f2 f3 = 0}, computed directly rather than by scanning all
+    residues -- the scan is O(l) per prime and made the whole sweep quadratic."""
+    h = ((n - 1) // 2) % l
+    if l == 2:
+        return len({0, h})               # 2s+1 is odd, so f2 has no root mod 2
+    return len({0, (-pow(2, -1, l)) % l, h})
+
+def singular_safe(n):
+    if n % 2 == 0:
+        return 0.0
+    s = 1.0
+    for p in SPRIMES:
+        w = roots_mod(n, p)
+        if w >= p:
+            return 0.0
+        s *= (1 - w / p) / (1 - 1 / p) ** 3
+    return s
+
+def count_safe(n):
+    """s in the window with s, 2s+1 and (n-1)/2 - s all prime."""
+    h = (n - 1) // 2
+    lo, hi = int(LO * n), int(HI * n)      # window is on c = (n-1)/2 - s
+    k = 0
+    for c in primes:
+        if c < lo: continue
+        if c > hi: break
+        sv = h - c
+        if sv < 2 or 2 * sv + 1 > N: continue
+        if sv in PRIMESET and (2 * sv + 1) in PRIMESET:
+            k += 1
+    return k
+
+
 def count(n, q):
     """solutions with c/n in the window."""
     lo, hi = int(LO * n), int(HI * n)
@@ -146,8 +199,12 @@ if truncated:
     cands = sorted(rng.sample(cands, A.maxn))
 q = None if A.no_q else A.q
 
-print(f"system: c prime, r = n - 2c prime"
-      + ("" if q is None else f", r = 1 (mod {q})"))
+if A.safe_prime:
+    print("system: s prime, r = 2s+1 prime, c = (n-1)/2 - s prime  (section 3.3's own,")
+    print("        the eta = 1 endpoint where the foreign block is at full efficiency)")
+else:
+    print(f"system: c prime, r = n - 2c prime"
+          + ("" if q is None else f", r = 1 (mod {q})"))
 print(f"window: c/n in [{LO:.4f}, {HI:.4f}]  (centre {A.centre:.4f}, half-width {A.window})")
 how = []
 if sampled:
@@ -165,6 +222,17 @@ print()
 
 rows, zero, degen = [], 0, []
 for n in cands:
+    if A.safe_prime:
+        a = count_safe(n)
+        W = HI - LO
+        denom = (math.log(A.centre * n) * math.log(0.5 * (1 - 2 * A.centre) * n)
+                 * math.log((1 - 2 * A.centre) * n))
+        pred = singular_safe(n) * (W * n) / max(denom, 1e-9)
+        if pred <= 0:
+            degen.append((n, a)); continue
+        if a == 0: zero += 1
+        rows.append((n, a, pred, a / pred if pred > 0 else 0.0))
+        continue
     if degenerate(n, q):
         degen.append((n, count(n, q)))
         continue
@@ -175,7 +243,17 @@ for n in cands:
     if a == 0: zero += 1
     rows.append((n, a, pred, a / pred if pred > 0 else 0.0))
 
-if degen:
+if degen and A.safe_prime:
+    print(f"{len(degen)} of {len(cands)} values have a VANISHING singular series: the")
+    print(f"   full-efficiency system is locally obstructed there, which for this system")
+    print(f"   happens exactly at n = 2 (mod 3) -- section 3.3's omega(3) = 3 case.")
+    print(f"   Observed counts there: max {max(a for _, a in degen)}"
+          + (", as predicted." if max(a for _, a in degen) == 0 else " -- INVESTIGATE"))
+    print()
+    if not rows:
+        sys.exit("every tested n is locally obstructed for this system; try another "
+                 "residue class -- 1 or 9 mod 12 are the unobstructed odd ones")
+elif degen:
     bad = [n for n, a in degen if a > 1]
     print(f"{len(degen)} of {len(cands)} values are DEGENERATE at q = {q}: the congruence")
     print(f"   forces q | c, so no solution with c > q can exist.  Excluded from the")
