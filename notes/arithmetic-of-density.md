@@ -304,38 +304,51 @@ The hypothesis is parametric, then, and of Goldbach difficulty. It remains in ad
 
 ### 3.7 The prediction, tested by counting
 
-*Everything above computes a singular series and then uses its **positivity** — that a solution exists near the balance point. That is much weaker than what the heuristic asserts, which is a **count**. This section tests the count. `count_check.py`; independent of the enumeration defect, since it concerns the additive families rather than completeness.*
+*Everything above computes a singular series and uses its **positivity** — that a solution exists near the balance point. The heuristic asserts more than that: a **count**. This section tests the count. `count_check.py`; independent of the enumeration defect, since it concerns the additive families rather than completeness.*
 
-**The system of §3.3, at the η = 1 endpoint.** Writing s = (r−1)/2 and c = (n−r)/2, full efficiency needs all three of
+**Each class must be tested at its own efficiency, and only at its own.** A foreign block r carries a twist of order t dividing r − 1, and its efficiency is η = 2t/(r−1) for odd t — so **η = 2/D exactly when r − 1 = D·t**. Taking t = q prime, the three forms are
 
-> f₁ = s,  f₂ = 2s + 1,  f₃ = (n−1)/2 − s
+> f₁ = q,  f₂ = D·q + 1 (= r),  f₃ = (n−1)/2 − (D/2)·q (= c)
 
-prime, with c in the balanced window of §3.4. Predicted count = 𝔖(n)·W·n / (log c · log s · log r) with 𝔖 the three-form singular series. Over the unobstructed odd classes, ratio of actual to predicted:
+and a solution is a q making all three prime. The class ceilings of §3.3 are attained at
 
-| class | band | values | mean | sd |
-|---|---|---|---|---|
-| 1 mod 12 | [5×10⁴, 10⁵] | exhaustive | 0.9843 | 0.1353 |
-| 1 mod 12 | [2×10⁵, 2.6×10⁵] | exhaustive | 1.0032 | 0.0930 |
-| 1 mod 12 | [4×10⁵, 5×10⁵] | exhaustive | 1.0137 | 0.0714 |
-| 9 mod 12 | [2×10⁵, 2.6×10⁵] | exhaustive | 1.0061 | 0.0922 |
-
-Mean at 1 to within a percent, sd falling like n^{−1/2}, and **no n with zero solutions in the window** anywhere. So the family does not merely have a solution; it has the number of solutions the singular series predicts.
-
-**The obstruction check runs the other way, and passes.** At **n ≡ 11 (mod 12)** the three-form singular series vanishes identically — 834 of 834 values in a test band — because ω(3) = 3 there, which is §3.3's own n ≡ 2 (mod 3) condition arrived at from the count rather than from the root analysis. Observed count is **0 at every one**. So the local obstruction is confirmed as an obstruction, not merely predicted as one.
-
-**A weaker relative, useful as a ladder rung.** Replacing the third primality condition by a congruence — c prime, r = n − 2c prime, r ≡ 1 (mod q) for a fixed q — tests a point *below* the η = 1 endpoint, where the foreign block's twist has order only q. This is the system that survives in the doubly-obstructed class, and it behaves:
-
-| band, n ≡ 11 (mod 12) | values | mean | sd |
+| n mod 12 | cap | η | **D** |
 |---|---|---|---|
-| [2×10⁴, 6×10⁴] | 3,334 | 0.9831 | 0.0737 |
-| [2×10⁵, 4×10⁵] | 16,667 | 0.9923 | 0.0352 |
-| [8×10⁵, 10⁶] | 16,667 | 0.9974 | 0.0209 |
+| 1, 9 | 1/9 | 1 | **2** (safe primes) |
+| 3, 7 | 0.08579 | 1/2 | **4** |
+| 5 | 0.0718 | 1/3 | **6** |
+| 11 | 0.05051 | 1/6 | **12** |
 
-Also passes at q = 5 and q = 7, and against the two-condition calibration with the congruence dropped.
+Testing a class at the wrong D tests a system with nothing to do with its ceiling: at D = 2 the class-11 singular series **vanishes identically**, and at D ≥ 4 the class-1 series vanishes because h = (n−1)/2 is even there and c = h − (D/2)q would be even. Those vanishings are the local obstructions of §3.3, recovered from the count.
 
-> **A local obstruction the root analysis of §3.3 does not list.** The congruence r ≡ 1 (mod q) pins c to the single class (n−1)/2 (mod q). When *that* class is 0 the family is empty: q | c forces c = q, so the count is O(1) rather than of order n/log³n. It fires for one n in q — never at q = 3 with n ≡ 11 (mod 12), which is why it went unnoticed until the twist prime was varied. Verified: observed count 0 at every such n. This does not affect the ceilings, since a family blocked at one q is generally available at another, but it belongs in the inventory of §3.3 alongside the ℓ = 2 and ℓ = 3 obstructions: **it is an obstruction indexed by the twist prime rather than by a fixed small prime.**
+**Results.** All exhaustive over the stated band; ratio of actual count to predicted.
 
-**What this does and does not establish.** It confirms the local analysis and the singular series, at both the full-efficiency endpoint and a lower rung, in the classes where each applies. It does **not** touch the global question of §3.5 — whether these parametric systems have solutions for *every* large n — which is where the conjecture actually lives. What it removes is the possibility that the constants are right but the model is wrong.
+| class | D | band | mean | sd | command |
+|---|---|---|---|---|---|
+| 1 | 2 | [2×10⁵, 2.3×10⁵] | 0.9930 | 0.0951 | `--nmin 200000 --nmax 230000 --residue 1 --modulus 12 --dq 2 --maxn 99999999` |
+| 9 | 2 | [2×10⁵, 2.3×10⁵] | 1.0035 | 0.0943 | as above with `--residue 9` |
+| 3 | 4 | [2×10⁵, 2.3×10⁵] | 1.0479 | 0.1428 | as above with `--residue 3 --dq 4` |
+| 7 | 4 | [2×10⁵, 2.3×10⁵] | 1.0365 | 0.1400 | as above with `--residue 7 --dq 4` |
+| 5 | 6 | [2×10⁵, 2.3×10⁵] | 0.9391 | 0.1071 | as above with `--residue 5 --dq 6` |
+| 11 | 12 | [2×10⁵, 2.3×10⁵] | 0.8762 | 0.1460 | as above with `--residue 11 --dq 12` |
+
+Every command is `python3 count_check.py` with `--maxn 99999999` to force an exhaustive run — the default `--maxn 400` subsamples, which leaves the mean sound but the sd noisy.
+
+**The unobstructed classes agree; the heavily obstructed ones are not yet settled.** D = 2 lands at 0.993 and 1.004. As D grows the scatter grows with it, and at D = 12 the band means do **not** sit at 1 in a stable way:
+
+| class 11, D = 12 | mean | sd |
+|---|---|---|
+| [2×10⁴, 5×10⁴] | 1.0043 | 0.2782 |
+| [10⁵, 1.3×10⁵] | 1.0546 | 0.1953 |
+| [2×10⁵, 2.4×10⁵] | 0.8787 | 0.1473 |
+| [3×10⁵, 3.3×10⁵] | 0.9722 | 0.1314 |
+| [7×10⁵, 7.3×10⁵] | 1.0477 | 0.0997 |
+
+The **sd falls cleanly** — 0.278 → 0.195 → 0.147 → 0.131 → 0.0997, close to n^{−1/2} — which is the right behaviour and says the per-n prediction is the right size. The **band means scatter by ±12%** with no trend, and by far more than the standard error of the mean would allow if the values were independent. They are not: nearby n share the primes in the window, so the effective sample size is much smaller than the count. **This is consistent with the singular series being correct and the check being underpowered at D = 12, but it does not demonstrate it**, and the honest statement is that the η = 1/6 system is verified only to within about 12%. See the open item in `pending-checks.md`.
+
+**What this establishes.** The local analysis and the singular series are confirmed at η = 1 and η = 1/2 to about 4%, with all four vanishing predictions confirmed exactly. It says nothing about §3.5's global question — whether solutions exist for *every* large n — which is where the conjecture lives. What it removes is the possibility that the constants are right but the model is wrong.
+
+> **A local obstruction indexed by the twist prime.** Distinct from the above, and found by varying q in the weaker system c prime, r = n − 2c prime, r ≡ 1 (mod q): the congruence pins c to the class (n−1)/2 (mod q), and when that class is 0 the family is empty, since q | c forces c = q. It fires for one n in q. Verified: observed count 0 at every such n. It belongs in §3.3's inventory alongside ℓ = 2 and ℓ = 3, being an obstruction indexed by the twist prime rather than by a fixed small prime.
 
 ## 4. Asymptotics: the multiplicative engine is a thinning exception
 

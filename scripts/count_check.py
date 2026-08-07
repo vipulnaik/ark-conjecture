@@ -64,11 +64,12 @@ ap.add_argument("--centre", type=float, default=1/3.0,
                 help="balance point x* = c/n; 1/3 for the three-part family, 1/2 for two-part")
 ap.add_argument("--q", type=int, default=3, help="the twist prime for the r = 1 mod q condition")
 ap.add_argument("--no-q", action="store_true", help="drop the congruence: two-condition calibration")
-ap.add_argument("--safe-prime", action="store_true",
-                help="test SECTION 3.3's own system instead: s prime, r = 2s+1 prime, "
-                     "c = (n-1)/2 - s prime.  This is the eta = 1 endpoint, where the "
-                     "foreign block runs at full efficiency, and is the system the "
-                     "density ceilings are actually derived from.")
+ap.add_argument("--dq", type=int, default=0, metavar="D",
+                help="test SECTION 3.3's own system at efficiency eta = 2/D: "
+                     "q prime, r = D*q + 1 prime, c = (n - r)/2 prime.  D must be even. "
+                     "D = 2 is the safe-prime endpoint eta = 1; D = 4, 6, 12 give "
+                     "eta = 1/2, 1/3, 1/6, which are the caps for the obstructed "
+                     "classes.  D = 12 is the one that matters for n = 11 (mod 12).")
 ap.add_argument("--quiet", action="store_true")
 A = ap.parse_args()
 
@@ -127,49 +128,63 @@ def singular(n, q):
     return s
 
 # ---------------------------------------------------------------------------
-# Section 3.3's own system.  The efficiency of a foreign block r is carried by
-# a prime-power divisor of r-1; the ceiling is derived at the eta = 1 endpoint,
-# where (r-1)/2 is itself prime -- r is a SAFE prime.  Writing s = (r-1)/2 and
-# c = (n-r)/2, the three forms are
+# Section 3.3's own system, at a chosen efficiency.
 #
-#     f1 = s,    f2 = 2s+1,    f3 = (n-1)/2 - s
+# A foreign block r carries a twist of order t, a prime power dividing r-1, and
+# its efficiency is eta = 2t/(r-1) for odd t.  So eta = 2/D exactly when
+# r - 1 = D*t.  Taking t = q prime, the three forms are
 #
-# and a solution is an s making all three prime.  This is a genuinely different
-# system from the r = 1 (mod q) one above: three primality conditions rather
-# than two plus a congruence, so a third factor of log and a different singular
-# series.  It is what section 3.3 needs and what should be quoted there.
+#     f1 = q,   f2 = D*q + 1  (= r),   f3 = (n-1)/2 - (D/2)*q  (= c)
+#
+# and a solution is a q making all three prime.  D = 2 is the safe-prime
+# endpoint, eta = 1.  The obstructed classes cap out lower and need larger D:
+#
+#     D  =   2      4      6     12
+#     eta=   1    1/2    1/3    1/6
+#     cap  1/9  0.08579  0.0718  0.05051     <- section 3.3's class ceilings
+#
+# Testing a class at the WRONG D tests a system with nothing to do with its
+# ceiling.  n = 11 (mod 12) caps at 1/6 and so needs D = 12; at D = 2 its
+# singular series vanishes identically, which is the obstruction, not a bug.
 
-def roots_mod(n, l):
-    """#{s mod l : f1 f2 f3 = 0}, computed directly rather than by scanning all
-    residues -- the scan is O(l) per prime and made the whole sweep quadratic."""
+def roots_mod(n, l, D):
+    """#{q mod l : f1 f2 f3 = 0 mod l}, or l itself if f3 vanishes identically."""
     h = ((n - 1) // 2) % l
-    if l == 2:
-        return len({0, h})               # 2s+1 is odd, so f2 has no root mod 2
-    return len({0, (-pow(2, -1, l)) % l, h})
+    rs = {0}                                    # f1 = q
+    if D % l:                                   # f2 = Dq+1
+        rs.add((-pow(D % l, -1, l)) % l)
+    if (D // 2) % l:                            # f3 = h - (D/2) q
+        rs.add((h * pow((D // 2) % l, -1, l)) % l)
+    elif h % l == 0:
+        return l                                # f3 == 0 identically: no solutions
+    return len(rs)
 
-def singular_safe(n):
+def singular_dq(n, D):
     if n % 2 == 0:
         return 0.0
     s = 1.0
     for p in SPRIMES:
-        w = roots_mod(n, p)
+        w = roots_mod(n, p, D)
         if w >= p:
             return 0.0
         s *= (1 - w / p) / (1 - 1 / p) ** 3
     return s
 
-def count_safe(n):
-    """s in the window with s, 2s+1 and (n-1)/2 - s all prime."""
+def count_dq(n, D):
+    """q in the window (measured on c) with q, D*q+1 and (n-1)/2-(D/2)q all prime."""
     h = (n - 1) // 2
-    lo, hi = int(LO * n), int(HI * n)      # window is on c = (n-1)/2 - s
+    lo, hi = int(LO * n), int(HI * n)
     k = 0
     for c in primes:
         if c < lo: continue
         if c > hi: break
-        sv = h - c
-        if sv < 2 or 2 * sv + 1 > N: continue
-        if sv in PRIMESET and (2 * sv + 1) in PRIMESET:
-            k += 1
+        num = h - c
+        if num <= 0 or num % (D // 2): continue
+        q = num // (D // 2)
+        if q < 2 or q not in PRIMESET: continue
+        r = D * q + 1
+        if r > N or r not in PRIMESET: continue
+        k += 1
     return k
 
 
@@ -199,9 +214,9 @@ if truncated:
     cands = sorted(rng.sample(cands, A.maxn))
 q = None if A.no_q else A.q
 
-if A.safe_prime:
-    print("system: s prime, r = 2s+1 prime, c = (n-1)/2 - s prime  (section 3.3's own,")
-    print("        the eta = 1 endpoint where the foreign block is at full efficiency)")
+if A.dq:
+    print(f"system: q prime, r = {A.dq}q+1 prime, c = (n-r)/2 prime   "
+          f"(section 3.3's own, at eta = 2/{A.dq} = {2/A.dq:.4g})")
 else:
     print(f"system: c prime, r = n - 2c prime"
           + ("" if q is None else f", r = 1 (mod {q})"))
@@ -222,12 +237,13 @@ print()
 
 rows, zero, degen = [], 0, []
 for n in cands:
-    if A.safe_prime:
-        a = count_safe(n)
+    if A.dq:
+        D = A.dq
+        a = count_dq(n, D)
         W = HI - LO
-        denom = (math.log(A.centre * n) * math.log(0.5 * (1 - 2 * A.centre) * n)
+        denom = (math.log(A.centre * n) * math.log((1 - 2 * A.centre) * n / D)
                  * math.log((1 - 2 * A.centre) * n))
-        pred = singular_safe(n) * (W * n) / max(denom, 1e-9)
+        pred = singular_dq(n, D) * (W * n * 2 / D) / max(denom, 1e-9)
         if pred <= 0:
             degen.append((n, a)); continue
         if a == 0: zero += 1
@@ -243,7 +259,7 @@ for n in cands:
     if a == 0: zero += 1
     rows.append((n, a, pred, a / pred if pred > 0 else 0.0))
 
-if degen and A.safe_prime:
+if degen and A.dq:
     print(f"{len(degen)} of {len(cands)} values have a VANISHING singular series: the")
     print(f"   full-efficiency system is locally obstructed there, which for this system")
     print(f"   happens exactly at n = 2 (mod 3) -- section 3.3's omega(3) = 3 case.")
