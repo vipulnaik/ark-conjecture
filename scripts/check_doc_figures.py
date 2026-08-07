@@ -304,6 +304,22 @@ if A.only in ("all", "prose"):
 
 # ---------------------------------------------------------------- PASS 5 census
 
+# Statements duplicated across documents on purpose are delimited by
+#     <!-- DUP:name -->  ...text...  <!-- /DUP -->
+# An explicit end marker rather than "up to the next blank line", because a
+# blockquoted theorem often runs across blank-looking "> " lines and the two
+# copies then capture different extents -- which reports drift that is not there.
+# PASS 5 compares every tagged block across files and reports drift.  The tag is
+# invisible in rendered markdown, so the duplication costs the reader nothing.
+DUP_RE = re.compile(r"<!--\s*DUP:([A-Za-z0-9_.\-]+)\s*-->\n(.*?)<!--\s*/DUP\s*-->", re.S)
+
+def dup_blocks(txt):
+    out = {}
+    for m in DUP_RE.finditer(txt):
+        out[m.group(1)] = " ".join(m.group(2).split())
+    return out
+
+
 # A census row looks like:  | **S7** | middle-layer-fused ... | ... |
 CENSUS_ROW = re.compile(r"^\|\s*\*\*(S\d+)\*\*\s*\|([^|]*)\|")
 
@@ -359,6 +375,29 @@ if A.only in ("all", "census"):
                 for d in files:
                     print(f"        {d}: {cens[d][sid][:70]}")
         print(f"\nchecked {len(allS)} S-numbers across {len(files)} censuses.")
+    # tagged duplicate statements
+    dups = {}
+    for d in DOCS:
+        try: txt = open(d).read()
+        except OSError: continue
+        for k, v in dup_blocks(txt).items():
+            dups.setdefault(k, {})[d] = v
+    if dups:
+        print(f"\ntagged duplicate statements: {len(dups)}")
+        for k, where in sorted(dups.items()):
+            if len(where) < 2:
+                print(f"   {k}: only in {list(where)[0]} -- tag is pointless with one copy")
+                continue
+            if len(set(where.values())) > 1:
+                findings += 1
+                print(f"   {k}: *** COPIES DIFFER ***")
+                for d, v in where.items():
+                    print(f"        {d}: {v[:90]}")
+            else:
+                print(f"   {k}: in step across {len(where)} files")
+    else:
+        print("\nno <!-- DUP:name --> tagged statements found.")
+
     print("\nThe census is duplicated ON PURPOSE. Keep both copies in step: a new")
     print("shape needs a row in each, and S-numbers are append-only -- never renumber,")
     print("since they are the key the two documents are joined by.")

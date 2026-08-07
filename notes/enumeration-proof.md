@@ -18,6 +18,10 @@ What does not survive: **μ(n) = B(n)**, the tables as exact values, the complet
 
 **Notation, since three related quantities appear throughout.** A *configuration* is what the enumeration ranges over: a choice of chain primes (p, q) and orbit sizes n = Σ Fᵢcᵢ with twists, admissible in the sense of Parts B–D. Each configuration has a *score* — the minimum over its intra-orbital, within-class-cross and between-orbit terms (Part E) — and the two scorings differ on exactly one kind of part, a p-characteristic part whose twist Lemma C strictly reduces:
 
+<!-- DUP:B_definition -->
+**B(n)** denotes the maximum, over all admissible configurations, of the minimum orbital size. It is computed by `mu_enumerate.py`. **B₀(n)** is the coarser partition-only bound of Theorem 2.3, which ignores coherence and is therefore larger.
+<!-- /DUP -->
+
 > **B_safe(n)** = max over admissible configurations of the score with such a part valued at **F·orb(c, dmax)**, the unconditional capacity given what the layers can hold: dmax is the q-part of c − 1 times the largest divisor of the rest coprime to Fmid. (Before 2026-08 this was F·C(c,2) flat. That is *also* a valid cap, but a needlessly loose one, and its looseness was not shape-neutral — it inflated fused classes specifically and made S4 vanish from the census. The Fmid constraint is a proven necessary condition — C_Fmid and the cyclic part of the twist sit in one cyclic group — so SAFE may use it.) This is what `mu_enumerate_v2.py` computes by default and what the `mu_bound` column holds.
 > **B_refined(n)** = the same max with such a part valued at F·orb(c, d) instead, which is what the Part E construction actually realises.
 > **B(n)** := **B_safe(n)**, written without a subscript wherever the distinction is not at issue.
@@ -214,6 +218,14 @@ Each isolates one phenomenon. All figures recomputed.
 - **n even** forces c odd, and the supply is a full Hardy–Littlewood system. But even n already have S3 available with cap 1/4, comfortably above S7's ceiling of 0.13397, so S7 can only win at even n where S3's *local supply* fails. All 45 even-n instances are of this kind. Under the conjectures that give S3 its supply, this set is thin.
 
 So S7 is a sparse escape rather than a competing family — but it is a genuine one, and it raises the odd-n class ceilings where it applies. **It is now enumerated**, since the corrected shape space admits cyclic-layer fusion; `ladder_verify.py` models a narrower version of it (prime-power F, one fused class) and would shorten its worklist if widened to match. Only F = 3 and F = 5 occur at all: larger fusion primes shrink F·C(c,2) faster than the foreign term can compensate.
+
+<!-- DUP:theorem_3_1 -->
+> **Theorem 3.1 (structure of Oliver groups).** Let Γ satisfy Oliver's condition on n points. Then for some pair of chain primes (p, q) the Γ-orbits are described by
+>
+> **n = Σᵢ Fᵢcᵢ**, each cᵢ a prime power and each **Fᵢ = F_mid,ᵢ · F_top,ᵢ** with F_top a power of q,
+>
+> in which each orbit is either **p-characteristic** — cᵢ a power of p, twist any divisor of cᵢ−1 — or **foreign** — cᵢ prime, twist a power of q, and never fused. The cyclic layer Γ₁/Γ₂ carries every F_mid,ᵢ, every cyclic-layer twist and every foreign prime **simultaneously**, so all of those orders are **pairwise coprime**; this subsumes the condition gcd(dᵢ, rⱼ) = 1 between twists and foreign primes. Imprimitive tower depth contributes nothing beyond Fᵢ. The orbital sizes are then *forced*, not chosen: **Fᵢ·orb(cᵢ, dᵢ)** within a fused class, **(Fᵢ or Fᵢ/2)·cᵢ²** between the blocks of one class, and **sᵢsⱼ** between distinct orbits.
+<!-- /DUP -->
 
 ### What the corrected shape space is
 
