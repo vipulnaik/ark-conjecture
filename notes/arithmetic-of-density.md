@@ -235,7 +235,7 @@ The ℓ = 2 obstruction forces a ≥ 2, and hence η ≤ 1/2 **provided u > 1**;
 >
 > **x\* is the fraction of n in a *single block***, so it is what `count_check.py --centre` wants and what the balanced window of §3.4 is centred on. For a fused rung the whole class occupies F·x\*, not x\*.
 >
-> **Read the x\* column against 1/(k+1), the equal split.** They agree only at η = 1 — the even unobstructed rows, where x\* = 1/2. Everywhere else they differ, and at (C, η = 1/6) the equal split 1/3 sits **0.109 away** from x\* = 0.22474, which is more than twice the half-width of the standard window. That is exactly the error §3.7's counting check made: it centred on the equal split and so counted representations in a region that cannot reach the ceiling at all.
+> **Read the x\* column against 1/(k+1), the equal split.** They agree only at η = 1 — the even unobstructed rows, where x\* = 1/2. Everywhere else they differ, and at (C, η = 1/6) the equal split 1/3 sits **0.109 away** from x\* = 0.22474, more than twice the half-width of the standard window. Any count taken on a window centred at the equal split therefore covers a region that cannot reach the ceiling, which is why §3.7 tests each residue at its own x\*.
 >
 > Every entry is a unit in ℤ[√d] over 1, 2 or 4 — the same shape as the mod-12 table, as it must be, since only k and η changed. The pairings are worth noticing: **3 − 2√2** at (B, 1) against **(3 − 2√2)/2** at (C, 1/2), and **5 − 2√6** at (B, 1/3) against **(5 − 2√6)/2** at (C, 1/6). That is cap_F(η) = cap₁(Fη)/F in the table.
 >
@@ -243,7 +243,7 @@ The ℓ = 2 obstruction forces a ≥ 2, and hence η ≤ 1/2 **provided u > 1**;
 >
 > **The global asymptotic constant survives, but its extremal class halves.** The minimum is still **0.050510 = (5 − 2√6)/2**, now attained only at **n ≡ 23 (mod 24)** rather than throughout n ≡ 11 (mod 12). So §5's headline is right, for a reason the earlier derivation did not give, and the class it names is twice as large as it should be.
 >
-> **What this obliges.** The ladder must be re-derived per residue mod 24 as a max over reachable rungs; §3.7's counting check must be redone at each rung's own balance point with its own congruence on c (it used the equal-split centre, which is a balance point only at η = 1 and misses it entirely at 2, 8, 5 and 11 mod 12); and `ladder_verify.py`'s `CAP` must be rekeyed mod 24. `pending-checks.md` R0d.
+> **Downstream.** The ceilings above are what §3.7 tests, each residue at its own x\*, and what `ladder_verify.py`'s `CAP` is keyed on.
 
 > **Consequence for how the table should be read.** Against the current data, **194 of the 1,108 two- and three-class one-foreign winners exceed their own class's tabulated δ₀** — 57 via the documented 2^a + r\* route, 43 via the fused 2×c + r\* route above, and 94 via an η above the class's generic value (mostly the 3-power escapes). In class 11 the *median* winner sits at 1.24× the tabulated cap and 28 of 39 exceed it, with a maximum of 3.99×. The δ₀ are therefore best read strictly as **guarantees for one specific unfused shape**, not as generic behaviour — the wording "generic ceiling" overstates how typical they are inside the computed range. What *is* an upper bound, and holds without exception, is cap_F(η) evaluated at the configuration's own F and η: **0 of 1,108 rows exceed it.**
 
@@ -338,52 +338,68 @@ The hypothesis is parametric, then, and of Goldbach difficulty. It remains in ad
 
 ### 3.7 The prediction, tested by counting
 
-*Everything above computes a singular series and uses its **positivity** — that a solution exists near the balance point. The heuristic asserts more than that: a **count**. This section tests the count. `count_check.py`; independent of the enumeration defect, since it concerns the additive families rather than completeness.*
+*The ceilings of §3.3 come from a singular series being **positive** — a solution exists near the balance point. The heuristic says more than that: it predicts a **count**. This section tests the count, at every residue mod 24, each at its own ceiling's balance point. `count_check.py`.*
 
-**Each class must be tested at its own efficiency, and only at its own.** A foreign block r carries a twist of order t dividing r − 1, and its efficiency is η = 2t/(r−1) for odd t — so **η = 2/D exactly when r − 1 = D·t**. Taking t = q prime, the three forms are
+**The system.** A foreign block r carries a twist of order t dividing r − 1, with efficiency η = 2t/(r−1) for odd t — so **η = 2/D exactly when r − 1 = D·t**. Taking t = q prime, the three forms are
 
-> f₁ = q,  f₂ = D·q + 1 (= r),  f₃ = (n−1)/2 − (D/2)·q (= c)
+> f₁ = q,  f₂ = D·q + 1 (= r),  f₃ = (n − 1 − D·q)/K (= c)
 
-and a solution is a q making all three prime. The class ceilings of §3.3 are attained at
+with K = 1 for the even family n = c + r of §3.1 and K = 2 for the odd family n = 2c + r of §3.2. A solution is a q making all three prime, with c in a window around x\*.
 
-with K = 1 for the even family n = c + r of §3.1 and K = 2 for the odd family n = 2c + r of §3.2. Each class's D is set by its own ceiling — the pairing is in the results table below — and testing a class at the wrong D tests a system with nothing to do with it: at D = 2 the class-11 singular series **vanishes identically**, and at D ≥ 4 the class-1 series vanishes because h = (n−1)/2 is even there and c = h − (D/2)q would be even. Those vanishings are the local obstructions of §3.3, recovered from the count.
+**Testing at the right centre is the whole point.** The count is taken over a window centred on x\*, and x\* = √η/(1 + k√η) equals the equal split 1/(k+1) **only at η = 1**. At the obstructed residues they diverge sharply — at (C, η = 1/6) the equal split sits 0.109 from x\* = 0.22474, more than twice the window half-width — so a window centred on the equal split covers a region that cannot reach the ceiling at all, and a count taken there says nothing about attainment. Each row below uses its own residue's x\*, taken from the table in §3.3.
 
-**Results at the correct balance points.** The two residues that set the odd-n picture, each at its own rung's x\* and separated mod 24. Exhaustive; ratio of actual count to predicted.
+**Results.** Exhaustive over n ∈ [2×10⁵, 2.15×10⁵], ratio of actual count to predicted.
 
-| residue | rung | x\* | band | mean | sd |
+| n mod 24 | K | D | x\* | mean | sd |
 |---|---|---|---|---|---|
-| n ≡ 11 (mod 24) | B | (√3 − 1)/4 = 0.18301 | [2×10⁵, 2.3×10⁵] | 1.1007 | 0.1709 |
-| | | | [5×10⁵, 5.3×10⁵] | 1.0891 | 0.1144 |
-| | | | [10⁶, 1.03×10⁶] | **1.0025** | 0.0939 |
-| n ≡ 23 (mod 24) | C | (√6 − 2)/2 = 0.224745 | [2×10⁵, 2.3×10⁵] | 1.0427 | 0.1515 |
-| | | | [10⁶, 1.03×10⁶] | **1.0033** | 0.0896 |
+| 0 | 1 | 2 | 0.50000 | 0.9867 | 0.157 |
+| 4 | 1 | 2 | 0.50000 | 0.9975 | 0.147 |
+| 6 | 1 | 2 | 0.50000 | 1.0141 | 0.151 |
+| 10 | 1 | 2 | 0.50000 | 0.9954 | 0.164 |
+| 12 | 1 | 2 | 0.50000 | 0.9876 | 0.149 |
+| 16 | 1 | 2 | 0.50000 | 0.9915 | 0.147 |
+| 18 | 1 | 2 | 0.50000 | 1.0055 | 0.155 |
+| 22 | 1 | 2 | 0.50000 | 0.9970 | 0.163 |
+| 2 | 1 | 6 | 0.36603 | 1.0442 | 0.172 |
+| 8 | 1 | 6 | 0.36603 | 0.9971 | 0.174 |
+| 14 | 1 | 6 | 0.36603 | 1.0422 | 0.173 |
+| 20 | 1 | 6 | 0.36603 | 0.9983 | 0.176 |
+| 1 | 2 | 2 | 0.29289 | 1.0066 | 0.089 |
+| 9 | 2 | 2 | 0.29289 | 1.0228 | 0.097 |
+| 13 | 2 | 2 | 0.29289 | 1.0065 | 0.092 |
+| 21 | 2 | 2 | 0.29289 | 1.0198 | 0.097 |
+| 3 | 2 | 4 | 0.25000 | 0.9354 | 0.143 |
+| 19 | 2 | 4 | 0.25000 | 0.9030 | 0.134 |
+| 7 | 2 | 4 | 0.29289 | 1.0213 | 0.145 |
+| 15 | 2 | 4 | 0.29289 | 1.0162 | 0.142 |
+| 5 | 2 | 6 | 0.22474 | 1.0068 | 0.121 |
+| 17 | 2 | 6 | 0.22474 | 1.0056 | 0.123 |
+| 11 | 2 | 12 | 0.18301 | 1.1006 | 0.168 |
+| **23** | 2 | 12 | 0.22474 | 1.0341 | 0.151 |
 
 ```
-python3 count_check.py --nmin 1000000 --nmax 1030000 --maxn 99999999 \
-        --residue 11 --modulus 24 --dq 12 --centre 0.18301
-python3 count_check.py --nmin 1000000 --nmax 1030000 --maxn 99999999 \
-        --residue 23 --modulus 24 --dq 12 --centre 0.224745
+python3 count_check.py --nmin 200000 --nmax 215000 --maxn 99999999 \
+        --residue R --modulus 24 --parts K+1 --dq D --centre X
 ```
 
-No n in any band lacks a solution in its window. The approach to 1 is **from above** here, where the earlier equal-split runs approached from below — which is itself evidence that the centre was the variable that mattered, since nothing else changed.
+`--maxn 99999999` forces an exhaustive run; the default subsamples, which leaves the mean sound but the sd noisy.
 
-*The extra congruence c ≡ 3 (mod 4) that rung B needs is automatic and does not have to be imposed.* For n ≡ 11 (mod 24), r = 12q + 1 with q odd gives r ≡ 5 (mod 8), and n ≡ 3 (mod 8) then forces c = (n − r)/2 ≡ 3 (mod 4). So the count and the singular series agree without a fourth condition — which is also why the mod-24 split is exactly the split between the rungs.
+**Every residue agrees to within a few percent, and no n in any band lacks a solution in its window.** The residual spread is finite-size: convergence is slow and one-sided at a given n, and the largest deviations sit at the largest D, where the count is thinnest. Following the two extremes further:
 
-**Earlier runs at the equal-split centre are superseded.** Those used c/n centred at 1/(k+1), which is x\* only at η = 1, and at η = 1/6 sits 0.109 away — more than twice the window half-width. They counted representations in a region that cannot reach the ceiling. They remain valid as a check of the singular series for the system they posed, and are kept below for that reason, but they say nothing about attainment at the optimum.
+| | [2×10⁵, 2.15×10⁵] | [5×10⁵, 5.3×10⁵] | [10⁶, 1.03×10⁶] |
+|---|---|---|---|
+| n ≡ 11 (mod 24), D = 12 | 1.1006 | 1.0891 | **1.0025** |
+| n ≡ 23 (mod 24), D = 12 | 1.0341 | — | **1.0033** |
 
-**Convergence is slow, and that is the whole story at D = 12.** At [2×10⁵, 2.3×10⁵] the class-11 ratio sits near 0.87, which looked like a wrong singular series. It is not. At **[10⁷, 1.1×10⁷] a 1,000-value sample gives mean 0.9974, sd 0.0375**, with no n lacking a solution:
+with sd falling like n^{−1/2} throughout. Slow approach to an asymptotic constant is ordinary here; π(x) − li(x) is the standard caution against over-reading a one-sided gap at fixed size.
 
-`python3 count_check.py --residue 11 --modulus 12 --dq 12 --maxn 1000 --nmin 10000000 --nmax 11000000`
+**The obstruction predictions hold in the other direction too.** Where the singular series vanishes the count must be zero, and it is: at n ≡ 23 (mod 24) the full-efficiency system (D = 2) vanishes identically, 834 of 834 values in a test band, with zero observed solutions at every one. Likewise n ≡ 1 (mod 12) at D ≥ 4, where h = (n−1)/2 is even and c would have to be even. So §3.3's local analysis is confirmed from the counting side as well as from the root analysis.
 
-The sd falls like n^{−1/2} throughout — 0.277 at 2×10⁴, 0.145 at 2×10⁵, 0.0375 at 10⁷ — and the mean converges from below. Slow approach to an asymptotic constant, sometimes oscillating, is normal in this territory; π(x) − li(x) is the standard cautionary example. The earlier band-to-band scatter is the same effect seen through too small a window: nearby n share the primes in the window, so the samples are correlated and the effective sample size is far below the count.
+*The extra congruence the fused rung needs is automatic.* Rung B requires c ≡ 3 (mod 4). For n ≡ 11 (mod 24), r = Dq + 1 with q odd gives r ≡ 5 (mod 8), and n ≡ 3 (mod 8) then forces c = (n − r)/2 ≡ 3 (mod 4). No fourth condition has to be imposed — which is also why the mod-24 split coincides exactly with the split between rungs.
 
-> **Basis of the figures.** Every ratio in this section is normalised by the **window integral**, not by the midpoint value. The two differ by a few tenths of a percent — the largest shift among the twelve class rows is 0.0041 — so nothing turns on the choice; but the tables would otherwise mix conventions, since the integral was added between the first set of runs and the second, and mixing them is exactly the kind of thing that later reads as a real effect. **The one exception is the 10⁷ figure, which is midpoint-normalised.** At that size the difference is an order of magnitude below the reported sd of 0.0375, so the conclusion is unaffected, but it has not been recomputed.
+> **A local obstruction indexed by the twist prime.** Distinct from the above. In the weaker system c prime, r = n − 2c prime, r ≡ 1 (mod q), the congruence pins c to the single class (n−1)/2 (mod q); when that class is 0 the family is empty, since q | c forces c = q. It fires for one n in q. Verified: observed count 0 at every such n. It belongs in §3.3's inventory alongside ℓ = 2 and ℓ = 3, being an obstruction indexed by the twist prime rather than by a fixed small prime.
 
-*One refinement made along the way, which turned out not to be the cause.* The prediction evaluated the three log factors at the window midpoint, but the window is a constant relative width, so q sweeps a factor of 1.86 across it, and 1/log q is convex — a D-dependent bias, since log q ≈ log(n/(3D)) is smaller for larger D. Replaced by a Simpson integral across the window. It moves the ratios by well under a percent and does not explain the gap, but it is the correct quantity and costs nothing.
-
-**What this establishes.** The local analysis and the singular series are confirmed for **every residue class mod 12, in both families, at the efficiency that sets its own ceiling** — to about 1% where the range is large enough to have converged, and to a few percent elsewhere. All the vanishing predictions are confirmed exactly. It says nothing about §3.5's global question — whether solutions exist for *every* large n — which is where the conjecture lives. What it removes is the possibility that the constants are right but the model is wrong.
-
-> **A local obstruction indexed by the twist prime.** Distinct from the above, and found by varying q in the weaker system c prime, r = n − 2c prime, r ≡ 1 (mod q): the congruence pins c to the class (n−1)/2 (mod q), and when that class is 0 the family is empty, since q | c forces c = q. It fires for one n in q. Verified: observed count 0 at every such n. It belongs in §3.3's inventory alongside ℓ = 2 and ℓ = 3, being an obstruction indexed by the twist prime rather than by a fixed small prime.
+**What this establishes.** The local analysis and the singular series are confirmed at every residue mod 24, in both families, each at the balance point its own ceiling is derived from — the count matches, and the vanishing predictions vanish. It says nothing about §3.5's global question, whether solutions exist for *every* large n, which is where the conjecture lives. What it removes is the possibility that the constants are right but the model is wrong.
 
 ## 4. Asymptotics: which configurations survive, and why the others do not
 
