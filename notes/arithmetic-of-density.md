@@ -24,7 +24,32 @@ Everything else in this document elaborates that split. Five consequences set th
 
 ---
 
-## 2. The two engines, exactly
+## 2. The configurations, and the two engines
+
+*The companion `enumeration-proof.md` classifies which configurations an Oliver group can realise and proves that classification; this document is about how they behave arithmetically. Its Part 0 carries the **configuration census**, reproduced below so that both documents can be read on their own.*
+
+> **The census is duplicated on purpose.** A split — structure there, behaviour here — would force a reader to join two tables across two files mentally, which is worse than the drift risk. So the duplication is deliberate and the drift risk is handled mechanically instead: `check_doc_figures.py --pass census` cross-checks every S-row between the two documents and reports any that is missing or reworded. **S-numbers are append-only.** A new shape gets the next number and a row in both files; nothing is ever renumbered, because the S-numbers are the key the documents are joined by.
+
+### 2.0 The census
+
+*Winner counts are from `mu_table_safe_v3.csv` and are **provisional** — the table rebuild under the corrected shape space is still in flight. Structural columns and asymptotic verdicts are stable.*
+
+| # | shape | engine | winners | asymptotic verdict | where |
+|---|---|---|---|---|---|
+| **S1** | one matching block, no copies | — | never | n itself a prime power, so out of scope entirely | §2.1 |
+| **S2** | fused matching class, **top**-layer copies, n = F·c | multiplicative | 40.4% | **→ 0**: needs ω(n) = 2 with both factors prime powers | §4 |
+| **S3** | matching + outside, n = c + r\* | additive | 37.8% | **→ ~50%**, essentially all even n | §3.1 |
+| **S4** | two matching + outside, n = 2c + r\* | additive | **0%** | dominated by S5 wherever fusion is admissible — see below | §3.2 |
+| **S5** | fused matching + outside; forces q = 2 | hybrid | 21.8% | carries the odd-n additive engine; see §4.2 | §3.2, §4.2 |
+| **S6** | two outside blocks | additive | 0% | **→ 0**: supply-limited, needs two coordinated safe primes | §4.3 |
+| **S7** | **middle**-layer-fused matching + outside | hybrid | — | an escape, not a family; see §4.1 | §4.1 |
+| **S8** | bottom-layer-fused matching | — | never | excluded (Lemma D1) | — |
+| **S9** | fused outside block, any layer | — | never | excluded (Lemma D2) | — |
+| **S10** | outside block with r = q | — | never | excluded: normality kills the twist | — |
+
+> **S4 has collapsed into S5, and this is new.** Under the old shape space, two equal unfused matching blocks plus a foreign prime was a distinct winner at 13% of the table. Fusing those two blocks scores 2·C(c,2) against C(c,2), so wherever fusion is admissible the fused reading strictly dominates — and the corrected enumerator finds it. All **79** former S4 winners in the rebuilt range are now S5, with the value rising at **77** of them. S4 survives only where fusion is inadmissible: F = 2 needs Ftop = 2 (hence q = 2, which pins the foreign twist to a 2-power) or Fmid = 2 (which needs 2 coprime to c − 1, impossible for odd c). No such n has appeared yet.
+
+**The engine dichotomy is a simplification, and the hybrids are where the action is.** S2 is purely multiplicative and S3, S4, S6 purely additive, but **S5 and S7 are neither** — a fused class supplying the multiplicative factor F alongside a foreign block supplying the additive one. That is not a defect of the taxonomy; it is where the two interesting phenomena live. S5's full efficiency requires a Fermat prime (§3.3), and S7 exists only because block fusion can come from the cyclic layer (§4.1). Both were missed by earlier drafts precisely because the two-engine framing had no slot for them.
 
 ### 2.1 The multiplicative engine: density 1/F
 
@@ -56,19 +81,11 @@ For k classes of sizes sᵢ = Fᵢcᵢ summing to n, the between-orbit classes s
 
 So the ladder of thresholds is one sequence: 1/4, 1/9, 1/16 at k = 2, 3, 4. The 1/9 above which Theorem E.1 settles the collapse, and the 1/16 above which Corollary F.3 gives k ≤ 3, are not independently chosen constants; they are the points at which the next part count becomes possible.
 
-### 2.3 The two engines cover complementary sets
+### 2.3 What the engines cover, and what that implies
 
-| | condition on n | density | share of table |
-|---|---|---|---|
-| fused, one class | n = F·c, both prime powers (so ω(n) ≤ 2) | 1/F, up to 1/2 | 754 winners |
-| two classes | n = c + r\*, c a prime power, r prime | ≤ 1/4 | 909 winners (851 of this exact shape, 58 fused-plus-foreign) |
-| three classes | n = 2c + r\*, c a prime power, r prime | ≤ 1/9 | 258 winners (257 of this exact shape, 1 two-foreign) |
+**Density above 1/4 is a purely multiplicative phenomenon.** S2 is the only shape that can exceed 1/4, since every additive or hybrid shape has at least two classes and Proposition F.2 caps k classes at 1/k². Everything at or below 1/4 is additive or hybrid, and therefore Hardy–Littlewood-conditional. The two engines cover complementary sets in the sense that matters: S2 needs ω(n) ≤ 2 with both factors prime powers, a condition of density zero, while S3–S5 need only that n admit a suitable split, which is conjecturally almost always.
 
-> *Verified.* Every one of the 356 table values with density above 1/4 has ω(n) = 2 and a one-part winner. Maximum density over all 844 values with ω(n) ≥ 3 is 0.2494 — the two-part cap.
-
-**So density above 1/4 is a purely multiplicative phenomenon**, and everything at or below it is additive and therefore Hardy–Littlewood.
-
----
+So the asymptotic picture is entirely §3's: **S3 for even n and S5 for odd n**, at the class caps of §3.3, with S2 a thinning exception (§4) and S6, S7 and the escapes contributing at densities that §4 measures rather than assumes.
 
 ## 3. The arithmetic conditions, family by family
 
@@ -395,9 +412,20 @@ The ~9–14% with no representation at all is Erdős's set, and the aggregate ov
 
 **None of this touches §5's floor, and the reason is worth stating.** Every escape *raises* δ(n). A floor is a minimum over n, so a route that lifts some values above the class cap cannot lower it, however common the route is. The asymptotic floor claim of §5 is therefore untouched by this correction.
 
-**What the correction does change is how the δ₀ table should be read.** The class ceilings are not "ceilings with O(log n) exceptions" but **ceilings for one specific unfused shape, exceeded by a few percent of n in each obstructed class, permanently**. In the computed range that shows up as the 194 of 1,108 winners recorded in §3.3. The right summary is that δ₀ is the value the *balanced* family guarantees, not a bound on what any family achieves — which is how §5 uses it, so nothing downstream needs revising.
+**What the correction does change is how the δ₀ table should be read.** The class ceilings are not "ceilings with O(log n) exceptions" but **ceilings for one specific unfused shape, exceeded permanently by a few percent of n in most obstructed classes and by a quarter of them in classes 5 and 11**. In the computed range that shows up as the 194 of 1,108 winners recorded in §3.3. The right summary is that δ₀ is the value the *balanced* family guarantees, not a bound on what any family achieves — which is how §5 uses it, so nothing downstream needs revising.
 
-*The 3-power and S7 escapes have not been measured this way.* Both pin n near 2·3^k, 4·3^k or a power of 2 in a stronger sense than the 2-power route does, so the O(log n) description may well be right for them — but it is now an untested claim rather than a shared one, and §8 item 5 carries it.
+**The 3-power escape is not sparse either, and it is far larger.** Measured the same way, over odd n in [2×10⁵, 2.1×10⁵], for the route with c a power of 3 or (r−1)/2 a power of 3:
+
+| n mod 12 | 1 | 3 | 5 | 7 | 9 | 11 |
+|---|---|---|---|---|---|---|
+| route available | 96.9% | 0% | 99.3% | 94.1% | 85.5% | 96.4% |
+| **exceeds its class cap** | 0% | 0% | **25.9%** | 4.1% | 0% | **26.0%** |
+
+It lands hardest exactly where the caps are lowest: **a quarter of all n in classes 5 and 11 exceed their tabulated δ₀ by this route alone**, permanently. And the supply really is thin in the naive sense — there are only seven primes r = 2·3^k + 1 below 2.2×10⁵, namely 3, 7, 19, 163, 487, 1459, 39367 — which is precisely how the O(log n) reading arises and why it is wrong: few *representations per n*, but a high proportion of n admitting one.
+
+> **The general shape of the error.** Every escape in §3.3 is O(log n) in representations per n, because each pins one part to a power of a fixed small prime. None of them is thereby sparse in n. Both routes measured so far are available at 85–99% of odd n and effective at a few percent to a quarter, with no sign of thinning. The S7 route of §3.3 has not been measured and should be assumed to behave the same way until it is.
+
+
 
 **The asymptotic question is entirely Hardy–Littlewood.** Since the multiplicative engine vanishes in density, the asymptotic behaviour of μ(n) for almost all n is set by the additive families, whose caps are 1/4 and 1/9 and whose availability is a Bateman–Horn question. In particular the ladder constants of §5 of the notes — the §3.3 constants — are the right asymptotic quantities, and the fused family's 1/2 and 1/3 are not, however dominant they look in the table.
 

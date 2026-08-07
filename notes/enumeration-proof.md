@@ -206,6 +206,8 @@ Each isolates one phenomenon. All figures recomputed.
 | **S9** | fused outside block, any layer | killed, **D2** | — | — | — | translations forced diagonal ⇒ a class of at most \|O\|/2 |
 | **S10** | outside block with r = q | killed | — | — | — | normality kills the twist ⇒ the block is worth r |
 
+> **Asymptotics are covered in `arithmetic-of-density.md`, not here.** This census's "asymptotic guess" column is a summary; the arguments behind it — which shapes thin, which stop winning, which escapes are sparse in n and which merely look it — are §4 of that document, and it carries the same census keyed by the same S-numbers. The duplication is deliberate and cross-checked by `check_doc_figures.py --pass census`; **S-numbers are append-only**, since they are what joins the two.
+
 **Why S7 vanishes, and why the reason differs by parity.** Write the shape as n = F·c + r with r an odd prime.
 
 - **n odd** forces F·c even. With F = 3 or 5 this forces **c to be a power of 2**, so there are only O(log n) choices of c and the supply is as thin as the existing 2^a escapes. All 12 odd-n instances in range have c ∈ {32, 128}.

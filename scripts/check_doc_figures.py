@@ -27,6 +27,16 @@ A figure sweep sees neither.  So this script runs four passes.
           numbers.  The signal is CONTRADICTION -- a file asserting both that the
           search is finished and that values remain -- not any single phrase.
 
+  PASS 5  CENSUS.  The configuration census is deliberately duplicated between
+          `enumeration-proof.md` (structure: shape, admissibility, which lemma
+          applies) and `arithmetic-of-density.md` (behaviour: frequency, delta,
+          why it stops winning).  The duplication is a reading convenience, not
+          an accident -- a split table would force the reader to join two
+          documents mentally, which is worse than the drift risk.  So the drift
+          risk is handled here instead: every row keyed by an S-number is
+          compared across files, and any S-number present in one census but not
+          the other, or carrying a different shape description, is reported.
+
   PASS 4  HYGIENE.  Doubled sentence fragments and doubled bold runs, which
           ad-hoc string replacement produces and which no reader catches.
 
@@ -44,7 +54,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("table")
 ap.add_argument("docs", nargs="+")
 ap.add_argument("--pass", dest="only", default="all",
-                choices=["all", "figures", "scope", "prose", "hygiene"])
+                choices=["all", "figures", "scope", "prose", "hygiene", "census"])
 ap.add_argument("--quiet", action="store_true", help="findings only")
 A = ap.parse_args()
 DOCS = [d for d in A.docs if d.endswith(".md")]
@@ -291,6 +301,67 @@ if A.only in ("all", "prose"):
                     print(f"   L{ln:<5} [{name}] {frag}")
     print("\n('all but N' and 'no exceptions' are counts written as words, which no")
     print(" numeric sweep will ever catch. Recheck them against the table by hand.)")
+
+# ---------------------------------------------------------------- PASS 5 census
+
+# A census row looks like:  | **S7** | middle-layer-fused ... | ... |
+CENSUS_ROW = re.compile(r"^\|\s*\*\*(S\d+)\*\*\s*\|([^|]*)\|")
+
+def census_rows(txt):
+    out = {}
+    for line in txt.split("\n"):
+        m = CENSUS_ROW.match(line.strip())
+        if m:
+            out[m.group(1)] = " ".join(m.group(2).split()).strip()
+    return out
+
+def norm(desc):
+    """Compare shape descriptions loosely: the two censuses word them for
+    different purposes, so only the distinguishing content should have to
+    match.  Strip markdown, punctuation and a few synonyms."""
+    d = desc.lower()
+    for a_, b_ in (("**", ""), ("*", ""), ("`", ""), ("\\", ""), ("—", " "), ("–", " "),
+                   ("-", " "), (",", " "), ("(", " "), (")", " "), (".", " "),
+                   (":", " "), (";", " "), ("+", " plus ")):
+        d = d.replace(a_, b_)
+    drop = {"the", "a", "an", "of", "with", "and", "class", "classes", "block",
+            "blocks", "one", "n", "layer", "copies", "count", "at", "in", "to"}
+    return tuple(sorted(w for w in d.split() if w not in drop))
+
+if A.only in ("all", "census"):
+    print("\n" + "=" * 72); print("PASS 5  CENSUS"); print("=" * 72)
+    cens = {}
+    for d in DOCS:
+        try: txt = open(d).read()
+        except OSError: continue
+        r = census_rows(txt)
+        if r:
+            cens[d] = r
+    if len(cens) < 2:
+        print(f"only {len(cens)} document(s) carry a census; nothing to cross-check.")
+        if cens:
+            for d, r in cens.items():
+                print(f"   {d}: {len(r)} rows, {', '.join(sorted(r, key=lambda x: int(x[1:])))}")
+    else:
+        files = list(cens)
+        allS = set().union(*(set(r) for r in cens.values()))
+        for sid in sorted(allS, key=lambda x: int(x[1:])):
+            have = [d for d in files if sid in cens[d]]
+            if len(have) != len(files):
+                findings += 1
+                miss = [d for d in files if d not in have]
+                print(f"   {sid}: MISSING from {', '.join(miss)} (present in {', '.join(have)})")
+                continue
+            descs = {d: norm(cens[d][sid]) for d in files}
+            if len(set(descs.values())) > 1:
+                findings += 1
+                print(f"   {sid}: shape descriptions differ ->")
+                for d in files:
+                    print(f"        {d}: {cens[d][sid][:70]}")
+        print(f"\nchecked {len(allS)} S-numbers across {len(files)} censuses.")
+    print("\nThe census is duplicated ON PURPOSE. Keep both copies in step: a new")
+    print("shape needs a row in each, and S-numbers are append-only -- never renumber,")
+    print("since they are the key the two documents are joined by.")
 
 # --------------------------------------------------------------- PASS 4 hygiene
 
