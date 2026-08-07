@@ -163,7 +163,7 @@ The decisive one is settled and unfavourable: BBKN §5.1 defines the max-min our
 
 - **Read Angel–Borja, arXiv:1603.04412**, before writing anything about n = 10. Oliver groups, dimension bounds, applied at ten vertices — same degree, same tool, unknown overlap, not in our reference list.
 - **Read Black's spacing definition.** Restricted to p-groups and concluding weak evasiveness, so probably incomparable to m\*, but the definition is in the paper body.
-- **Check whether Shparlinski's Theorem 2 survives the prime-power version of α.** His ladder uses the largest *prime* divisor of r − 1; our η uses the largest prime *power* divisor of the odd part. If it transfers, "(H) is the γ = 1 endpoint" is a clean framing.
+- **Check whether Shparlinski's Theorem 2 survives the prime-power version of α.** *Now the main live number-theoretic question,* since his Corollary 3 already settles what Open Problem 2 of the notes was asking for. His ladder uses the largest *prime* divisor of r − 1; our η uses the largest prime *power* divisor of the odd part. If it transfers, "(H) is the γ = 1 endpoint" is a clean framing.
 - **Read Scheidweiler–Triesch and Korneffel–Triesch properly.** The current best unconditional weak bound is n²/3 − o(n²); §5 will read as competing and losing unless it says why the statements differ in kind.
 
 ### T5. Decide whether to close the Lemma C gap at all
