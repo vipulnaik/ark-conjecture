@@ -5,11 +5,20 @@ one, as a check on `mu_enumerate.py`'s PRUNING.
 
 Why this and not just rerunning mu_enumerate.py: rerunning the shipped code
 re-executes the same pruning, so it cannot detect a prune that is too aggressive.
-`brute.py` was written separately from the Part G.3 specification with no
-pruning, no seed, and no precomputed part pool -- it enumerates (p, q) over all
-primes plus the p=0 sentinel, then every multiset of admissible parts summing to
-n, and scores each with the SAFE rule.  Agreement is therefore evidence about
-the pruning rather than about the arithmetic.
+`brute.py` was written separately from the Part 0 specification with no pruning,
+no seed, and no precomputed part pool -- it enumerates (p, q) over all primes
+plus the p=0 sentinel, then every multiset of admissible classes summing to n,
+and scores each with the SAFE rule.  Agreement is therefore evidence about the
+pruning rather than about the arithmetic.
+
+BOTH were updated in 2026-08 for the corrected shape space, in which the block
+count is F = Fmid * Ftop with Fmid supplied by the cyclic layer.  So point this
+at the table the NEW enumerator produced; run against the old table it will
+report a mismatch at roughly one n in seven, which is the defect, not a bug:
+
+    naive HIGHER than table  ->  either the table predates the repair, or the
+                                 shipped pruning discards a real configuration
+    naive LOWER than table   ->  the naive enumerator is missing a shape
 
 Cost is roughly |parts|^kmax per (p,q) pair, so it grows fast: n <= 120 is
 seconds, n <= 260 is an overnight run.  Use --nmax to say how far.

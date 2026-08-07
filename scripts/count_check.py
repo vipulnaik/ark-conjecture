@@ -137,18 +137,30 @@ def count(n, q):
 cands = [n for n in range(max(A.nmin, 6), A.nmax + 1)
          if n % A.modulus == A.residue % A.modulus]
 rng = random.Random(A.seed)
-if A.sample < 1.0:
+total = len(cands)
+sampled = A.sample < 1.0
+if sampled:
     cands = [n for n in cands if rng.random() < A.sample]
-if len(cands) > A.maxn:
+truncated = len(cands) > A.maxn
+if truncated:
     cands = sorted(rng.sample(cands, A.maxn))
 q = None if A.no_q else A.q
 
 print(f"system: c prime, r = n - 2c prime"
       + ("" if q is None else f", r = 1 (mod {q})"))
 print(f"window: c/n in [{LO:.4f}, {HI:.4f}]  (centre {A.centre:.4f}, half-width {A.window})")
+how = []
+if sampled:
+    how.append(f"--sample {A.sample:.3g}")
+if truncated:
+    how.append(f"--maxn {A.maxn} (RANDOM SUBSET of the {total:,} qualifying n)")
 print(f"testing {len(cands)} values of n = {A.residue % A.modulus} (mod {A.modulus}) "
-      f"in [{A.nmin:,}, {A.nmax:,}]"
-      + (f", sampled at {A.sample:.3g}" if A.sample < 1 else ", exhaustive"))
+      f"in [{A.nmin:,}, {A.nmax:,}]: "
+      + ("; ".join(how) if how else f"exhaustive, all {total:,}"))
+if truncated:
+    print("   NOTE: --maxn subsamples silently unless you look here.  The mean is a")
+    print("   good estimate at this size but the sd is noisy; quote the sd only from")
+    print("   an exhaustive run, or raise --maxn until it stabilises.")
 print()
 
 rows, zero, degen = [], 0, []
