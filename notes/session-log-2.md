@@ -341,3 +341,18 @@ Reachability decides which rung is the real cap. A needs c even, so c = 2^a at o
 **The counting check validated the wrong window.** §3.7 used the equal-split centre 1/(k+1). The balance point is √η/(1+k√η), equal to the equal split only at η = 1. With a 0.05 half-width the window **misses the balance point entirely** at classes 2, 8, 5 and 11 — including the class that sets the global floor. At c = n/3 with η = 1/6 the achievable density is η/9 = 0.0185 against a cap of 0.05051, so the check counted representations in a region that cannot reach the cap at all. Sound for the system posed; silent on attainment at the optimum.
 
 Both are conservative errors: δ₀ is larger than claimed and the floor rises. Recorded as R0d.
+
+
+---
+
+## L25. The ceilings are mod 24, not mod 12
+
+Follows L24. A co-author asked whether the mod-8 structure of the S4/S5 split ought to push the whole classification to mod 24. It does, and the answer is sharper than either of the intermediate positions.
+
+**The mechanism.** Rung B (two fused c-blocks + foreign) needs the twist on the c-blocks to be odd, i.e. **c ≡ 3 (mod 4)**. But η = 1/6 with an odd twist forces r − 1 = 12·odd, hence **r ≡ 5 (mod 8)**; with 2c ≡ 6 (mod 8) that gives **n ≡ 3 (mod 8)**. So reachability of the fused rung is a congruence on n mod 8, and combined with the mod-3 obstruction the ceilings are a mod-24 phenomenon. Measured over 15,000 values per residue: 100% or 0%, no boundary cases.
+
+**Result: eight distinct ceilings across 24 residues**, against six across 12. Nine of the twelve odd residues rise by 33–54%. Three do not — **7, 15 and 23 mod 24** are stuck on rung C.
+
+**The global constant survives and its extremal class halves.** min = 0.050510 = (5 − 2√6)/2, attained at **n ≡ 23 (mod 24)** alone. So §5's headline was right, but not for the reason given, and the class it named was twice too large. `ladder_verify.py` rekeyed mod 24; its 20,000 run puts the floor at n = 8927 ≡ 23 (mod 24), confirming the prediction.
+
+**A prediction that did *not* hold, and why that is fine.** If low n clustered at the low-cap residues, the branch-and-bound record holders should all be ≡ 23 (mod 24). Eight of eleven are; 2291, 3059 and 11819 are ≡ 11. No contradiction: caps are ceilings, and finite-n record holders are low because *supply* fails, not because their ceiling is low. n = 3059 rose to 0.0839 under the corrected shape space, above rung B, which fits. The mod-24 result is about the asymptotic floor and the finite record holders do not test it.

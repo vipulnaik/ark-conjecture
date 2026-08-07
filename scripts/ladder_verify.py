@@ -42,12 +42,13 @@ optimum sits at x = 0.1973, and reports a spurious shortfall there.
 
 CLASS CAPS (section 3.3), used to report each n as a fraction of what its class
 permits:
-    n mod 12 in {0,4,6,10}   eta=1     cap 1/4            = 0.25000
-    n mod 12 in {2,8}        eta=1/3   cap 1/(1+sqrt3)^2  = 0.13397
-    n mod 12 in {1,9}        eta=1     cap 1/9            = 0.11111
-    n mod 12 in {3,7}        eta=1/2   cap 1/(2+sqrt2)^2  = 0.08579
-    n mod 12 == 5            eta=1/3   cap                = 0.07180
-    n mod 12 == 11           eta=1/6   cap                = 0.05051
+    even n                          cap 0.25000 or 0.13397  (unchanged)
+    n mod 24 in {1,9,13,21}         cap 0.17157   rung B
+    n mod 24 in {3,19}              cap 0.12500   rung B
+    n mod 24 in {5,17}              cap 0.10102   rung B
+    n mod 24 in {7,15}              cap 0.08579   rung C -- no fused rung
+    n mod 24 == 11                  cap 0.06699   rung B
+    n mod 24 == 23                  cap 0.05051   rung C -- the extremal residue
 
 Usage:
     python3 ladder_verify.py 100000
@@ -71,11 +72,26 @@ for i, x in enumerate(_A):
 # a future mu_enumerate.py run.
 ASYMPTOTIC = 2.5 - 6 ** 0.5
 
-CAP = {0: .25, 4: .25, 6: .25, 10: .25,
-       2: 1 / (1 + 3 ** .5) ** 2, 8: 1 / (1 + 3 ** .5) ** 2,
-       1: 1 / 9, 9: 1 / 9,
-       3: 1 / (2 + 2 ** .5) ** 2, 7: 1 / (2 + 2 ** .5) ** 2,
-       5: 0.07180, 11: 0.05051}
+# CEILINGS, REKEYED MOD 24 (2026-08).  The old table was keyed mod 12 and used
+# the UNFUSED rung throughout.  For odd n the shapes form a ladder
+#
+#   A  one c-block + foreign      cap  eta/(1+sqrt e)^2      needs c = 2^a
+#   B  two c-blocks FUSED + fgn   cap 2eta/(sqrt2+2sqrt e)^2 needs c = 3 mod 4
+#   C  two c-classes UNFUSED      cap  eta/(1+2sqrt e)^2     always available
+#
+# with A > B > C.  Rung B needs an odd twist on the c-blocks, which forces
+# r = 5 mod 8 and hence n = 3 mod 8 -- so half of each obstructed class reaches
+# B and half is stuck on C, and the split is mod 24 rather than mod 12.
+# Measured 100%/0% with no boundary cases.  Nine of the twelve odd residues rise
+# by 33-54%; residues 7, 15 and 23 do not.  The global minimum is unchanged at
+# 0.050510, now attained at n = 23 (mod 24) alone.
+CAP = {0: 0.250000, 1: 0.171573, 2: 0.133975, 3: 0.125000,
+       4: 0.250000, 5: 0.101021, 6: 0.250000, 7: 0.085786,
+       8: 0.133975, 9: 0.171573, 10: 0.250000, 11: 0.066987,
+       12: 0.250000, 13: 0.171573, 14: 0.133975, 15: 0.085786,
+       16: 0.250000, 17: 0.101021, 18: 0.250000, 19: 0.125000,
+       20: 0.133975, 21: 0.171573, 22: 0.250000, 23: 0.050510}
+MOD = 24
 
 t = time.time()
 sieve = bytearray([1]) * (N + 1)
@@ -247,7 +263,7 @@ def stamp():
     return time.strftime("%H:%M:%S")
 
 t0 = time.time()
-per = {a: [1e9, None, 0] for a in range(12)}
+per = {a: [1e9, None, 0] for a in range(MOD)}
 gmin = (1e9, None)
 below = []
 weak = []
@@ -257,7 +273,7 @@ print(f"{stamp()}  scanning to {N:,}; checkpoint every {TICK:,}, "
       f"summary every {SUMMARY:,}")
 for n in range(6, N + 1):
     if not ispp[n]:
-        a = n % 12
+        a = n % MOD
         # Never early-return while the value is still below the asymptotic
         # bound: those n are exactly the worklist, and truncating them there
         # both lengthens the list and makes the family order matter.  Only
@@ -293,13 +309,13 @@ for n in range(6, N + 1):
         b = f"{blk_min[0]:.5f} at n = {blk_min[1]}" if blk_min[1] else "n/a"
         print(f"{stamp()}  --- through {n:,}: block floor {b}; "
               f"global floor {gmin[0]:.5f} at n = {gmin[1]} "
-              f"(mod 12 = {gmin[1] % 12}); {len(below)} below {FLOOR} ---")
+              f"(mod 24 = {gmin[1] % MOD}); {len(below)} below {FLOOR} ---")
         blk_min = (1e9, None)
 print(f"{stamp()}  scan complete in {time.time()-t0:.0f}s")
 print()
-print(f"{'n mod 12':>9} {'cap':>9} {'min delta/cap':>14} {'at n':>8} "
+print(f"{'n mod 24':>9} {'cap':>9} {'min delta/cap':>14} {'at n':>8} "
       f"{'# below ' + str(FLOOR):>14}")
-for a in range(12):
+for a in range(MOD):
     r, n, cnt = per[a]
     if n is None:
         continue
@@ -307,7 +323,7 @@ for a in range(12):
 print()
 print(f"GLOBAL FLOOR over composite non-prime-power n <= {N:,}: "
       f"delta >= {gmin[0]:.5f}, attained at n = {gmin[1]} "
-      f"(n mod 12 = {gmin[1] % 12})")
+      f"(n mod 24 = {gmin[1] % MOD})")
 print(f"values with delta < {FLOOR}: {len(below)}"
       + (f" -> {below[:10]}" if below
          else "  -- the section 5 conjecture holds throughout this range"))

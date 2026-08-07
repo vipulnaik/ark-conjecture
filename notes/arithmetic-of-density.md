@@ -205,7 +205,9 @@ The ℓ = 2 obstruction forces a ≥ 2, and hence η ≤ 1/2 **provided u > 1**;
 >
 > Fusion at F = 2 forces q = 2, which pins the foreign efficiency to the 2-part of r − 1 — full **exactly** at a Fermat prime. So cap_2(1) is reachable only with r ∈ {5, 17, 257, 65537}, which is why all 20 of the winners attaining it use r = 257, and why they sit in classes 3 and 7 where the table says η ≤ 1/2. The two facts are the same fact.
 >
-> **2026-08: the odd-n caps are the bottom rung of a three-rung ladder, and §3.3 tabulated the bottom one.** The derivation below optimises **one** shape and calls the result the class cap. The cap is a max over shapes, each with **its own balance point**, and the shapes form a ladder. Writing x = c/n and η for the foreign efficiency, for odd n = (c-part) + r\*:
+> **2026-08: the ceilings are a mod-24 phenomenon, and the table below optimises the wrong rung.** Two corrections compound here. Both were found by asking whether the S4/S5 result should have changed this analysis; both understate δ₀.
+>
+> **(a) The shapes form a ladder and the table takes its bottom rung.** For odd n = (c-part) + r\*, with x = c/n:
 >
 > | rung | shape | intra density | cap | balance point |
 > |---|---|---|---|---|
@@ -213,20 +215,28 @@ The ℓ = 2 obstruction forces a ≥ 2, and hence η ≤ 1/2 **provided u > 1**;
 > | **B** | two c-blocks **fused** + foreign | 2x² | 2η/(√2+2√η)² | √η/(√2+2√η) |
 > | **C** | two c-classes **unfused** + foreign | x² | η/(1+2√η)² | √η/(1+2√η) |
 >
-> and the caps run **A > B > C** in every class:
+> with **A > B > C** in every class, and each rung at its **own** balance point — 0.2247 for C at η = 1/6, 0.1830 for B. The cross term binds at none of them, so all three derivations are valid; only the choice of answer was wrong. Behind the ladder is the identity **cap_F(η) = F·cap₁(η/F)**: fusing F ways trades a factor F on the intra term against the same factor on the effective efficiency, which is why one class's fused optimum lands exactly on the next class down's unfused optimum.
 >
-> | class | η | A | B | **C (tabulated below)** | B/C |
-> |---|---|---|---|---|---|
-> | 1, 9 | 1 | 0.25000 | 0.17157 | 0.11111 | 1.54 |
-> | 3, 7 | 1/2 | 0.17157 | 0.12500 | 0.08579 | 1.46 |
-> | 5 | 1/3 | 0.13397 | 0.10102 | 0.07180 | 1.41 |
-> | 11 | 1/6 | 0.08404 | **0.06699** | 0.05051 | 1.33 |
+> **(b) Reachability is a congruence on n mod 24, not mod 12.** Rung A needs c even, hence c = 2^a — only ~log₂n choices, so its optimum is rarely available; that is what §3.3 below miscalls the "2^a + r\* escape", which is not an escape from the ceiling but the top rung, usually out of reach. Rung B needs the twist on the c-blocks to be odd, i.e. **c ≡ 3 (mod 4)**. But η = 1/6 with an odd twist forces r − 1 = 12·odd, hence **r ≡ 5 (mod 8)**; with 2c ≡ 6 (mod 8) that gives **n ≡ 3 (mod 8)**. So half of each obstructed class can use rung B and half cannot, and the split is by n mod 24. Measured over 15,000 values per residue, it is 100% or 0% with no boundary cases.
 >
-> The cross term does not bind at any of these optima, so all three derivations are internally valid; the error is in taking C for the answer. There is a tidy identity behind the ladder: **cap_F(η) = F·cap₁(η/F)**, so fusing F ways trades a factor F on the intra term against the same factor on the effective efficiency — which is why the fused optimum for one class lands exactly on the unfused optimum of the next class down.
+> **The corrected ceiling table.**
 >
-> **Which rung is reachable is the whole question, and it is not the one §3.3 assumed.** Rung A needs c even, hence c = 2^a at odd n — only ~log₂n choices, so its balance point is rarely available. **That is precisely the "2^a + r\* escape" listed below.** It is not an escape from the cap; it is the *top rung*, usually out of reach, which is why it beats the tabulated value whenever it does land near the optimum. Rung B needs the twist on the c-blocks to be odd, i.e. the odd part of c − 1 to be (c−1)/2, i.e. **c ≡ 3 (mod 4)** — half of all primes, so its balance point *is* generically reachable. Rung C needs nothing extra and is always available.
+> | n mod 24 | rung | cap | vs mod-12 value |
+> |---|---|---|---|
+> | 0, 4, 6, 10, 12, 16, 18, 22 | even, F = 1 | 0.25000 | — |
+> | 2, 8, 14, 20 | even, F = 1 | 0.13397 | — |
+> | 1, 9, 13, 21 | B | **0.17157** | ×1.54 |
+> | 3, 19 | B | **0.12500** | ×1.46 |
+> | 5, 17 | B | **0.10102** | ×1.41 |
+> | 7, 15 | C | 0.08579 | — |
+> | 11 | B | **0.06699** | ×1.33 |
+> | **23** | **C** | **0.05051** | — |
 >
-> **So the generic odd-n cap is rung B, and §3.3 understates it by 33–54%.** The class-11 value becomes **0.06699** rather than 0.05051, which raises the asymptotic floor of §5 by the same factor. Two things follow that have not been done: the ladder must be re-derived per class as a max over rungs subject to reachability, and §3.7's counting check must be redone at each rung's *own* balance point with its *own* congruence condition on c — the check as run used the equal-split centre 1/(k+1), which is rung C's optimum only when η = 1 and misses the balance point entirely in classes 2, 8, 5 and 11.
+> Eight distinct ceilings across 24 residues, against six across 12. Nine of the twelve odd residues rise by 33–54%; **three do not** — 7, 15 and 23 mod 24 are stuck on rung C.
+>
+> **The global asymptotic constant survives, but its extremal class halves.** The minimum is still **0.050510 = (5 − 2√6)/2**, now attained only at **n ≡ 23 (mod 24)** rather than throughout n ≡ 11 (mod 12). So §5's headline is right, for a reason the earlier derivation did not give, and the class it names is twice as large as it should be.
+>
+> **What this obliges.** The ladder must be re-derived per residue mod 24 as a max over reachable rungs; §3.7's counting check must be redone at each rung's own balance point with its own congruence on c (it used the equal-split centre, which is a balance point only at η = 1 and misses it entirely at 2, 8, 5 and 11 mod 12); and `ladder_verify.py`'s `CAP` must be rekeyed mod 24. `pending-checks.md` R0d.
 
 > **Consequence for how the table should be read.** Against the current data, **194 of the 1,108 two- and three-class one-foreign winners exceed their own class's tabulated δ₀** — 57 via the documented 2^a + r\* route, 43 via the fused 2×c + r\* route above, and 94 via an η above the class's generic value (mostly the 3-power escapes). In class 11 the *median* winner sits at 1.24× the tabulated cap and 28 of 39 exceed it, with a maximum of 3.99×. The δ₀ are therefore best read strictly as **guarantees for one specific unfused shape**, not as generic behaviour — the wording "generic ceiling" overstates how typical they are inside the computed range. What *is* an upper bound, and holds without exception, is cap_F(η) evaluated at the configuration's own F and η: **0 of 1,108 rows exceed it.**
 
@@ -516,7 +526,7 @@ This is a *lower* bound on δ(n), not δ(n) itself, since it uses only four fami
 
 So the low-density dips are a small-n phenomenon and the asymptotic floor is the class-11 cap.
 
-> **The asymptotic constant below is under revision.** It is stated as the class-11 value of rung C — the unfused shape — which §3.3 now records as the bottom of a three-rung ladder. The generically reachable rung is B, at **0.06699**, a factor 1.33 higher. Every occurrence of (5 − 2√6)/2 in this document, in `orbital-evasiveness-notes.md`, and in `ladder_verify.py`'s `ASYMPTOTIC` constant is the rung-C value. The conjecture is therefore **conservative, not wrong** — but it is not the sharp statement, and 47 of the 49 class-11 rows in the rebuilt table already exceed 0.06699.
+> **The constant is right; the class it names is twice too large.** §3.3 now derives the ceilings mod 24 rather than mod 12, and nine of the twelve odd residues rise by 33–54% because a fused rung is reachable there. Three do not: **7, 15 and 23 mod 24**. The minimum over all residues is unchanged at **0.050510**, attained at **n ≡ 23 (mod 24)** alone — half of the n ≡ 11 (mod 12) named below. So the conjecture stands as stated, but the sentence identifying the extremal class needs narrowing, and the six-value ceiling table it refers to has become eight values.
 
 > **Conjecture (global density floor).** For every composite non-prime-power n,
 >
@@ -526,7 +536,7 @@ So the low-density dips are a small-n phenomenon and the asymptotic floor is the
 >
 > **δ(n) ≥ (5 − 2√6)/2 − o(1) = 0.050510…**,
 >
-> the extremal class being n ≡ 11 (mod 12) — the only one carrying both local obstructions, where the balanced family yields η/(1 + k√η)² at η = 1/6, k = 2. The asymptotic half says the *worst* n eventually reach what the balanced family guarantees; it is a floor, and individual n exceed it freely.
+> the extremal class being **n ≡ 23 (mod 24)** — the only residue carrying both local obstructions *and* unable to reach the fused rung, where the balanced family yields η/(1 + k√η)² at η = 1/6, k = 2. The other half of n ≡ 11 (mod 12) reaches 0.06699 (§3.3). The asymptotic half says the *worst* n eventually reach what the balanced family guarantees; it is a floor, and individual n exceed it freely.
 
 The constant 1/50 is deliberately loose. Two things are absorbed into the margin: the finite exceptional set of §3.5, whose members fall back on whatever configuration they can find, and the windowing loss of §3.4, which costs a factor Θ(√ε) when the balance point is not exactly available.
 

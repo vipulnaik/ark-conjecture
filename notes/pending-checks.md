@@ -66,23 +66,28 @@ This is the one place where SAFE's over-count is not shape-neutral: it changes w
 python3 scripts/mu_enumerate_v2.py --nmax 2600 --refined --out outputs/mu_table_refined_v3.csv
 ```
 
-## R0d. Re-derive the class caps as a max over rungs, and redo the counting check
+## R0d. Ceilings rederived mod 24 — DONE; counting check still to redo
 
-**Two compounding errors, found 2026-08, both understating δ₀.**
+**Done.** The ceilings were derived for one shape (the unfused rung) and keyed mod 12. Corrected: for odd n the shapes form a ladder A > B > C, reachability of the fused rung B forces n ≡ 3 (mod 8), and the ceilings are therefore a **mod-24** phenomenon — eight distinct values across 24 residues, against six across 12. Nine of the twelve odd residues rise by 33–54%; **7, 15 and 23 do not**. Full table in `arithmetic-of-density.md` §3.3.
 
-1. **§3.3 optimised one shape.** For odd n the shapes form a ladder with caps A > B > C — one c-block + foreign, two fused + foreign, two unfused + foreign — and §3.3 tabulated **C**, the bottom. Generic reachability picks **B** (needs c ≡ 3 mod 4, half of all primes); A needs c = 2^a and is the thing §3.3 miscalls an "escape". Class 11 becomes **0.06699** not 0.05051, a factor 1.33, and the same factor propagates to §5's asymptotic floor and to `ladder_verify.py`'s `ASYMPTOTIC`.
+The global constant **0.050510 is unchanged**, but its extremal class halves: **n ≡ 23 (mod 24)**, not all of n ≡ 11 (mod 12). `ladder_verify.py`'s `CAP` is rekeyed mod 24 and its 20,000 run puts the floor at n = 8927 ≡ 23 (mod 24), as the theory now predicts.
 
-2. **§3.7 validated the wrong window.** It used the equal-split centre 1/(k+1), which is the balance point only at η = 1. The true balance point is √η/(1+k√η), and the 0.05-half-width window **misses it entirely** in classes 2, 8, 5 and 11 — including class 11, which sets the floor. Each rung also carries its own congruence on c, so the singular series differs, not just the centre.
+**Still to do.**
 
-Order: re-derive the caps first, since they set the centres the counting check needs. `--centre` is already a flag, so (2) is a rerun rather than a code change.
+1. **Redo the counting check at each rung's own balance point.** §3.7 used the equal-split centre 1/(k+1), which is a balance point only at η = 1 and **misses it entirely** at 2, 8, 5 and 11 mod 12 — including the class that sets the floor. Each rung also carries its own congruence on c, so the singular series differs, not just the centre. `--centre` is already a flag; `--modulus 24` is needed to separate the split classes.
 
 ```bash
-# per class, at that class's own rung-B balance point
+# rung B at n = 11 mod 24, its own balance point sqrt(1/6)/(sqrt2+2sqrt(1/6))
 python3 count_check.py --nmin 200000 --nmax 230000 --maxn 99999999 \
-        --residue 11 --modulus 12 --dq 12 --centre 0.18301
+        --residue 11 --modulus 24 --dq 12 --centre 0.18301
+# rung C at n = 23 mod 24, the extremal residue
+python3 count_check.py --nmin 200000 --nmax 230000 --maxn 99999999 \
+        --residue 23 --modulus 24 --dq 12 --centre 0.22474
 ```
 
-**Do not quote 0.050510 as the asymptotic constant** until this is settled; it is conservative by a third.
+2. **Rerun `ladder_verify.py` to 10⁶** with the mod-24 ceilings. The worklist is driven by `ASYMPTOTIC` = 0.050510, which is unchanged, so the 41,584 entries should be stable — but the per-class `min delta/cap` diagnostics all shift, and those are what would reveal a class behaving anomalously.
+
+3. **Sanity-check the ratio spread.** With the raised ceilings the per-residue δ/cap minima now run 0.327–0.653 (previously 0.327–0.716). Still no residue anomalously weak, but worth rechecking at 10⁶.
 
 ## R1. Routine, after any new batch of table values
 
