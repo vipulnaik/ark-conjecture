@@ -82,13 +82,20 @@ python3 wide_cert.py 100000 --no-theorems                      # NEEDS THE FLAG
 
 ## R3. Extend the naive-enumerator comparison
 
-The only check that tests the restructure rather than re-running it. `brute.py` now carries the same SAFE tightening as the enumerator — the twist's cyclic part must be coprime to Fmid — implemented by repeated trial division rather than a shared factor set, so it stays a different program. Reproduces B(10) = 20, B(12) = 18, B(78) = 465, and agrees with `mu_enumerate_v2.py` against **v4** at every n ≤ 110 (0 mismatches).
+The only check that tests the restructure rather than re-running it. `brute.py` carries the same SAFE tightening as the enumerator, implemented by repeated trial division rather than a shared factor set so it stays a different program.
 
-Cost grows like n^4.5, so n = 200 is about an hour; `--resume` appends per value and survives interruption.
+**Status: 67 values to n = 105 by contiguous sweep, 0 mismatches**, with all gaps exactly the prime powers (correctly skipped). Every record agrees with v4.
+
+**Targeted values matter more than contiguous coverage here.** Cost grows like n^4.5, so a sweep stalls well below the range where the corrected shape space actually bites — the first S7 instance is n = 143 and the first S4 winner is n = 247, both far above where a sweep reaches in reasonable time. Use `--nlist`:
 
 ```bash
+python3 brute_compare.py mu_table_safe_v4.csv --nlist 143,247,285,308 --resume runs/brute.jsonl
 python3 brute_compare.py mu_table_safe_v4.csv --nmax 200 --resume runs/brute.jsonl
 ```
+
+Both new-shape values confirmed independently: **n = 143 → 1081** (the first cyclic-layer-fused winner) and **n = 247 → 2525** (the first S4 winner, c = 73 ≡ 1 mod 8). So the new code paths are verified by a program that knows nothing about them, which the contiguous sweep alone could not do.
+
+n = 308 is not yet in v4 — it needs the rebuild to pass 288 — and is worth rerunning once it is, since it is the original counterexample.
 
 ## R4. Count the Lemma C exposure after each extension
 

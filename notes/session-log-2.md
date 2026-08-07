@@ -367,3 +367,14 @@ Closes the second half of L24/L25. The check had centred the window on the equal
 Redone at each rung's own x\*, separated mod 24: **n ≡ 11 (mod 24) at rung B** (x\* = (√3 − 1)/4) gives 1.1007 → 1.0891 → **1.0025** across bands to 10⁶; **n ≡ 23 (mod 24) at rung C** (x\* = (√6 − 2)/2) gives 1.0427 → **1.0033**. sd falls like n^{−1/2}; no n without a solution anywhere. The approach to 1 is now **from above**, where the equal-split runs approached from below — nothing else changed, so the centre was the variable.
 
 Two things confirmed along the way. The four closed forms flagged as suspicious for looking too rational — notably (B, η = 1/2) at cap 1/8 with x\* = 1/4 — were re-derived by direct numerical optimisation over x with all cross terms included, and all four reproduce exactly. And the extra congruence c ≡ 3 (mod 4) that rung B requires is **automatic**: r = 12q + 1 with q odd gives r ≡ 5 (mod 8), and n ≡ 3 (mod 8) then forces c ≡ 3 (mod 4). That is why the mod-24 split coincides exactly with the split between rungs, rather than being an extra condition layered on top.
+
+
+---
+
+## L27. The naive check reaches the values that matter
+
+The contiguous sweep confirms the pruning but not the new shapes: cost grows like n^4.5, so it stalls around n = 105–200, while the first S7 instance is n = 143 and the first S4 winner n = 247. Added `--nlist` to `brute_compare.py` so specific values can be checked directly.
+
+**Both new-shape values verified independently.** n = 143 → 1081, the first cyclic-layer-fused winner; n = 247 → 2525, the first S4 winner (c = 73 ≡ 1 mod 8, so the unfused reading wins per §3.2). `brute.py` reproduces both from the Part 0 specification with no knowledge of the mod-8 analysis or of cyclic-layer fusion as a named phenomenon.
+
+The contiguous run stands at 67 values to n = 105 with 0 mismatches and all gaps exactly the prime powers — skipped because the answer is known, per the convention now stated in `arithmetic-of-density.md`.

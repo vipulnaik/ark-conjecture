@@ -35,6 +35,12 @@ ap = argparse.ArgumentParser()
 ap.add_argument("table")
 ap.add_argument("--nmax", type=int, default=120)
 ap.add_argument("--nmin", type=int, default=6)
+ap.add_argument("--nlist", default=None,
+                help="comma-separated n to check instead of a range. The cost grows "
+                     "like n^4.5, so a contiguous sweep stalls well below the values "
+                     "that actually exercise the corrected shape space -- the first "
+                     "S7 instance is n = 143 and the first S4 winner n = 247. A "
+                     "targeted list reaches those for a fraction of the time.")
 ap.add_argument("--kmax", type=int, default=4,
                 help="max parts the naive enumerator considers (4 covers every "
                      "known winner shape; 3 is much faster and still meaningful)")
@@ -54,8 +60,16 @@ if A.resume and os.path.exists(A.resume):
         done[d["n"]] = d["brute"]
     print(f"resuming: {len(done)} values already checked")
 
-todo = [n for n in sorted(tbl) if A.nmin <= n <= A.nmax and n not in done]
-print(f"{len(todo)} value(s) to check in [{A.nmin}, {A.nmax}] at kmax={A.kmax}"
+if A.nlist:
+    want = [int(x) for x in A.nlist.replace(",", " ").split()]
+    missing = [n for n in want if n not in tbl]
+    if missing:
+        print(f"not in the table, skipping: {missing}")
+    todo = [n for n in want if n in tbl and n not in done]
+else:
+    todo = [n for n in sorted(tbl) if A.nmin <= n <= A.nmax and n not in done]
+where = f"from --nlist" if A.nlist else f"in [{A.nmin}, {A.nmax}]"
+print(f"{len(todo)} value(s) to check {where} at kmax={A.kmax}"
       f"  (table has {len(tbl)} rows)")
 
 # Long runs get interrupted.  Flush every result so --resume always has a
