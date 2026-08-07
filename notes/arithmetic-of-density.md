@@ -319,37 +319,45 @@ Two things cut the other way. The demand is a **disjunction** over eight shapes 
 
 **What this means for the framework.** The ladder's conditional results should be read as conditional on a *parametric* hypothesis of Goldbach type, not on Bateman–Horn. The distinction matters in two places. It explains why §3.4's window analysis is needed at all: for a fixed system one would simply count solutions up to X, whereas here the solutions live in a window proportional to n and one must check that the window does not shrink. And it explains why §6's covering formulation is the right shape — a disjunction over a finite family of parametric systems is exactly what a lower bound on μ can deliver, and is strictly weaker than any single system's solvability.
 
-### 3.6 Effectivity: what the conjectures give, and why the gap is not where it looks
+### 3.6 What the conjectures give: the shifted-prime ladder, and effectivity
 
-The hypothesis is parametric, then, and of Goldbach difficulty. It remains in addition a *heuristic*, and an asymptotic one. Since the computations of this programme are exact statements about small n, the natural worry is a middle range covered by neither. The worry is real but misplaced, and the resolution matters for how the ladder should be stated.
+**The route's strength is a single parameter.** The efficiency condition — that r − 1 carry a large prime-power divisor — is what couples this framework to the literature on shifted primes, and the coupling reduces to one exponent. Write θ for what can be guaranteed in P(r − 1) > r^θ. The foreign block then contributes qr ≥ r^{1+θ}, and with r of order n the family delivers roughly **n^{1+θ}**. Every result in this area is a value of θ:
 
-**The relevant conjectures have no error term at all.** This is true of Bateman–Horn in the fixed-system setting and of Hardy–Littlewood in the parametric one alike. Its content is π_f(x) ~ (1/D)·𝔖(f)·∫₂^x dt/(log t)^k, a bare asymptotic with an ineffective implied constant. It therefore says *nothing whatever* about any specific n, and the uncovered range is not a middle interval that computation can close from below — it is everything above wherever the computation stops, with no upper end.
+| input on shifted primes | θ | quantifier | edge bound |
+|---|---|---|---|
+| Bombieri–Vinogradov | 1/4 | all large n | n^{5/4+o(1)} |
+| Chowla-type | 1/2 | all large n | n^{3/2−ε} |
+| Baker–Harman, positive relative density; **0.679** (Li, 2025) | 0.677 → 0.679 | **almost all** n | n^{1.677} |
+| Elliott–Halberstam | → 1 | all large n | n^{2−o(1)} |
 
-**Quantitative refinements exist but are the wrong shape.** The conjectured square-root form, π_f(x) = (1/D)·𝔖(f)·Li_k(x) + O_ε(x^{1/2+ε}), is a statement about the *counting function up to x*. Our families need a representation at each individual n, and a count with an error term does not deliver one: an exceptional n contributes O(1) to a count whose error term is a power of x. Nor can one assume uniformity in n to compensate — Friedlander and Granville showed that sufficiently uniform versions of Hardy–Littlewood-type conjectures are false outright, so uniformity is not a free hypothesis.
+Hypothesis (H) of §3.5 is the **θ = 1 endpoint** of this ladder. Stating it that way is more informative than calling it a barrier: it places the hypothesis on a scale with a known current value rather than in a separate category.
 
-**But the quantity that matters is computable directly, and cheaply.** This is what dissolves the difficulty. What §5 needs at each n is not an asymptotic count of representations but the best density the families actually achieve — a sieve computation costing O(n/log n) against the n^2.9 of computing B(n). The asymmetry is what lets the floor be verified far past the range where μ(n) is known.
+**The ceiling on the route is technological, not conjectural — and this distinguishes it from Chowla's 1/2.** Chowla's exponent is the value a *conjecture* buys; beating it means assuming something else. Baker–Harman's is the current output of a *method*, and the method's limit is a **level-of-distribution barrier**: results of this shape rest on Brun–Titchmarsh on average, i.e. on controlling primes in progressions to moduli beyond x^{1/2} — exactly the gap between Bombieri–Vinogradov and Elliott–Halberstam. The exponent moves whenever that control does, and it has: 0.677 became **0.679** on Maynard's triple-convolution estimates, in the lineage that took Bombieri–Friedlander–Iwaniec's x^{29/56} to Maynard's x^{11/21} and Lichtman's x^{17/32}. So θ → 1 is not a separate wish; it *is* level → 1, which is Elliott–Halberstam.
 
-> *Verified* (`ladder_verify.py`). Over every composite non-prime-power n ≤ 10⁶ — all twelve residue classes, no eligibility filter — the best density the four families achieve is at least **0.02516**, attained at n = 8927, and **no value falls below 0.02**.  That is a direct verification of §5's conjecture over a range roughly 450× wider than where μ(n) itself is known.
+**It is the shifted-prime condition specifically that imposes this.** Binary Goldbach in the almost-all regime carries no such condition, which is why Montgomery–Vaughan settles it unconditionally with a power-saving exceptional set. Adding "and r − 1 has a large prime factor" couples the problem to primes in progressions to large moduli and puts it behind the barrier. The condition that buys the density is the same condition that caps the exponent.
 
-**And the middle range turns out to be bounded and computable.** The worry is that between the verified range and the asymptotic one lies a band reachable by neither. Empirically it is not open-ended: the lower envelope of achievable density falls to its minimum in [10³, 10⁴) and rises monotonically thereafter, with only four of 48,729 worklist entries having a bound below 0.030 and all four in [3000, 10⁴]. §5 sets this out. So the structure is not "computed below, conjectural above" with a gap between, but:
+> *One caveat on transferring the ladder.* θ is stated for the largest **prime** divisor of r − 1, while the efficiency η of §3.3 is built from the largest prime **power** divisor of the odd part, together with the 2-part. The two agree when r − 1 = 2q and differ otherwise, so the ladder should be checked against the prime-power version before (H) is called its endpoint without qualification.
+
+**On effectivity.** Whichever rung is in play, the conjecture supplying it has no error term: Bateman–Horn and Hardy–Littlewood alike assert π_f(x) ~ (1/D)·𝔖(f)·∫₂^x dt/(log t)^k, a bare asymptotic with an ineffective implied constant. It says nothing about any specific n, so what is uncovered is not a middle interval that computation might close from below — it is everything above wherever the computation stops.
+
+The conjectured square-root refinement π_f(x) = (1/D)·𝔖(f)·Li_k(x) + O_ε(x^{1/2+ε}) does not help, being the wrong shape: it bounds the *counting function up to x*, while the families need a representation at each individual n, and an exceptional n contributes O(1) to a count whose error term is a power of x. Nor is uniformity in n a free hypothesis — Friedlander and Granville showed that sufficiently uniform versions of Hardy–Littlewood-type conjectures are false outright.
+
+**But the quantity §5 needs is computable directly and cheaply**, and that is what dissolves the difficulty. At each n it is not an asymptotic count of representations but the best density the families actually achieve — a sieve computation costing O(n/log n) against the n^2.9 of computing B(n). The asymmetry is what lets the floor be verified far past the range where μ(n) is known.
+
+> *Verified* (`ladder_verify.py`). Over every composite non-prime-power n ≤ 10⁶ — all twenty-four residues, no eligibility filter — the best density the four families achieve is at least **0.02516**, attained at n = 8927, and **no value falls below 0.02**. That is a direct verification of §5's conjecture over a range roughly 450× wider than where μ(n) itself is known.
+
+So the structure is not "computed below, conjectural above" with an unreachable band between:
 
 | | range | status |
 |---|---|---|
-| μ(n) known exactly | contiguous to n = 2,376, plus n = 3,059 and 3,239 | computed (2,008 rows) |
-| collapse B_refined = B_safe certified | n ≤ 100,000 | computed, from lower bounds (Part E″), at all but two values — n = 50,817 and n = 89,697. *Certifies the enumeration's two endpoints agree; no longer gives μ(n) = B(n), since the shape space is incomplete.* |
+| μ(n) known exactly | the computed table | computed |
+| collapse B_refined = B_safe certified | n ≤ 100,000 | computed from lower bounds (Part E″), at all but two values — n = 50,817 and n = 89,697 |
 | global floor δ ≥ 0.02516 | n ≤ 10⁶ | computed (§5); the branch-and-bound gives the stronger δ ≥ 0.026117 over the same range |
 | global floor δ ≥ 0.02 | n > 10⁶ | conjectural, ineffectively |
 
-**One consistency check worth recording.** The obstructions of §3.3 were derived there from the structure of r − 1 — which twists Lemma B′ permits. They also fall out of the singular series: 𝔖(n) vanishes precisely when ω(2) = 2 or ω(3) = 3, which is exactly n ≡ 3 (mod 4) or n ≡ 2 (mod 3). Two independent routes to the same two classes.
+**The natural next rung is an exceptional-set bound**, not because it would be better than an all-n statement — it would not — but because it is strictly weaker and is where progress on problems of this shape has historically come first. "All but O(x^θ) of n ≤ x admit a representation", for some θ < 1, is exactly the form Montgomery–Vaughan and then Pintz achieved for binary Goldbach, and results of that shape are sometimes effective. An effective one here, combined with verification up to N, would give an unconditional density statement about the ladder — which no amount of asymptotic Bateman–Horn can, at any rung.
 
-**What would be worth proving instead.** Given that per-n computation is cheap and the asymptotic is ineffective, the statement that would actually add something is an **exceptional-set bound**: not "every large n admits a representation" but "all but O(x^θ) of n ≤ x do", for some θ < 1. Results of that shape are known for binary Goldbach (Montgomery–Vaughan, and subsequently Pintz, with θ well below 1) and are sometimes effective. Combined with verification up to N, an effective exceptional-set bound would give a genuine unconditional density statement about the ladder, which no amount of asymptotic Bateman–Horn can.
-
-
-> **Where this sits on the shifted-prime ladder.** The efficiency condition — that r − 1 carry a large prime-power divisor — is what couples this framework to the literature on shifted primes, and the coupling is a single parameter. Writing θ for the exponent one can guarantee in P(r − 1) > r^θ, the family delivers roughly **n^{1+θ}**, so the whole hierarchy is θ: Bombieri–Vinogradov gives θ = 1/4 for all large n; Chowla-type input gives 1/2; **Baker–Harman gives 0.677 — now 0.679 (Li, 2025) — for a positive relative density of primes, hence almost all n**; Elliott–Halberstam gives θ → 1. Hypothesis (H) of §3.5 is the **θ = 1 endpoint**.
->
-> That framing is more informative than calling (H) a barrier, and it locates the obstruction precisely. The ceiling here is **not conjectural but technological**: results of the Baker–Harman kind rest on Brun–Titchmarsh on average, i.e. on controlling primes in progressions to moduli beyond x^{1/2}, which is exactly the gap between Bombieri–Vinogradov and Elliott–Halberstam. The exponent has moved as that control improved and will move again. It is the shifted-prime condition specifically that imposes it — binary Goldbach in the almost-all regime carries no such condition, which is why Montgomery–Vaughan settles it unconditionally with a power-saving exceptional set.
->
-> *One caveat on transferring the ladder.* θ is stated for the largest **prime** divisor of r − 1, while the efficiency η of §3.3 is built from the largest prime **power** divisor of the odd part, together with the 2-part. The two agree when r − 1 = 2q^e with e = 1 and differ otherwise, so the ladder should be checked against the prime-power version before (H) is called its endpoint without qualification.
+**One consistency check worth recording.** The obstructions of §3.3 were derived there from the structure of r − 1 — which twists Lemma B′ permits. They also fall out of the singular series: 𝔖(n) vanishes precisely when ω(2) = 2 or ω(3) = 3, which is exactly n ≡ 3 (mod 4) or n ≡ 2 (mod 3). Two independent routes to the same obstructions.
 
 ### 3.7 The prediction, tested by counting
 
