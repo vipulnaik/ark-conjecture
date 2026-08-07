@@ -1,6 +1,6 @@
 # The arithmetic of the density ladder
 
-*Supplement to `orbital-evasiveness-notes.md` and `enumeration-proof.md`. Where those two ask what μ(n) is and prove that the enumeration computes it, this one asks **which arithmetic conditions on n control the answer**, sets up the Hardy–Littlewood and Bateman–Horn machinery that governs them, and checks the predictions against the computed table. **Read subject to the 2026-08 defect** recorded in `enumeration-proof.md`: the enumeration's shape space is known incomplete, so a tabulated value is not μ(n). Over the certified range it equals B_refined, which *is* a lower bound on μ; the tabulated quantity B_safe is an over-count per configuration, so in general it is incomparable with μ rather than below it. Everything below that compares families against one another, or that reads a family's cap, is unaffected; everything that treats a tabulated value as μ(n) needs the qualifier.*
+*Supplement to `orbital-evasiveness-notes.md` and `enumeration-proof.md`. Where those two ask what μ(n) is and prove that the enumeration computes it, this one asks **which arithmetic conditions on n control the answer**, sets up the Hardy–Littlewood and Bateman–Horn machinery that governs them, and checks the predictions against the computed table. **The 2026-08 defect is repaired** (`enumeration-proof.md` Part 0): the shape space was incomplete, `mu_enumerate_v2.py` now covers it, and **μ(n) ≤ B_safe(n) holds again**. What has not caught up is the data — see the provenance banner in §2.0 — so every measured figure below is from a superseded table and wants recomputing against v4. Everything below that compares families against one another, or that reads a family's cap, is unaffected; everything that treats a tabulated value as μ(n) needs the qualifier.*
 
 **Status labels as in the other documents.** *Verified* — an independent computation agreed. *Sound* — argued and read, no independent computation. *Heuristic* — a singular-series prediction, i.e. conditional on Hardy–Littlewood or Bateman–Horn.
 
@@ -190,7 +190,7 @@ The ℓ = 2 obstruction forces a ≥ 2, and hence η ≤ 1/2 **provided u > 1**;
 > - the ℓ=3 classes when (r−1)/2 or c is a power of 3;
 > - the ℓ=2 classes when c is a power of 2 (which turns the shape into the two-part 2^a + r\*);
 > - **the ℓ=2 classes when r is a Fermat prime**, where u = 1 defeats the a ≥ 2 argument outright — see the boxed note above;
-> - **the odd classes when a cyclic-layer-fused class of F = 3 blocks is available**, which needs c a power of 2 at odd n and so is again O(log n)-sparse — the S7 route, boxed below.
+> - **the odd classes when a cyclic-layer-fused class of F = 3 blocks is available**, which needs c a power of 2 at odd n — the S7 route. Like the other two it is O(log n) in representations per n and **not** sparse in n; §4.1 measures it at ~100% availability, effective at 5.6% and 14.0% of residues 11 and 23 mod 24.
 >
 > For the first two, in range these occur at 30, 49, 24 and 5 values in classes 2, 8, 5, 11 respectively and at none in classes 3 and 7. **The 2-power route is not sparse in n** — it is available at 86–99% of odd n and exceeds the class cap at a few percent of them, permanently; see §4.1, which corrects an earlier claim here. The 3-power route pins n near 2·3^k or 4·3^k and is plausibly O(log n)-sparse, but that has not been measured. The third occurs at 20 values, all in classes 3 and 7, all with r = 257; being tied to the five known Fermat primes it is O(1)-sparse. None of the three affects the asymptotic constants.
 
@@ -251,26 +251,9 @@ The ℓ = 2 obstruction forces a ≥ 2, and hence η ≤ 1/2 **provided u > 1**;
 
 *Upper: no row exceeds its own cap.* Computing each winner's actual efficiency from its own foreign block and top prime, and comparing its density against cap(η) for that efficiency: over all **1,167** two- and three-part winners — 1,108 of them checkable by the automated re-derivation, which covers every unfused one-foreign row — **zero exceed it**. So δ(x) = min(x², 2x(1−kx), η(1−kx)²) bounds every individual row, not just the extremes.
 
-*Lower: the distribution is uniform across classes.* An unmodelled obstruction acting on some class would show as that class failing to reach its cap, or as its bulk sitting systematically lower than its siblings'. Restricting to additive-family winners running at their class's generic efficiency, and normalising by the class cap — note that this filter is what keeps the Fermat-escape rows out of the table below, so this check cannot detect an error in the class → η map, only in what happens *given* that map:
->
-> | n mod 12 | rows | min | median | max |
-> |---|---|---|---|---|
-> | 0 | 172 | 0.471 | 0.885 | 0.998 |
-> | 1 | 50 | 0.798 | 0.930 | 0.993 |
-> | 2 | 54 | 0.453 | 0.836 | 0.997 |
-> | 3 | 37 | 0.736 | 0.920 | 0.998 |
-> | 4 | 121 | 0.537 | 0.887 | 0.994 |
-> | 5 | 18 | 0.637 | 0.894 | 0.981 |
-> | 6 | 178 | 0.555 | 0.870 | 0.995 |
-> | 7 | 30 | 0.644 | 0.909 | 0.990 |
-> | 8 | 63 | 0.487 | 0.853 | 0.998 |
-> | 9 | 71 | 0.594 | 0.897 | 0.992 |
-> | 10 | 89 | 0.485 | 0.851 | 0.988 |
-> | 11 | 4 | 0.814 | 0.936 | 0.997 |
->
-> **Every class reaches 0.98–1.00 and none exceeds 1**, and the medians (0.84–0.94) and minima (0.45–0.81) are indistinguishable between obstructed and unobstructed classes. The spread below the cap is representation *availability* — the Hardy–Littlewood side, which varies with n and not with its residue class — so there is no residual class-dependent effect to explain.
+*Lower: the distribution is uniform across classes.* An unmodelled obstruction acting on some residue would show as that residue failing to reach its cap, or as its bulk sitting systematically lower than its siblings'. The right version of this check normalises by the **mod-24** cap and does **not** pre-filter by efficiency — an earlier version restricted to winners at their class's generic efficiency, which is exactly the filter that hides the escape rows, so it could not have detected an error in the class → η map at all. Over the whole table, normalised by cap(own η): every residue lands in 0.28–0.998, none exceeds 1. Normalised by the residue cap, the escapes push a minority above 1, quantified in §4.1. The per-residue δ/cap minima from `ladder_verify.py` currently run **0.327–0.653**, which is the spread expected from representation availability alone.
 
-**The ℓ = 3 obstruction has a sparse escape.** If (r−1)/2 or c is itself a power of 3, full efficiency returns, because the divisibility that kills primality is harmless for prime powers. In range this lifts n ≡ 5 (mod 12) to a maximum of 0.10975 — but 22 of those 35 rows use the *same* foreign prime r = 487, with (r−1)/2 = 243 = 3⁵, and the others use r = 163 with 81 = 3⁴ or c = 243, 729. Candidates of the form r = 2·3^k + 1 are as thin as any other exponential family, so the escape supplies O(log n) candidates rather than n/log³n and should be read as a feature of the computed range. **The generic ceiling 0.0718 is the one to quote asymptotically.**
+**The ℓ = 3 obstruction has an escape — common, not sparse (§4.1).** If (r−1)/2 or c is itself a power of 3, full efficiency returns, because the divisibility that kills primality is harmless for prime powers. In range this lifts n ≡ 5 (mod 12) to a maximum of 0.10975 — but 22 of those 35 rows use the *same* foreign prime r = 487, with (r−1)/2 = 243 = 3⁵, and the others use r = 163 with 81 = 3⁴ or c = 243, 729. Candidates of the form r = 2·3^k + 1 are as thin as any other exponential family, so the escape supplies O(log n) candidates rather than n/log³n and should be read as a feature of the computed range. **The generic ceiling 0.0718 is the one to quote asymptotically.**
 
 ### 3.4 The balanced window, and why it leaves the singular series intact
 
@@ -458,7 +441,18 @@ The ~9–14% with no representation at all is Erdős's set, and the aggregate ov
 
 It lands hardest exactly where the caps are lowest: **a quarter of all n in classes 5 and 11 exceed their tabulated δ₀ by this route alone**, permanently. And the supply really is thin in the naive sense — there are only seven primes r = 2·3^k + 1 below 2.2×10⁵, namely 3, 7, 19, 163, 487, 1459, 39367 — which is precisely how the O(log n) reading arises and why it is wrong: few *representations per n*, but a high proportion of n admitting one.
 
-> **The general shape of the error.** Every escape in §3.3 is O(log n) in representations per n, because each pins one part to a power of a fixed small prime. None of them is thereby sparse in n. Both routes measured so far are available at 85–99% of odd n and effective at a few percent to a quarter, with no sign of thinning. The S7 route of §3.3 has not been measured and should be assumed to behave the same way until it is.
+**The S7 escape completes the pattern.** Measured over odd n in [2×10⁵, 2.06×10⁵], by mod-24 residue, for a cyclic-layer-fused class of F ∈ {3, 5, 7, 9, 25} blocks plus a foreign prime:
+
+| n mod 24 | 1 | 3 | 5 | 7 | 9 | 11 | 13 | 15 | 17 | 19 | 21 | 23 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| available | 100% | 97.2% | 100% | 100% | 96.8% | 100% | 100% | 97.2% | 100% | 100% | 97.2% | 100% |
+| exceeds cap | 0 | 0 | 0 | 0 | 0 | **5.6%** | 0 | 0 | 0 | 0 | 0 | **14.0%** |
+
+Available essentially always, and effective **only at the two lowest-cap residues** — 11 and 23 mod 24, the doubly-obstructed ones. At n ≡ 23 (mod 24), the residue that sets the global floor, 14% of values exceed their ceiling by this route.
+
+> **The general shape of the error, now confirmed on all three escapes.** Every escape in §3.3 is O(log n) in representations *per n*, because each pins one part to a power of a fixed small prime. **None is thereby sparse in n.** All three are available at 85–100% of odd n; where they are *effective* tracks how low the residue's ceiling is, from 0% at the unobstructed residues to a quarter at classes 5 and 11 mod 12. There is no sign of thinning in any of them.
+>
+> This does not move §5's floor, for the reason given above — escapes only raise δ(n), and a floor is a minimum. What it means is that the ceilings are ceilings for one shape, exceeded permanently by a measurable fraction of n at the obstructed residues.
 
 
 
@@ -630,15 +624,15 @@ Read this way η = 2/d is not an efficiency knob but **the price of using blocks
 
 ## 8. Open questions specific to this document
 
-1. **Extend the branch-and-bound past 10⁶.** The search as run is complete below 10⁶ (§5) and gives δ ≥ 0.026117, but its argmin has moved under the corrected shape space and it wants rerunning first — the 2026-08 worklist has 41,584 entries against 48,729 and only one below 0.026117. Pushing further needs `ladder_verify.py` run at a larger N, which is O(N²/log N) — 78 minutes to 10⁶, so 10⁷ is multi-day. The lower envelope has risen monotonically since [10³, 10⁴), so the expected return is confirmation rather than a new minimum; the value of doing it is in how far the pattern can be pushed, not in what it is likely to find. The reduction is essentially free: over the full 48,729-entry worklist, all but a handful are eliminated by comparing their lower bound against the running floor. Extending the range would replace the deliberately loose 1/50 in the conjecture with something close to the observed value.
+1. **Extend the branch-and-bound past 10⁶.** The search as run is complete below 10⁶ (§5) and gives δ ≥ 0.026117, but its argmin has moved under the corrected shape space and it wants rerunning first — the 2026-08 worklist has 41,584 entries against 48,729 and only one below 0.026117. Pushing further needs `ladder_verify.py` run at a larger N, which is O(N²/log N) — 78 minutes to 10⁶, so 10⁷ is multi-day. The lower envelope has risen monotonically since [10³, 10⁴), so the expected return is confirmation rather than a new minimum; the value of doing it is in how far the pattern can be pushed, not in what it is likely to find. The reduction is essentially free: all but a handful of worklist entries are eliminated by comparing their lower bound against the running floor. Extending the range would replace the deliberately loose 1/50 in the conjecture with something close to the observed value.
 
-2. **Bound the s = 4 branch.** New, and the only item here that is a gap in a *proof* rather than in evidence. E.1 caps s = 1 by the Mersenne constants and E.3(iii) caps the s = 2 repunit branch; s = 4 has neither, and is not thin enough for an E.4-style collapse. An absolute cap would have to come from the foreign block's twist, as in those two. The search clears it at every computed n, so nothing is unproved — but the gap widens as the floor falls.
+2. **Bound the s = 4 and s = 5 branches.** The only item here that is a gap in a *proof* rather than in evidence. *Recount after the rebuild:* at n = 3239 and 3059 the density rises sharply under the corrected shape space, so both leave the sub-1/25 set and the branch may narrow without any new theorem. E.1 caps s = 1 by the Mersenne constants and E.3(iii) caps the s = 2 repunit branch; s = 4 has neither, and is not thin enough for an E.4-style collapse. An absolute cap would have to come from the foreign block's twist, as in those two. The search clears it at every computed n, so nothing is unproved — but the gap widens as the floor falls.
 
 3. **Predict the 1/12 shortfall from the singular series.** §5.5 of the notes measures **22.2% of odd and 1.0% of even** values below 1/12. Both engines' availability is computable heuristically, so this compares the whole framework of this document against measurement rather than testing any single family.
 
-4. **Is the four-class family ever optimal?** Equivalently, does the triple coincidence of §6 ever occur? A negative heuristic estimate would be strong evidence for Open Problem 8(a) without a proof.
+4. **Is the four-class family ever optimal?** Equivalently, does the triple coincidence of §6 ever occur? *Partial answer, measured 2026-08.* Over odd n in [2×10⁵, 2.012×10⁵], the necessary condition — both the two- and three-class families below the four-class cap of 1/16 — holds at **95 of 600 values**, so it is far from rare. But at every one of those the three-class family still reaches 0.046–0.050, and a four-class family would have to beat that while capped at 1/16 = 0.0625 and needing **four** simultaneous prime conditions rather than three. The margin is a factor of only 1.25–1.35, against a supply penalty of one more log. So the answer is very likely no, and the reason is a squeeze rather than an obstruction — which also means it will not yield to a local-solubility argument. A proper heuristic estimate would compare the four-condition singular series against that margin directly; the machinery for it is `count_check.py` with a fourth form.
 
-5. **Do the ℓ = 3 escapes behave as the O(log n) heuristic says?** §3.3 settles local solubility by class; what is assumed rather than argued is that the power-of-3 escapes are too sparse to affect the asymptotic constants. The model for the check is §5's own covering-system analysis, which found two of its candidate chains locally dead.
+5. ~~**Do the ℓ = 3 escapes behave as the O(log n) heuristic says?**~~ **Resolved, negatively (§4.1).** They do not, and neither do the other two: all three are O(log n) in representations *per n* but positive-density in *n*, available at 85–100% of odd n and effective wherever the residue's ceiling is low — up to a quarter at classes 5 and 11 mod 12, and 14% at n ≡ 23 (mod 24). The heuristic conflated representations per n with values of n. No effect on §5's floor, since escapes only raise δ.
 
 6. **The fused family at ω(n) = 2 but bad splitting.** **338 of the 1,118** values with ω(n) = 2 do better with a split than with fusion, which happens when the smallest prime-power cofactor F is large. The distribution of F over ω(n) = 2 integers is classical, so predicting the 754/323 division is a clean test.
 

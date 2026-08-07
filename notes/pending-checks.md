@@ -169,28 +169,23 @@ Now a question about the *sharpness* of the search rather than about the results
 
 ### A1. Bound the s = 4 and s = 5 branches
 
-Opened by the density floor falling to 0.026117, which puts four computed values below 1/25 (n = 2291, 2303, 3059, 3239) and one below 1/36. Neither branch is thin enough for an E.4-style collapse — c − 1 = 4r and c − 1 = 5r carry no parity or congruence forcing — so an absolute cap would have to come from the foreign block's twist, as in E.1 and E.3(iii). The search clears both at every computed n, so nothing is unproved; the gap is theorem-side and widens as the floor falls. Currently 4 branches at s = 4 and 1 at s = 5 over the certified range.
+The only remaining gap in a *proof* rather than in evidence. E.1 caps s = 1 by the Mersenne constants and E.3(iii) caps the s = 2 repunit branch; s = 4 and s = 5 have neither, and neither is thin enough for an E.4-style collapse — c − 1 = 4r and c − 1 = 5r carry no parity or congruence forcing. An absolute cap would have to come from the foreign block's twist, as in those two. The search clears both at every computed n, so nothing is unproved.
+
+*Recount after the rebuild.* At n = 3239 and 3059 the density rises sharply under the corrected shape space, so both leave the sub-1/25 set and the branch may narrow without any new theorem.
 
 ### A2. Promote E.3(ii) past the bare pair
 
-The largest theorem-side residue: **505 branches** over the certified range where E.3(ii) is pairwise only and the global promotion is open. With the above-1/9 route refuted (a majority of odd n have δ < 1/9 outright), this is the only path left to Part J item 2. The obstruction is known and specific: with a leftover the (r, r) re-reading must also re-type the leftover parts, and the commonest case L = c fails outright because two blocks of the same prime c would be two equal foreign parts, which Part E forbids.
+The largest theorem-side residue: **505 branches** where E.3(ii) is pairwise only and the global promotion is open. The obstruction is known and specific: with a leftover, the (r, r) re-reading must also re-type the leftover parts, and the commonest case L = c fails outright because two blocks of the same prime c would be two equal foreign parts, which Part E forbids.
 
-### A3. Fold the twist-prime obstruction into §3.3's inventory
+### A3. Make "blocked at one q, available at another" a theorem
 
-Found by `count_check.py` when the twist prime was varied: the congruence r ≡ 1 (mod q) pins c to the class (n−1)/2 (mod q), and when that class is 0 the family is empty. Fires for one n in q. Already written into §3.7; what is open is whether it belongs in §3.3's obstruction table proper, and whether "blocked at one q, available at another" can be made a theorem rather than an observation.
-
-### A4. Reconstruct or retire the filtered per-class table in §3.3
-
-Its row counts sum to 887 and the filter that produced them was not reconstructed. The unfiltered version now in the document supersedes it in content, but the document carries both, which is worse than carrying either. Either reproduce the filter or delete the table. **Partly unverified.**
+The twist-prime obstruction is written into §3.7: the congruence r ≡ 1 (mod q) pins c to the class (n−1)/2 (mod q), and when that class is 0 the family is empty, which fires for one n in q. What is open is whether the observation that another q is always available can be proved rather than measured.
 
 ### A4a. Prove Theorem 2.3's two-part reduction
 
-The only gap left in the whittling. That the maximising partition never needs three or more parts is verified exhaustively to n = 1200 but not proved; the old justification is false because cap is not monotone (cap(127) = 8001 against cap(129) = 2709). My attempt reaches "the merged partition is worse only if cap(n − s₁) < s₁s₂" and stalls there. Nothing depends on it except the O(n) cost claim for B₀ — the inequality μ ≤ B₀ quantifies over all partitions — so this is low priority but self-contained.
-
-### A4b. Measure the S7 escape's density in n
-
-The last unmeasured escape. Both the 2-power and 3-power routes turned out to be O(log n) in *representations per n* but positive-density in *n* — available at 85–99% and effective at a few percent to a quarter (§4.1). S7 is described the same way and should be assumed to behave the same way until measured. Same method: availability and cap-exceedance by residue class over a band around 2×10⁵.
+That the maximising partition never needs three or more parts is verified exhaustively to n = 1200 but not proved; the old justification is false because cap is not monotone (cap(127) = 8001 against cap(129) = 2709). The attempt reaches "the merged partition is worse only if cap(n − s₁) < s₁s₂" and stalls. Nothing depends on it except the O(n) cost claim for B₀ — the inequality μ ≤ B₀ quantifies over all partitions — so this is low priority but self-contained.
 
 ### A5. Sweep for other expired-scope arguments
 
-The two worst defects of the 2026-08 pass were arguments whose scope silently expired — one because the density floor moved, one because a class table was never re-derived from the formula that superseded it. A systematic backward pass — every claim of the form "for all computed n, X", every derivation that fixes a parameter the data has since moved — would say whether there are more. Distinct from R6, which automates detection going forward.
+*Partly done.* A pattern scan across the three documents found the O(log n) sparsity claims (now corrected, §4.1), the mod-12 ceiling framing (now mod-24), and the `B_safe` definition (now F·orb(c, dmax)). What remains unswept: the ~85 "absolute claims" (never / always / no exception) across the three documents, which a numeric sweep cannot check and which are the class §4.1's error lived in. Worth one pass reading each against its current scope.
+
