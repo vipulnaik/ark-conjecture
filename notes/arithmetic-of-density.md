@@ -325,12 +325,12 @@ Testing a class at the wrong D tests a system with nothing to do with its ceilin
 
 | class | D | band | mean | sd | command |
 |---|---|---|---|---|---|
-| 1 | 2 | [2×10⁵, 2.3×10⁵] | 0.9930 | 0.0951 | `--nmin 200000 --nmax 230000 --residue 1 --modulus 12 --dq 2 --maxn 99999999` |
-| 9 | 2 | [2×10⁵, 2.3×10⁵] | 1.0035 | 0.0943 | as above with `--residue 9` |
-| 3 | 4 | [2×10⁵, 2.3×10⁵] | 1.0479 | 0.1428 | as above with `--residue 3 --dq 4` |
-| 7 | 4 | [2×10⁵, 2.3×10⁵] | 1.0365 | 0.1400 | as above with `--residue 7 --dq 4` |
-| 5 | 6 | [2×10⁵, 2.3×10⁵] | 0.9391 | 0.1071 | as above with `--residue 5 --dq 6` |
-| 11 | 12 | [2×10⁵, 2.3×10⁵] | 0.8762 | 0.1460 | as above with `--residue 11 --dq 12` |
+| 1 | 2 | [2×10⁵, 2.3×10⁵] | 0.9892 | 0.0947 | `--nmin 200000 --nmax 230000 --residue 1 --modulus 12 --dq 2 --maxn 99999999` |
+| 9 | 2 | [2×10⁵, 2.3×10⁵] | 0.9997 | 0.0940 | as above with `--residue 9` |
+| 3 | 4 | [2×10⁵, 2.3×10⁵] | 1.0438 | 0.1423 | as above with `--residue 3 --dq 4` |
+| 7 | 4 | [2×10⁵, 2.3×10⁵] | 1.0324 | 0.1394 | as above with `--residue 7 --dq 4` |
+| 5 | 6 | [2×10⁵, 2.3×10⁵] | 0.9353 | 0.1067 | as above with `--residue 5 --dq 6` |
+| 11 | 12 | [2×10⁵, 2.3×10⁵] | 0.8725 | 0.1454 | as above with `--residue 11 --dq 12` |
 
 Every command is `python3 count_check.py` with `--maxn 99999999` to force an exhaustive run — the default `--maxn 400` subsamples, which leaves the mean sound but the sd noisy.
 
@@ -347,11 +347,13 @@ Every command is `python3 count_check.py` with `--maxn 99999999` to force an exh
 
 `python3 count_check.py --nmin 200000 --nmax 212000 --residue R --modulus 12 --parts 2 --dq D --maxn 99999999`
 
-**Convergence is slow, and that is the whole story at D = 12.** At [2×10⁵, 2.4×10⁵] the class-11 ratio sits near 0.88, which looked like a wrong singular series. It is not. At **[10⁷, 1.1×10⁷] a 1,000-value sample gives mean 0.9974, sd 0.0375**, with no n lacking a solution:
+**Convergence is slow, and that is the whole story at D = 12.** At [2×10⁵, 2.3×10⁵] the class-11 ratio sits near 0.87, which looked like a wrong singular series. It is not. At **[10⁷, 1.1×10⁷] a 1,000-value sample gives mean 0.9974, sd 0.0375**, with no n lacking a solution:
 
 `python3 count_check.py --residue 11 --modulus 12 --dq 12 --maxn 1000 --nmin 10000000 --nmax 11000000`
 
-The sd falls like n^{−1/2} throughout — 0.278 at 2×10⁴, 0.146 at 2×10⁵, 0.0375 at 10⁷ — and the mean converges from below. Slow approach to an asymptotic constant, sometimes oscillating, is normal in this territory; π(x) − li(x) is the standard cautionary example. The earlier band-to-band scatter is the same effect seen through too small a window: nearby n share the primes in the window, so the samples are correlated and the effective sample size is far below the count.
+The sd falls like n^{−1/2} throughout — 0.277 at 2×10⁴, 0.145 at 2×10⁵, 0.0375 at 10⁷ — and the mean converges from below. Slow approach to an asymptotic constant, sometimes oscillating, is normal in this territory; π(x) − li(x) is the standard cautionary example. The earlier band-to-band scatter is the same effect seen through too small a window: nearby n share the primes in the window, so the samples are correlated and the effective sample size is far below the count.
+
+> **Basis of the figures.** Every ratio in this section is normalised by the **window integral**, not by the midpoint value. The two differ by a few tenths of a percent — the largest shift among the twelve class rows is 0.0041 — so nothing turns on the choice; but the tables would otherwise mix conventions, since the integral was added between the first set of runs and the second, and mixing them is exactly the kind of thing that later reads as a real effect. **The one exception is the 10⁷ figure, which is midpoint-normalised.** At that size the difference is an order of magnitude below the reported sd of 0.0375, so the conclusion is unaffected, but it has not been recomputed.
 
 *One refinement made along the way, which turned out not to be the cause.* The prediction evaluated the three log factors at the window midpoint, but the window is a constant relative width, so q sweeps a factor of 1.86 across it, and 1/log q is convex — a D-dependent bias, since log q ≈ log(n/(3D)) is smaller for larger D. Replaced by a Simpson integral across the window. It moves the ratios by well under a percent and does not explain the gap, but it is the correct quantity and costs nothing.
 
