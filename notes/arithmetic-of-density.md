@@ -367,7 +367,9 @@ The constant 1/50 is deliberately loose: the scan's floor is 0.02504, so 1/50 ca
 >
 > Those are the successive record minima, in increasing n. The order in which candidates are examined changes which get *recorded* — a value can set the running floor and then be superseded by a smaller n examined later — but not the final result, since the floor only falls and pruning is sound at every stage.
 
-> **The branch-and-bound is complete, and survives the 2026-08 defect as a bound.** Exactly two of the 48,729 candidates have a lower bound below 0.026117: n = 3239 (0.02504) and n = 8927 (0.02516), which rejects at K = 3. Every other n ≤ 10⁶ is pruned. Every step used the table from below — `ladder_verify.py` scores explicit constructions, and μ(n) ≥ B(n) holds whatever the shape space omits — so
+> **The candidate set has shrunk sharply and the search wants rerunning.** On the 2026-08 worklist only **one** value sits below 0.026117 (n = 8927 itself, against two before), two below 0.030 (against four), and 23 below 0.037524 (against 29). The old minimiser n = 3239 has risen to 0.04357 and n = 3059 has left the list entirely. Since 8927's own B(n) was already shown to exceed 0.02612, the true minimum below 10⁶ now looks likely to sit at or above 0.037524 (n = 2291) — but establishing that needs the search rerun on the repaired enumerator.
+>
+> **The branch-and-bound as run is complete, and survives the 2026-08 defect as a bound.** Exactly two of the 48,729 candidates have a lower bound below 0.026117: n = 3239 (0.02504) and n = 8927 (0.02516), which rejects at K = 3. Every other n ≤ 10⁶ is pruned. Every step used the table from below — `ladder_verify.py` scores explicit constructions, and μ(n) ≥ B(n) holds whatever the shape space omits — so
 >
 > **min { μ(n)/C(n,2) : n ≤ 10⁶ composite, not a prime power } ≥ 136957/5243941 = 0.0261166…**
 >
@@ -389,10 +391,18 @@ Every candidate at every stage has been **n ≡ 11 (mod 12)**, the doubly-obstru
 
 | n | values in worklist | minimum bound | attained at |
 |---|---|---|---|
-| [10², 10³) | 3 | 0.03649 | 935 |
-| [10³, 10⁴) | 226 | **0.02504** | 3239 |
-| [10⁴, 10⁵) | 3,679 | 0.03045 | 11819 |
-| [10⁵, 10⁶) | 44,821 | 0.04125 | 134423 |
+| [10², 10³) | 2 | 0.03649 | 935 |
+| [10³, 10⁴) | 158 | 0.02516 | 8927 |
+| [10⁴, 10⁵) | 2,987 | 0.03045 | 11819 |
+| [10⁵, 10⁶) | 38,437 | 0.04125 | 134423 |
+
+*(Rerun 2026-08 with the S7 family added and the `stop_at` truncation fixed; 41,584 entries, down 14.7% from the 48,729 of the three-family run. The list is a strict subset of the old one and no value fell, as it must be, since the script maxes over explicit constructions.)*
+
+**The per-block floors are now real minima, and they rise.** The earlier run capped `achieved` at 0.9 × cap, so six consecutive decades all reported the same 0.04546 = 0.9 × 0.05051 — an artefact of the early return, not a measurement. With the cap raised to the asymptotic bound, nothing below 0.050510 is truncated, and the block sequence over the last six decades reads
+
+> 0.04625 → 0.04518 → 0.04704 → 0.04729 → 0.04732 → 0.04738 → **0.04810**
+
+which is the first direct evidence for §4's prediction that the lower envelope rises as the ω(n) = 2 population thins. It was invisible before because the artefact sat exactly where the signal is.
 
 **The lower envelope falls to a minimum in [10³, 10⁴) and then rises monotonically, never returning.** Only four values in the entire worklist have a bound below 0.030, and all four lie in [3000, 10⁴]. Above 10⁴ — across 48,500 entries — nothing comes within 20% of the floor.
 
