@@ -215,22 +215,28 @@ The ℓ = 2 obstruction forces a ≥ 2, and hence η ≤ 1/2 **provided u > 1**;
 > | **B** | two c-blocks **fused** + foreign | 2x² | 2η/(√2+2√η)² | √η/(√2+2√η) |
 > | **C** | two c-classes **unfused** + foreign | x² | η/(1+2√η)² | √η/(1+2√η) |
 >
-> with **A > B > C** in every class, and each rung at its **own** balance point — 0.2247 for C at η = 1/6, 0.1830 for B. The cross term binds at none of them, so all three derivations are valid; only the choice of answer was wrong. Behind the ladder is the identity **cap_F(η) = F·cap₁(η/F)**: fusing F ways trades a factor F on the intra term against the same factor on the effective efficiency, which is why one class's fused optimum lands exactly on the next class down's unfused optimum.
+> with **A > B > C** in every class, and each rung at its **own** balance point — 0.2247 for C at η = 1/6, 0.1830 for B. The cross term binds at none of them, so all three derivations are valid; only the choice of answer was wrong. Behind the ladder is a change of variable. Since (√F + F√η)² = F(1 + √(Fη))², the fused cap simplifies to
+>
+> > **cap_F(η) = η/(1 + √(Fη))²**,
+>
+> which is the k-class formula η/(1 + k√η)² at **k = √F**. So *fusing F blocks is worth exactly √F unfused classes*: rung B sits at k = √2, strictly between the one-class rung A (k = 1) and the two-class rung C (k = 2). Equivalently **cap_F(η) = cap₁(Fη)/F**, which is why one rung's value at η is exactly half the next rung's at 2η — visible in the surd column below, where rung C at η = 1/6 is (5 − 2√6)/2 and rung B at η = 1/3 is 5 − 2√6.
 >
 > **(b) Reachability is a congruence on n mod 24, not mod 12.** Rung A needs c even, hence c = 2^a — only ~log₂n choices, so its optimum is rarely available; that is what §3.3 below miscalls the "2^a + r\* escape", which is not an escape from the ceiling but the top rung, usually out of reach. Rung B needs the twist on the c-blocks to be odd, i.e. **c ≡ 3 (mod 4)**. But η = 1/6 with an odd twist forces r − 1 = 12·odd, hence **r ≡ 5 (mod 8)**; with 2c ≡ 6 (mod 8) that gives **n ≡ 3 (mod 8)**. So half of each obstructed class can use rung B and half cannot, and the split is by n mod 24. Measured over 15,000 values per residue, it is 100% or 0% with no boundary cases.
 >
 > **The corrected ceiling table.**
 >
-> | n mod 24 | rung | cap | vs mod-12 value |
-> |---|---|---|---|
-> | 0, 4, 6, 10, 12, 16, 18, 22 | even, F = 1 | 0.25000 | — |
-> | 2, 8, 14, 20 | even, F = 1 | 0.13397 | — |
-> | 1, 9, 13, 21 | B | **0.17157** | ×1.54 |
-> | 3, 19 | B | **0.12500** | ×1.46 |
-> | 5, 17 | B | **0.10102** | ×1.41 |
-> | 7, 15 | C | 0.08579 | — |
-> | 11 | B | **0.06699** | ×1.33 |
-> | **23** | **C** | **0.05051** | — |
+> | n mod 24 | rung | η | cap, closed form | cap | vs mod-12 |
+> |---|---|---|---|---|---|
+> | 0, 4, 6, 10, 12, 16, 18, 22 | even, k = 1 | 1 | **1/4** | 0.25000 | — |
+> | 2, 8, 14, 20 | even, k = 1 | 1/3 | **(2 − √3)/2** | 0.13397 | — |
+> | 1, 9, 13, 21 | B, k = √2 | 1 | **3 − 2√2** | 0.17157 | ×1.54 |
+> | 3, 19 | B, k = √2 | 1/2 | **1/8** | 0.12500 | ×1.46 |
+> | 5, 17 | B, k = √2 | 1/3 | **5 − 2√6** | 0.10102 | ×1.41 |
+> | 7, 15 | C, k = 2 | 1/2 | **(3 − 2√2)/2** | 0.08579 | — |
+> | 11 | B, k = √2 | 1/6 | **(2 − √3)/4** | 0.06699 | ×1.33 |
+> | **23** | **C, k = 2** | 1/6 | **(5 − 2√6)/2** | 0.05051 | — |
+>
+> Every entry is a unit in ℤ[√d] over 1, 2 or 4 — the same shape as the mod-12 table, as it must be, since only k and η changed. The pairings are worth noticing: **3 − 2√2** at (B, 1) against **(3 − 2√2)/2** at (C, 1/2), and **5 − 2√6** at (B, 1/3) against **(5 − 2√6)/2** at (C, 1/6). That is cap_F(η) = cap₁(Fη)/F in the table.
 >
 > Eight distinct ceilings across 24 residues, against six across 12. Nine of the twelve odd residues rise by 33–54%; **three do not** — 7, 15 and 23 mod 24 are stuck on rung C.
 >
