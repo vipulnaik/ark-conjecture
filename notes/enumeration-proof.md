@@ -197,18 +197,21 @@ Each isolates one phenomenon. All figures recomputed.
 
 *Every shape the framework admits or excludes, in one place. Winner counts are over n ≤ 2298 (1,921 values); S7 is measured to n = 2400. "Trend" is the winner share across thirds of the range.*
 
-| # | Shape | Status | Winners | Trend | Asymptotic guess | δ behaviour |
-|---|---|---|---|---|---|---|
-| **S1** | one matching block, no copies | enumerated | every prime power | — | **→ 0**: prime powers are O(N/log N) | trivial where it applies: n = c, AGL(1, n) 2-transitive, δ = 1 |
-| **S2** | fused matching class, **top**-layer copies, n = F·c | enumerated | **754** (39.3%) | 49.1 → 36.2 → **32.6%** | **→ 0** (needs ω(n) = 2 with both factors prime powers) | clusters at **1/F**: 0.4995, 0.3326, 0.2492, 0.1992, 0.1420, 0.1103. Holds every δ > 1/4 |
-| **S3** | matching + outside, n = c + r\* | enumerated | **851** (44.3%) | 41.2 → 45.8 → **45.9%** | **→ ~50%**: essentially all even n | → class cap. Medians 0.220/0.221/0.218/0.213 at n ≡ 0,4,6,10 (cap **1/4**); 0.1265/0.1272 at 2,8 (cap **0.13397**) |
-| **S4** | two matching + outside, n = 2c + r\* | enumerated | v2 **257** (13.4%); v3 **0**, an over-credit artefact; v4 restores it at c ≡ 1 (mod 8) | 6.1 → 13.9 → **20.0%** | **→ 1/24 ≈ 4.2%** outright plus 1/24 tied with S5; only at residues 7, 15, 23 mod 24 — see `arithmetic-of-density.md` §3.2 | → class cap. Medians 0.1033/0.0997 at 1,9 (**1/9**); 0.0782/0.0765 at 3,7 (**0.08579**); 0.0695 at 5 (**0.0718**); 0.052 at 11 (**0.05051**) |
-| **S5** | fused matching + outside; forces q = 2 | enumerated | v2 **58** (3.0%); v3 **21.8%**, inflated by the same artefact; v4 pending | 3.6 → 3.9 → **1.6%** | **→ 10/24 ≈ 41.7%** outright plus the 1/24 tied with S4; sole winner at the nine rung-B residues | cap₂(η) = 0.17157 at η = 1, but η = 1 needs a **Fermat** prime; at η = 1/3 it is 0.10102, already below S4's 1/9. Max seen 0.1614 (n = 639) |
-| **S6** | two outside blocks | enumerated | **1** (0.05%) | 0 → 0.2 → 0% | **→ 0** | ceiling is 1/4, so it is *supply*-limited not cap-limited: needs r₁ + r₂ = n with both rᵢ − 1 = 2qᵉ for a **common** q |
-| **S7** | **middle**-layer-fused matching + outside | **MISSING** | 57 values beat B | 2.7 → 2.3 → **3.4%** | **→ 0**, but for two different reasons by parity — see below | cap_F(η) = Fη/(√F + F√η)². F = 3: **0.13397 / 0.10102 / 0.08333** at η = 1, ½, ⅓. F = 5 is uniformly worse (0.09549 at η = 1) |
-| **S8** | bottom-layer-fused matching | killed, **D1** | — | — | — | F·C(c,2) < C(F·c,2) strictly |
-| **S9** | fused outside block, any layer | killed, **D2** | — | — | — | translations forced diagonal ⇒ a class of at most \|O\|/2 |
-| **S10** | outside block with r = q | killed | — | — | — | normality kills the twist ⇒ the block is worth r |
+*`aod` = `arithmetic-of-density.md`. The **δ behaviour** column is mod-12 era and describes the unfused rung; the current ceilings are mod-24 and are in `aod` §3.3.*
+
+
+| # | Shape | Status | Winners | Trend | Asymptotic guess | δ behaviour | where |
+|---|---|---|---|---|---|---|---|
+| **S1** | one matching block, no copies | enumerated | every prime power | — | **→ 0**: prime powers are O(N/log N) | trivial where it applies: n = c, AGL(1, n) 2-transitive, δ = 1 | `aod` §4.1 |
+| **S2** | fused matching class, **top**-layer copies, n = F·c | enumerated | **754** (39.3%) | 49.1 → 36.2 → **32.6%** | **→ 0** (needs ω(n) = 2 with both factors prime powers) | clusters at **1/F**: 0.4995, 0.3326, 0.2492, 0.1992, 0.1420, 0.1103. Holds every δ > 1/4 | `aod` §4.1 |
+| **S3** | matching + outside, n = c + r\* | enumerated | **851** (44.3%) | 41.2 → 45.8 → **45.9%** | **→ ~50%**: essentially all even n | → class cap. Medians 0.220/0.221/0.218/0.213 at n ≡ 0,4,6,10 (cap **1/4**); 0.1265/0.1272 at 2,8 (cap **0.13397**) | `aod` §3.1 |
+| **S4** | two matching + outside, n = 2c + r\* | enumerated | v2 **257** (13.4%); v3 **0**, an over-credit artefact; v4 restores it at c ≡ 1 (mod 8) | 6.1 → 13.9 → **20.0%** | **→ 1/24 ≈ 4.2%** outright plus 1/24 tied with S5; only at residues 7, 15, 23 mod 24 — see `arithmetic-of-density.md` §3.2 | → class cap. Medians 0.1033/0.0997 at 1,9 (**1/9**); 0.0782/0.0765 at 3,7 (**0.08579**); 0.0695 at 5 (**0.0718**); 0.052 at 11 (**0.05051**) | `aod` §3.2, §3.9 |
+| **S5** | fused matching + outside; forces q = 2 | enumerated | v2 **58** (3.0%); v3 **21.8%**, inflated by the same artefact; v4 pending | 3.6 → 3.9 → **1.6%** | **→ 10/24 ≈ 41.7%** outright plus the 1/24 tied with S4; sole winner at the nine rung-B residues | cap₂(η) = 0.17157 at η = 1, but η = 1 needs a **Fermat** prime; at η = 1/3 it is 0.10102, already below S4's 1/9. Max seen 0.1614 (n = 639) | `aod` §3.2, §3.9 |
+| **S6** | two outside blocks | enumerated | **1** (0.05%) | 0 → 0.2 → 0% | **→ 0** | ceiling is 1/4, so it is *supply*-limited not cap-limited: needs r₁ + r₂ = n with both rᵢ − 1 = 2qᵉ for a **common** q | `aod` §4.2 |
+| **S7** | **middle**-layer-fused matching + outside | **MISSING** | 57 values beat B | 2.7 → 2.3 → **3.4%** | **→ 0**, but for two different reasons by parity — see below | cap_F(η) = Fη/(√F + F√η)². F = 3: **0.13397 / 0.10102 / 0.08333** at η = 1, ½, ⅓. F = 5 is uniformly worse (0.09549 at η = 1) | `aod` §4.3 |
+| **S8** | bottom-layer-fused matching | killed, **D1** | — | — | — | F·C(c,2) < C(F·c,2) strictly | Part D2 |
+| **S9** | fused outside block, any layer | killed, **D2** | — | — | — | translations forced diagonal ⇒ a class of at most \|O\|/2 | Part D2 |
+| **S10** | outside block with r = q | killed | — | — | — | normality kills the twist ⇒ the block is worth r | Part B |
 
 > **Asymptotics are covered in `arithmetic-of-density.md`, not here.** This census's "asymptotic guess" column is a summary; the arguments behind it — which shapes thin, which stop winning, which escapes are sparse in n and which merely look it — are §4 of that document, and it carries the same census keyed by the same S-numbers. The duplication is deliberate and cross-checked by `check_doc_figures.py --pass census`; **S-numbers are append-only**, since they are what joins the two.
 

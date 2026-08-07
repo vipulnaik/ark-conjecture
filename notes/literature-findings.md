@@ -36,7 +36,7 @@ So **our §3 even construction is k = 1 and our odd construction is k = 2** in t
 
 **Where we are nonetheless strictly larger, and this matters.** B(n) is not f(n). Four differences, all in the direction of B(n) ≥ f(n), several of them strict:
 
-- **They require p prime; we allow c a prime power.** Their Γ₀(p^α, Δ_k) in §4.1 does allow α > 1, but §5 instantiates at α = 1 throughout.
+- **They require p prime; we allow c a prime power.** Their Γ₀(p^α, Δ_k) in §4.3 does allow α > 1, but §5 instantiates at α = 1 throughout.
 - **They require q prime with r ≡ 1 (mod q), giving an orbital of order qr.** We allow the twist t to be any prime *power* divisor of r − 1, and our `orb(r, t)` is rt or rt/2 depending on parity. On a foreign block with r − 1 = 2q^e this is a factor of q^{e−1} larger than theirs.
 - **They always require a foreign part.** W_n is empty of the configurations n = F·c with no foreign block at all — which are **39% of our computed table** and every value with δ > 1/4. On those n, f(n) as defined does not see the winner.
 - **They never claim f(n) is the maximum over all Oliver groups.** It is a lower bound from one family. Our Theorem 2.3 plus the enumeration claims B(n) is the *exact* maximum, which is a different kind of statement and is the part neither paper attempts.

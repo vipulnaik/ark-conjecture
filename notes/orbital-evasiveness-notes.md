@@ -179,7 +179,7 @@ The two equal blocks may be fused or not, and which is better depends on c mod 8
 
 > **Proposition 5.2′ (top rung, both parities).** Unconditionally: μ(n) ≥ δ₀(n)·C(n,2) for every n admitting the relevant representation, with δ₀ the ceiling for n's residue mod 24. The representation's existence is what the conjectures supply; the group-theoretic content is the construction, which is unconditional.
 
-**The ceilings are ceilings of the families, not bounds on μ.** A single fused class reaches 1/F and exceeds every row; the escapes of `arithmetic-of-density.md` §4.1 exceed them at O(n/log n) values. The ceiling table (there, §3.3, keyed mod 24) says what the *balanced* family guarantees at each residue, which is what the floor argument needs and all it needs.
+**The ceilings are ceilings of the families, not bounds on μ.** A single fused class reaches 1/F and exceeds every row; the escapes of `arithmetic-of-density.md` §4.3 exceed them at O(n/log n) values. The ceiling table (there, §3.3, keyed mod 24) says what the *balanced* family guarantees at each residue, which is what the floor argument needs and all it needs.
 
 ## 6. The converse: μ encodes prime distribution
 

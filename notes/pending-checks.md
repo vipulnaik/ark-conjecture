@@ -186,7 +186,7 @@ The largest theorem-side residue: **505 branches** where E.3(ii) is pairwise onl
 
 ### A3. Make "blocked at one q, available at another" a theorem
 
-The twist-prime obstruction is written into §3.7: the congruence r ≡ 1 (mod q) pins c to the class (n−1)/2 (mod q), and when that class is 0 the family is empty, which fires for one n in q. What is open is whether the observation that another q is always available can be proved rather than measured.
+The twist-prime obstruction is written into §3.8: the congruence r ≡ 1 (mod q) pins c to the class (n−1)/2 (mod q), and when that class is 0 the family is empty, which fires for one n in q. What is open is whether the observation that another q is always available can be proved rather than measured.
 
 ### A4a. Theorem 2.3's two-part reduction is not elementary — reclassified
 
@@ -202,5 +202,5 @@ So two-part splits of the required quality are **plentiful**, and that is a Gold
 
 ### A5. Sweep for other expired-scope arguments
 
-*Partly done.* A pattern scan across the three documents found the O(log n) sparsity claims (now corrected, §4.1), the mod-12 ceiling framing (now mod-24), and the `B_safe` definition (now F·orb(c, dmax)). What remains unswept: the ~85 "absolute claims" (never / always / no exception) across the three documents, which a numeric sweep cannot check and which are the class §4.1's error lived in. Worth one pass reading each against its current scope.
+*Partly done.* A pattern scan across the three documents found the O(log n) sparsity claims (now corrected, §4.3), the mod-12 ceiling framing (now mod-24), and the `B_safe` definition (now F·orb(c, dmax)). What remains unswept: the ~85 "absolute claims" (never / always / no exception) across the three documents, which a numeric sweep cannot check and which are the class §4.3's error lived in. Worth one pass reading each against its current scope.
 
