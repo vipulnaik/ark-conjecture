@@ -356,3 +356,14 @@ Follows L24. A co-author asked whether the mod-8 structure of the S4/S5 split ou
 **The global constant survives and its extremal class halves.** min = 0.050510 = (5 − 2√6)/2, attained at **n ≡ 23 (mod 24)** alone. So §5's headline was right, but not for the reason given, and the class it named was twice too large. `ladder_verify.py` rekeyed mod 24; its 20,000 run puts the floor at n = 8927 ≡ 23 (mod 24), confirming the prediction.
 
 **A prediction that did *not* hold, and why that is fine.** If low n clustered at the low-cap residues, the branch-and-bound record holders should all be ≡ 23 (mod 24). Eight of eleven are; 2291, 3059 and 11819 are ≡ 11. No contradiction: caps are ceilings, and finite-n record holders are low because *supply* fails, not because their ceiling is low. n = 3059 rose to 0.0839 under the corrected shape space, above rung B, which fits. The mod-24 result is about the asymptotic floor and the finite record holders do not test it.
+
+
+---
+
+## L26. The counting check redone at the true balance points
+
+Closes the second half of L24/L25. The check had centred the window on the equal split 1/(k+1), which is the balance point only at η = 1; at η = 1/6 it sits 0.109 away, more than twice the window half-width, so it counted representations in a region that cannot reach the ceiling.
+
+Redone at each rung's own x\*, separated mod 24: **n ≡ 11 (mod 24) at rung B** (x\* = (√3 − 1)/4) gives 1.1007 → 1.0891 → **1.0025** across bands to 10⁶; **n ≡ 23 (mod 24) at rung C** (x\* = (√6 − 2)/2) gives 1.0427 → **1.0033**. sd falls like n^{−1/2}; no n without a solution anywhere. The approach to 1 is now **from above**, where the equal-split runs approached from below — nothing else changed, so the centre was the variable.
+
+Two things confirmed along the way. The four closed forms flagged as suspicious for looking too rational — notably (B, η = 1/2) at cap 1/8 with x\* = 1/4 — were re-derived by direct numerical optimisation over x with all cross terms included, and all four reproduce exactly. And the extra congruence c ≡ 3 (mod 4) that rung B requires is **automatic**: r = 12q + 1 with q odd gives r ≡ 5 (mod 8), and n ≡ 3 (mod 8) then forces c ≡ 3 (mod 4). That is why the mod-24 split coincides exactly with the split between rungs, rather than being an extra condition layered on top.

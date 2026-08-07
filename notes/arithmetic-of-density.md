@@ -368,33 +368,28 @@ and a solution is a q making all three prime. The class ceilings of §3.3 are at
 
 with K = 1 for the even family n = c + r of §3.1 and K = 2 for the odd family n = 2c + r of §3.2. Each class's D is set by its own ceiling — the pairing is in the results table below — and testing a class at the wrong D tests a system with nothing to do with it: at D = 2 the class-11 singular series **vanishes identically**, and at D ≥ 4 the class-1 series vanishes because h = (n−1)/2 is even there and c = h − (D/2)q would be even. Those vanishings are the local obstructions of §3.3, recovered from the count.
 
-**Results.** All twelve classes, both families, each at the D that sets its own ceiling. Exhaustive over the same band **[2×10⁵, 2.3×10⁵]** throughout; ratio of actual count to predicted.
+**Results at the correct balance points.** The two residues that set the odd-n picture, each at its own rung's x\* and separated mod 24. Exhaustive; ratio of actual count to predicted.
 
-| n mod 12 | family | K | D | η | cap | mean | sd |
-|---|---|---|---|---|---|---|---|
-| 0 | even, n = c + r | 1 | 2 | 1 | 1/4 | 0.9869 | 0.1477 |
-| 4 | even, n = c + r | 1 | 2 | 1 | 1/4 | 1.0064 | 0.1464 |
-| 6 | even, n = c + r | 1 | 2 | 1 | 1/4 | 1.0207 | 0.1493 |
-| 10 | even, n = c + r | 1 | 2 | 1 | 1/4 | 1.0180 | 0.1587 |
-| 2 | even, n = c + r | 1 | 6 | 1/3 | 0.13397 | 1.0178 | 0.1883 |
-| 8 | even, n = c + r | 1 | 6 | 1/3 | 0.13397 | 0.9838 | 0.1926 |
-| 1 | odd, n = 2c + r | 2 | 2 | 1 | 1/9 | 0.9892 | 0.0947 |
-| 9 | odd, n = 2c + r | 2 | 2 | 1 | 1/9 | 0.9997 | 0.0940 |
-| 3 | odd, n = 2c + r | 2 | 4 | 1/2 | 0.08579 | 1.0438 | 0.1423 |
-| 7 | odd, n = 2c + r | 2 | 4 | 1/2 | 0.08579 | 1.0324 | 0.1394 |
-| 5 | odd, n = 2c + r | 2 | 6 | 1/3 | 0.0718 | 0.9353 | 0.1067 |
-| 11 | odd, n = 2c + r | 2 | 12 | 1/6 | 0.05051 | 0.8725 | 0.1454 |
-
-Each row is
+| residue | rung | x\* | band | mean | sd |
+|---|---|---|---|---|---|
+| n ≡ 11 (mod 24) | B | (√3 − 1)/4 = 0.18301 | [2×10⁵, 2.3×10⁵] | 1.1007 | 0.1709 |
+| | | | [5×10⁵, 5.3×10⁵] | 1.0891 | 0.1144 |
+| | | | [10⁶, 1.03×10⁶] | **1.0025** | 0.0939 |
+| n ≡ 23 (mod 24) | C | (√6 − 2)/2 = 0.224745 | [2×10⁵, 2.3×10⁵] | 1.0427 | 0.1515 |
+| | | | [10⁶, 1.03×10⁶] | **1.0033** | 0.0896 |
 
 ```
-python3 count_check.py --nmin 200000 --nmax 230000 --maxn 99999999 \
-                       --residue R --modulus 12 --parts K+1 --dq D
+python3 count_check.py --nmin 1000000 --nmax 1030000 --maxn 99999999 \
+        --residue 11 --modulus 24 --dq 12 --centre 0.18301
+python3 count_check.py --nmin 1000000 --nmax 1030000 --maxn 99999999 \
+        --residue 23 --modulus 24 --dq 12 --centre 0.224745
 ```
 
-`--maxn 99999999` forces an exhaustive run; the default 400 subsamples, which leaves the mean sound but the sd noisy. `--parts` defaults to 3, so the odd rows can omit it.
+No n in any band lacks a solution in its window. The approach to 1 is **from above** here, where the earlier equal-split runs approached from below — which is itself evidence that the centre was the variable that mattered, since nothing else changed.
 
-**Every class agrees except the two most obstructed**, and those are a convergence effect rather than a discrepancy — see below. No n anywhere in the band lacks a solution in its window.
+*The extra congruence c ≡ 3 (mod 4) that rung B needs is automatic and does not have to be imposed.* For n ≡ 11 (mod 24), r = 12q + 1 with q odd gives r ≡ 5 (mod 8), and n ≡ 3 (mod 8) then forces c = (n − r)/2 ≡ 3 (mod 4). So the count and the singular series agree without a fourth condition — which is also why the mod-24 split is exactly the split between the rungs.
+
+**Earlier runs at the equal-split centre are superseded.** Those used c/n centred at 1/(k+1), which is x\* only at η = 1, and at η = 1/6 sits 0.109 away — more than twice the window half-width. They counted representations in a region that cannot reach the ceiling. They remain valid as a check of the singular series for the system they posed, and are kept below for that reason, but they say nothing about attainment at the optimum.
 
 **Convergence is slow, and that is the whole story at D = 12.** At [2×10⁵, 2.3×10⁵] the class-11 ratio sits near 0.87, which looked like a wrong singular series. It is not. At **[10⁷, 1.1×10⁷] a 1,000-value sample gives mean 0.9974, sd 0.0375**, with no n lacking a solution:
 

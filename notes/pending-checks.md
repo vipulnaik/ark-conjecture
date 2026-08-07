@@ -66,28 +66,24 @@ This is the one place where SAFE's over-count is not shape-neutral: it changes w
 python3 scripts/mu_enumerate_v2.py --nmax 2600 --refined --out outputs/mu_table_refined_v3.csv
 ```
 
-## R0d. Ceilings rederived mod 24 — DONE; counting check still to redo
+## R0d. Ceilings mod 24 and the counting check — DONE
 
-**Done.** The ceilings were derived for one shape (the unfused rung) and keyed mod 12. Corrected: for odd n the shapes form a ladder A > B > C, reachability of the fused rung B forces n ≡ 3 (mod 8), and the ceilings are therefore a **mod-24** phenomenon — eight distinct values across 24 residues, against six across 12. Nine of the twelve odd residues rise by 33–54%; **7, 15 and 23 do not**. Full table in `arithmetic-of-density.md` §3.3.
+**Ceilings rederived.** The old table optimised one shape (the unfused rung) and was keyed mod 12. For odd n the shapes form a ladder A > B > C; reachability of the fused rung forces n ≡ 3 (mod 8), so the ceilings are a **mod-24** phenomenon — eight distinct values across 24 residues. Nine of the twelve odd residues rise by 33–54%; **7, 15 and 23 do not**. Table with closed forms and balance points in `arithmetic-of-density.md` §3.3. `ladder_verify.py`'s `CAP` rekeyed mod 24.
 
-The global constant **0.050510 is unchanged**, but its extremal class halves: **n ≡ 23 (mod 24)**, not all of n ≡ 11 (mod 12). `ladder_verify.py`'s `CAP` is rekeyed mod 24 and its 20,000 run puts the floor at n = 8927 ≡ 23 (mod 24), as the theory now predicts.
+The global constant **0.050510 is unchanged**, its extremal class halved to **n ≡ 23 (mod 24)**. The 20,000 ladder run puts the floor at n = 8927 ≡ 23 (mod 24), as predicted.
 
-**Still to do.**
+**Counting check redone at the correct centres, and it passes.** At each rung's own x\*, separated mod 24:
 
-1. **Redo the counting check at each rung's own balance point.** §3.7 used the equal-split centre 1/(k+1), which is a balance point only at η = 1 and **misses it entirely** at 2, 8, 5 and 11 mod 12 — including the class that sets the floor. Each rung also carries its own congruence on c, so the singular series differs, not just the centre. `--centre` is already a flag; `--modulus 24` is needed to separate the split classes.
+| residue | rung | x\* | [2×10⁵, 2.3×10⁵] | [10⁶, 1.03×10⁶] |
+|---|---|---|---|---|
+| 11 mod 24 | B | 0.18301 | 1.1007 | **1.0025** |
+| 23 mod 24 | C | 0.224745 | 1.0427 | **1.0033** |
 
-```bash
-# rung B at n = 11 mod 24, its own balance point sqrt(1/6)/(sqrt2+2sqrt(1/6))
-python3 count_check.py --nmin 200000 --nmax 230000 --maxn 99999999 \
-        --residue 11 --modulus 24 --dq 12 --centre 0.18301
-# rung C at n = 23 mod 24, the extremal residue
-python3 count_check.py --nmin 200000 --nmax 230000 --maxn 99999999 \
-        --residue 23 --modulus 24 --dq 12 --centre 0.22474
-```
+sd falling like n^{−1/2}, no n without a solution. The approach to 1 is **from above**, where the equal-split runs approached from below — evidence that the centre was the variable that mattered.
 
-2. **Rerun `ladder_verify.py` to 10⁶** with the mod-24 ceilings. The worklist is driven by `ASYMPTOTIC` = 0.050510, which is unchanged, so the 41,584 entries should be stable — but the per-class `min delta/cap` diagnostics all shift, and those are what would reveal a class behaving anomalously.
+**Two independent confirmations worth recording.** The four suspicious closed forms — including the rational-looking (B, η = 1/2) row at cap 1/8, x\* = 1/4 — were re-derived by direct numerical optimisation over x including all cross terms, and all four reproduce. And the extra congruence c ≡ 3 (mod 4) that rung B needs turns out to be **automatic** given n ≡ 11 (mod 24) and r = 12q + 1, which is why the mod-24 split is exactly the split between rungs.
 
-3. **Sanity-check the ratio spread.** With the raised ceilings the per-residue δ/cap minima now run 0.327–0.653 (previously 0.327–0.716). Still no residue anomalously weak, but worth rechecking at 10⁶.
+**Left over:** rerun `ladder_verify.py` to 10⁶ with the mod-24 ceilings. The worklist is driven by `ASYMPTOTIC` = 0.050510, unchanged, so the 41,584 entries should be stable — but the per-residue `min delta/cap` diagnostics all shift, and those are what would reveal a residue behaving anomalously. Current spread at 20,000 is 0.327–0.653.
 
 ## R1. Routine, after any new batch of table values
 
