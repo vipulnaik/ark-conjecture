@@ -39,7 +39,7 @@ Everything else in this document elaborates that split. Five consequences set th
 | **S1** | one matching block, no copies | — | never | n itself a prime power, so out of scope entirely | §2.1 |
 | **S2** | fused matching class, **top**-layer copies, n = F·c | multiplicative | 40.4% | **→ 0**: needs ω(n) = 2 with both factors prime powers | §4 |
 | **S3** | matching + outside, n = c + r\* | additive | 37.8% | **→ ~50%**, essentially all even n | §3.1 |
-| **S4** | two matching + outside, n = 2c + r\* | additive | **0%** | dominated by S5 wherever fusion is admissible — see below | §3.2 |
+| **S4** | two matching + outside, n = 2c + r\* | additive | **0%** under SAFE | carries odd n jointly with S5, splitting by c mod 8 | §3.2, §4.2 |
 | **S5** | fused matching + outside; forces q = 2 | hybrid | 21.8% | carries the odd-n additive engine; see §4.2 | §3.2, §4.2 |
 | **S6** | two outside blocks | additive | 0% | **→ 0**: supply-limited, needs two coordinated safe primes | §4.3 |
 | **S7** | **middle**-layer-fused matching + outside | hybrid | — | an escape, not a family; see §4.1 | §4.1 |
@@ -47,7 +47,20 @@ Everything else in this document elaborates that split. Five consequences set th
 | **S9** | fused outside block, any layer | — | never | excluded (Lemma D2) | — |
 | **S10** | outside block with r = q | — | never | excluded: normality kills the twist | — |
 
-> **S4 has collapsed into S5, and this is new.** Under the old shape space, two equal unfused matching blocks plus a foreign prime was a distinct winner at 13% of the table. Fusing those two blocks scores 2·C(c,2) against C(c,2), so wherever fusion is admissible the fused reading strictly dominates — and the corrected enumerator finds it. All **79** former S4 winners in the rebuilt range are now S5, with the value rising at **77** of them. S4 survives only where fusion is inadmissible: F = 2 needs Ftop = 2 (hence q = 2, which pins the foreign twist to a 2-power) or Fmid = 2 (which needs 2 coprime to c − 1, impossible for odd c). No such n has appeared yet.
+> **S4's disappearance is an artefact of SAFE scoring, not a domination.** In the old table, two equal unfused matching blocks plus a foreign prime was 13% of winners; in the rebuilt table all **79** such winners are reported as S5, with the value rising at 77. That looks like fusion dominating, and it is not.
+>
+> Fusing two equal classes doubles the intra term and the cross-to-foreign term and leaves the within-class cross alone — but it puts C₂ in the cyclic layer, so the twist on the c-blocks must be **odd**, i.e. the largest odd divisor of c − 1. When c ≡ 3 (mod 4) that is (c−1)/2 and the doubling is clean; when 4 | c − 1 the odd part is smaller and the doubling does not recover it. The split is exactly by **c mod 8** (§4.2):
+>
+> | c | c mod 4 | odd twist | fused 2·orb(c,d) | unfused C(c,2) |
+> |---|---|---|---|---|
+> | 83 | 3 | 41 | 6806 | 3403 |
+> | 89 | 1 | 11 | **1958** | 3916 |
+> | 101 | 1 | 25 | 5050 | 5050 |
+> | 103 | 3 | 51 | 10506 | 5253 |
+>
+> The split is exactly by **c mod 8** and is exceptionless over all primes c < 20000: S5 strictly better at c ≡ 3, 7; exact tie at c ≡ 5; S4 strictly better at c ≡ 1. Each class holds a quarter of the primes, so **S4 wins outright on a quarter of all c and ties on another quarter** — it is not an also-ran but a co-carrier of the odd-n asymptotics. §4.2 has the table.
+>
+> **What the table is actually showing** is that SAFE credits every matching part F·C(c,2) *whatever the twist*, so the fused reading is scored at 2·C(c,2) even where the realisable value is half that. This is the one place found so far where SAFE's over-count is **not shape-neutral**: elsewhere it inflates a value, here it changes which shape wins. The winner percentages in the census are therefore SAFE's preferences, not μ's, and the census wants rerunning under `--refined` before the shape distribution is quoted anywhere.
 
 **The engine dichotomy is a simplification, and the hybrids are where the action is.** S2 is purely multiplicative and S3, S4, S6 purely additive, but **S5 and S7 are neither** — a fused class supplying the multiplicative factor F alongside a foreign block supplying the additive one. That is not a defect of the taxonomy; it is where the two interesting phenomena live. S5's full efficiency requires a Fermat prime (§3.3), and S7 exists only because block fusion can come from the cyclic layer (§4.1). Both were missed by earlier drafts precisely because the two-engine framing had no slot for them.
 
@@ -373,7 +386,13 @@ The sd falls like n^{−1/2} throughout — 0.277 at 2×10⁴, 0.145 at 2×10⁵
 
 > **A local obstruction indexed by the twist prime.** Distinct from the above, and found by varying q in the weaker system c prime, r = n − 2c prime, r ≡ 1 (mod q): the congruence pins c to the class (n−1)/2 (mod q), and when that class is 0 the family is empty, since q | c forces c = q. It fires for one n in q. Verified: observed count 0 at every such n. It belongs in §3.3's inventory alongside ℓ = 2 and ℓ = 3, being an obstruction indexed by the twist prime rather than by a fixed small prime.
 
-## 4. Asymptotics: the multiplicative engine is a thinning exception
+## 4. Asymptotics: which configurations survive, and why the others do not
+
+*§3 handles the configurations that carry the asymptotics — S3 for even n, and **S4 and S5 jointly** for odd n, which split the range by a congruence on c. This section covers everything else in the census: S2, which thins; S6, which is present but supply-limited; S7 and the escapes, which are neither families nor sparse. Each subsection says which of three fates applies, and on what evidence.*
+
+> **Three fates, and they are different.** A configuration can (i) require a condition on n of density zero, so it *thins*; (ii) remain available at a positive density of n but be beaten by a better shape, so it *stops winning*; or (iii) remain available and keep winning at a positive but small proportion. Earlier drafts collapsed (i) and (iii) under "O(log n)-sparse", which is what §4.1 corrects. The distinction matters because only (i) removes a shape from the asymptotic picture.
+
+### 4.0 S2, the multiplicative engine: fate (i), it thins
 
 The fused family requires ω(n) ≤ 2, which is a **density-zero condition**: the count of n ≤ N with exactly two distinct prime factors is ~N log log N / log N.
 
@@ -393,7 +412,7 @@ Two consequences, and both should temper how the computed range is read.
 
 **The observed density floor should drift downward.** Fully 55.7% of the current table has ω(n) = 2, so more than half the computed values are served by an engine whose reach halves over the next few decades of n. The median of 0.1994 is propped up by a population that thins — and the prediction has already been borne out: the floor was 0.0418 at n = 575 when the table reached 1,540, then 0.041107, then 0.037524 at n = 2,291, and it now stands at 0.026117.
 
-### 4.1 Which escapes survive asymptotically, and which do not
+### 4.1 The escapes: fate (iii), permanent at a small proportion
 
 *§3.3 lists three escapes from the class ceilings and calls each "O(log n)-sparse". That description conflates two different things and is wrong for the first one. Settling it was item A3.*
 
@@ -427,7 +446,43 @@ It lands hardest exactly where the caps are lowest: **a quarter of all n in clas
 
 
 
-**The asymptotic question is entirely Hardy–Littlewood.** Since the multiplicative engine vanishes in density, the asymptotic behaviour of μ(n) for almost all n is set by the additive families, whose caps are 1/4 and 1/9 and whose availability is a Bateman–Horn question. In particular the ladder constants of §5 of the notes — the §3.3 constants — are the right asymptotic quantities, and the fused family's 1/2 and 1/3 are not, however dominant they look in the table.
+### 4.2 S4 shares the odd-n asymptotics with S5; S6 is fate (ii)
+
+**S4 does not stop winning — it and S5 divide the odd-n range between them, by c mod 8.** Both need the same split n = 2c + r with c, r prime, so they draw on the same Hardy–Littlewood supply and neither thins. Which one wins is decided by the intra term alone: fusing doubles it to 2·orb(c, d) but forces d to be the **odd part of c − 1**, against the unfused C(c,2) at the full twist. Comparing the two over all primes c < 20000:
+
+| c mod 8 | c − 1 | fused intra | verdict |
+|---|---|---|---|
+| 3, 7 | 2·odd | 2·C(c,2) | **S5 strictly better** |
+| 5 | 4·odd | C(c,2) | **exact tie** |
+| 1 | 8 \| c−1 | ≤ C(c,2)/2 | **S4 strictly better** |
+
+with 570 / 565 / 569 / 556 primes in the four classes below 20000 — so each verdict holds on a quarter of all c, with no exceptions in that range. S4 therefore carries the odd-n asymptotics at c ≡ 1 (mod 8) and ties at c ≡ 5, and belongs with §3's families rather than with the also-rans. The SAFE census's 0 winners for S4 is an artefact of the over-count, not a fact about μ — see the box in §2.0.
+
+**S6 — two outside blocks and no matching class.** Its ceiling is 1/4, the same as S3's, so it is not cap-limited; it is **supply**-limited. It needs r₁ + r₂ = n with both rᵢ − 1 = 2qᵉ for a *common* q, which is a system with two efficiency conditions coupled through a shared parameter rather than the single condition of §3.2. That is strictly harder than anything §3 analyses, and it is why S6 has exactly one winner in the whole computed range (n = 1175). Expected fate (ii) tending to (i), but the singular series for the coupled system has not been written down.
+
+### 4.3 What is left over
+
+**S1** never occurs: n = c means n is a prime power, which is outside the scope of μ entirely.
+
+**S8, S9, S10** are excluded by theorem, not by rarity — D1, D2, and the normality argument respectively. They cannot occur at any n, so they have no asymptotics.
+
+**S7** is an escape rather than a family, and §4.1 covers it with the other two. Its parity structure is the one thing here that genuinely restricts n: at odd n it forces c to be a power of 2. Whether that makes it fate (i) or fate (iii) has **not been measured** — both other escapes turned out to be (iii) after being assumed (i), so it should be assumed (iii) until checked. `pending-checks.md` item A4b.
+
+### 4.4 The asymptotic question is entirely Hardy–Littlewood
+
+**Summary of the fates.**
+
+| shape | fate | evidence |
+|---|---|---|
+| S2 | (i) thins | ω(n) = 2 with both factors prime powers has density 0 |
+| S3 | carries even n | §3.1; the counting check of §3.7 |
+| S5 | carries odd n at c ≡ 3, 7 (mod 8) | §3.2; §4.2 for the split with S4 |
+| S4 | carries odd-n jointly with S5 | wins at c ≡ 1 (mod 8), ties at 5, loses at 3 and 7 — §4.2 |
+| S6 | (ii), plausibly (i) | supply-limited by a coupled two-efficiency system; 1 winner in range |
+| S7, the escapes | (iii) permanent at a small proportion | measured in §4.1 for two of three routes |
+| S1, S8, S9, S10 | cannot occur | out of scope, or excluded by D1, D2, normality |
+
+Since the multiplicative engine vanishes in density, the asymptotic behaviour of μ(n) for almost all n is set by the additive families, whose caps are 1/4 and 1/9 and whose availability is a Bateman–Horn question. In particular the ladder constants of §5 of the notes — the §3.3 constants — are the right asymptotic quantities, and the fused family's 1/2 and 1/3 are not, however dominant they look in the table.
 
 ---
 
@@ -532,6 +587,8 @@ That is a covering statement, and it is strictly weaker than any single system b
 - **demote one block's multiplicative group into the top q-group** — then Γ/Γ₁ = C_t must be a q-group, so t = (r−1)/d must be a prime power. That is the Sophie Germain condition, and it is where the conditionality enters.
 
 Read this way η = 2/d is not an efficiency knob but **the price of using blocks of unequal size at all**, and the dichotomy explains why no unconditional family with ω(n) ≥ 3 has ever appeared in the computed table: from constructions of this shape, none can.
+
+**In census terms**, the disjunction below ranges over S3, S4 and S5 for the two- and three-class shapes, plus their higher-k analogues; S2 drops out with the fusion shapes, and S6 through S10 either cannot occur or are supply-limited past the point of mattering (§4). So the finite set of Bateman–Horn systems is exactly the set §3 analyses, taken over all part-counts up to the bound below.
 
 **The fusion shapes can be dropped from the asymptotic statement.** A shape with any F_i > 1 needs a q-power's worth of equal blocks, and in the extreme single-class case n = F·c it needs ω(n) ≤ 2 outright. Fused winners are 39.3% of the computed table, but that share is propped up by small n: the ω(n) ≤ 2 population thins like log log n / log n (§4), from 64.9% below 800 to 28.5% near 10⁶. So the fusion shapes cover a **density-zero** set of n, and the asymptotic covering statement runs over the purely additive shapes alone — a much smaller set, 5 of the 31 at δ₀ = 1/9.
 
