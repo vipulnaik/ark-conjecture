@@ -221,6 +221,16 @@ It **replaces the by-hand checking** done in each review pass, and it found a do
 
 *Note the v4 witness at n = 551 is now `p=2 q=83: 3x128 + 1x167*` — a fused class of three 128-blocks, not the two distinct powers of 2. The 256 + 167\* + 128 configuration is still admissible and still makes the point about cyclicity; it is simply no longer the optimum there. Open Problem 1's worked instance should be restated as an admissible configuration rather than as a winner.*
 
+### A10. Two defects in the GAP/CSP pipeline — see `gap_review.md`
+
+*Found 2026-08 on a cold review of the n = 10 pipeline. The pipeline is otherwise sound: the order matrix verifies clean (V = 1,242, reflexive, 0 antisymmetry and 0 transitivity violations sampled), and the χ machinery already subsumes §9.7's fixed-complex criterion rather than needing it added.*
+
+**(a) `adversary.py` poisons its persisted memo on budget exhaustion — fix before any rerun.** A child returning `False` because the node budget ran out is indistinguishable from a genuine failure to survive; the `out_of_budget` test sits *after* the `res = False; break`, so `memo[key] = False` is written for a node whose value is unknown. The memo is pickled in the heartbeat and in the `finally`, and reloaded on the next run — which the docstring actively recommends. Failure mode is a spurious **NON-EVASIVE**, the counterexample-found verdict. Two-line fix in `gap_review.md` §1; **delete any `adversary_memo.pkl` from a BUDGET run rather than resuming it.**
+
+**(b) `ark_intersect.py`'s `.top_primes` is unsound, and fires at n = 12.** It reads q off the **twist** prime, which is the cyclic layer, not the top — the same layer conflation as the S5/S7 finding. Returning the minimum is safe, but the documented "enforce mod lcm, strictly stronger" is not: a twist prime need not be a valid top prime. At the group the docstring itself names, AGL(1,5)[d=4] × F₇:C₃ on n = 12, q = 2 is valid and q = 3 appears not to be, so mod 6 would impose an unjustified constraint — and on a CSP whose useful answer is UNSAT, an unjustified constraint is **a spurious proof of ARK**. `ark_gap.g` is unaffected: `IsOliverTop` verifies each q against an actual normal subgroup, so **lcm over the GAP `"+"` tag is legitimate; lcm over `.top_primes` is not.** Nothing consumes the tag today and no n = 10 group is multi-prime, so this is latent.
+
+**(c) Worth measuring, not a defect.** By §9.7 the χ constraint is decisive at t ≤ 3 and weak by t ≥ 4, but 93% of the battery's Σ2^t cost sits at t ≥ 7 (31 groups, 16,128 of 17,356). High-t groups do generate catalog classes and monotonicity couplings, so this is not an argument to drop them — but the battery is selected by m\* and cost, never by constraint strength, and the trade is unmeasured. Cheap test: solve the t ≤ 6 sub-battery (44 groups, 7% of the cost) and see how much backbone survives. If most does, n = 12 becomes tractable.
+
 ### A2. Promote E.3(ii) past the bare pair
 
 The last theorem-side residue in the fallback collapse. With a leftover, the (r, r) re-reading must also re-type the leftover parts, and the commonest case **L = c** fails outright because two blocks of the same prime c would be two equal foreign parts, which Part E forbids.
