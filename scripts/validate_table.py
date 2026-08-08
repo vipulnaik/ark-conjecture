@@ -394,6 +394,19 @@ def c_s5(R, base):
             f"u = {dict(sorted(us.items()))}", big[:5])
 
 
+@check("B", "no winner has two matching classes of different sizes", "aod section 6.2, A9")
+def c_equal_sizes(R, base):
+    bad, multi = [], 0
+    for r in R:
+        sizes = {c for F, c, f in r.cls if not f}
+        if sum(1 for F, c, f in r.cls if not f) > 1:
+            multi += 1
+            if len(sizes) > 1:
+                bad.append((r.n, r.witness))
+    return ("FAIL" if bad else "PASS",
+            f"{multi} winners have >1 matching class; {len(bad)} have unequal sizes", bad[:5])
+
+
 @check("B", "S6 (two foreign blocks) wins nowhere", "aod section 4.2")
 def c_s6(R, base):
     rows = [(r.n, r.witness) for r in R if r.shape == "S6"]

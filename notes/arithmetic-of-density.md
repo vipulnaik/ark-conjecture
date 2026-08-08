@@ -950,34 +950,149 @@ Corollary 3.2 of the notes is an equivalence, so a lower bound on μ yields an a
 
 **It does not force any single Bateman–Horn system to be solvable for all large n.** A bound μ(n) ≥ δ₀·C(n,2) says only that *some* admissible configuration reaches δ₀ — and which one may vary with n. Nothing in the framework privileges a particular system, and indeed the computed table shows the winning shape changing constantly with n.
 
-**What it does force is a covering statement over a finite set of systems.** At density δ₀ the search bounds are all effective. Proposition F.1 caps the number of classes at k ≤ 1/√δ₀; each part has size s_i ≳ √δ₀·n, so with Σ s_i = n the fusion counts obey F_i ≤ 1/√δ₀ as well; foreign parts are never fused (Lemma B′) and are pairwise distinct primes. So the possible **shapes** — the choice of k, of each part's type, and of the fusion counts — form a finite set whose size depends on δ₀ alone:
+**What it does force is a covering statement over a finite set of systems.** At density δ₀ the search bounds are all effective, so the possible **shapes** form a finite set depending on δ₀ alone. Getting that set right matters, since the covering statement is only as strong as the set is small.
 
-| δ₀ | k ≤ | distinct shapes |
-|---|---|---|
-| 1/9 | 3 | 31 |
-| 1/16 | 4 | 117 |
-| 0.026117 (current floor) | 6 | 1,593 |
-| 0.02 (conjectured) | 7 | 5,937 |
+#### 6.1 The feasibility criterion, derived
 
-Each shape, with n as a parameter, *is* a Bateman–Horn system in its remaining free variables. So the correct backwards implication is:
+Write x_i = s_i/n for each part's share of n, so Σx_i = 1. Each part imposes one constraint, and they are all the same constraint:
 
-> **μ(n) ≥ δ₀·C(n,2) for most n  ⟹  for most n, at least one of a finite explicit set of Bateman–Horn systems is solvable at n.**
+- a **matching class** of F blocks of size c = x n / F has intra term F·C(c,2), of density **x²/F**;
+- its **within-class cross** term is F·c² for odd F and (F/2)·c² for even F, of density 2x²/F and x²/F respectively — so it is never tighter than the intra term, and at even F exactly ties it;
+- a **foreign block** has intra term at most C(r,2), of density **x²**, which is the F = 1 case;
+- **cross terms** x_i x_j are implied once every x_i ≥ √δ₀.
 
-That is a covering statement, and it is strictly weaker than any single system being solvable — which is why the route yields robustness rather than sharp prime theorems. It is also why the ladder survives individual systems failing: §3.3's local obstructions kill particular systems in particular residue classes without touching the conclusion, because another shape covers those n.
+So every part obeys x_i ≥ √(δ₀ F_i), with F = 1 for foreign parts, and summing:
 
-**Why conditionality is unavoidable once ω(n) ≥ 3: a dichotomy.** Every block must have size ≍ n, so there are boundedly many. A p-characteristic block of size c contributes C_{c−1} to the cyclic middle layer, and Oliver's chain requires that layer to be cyclic. Two blocks of *different* odd prime-power sizes c, c′ contribute C_{c−1} × C_{c′−1}, and both orders are even, so the product is never cyclic. That leaves exactly three escapes:
+> **Feasibility.  Σ_i √F_i ≤ 1/√δ₀.**
 
-- **all blocks the same size** — one diagonal C_{c−1}, cyclic, with the top q-group coming free from permuting the blocks. This is n = F·c, the multiplicative engine, and it is unconditional — but it needs ω(n) ≤ 2;
+One criterion replaces the three that might be imposed separately, and it is strictly sharper than their conjunction. It gives k ≤ 1/√δ₀ (Proposition F.1) by taking every F_i = 1, and it gives **F ≤ 1/δ₀** — note this is *not* 1/√δ₀, which is the natural-looking but wrong bound: at δ₀ = 1/9 a single class of **nine** fused blocks is feasible, and at the floor 0.051813 the winner `19x61` at n = 1159 has √19 = 4.359 against 1/√δ = 4.393, sitting essentially *on* the boundary. **Checked against every winner in the table: 0 of 1,295 violate it.**
+
+Writing **L = 1/√δ₀** and **N(δ₀)** for the number of shapes the criterion admits:
+
+| δ₀ | L | k ≤ | F ≤ | N(δ₀) |
+|---|---|---|---|---|
+| 1/9 | 3.000 | 3 | 9 | **24** |
+| 1/16 | 4.000 | 4 | 16 | **65** |
+| 0.051813 (floor in range) | 4.393 | 4 | 19 | **83** |
+| 0.026117 | 6.188 | 6 | 38 | **453** |
+| 0.02 (conjectured) | 7.071 | 7 | 50 | **982** |
+
+**This column is the raw count and nothing has been removed from it yet.** §6.2 asks whether a shape names one system at all, §6.3 gives the reductions, and §6.4 counts what survives them — which is a far smaller and much more slowly growing set than the table suggests.
+
+#### 6.2 Does a shape determine a single system? The one-size presupposition
+
+*The whole count rests on each shape naming one Bateman–Horn system, so this comes first.* Naively each matching class carries its own free size, so the number of free variables would grow with the class count and a "shape" would not name a single Bateman–Horn system. What collapses them is the cyclic layer, and the argument is a density argument rather than a structural one — it is worth setting out carefully, because the crisp version of it is false.
+
+**The twist orders are what the cyclic layer constrains, not the multiplicative groups.** A matching class of blocks of size c carrying a twist of order d has intra term ≈ c·d/2, so its density is c·d/n², and reaching δ₀ needs
+
+> **d ≥ δ₀·n²/c**,  equivalently a twist fraction **d/(c−1) ≥ δ₀/x²** with x = c/n.
+
+So a block needs a *bounded fraction* of its multiplicative group, not all of it: at x = 0.3 and δ₀ = 0.05 the fraction may be as low as about 0.55. Cyclicity of Γ₁/Γ₂ then requires the twist orders {d_i} of the distinct classes, together with the foreign translation orders {r_b}, to be **pairwise coprime** — it does not require the full C_{c_i−1} to embed.
+
+**Two classes of equal size cost nothing**, because they can share a single *diagonal* twist: one C_d acting on both, contributing one factor rather than two. That is Theorem 2.1's construction and it is why S4 exists at all.
+
+**Two classes of unequal size are the case that is not settled here.** With c = p^a and c′ = p^b, a shared diagonal twist has order dividing gcd(p^a−1, p^b−1) = p^{gcd(a,b)}−1, so at a | b the larger block runs at twist fraction ≈ (p^a−1)/(p^b−1) ≈ x/x′, which is small; and independent twists d, d′ must be coprime, so at most one may be even and the other loses at least a factor 2. **Neither of those is an outright contradiction at the densities of interest** — a factor-2 loss is affordable when the required twist fraction is 0.55 — so the claim that unequal matching sizes are impossible does *not* follow from cyclicity alone, and the version of this argument that asserts C_{c−1} × C_{c′−1} is never cyclic has quietly assumed full twists.
+
+**What is established, and what is not.** Established: each additional matching class of a *different* size costs either a diagonal twist bounded by gcd(c−1, c′−1) or a coprimality split of the available orders, and both press the twist fractions down towards the δ₀/x² floor. Not established: that the cost is always fatal. What supports the collapse is empirical — **no winner in the computed table has two matching classes of different sizes**, and the seven winners with two matching classes all have them equal — plus the fact that the enumerator imposes the true pairwise-coprimality condition rather than the full-twist caricature, so it would have found such a configuration had one been optimal.
+
+**At p = 2 it fails outright, and the documents already contain the witness.** The configuration n = 551 = 256 + 167\* + 128 has two matching classes of different sizes, 2⁸ and 2⁷, with c − 1 = 255 and c′ − 1 = 127 both **odd** and coprime — so both twists are full and the cyclic layer C₂₅₅ × C₁₂₇ × C₁₆₇ is cyclic. That is §6.5's second escape, and it is the worked instance of Open Problem 1.
+
+So: *the count below presupposes one size variable per shape, and that presupposition is supported but not proved.* The open case is **odd p**, where c − 1 and c′ − 1 are both even so at most one twist keeps its 2-part; whether that loss is always fatal is precisely Open Problem 1's question about beating the ℓ = 2 loss, with p = 2 the known positive answer. Since the c = 2^a escape sits outside the accounting below in any case, the count is unaffected by the p = 2 branch and hostage only to the odd-p one.
+
+> **What would break if the odd-p case goes the other way, and what would not.** Worth pinning down, since the presupposition is load-bearing.
+>
+> - **Finiteness survives, and easily.** A shape would have to record not only its parts but which matching parts share a size — a set partition of them. The number of distinct sizes is bounded by the number of matching classes, itself bounded by k ≤ 1/√δ₀, so the shape space stays finite and every shape is still one Bateman–Horn system, merely in several size variables rather than one. **The general principle — finitely many explicit systems, computable from δ₀ alone — is not at risk.**
+> - **The counts change, by a partition factor.** For the purely additive shapes that carry the asymptotics, a shape with k parts and i foreign ones must additionally partition its j = k − i matching parts by size, giving Σ_{k≤K} Σ_{j<k} p(j) in place of Σ_{k≤K} k:
+>
+>   |  | | **additive shapes** | | | **all shapes** | | |
+>   | δ₀ | K | one size (§6.4) | sizes free | sizes free, penalised | one size (§6.1) | sizes free | sizes free, penalised |
+>   |---|---|---|---|---|---|---|---|
+>   | 1/9 | 3 | 6 | 7 | 7 | 24 | 32 | **26** |
+>   | 1/16 | 4 | 10 | 14 | 14 | 65 | 109 | **80** |
+>   | 0.026117 | 6 | 21 | 45 | 41 | 453 | 1,406 | **774** |
+>   | 0.02 | 7 | 28 | **75** | **63** | 982 | 4,063 | **1,956** |
+>   | 1/400 | 20 | 210 | 8,266 | — | — | — | — |
+>
+>   The two "sizes free" columns differ by whether the factor-2 penalty is charged. Since at most one size class keeps its 2-part, every other class needs x ≥ √(2δ₀F) rather than √(δ₀F), and that pushes some of the newly admitted shapes back out of feasibility — which is why the penalised column is the one to quote. At the conjectured floor the purely additive disjunction would be **63-way rather than 28-way**, and the raw count 1,956 rather than 982: a factor of about two in both, not an explosion.
+>
+>   The growth of the additive count becomes Σ_{k≤K}Σ_{j<k}p(j) ~ K·p(K) = exp(π√(2K/3) + O(log K)), i.e. **exp(c·δ₀^{−1/4})** — worse than quadratic but still subexponential, and still far below the raw fusion count's exp(2.53·δ₀^{−1/3}).
+> - **The ceiling table of §3.3 is not at risk.** A configuration with two unequal matching sizes has at most one twist keeping its 2-part, so at least one class runs at half its intra density — its cap is *below* the equal-size shape of the same part count. Such shapes would enlarge the covering set without raising any class ceiling, so §3.3's caps stand as caps and §6.6's collapse argument is unaffected in kind, though the gaps ε it needs would have to be rechecked against the new shapes' caps.
+> - **The parity reduction survives** unchanged: every matching size is a power of the same odd p, hence odd, so n ≡ ΣF_a + i (mod 2) regardless of how many distinct sizes there are.
+>
+> So the exposure is to the specific numbers of §6.1 and §6.4, not to the structure of the argument.
+
+#### 6.3 How the naive count overstates the covering set
+
+Granting §6.2's presupposition, three reductions apply to the raw table, and they are worth keeping apart because only some are unconditional.
+
+**(a) A shape is already a number-theoretic object, not a group-theoretic one — so census shapes and systems are different counts.** The Bateman–Horn system attached to a shape sees the part sizes and nothing else. It does not see *which layer* holds a fusion. So **S5 and S7 at F = 2 are one shape and one system** — both are n = 2c + r\*, realised by two different Oliver groups distinguished only by whether the block swap sits in the top or the cyclic layer (§3.2). The same holds for every fused shape. The consequence is that the census counts (S1…S10, ten shapes) and N(δ₀) are measuring different things and must never be compared: one group realisation may serve several shapes, and one shape may carry several realisations. *This reduction is already built into N(δ₀) above*, which counts systems; it is listed because the comparison is the tempting error, not because it removes anything further.
+
+**(b) Parity halves the set pointwise.** With p odd, c is odd, and every foreign r is odd, so n ≡ ΣF_a + i (mod 2), where i is the number of foreign parts. **A shape is available only at n of one parity**, so the disjunction at any given n runs over about half of N(δ₀). This one *does* cut the table: 24 splits 14 / 10, and 982 splits 498 / 484. (The c = 2^a escape sits outside it, as the remark above notes.)
+
+**(c) Local obstructions prune further, per residue class.** §3.3 does this for the three-part family: at n ≡ 2 (mod 3) the full-efficiency system has ω(3) = 3 and vanishes identically, and the ℓ = 2 conditions cut the odd classes similarly. Every shape has such an analysis, and each removes that shape from the covering set at particular residues. **This is the one reduction not computed here.** Doing it for all 453 shapes at δ₀ = 0.026117 is mechanical — each system is a few linear forms in one variable, and only ℓ = 2 and ℓ = 3 can obstruct (§3.3.1) — and it is the obvious next step, being the reduction most likely to be large: the three-part family alone loses a third of residues mod 12.
+
+**What is *not* available is a domination argument.** One might hope some shapes are unconditionally beaten by others and could be dropped. The unconditional facts of that kind are already applied in generating the list: Lemma D1 removes F a power of p (bottom-layer fusion is absorbed into a larger block), Lemma D2 removes fused foreign blocks, Lemma B′ removes foreign prime powers, and Part A removes fixed points. Beyond those, domination fails at exactly the interesting places — S4 and S7-at-F=2 realise the same shape and neither dominates, which is the content of the c mod 8 law. So the list cannot be shortened by comparing shapes to each other.
+
+#### 6.4 Counting the shapes, before and after the reductions
+
+**The raw count is a weighted partition problem.** A shape is a multiset {F_i} of fusion counts with Σ√F_i ≤ L, together with a choice of which of its F = 1 parts are foreign rather than matching; a multiset with m₁ parts equal to 1 admits m₁ + 1 such choices. So
+
+> **N(δ₀) = Σ_{ M : Σ_{F ∈ M} √F ≤ L } ( m₁(M) + 1 )**,  over nonempty multisets M of positive integers.
+
+The parts are drawn from {√1, √2, √3, …}, whose counting function is A(x) = #{F : √F ≤ x} = x², so their Dirichlet series is Σ_F (√F)^{−s} = **ζ(s/2)**, with a simple pole at s = 2 of residue 2. Meinardus' theorem for parts of counting order α with residue A gives log N ~ (1 + 1/α)·[A·Γ(α+1)·ζ(α+1)]^{1/(α+1)}·L^{α/(α+1)}, and at α = 2, A = 2,
+
+> **log N(δ₀) ~ 3/2 · (4ζ(3))^{1/3} · δ₀^{−1/3} ≈ 2.532·δ₀^{−1/3}**.
+
+So the raw set grows like exp(2.53·δ₀^{−1/3}) — subexponential in 1/δ₀, so halving the floor does not square the disjunction. Convergence is slow, as always for Meinardus: fitting log N against L^{2/3} over L ∈ [6,10] gives slope **2.416**, still climbing, and the asymptotic overstates the exact count by about 11× at the densities of interest. Use the exact sum in range and the asymptotic only for the growth.
+
+**Applying the reductions changes the growth rate, not just the constant.** Reduction (a) is already in N. Reduction (b) halves it, which is invisible in log N. What matters is §6.5's observation that the **fusion shapes cover a density-zero set of n**, so the asymptotic covering set consists of the purely additive shapes — every F_i = 1 — with at least one foreign part. Those are counted directly rather than by a partition asymptotic: a shape is determined by its number of parts k ≤ K = ⌊L⌋ and its number of foreign parts i ∈ {1,…,k}, giving
+
+> **N_add(δ₀) = Σ_{k=1}^{K} k = K(K+1)/2,  K = ⌊δ₀^{−1/2}⌋** — **quadratic in L, hence ≈ 1/(2δ₀)**.
+
+And parity is now exact rather than approximate: since every F_i = 1, n ≡ k (mod 2), so **a shape with k parts serves exactly the n of parity k**. The covering set at a given n is therefore
+
+> **Σ_{k ≤ K, k ≡ n (mod 2)} k**.
+
+| δ₀ | raw N(δ₀) | additive N_add | at odd n | at even n |
+|---|---|---|---|---|
+| 1/9 | 24 | **6** | 4 | 2 |
+| 1/16 | 65 | **10** | 4 | 6 |
+| 0.026117 | 453 | **21** | 9 | 12 |
+| 0.02 (conjectured) | 982 | **28** | **16** | **12** |
+
+That is the number that belongs in the covering statement: **at the conjectured floor, 16 systems at odd n and 12 at even n**, before local obstruction cuts further — not 982. The exponential growth of the raw count is an artefact of counting fusion shapes that cover a vanishing set of n.
+
+#### 6.5 The dichotomy, and where the conditionality enters
+
+**Why conditionality is unavoidable once ω(n) ≥ 3.** Every block must have size ≍ n, so there are boundedly many. A p-characteristic block of size c needs a twist of order d ≥ δ₀n²/c to contribute at all (§6.2), and Oliver's chain requires the twist orders of distinct classes to be pairwise coprime in one cyclic layer. Two blocks of *different* odd prime-power sizes have c − 1 and c′ − 1 both even, so at most one twist may use its 2-part, and a shared diagonal twist is capped by gcd(c−1, c′−1). *At full twists this is an outright contradiction; at the partial twists the density actually permits it is a cost rather than a bar* — see §6.2, where the same caveat is recorded. Either way it pushes hard towards three escapes:
+
+- **all blocks the same size** — one diagonal C_{c−1}, cyclic, with the top q-group coming free from permuting the blocks. This is n = F·c, the multiplicative engine, unconditional but needing ω(n) ≤ 2;
 - **a block of 2-power size** — then c − 1 is odd and can sit cyclically beside C_{r−1} without demotion. This is what n = 551 = 256 + 167\* + 128 exploits, and §4.3 counts at O(n/log n) values;
 - **demote one block's multiplicative group into the top q-group** — then Γ/Γ₁ = C_t must be a q-group, so t = (r−1)/d must be a prime power. That is the Sophie Germain condition, and it is where the conditionality enters.
 
 Read this way η = 2/d is not an efficiency knob but **the price of using blocks of unequal size at all**, and the dichotomy explains why no unconditional family with ω(n) ≥ 3 has ever appeared in the computed table: from constructions of this shape, none can.
 
-**In census terms**, the disjunction below ranges over S3, S4 and S7 at F = 2 for the two- and three-class shapes, plus their higher-k analogues; S2 drops out with the fusion shapes, and S6 through S10 either cannot occur or are supply-limited past the point of mattering (§4). So the finite set of Bateman–Horn systems is exactly the set §3 analyses, taken over all part-counts up to the bound below.
+**Hence the fusion shapes drop from the asymptotic statement.** A shape with any F_i > 1 needs a q-power's worth of equal blocks, and in the extreme single-class case n = F·c it needs ω(n) ≤ 2 outright. Fused winners are 39.6% of the computed table, but that share is propped up by small n: the ω(n) ≤ 2 population thins like log log n / log n (§4), from 64.9% below 800 to 28.5% near 10⁶. So the fusion shapes cover a **density-zero** set of n, which is what licenses the N_add count of §6.4.
 
-**The fusion shapes can be dropped from the asymptotic statement.** A shape with any F_i > 1 needs a q-power's worth of equal blocks, and in the extreme single-class case n = F·c it needs ω(n) ≤ 2 outright. Fused winners are 39.3% of the computed table, but that share is propped up by small n: the ω(n) ≤ 2 population thins like log log n / log n (§4), from 64.9% below 800 to 28.5% near 10⁶. So the fusion shapes cover a **density-zero** set of n, and the asymptotic covering statement runs over the purely additive shapes alone — a much smaller set, 5 of the 31 at δ₀ = 1/9.
+**In census terms** — with the caveat of §6.3(a) — the disjunction ranges over S3, S4 and S7 at F = 2 for the two- and three-class shapes, plus their higher-k analogues; S2 drops with the fusion shapes, and S6 through S10 either cannot occur or are supply-limited past the point of mattering (§4).
 
-**What this does not give.** Because the conclusion is a disjunction over shapes, it cannot be inverted into a statement about any one prime configuration; one cannot extract "n = c + r with r a safe prime is solvable for large n" from it. Getting that would need the covering to be shown *irredundant* — that some particular n are covered by one shape only — which the data does not support, since most n are covered by several.
+#### 6.6 The covering statement, and when it collapses to a single system
+
+> **μ(n) ≥ δ₀·C(n,2) for most n  ⟹  for most n, at least one of a finite explicit set of Bateman–Horn systems is solvable at n** — the set being the purely additive shapes with at most ⌊δ₀^{−1/2}⌋ parts, of the parity of n, not locally obstructed at n's residue class.
+
+At the conjectured floor that is **16 systems at odd n and 12 at even n**. It is a covering statement, and weaker than any single system being solvable — which is why the route ordinarily yields robustness rather than sharp prime theorems, and why the ladder survives individual systems failing: §3.3's local obstructions kill particular systems in particular residue classes without touching the conclusion, because another shape covers those n.
+
+**But the disjunction collapses when δ₀ is set just below a class ceiling.** The shapes' ceilings are known and separated, so **a floor just under δ_c admits only the shape that attains it**. At n ≡ 23 (mod 24) the surviving rung is S4's at 0.050510, the next shape down being the fused rung at d = 24 with 0.042020, so any ε < 0.0085 leaves exactly one additive shape standing, and the conclusion is
+
+> for most n ≡ 23 (mod 24), **the system n = 2c + r with c a prime power, r prime and r ≡ 1 (mod q) for a prime power q ≥ (r−1)/12, is solvable with c/n near (√6 − 2)/2**
+
+— one system, not a disjunction. Three caveats:
+
+- **The density-zero families must be excluded by hand**, being bounded by no class ceiling: n a prime power (S1), ω(n) = 2 (S2), and the escapes of §4.3 — c a power of 2, c or (r−1)/2 a power of 3, and r = 2^a·u + 1 with u small. Each is O(n/log n) or thinner, so "most n" survives, but the statement is about the complement of an explicit sparse set.
+- **The gap between consecutive ceilings bounds ε**, and it is not uniform: 0.0085 at n ≡ 23 (mod 24), but the classes where two rungs tie — 7 and 15, where cap_B(1/4) = cap_C(1/2) exactly — admit **no** such ε, and there the disjunction genuinely cannot be collapsed.
+- **It is conditional in the direction that matters.** The hypothesis is a lower bound on μ that we do not have; the argument shows that *if* the floor conjecture holds just under a class ceiling, the arithmetic consequence is sharp. That is a statement about the strength of the conclusion, not evidence for it.
+
+So: **the route yields robustness at floors well below the ceilings, and sharp single-system statements at floors just beneath them.** The closer δ₀ sits to a class ceiling the stronger the arithmetic and the harder the hypothesis — worth stating because it identifies which floor conjecture would be worth proving. A floor of 1/50 gives a 16-way disjunction at odd n; a floor of 0.0505 at one residue class gives a single Bateman–Horn system.
 
 ---
 
@@ -985,7 +1100,7 @@ Read this way η = 2/d is not an efficiency knob but **the price of using blocks
 
 **The odd-n route above 1/9 is refuted.** It asked for a constant above 1/9 bounding δ from below on odd n, so Theorem E.1 would settle the collapse there wholesale. No such constant exists: **54.3% of the odd n in the computed table have δ(n) < 1/9**, and these are exact values of μ, not shortfalls of any family. Worse, the share grows — 37.0% of odd n below 800, 59.9% in [800, 1600), 64.8% in [1600, 2299). The route is closed permanently, so **Open Problem 8(b) must be settled by promoting E.3(ii) directly**, which is the only remaining path.
 
-**Open Problem 1** stands: the ℓ = 2 and ℓ = 3 efficiency losses obstruct *these* families rather than μ itself, and a family with different local structure might avoid them. The worked instance is n = 551 = 256 + 167\* + 128, using two distinct powers of 2 to sidestep the equal-block form. Since both systems already supply ~n/log³n representations wherever soluble, no strengthening of sieve input helps — this is a question about mechanisms.
+**Open Problem 1** stands, and §6.2 gives it a second face. As stated it asks whether a family with different *local* structure can beat the ℓ = 2 and ℓ = 3 efficiency losses, which obstruct these families rather than μ itself; the admissible configuration n = 551 = 256 + 167\* + 128 uses two distinct powers of 2 to sidestep the equal-block form. **The same question controls whether a shape determines a single Bateman–Horn system.** §6 needs all matching classes to share a block size, and the argument for that holds only at full twists; at p = 2 it fails outright, n = 551 being the witness, and at odd p — where c − 1 and c′ − 1 are both even, so at most one twist keeps its 2-part — it is open. So Open Problem 1 is not only about lifting the obstructed residues: its odd-p half is upstream of §6's shape count. Since both systems already supply ~n/log³n representations wherever soluble, no strengthening of sieve input helps — this is a question about mechanisms.
 
 **Open Problem 8(a) (k ≤ 3)** is the statement that the four-class cap 1/16 is never the best available, which needs ω(n) ≥ 3 together with no good two- or three-class representation. It has never occurred: no winner in the computed table uses four classes, and the δ ≤ 1/16 tail is 45 of 1,921 values. The branch-and-bound of §5 adds a little: it examined every n ≤ 10⁶ whose lower bound fell below the running floor, and none of them wanted a fourth class either.
 

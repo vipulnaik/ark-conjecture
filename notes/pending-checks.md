@@ -203,6 +203,24 @@ Two extra modes cover the cases that would otherwise send you to the CSV. **`--b
 
 It **replaces the by-hand checking** done in each review pass, and it found a documentation error on its first run (see below). **Amend it in the same pass whenever the model changes** — each check names the document section it comes from, so a stale check is findable from either end. Note what it does *not* do: it checks the table against the documents' model, not against mathematics. For independent evidence use `brute_compare.py`.
 
+### A9. The unequal-matching-sizes dichotomy — rescoped: this **is** Open Problem 1, at odd p
+
+*Raised 2026-08 while making §6 rigorous, then traced to an existing item rather than a new one.*
+
+§6 needs each shape to determine **one** Bateman–Horn system, hence all matching classes to share a block size. The argument given — two blocks of different odd prime-power sizes contribute C_{c−1} × C_{c′−1}, both orders even, never cyclic — **assumes full twists**. A block of size c with twist of order d has intra term ≈ cd/2, so it needs only d ≥ δ₀n²/c, a twist *fraction* ≥ δ₀/x², about 0.55 at x = 0.3 and δ₀ = 0.05. Cyclicity constrains the twist **orders** to be pairwise coprime, not the full multiplicative groups to embed, so two unequal classes cost a factor of 2 at worst — affordable at these densities.
+
+**And at p = 2 the dichotomy fails outright, with a witness already in the documents.** Open Problem 1's worked instance is **n = 551 = 256 + 167\* + 128** — two matching classes of *different* sizes, 2⁸ and 2⁷. Both c − 1 = 255 and c′ − 1 = 127 are **odd**, gcd(255, 127) = 1, so both twists are full and the cyclic layer C₂₅₅ × C₁₂₇ × C₁₆₇ is genuinely cyclic. This is exactly §6.5's second escape, and it is the mechanism Open Problem 1 asks about.
+
+**So the residual question is the odd-p case, and it is Open Problem 1 in general form:** at odd p, c − 1 and c′ − 1 are both even, so at most one twist keeps its 2-part. Does the resulting loss always sink the configuration below what an equal-size shape achieves at the same n, or is there a family here? Framed that way it is the same "can a family with different local structure beat the ℓ = 2 loss" question, with the 2-power escape being the known positive answer at p = 2 and the odd-p case open.
+
+**If it goes the other way, what breaks is the arithmetic and not the architecture.** Finiteness survives — a shape would additionally record a set partition of its matching parts by size, bounded by k ≤ 1/√δ₀, so it is still finitely many explicit Bateman–Horn systems. The purely additive count goes from Σ_{k≤K} k = K(K+1)/2 to Σ_{k≤K} Σ_{j<k} p(j), i.e. from ≈1/(2δ₀) to exp(c·δ₀^{−1/4}); at the conjectured floor **28 → 63** once the factor-2 penalty is charged (75 without it), and the raw count **982 → 1,956**. A factor of about two, not an explosion. §3.3's ceilings are unaffected, since an unequal-size configuration loses a factor 2 on one class's intra term and so caps *below* the equal-size shape of the same part count. Parity survives too. See the box in §6.2.
+
+**What is wanted:** given c = p^a, c′ = p^b with a < b and p odd, twist fractions bounded below by δ₀/x² and δ₀/x′², and pairwise-coprime orders, show x + x′ ≤ 1 cannot be met — or exhibit the configuration. The second branch would be a new family and would also break §6's one-size-variable presupposition, so the shape count depends on it.
+
+**Evidence meanwhile:** **no winner in the computed table has two matching classes of different sizes at odd p** (the p = 2 instances aside), and all seven winners with two matching classes have them equal. The enumerator imposes the true pairwise-coprimality condition rather than the full-twist version, so it would have found such a configuration had one been optimal below n = 1572. Checked automatically by `validate_table.py` (group B) on every extension.
+
+*Note the v4 witness at n = 551 is now `p=2 q=83: 3x128 + 1x167*` — a fused class of three 128-blocks, not the two distinct powers of 2. The 256 + 167\* + 128 configuration is still admissible and still makes the point about cyclicity; it is simply no longer the optimum there. Open Problem 1's worked instance should be restated as an admissible configuration rather than as a winner.*
+
 ### A2. Promote E.3(ii) past the bare pair
 
 The last theorem-side residue in the fallback collapse. With a leftover, the (r, r) re-reading must also re-type the leftover parts, and the commonest case **L = c** fails outright because two blocks of the same prime c would be two equal foreign parts, which Part E forbids.
