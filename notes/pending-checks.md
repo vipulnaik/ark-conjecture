@@ -86,7 +86,7 @@ The only check that tests the restructure rather than re-running it. `brute.py` 
 
 **Status: 67 values to n = 105 by contiguous sweep, 0 mismatches**, with all gaps exactly the prime powers (correctly skipped). Every record agrees with v4.
 
-**Targeted values matter more than contiguous coverage here.** Cost grows like n^4.5, so a sweep stalls well below the range where the corrected shape space actually bites — the first S7 instance is n = 143 and the first S4 winner is n = 247, both far above where a sweep reaches in reasonable time. Use `--nlist`:
+**Targeted values matter more than contiguous coverage here.** Cost grows like n^4.5, so a sweep stalls well below the range where the corrected shape space actually bites — the first S7-at-F≥3 instance is n = 143 and the first S4 winner is n = 247, both far above where a sweep reaches in reasonable time. Use `--nlist`:
 
 ```bash
 python3 brute_compare.py mu_table_safe_v4.csv --nlist 143,247,285,308 --resume runs/brute.jsonl
@@ -121,9 +121,9 @@ Also worth knowing: Pass 3 exempts files matching `session-log|pending-checks|RE
 
 ## R7. Rerun `ladder_verify.py` to 10⁶
 
-**The SAFE over-credit is fixed.** Its S7 family scored the fused class at `F·comb(c,2)` regardless of the twist's parity, which credited a twist the configuration cannot have and made the reported value an upper bound on that family rather than a lower one. Now `F·orb(c, dmax)` with dmax the largest divisor of c − 1 coprime to the fusion prime. Verified over n ≤ 20,000: **no value rose, none fell, the worklist is unchanged at 436** — the term was never binding in this window, so no published number moves, but the script is sound now rather than accidentally right.
+**The SAFE over-credit is fixed.** Its S7-at-F≥3 family scored the fused class at `F·comb(c,2)` regardless of the twist's parity, which credited a twist the configuration cannot have and made the reported value an upper bound on that family rather than a lower one. Now `F·orb(c, dmax)` with dmax the largest divisor of c − 1 coprime to the fusion prime. Verified over n ≤ 20,000: **no value rose, none fell, the worklist is unchanged at 436** — the term was never binding in this window, so no published number moves, but the script is sound now rather than accidentally right.
 
-One gap remains, and it only loses coverage rather than soundness: **the S7 family is narrower than the enumerator's**, modelling prime-power `F` with one fused class where the enumerator allows any `Fmid` and composite `F` such as 6 = 2·3. Widening it would shorten the worklist.
+Two gaps remain, and both lose coverage rather than soundness. **The S7 family is narrower than the enumerator's**, modelling prime-power `F` with one fused class where the enumerator allows any `Fmid` and composite `F` such as 6 = 2·3. And it starts at `F = 3`, so it misses **F = 2 in either layer** — the odd-n fused rung B and S5 — which is the more serious of the two, since the `CAP` table it reports against is keyed on rung-B ceilings it therefore cannot reach. See A6.
 
 The 10⁶ run then wants redoing. `ASYMPTOTIC` = 0.050510 is unchanged, so the 41,584 entries should be roughly stable — but every per-residue `min delta/cap` diagnostic shifts under the mod-24 ceilings, and those are what would reveal a residue behaving anomalously. Current spread at 20,000 is 0.327–0.653.
 
@@ -204,3 +204,28 @@ So two-part splits of the required quality are **plentiful**, and that is a Gold
 
 *Partly done.* A pattern scan across the three documents found the O(log n) sparsity claims (now corrected, §4.3), the mod-12 ceiling framing (now mod-24), and the `B_safe` definition (now F·orb(c, dmax)). What remains unswept: the ~85 "absolute claims" (never / always / no exception) across the three documents, which a numeric sweep cannot check and which are the class §4.3's error lived in. Worth one pass reading each against its current scope.
 
+
+### A6. Fold the two F = 2 fused rungs apart, and fix `ladder_verify.py` to scan both
+
+*Opened 2026-08 after the S5/rung-B conflation was found; the documents are relabelled, the script is not.*
+
+Fusing the two equal c-blocks of the odd-n family n = 2c + r admits two layer assignments, which are different census shapes and score differently:
+
+- **cyclic layer** (F_mid = 2, q free): twist cut to the odd part of c − 1, so the gain is governed by c mod 8. This is **S7 at F = 2**, and it is what §§3.2, 3.3(b), 3.9 of `arithmetic-of-density.md` derive under the name S5. 150 winners in v4.
+- **top layer** (F_top = 2, forcing q = 2): full twist, intra 2·C(c,2) for **every** odd prime power c — this is Theorem 2.1's own construction with a foreign block added — but η pinned to 1/u, u the odd part of r − 1. This is **S5** as the census defines it. 24 winners in v4, all with u ∈ {1, 3}.
+
+The prose is now split; three things remain.
+
+1. **`ladder_verify.py` scans neither rung.** Its three-part branch scores the intra term at `comb(c,2)`, i.e. unfused rung C only, and its S7 loop runs over `Fp ∈ (3, 9, 5, 25, 7)` — **F = 2 is never tried**. So every family value it reports for odd n is a rung-C value, while its `CAP` table is keyed on rung B. The per-residue `δ/cap` diagnostics are therefore measuring against a ceiling the script structurally cannot approach, which is exactly the kind of systematic shortfall those diagnostics exist to detect. Adding F = 2 needs care: the S7 loop's guard `(c - 1) % qF == 0 → continue` kills every odd c at qF = 2, and the cyclic-layer constraint is already carried by `dmax`, so the guard wants rewriting rather than extending. The top-layer rung needs a separate branch with `η = 1/u`.
+2. ~~**Recompute §3.9.2's observed split with the rungs separated by top prime.**~~ **Done** — `rung_split.py`, band [2×10⁵, 2.06×10⁵]. S5 never wins outright anywhere in the band, but is in the argmax set at 23.5% of n ≡ 7 and 30.4% of n ≡ 15 (mod 24) and never at 23, so the conflation was inflating the tie column at two residues and nothing else. The window convention turned out to matter more than the layer separation: scanning each residue at its **own** balance point ± 0.05 (`count_check.py`'s convention) rather than at a flat window makes residue 23 match §3.9 exactly at 0 / 43.2 / 56.8, whereas a flat [0.10, 0.42] window produces a spurious 7.6% of fused wins there. **Check the window convention before reading any discrepancy in §§3.8–3.9 as a finding.**
+
+Still open: residues 7 and 15 transpose the fused and tie columns (predicted 50 / 25 / 25, observed 8.7 / 31.1 / 60.2 and 0.0 / 31.6 / 68.4) with S4 already near its predicted share; and §3.9.2's original table (24.0 / 24.8 / 51.2 at residue 7) predates the window convention and should either be re-derived under it or dropped in favour of the rescan.
+3. **Recount the census winner columns for S5 and S7.** Done for v4 (S5 24, S7 150 at F = 2); recount on every extension, since the split is by top prime and nothing in the pipeline computes it automatically.
+
+*What is not affected.* No ceiling in the mod-24 table moves: rung B′ has the same cap formula as B but η = 1/u, so it clears the worst class ceiling 0.050510 only for u ≤ 9, i.e. r = 2^a·u + 1 with u one of five small odd values — an O(log n)-per-n family, hence an escape of the same tier as the others. The documented "Fermat escape" is its u = 1 case.
+
+### A7. The n = 1175 two-foreign witness has changed under v4
+
+`enumeration-proof.md` Part I records n = 1175 = 641\* + 277 + 257\* as the unique two-foreign winner in the table, binding on the Fermat prime 257 at 32,896. Under v4 the winner at that n is **`p=139 q=103: 1x619* + 4x139`** with B = 38,364 and δ = 0.05562 — one foreign part, not two, and a cyclic-layer-fused class of four. So the claim that the two-foreign shape (S6) has exactly one instance in range needs recounting: it may now have **none** below 1428, which would change S6's row in both censuses from "1 winner" to "no instance in the current v4 range".
+
+The second instance the branch-and-bound found, n = 3059 = 1511\* + 907\* + 641, is beyond v4's frontier and untested under the corrected shape space. Both should be rechecked when the rebuild passes those values — and note the general point, which is that the shape-space repair can move a winner from one census row to another, so **every per-shape count in Part I is v2-era until recomputed**, not merely the ones marked as such.
