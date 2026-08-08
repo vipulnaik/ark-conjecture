@@ -174,19 +174,74 @@ Now a question about the *sharpness* of the search rather than about the results
 
 *Self-contained analysis against the existing files. No new materials needed.*
 
-### A1. Bound the s = 4 and s = 5 branches
+### A1. ~~Bound the s = 4 and s = 5 branches~~ — dissolved in range by the rebuild
 
-The only remaining gap in a *proof* rather than in evidence. E.1 caps s = 1 by the Mersenne constants and E.3(iii) caps the s = 2 repunit branch; s = 4 and s = 5 have neither, and neither is thin enough for an E.4-style collapse — c − 1 = 4r and c − 1 = 5r carry no parity or congruence forcing. An absolute cap would have to come from the foreign block's twist, as in those two. The search clears both at every computed n, so nothing is unproved.
+*Recounted against `mu_table_safe_v4.csv` at the 1,295-row / n ≤ 1572 frontier.* Since **s ≤ 1/√δ − 1** and the corrected shape space has lifted the density floor over that range to **δ ≥ 0.051813** (n = 1159, `19x61`), the bound gives
 
-*Recount after the rebuild.* At n = 3239 and 3059 the density rises sharply under the corrected shape space, so both leave the sub-1/25 set and the branch may narrow without any new theorem.
+> s ≤ 1/√0.051813 − 1 = **3.393**, hence **s ≤ 3 at every n in the current v4 range.**
+
+So the s = 4 and s = 5 branches are **not reachable at all** where the table now reaches, and Part E′ closes every branch by theorem there: E.1 for s = 1, E.3(iii) for the s = 2 repunit family, E.4 for s = 3 outright. **The whole theorem-side residue collapses to the one open case, E.3(ii) with a leftover** — which is A2.
+
+This is not a proof of the branches, and the item should not be closed outright: the floor moves with the range, and the branches reappear the moment some n drops below 1/16. What has changed is that they are no longer *live* — they were an artefact of a floor (0.026117 at n = 3239) computed under the pre-repair shape space. Both former record-holders leave the sub-1/25 set entirely. **Recheck at each extension**; the trigger is the first n with δ ≤ 1/16.
+
+*Related recount, same source.* The low-density tail that Part J item 1 and Open Problem 8(a) are scoped to has also collapsed. Over the common range n ≤ 1572, comparing v2 against v4:
+
+| | v2 | v4 |
+|---|---|---|
+| δ ≤ 1/9 | 275 | **159** |
+| δ ≤ 1/16 | 17 | **3** (n = 527, 1159, 1175) |
+| δ ≤ 1/25 | 0 | 0 |
+| density floor | 0.041812 (n = 575) | **0.051813** (n = 1159) |
+
+So Corollary F.3's k ≤ 3 is now free at **1292 of 1295 values (99.8%)**, against the 97.7% the documents quote from v2. Open Problem 8(a) is correspondingly narrower, though its *stated* scope ("45 of 1,921 values") is a v2-era figure over a wider range and should be restated only once the rebuild finishes.
+
+### A0. What the extended v4 run confirms (n ≤ 1572, 1,295 rows)
+
+*Checked against the run in progress. No document counts updated — those wait for the run to finish — but the structural verdicts are worth recording now, because every one of them is a hypothesis this session's relabelling rests on, and all of them hold.*
+
+- **v4 ≥ v2 everywhere.** Over the 1,295 common values, **213 rise and 0 fall**. That is the signature R0 predicts for a shape-space enlargement plus a SAFE tightening that was never binding.
+- **S4 winners all have c ≡ 1 (mod 8).** Seven instances now — n = 247, 285, 437, 777, 1377, 1417, **1529** (c = 521 ≡ 1). The new one extends the pattern rather than breaking it.
+- **S5 winners obey no congruence on c and have small u.** 27 instances, c spread 9/8/7/3 across c ≡ 7, 5, 3, 1 (mod 8), and **u = oddpart(r − 1) ∈ {1, 3} only** (18 and 9). Exactly what §3.3's rung-B′ box predicts: no c-condition, and supply confined to r = 2^a·u + 1 with u small.
+- **S7 at F = 2 concentrates at c ≡ 3 (mod 4).** 157 of 172, with 10 at c ≡ 5 (mod 8) — the documented tie case — and 5 at p = 2. The c mod 8 law holds for the cyclic rung and not for the top one, which is the whole content of §3.2.
+- **S6 still has zero winners** anywhere in range, confirming A7 at the wider frontier.
+- **No winner exceeds cap_F(η) for its own F and η** — 0 violations across every one-matching-class, one-foreign row. This is the upper-bound half of §3.3.8's validation, and it survives the enlarged range.
+- **Class ceilings are exceeded freely, as they should be.** At n ≡ 11 and n ≡ 23 (mod 24) **every single winner** (33 of 33, 33 of 33) beats its residue's δ₀. The ceilings are family guarantees, not bounds on δ(n) — but 100% is worth knowing, since it means the tabulated δ₀ describes essentially nothing about the computed range at those two residues.
+
+**One structural change that is not a count.** Three-part winners have largely been absorbed by two-part fused ones: over the common range the part distribution moves from **{1: 551, 2: 615, 3: 129}** to **{1: 513, 2: 775, 3: 7}**. A configuration that was c + c + r\* is now read as the single fused class 2×c + r\*, which is one part rather than two. This is the largest qualitative change the repair has produced, and it bears on several claims written against v2 — in particular Part I's "three-part winners beat two-part configurations by wide margins" (a sample of 23 three-part winners, of which few now survive as three-part) and Part J item 1's framing of minimality. Both should be re-derived rather than merely recounted.
+
+### A0b. `validate_table.py` — run this on every table extension
+
+`python3 validate_table.py mu_table_safe_v4.csv --baseline mu_table_safe_v2.csv`
+
+Checks a table against every belief the three documents currently state: well-formedness and Lemmas B′/D2 on each witness, re-derivation of `mu_bound` from the witness by the G.3 formulas, Prop F.1, cap_F(η), the S4/S5/S7-at-F=2 congruence patterns, S6 emptiness, layer-by-top-prime, monotonicity against a baseline, and seven measured quantities (floor and the s/k bounds it implies, low-density tail, part-count distribution, census counts, class-ceiling exceedances, foreign-block efficiency, Lemma C exposure). Exits nonzero on any FAIL.
+
+It **replaces the by-hand checking** done in each review pass, and it found a documentation error on its first run (see below). **Amend it in the same pass whenever the model changes** — each check names the document section it comes from, so a stale check is findable from either end. Note what it does *not* do: it checks the table against the documents' model, not against mathematics. For independent evidence use `brute_compare.py`.
+
+### A0c. The within-class cross coefficient is keyed on F's parity, not on q — **fixed**
+
+*Found by `validate_table.py` on its first run: 170 of 1,295 rows failed re-derivation.*
+
+Parts E, G.3 and the value formula stated the within-class cross term's coefficient as "**F for odd q, F/2 for q = 2**". That was correct while every block count was forced to be a q-power, since F even then meant q = 2. Under the corrected shape space F = F_mid·F_top need not be a q-power and the two conditions come apart. The smallest witness is **n = 15**, whose winner is `p=5 q=2: 3x5`: **q = 2 but F = 3**, so the coefficient is 3 and the term is 75. Reading it off q gives 25 and understates B(15) as 25 against the true 30.
+
+The correct rule is **F for odd F, F/2 for even F** — the divisibility argument is about the fusing group's own prime ℓ, and ℓ = 2 exactly when F is even. **Both shipped enumerators already key on `F % 2`** (`mu_enumerate_v2.py` line 190, `brute.py` line 119), so no computed value moves and no rerun is needed; this was prose only. Corrected in Part E's value formula, the realisability paragraph, G.3, both copies of the Theorem 3.1 `DUP` block, and `aod` §2.1.
 
 ### A2. Promote E.3(ii) past the bare pair
 
 The largest theorem-side residue: **505 branches** where E.3(ii) is pairwise only and the global promotion is open. The obstruction is known and specific: with a leftover, the (r, r) re-reading must also re-type the leftover parts, and the commonest case L = c fails outright because two blocks of the same prime c would be two equal foreign parts, which Part E forbids.
 
-### A3. Make "blocked at one q, available at another" a theorem
+### A3. ~~Make "blocked at one q, available at another" a theorem~~ — reclassified: the congruence half is trivial, the rest is Hardy–Littlewood
 
-The twist-prime obstruction is written into §3.8: the congruence r ≡ 1 (mod q) pins c to the class (n−1)/2 (mod q), and when that class is 0 the family is empty, which fires for one n in q. What is open is whether the observation that another q is always available can be proved rather than measured.
+*Worked through 2026-08.* The item conflated two questions with very different status, and separating them settles one and relocates the other.
+
+**The congruence half is immediate.** For the diagnostic system of §3.9.2 — c prime, r = n − 2c prime, r ≡ 1 (mod q) — the congruence pins c to the class (n−1)/2 (mod q), and the system is degenerate exactly when that class is 0, i.e. when
+
+> **q | (n − 1)/2.**
+
+So the degenerate q at a given n are precisely the prime divisors of (n−1)/2. There are **ω((n−1)/2) ≤ log₂ n** of them, and typically far fewer: measured over odd n ∈ [10⁴, 4·10⁴] the mean is **2.56** and the maximum **5**. Every other prime is non-degenerate. So "another q is always available" is not an empirical observation at all — it is the statement that a positive integer has finitely many prime divisors, and the obstruction can remove only O(log n) candidates from an unbounded supply. That half needs no theorem.
+
+**The half that remains is not about q at all.** What the ladder actually needs is not *some* non-degenerate q but a q whose system has both **supply** (a solution near the balance point) and **efficiency** (q large enough that η = 2/d is usable, which ties q to a large prime-power divisor of r − 1). Neither follows from non-degeneracy: a system can be locally fine at every prime and still have no solution at a given n, which is exactly the content of Hypothesis (H). So the residual question is the same parametric Hardy–Littlewood question as §3.5's, restricted to a particular q, and not a separate item.
+
+**Conclusion: close A3 as a standalone item.** Record the congruence count in §3.9.2's obstruction box — where the text currently says the availability of another q is "measured" rather than proved, which understates it — and let the supply question sit with (H), where it already is. Nothing here is unproved that was not already unproved.
 
 ### A4a. Theorem 2.3's two-part reduction is not elementary — reclassified
 

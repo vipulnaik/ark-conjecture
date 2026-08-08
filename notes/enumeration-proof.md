@@ -249,7 +249,7 @@ So S7 **at F ≥ 3** is an escape rather than a competing family — reaching O(
 >
 > **n = Σᵢ Fᵢcᵢ**, each cᵢ a prime power and each **Fᵢ = F_mid,ᵢ · F_top,ᵢ** with F_top a power of q,
 >
-> in which each orbit is either **p-characteristic** — cᵢ a power of p, twist any divisor of cᵢ−1 — or **foreign** — cᵢ prime, twist a power of q, and never fused. The cyclic layer Γ₁/Γ₂ carries every F_mid,ᵢ, every cyclic-layer twist and every foreign prime **simultaneously**, so all of those orders are **pairwise coprime**; this subsumes the condition gcd(dᵢ, rⱼ) = 1 between twists and foreign primes. Imprimitive tower depth contributes nothing beyond Fᵢ. The orbital sizes are then *forced*, not chosen: **Fᵢ·orb(cᵢ, dᵢ)** within a fused class, **(Fᵢ or Fᵢ/2)·cᵢ²** between the blocks of one class, and **sᵢsⱼ** between distinct orbits.
+> in which each orbit is either **p-characteristic** — cᵢ a power of p, twist any divisor of cᵢ−1 — or **foreign** — cᵢ prime, twist a power of q, and never fused. The cyclic layer Γ₁/Γ₂ carries every F_mid,ᵢ, every cyclic-layer twist and every foreign prime **simultaneously**, so all of those orders are **pairwise coprime**; this subsumes the condition gcd(dᵢ, rⱼ) = 1 between twists and foreign primes. Imprimitive tower depth contributes nothing beyond Fᵢ. The orbital sizes are then *forced*, not chosen: **Fᵢ·orb(cᵢ, dᵢ)** within a fused class, **(Fᵢ or Fᵢ/2)·cᵢ²** between the blocks of one class — Fᵢ for odd Fᵢ and Fᵢ/2 for even Fᵢ, keyed on the block count's parity rather than on q — and **sᵢsⱼ** between distinct orbits.
 <!-- /DUP -->
 
 ### What the corrected shape space is
@@ -456,9 +456,9 @@ Completeness is proved below and realisability with it; what is *not* proved is 
 
 **The general configuration.** Parts B–D leave the following shape. Fix chain primes (p, q). The orbits are: some p-characteristic parts, each a p-power, grouped into fusion classes permuted by transitive q-groups (so each class has q-power size); and some foreign parts, each a prime with a q-power twist, subject to Lemma C against every p-part twist. Writing one fusion class of F blocks of size m together with foreign primes r₁, …, r_v:
 
-> value = min( F·orb(m, d), (F or F/2)·m², min_j orb(r_j, t_j), min_j F·m·r_j, min_{j<j'} r_j·r_{j'} )
+> value = min( F·orb(m, d), (F or F/2)·m², min_j orb(r_j, t_j), min_j F·m·r_j, min_{j<j'} r_j·r_{j'} ),  the second coefficient being F for odd F and F/2 for even F
 
-with d the largest divisor of m−1 coprime to every r_j, t_j the q-part of r_j−1, and the second term present only when F > 1 (its coefficient F for odd q, F/2 for q = 2, from the pattern-orbit count of the transitive q-group on the blocks).
+with d the largest divisor of m−1 coprime to every r_j, t_j the q-part of r_j−1, and the second term present only when F > 1, its coefficient being **F for odd F and F/2 for even F** — keyed on the parity of the block count itself, not on q.
 
 **Admissibility constraints.** Two are easy to omit, and omitting either inflates the bound — the dangerous direction.
 
@@ -486,7 +486,9 @@ What does **not** reduce is multisets of distinct part sizes and the choice of b
 - one generator of the cyclic layer carries the twists of all p-characteristic parts *diagonally*, its image in each part being that part's full twist C_{dᵢ}, so distinct p-parts need no coprimality between their twist orders;
 - each foreign twist, a q-power, and each fusion class's block permutation both lie in the top q-group.
 
-Γ₂ is a p-group by construction; Γ₁/Γ₂ is cyclic exactly when the independent orders in it are pairwise coprime, which is Lemma C and is what the enumeration enforces; Γ/Γ₁ is a q-group as a product of q-groups on disjoint supports. And the resulting orbital sizes are *forced*, not chosen: the intra-orbital of a class is Fᵢ·orb(cᵢ, dᵢ) because the block permutation fuses the Fᵢ copies; the within-class cross is (Fᵢ or Fᵢ/2)·cᵢ² because the minimum pair-orbital of a transitive q-group on Fᵢ points is exactly Fᵢ/2 for q = 2 and Fᵢ for odd q — **and that is an upper bound, not merely an attained value, by divisibility**: every orbital of a q-group has q-power size, and the q-part of C(F,2) = F(F−1)/2 is F for odd q and F/2 for q = 2 (F−1 is coprime to q), so if every orbital exceeded that value they would all be divisible by qF and so would their sum, contradicting the q-part of the sum; attainment then follows from the regular C_F action. This replaces an appeal to "the pattern-orbit count", which asserted attainment where the bound is what the argument needs; and the between-orbit classes are single orbitals of size sᵢsⱼ because the translations of distinct orbits act independently.
+Γ₂ is a p-group by construction; Γ₁/Γ₂ is cyclic exactly when the independent orders in it are pairwise coprime, which is Lemma C and is what the enumeration enforces; Γ/Γ₁ is a q-group as a product of q-groups on disjoint supports. And the resulting orbital sizes are *forced*, not chosen: the intra-orbital of a class is Fᵢ·orb(cᵢ, dᵢ) because the block permutation fuses the Fᵢ copies; the within-class cross is (Fᵢ or Fᵢ/2)·cᵢ² because the minimum pair-orbital of a transitive group of degree Fᵢ is exactly **Fᵢ/2 for even Fᵢ and Fᵢ for odd Fᵢ** — **and that is an upper bound, not merely an attained value, by divisibility**: for a transitive group of prime-power degree ℓ^a every orbital has ℓ-power size, and the ℓ-part of C(F,2) = F(F−1)/2 is F for odd ℓ and F/2 for ℓ = 2 (F−1 is coprime to ℓ), so if every orbital exceeded that value they would all be divisible by ℓF and so would their sum, contradicting the ℓ-part of the sum; attainment then follows from the regular C_F action.
+
+> **The parity is F's, not q's.** Earlier drafts stated this coefficient as "F for odd q, F/2 for q = 2", which was correct while every block count was forced to be a q-power — then F even meant q = 2. Under the corrected shape space F = F_mid·F_top need not be a q-power, and the two conditions come apart: at n = 15 the winner is `p=5 q=2: 3x5`, with **q = 2 but F = 3**, so the coefficient is 3 and the term is 75, not 25. Reading it off q there would give a within-class cross of 25 and understate B(15) as 25 against the true 30. Both shipped enumerators key on `F % 2` and are unaffected; it was only the prose. The fusing group's own prime ℓ is what the divisibility argument uses, and ℓ = 2 exactly when F is even. This replaces an appeal to "the pattern-orbit count", which asserted attainment where the bound is what the argument needs; and the between-orbit classes are single orbitals of size sᵢsⱼ because the translations of distinct orbits act independently.
 
 Verified by orbit computation that the built group's orbital sizes equal the enumeration's terms exactly:
 
@@ -661,7 +663,7 @@ The part that could escape to the top is precisely the part that was never at ri
 
 > **n = Σᵢ Fᵢ·cᵢ**, Fᵢ a q-power, cᵢ a prime power, each cᵢ p-characteristic or a foreign prime,
 
-twists dᵢ | cᵢ−1 (a q-power when foreign), subject to Lemma C. The orbital data is that of Part E's value formula: intra-orbital Fᵢ·orb(cᵢ, dᵢ) per class, within-class cross (Fᵢ or Fᵢ/2)·cᵢ² when Fᵢ > 1, and between-orbit classes of size sᵢsⱼ.
+twists dᵢ | cᵢ−1 (a q-power when foreign), subject to Lemma C. The orbital data is that of Part E's value formula: intra-orbital Fᵢ·orb(cᵢ, dᵢ) per class, within-class cross (Fᵢ or Fᵢ/2)·cᵢ² when Fᵢ > 1 — Fᵢ for odd Fᵢ, Fᵢ/2 for even Fᵢ — and between-orbit classes of size sᵢsⱼ.
 
 **G.4 The search is bounded on every axis.** With δ = m\*/C(n,2): the intra-orbital satisfies Fᵢ·orb(cᵢ,dᵢ) < Fᵢcᵢ²/2 and must be at least m\*, while Fᵢcᵢ ≤ n. Hence
 

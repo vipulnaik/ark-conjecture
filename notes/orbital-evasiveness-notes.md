@@ -132,7 +132,7 @@ What the framework once had to assume about extremal groups is, in its structura
 >
 > **n = Σᵢ Fᵢcᵢ**, each cᵢ a prime power and each **Fᵢ = F_mid,ᵢ · F_top,ᵢ** with F_top a power of q,
 >
-> in which each orbit is either **p-characteristic** — cᵢ a power of p, twist any divisor of cᵢ−1 — or **foreign** — cᵢ prime, twist a power of q, and never fused. The cyclic layer Γ₁/Γ₂ carries every F_mid,ᵢ, every cyclic-layer twist and every foreign prime **simultaneously**, so all of those orders are **pairwise coprime**; this subsumes the condition gcd(dᵢ, rⱼ) = 1 between twists and foreign primes. Imprimitive tower depth contributes nothing beyond Fᵢ. The orbital sizes are then *forced*, not chosen: **Fᵢ·orb(cᵢ, dᵢ)** within a fused class, **(Fᵢ or Fᵢ/2)·cᵢ²** between the blocks of one class, and **sᵢsⱼ** between distinct orbits.
+> in which each orbit is either **p-characteristic** — cᵢ a power of p, twist any divisor of cᵢ−1 — or **foreign** — cᵢ prime, twist a power of q, and never fused. The cyclic layer Γ₁/Γ₂ carries every F_mid,ᵢ, every cyclic-layer twist and every foreign prime **simultaneously**, so all of those orders are **pairwise coprime**; this subsumes the condition gcd(dᵢ, rⱼ) = 1 between twists and foreign primes. Imprimitive tower depth contributes nothing beyond Fᵢ. The orbital sizes are then *forced*, not chosen: **Fᵢ·orb(cᵢ, dᵢ)** within a fused class, **(Fᵢ or Fᵢ/2)·cᵢ²** between the blocks of one class — Fᵢ for odd Fᵢ and Fᵢ/2 for even Fᵢ, keyed on the block count's parity rather than on q — and **sᵢsⱼ** between distinct orbits.
 <!-- /DUP -->
 >
 > Conversely, **every configuration meeting these conditions is realised by an explicit group** with exactly that orbital data.

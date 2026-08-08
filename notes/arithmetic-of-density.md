@@ -75,7 +75,7 @@ Everything else in this document elaborates that split. Five consequences set th
 
 ### 2.1 The multiplicative engine: density 1/F
 
-Let n = F·c with F a power of q and c a power of p. The single fused class has intra-orbital F·C(c,2), within-class cross (F or F/2)·c², and no other terms, so
+Let n = F·c with F a power of q and c a power of p. The single fused class has intra-orbital F·C(c,2), within-class cross (F or F/2)·c² — F for odd F, F/2 for even F — and no other terms, so
 
 > m\* = F·C(c,2) = F·c(c−1)/2, and **δ = m\*/C(n,2) = (c−1)/(Fc−1) → 1/F.**
 
@@ -572,6 +572,8 @@ with sd falling like n^{−1/2} throughout. Slow approach to an asymptotic const
 *The extra congruence the fused rung needs is automatic.* Rung B — the cyclic-layer one, S7 at F = 2 — requires c ≡ 3 (mod 4). (Rung B′, S5 proper, requires no congruence on c and is not what this paragraph is about; see the box in §3.3.) For n ≡ 11 (mod 24), r = Dq + 1 with q odd gives r ≡ 5 (mod 8), and n ≡ 3 (mod 8) then forces c = (n − r)/2 ≡ 3 (mod 4). No fourth condition has to be imposed — which is also why the mod-24 split coincides exactly with the split between rungs.
 
 > **A local obstruction indexed by the twist prime.** Distinct from the above. In the weaker system c prime, r = n − 2c prime, r ≡ 1 (mod q), the congruence pins c to the single class (n−1)/2 (mod q); when that class is 0 the family is empty, since q | c forces c = q. It fires for one n in q. Verified: observed count 0 at every such n. It belongs in §3.3's inventory alongside ℓ = 2 and ℓ = 3, being an obstruction indexed by the twist prime rather than by a fixed small prime.
+>
+> *It cannot obstruct the family, and that is a triviality rather than an observation.* Read the condition the other way round: at a fixed n the degenerate q are exactly the **prime divisors of (n−1)/2**, of which there are ω((n−1)/2) ≤ log₂ n — measured over odd n ∈ [10⁴, 4·10⁴], mean 2.56 and maximum 5. Every other prime is non-degenerate, so the obstruction removes O(log n) candidates from an unbounded supply. What is *not* settled by that is whether some non-degenerate q also has supply near the balance point and an efficiency worth having; that is the parametric question of §3.5 and Hypothesis (H), not a separate obstruction.
 
 **What this establishes.** The local analysis and the singular series are confirmed at every residue mod 24, in both families, each at the balance point its own ceiling is derived from — the count matches, and the vanishing predictions vanish. It says nothing about §3.5's global question, whether solutions exist for *every* large n, which is where the conjecture lives. What it removes is the possibility that the constants are right but the model is wrong.
 
