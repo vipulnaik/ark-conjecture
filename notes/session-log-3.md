@@ -196,11 +196,22 @@ F = 2 was deliberately kept out of the S7 loop: that loop's guard `(c-1) % qF ==
 
 One anomaly surfaced and is now item A8(a): **n ≡ 11 (mod 24) did not move**, alone among the rung-B residues, its worst value n = 11819 still at 0.455 of a cap that is rung B at η = 1/6.
 
-## 12. Left undone
+## 12. A8: the residue-11 diagnostic, resolved
+
+The `ladder_verify.py` repair left one residue behaving unlike its class — n ≡ 11 (mod 24) was the only rung-B residue whose δ/cap minimum did not move. Computed directly, and it is a consequence of the model rather than a hole in it.
+
+**The fused rungs double the intra term and nothing else, so they are invisible wherever the foreign block binds.** Checked at all nine rung-B residues: the configuration realising each class minimum is foreign-bound. So what the repair changed at eight of them was the value at some *other* n, which then displaced the old minimum; at residue 11 nothing did.
+
+At the class minimum **n = 11819 = 53·223** the best three-part split is c = 2069, r = 7681, with r − 1 = 2⁹·3·5 of **odd part 15** — so η = 1/15 at q = 2 and 0.00026 at any odd q. Intra C(2069,2) = 2,139,346 against foreign 1,966,336: the foreign term binds, and doubling the intra to 4,278,692 changes nothing. Both fused readings return exactly the unfused value.
+
+**And residue 11 is the most exposed to this by construction**: it is the doubly-obstructed class, needing η = 1/6, the hardest efficiency in the table. A class whose ceiling already assumes a scarce foreign efficiency is the class whose weak values are foreign-bound, and foreign-bound is exactly what fusion cannot lift. The residue that failed to move is the one the model predicts should fail to move. Written into `aod` §3.7.
+
+*Also closed in the same pass:* §3.9.2 carried two measurements of the same quantity under different window conventions. The pre-convention table (24.0 / 24.8 / 51.2 at residue 7) was dropped rather than re-derived — the per-residue-window rescan is the correct convention, and keeping both was worse than keeping one. Two duplicated blocks went with it.
+
+## 13. Left undone
 
 - **A2**, the E.3(ii) promotion — the last theorem-side residue, scoped but not attempted. E″'s cases (α)–(γ) already prove no *structural* argument can work, so any promotion must compare across partitions of n and lands back on Hypothesis (H). Its "505 branches" figure is v2-era and probably much smaller now; recount before proving.
-- **A8(a)**, the n ≡ 11 (mod 24) anomaly — the only rung-B residue whose diagnostic did not move.
-- **A8(b)**, residues 7 and 15 still transposing fused and tie columns, and §3.9.2 carrying two measurements of the same quantity under different window conventions.
+- **Residues 7 and 15 transpose the fused and tie columns** in §3.9.2 — predicted 50 / 25 / 25, observed 8.7 / 31.1 / 60.2 and 0.0 / 31.6 / 68.4, with S4 near its predicted share. The layer conflation and the escape-tie mechanism each account for part; whether the remainder is convergence or a defect in the share model is open, and §3.9.1's box on the 1 : 1 : 2 limit is the reason to doubt computation can settle it.
 - Every per-shape count in Part I is v2-era until the rebuild finishes; **A0** records that the repair migrates winners between census rows (232 of 1,295 changed shape), so these want re-deriving rather than recounting.
 - A `brute_compare.py` run at n = 285 and 308 was started and did not finish.
 - §3.8 is still 1,267 words and would take `####` cleanly if uniform granularity across §3 is wanted.

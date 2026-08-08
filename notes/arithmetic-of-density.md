@@ -655,35 +655,25 @@ At the nine B-alone residues the fused rung has a strictly higher cap, so the ar
 
 ##### 3.9.2.1 The observed split
 
-**The observed split, by residue.** Measured over odd n in [2×10⁵, 2.06×10⁵], in the same fused / S4 / tie order as §3.9.1's prediction:
+**Measured over odd n in [2×10⁵, 2.06×10⁵]** (`rung_split.py`), in the same order as §3.9.1's prediction. Each residue is scanned in a window of half-width 0.05 around **its own** balance point, which is `count_check.py`'s convention and the right one here, since the prediction is about configurations *at* the class ceiling:
 
-| n mod 24 | fused rung wins | S4 wins | tie |
-|---|---|---|---|
-| 1, 3, 5, 9, 11, 13, 17, 19, 21 | **100%** | 0% | 0% |
-| 7 | 24.0% | 24.8% | 51.2% |
-| 15 | 26.8% | 18.8% | 54.4% |
-| 23 | 0% | 44.0% | 56.0% |
-| **all odd n** | **79.2%** | **7.3%** | **13.5%** |
+| n mod 24 | fused rung wins | S4 wins | tie | values |
+|---|---|---|---|---|
+| 1, 3, 5, 9, 11, 13, 17, 19, 21 | **100.0%** | 0.0% | 0.0% | 1887 |
+| 7 | 8.7% | 31.1% | 60.2% | 196 |
+| 15 | 0.0% | 31.6% | 68.4% | 250 |
+| 23 | **0.0%** | 43.2% | 56.8% | 185 |
+| **all odd n** | **75.6%** | **8.7%** | **15.6%** | 2518 |
 
 **The nine rung-B residues match exactly**, at 100 / 0 / 0 — no surprise, since there the prediction rests on a congruence rather than on supply, and congruences do not wait for n to grow.
 
-**Residue 23 matches on the fused rung and misses on the other two**: predicted 0 / 50 / 50, observed 0 / 44.0 / 56.0. The zero is congruence-forced and exact; the 44 / 56 against 50 / 50 is a modest excess of ties.
+**Residue 23 matches well**: predicted 0 / 50 / 50, observed 0.0 / 43.2 / 56.8. The zero is congruence-forced and exact; the 43 / 57 against 50 / 50 is the same modest excess of ties seen elsewhere.
 
-**Residues 7 and 15 match on S4 and transpose the other two**: predicted 50 / 25 / 25, observed 24.0 / 24.8 / 51.2 and 26.8 / 18.8 / 54.4. **The S4 share is already right** — 24.8 and 18.8 against 25 — while the fused-rung share and the ties are swapped, ties running near 50% where fused wins were predicted to. (These figures predate the per-residue window convention; the layer-separated rescan below, taken at each residue's own x\*, gives the same qualitative picture with the transposition larger still.)
+**Residues 7 and 15 match on S4 and transpose the other two**: predicted 50 / 25 / 25, observed 8.7 / 31.1 / 60.2 and 0.0 / 31.6 / 68.4. **The S4 share is already near right** — 31.1 and 31.6 against 25 — while the fused-rung share and the ties are swapped, ties running near two thirds where fused wins were predicted at a half. This is the one place prediction and measurement disagree, and the two sub-sections below account for part of it.
 
 ##### 3.9.2.2 Separating the two fused rungs
 
-**The table above does not separate the two fused rungs.** Its columns were taken by asking whether the winner fuses its two c-blocks, not by asking *which layer* the swap sits in — so a top-layer win (S5) is scored as a fused win, and a top-layer configuration equalling the unfused value is scored as a tie. Those are different shapes with different laws, and only S7 at F = 2 is a party to §3.9.1's prediction. Rescanning the same band with the three readings scored separately (`rung_split.py`), taking each residue's window as **its own balance point ± 0.05** — `count_check.py`'s convention, and the right one here, since §3.9.1's prediction is about configurations *at the class ceiling*:
-
-| n mod 24 | S7 at F = 2 wins | S4 wins | S5 wins | tie | values |
-|---|---|---|---|---|---|
-| 1, 3, 5, 9, 11, 13, 17, 19, 21 | **100.0%** | 0.0% | 0.0% | 0.0% | 1887 |
-| 7 | 8.7% | 31.1% | **0.0%** | 60.2% | 196 |
-| 15 | 0.0% | 31.6% | **0.0%** | 68.4% | 250 |
-| 23 | **0.0%** | 43.2% | **0.0%** | 56.8% | 185 |
-| **all odd n** | **75.6%** | **8.7%** | **0.0%** | **15.6%** | 2518 |
-
-> **The window convention is not a detail.** Run flat — a single c/n window [0.10, 0.42] shared by every residue — the same scan gives 33.2 / 20.9 / 0 / 45.9 at residue 7 and **7.6%** fused wins at residue 23, where §3.9.1 argues the fused rung can never win strictly. Those extra wins are an artefact: a flat window reaches c/n ratios that no residue's ceiling is derived at, admitting configurations well away from the balance point, and at residue 23 it lets in c ≡ 3 (mod 8) escapes that the ceiling comparison does not govern. With each residue scanned at its own x\* the 7.6% goes to **0.0%, exactly as predicted**. Any measurement in this section that is not taken at the per-residue balance point is measuring a different question.
+**The table above does not separate the two fused rungs.** Its columns were taken by asking whether the winner fuses its two c-blocks, not by asking *which layer* the swap sits in — so a top-layer win (S5) is scored as a fused win, and a top-layer configuration equalling the unfused value is scored as a tie. Those are different shapes with different laws, and only S7 at F = 2 is a party to §3.9.1's prediction. Scoring the three readings separately over the same band, at the same per-residue windows, adds an S5 column to the table above: **0.0% at every residue**.
 
 **S5 never wins outright anywhere in the band**, which is the expected consequence of its being supply-limited to r = 2^a·u + 1 with u small — at n ≈ 2×10⁵ that family is too thin to supply the *best* configuration at any value. So the conflation is not inflating the fused column.
 
@@ -698,7 +688,6 @@ At the nine B-alone residues the fused rung has a strictly higher cap, so the ar
 
 So at residues 7 and 15, S5 is among the joint winners at a quarter to a third of values — it reaches the same score without ever exceeding it, which is exactly how a shape whose binding term is the foreign block behaves under a change of fusion layer. That is a real contribution to the excess ties at those two residues. **It contributes nothing at residue 23**, where S5 is never in the argmax at all, so the excess ties there need a different explanation — which the next box supplies.
 
-> **Residue 23 now matches the prediction closely.** Predicted 0 / 50 / 50 for fused / S4 / tie; observed **0.0 / 43.2 / 56.8**. The zero is exact and congruence-forced, and the 43 / 57 against 50 / 50 is the same modest excess of ties seen elsewhere. Residues 7 and 15 are where the gap remains, and it is entirely in the tie column: predicted 50 / 25 / 25, observed 8.7 / 31.1 / 60.2 and 0.0 / 31.6 / 68.4, with S4's share already near its predicted 25.
 
 ##### 3.9.2.3 The excess ties
 
@@ -876,7 +865,13 @@ The residue analysis gives eight different δ₀ across the 24 residue classes (
 
 > **δ ≥ 0.02516, at n = 8927.**
 
-This is a *lower* bound on δ(n), not δ(n) itself, since it uses only four families. No class is anomalously weak relative to its own cap: the per-class minima of δ/cap run from **0.327 to 0.653** at N = 20,000, the spread expected from representation availability alone. The one residue that behaves unlike its class is **n ≡ 11 (mod 24)**, which alone among the nine rung-B residues did not rise when the fused rungs were added — its worst value, n = 11819 at 0.455 of cap, is unmoved, so either the supply fails there or η = 1/6 is not reachable.
+This is a *lower* bound on δ(n), not δ(n) itself, since it uses only four families. No class is anomalously weak relative to its own cap: the per-class minima of δ/cap run from **0.327 to 0.653** at N = 20,000, the spread expected from representation availability alone. The one residue that did not rise when the fused rungs were added is **n ≡ 11 (mod 24)**, and the reason is instructive rather than anomalous.
+
+> **The fused rungs double the intra term and nothing else, so they are invisible wherever the foreign block binds.** At every one of the nine rung-B residues, the configuration realising the *class minimum* binds on its foreign term, not its intra term — checked directly at all nine. Fusing cannot move a value whose bottleneck is the foreign block, so what the fix changed at eight of them was the value at some *other* n in the class, which then displaced the old minimum. At n ≡ 11 (mod 24) nothing displaced it.
+>
+> Worked at the class minimum n = 11819 = 53·223: the best three-part split is c = 2069, r = 7681, and r − 1 = 7680 = 2⁹·3·5 has **odd part 15**, so η = 1/15 at q = 2 and 0.00026 at any odd q. The intra term is C(2069,2) = 2,139,346 and the foreign term is 1,966,336 — the foreign one binds, and doubling the intra to 4,278,692 changes nothing. Both fused readings return exactly the unfused value. (Also c ≡ 1 (mod 4), so the cyclic rung would lose the twist anyway; but even at c ≡ 3 it would not have helped.)
+>
+> **And residue 11 is the one most exposed to this**, by construction: it is the doubly-obstructed class, needing η = 1/6, the hardest efficiency in the table. A class whose ceiling already assumes a scarce foreign efficiency is the class whose weak values will be foreign-bound, and foreign-bound values are exactly the ones fusion cannot lift. So the residue that failed to move is the one the model predicts should fail to move.
 
 **The floor rises with n**, as the singular-series picture requires — once representations near the balance point become plentiful, the achievable density approaches the class cap. Block minima over the last seven blocks of 10⁵:
 
