@@ -231,6 +231,48 @@ It **replaces the by-hand checking** done in each review pass, and it found a do
 
 **(c) Worth measuring, not a defect.** By §9.7 the χ constraint is decisive at t ≤ 3 and weak by t ≥ 4, but 93% of the battery's Σ2^t cost sits at t ≥ 7 (31 groups, 16,128 of 17,356). High-t groups do generate catalog classes and monotonicity couplings, so this is not an argument to drop them — but the battery is selected by m\* and cost, never by constraint strength, and the trade is unmeasured. Cheap test: solve the t ≤ 6 sub-battery (44 groups, 7% of the cost) and see how much backbone survives. If most does, n = 12 becomes tractable.
 
+### A11. Section 8.8-8.12 validation -- mostly PASSED; two findings and one gap
+
+*The n = 10 artefacts arrived and the census claims check out exactly.* **967 = 268 Oliver + 699 p-groups**; 24 transitive Oliver groups at t <= 12; `groups_out.txt` well-formed; order matrix reproduces (V = 1,242, 249,711 true entries, density 0.162); catalog complement-closed with **no self-complementary class**; m* = 20 via AGL(1,5) wr C2; section 9.7's "skeleton contains 2K5, not K5,5" confirmed (x[2] = 1, x[1] = 0); probe record 817 rows / 409 classes / **54 CAP** exactly as the source comment says; involution 30 confirmed pairs, 0 violations. I re-derived primal and dual chi for all 40 Oliver groups on `solution1.pkl` from scratch: **0 violations**, plus 0 monotonicity violations. Detail in `gap_review.md` section 0.
+
+**Finding 1 -- every t <= 3 group has chi = 1 exactly, primal and dual**, including those only required to satisfy chi = 1 mod q, and the one extra option section 9.7 permits (chi = 3 at t = 3, q = 2) is not taken. The criterion's prediction lands empirically, and at the small-t end the mod-q groups behave as if they had trivial tops.
+
+**Finding 2 -- the complement-dual of solution1 is itself a valid solution, with 1,028 IN classes against 214.** Section 8.9's involution is a pairing of the *solution set*, not a symmetry of any solution (they differ at 814 of 1,242 classes), and the pair is wildly asymmetric in size. Any argument from "the surviving property is sparse" must reckon with a dense dual partner the CSP cannot distinguish.
+
+**Gap -- the free band is not established.** Forced IN runs to 10 edges and forced OUT from 35, but the 54 CAP probes span **9-36**, straddling both boundaries. So "band = 11-34, static" is not a measurement, and the runbook's escalation rule (static band => stage FULL) is being applied to an unestablished number. **Rerun the 54 CAP classes at a larger `--nodecap` before escalating**; it is far cheaper than stage FULL.
+
+### A12b. Corrections to `small-degree-verification.md` -- see `small-degree-review.md`
+
+Four corrections and one reordering. **m* = 18 at n = 12 is attained by 8 groups / 1 orbital partition / 3 distinct (partition, prime) conditions** -- that document is right, section 8.11's "six ways" is wrong, and my own "seven ways" missed the wreath `B2:4x3:4.1` = T(4,4) wr T(3,1), whose presence is the direct confirmation that (F4:C3) wr C3 attains the optimum. **Its item 5b's "the eight attainers sit at q = 2 and q = 3" is wrong**: one is `A:166`, a **trivial top**, so the optimum is witnessed by the harshest condition available. **Its item 4's CAP range is 9-36, not 12-36**, which matters because forced-IN ends at 10 and forced-OUT begins at 35, so the CAPs straddle both boundaries. **Its item 6 is answerable**: the `+` diagnostic returns 0 at both degrees, 8,082 groups, so either the files predate the change or no group admits two usable q -- and if a fresh re-emission also yields none, the lcm strengthening should be **retired**, not left as dead code carrying the A10(b) hazard.
+
+**New finding: `--maxt` truncates far more than `--maxgroups`.** I reimplemented `_orbital_canon` independently and it reproduces the n = 12 log exactly (2,293 -> 230 distinct, 2,063 redundant, 203 Oliver + 27 p-groups). Distinct conditions by cut: maxt 4/5/6/7/8/10/12 -> 36/73/125/169/**230**/339/**425**. So `--maxgroups 200` drops 3 conditions and `--maxt 8` drops **195**. The honest framing of the proposed `--maxt 6` remedy is "we use 54% of available conditions today; that would use 29%".
+
+**Reordering: run a cheap battery before deciding how to compute S.** That document's item 11 says the S question gates item 1. The prior question is whether n = 12 is SAT at all: a `--maxt 6` battery is 125 conditions with a much smaller catalog, and stage 3 scales with V-squared, so plausibly hours. UNSAT there settles n = 12 and neither the 22-day stage 3 nor the EGF route is needed.
+
+*Also:* item 8's premise verified (the empty graph is in both catalogs, so the mutating-`classify` hazard is latent as described); item 7's audit script is written and validated (`dedup_audit.py`) but **the n = 10 `groups_out.txt` was replaced by the n = 12 one in the latest upload** -- re-upload it and item 7 closes in two minutes.
+
+### A12. n = 12 validated — census exact, one off-by-one, and stage 3 is a 22-day job
+
+**Exact:** 7,115 = 295 + 657 + 67 + 6,096 (6,004/88/2/2); 2,293 raw at t ≤ 8; all lines well-formed with 66-entry maps; stages A/B/B2/C = 194/969/28/5,924; inference rate 20.8% against n = 10's 19.9%. The earlier 8,819 was wrong and 7,115 is right.
+
+**Corrections to §8.11:**
+
+- **m\* = 18 is achieved *seven* ways, not six** — `A:85`, `A:164`, `A:166`, `A:207`, `A:228`, `A:229`, `A:265`, all with orbital sizes [18, 48] and one (`A:166`) with a trivial top. Exceeded zero ways, so the wreath-optimality conclusion stands. All seven are **t = 2**, so §9.7's two-orbital criterion applies at n = 12 exactly as at n = 10: any counterexample contains **exactly one** of the 18-edge and 48-edge orbitals.
+- **"keeps 230" should be "keeps 227".** 230 is the number of *distinct (partition, prime) conditions*; 227 is what survives `--maxgroups 200` capping the Oliver side (203 distinct Oliver conditions, 3 dropped).
+- **`done_keys.txt` gives the missing skip count**: 16,353 keys against 7,115 emitted, so **9,238 groups were dropped** as non-Oliver or over `MAXT = 12` — 56% of what GAP built, and the bound on what raising `MAXT` could add.
+
+**Action needed — the running battery will not finish.** Measured from the log's own throughput (16,061 pairs in 30,002 s = 0.54 pairs/s), the 227-group stage 3 needs **1,018,719 VF2-requiring pairs ≈ 529 h ≈ 22 days**, against ~39 h total for the 59-group battery. §8.11's "should collapse to hours" is right for the 59-group run and wrong for this one: the inference *rate* transfers, but 13.6× the classes means 13.7× the work. (Upper bound only — the closure feeds back on resume, 20.6% → 17.8% → 16.8% on the small battery — but not an upper bound that makes it advisable.)
+
+**Run a t ≤ 6 battery instead**, per §9.7's finding that constraint force comes from *few* orbitals: 125 of the 227 groups, all four t = 2 groups included, Σ2^t of 4,952 against 25,432, and a much smaller catalog since class count is driven by the big lattices. Cheapest route to a SAT/UNSAT verdict at n = 12; if UNSAT, the expensive battery is never needed.
+
+**One more observation across both degrees.** No group at n = 10 or n = 12 carries a **multi-prime tag** — tags are `0`, `2`, `3` and `P*` at both. So the `+`-separated tag and the lcm strengthening in `stage4_fast.py` / `probe_backbone.py`, which Appendix B flags as "available and unused", **has never fired in 8,082 groups**. Worth understanding why before treating it as a live strengthening, especially as it carries the A10(b) soundness hazard.
+
+### A11b. Artefacts still wanted -- see `gap_data_wanted.md`
+
+Those sections assert roughly twenty numbers; three are verifiable from the uploaded n = 10 checkpoints and the rest are not. Priority order: **groups_out.txt at n = 10** (the 967 / 268 / 699 headline, unreachable from `ckpt_groups.pkl`, which holds only the 75 post-selection survivors), **groups_out.txt at n = 12** (a census that has already been wrong once, 8,819 to 7,115, plus the m* = 18 six-ways claim underpinning the wreath clause), **a stage-4 solution pickle** (unlocks the section 8.9 backbone, section 9.7's "the skeleton contains 2K5" claim, and makes `chi_test.py` runnable so section 8.12's chi kill can be reproduced), and **stage4_fast.py / probe_backbone.py** (unreviewed, and where the A10(b) lcm hazard would land).
+
+*Verified meanwhile:* section 8.11's order-matrix acceptance reproduces exactly (V = 1,242, 249,711 true entries, density 0.162, reflexive, antisymmetric, transitive on samples); the catalog is **complement-closed with no self-complementary class**, confirming section 8.9's involution as a property of the object; and m* = 20 at n = 10 from AGL(1,5) wr C2, with 2K5 and K5,5 sitting at catalog indices 2 and 1.
+
 ### A2. Promote E.3(ii) past the bare pair
 
 The last theorem-side residue in the fallback collapse. With a leftover, the (r, r) re-reading must also re-type the leftover parts, and the commonest case **L = c** fails outright because two blocks of the same prime c would be two equal foreign parts, which Part E forbids.
