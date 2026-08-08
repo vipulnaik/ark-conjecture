@@ -166,6 +166,40 @@ for q0 in (3, 5, 7):
         arr[r] = best_e
     EFF_EX[q0] = arr
 
+# Best foreign efficiency over ODD top primes only -- what rung B may use, since
+# its cyclic-layer C_2 rules out q = 2 sharing the layer with an even twist.
+EFF_ODD = [0.0] * (N + 1)
+for r in range(3, N + 1, 2):
+    if not sieve[r]:
+        continue
+    m = r - 1
+    y, d, best_e = m, 3, 0.0
+    while y % 2 == 0:
+        y //= 2
+    while d * d <= y:
+        if y % d == 0:
+            e2 = 1
+            while y % d == 0:
+                y //= d; e2 += 1
+            best_e = max(best_e, 2 * (d ** (e2 - 1)) / m)
+        d += 2
+    if y > 1:
+        best_e = max(best_e, 2 * y / m)
+    EFF_ODD[r] = best_e
+
+# Rung B' (top-layer F = 2) forces q = 2, so the foreign twist is the 2-part of
+# r - 1 and the efficiency is 1/u with u the odd part.  Kept separate from EFF,
+# which maximises over all q and would overstate this rung.
+EFF2 = [0.0] * (N + 1)
+for r in range(3, N + 1, 2):
+    if sieve[r]:
+        m = r - 1
+        a2 = 1
+        while m % (2 * a2) == 0:
+            a2 *= 2
+        EFF2[r] = a2 / m          # = 2-part of r-1 over r-1 = 1/u
+
+
 def orb_ld(c, t, char2):
     """Minimum intra-orbital of a c-block with cyclic twist of order t, capped
     at C(c,2).  Same rule as mu_enumerate's orb()."""
@@ -223,11 +257,38 @@ def achieved(n, stop_at=None):
                     return best
         r = n - 2 * c                              # three parts, two equal blocks
         if 3 <= r <= N and sieve[r] and bp != r and (c - 1) % r:   # Lemma C, as above
+            # rung C: the two c-blocks left UNFUSED (census S4)
             v = min(comb(c, 2), EFF[r] * comb(r, 2), c * c, c * r)
             if v > best * C:
                 best = v / C
                 if stop_at and best > stop_at:
                     return best
+            # rung B: the two c-blocks fused in the CYCLIC layer (census S7 at
+            # F = 2).  Fmid = 2 shares the cyclic layer with the twist, so the
+            # twist is cut to the ODD PART of c-1; the top prime is free, but
+            # must differ from 2, hence EFF_EX[3]-style exclusion is wrong here
+            # -- what is excluded is q = 2, so use the best odd-q efficiency.
+            dodd = c - 1
+            while dodd % 2 == 0:
+                dodd //= 2
+            eB = EFF_ODD[r]
+            if eB > 0:
+                v = min(2 * orb_ld(c, dodd, bp == 2), eB * comb(r, 2),
+                        2 * c * c, 2 * c * r)
+                if v > best * C:
+                    best = v / C
+                    if stop_at and best > stop_at:
+                        return best
+            # rung B': the two c-blocks fused in the TOP layer (census S5).
+            # F_top = 2 forces q = 2, so the twist is untouched (full c-1) and
+            # the foreign efficiency is the 2-part of r-1, i.e. 1/u.  The
+            # within-class cross carries F/2 because F is even.
+            if EFF2[r] > 0:
+                v = min(2 * comb(c, 2), EFF2[r] * comb(r, 2), c * c, 2 * c * r)
+                if v > best * C:
+                    best = v / C
+                    if stop_at and best > stop_at:
+                        return best
     # S7 (added 2026-08): F blocks of c fused in the CYCLIC layer, plus a
     # foreign prime.  This is the family enumeration-proof.md G.2 wrongly ruled
     # out -- the block-permuting group need not sit in the top q-group, so F need
@@ -243,6 +304,12 @@ def achieved(n, stop_at=None):
     # the values that form the worklist, so order no longer changes the result.
     # S7 is kept last anyway: it is the most expensive family and the one most
     # often irrelevant.
+    # F = 2 is deliberately absent from this loop and handled in the three-part
+    # branch above instead.  The loop's guard `(c-1) % qF == 0 -> continue` is
+    # right for odd qF (the fusion prime must not divide the twist) but kills
+    # every odd c at qF = 2, since c-1 is then always even; and the F = 2 case
+    # is not an escape but the odd-n fused RUNG (rungs B and B'), which belongs
+    # with the family it competes against.  See aod section 3.2.
     for Fp, qF in ((3, 3), (9, 3), (5, 5), (25, 5), (7, 7)):
         EFFx = EFF_EX[qF]
         for c in PPs:

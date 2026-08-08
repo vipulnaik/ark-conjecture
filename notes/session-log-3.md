@@ -181,11 +181,27 @@ Everything else in the 41 was correctly range-tagged, still true and now automat
 
 **`pending-checks.md` cleaned.** The "open defect" section replaced by a status note (the repair is done; what remains is propagation); the risk ranking updated from "210 rows" to 1,295; R4 marked automated; and six closed §2b items — A0, A0c, A1, A3, A4a, A7 — collapsed from long-form entries into a summary list with the detail here. A6 reduced to the one live item, the `ladder_verify.py` fix.
 
-## 11. Left undone
+## 11. `ladder_verify.py` repaired, and what it confirmed
 
-- `ladder_verify.py` still reaches neither F = 2 rung (**A6**).
-- §3.9.2's original table (24.0 / 24.8 / 51.2 at residue 7) predates the window convention and should be re-derived under it or dropped in favour of the rescan.
-- Residues 7 and 15 still transpose the fused and tie columns.
-- The census S6 rows say "1 winner" in v2-era columns; the v4 count is 0 (**A7**), and every Part I per-shape count is v2-era until recomputed.
+The script modelled neither F = 2 rung: its three-part branch scored the intra term unfused and its S7 loop started at F = 3, while its `CAP` table was keyed on rung-B ceilings. Both rungs are now in the three-part branch:
+
+- **rung B** (cyclic, F_mid = 2): intra 2·orb(c, odd part of c−1), with a new `EFF_ODD` array giving the best foreign efficiency over **odd** top primes only, since q = 2 cannot share the cyclic layer with the fusion.
+- **rung B′** (top, F_top = 2): intra 2·C(c,2) at full twist, `EFF2[r] = 1/u`, and within-class cross c² rather than 2c² because F is even.
+
+F = 2 was deliberately kept out of the S7 loop: that loop's guard `(c-1) % qF == 0 → continue` is right for odd fusion primes and kills every odd c at qF = 2, and F = 2 is the rung rather than an escape. Both arrays were verified against their definitions.
+
+**The worklist halves, 436 → 213** at N = 20,000, with the global floor unchanged at 0.02516 (n = 8927) as it must be, the script computing a lower bound.
+
+**The diagnostics validated the §3.2 picture from an independent direction.** Only the fused-rung residues moved: eight of the nine rung-B residues rose by 0.03–0.15 (worst odd residue 0.385 → 0.450), residue 15 rose slightly, and **no even residue moved at all**. That last is the control — fusion does not arise at k = 1 — and it is what makes the result evidence rather than bookkeeping. Had the two rungs been a labelling fiction, adding them would have moved even residues too, or nothing.
+
+One anomaly surfaced and is now item A8(a): **n ≡ 11 (mod 24) did not move**, alone among the rung-B residues, its worst value n = 11819 still at 0.455 of a cap that is rung B at η = 1/6.
+
+## 12. Left undone
+
+- **A2**, the E.3(ii) promotion — the last theorem-side residue, scoped but not attempted. E″'s cases (α)–(γ) already prove no *structural* argument can work, so any promotion must compare across partitions of n and lands back on Hypothesis (H). Its "505 branches" figure is v2-era and probably much smaller now; recount before proving.
+- **A8(a)**, the n ≡ 11 (mod 24) anomaly — the only rung-B residue whose diagnostic did not move.
+- **A8(b)**, residues 7 and 15 still transposing fused and tie columns, and §3.9.2 carrying two measurements of the same quantity under different window conventions.
+- Every per-shape count in Part I is v2-era until the rebuild finishes; **A0** records that the repair migrates winners between census rows (232 of 1,295 changed shape), so these want re-deriving rather than recounting.
 - A `brute_compare.py` run at n = 285 and 308 was started and did not finish.
-- §3.8 is still 1267 words and would take `####` cleanly if uniform granularity across §3 is wanted.
+- §3.8 is still 1,267 words and would take `####` cleanly if uniform granularity across §3 is wanted.
+- **T4**'s remaining item, the Shparlinski prime-power transfer, needs the paper body and a human judgement about a proof's robustness.

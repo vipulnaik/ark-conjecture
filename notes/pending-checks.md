@@ -93,10 +93,6 @@ Both new-shape values confirmed independently: **n = 143 → 1081** (the first c
 
 n = 308 is not yet in v4 — it needs the rebuild to pass 288 — and is worth rerunning once it is, since it is the original counterexample.
 
-## R4. ~~Count the Lemma C exposure after each extension~~ — automated
-
-Now a check in `validate_table.py` (group B), which reports it on every run. Currently **0 of 1,302** p-characteristic winner parts have both a > 1 and a foreign prime dividing c − 1, so the gap Lemma C leaves at a > 1 is still vacuous on every winner. Nothing to do by hand.
-
 ## R5. Fix the two `fb_common.py` defects
 
 *(The two `wide_cert.py` defects found alongside these — a pass-1 cache keyed on NMAX alone, so a changed `SCAN_CAP` or `WEAK` silently reused a stale B_lo; and hardcoded absolute paths — are already fixed in the shipped file.)*
@@ -117,11 +113,11 @@ Also worth knowing: Pass 3 exempts files matching `session-log|pending-checks|RE
 
 ## R7. Rerun `ladder_verify.py` to 10⁶
 
-**The SAFE over-credit is fixed.** Its S7-at-F≥3 family scored the fused class at `F·comb(c,2)` regardless of the twist's parity, which credited a twist the configuration cannot have and made the reported value an upper bound on that family rather than a lower one. Now `F·orb(c, dmax)` with dmax the largest divisor of c − 1 coprime to the fusion prime. Verified over n ≤ 20,000: **no value rose, none fell, the worklist is unchanged at 436** — the term was never binding in this window, so no published number moves, but the script is sound now rather than accidentally right.
+The script is now correct on both counts that were open: the SAFE over-credit on the S7-at-F≥3 family is fixed (`F·orb(c, dmax)` rather than `F·comb(c,2)`), and A6 added the two F = 2 fused rungs. At N = 20,000 the worklist is **213**, down from 436, and the per-residue diagnostics moved only at the fused-rung residues.
 
-Two gaps remain, and both lose coverage rather than soundness. **The S7 family is narrower than the enumerator's**, modelling prime-power `F` with one fused class where the enumerator allows any `Fmid` and composite `F` such as 6 = 2·3. And it starts at `F = 3`, so it misses **F = 2 in either layer** — the odd-n fused rung B and S5 — which is the more serious of the two, since the `CAP` table it reports against is keyed on rung-B ceilings it therefore cannot reach. See A6.
+So the 10⁶ run wants redoing, and this time the diagnostics are worth reading rather than discounting. `ASYMPTOTIC` = 0.050510 is unchanged; the previous run's 41,584 worklist entries should roughly halve. Current spread at 20,000 is 0.327–0.653.
 
-The 10⁶ run then wants redoing. `ASYMPTOTIC` = 0.050510 is unchanged, so the 41,584 entries should be roughly stable — but every per-residue `min delta/cap` diagnostic shifts under the mod-24 ceilings, and those are what would reveal a residue behaving anomalously. Current spread at 20,000 is 0.327–0.653.
+*One coverage gap remains, and it only loses values rather than soundness:* the S7-at-F≥3 family still models prime-power `F` with one fused class, where the enumerator allows any `Fmid` and composite `F` such as 6 = 2·3.
 
 ```bash
 python3 ladder_verify.py 1000000
@@ -186,6 +182,7 @@ Now a question about the *sharpness* of the search rather than about the results
 - **A3. "Blocked at one q, available at another".** The congruence half is trivial (the degenerate q are the prime divisors of (n−1)/2, at most log₂n of them); the rest is Hypothesis (H) restricted to one q, not a separate item.
 - **A4a. Theorem 2.3's two-part reduction.** Reclassified as a Goldbach-tier statement rather than a gap in a proof; nothing depends on it but the O(n) cost claim for B₀.
 - **A5. The expired-scope sweep.** 41 range-scoped absolute claims read against v4; two expiries found and fixed — the weak values are no longer all n ≡ 11 (mod 12) (the minimum is now n = 1159 = 19·61, a *multiplicative* value), and Part I's low-density tail figures are structurally wrong rather than merely stale. Closed as an item, but budget **one reading pass per major extension**: `validate_table.py` and `check_doc_figures.py --pass scope` catch mechanical and whitelisted claims, neither catches a claim about a *mechanism*, and that is the kind that expired here.
+- **A6. `ladder_verify.py` scans both F = 2 rungs.** Rungs B (cyclic, odd-q efficiency) and B′ (top, q = 2, η = 1/u) added to the three-part branch; worklist halves 436 → 213 at N = 20,000; the per-residue diagnostics move **only** at fused-rung residues and not at any even one. Two follow-ups below.
 - **A7. The n = 1175 two-foreign witness.** Moved under v4; S6 now has **zero** winners in range, confirmed to n = 1572. Now checked automatically.
 
 ### A0b. `validate_table.py` — run this on every table extension
@@ -206,14 +203,20 @@ It **replaces the by-hand checking** done in each review pass, and it found a do
 
 ### A2. Promote E.3(ii) past the bare pair
 
-The largest theorem-side residue: **505 branches** where E.3(ii) is pairwise only and the global promotion is open. The obstruction is known and specific: with a leftover, the (r, r) re-reading must also re-type the leftover parts, and the commonest case L = c fails outright because two blocks of the same prime c would be two equal foreign parts, which Part E forbids.
+The last theorem-side residue in the fallback collapse. With a leftover, the (r, r) re-reading must also re-type the leftover parts, and the commonest case **L = c** fails outright because two blocks of the same prime c would be two equal foreign parts, which Part E forbids.
 
-### A6. Fix `ladder_verify.py` to scan both F = 2 rungs
+*Scoped 2026-08 and not attempted.* Two things about its shape are worth recording before anyone spends time on it.
 
-*The documents are relabelled; the script is not.* Its three-part branch scores the intra term at `comb(c,2)` — unfused rung C only — and its S7 loop runs over `Fp ∈ (3, 9, 5, 25, 7)`, so **F = 2 is never tried in either layer**, while its `CAP` table is keyed on the rung-B ceilings. Every family value it reports for odd n is therefore a rung-C value measured against a ceiling it structurally cannot reach, which is exactly the systematic shortfall those `δ/cap` diagnostics exist to detect.
+- **No structural argument can work**, and that is already proved: cases (α)–(γ) of E″ show that within a fallback configuration's own partition the fallback reading is *forced*, so any promotion must compare across partitions of n — where additive supply enters and one is back at Hypothesis (H). So this is not a gap to be closed by a better case analysis.
+- **The "505 branches" figure is v2-era and probably much smaller now.** A1's recount found the whole fallback question narrowed sharply under the corrected shape space (s ≤ 3 everywhere in range, δ ≤ 1/16 down from 17 values to 3). The first move is a recount, not a proof — rerun `fallback_cert.py` against v4 and see what the residue actually is.
 
-Adding F = 2 needs care rather than an extra tuple entry: the S7 loop's guard `(c - 1) % qF == 0 → continue` kills every odd c at qF = 2, and the cyclic-layer constraint is already carried by `dmax`, so the guard wants rewriting. The top-layer rung needs a separate branch with η = 1/u.
+Two questions for whoever picks it up, either of which would make it tractable rather than open-ended:
 
-*Nothing published moves.* The script computes a lower bound, so adding a family can only raise it: `δ ≥ 0.02516` over n ≤ 10⁶ stands and would if anything improve. What changes is the per-residue diagnostics.
+1. **Is the q-pinning mechanism written out anywhere in full?** E″ observes that r − 1 = 2q forces every leftover foreign part into r_j ≡ 1 (mod q), and calls it "the likely ingredient of an unconditional argument", but only in the context of the Cunningham chain 719 → 1439 → 2879. Extracting it as a lemma looks doable; the question is whether that has been tried and hit something.
+2. **Is L = c the only obstructed leftover, or only the one that has come up?** If every other leftover shape is re-readable, the open case is narrower than "with a leftover" — it is a single configuration, two equal c-blocks plus the foreign r, which is exactly the shape of both unresolved values below 10⁵ (n = 50,817 and n = 89,697) and might yield to a direct argument.
 
-**Still open alongside it:** residues 7 and 15 transpose the fused and tie columns (predicted 50 / 25 / 25, observed 8.7 / 31.1 / 60.2 and 0.0 / 31.6 / 68.4), and §3.9.2's original table (24.0 / 24.8 / 51.2 at residue 7) predates the per-residue window convention and should be re-derived under it or dropped in favour of the rescan.
+### A8. Two follow-ups from the `ladder_verify.py` fix
+
+**(a) n ≡ 11 (mod 24) behaves unlike its own class.** It is the only one of the nine rung-B residues whose δ/cap minimum did *not* move when the two F = 2 fused rungs were added: it sits at 0.455, with the worst value n = 11819, exactly where it was. Its cap 0.06699 is rung B at η = 1/6, so the rung is supposed to be available there. Either the supply fails at that n, or η = 1/6 is not reachable in the way the ceiling derivation assumes. This is a one-value check — score the three readings at n = 11819 directly and see which term binds — and it is the kind of anomaly the per-residue diagnostics exist to surface, so it should not be left sitting.
+
+**(b) Residues 7 and 15 still transpose the fused and tie columns.** §3.9.2 predicts 50 / 25 / 25 and measures 8.7 / 31.1 / 60.2 and 0.0 / 31.6 / 68.4, with S4 already near its predicted share and the fused wins almost all becoming ties. The tie diagnosis in that section covers part of it. Separately, §3.9.2's **original** table (24.0 / 24.8 / 51.2 at residue 7) predates the per-residue window convention and should be re-derived under it or dropped in favour of `rung_split.py`'s rescan; keeping two measurements of the same quantity under different conventions in one section is worse than having one.
