@@ -168,7 +168,20 @@ Recorded so the negatives are on file.
 - **`brute.py` / `brute_compare.py`** read in full and confirmed genuinely independent; all 139 records in `brute.jsonl` (n ≤ 200) agree with v4. **`count_check.py`**'s degeneracy check, `roots_mod`'s identically-vanishing branch, and the Simpson integration.
 - **`mu_enumerate_v2.py` needs no rerun.** `_fusions` enumerates *every* (F_mid, F_top) splitting rather than a canonical one, so both rungs are in the search space at every q; and `value()` constrains `dmax` by `Fmid` alone, which is the correct rule since F_top lives in Γ/Γ₁. The enumerator was right throughout — everything wrong was prose. v4 stands as computed and R0 continues from where it is.
 
-## 10. Left undone
+## 10. The A5 scope sweep, and `pending-checks.md` cleanup
+
+**`validate_table.py`** (see §3 above for `rung_split.py`; this is the second script) now runs every belief the documents state against any table version, grouped into table integrity / exact claims at every n / density and distribution, with expected asymptotics printed beside each measured quantity. It found the F-parity error of §5 on its first run.
+
+**A5, the expired-scope sweep, is done.** Regex for absolute language intersected with range language gave 41 candidates from ~480 lines; each read against v4. Two genuine expiries:
+
+- *The weak values are no longer all n ≡ 11 (mod 12).* The minimum over the corrected range is **n = 1159 ≡ 7 (mod 12)**, and — more interesting than the residue — its winner is `19x61`, a single fused class. The finite-range floor is currently set by a **multiplicative** value with a large smallest cofactor, not by an arithmetically weak additive residue. Eight of the ten weakest are still ≡ 11 (mod 12), so the additive pattern holds; what has changed is which mechanism binds at computed sizes. Recorded in `aod` §5 as a box, since it gives §3.7's two-engine handover a concrete witness from the floor's side.
+- *Part I's low-density tail figures are structurally wrong, not merely stale.* δ ≤ 1/16 falls from 17 values to 3 on the common range, and three-part winners from 129 to 7. The surrounding argument — a tail whose winners spread across part counts — no longer describes anything. Flagged in place.
+
+Everything else in the 41 was correctly range-tagged, still true and now automatically checked, or absolute for a table-independent reason.
+
+**`pending-checks.md` cleaned.** The "open defect" section replaced by a status note (the repair is done; what remains is propagation); the risk ranking updated from "210 rows" to 1,295; R4 marked automated; and six closed §2b items — A0, A0c, A1, A3, A4a, A7 — collapsed from long-form entries into a summary list with the detail here. A6 reduced to the one live item, the `ladder_verify.py` fix.
+
+## 11. Left undone
 
 - `ladder_verify.py` still reaches neither F = 2 rung (**A6**).
 - §3.9.2's original table (24.0 / 24.8 / 51.2 at residue 7) predates the window convention and should be re-derived under it or dropped in favour of the rescan.

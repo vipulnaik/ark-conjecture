@@ -8,23 +8,19 @@
 
 ---
 
-## The open defect
+## Status
 
-**G.2 is false and the upper bound does not currently hold.** The block-permuting group of an orbit may sit in the cyclic layer rather than the top q-group, so the block count need not be a q-power. Smallest witness n = 308. Full account in `enumeration-proof.md` Part 0; the density consequences in `arithmetic-of-density.md` §3.3.
+**The G.2 defect is repaired and propagated in the enumerator.** The block-permuting group of an orbit may sit in the cyclic layer rather than the top q-group, so the block count need not be a q-power; smallest witness n = 308. `mu_enumerate_v2.py` covers the corrected shape space, so **μ(n) ≤ B_safe(n) holds again** for the original reason — F·orb(c, dmax) caps any admissible stabiliser. Full account in `enumeration-proof.md` Part 0.
 
-**What survives:** `B_refined ≤ μ` unconditionally, and `B_safe = B_refined` wherever the collapse certificate applies — the whole computed table and all but two composite non-prime-power n ≤ 10⁵ — so on that range the tabulated value is ≤ μ. Every construction stands, and §5's global floor holds as an inequality (`δ ≥ 0.026117` over n ≤ 10⁶).
+**What is left is propagation, not repair.** The table rebuild (R0) is in flight and everything measured waits on it. Two scripts still carry the old model: `ladder_verify.py` (A6) and, for its narrower S7 family, R7.
 
-*Do not restate this as `B_safe ≤ μ`.* `B_safe` deliberately over-counts per configuration, scoring a p-characteristic part at F·C(c,2) even where Lemma C reduces the twist. That over-count and the incomplete shape space push in opposite directions, so B_safe and μ are **incomparable** in general.
-
-**What does not survive:** μ(n) = B(n), the table as exact values, and the argmin of the floor — at n = 3239 the corrected space gives 0.043570.
-
-**The repair is done in the enumerator and restores the original inequality.** `mu_enumerate_v2.py` covers the corrected shape space, so `μ ≤ B_safe` holds again for the original reason — F·orb(c, dmax) caps any admissible stabiliser. What remains is to propagate it: rebuild the table (R0), and fix the two scripts still using the old scoring (R7, R3).
+*Do not restate the inequality as `B_safe ≤ μ`.* `B_safe` deliberately over-counts per configuration, so B_safe and μ are incomparable in general; what holds is B_refined ≤ μ ≤ B_safe, with the endpoints collapsing wherever the certificate applies.
 
 ## Where the residual risk sits
 
 Ranked, so the sections below have a stated basis. This is not the order the items appear in.
 
-1. **The rebuild.** The enumerator is repaired, `ladder_verify.py` and `brute.py` now carry the same tightening, and the table rebuild is in flight (v4, 210 rows). Everything downstream waits on it. → **R0**
+1. **The rebuild.** The enumerator is repaired, `ladder_verify.py` and `brute.py` now carry the same tightening, and the table rebuild is in flight (v4, 1,295 rows to n = 1572). Everything measured waits on it. → **R0**
 
 2. **Exhaustiveness of the GAP stages.** The subdirect-product hole is real and undischarged. It degrades *evidence* rather than creating an error — a missed group could only have larger m\*, i.e. it would be a counterexample, not a silent corruption — but it is the only non-circular check in the framework. → `small-degree-verification.md` item 5
 3. **Part E's realisability construction.** Attainment's other leg, argued in general and spot-checked at eight configurations from n = 12 to 315. Unlike the certificate, this has no per-n verification at all. → **T2**
@@ -97,9 +93,9 @@ Both new-shape values confirmed independently: **n = 143 → 1081** (the first c
 
 n = 308 is not yet in v4 — it needs the rebuild to pass 288 — and is worth rerunning once it is, since it is the original counterexample.
 
-## R4. Count the Lemma C exposure after each extension
+## R4. ~~Count the Lemma C exposure after each extension~~ — automated
 
-Currently **zero**: of the p-characteristic parts appearing in a computed winner, none has both a > 1 and a foreign prime dividing c − 1. Since Lemma C is proved only for prime c, this count is the live measure of whether the gap has started to bite. A dozen lines against the CSV; worth folding into `check_doc_figures.py`. Recount against v4.
+Now a check in `validate_table.py` (group B), which reports it on every run. Currently **0 of 1,302** p-characteristic winner parts have both a > 1 and a foreign prime dividing c − 1, so the gap Lemma C leaves at a > 1 is still vacuous on every winner. Nothing to do by hand.
 
 ## R5. Fix the two `fb_common.py` defects
 
@@ -157,14 +153,20 @@ The specific question is not "is each condition true" but **"is each condition n
 
 *Human, for the same reason as T1: the value is in the independence.*
 
-### T4. Literature checks — four items left; see `literature-findings.md`
+### T4. Literature checks — three read, one left, and two things to decide
 
-The decisive one is settled and unfavourable: BBKN §5.1 defines the max-min our §3 optimises, Shparlinski (2014) names it f(n), and our even/odd constructions are k = 1 and k = 2 in that family. B(n) is nonetheless strictly larger and nobody has studied f(n) at fixed n. What remains:
+*Three of the four are now read and written up in `literature-findings.md` §§5–8. What is left for you is judgement, not reading.*
 
-- **Read Angel–Borja, arXiv:1603.04412**, before writing anything about n = 10. Oliver groups, dimension bounds, applied at ten vertices — same degree, same tool, unknown overlap, not in our reference list.
-- **Read Black's spacing definition.** Restricted to p-groups and concluding weak evasiveness, so probably incomparable to m\*, but the definition is in the paper body.
-- **Check whether Shparlinski's Theorem 2 survives the prime-power version of α.** *Now the main live number-theoretic question,* since his Corollary 3 already settles what Open Problem 2 of the notes was asking for. His ladder uses the largest *prime* divisor of r − 1; our η uses the largest prime *power* divisor of the odd part. If it transfers, "(H) is the γ = 1 endpoint" is a clean framing.
-- **Read Scheidweiler–Triesch and Korneffel–Triesch properly.** The current best unconditional weak bound is n²/3 − o(n²); §5 will read as competing and losing unless it says why the statements differ in kind.
+**Still needs the paper: Shparlinski's Theorem 2 at prime powers.** His ladder uses the largest *prime* divisor of r − 1; our η uses the largest prime *power* divisor of the odd part plus the 2-part. They agree at r − 1 = 2q and differ otherwise. If the argument transfers, "(H) is the θ = 1 endpoint" is exact; if not, §3.6's caveat stays. A judgement about a proof's robustness, so it wants a human read.
+
+**Decisions arising, in descending order of value:**
+
+1. **Run our n = 10 CSP against Angel–Borja's five surviving types.** They reduce potential counterexamples at ten vertices to order ideals I₂, I₄, I₅, I₆, I₈ of a 10-element poset, having killed I₁, I₃, I₇, I₉ — and say explicitly they could not find Oliver groups for the rest. Each type is a stated set of isomorphism classes, so it is a constraint our solver accepts directly. Reproducing their four eliminations is **non-circular validation of the CSP**, which the framework is short of; killing more is an increment on a 2016 paper. This is the most concrete thing the literature review has produced.
+2. **Decide whether to take their χ = 1 exploitation.** At a trivial-top Oliver group χ(P^Γ) = 1 exactly, so the fixed complex cannot be a single point and P must contain a **union of two orbitals** — which gives them dim P ≥ 4p − 1. We stop at non-voidness (§7.2's bottom box). Their step needs only two vertices in the fixed complex, which our orbital counts supply at every non-prime-power n, so it looks cheap. §7.3 lists three places left to look for strength; this may be a fourth.
+3. **Add a sentence to §5 distinguishing δ from c(n).** Scheidweiler–Triesch's n²/3 − o(n²) is a bound on *how many queries* every nontrivial monotone property forces; our δ ≈ 0.05 is a threshold on *which properties* the method reaches exactly. Same technique — the Triesch line is explicitly topological — different quantity. Without that sentence §5 reads as competing and losing against a larger number.
+4. **Cite Angel–Borja**, and note that the vertex-homogeneous dimension bound they attribute to Lutz is a *different* Lutz paper (JCTB 81, 2001) from the one we reference.
+
+**Two things the reading closed.** Black's spacing is confirmed incomparable — p-groups only, bounds D(f) directly rather than a single group's minimum orbital, and concludes Ω(n) rather than exact evasiveness; its one useful role is as the standing demonstration that the number theory is not needed for Ω(n), which sharpens what ours buys. And Angel–Borja does **not** overlap: they use Oliver groups to force *named members* and feed those into a mod-p isomorphism-class count, where we extract a *size*. Their Proposition 4.5 is our Theorem 2.1 with the diagonal twist deleted (m\* = 2p against our p(p−1)) — so we are stronger on size, and they get a qualitative membership statement that fusing the orbitals destroys. That trade-off is worth a line in §9.7.
 
 ### T5. Decide whether to close the Lemma C gap at all
 
@@ -174,40 +176,15 @@ Now a question about the *sharpness* of the search rather than about the results
 
 *Self-contained analysis against the existing files. No new materials needed.*
 
-### A1. ~~Bound the s = 4 and s = 5 branches~~ — dissolved in range by the rebuild
+**Closed this pass** — detail in `session-log-3.md`, nothing left to do:
 
-*Recounted against `mu_table_safe_v4.csv` at the 1,295-row / n ≤ 1572 frontier.* Since **s ≤ 1/√δ − 1** and the corrected shape space has lifted the density floor over that range to **δ ≥ 0.051813** (n = 1159, `19x61`), the bound gives
-
-> s ≤ 1/√0.051813 − 1 = **3.393**, hence **s ≤ 3 at every n in the current v4 range.**
-
-So the s = 4 and s = 5 branches are **not reachable at all** where the table now reaches, and Part E′ closes every branch by theorem there: E.1 for s = 1, E.3(iii) for the s = 2 repunit family, E.4 for s = 3 outright. **The whole theorem-side residue collapses to the one open case, E.3(ii) with a leftover** — which is A2.
-
-This is not a proof of the branches, and the item should not be closed outright: the floor moves with the range, and the branches reappear the moment some n drops below 1/16. What has changed is that they are no longer *live* — they were an artefact of a floor (0.026117 at n = 3239) computed under the pre-repair shape space. Both former record-holders leave the sub-1/25 set entirely. **Recheck at each extension**; the trigger is the first n with δ ≤ 1/16.
-
-*Related recount, same source.* The low-density tail that Part J item 1 and Open Problem 8(a) are scoped to has also collapsed. Over the common range n ≤ 1572, comparing v2 against v4:
-
-| | v2 | v4 |
-|---|---|---|
-| δ ≤ 1/9 | 275 | **159** |
-| δ ≤ 1/16 | 17 | **3** (n = 527, 1159, 1175) |
-| δ ≤ 1/25 | 0 | 0 |
-| density floor | 0.041812 (n = 575) | **0.051813** (n = 1159) |
-
-So Corollary F.3's k ≤ 3 is now free at **1292 of 1295 values (99.8%)**, against the 97.7% the documents quote from v2. Open Problem 8(a) is correspondingly narrower, though its *stated* scope ("45 of 1,921 values") is a v2-era figure over a wider range and should be restated only once the rebuild finishes.
-
-### A0. What the extended v4 run confirms (n ≤ 1572, 1,295 rows)
-
-*Checked against the run in progress. No document counts updated — those wait for the run to finish — but the structural verdicts are worth recording now, because every one of them is a hypothesis this session's relabelling rests on, and all of them hold.*
-
-- **v4 ≥ v2 everywhere.** Over the 1,295 common values, **213 rise and 0 fall**. That is the signature R0 predicts for a shape-space enlargement plus a SAFE tightening that was never binding.
-- **S4 winners all have c ≡ 1 (mod 8).** Seven instances now — n = 247, 285, 437, 777, 1377, 1417, **1529** (c = 521 ≡ 1). The new one extends the pattern rather than breaking it.
-- **S5 winners obey no congruence on c and have small u.** 27 instances, c spread 9/8/7/3 across c ≡ 7, 5, 3, 1 (mod 8), and **u = oddpart(r − 1) ∈ {1, 3} only** (18 and 9). Exactly what §3.3's rung-B′ box predicts: no c-condition, and supply confined to r = 2^a·u + 1 with u small.
-- **S7 at F = 2 concentrates at c ≡ 3 (mod 4).** 157 of 172, with 10 at c ≡ 5 (mod 8) — the documented tie case — and 5 at p = 2. The c mod 8 law holds for the cyclic rung and not for the top one, which is the whole content of §3.2.
-- **S6 still has zero winners** anywhere in range, confirming A7 at the wider frontier.
-- **No winner exceeds cap_F(η) for its own F and η** — 0 violations across every one-matching-class, one-foreign row. This is the upper-bound half of §3.3.8's validation, and it survives the enlarged range.
-- **Class ceilings are exceeded freely, as they should be.** At n ≡ 11 and n ≡ 23 (mod 24) **every single winner** (33 of 33, 33 of 33) beats its residue's δ₀. The ceilings are family guarantees, not bounds on δ(n) — but 100% is worth knowing, since it means the tabulated δ₀ describes essentially nothing about the computed range at those two residues.
-
-**One structural change that is not a count.** Three-part winners have largely been absorbed by two-part fused ones: over the common range the part distribution moves from **{1: 551, 2: 615, 3: 129}** to **{1: 513, 2: 775, 3: 7}**. A configuration that was c + c + r\* is now read as the single fused class 2×c + r\*, which is one part rather than two. This is the largest qualitative change the repair has produced, and it bears on several claims written against v2 — in particular Part I's "three-part winners beat two-part configurations by wide margins" (a sample of 23 three-part winners, of which few now survive as three-part) and Part J item 1's framing of minimality. Both should be re-derived rather than merely recounted.
+- **A0. What the extended v4 run confirms.** Every structural hypothesis holds at n ≤ 1572; v4 ≥ v2 at all 1,295 common values. Now re-run automatically by `validate_table.py`.
+- **A0c. The within-class cross coefficient.** Stated as "F for odd q, F/2 for q = 2"; the rule is keyed on **F's parity**, not q's. Smallest witness n = 15 (`p=5 q=2: 3x5`, q = 2 but F = 3). Both enumerators were already right; prose corrected in five places.
+- **A1. The s = 4 and s = 5 branches.** Dissolved in range: the floor rose to 0.051813, so s ≤ 1/√δ − 1 = 3.393 and only s ≤ 3 is reachable, where E.1/E.3(iii)/E.4 close everything. **Recheck at each extension** — the trigger is the first n with δ ≤ 1/16.
+- **A3. "Blocked at one q, available at another".** The congruence half is trivial (the degenerate q are the prime divisors of (n−1)/2, at most log₂n of them); the rest is Hypothesis (H) restricted to one q, not a separate item.
+- **A4a. Theorem 2.3's two-part reduction.** Reclassified as a Goldbach-tier statement rather than a gap in a proof; nothing depends on it but the O(n) cost claim for B₀.
+- **A5. The expired-scope sweep.** 41 range-scoped absolute claims read against v4; two expiries found and fixed — the weak values are no longer all n ≡ 11 (mod 12) (the minimum is now n = 1159 = 19·61, a *multiplicative* value), and Part I's low-density tail figures are structurally wrong rather than merely stale. Closed as an item, but budget **one reading pass per major extension**: `validate_table.py` and `check_doc_figures.py --pass scope` catch mechanical and whitelisted claims, neither catches a claim about a *mechanism*, and that is the kind that expired here.
+- **A7. The n = 1175 two-foreign witness.** Moved under v4; S6 now has **zero** winners in range, confirmed to n = 1572. Now checked automatically.
 
 ### A0b. `validate_table.py` — run this on every table extension
 
@@ -225,70 +202,16 @@ Two extra modes cover the cases that would otherwise send you to the CSV. **`--b
 
 It **replaces the by-hand checking** done in each review pass, and it found a documentation error on its first run (see below). **Amend it in the same pass whenever the model changes** — each check names the document section it comes from, so a stale check is findable from either end. Note what it does *not* do: it checks the table against the documents' model, not against mathematics. For independent evidence use `brute_compare.py`.
 
-### A0c. The within-class cross coefficient is keyed on F's parity, not on q — **fixed**
-
-*Found by `validate_table.py` on its first run: 170 of 1,295 rows failed re-derivation.*
-
-Parts E, G.3 and the value formula stated the within-class cross term's coefficient as "**F for odd q, F/2 for q = 2**". That was correct while every block count was forced to be a q-power, since F even then meant q = 2. Under the corrected shape space F = F_mid·F_top need not be a q-power and the two conditions come apart. The smallest witness is **n = 15**, whose winner is `p=5 q=2: 3x5`: **q = 2 but F = 3**, so the coefficient is 3 and the term is 75. Reading it off q gives 25 and understates B(15) as 25 against the true 30.
-
-The correct rule is **F for odd F, F/2 for even F** — the divisibility argument is about the fusing group's own prime ℓ, and ℓ = 2 exactly when F is even. **Both shipped enumerators already key on `F % 2`** (`mu_enumerate_v2.py` line 190, `brute.py` line 119), so no computed value moves and no rerun is needed; this was prose only. Corrected in Part E's value formula, the realisability paragraph, G.3, both copies of the Theorem 3.1 `DUP` block, and `aod` §2.1.
-
 ### A2. Promote E.3(ii) past the bare pair
 
 The largest theorem-side residue: **505 branches** where E.3(ii) is pairwise only and the global promotion is open. The obstruction is known and specific: with a leftover, the (r, r) re-reading must also re-type the leftover parts, and the commonest case L = c fails outright because two blocks of the same prime c would be two equal foreign parts, which Part E forbids.
 
-### A3. ~~Make "blocked at one q, available at another" a theorem~~ — reclassified: the congruence half is trivial, the rest is Hardy–Littlewood
+### A6. Fix `ladder_verify.py` to scan both F = 2 rungs
 
-*Worked through 2026-08.* The item conflated two questions with very different status, and separating them settles one and relocates the other.
+*The documents are relabelled; the script is not.* Its three-part branch scores the intra term at `comb(c,2)` — unfused rung C only — and its S7 loop runs over `Fp ∈ (3, 9, 5, 25, 7)`, so **F = 2 is never tried in either layer**, while its `CAP` table is keyed on the rung-B ceilings. Every family value it reports for odd n is therefore a rung-C value measured against a ceiling it structurally cannot reach, which is exactly the systematic shortfall those `δ/cap` diagnostics exist to detect.
 
-**The congruence half is immediate.** For the diagnostic system of §3.9.2 — c prime, r = n − 2c prime, r ≡ 1 (mod q) — the congruence pins c to the class (n−1)/2 (mod q), and the system is degenerate exactly when that class is 0, i.e. when
+Adding F = 2 needs care rather than an extra tuple entry: the S7 loop's guard `(c - 1) % qF == 0 → continue` kills every odd c at qF = 2, and the cyclic-layer constraint is already carried by `dmax`, so the guard wants rewriting. The top-layer rung needs a separate branch with η = 1/u.
 
-> **q | (n − 1)/2.**
+*Nothing published moves.* The script computes a lower bound, so adding a family can only raise it: `δ ≥ 0.02516` over n ≤ 10⁶ stands and would if anything improve. What changes is the per-residue diagnostics.
 
-So the degenerate q at a given n are precisely the prime divisors of (n−1)/2. There are **ω((n−1)/2) ≤ log₂ n** of them, and typically far fewer: measured over odd n ∈ [10⁴, 4·10⁴] the mean is **2.56** and the maximum **5**. Every other prime is non-degenerate. So "another q is always available" is not an empirical observation at all — it is the statement that a positive integer has finitely many prime divisors, and the obstruction can remove only O(log n) candidates from an unbounded supply. That half needs no theorem.
-
-**The half that remains is not about q at all.** What the ladder actually needs is not *some* non-degenerate q but a q whose system has both **supply** (a solution near the balance point) and **efficiency** (q large enough that η = 2/d is usable, which ties q to a large prime-power divisor of r − 1). Neither follows from non-degeneracy: a system can be locally fine at every prime and still have no solution at a given n, which is exactly the content of Hypothesis (H). So the residual question is the same parametric Hardy–Littlewood question as §3.5's, restricted to a particular q, and not a separate item.
-
-**Conclusion: close A3 as a standalone item.** Record the congruence count in §3.9.2's obstruction box — where the text currently says the availability of another q is "measured" rather than proved, which understates it — and let the supply question sit with (H), where it already is. Nothing here is unproved that was not already unproved.
-
-### A4a. Theorem 2.3's two-part reduction is not elementary — reclassified
-
-*Investigated 2026-08. The statement is true and the reason is now clear, but it is not the kind of statement the proof was reaching for.*
-
-The claim is that the maximising partition never needs three or more parts. The natural attack compares a k-part partition against the two-part split (s₁, n − s₁): the cap(s₁) term is shared and the cross term only improves, so the two-part split is worse **only if cap(n − s₁) falls below the k-part value**. Since cap is not monotone, that cannot be ruled out termwise — which is where the old justification failed and where my attempt stalled.
-
-**The reason it nonetheless holds is additive, not combinatorial.** A three-part partition is capped by min(cap(s₁), s₁s₂) ≤ (n/3)²/2. So it can only win at an n where *no* two-part split reaches that value. Searching odd n in [1500, 4000): **not one** has V(1 or 2 parts) < (n/3)²/2 — the necessary condition is never even met, let alone the conclusion violated. Inspecting the optimal splits shows why: they are (prime power, composite-with-a-large-prime-power-factor) at 428 of 500 sampled n, and (prime power, prime power) at the other 72. Examples: n = 2001 splits as 977 + 1024 with both parts prime powers, value 476776 against the three-part ceiling of 222444.
-
-So two-part splits of the required quality are **plentiful**, and that is a Goldbach-tier fact about the additive structure of n, not something an inequality on cap will produce. Any proof will need an input of the same kind as §3's.
-
-**What this changes.** The reduction should be reclassified from "a gap in a proof" to "a statement of the same conjectural tier as the rest of §3", and stated that way. Nothing depends on it except the O(n) cost claim for B₀; the inequality μ ≤ B₀ quantifies over all partitions and is unaffected. Verified exhaustively to n = 1200 for all partitions, and to n = 4000 for odd n by the necessary-condition test above.
-
-### A5. Sweep for other expired-scope arguments
-
-*Partly done.* A pattern scan across the three documents found the O(log n) sparsity claims (now corrected, §4.3), the mod-12 ceiling framing (now mod-24), and the `B_safe` definition (now F·orb(c, dmax)). What remains unswept: the ~85 "absolute claims" (never / always / no exception) across the three documents, which a numeric sweep cannot check and which are the class §4.3's error lived in. Worth one pass reading each against its current scope.
-
-
-### A6. Fold the two F = 2 fused rungs apart, and fix `ladder_verify.py` to scan both
-
-*Opened 2026-08 after the S5/rung-B conflation was found; the documents are relabelled, the script is not.*
-
-Fusing the two equal c-blocks of the odd-n family n = 2c + r admits two layer assignments, which are different census shapes and score differently:
-
-- **cyclic layer** (F_mid = 2, q free): twist cut to the odd part of c − 1, so the gain is governed by c mod 8. This is **S7 at F = 2**, and it is what §§3.2, 3.3(b), 3.9 of `arithmetic-of-density.md` derive under the name S5. 150 winners in v4.
-- **top layer** (F_top = 2, forcing q = 2): full twist, intra 2·C(c,2) for **every** odd prime power c — this is Theorem 2.1's own construction with a foreign block added — but η pinned to 1/u, u the odd part of r − 1. This is **S5** as the census defines it. 24 winners in v4, all with u ∈ {1, 3}.
-
-The prose is now split; three things remain.
-
-1. **`ladder_verify.py` scans neither rung.** Its three-part branch scores the intra term at `comb(c,2)`, i.e. unfused rung C only, and its S7 loop runs over `Fp ∈ (3, 9, 5, 25, 7)` — **F = 2 is never tried**. So every family value it reports for odd n is a rung-C value, while its `CAP` table is keyed on rung B. The per-residue `δ/cap` diagnostics are therefore measuring against a ceiling the script structurally cannot approach, which is exactly the kind of systematic shortfall those diagnostics exist to detect. Adding F = 2 needs care: the S7 loop's guard `(c - 1) % qF == 0 → continue` kills every odd c at qF = 2, and the cyclic-layer constraint is already carried by `dmax`, so the guard wants rewriting rather than extending. The top-layer rung needs a separate branch with `η = 1/u`.
-2. ~~**Recompute §3.9.2's observed split with the rungs separated by top prime.**~~ **Done** — `rung_split.py`, band [2×10⁵, 2.06×10⁵]. S5 never wins outright anywhere in the band, but is in the argmax set at 23.5% of n ≡ 7 and 30.4% of n ≡ 15 (mod 24) and never at 23, so the conflation was inflating the tie column at two residues and nothing else. The window convention turned out to matter more than the layer separation: scanning each residue at its **own** balance point ± 0.05 (`count_check.py`'s convention) rather than at a flat window makes residue 23 match §3.9 exactly at 0 / 43.2 / 56.8, whereas a flat [0.10, 0.42] window produces a spurious 7.6% of fused wins there. **Check the window convention before reading any discrepancy in §§3.8–3.9 as a finding.**
-
-Still open: residues 7 and 15 transpose the fused and tie columns (predicted 50 / 25 / 25, observed 8.7 / 31.1 / 60.2 and 0.0 / 31.6 / 68.4) with S4 already near its predicted share; and §3.9.2's original table (24.0 / 24.8 / 51.2 at residue 7) predates the window convention and should either be re-derived under it or dropped in favour of the rescan.
-3. **Recount the census winner columns for S5 and S7.** Done for v4 (S5 24, S7 150 at F = 2); recount on every extension, since the split is by top prime and nothing in the pipeline computes it automatically.
-
-*What is not affected.* No ceiling in the mod-24 table moves: rung B′ has the same cap formula as B but η = 1/u, so it clears the worst class ceiling 0.050510 only for u ≤ 9, i.e. r = 2^a·u + 1 with u one of five small odd values — an O(log n)-per-n family, hence an escape of the same tier as the others. The documented "Fermat escape" is its u = 1 case.
-
-### A7. The n = 1175 two-foreign witness has changed under v4
-
-`enumeration-proof.md` Part I records n = 1175 = 641\* + 277 + 257\* as the unique two-foreign winner in the table, binding on the Fermat prime 257 at 32,896. Under v4 the winner at that n is **`p=139 q=103: 1x619* + 4x139`** with B = 38,364 and δ = 0.05562 — one foreign part, not two, and a cyclic-layer-fused class of four. So the claim that the two-foreign shape (S6) has exactly one instance in range needs recounting: it may now have **none** below 1428, which would change S6's row in both censuses from "1 winner" to "no instance in the current v4 range".
-
-The second instance the branch-and-bound found, n = 3059 = 1511\* + 907\* + 641, is beyond v4's frontier and untested under the corrected shape space. Both should be rechecked when the rebuild passes those values — and note the general point, which is that the shape-space repair can move a winner from one census row to another, so **every per-shape count in Part I is v2-era until recomputed**, not merely the ones marked as such.
+**Still open alongside it:** residues 7 and 15 transpose the fused and tie columns (predicted 50 / 25 / 25, observed 8.7 / 31.1 / 60.2 and 0.0 / 31.6 / 68.4), and §3.9.2's original table (24.0 / 24.8 / 51.2 at residue 7) predates the per-residue window convention and should be re-derived under it or dropped in favour of the rescan.

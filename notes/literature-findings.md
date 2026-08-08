@@ -138,3 +138,68 @@ Not resolved this pass. This one is a mathematical check rather than a framing q
 2. **Check whether Shparlinski's Theorem 2 survives the prime-power version of α** (item 2). If it does, "the γ = 1 endpoint" is a clean and accurate framing for (H); if not, we need a different way to say it.
 3. **Read Scheidweiler–Triesch and Korneffel–Triesch properly** (item 3). I have n²/3 secondhand; the primary source should be checked before it goes in a comparison table.
 4. **Decide the framing** (item 1). Not a literature question any more — the literature is now clear. It is a decision about what the paper claims, and it should be made before more writing happens, because it determines whether §3 is a contribution or a recap.
+
+---
+
+# Second pass (2026-08): three of the four T4 items read
+
+*Angel–Borja was read in full; the Triesch lineage and Black's spacing definition were settled from abstracts and citing papers. The Shparlinski prime-power question is the one still needing the paper itself. As before, nothing here has been folded into the primary documents — these are notes for the judgement calls.*
+
+## 5. Angel–Borja, arXiv:1603.04412 — read in full; complementary, not overlapping
+
+*"The Evasiveness Conjecture and Graphs on 2p Vertices", Andrés Angel and Jerson Borja, 2016.*
+
+**Their method is a different use of the same tool.** They compute χ(P) = Σ_{[G] ⊆ P} (−1)^{m_G−1}·|[G]| over *isomorphism classes*, and look for a common divisor of the class sizes |[G]| = n!/|Aut(G)|. If p divides every |[G]| then p | χ(P) so χ(P) ≠ 1 and P is evasive. Their §3 classifies the graphs on 2p vertices with p ∤ |[G]|: they are exactly G₁ ∪ G₂ or G₁ + G₂ with each Gᵢ on p vertices of the circulant form C(s₁,…,s_l) (Lemma 3.3). Oliver groups enter only to force *membership* of specific graphs, which is then fed into that counting argument.
+
+**So the two frameworks use Oliver groups for different purposes.** We extract a *size* — m\*(Γ) large means sparse properties are evasive. They extract *named members* — "P contains a perfect matching", "P contains 2C_p or K_{p,p}" — and combine those with the mod-p class count. Neither subsumes the other, and the overlap in machinery is Oliver's theorem and nothing else.
+
+**Their Proposition 4.5 is our Theorem 2.1 with the twist deleted.** Their group at n = 2p is Γ = ⟨α, β, γ⟩ with α the p transpositions, β and γ the two independent p-cycles — i.e. (C_p × C_p) ⋊ C₂, Oliver with a *trivial top* layer. Its orbitals are K_{p,p} of size p² together with (p−1)/2 classes C(t) ∪ C(t′) of size 2p each, so **m\* = 2p**. Our Theorem 2.1 uses the same bottom and swap plus the **diagonal multiplicative twist** C_{p−1}, which fuses those (p−1)/2 classes into a single orbital of size p(p−1), giving **m\* = p(p−1) = μ(2p)**. At p = 5: theirs is {25, 10, 10}, ours is {25, 20}.
+
+> So on the size axis we are strictly stronger — P must contain a graph with ≥ p(p−1) edges, not ≥ 2p. But their weaker group buys something we do not get: because its orbits are *named* graphs (2C_p and K_{p,p}), the transversal condition yields a qualitative membership statement. Fusing the classes destroys exactly that. **This is a real trade-off and worth stating in §9.7:** a larger m\* comes from merging orbitals, and merged orbitals are less informative about *which* graphs are in P.
+
+**One exploitation of Oliver's theorem that we do not make.** Their Corollary 4.6 gets **dim P ≥ 4p − 1** by observing that at a trivial-top Oliver group χ(P^Γ) = 1 *exactly*, so P^Γ cannot be a single point — it must contain a face, i.e. P contains a **union of two orbitals**. We use χ(Δ_P^Γ) ≠ 0 to get non-voidness (§7.2's bottom box) and stop there. Their step is strictly more: from χ = 1 and ≥ 2 vertices in the fixed complex, a higher-dimensional face is forced. §7.3 lists three places left to look for strength; this is arguably a fourth, and a cheap one — it needs only that the fixed complex have at least two vertices, which our own orbital counts give at every non-prime-power n. **Worth checking whether it strengthens anything at n = 10 or 12.**
+
+**A pointed contrast on fixed points.** Their Corollary 4.3 handles n = p^r + 1 with Γ_{p^r} × 1 — a configuration with a **fixed point**. Our Part A discards those immediately: a fixed point caps m\* at n − 1, so the configuration is dominated and never enumerated. Yet they get a strong conclusion from it (P contains K_{p^r} ∪ K₁ or K_{p^r,1}, and cannot contain both, else P is trivial). **Fixed points are worthless for orbital annihilation and useful for the transversal/χ argument.** That is a clean statement of why our filter is lossy for §8's purposes, and it bears directly on Open Problem 4.
+
+**Direct cross-check available at n = 10.** They reduce potential counterexamples to 9 order ideals ("types") of a 10-element poset of isomorphism classes, then kill types 1, 3, 7 and 9 — leaving **types 2, 4, 5, 6, 8** (their Remark 5.2, where they say they could not find Oliver groups to discard the rest). Our §8 CSP works over 12,005,168 isomorphism classes and killed nine of eighteen candidate patterns. These are different parametrisations of the same question, and **our machinery can test their types directly**: each type is a stated set of isomorphism classes, so it is a constraint our solver can accept. Either we reproduce their four eliminations (a real non-circular validation of the CSP) or we kill more (a publishable increment on a 2016 paper). This is the single most concrete item to come out of the literature review.
+
+*Bibliographic note:* they are not in our reference list and should be, and their reference [7] attributes the vertex-homogeneous dimension bound to **Lutz**, *Some results related to the evasiveness conjecture*, JCTB 81 (2001) — which is a different Lutz paper from the one we cite.
+
+## 6. Black's spacing — confirmed incomparable to m\*
+
+*Black, "Monotone properties of k-uniform hypergraphs are weakly evasive", ITCS 2015 / ACM ToCT 11(3), 2019.*
+
+The framework is **orbit augmentation sequences**: sequences of sets with group actions, carrying a parameter called the **spacing**, which is a lower bound on decision-tree complexity for any nontrivial monotone property invariant under all the groups involved — **assuming all those groups are p-groups**. Operations (composition, direct product) build the sequences up; applications to k-graphs go via liftings with wreath-product actions of p-groups.
+
+Three reasons it does not interact with μ, which settles the item as suspected:
+
+- **p-groups only.** No cyclic layer and no second prime, so it is not the Oliver condition at all — the whole coherence apparatus of our §2.4 has nothing to constrain.
+- **It bounds D(f) directly**, not the minimum orbital of one group. Spacing is a property of a *sequence*; m\* is a property of a single group.
+- **The conclusion is weak evasiveness, Ω(n) on n = v^k variables**, where ours is exact evasiveness on a sparse class. Different target.
+
+The one genuine point of contact is methodological and worth a sentence rather than a comparison: Black's stated motivation is that KQS use "the topological approach combined with heavy number theory" and that his argument is elementary by contrast. Our framework is squarely on the heavy-number-theory side, so **Black is the standing demonstration that the number theory is not necessary for the Ω(n) conclusion** — which sharpens what the number theory is actually buying us, namely the exponent above 1.
+
+## 7. Korneffel–Triesch and Scheidweiler–Triesch — different quantity, and §5 must say so
+
+The lineage, all bounds on **c(n)**, the minimum over *all* nontrivial monotone properties of the decision-tree complexity:
+
+| | bound on c(n) |
+|---|---|
+| Rivest–Vuillemin (1976) | n²/16 |
+| Kleitman–Kwiatkowski (1980) | n²/9 |
+| Kahn–Saks–Sturtevant (1984) | n²/4 |
+| Korneffel–Triesch (2010) | **(8/25)n² − o(n²)** = 0.32 n² |
+| Scheidweiler–Triesch | **n²/3 − o(n²)** — current best |
+
+**These are not competing with μ, and the numbers must not be compared.** c(n) is a *universal* lower bound: every nontrivial monotone property needs that many queries. μ(n) supports a *conditional but exact* statement: any property whose members all have fewer than μ(n) edges needs **all** C(n,2) queries. So:
+
+> Their result: every property needs ≥ n²/3 ≈ 0.667·C(n,2) queries.
+> Ours: sparse properties need exactly C(n,2), i.e. 1·C(n,2), on a restricted class.
+
+Neither implies the other. Ours is the stronger conclusion on a smaller class; theirs is weaker on all of them. **The density δ(n) ≈ 0.05 is a sparseness threshold, not a fraction of queries**, so reading it against 1/3 is a category error — and it is precisely the error §5 invites by quoting a small constant next to this literature. §5 should say, in one sentence, that δ measures *which properties* the method reaches and c(n) measures *how many queries* are forced for all of them.
+
+*Also worth noting for framing:* the Triesch line is itself topological (Korneffel–Triesch is explicitly "an application of the topological approach of Kahn, Saks and Sturtevant"), so the honest statement is not "different technique" but **same technique, different quantity**.
+
+## 8. What is still open in T4
+
+**Only the Shparlinski prime-power question**, and it needs the paper body. His Theorem 2 ladder is stated for the largest **prime** divisor of r − 1; our η is built from the largest prime **power** divisor of the odd part, together with the 2-part. The two agree when r − 1 = 2q and differ otherwise. If his argument transfers verbatim to the prime-power version, "(H) is the θ = 1 endpoint" is exact rather than approximate; if it does not, §3.6's caveat has to stay. This is a judgement about a proof's robustness, not a fact to look up.
