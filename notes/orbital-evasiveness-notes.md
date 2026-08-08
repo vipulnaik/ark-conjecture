@@ -493,13 +493,38 @@ This is strictly weaker as a hypothesis than the sparse criterion, which demands
 
 *The criterion can be sharpened from one orbital to two, and the sharpening is free.* The transversal form uses only that Δ_P^Γ is **non-void**, which is the weakest thing the congruence gives (§7.2). But Δ_P^Γ is a simplicial complex whose vertices are exactly the orbitals lying in P, and whose faces are the unions of orbitals lying in P. If **v** orbitals lie in P and none of their pairwise unions does, then Δ_P^Γ is v isolated points and **χ(Δ_P^Γ) = v** outright. Oliver's congruence says χ ≡ 1 (mod q), so:
 
-> **Two-orbital criterion.** Let Γ be Oliver on [n] with top prime q, and let P be nontrivial monotone decreasing and non-evasive. Let v be the number of orbitals of Γ lying in P. Then either **v ≡ 1 (mod q)**, or **some union of two orbitals of Γ also lies in P**. In particular, at a **trivial top** — where Smith gives χ = 1 exactly — v ≥ 2 forces a two-orbital union into P.
+> **Fixed-complex criterion.** Let Γ be Oliver on [n] with top prime q, and P nontrivial monotone decreasing and non-evasive. Δ_P^Γ is the simplicial complex whose **vertices are the orbitals of Γ lying in P** and whose **faces are the sets of orbitals whose union lies in P** — a downward-closed family, since P is. Then χ(Δ_P^Γ) ≡ 1 (mod q), and the face on *all* orbitals is excluded, its union being K_n.
 
-The useful case is small v, where the congruence has no room. At **q = 2 with exactly two orbitals in P**, v = 2 ≢ 1 (mod 2), so the union is forced; the k = 2 block group of the two-graph criterion above is exactly this shape, so whenever a non-evasive P contains both 2K_m and K_{m,m} it must also contain **2K_m ∪ K_{m,m} = K_n**, i.e. P is trivial. So at n = 2m the two-graph criterion strengthens to: *P contains exactly one of 2K_m and K_{m,m}.* The same argument at a trivial top is what Angel–Borja use to force dim P ≥ 4p − 1 at n = 2p, and to show that a nontrivial P on p^r + 1 vertices cannot contain both K_{p^r} ∪ K₁ and K_{p^r,1}.
+Because the number of orbitals **t** is small at any configuration we care about, this is a finite constraint that can simply be enumerated.
+
+> **How many orbitals a configuration has, exactly.** It is combinatorial, and it is *not* the part count. For a configuration with classes (F_i, c_i) and twists of order d_i,
+>
+> > **t = Σ_i [ (c_i − 1)/|±T_i| + ⌊F_i/2⌋ ] + C(k,2)**,  where |±T_i| = d_i if d_i is even or p = 2, and 2d_i otherwise.
+>
+> The three summands are the three term types of the value formula. The first is the number of intra-orbitals of a class — **1 exactly when the twist is full**, since then ±T is all of 𝔽_{c}^×, which is §3.2's quadratic-residue collapse read as a count. The second is the number of within-class cross orbitals: the pair-difference classes of C_F acting on the blocks are indexed by ±j for j = 1…⌊F/2⌋. The third is one orbital per pair of classes.
+>
+> *The ⌊F/2⌋ is the same fact as the value formula's coefficient.* The class j = F/2 exists only for even F and has half the size of the others — which is precisely why the within-class cross term carries F for odd F and F/2 for even F. Count and coefficient are two readings of one C_F computation, which is worth knowing because stating that coefficient in terms of q rather than F was a live error in these documents.
+>
+> **Measured over the current table:** t = 2 (20.4%), 3 (46.1%), 4 (18.0%), 5 (10.1%), 6 (4.0%), with a tail to 10; mean 3.36, and **t ≤ 4 covers 84.5%**, t ≤ 5 covers 94.6%.
+>
+> **The trivial bound is t ≤ 1/δ**, since the orbitals partition C(n,2) and each has at least m\* = δ·C(n,2) elements. It is far from tight — mean 1/δ is 5.63 against mean t of 3.36, so t runs at about **65% of the bound** — because δ is set by the *smallest* orbital while the count benefits from the large ones. It is tight (ratio 0.999) exactly at Theorem 2.1's configurations n = 2m, where the two orbitals m(m−1) and m² are nearly equal; loosest (ratio 0.27) where a foreign block runs at low efficiency, so its orbital is tiny beside the cross terms — n = 851 = 467\* + 3×128 has 1/δ = 14.8 and only 4 orbitals.
+
+Enumerating every downward-closed family on t vertices and filtering by χ ≡ 1 (mod q):
+
+| t | what the congruence permits |
+|---|---|
+| **1** | **nothing** — the only complexes are ∅ (χ = 0) and the point (whose union is K_n). So a 2-homogeneous Γ forces P evasive, which is the classical statement recovered. |
+| **2** | **exactly one orbital in P**, and their union not in P. Two orbitals with no edge gives χ = 2 ≢ 1 for any q; with the edge, the union is K_n. |
+| **3** | one orbital: free. Two orbitals: **their union must lie in P** (χ = 2 is impossible, so the edge is forced). All three: at odd q, **exactly two of the three pairwise unions lie in P and no triple union does** — the complex is a *path*, so one orbital is distinguished, its union with each of the others lying in P while the union of the two ends does not. At q = 2 there is one extra option, no pairwise union at all (χ = 3). |
+| **4** | genuinely loose — at q = 5 or 7 the pairwise/triple union counts may be (3,0), (4,1), (5,2) or (6,3); at q = 2 seven patterns survive. The constraint stops being interesting here. |
+
+So the criterion has real force at t ≤ 3 — two thirds of the computed winners — and fades at t = 4. Note what it gives beyond a count: at t = 3 it fixes not only *how many* orbitals lie in P but **which unions do**, and in the odd-q case singles out a distinguished orbital. That is a relation among the orbitals, not just a tally, and it is the part a pure "how many fixed subgraphs" argument cannot see.
+
+*The t = 2 row is the two-graph criterion above*, whose block group at n = 2m has exactly the orbitals 2K_m and K_{m,m}: so a non-evasive P contains **exactly one** of them, strengthening the earlier "at least one". The trivial-top case of the same argument is what Angel–Borja use to force dim P ≥ 4p − 1 at n = 2p, and to show that a nontrivial P on p^r + 1 vertices cannot contain both K_{p^r} ∪ K₁ and K_{p^r,1}.
 
 > **It does not settle n = 2·(prime power), and seeing why says what the criterion is good for.** At n = 2m the group has exactly **two** orbitals, so v ∈ {0, 1, 2}: v = 0 is excluded by non-voidness, v = 2 forces the union K_n and hence triviality, and **v = 1 survives** — Δ_P^Γ is then a single point with χ = 1 and the congruence is satisfied. The conclusion is a case split, not a contradiction: P contains 2K_m and not K_{m,m}, or K_{m,m} and not 2K_m. Both branches are consistent downward-closed properties (at n = 10, a 20-edge and a 25-edge generator respectively), which is why the two-graph criterion sharpens at n = 2m without closing it.
 >
-> The general shape: the criterion constrains the **orbital count in P**, so its force comes from how many values of v the congruence can exclude, and with t orbitals there are only t + 1 values to work with. At t = 2 exactly one survives. A group with many orbitals excludes many more — which is the opposite of what a max-m\\* search selects for, since large m\\* comes from few, large, heavily fused orbitals. **This criterion and the μ-machinery want opposite groups.**
+> The general shape is the reverse of what one might expect. **Force comes from few orbitals, not many.** At t = 1 the criterion is a contradiction outright; at t = 2 it pins the count exactly; at t = 3 it pins the count *and* the union structure; by t = 4 the congruence has enough complexes to choose from that little survives. So the criterion is sharpest precisely where the μ-machinery also lives — large m\* comes from few, large, heavily fused orbitals, and two thirds of the winning configurations in the table have t ∈ {2, 3}. **The two are not in tension**, contrary to what the earlier reading of this suggested; the limit is simply that at t = 2 and 3 the surviving patterns are consistent rather than contradictory.
 >
 > *What it does not do at n = 10, to be precise about the record.* §8.4's nine kills include χ(closure of K₅,₅) = −288729, which settles the *minimal* property in the second branch — the monotone closure of K₅,₅ — and says nothing about a larger P that happens to contain K₅,₅. Killing a branch outright needs the conjunction over the whole battery, which is §8's business and is where n = 10 remains open.
 
