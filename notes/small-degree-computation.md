@@ -2,7 +2,7 @@
 
 *Companion to `orbital-evasiveness-notes.md`, `enumeration-proof.md` and `arithmetic-of-density.md`. Those three are about the general framework — Oliver groups, the μ(n) bound, the additive engine. This one is about what happens when a single small degree is attacked exhaustively: what the computation confirms, what it has failed to settle, and why.*
 
-**Reading guide.** §1 says what the exercise is for. §§2–3 set up the objects and the pipeline. §4 is the part the rest of the programme depends on — the independent confirmations. §§5–6 are the results at each degree. §7 diagnoses why n = 10 has not fallen. §8 is the barrier analysis. §9 is the algorithmic contrast. §10 collects what is open.
+**Reading guide.** §1 says what the exercise is for. §§2–3 set up the objects and the pipeline — §2.0 first, since where each test sits on the metaproperty ladder is what bounds the whole exercise. §4 is the part the rest of the programme depends on — the independent confirmations. §§5–6 are the results at each degree. §7 diagnoses why n = 10 has not fallen. §8 is the barrier analysis. §9 is the algorithmic contrast. §10 collects what is open.
 
 ---
 
@@ -12,9 +12,11 @@
 
 The computations serve three purposes that are easy to run together and should be kept apart, because they have different standards of evidence.
 
-**(a) Confirming the framework.** μ(n) is defined as a maximum over Oliver groups, and the enumeration of `enumeration-proof.md` computes a bound B(n) by a *classification* argument — it enumerates configuration shapes and scores them, never touching an actual group. An exhaustive group search at a small degree tests that classification from the outside: if the search finds a group whose minimum orbital exceeds B(n), the classification has missed a shape. **This is the only non-circular check the framework has**, and it is why §4 is the section the rest of the programme cites.
+**(a) Cross-validating the framework and the search against each other.** μ(n) is defined as a maximum over Oliver groups, and `enumeration-proof.md` computes a bound B(n) by a *classification* argument — it enumerates configuration shapes and scores them, never touching an actual group. An exhaustive group search computes the same quantity by construction rather than by classification, so agreement is evidence in **both directions at once**: it is the only non-circular check that the classification has not missed a shape, and it is simultaneously the only check that the GAP enumeration, the orbital-map extraction and the Oliver test are computing what they claim to. A disagreement would not say which side was wrong, only that one of them was — which is why §4 records both readings.
 
-**(b) Confirming the literature.** KSS settle n = 6; Adamaszek settles n ≤ 5 and finds the unique nonevasive property at 5 vertices; Angel–Borja reduce n = 10 to five candidate types by a different method. Reproducing those with independent machinery is cheap and catches implementation error that no amount of internal consistency would.
+**(b) Cross-validating against the literature.** KSS settle n = 6; Adamaszek settles n ≤ 5 and identifies the unique nonevasive property at 5 vertices; Angel–Borja reduce n = 10 to five candidate types by a wholly different method. Reproducing these is cheap, and again it cuts both ways: a reproduction is evidence that the pipeline is correct, and it is also evidence that *our reading of the literature* is correct — that we have the right statement of Oliver's condition, the right notion of the fixed complex, and the right convention for χ. Several of the sign and normalisation conventions in §2 are only pinned down by these reproductions.
+
+*Neither (a) nor (b) is a one-way audit of the code.* Treating them as such is the natural mistake, and it discards half their value: the framework's own statements are what the code is tested against, so the code passing is a statement about the framework too.
 
 **(c) Attacking the conjecture.** If the CSP over a battery of groups is **UNSAT**, ARK holds unconditionally at that degree. This is the only one of the three that could produce a new theorem, and it is the only one that has not succeeded.
 
@@ -38,6 +40,30 @@ The smallest open cases of the right kind. n = 6 is settled by KSS; 7, 8, 9 are 
 
 ## 2. The objects
 
+### 2.0 The metaproperty ladder, and which rung the pipeline lives on
+
+Everything the pipeline tests is a consequence of one implication, and it is worth having the chain in view before the machinery, because the pipeline's reach is exactly a statement about where on it each test sits.
+
+> **non-evasive ⟹ ℤ-acyclic ⟹ 𝔽_p-acyclic for each p ⟹ χ(Δ_P) = 1.**
+
+(There are intermediate rungs — collapsible, contractible — between the first two; they matter for the general theory and not here, since no test in this document distinguishes them.) **ARK is exactly the assertion that the first implication reverses**, and each step to the right discards information: the left end is simplicial, the middle homotopical and homological, the right end a single integer.
+
+**Two families of test hang off this chain, and they are independent.**
+
+| test | needs | form |
+|---|---|---|
+| Oliver congruences | ℤ-acyclicity | χ(Δ_P^Γ) ≡ 1 (mod q) for each Oliver Γ |
+| Smith conditions | 𝔽_p-acyclicity | Δ_P^{P₀} is 𝔽_p-acyclic for p-subgroups P₀ |
+| **global χ** | **χ(Δ_P) = 1** | one integer, for the whole complex |
+
+The first two constrain **fixed complexes** — the subcomplexes cut out by a group action. The third constrains **Δ_P itself**, with no group in sight, and asks for χ = 1 *on the nose*, not a congruence. Neither family implies the other, and that is not a technicality: it is exactly why the n = 10 skeleton satisfied every group condition in a 75-group battery and then died to a single integer (§5.4). **When §3.7 says the global test is "not expressible on the CSP variables", this is why** — the CSP's variables are memberships of *orbital unions*, and χ(Δ_P) is a sum over all 12,005,168 isomorphism classes.
+
+**Nothing in the pipeline probes above ℤ-acyclicity, and that is a deliberate consequence of where the evidence is.** The tests are all consequences of acyclicity, so a property passing every one of them — including the global χ test — would not disprove ARK. It would exhibit a nontrivial monotone property whose complex is ℤ-acyclic, which is *strictly weaker* than a counterexample, since ¬ARK additionally demands non-evasiveness. Climbing the ladder means working with collapsibility or non-evasiveness directly, which is what the adversary game of §3.8 does and why it is the only tool here that could settle a candidate outright.
+
+The reason we have not climbed is that **no plausible counterexample to ℤ-acyclicity has turned up.** Every candidate the CSP produced has been killed at the χ = 1 rung — the weakest rung of all — or has survived every rung tested. There has been no case where a property passed χ = 1 and the acyclicity conditions and then needed a finer test, so building machinery for the higher rungs would be building it speculatively. If the n = 12 battery returns SAT and its skeleton survives the global χ test, that changes, and §3.8 becomes the next tool rather than the last resort.
+
+*One structural fact about the bottom rung, which explains the prime-power case.* For n = p^k take Γ = AGL(1, n) = 𝔽_n ⋊ C_{n−1}: an Oliver chain with a **trivial** top layer, so ℤ-acyclicity forces χ(Δ_P^Γ) = 1 exactly — while the invariant graphs are only ∅ and K_n, giving a fixed complex {∅} with χ = 0. That is KSS, and it is the t = 1 row of §2.4 below. But the collapse stops at ℤ-acyclicity: 𝔽_p-acyclicity and χ(Δ_P) = 1 are *not* excluded at prime powers, because Smith theory applied to the translation subgroup leaves a large fixed complex and yields no contradiction. Even where ARK is a theorem, the last two rungs are strictly weaker than the rest.
+
 ### 2.1 Fixed complexes and orbital partitions
 
 Let P be a monotone decreasing graph property on [n] and Γ ≤ Sₙ. Γ acts on the C(n,2) pairs; its orbits on pairs are the **orbitals**, and they partition the edge set of Kₙ. A graph is Γ-invariant exactly when it is a union of orbitals, so:
@@ -50,15 +76,17 @@ That family is downward closed because P is. The whole computation is about this
 
 That is what makes deduplication possible (§3.2) and what bounds how much a larger battery can buy.
 
-### 2.2 The three conditions
+### 2.2 The three conditions on a fixed complex
 
-| source | condition on Δ_P^Γ | when |
-|---|---|---|
-| Oliver's fixed-point theorem | χ(Δ_P^Γ) ≡ 1 (mod q) | Γ is p-by-cyclic-by-q |
-| Oliver, trivial top layer | **χ(Δ_P^Γ) = 1 exactly** | Γ is p-by-cyclic |
-| Smith theory | Δ_P^Γ is 𝔽_p-acyclic | Γ is a p-group |
+Refining §2.0's table for the group-dependent tests, which is what the battery enforces:
 
-The trivial-top case is the harshest and is why the pipeline tags it separately (`0`). The p-group condition is not a congruence but a homological one, and is checked by Smith normal form rather than by an alternating sum.
+| source | condition on Δ_P^Γ | when | tag |
+|---|---|---|---|
+| Oliver's fixed-point theorem | χ(Δ_P^Γ) ≡ 1 (mod q) | Γ is p-by-cyclic-by-q | `q` |
+| Oliver, trivial top layer | **χ(Δ_P^Γ) = 1 exactly** | Γ is p-by-cyclic | `0` |
+| Smith theory | Δ_P^Γ is 𝔽_p-acyclic | Γ is a p-group | `P<p>` |
+
+The trivial-top case is the harshest — a congruence collapses to an equality — which is why the pipeline tags it separately. The p-group condition is not a congruence but a homological one, and is checked by Smith normal form rather than by an alternating sum.
 
 **Each condition comes in a primal and a dual form.** P^∨ = {G : Ḡ ∉ P} is monotone, nontrivial, and evasive exactly when P is; complements of orbital unions are orbital unions of the *same* group, so the dual bits are y[S] = 1 − x[comp S] — no new variables, a second condition per group for free.
 
@@ -146,7 +174,7 @@ For downward-closed P, let S = Σ over *labelled* G ∈ P of (−1)^{|E(G)|}. Th
 
 > **S ≠ 0 ⟹ P is evasive**, with no game search.
 
-This is the decisive test, and it is **not expressible on the CSP variables** — the CSP constrains only catalog classes, so a solution does not determine a property. The test therefore applies to the *minimal monotone extension* of a solution's IN set: take the maximal IN classes as generators and enumerate the full down-closure by edge-deletion BFS with nauty canonicalisation.
+This is the decisive test, and — as §2.0 sets out — it is **not expressible on the CSP variables**: it constrains Δ_P itself rather than a fixed complex, and asks for χ = 1 on the nose rather than a congruence. The CSP constrains only catalog classes, so a solution does not determine a property. The test therefore applies to the *minimal monotone extension* of a solution's IN set: take the maximal IN classes as generators and enumerate the full down-closure by edge-deletion BFS with nauty canonicalisation.
 
 ### 3.8 The adversary game (`adversary.py`)
 
@@ -343,4 +371,5 @@ The connection to §5.3 is worth noting. K₁,₈ is forced IN while the spannin
 4. **Close or refute the subdirect-product hole** (§8.5) — the only thing standing between "no enumerated group exceeds B(n)" and "the exhaustive optimum is the predicted construction".
 5. **Decide how S is computed at n = 12** (§8.3): full down-closure versus the exponential-formula route.
 6. **Settle the multi-prime tag question** (§8.6) and either exercise or retire the lcm strengthening.
-7. **The two structural closures** at n = 10 (subgraphs of C₅[K₂], of C₅⊔C₅ ∪ K₅,₅) that the χ kill has not reached (§5.4).
+7. **Climb the ladder, if a candidate ever warrants it** (§2.0). Nothing in the pipeline probes above ℤ-acyclicity, because no candidate has yet survived the χ = 1 rung to need it. If the n = 12 battery returns SAT and its skeleton passes the global χ test, the adversary game of §3.8 stops being a last resort and becomes the next tool — and `adversary.py` should be validated against Adamaszek's ℰ as a negative control before any EVASIVE verdict from it is trusted.
+8. **The two structural closures** at n = 10 (subgraphs of C₅[K₂], of C₅⊔C₅ ∪ K₅,₅) that the χ kill has not reached (§5.4).
