@@ -1,0 +1,153 @@
+
+sieve and efficiencies to 1,000,000 in 6.1s
+19:45:00  scanning to 1,000,000; checkpoint every 10,000, summary every 100,000
+19:45:02  n =    10,000  (     2s,    6126 n/s)  floor so far 0.02516 at n = 8927   eta ~181.3m
+19:45:05  n =    20,000  (     5s,    3317 n/s)  floor so far 0.02516 at n = 8927   eta ~138.7m
+19:45:09  n =    30,000  (     9s,    2553 n/s)  floor so far 0.02516 at n = 8927   eta ~118.2m
+19:45:14  n =    40,000  (    14s,    1995 n/s)  floor so far 0.02516 at n = 8927   eta ~108.2m
+19:45:20  n =    50,000  (    20s,    1650 n/s)  floor so far 0.02516 at n = 8927   eta ~102.2m
+19:45:27  n =    60,000  (    27s,    1396 n/s)  floor so far 0.02516 at n = 8927   eta ~98.4m
+19:45:36  n =    70,000  (    36s,    1098 n/s)  floor so far 0.02516 at n = 8927   eta ~98.0m
+19:45:47  n =    80,000  (    46s,     950 n/s)  floor so far 0.02516 at n = 8927   eta ~98.0m
+19:45:57  n =    90,000  (    57s,     976 n/s)  floor so far 0.02516 at n = 8927   eta ~95.3m
+19:46:09  n =   100,000  (    69s,     834 n/s)  floor so far 0.02516 at n = 8927   eta ~94.2m
+19:46:09  --- through 100,000: block floor 0.02516 at n = 8927; global floor 0.02516 at n = 8927 (mod 24 = 23); 0 below 0.02 ---
+19:46:22  n =   110,000  (    82s,     751 n/s)  floor so far 0.02516 at n = 8927   eta ~93.5m
+19:46:36  n =   120,000  (    96s,     697 n/s)  floor so far 0.02516 at n = 8927   eta ~92.8m
+19:46:52  n =   130,000  (   112s,     641 n/s)  floor so far 0.02516 at n = 8927   eta ~92.2m
+19:47:09  n =   140,000  (   129s,     585 n/s)  floor so far 0.02516 at n = 8927   eta ~92.0m
+19:47:27  n =   150,000  (   147s,     568 n/s)  floor so far 0.02516 at n = 8927   eta ~91.3m
+19:47:45  n =   160,000  (   165s,     538 n/s)  floor so far 0.02516 at n = 8927   eta ~90.5m
+19:48:03  n =   170,000  (   183s,     566 n/s)  floor so far 0.02516 at n = 8927   eta ~88.9m
+19:48:22  n =   180,000  (   202s,     528 n/s)  floor so far 0.02516 at n = 8927   eta ~87.6m
+19:48:41  n =   190,000  (   221s,     512 n/s)  floor so far 0.02516 at n = 8927   eta ~86.2m
+19:49:03  n =   200,000  (   243s,     461 n/s)  floor so far 0.02516 at n = 8927   eta ~85.4m
+19:49:03  --- through 200,000: block floor 0.04125 at n = 134423; global floor 0.02516 at n = 8927 (mod 24 = 23); 0 below 0.02 ---
+19:49:27  n =   210,000  (   267s,     421 n/s)  floor so far 0.02516 at n = 8927   eta ~85.0m
+19:49:50  n =   220,000  (   290s,     438 n/s)  floor so far 0.02516 at n = 8927   eta ~84.0m
+19:50:12  n =   230,000  (   312s,     440 n/s)  floor so far 0.02516 at n = 8927   eta ~82.7m
+19:50:37  n =   240,000  (   336s,     416 n/s)  floor so far 0.02516 at n = 8927   eta ~81.7m
+19:51:02  n =   250,000  (   362s,     389 n/s)  floor so far 0.02516 at n = 8927   eta ~80.8m
+19:51:31  n =   260,000  (   391s,     345 n/s)  floor so far 0.02516 at n = 8927   eta ~80.5m
+19:52:00  n =   270,000  (   420s,     345 n/s)  floor so far 0.02516 at n = 8927   eta ~79.9m
+19:52:30  n =   280,000  (   450s,     330 n/s)  floor so far 0.02516 at n = 8927   eta ~79.4m
+19:53:00  n =   290,000  (   480s,     335 n/s)  floor so far 0.02516 at n = 8927   eta ~78.6m
+19:53:32  n =   300,000  (   512s,     318 n/s)  floor so far 0.02516 at n = 8927   eta ~78.0m
+19:53:32  --- through 300,000: block floor 0.04540 at n = 294839; global floor 0.02516 at n = 8927 (mod 24 = 23); 0 below 0.02 ---
+19:54:03  n =   310,000  (   543s,     318 n/s)  floor so far 0.02516 at n = 8927   eta ~77.1m
+19:54:37  n =   320,000  (   577s,     294 n/s)  floor so far 0.02516 at n = 8927   eta ~76.6m
+19:55:13  n =   330,000  (   613s,     276 n/s)  floor so far 0.02516 at n = 8927   eta ~76.1m
+19:55:51  n =   340,000  (   651s,     267 n/s)  floor so far 0.02516 at n = 8927   eta ~75.6m
+19:56:30  n =   350,000  (   690s,     257 n/s)  floor so far 0.02516 at n = 8927   eta ~75.2m
+19:57:10  n =   360,000  (   730s,     249 n/s)  floor so far 0.02516 at n = 8927   eta ~74.7m
+19:57:52  n =   370,000  (   772s,     239 n/s)  floor so far 0.02516 at n = 8927   eta ~74.3m
+19:58:32  n =   380,000  (   812s,     250 n/s)  floor so far 0.02516 at n = 8927   eta ~73.6m
+19:59:14  n =   390,000  (   854s,     235 n/s)  floor so far 0.02516 at n = 8927   eta ~73.0m
+19:59:56  n =   400,000  (   895s,     243 n/s)  floor so far 0.02516 at n = 8927   eta ~72.2m
+19:59:56  --- through 400,000: block floor 0.04625 at n = 368639; global floor 0.02516 at n = 8927 (mod 24 = 23); 0 below 0.02 ---
+20:00:40  n =   410,000  (   940s,     226 n/s)  floor so far 0.02516 at n = 8927   eta ~71.5m
+20:01:25  n =   420,000  (   985s,     221 n/s)  floor so far 0.02516 at n = 8927   eta ~70.8m
+20:02:12  n =   430,000  (  1032s,     213 n/s)  floor so far 0.02516 at n = 8927   eta ~70.1m
+20:03:02  n =   440,000  (  1081s,     202 n/s)  floor so far 0.02516 at n = 8927   eta ~69.5m
+20:03:51  n =   450,000  (  1130s,     204 n/s)  floor so far 0.02516 at n = 8927   eta ~68.8m
+20:04:43  n =   460,000  (  1183s,     191 n/s)  floor so far 0.02516 at n = 8927   eta ~68.2m
+20:05:36  n =   470,000  (  1235s,     190 n/s)  floor so far 0.02516 at n = 8927   eta ~67.5m
+20:06:27  n =   480,000  (  1286s,     196 n/s)  floor so far 0.02516 at n = 8927   eta ~66.7m
+20:07:19  n =   490,000  (  1339s,     189 n/s)  floor so far 0.02516 at n = 8927   eta ~65.8m
+20:08:14  n =   500,000  (  1394s,     184 n/s)  floor so far 0.02516 at n = 8927   eta ~65.0m
+20:08:14  --- through 500,000: block floor 0.04518 at n = 421679; global floor 0.02516 at n = 8927 (mod 24 = 23); 0 below 0.02 ---
+20:09:13  n =   510,000  (  1453s,     169 n/s)  floor so far 0.02516 at n = 8927   eta ~64.3m
+20:10:13  n =   520,000  (  1513s,     166 n/s)  floor so far 0.02516 at n = 8927   eta ~63.6m
+20:11:14  n =   530,000  (  1574s,     164 n/s)  floor so far 0.02516 at n = 8927   eta ~62.9m
+20:12:11  n =   540,000  (  1631s,     174 n/s)  floor so far 0.02516 at n = 8927   eta ~61.9m
+20:13:08  n =   550,000  (  1688s,     175 n/s)  floor so far 0.02516 at n = 8927   eta ~60.9m
+20:14:11  n =   560,000  (  1751s,     160 n/s)  floor so far 0.02516 at n = 8927   eta ~60.0m
+20:15:12  n =   570,000  (  1811s,     165 n/s)  floor so far 0.02516 at n = 8927   eta ~58.9m
+20:16:12  n =   580,000  (  1872s,     165 n/s)  floor so far 0.02516 at n = 8927   eta ~57.9m
+20:17:11  n =   590,000  (  1931s,     170 n/s)  floor so far 0.02516 at n = 8927   eta ~56.7m
+20:18:13  n =   600,000  (  1993s,     161 n/s)  floor so far 0.02516 at n = 8927   eta ~55.6m
+20:18:13  --- through 600,000: block floor 0.04704 at n = 562847; global floor 0.02516 at n = 8927 (mod 24 = 23); 0 below 0.02 ---
+20:19:13  n =   610,000  (  2053s,     167 n/s)  floor so far 0.02516 at n = 8927   eta ~54.4m
+20:20:16  n =   620,000  (  2116s,     158 n/s)  floor so far 0.02516 at n = 8927   eta ~53.3m
+20:21:21  n =   630,000  (  2180s,     155 n/s)  floor so far 0.02516 at n = 8927   eta ~52.2m
+20:22:24  n =   640,000  (  2244s,     157 n/s)  floor so far 0.02516 at n = 8927   eta ~51.0m
+20:23:31  n =   650,000  (  2310s,     151 n/s)  floor so far 0.02516 at n = 8927   eta ~49.8m
+20:24:38  n =   660,000  (  2378s,     148 n/s)  floor so far 0.02516 at n = 8927   eta ~48.6m
+20:25:45  n =   670,000  (  2445s,     148 n/s)  floor so far 0.02516 at n = 8927   eta ~47.4m
+20:26:53  n =   680,000  (  2513s,     148 n/s)  floor so far 0.02516 at n = 8927   eta ~46.2m
+20:28:02  n =   690,000  (  2582s,     144 n/s)  floor so far 0.02516 at n = 8927   eta ~44.9m
+20:29:08  n =   700,000  (  2648s,     152 n/s)  floor so far 0.02516 at n = 8927   eta ~43.6m
+20:29:08  --- through 700,000: block floor 0.04732 at n = 684023; global floor 0.02516 at n = 8927 (mod 24 = 23); 0 below 0.02 ---
+20:30:25  n =   710,000  (  2724s,     131 n/s)  floor so far 0.02516 at n = 8927   eta ~42.4m
+20:31:39  n =   720,000  (  2799s,     135 n/s)  floor so far 0.02516 at n = 8927   eta ~41.2m
+20:32:50  n =   730,000  (  2870s,     140 n/s)  floor so far 0.02516 at n = 8927   eta ~39.9m
+20:34:01  n =   740,000  (  2941s,     142 n/s)  floor so far 0.02516 at n = 8927   eta ~38.5m
+20:35:16  n =   750,000  (  3016s,     133 n/s)  floor so far 0.02516 at n = 8927   eta ~37.2m
+20:36:32  n =   760,000  (  3092s,     131 n/s)  floor so far 0.02516 at n = 8927   eta ~35.9m
+20:37:47  n =   770,000  (  3167s,     134 n/s)  floor so far 0.02516 at n = 8927   eta ~34.6m
+20:39:00  n =   780,000  (  3240s,     137 n/s)  floor so far 0.02516 at n = 8927   eta ~33.2m
+20:40:20  n =   790,000  (  3320s,     125 n/s)  floor so far 0.02516 at n = 8927   eta ~31.8m
+20:41:41  n =   800,000  (  3401s,     124 n/s)  floor so far 0.02516 at n = 8927   eta ~30.5m
+20:41:41  --- through 800,000: block floor 0.04780 at n = 792839; global floor 0.02516 at n = 8927 (mod 24 = 23); 0 below 0.02 ---
+20:42:59  n =   810,000  (  3479s,     128 n/s)  floor so far 0.02516 at n = 8927   eta ~29.0m
+20:44:20  n =   820,000  (  3560s,     123 n/s)  floor so far 0.02516 at n = 8927   eta ~27.6m
+20:45:46  n =   830,000  (  3646s,     117 n/s)  floor so far 0.02516 at n = 8927   eta ~26.2m
+20:47:03  n =   840,000  (  3722s,     130 n/s)  floor so far 0.02516 at n = 8927   eta ~24.8m
+20:48:19  n =   850,000  (  3799s,     131 n/s)  floor so far 0.02516 at n = 8927   eta ~23.3m
+20:49:37  n =   860,000  (  3876s,     129 n/s)  floor so far 0.02516 at n = 8927   eta ~21.8m
+20:51:01  n =   870,000  (  3961s,     118 n/s)  floor so far 0.02516 at n = 8927   eta ~20.3m
+20:52:28  n =   880,000  (  4048s,     115 n/s)  floor so far 0.02516 at n = 8927   eta ~18.8m
+20:53:57  n =   890,000  (  4137s,     112 n/s)  floor so far 0.02516 at n = 8927   eta ~17.4m
+20:55:22  n =   900,000  (  4222s,     118 n/s)  floor so far 0.02516 at n = 8927   eta ~15.8m
+20:55:22  --- through 900,000: block floor 0.04738 at n = 848327; global floor 0.02516 at n = 8927 (mod 24 = 23); 0 below 0.02 ---
+20:56:54  n =   910,000  (  4314s,     109 n/s)  floor so far 0.02516 at n = 8927   eta ~14.3m
+20:58:28  n =   920,000  (  4408s,     106 n/s)  floor so far 0.02516 at n = 8927   eta ~12.8m
+21:00:00  n =   930,000  (  4500s,     108 n/s)  floor so far 0.02516 at n = 8927   eta ~11.3m
+21:01:35  n =   940,000  (  4595s,     105 n/s)  floor so far 0.02516 at n = 8927   eta ~9.7m
+21:03:10  n =   950,000  (  4690s,     106 n/s)  floor so far 0.02516 at n = 8927   eta ~8.1m
+21:04:41  n =   960,000  (  4781s,     110 n/s)  floor so far 0.02516 at n = 8927   eta ~6.5m
+21:06:12  n =   970,000  (  4872s,     110 n/s)  floor so far 0.02516 at n = 8927   eta ~4.9m
+21:07:48  n =   980,000  (  4968s,     104 n/s)  floor so far 0.02516 at n = 8927   eta ~3.3m
+21:09:24  n =   990,000  (  5064s,     104 n/s)  floor so far 0.02516 at n = 8927   eta ~1.7m
+21:11:01  n = 1,000,000  (  5161s,     103 n/s)  floor so far 0.02516 at n = 8927   eta ~0.0m
+21:11:01  --- through 1,000,000: block floor 0.04810 at n = 948527; global floor 0.02516 at n = 8927 (mod 24 = 23); 0 below 0.02 ---
+21:11:01  scan complete in 5161s
+
+ n mod 24       cap  min delta/cap     at n   # below 0.02
+        0   0.25000          0.471       72              0
+        1   0.17157          0.570     1921              0
+        2   0.13398          0.588     2114              0
+        3   0.12500          0.522     2139              0
+        4   0.25000          0.598     1300              0
+        5   0.10102          0.568     2117              0
+        6   0.25000          0.483     1038              0
+        7   0.08579          0.604     1159              0
+        8   0.13398          0.515      368              0
+        9   0.17157          0.450     1809              0
+       10   0.25000          0.442      754              0
+       11   0.06699          0.455    11819              0
+       12   0.25000          0.448     1068              0
+       13   0.17157          0.509      253              0
+       14   0.13398          0.632     1742              0
+       15   0.08579          0.613     5319              0
+       16   0.25000          0.327      688              0
+       17   0.10102          0.453     1817              0
+       18   0.25000          0.435      138              0
+       19   0.12500          0.492     1147              0
+       20   0.13398          0.653      308              0
+       21   0.17157          0.520      357              0
+       22   0.25000          0.499       70              0
+       23   0.05051          0.498     8927              0
+
+GLOBAL FLOOR over composite non-prime-power n <= 1,000,000: delta >= 0.02516, attained at n = 8927 (n mod 24 = 23)
+values with delta < 0.02: 0  -- the section 5 conjecture holds throughout this range
+
+values below the asymptotic bound 0.050510 = 5/2 - sqrt(6): 19583
+  NOT counterexamples.  This script searches four families over a window,
+  so it computes a LOWER BOUND on delta(n).  It is a worklist: computing
+  B(n) at these n would tighten the global floor of section 5 of
+  arithmetic-of-density.md.  Written to ladder_weak.txt.
+  NOTE (2026-08): mu_enumerate.py does NOT yet model the S7 family, so at
+  some n THIS script now reports a larger value than the table does.  That
+  is the defect of enumeration-proof.md J0, not an error here.
+  first 15: 575(0.04181), 935(0.04229), 1175(0.03919), 1643(0.04746), 1679(0.04892), 1739(0.04883), 1817(0.04574), 2135(0.05022), 2183(0.04411), 2279(0.04908), 2303(0.04067), 2639(0.05043), 2759(0.04621), 3071(0.04921), 3131(0.03751)
