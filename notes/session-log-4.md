@@ -506,6 +506,32 @@ The run is done and needs nothing further. What replaces it is the branch-and-bo
 **The floor is the question, not the answer** — the one trap here. Setting `--floor` to the current global floor 0.02516 would prune *everything*, 8927 included, because pruning fires at LB ≥ floor and 8927's LB equals it. So the ladder is: 0.0400 asks whether any n leaves room for **s = 4** (21 entries survive pruning), 0.045742 asks whether anything undercuts the table floor (189), and 0.02516 + ε asks the one question §5.1 now turns on, namely whether **B(8927) > 0.02516** (1). Cheapest first, since the cheap run may answer the expensive one's question.
 
 Two cautions recorded with it. `--refined` with `--floor` is refused by the script, and the reason belongs in the item: adaptive mode appends to `--out`, the schema records no mode, so a refined row in an unconditional table would be undetectable and would corrupt every downstream figure. And the job is a table extension, so **R1 gets rerun afterwards** like any other batch.
+## Twelfth batch: `literature-findings.md` reference convention, and the refs pass extended to it
+
+**The problem was worse than sloppy prose.** That file cites three of our documents and several other people's papers in identical `§n.m` notation, and the collision is not hypothetical: **§5.1 is both BBKN's construction section and `aod`'s branch-and-bound section**, and in item 1 they appear a few lines apart. The refs pass had been told to skip the file entirely, on the ground that it "cites outward" — true of the external references and false of the rest, so nothing checked the internal ones at all.
+
+**Convention, now stated at the top of the file and applied throughout:** every reference to one of our documents carries an explicit prefix — `` `aod` §3.3 ``, `` `notes` §9.7 ``, `` `ep` Part E `` — and a bare section number belongs to whichever paper the sentence names. Forty-three references were prefixed across all four passes of the file. The mapping itself is worth recording because it is not guessable: §§3–6 are `arithmetic-of-density.md`, §§8–9 and §2.4 are `orbital-evasiveness-notes.md`, lettered Parts are `enumeration-proof.md`.
+
+**`check_doc_figures.py --pass refs` now covers the file in a prefixed-only mode.** `ALIAS` gained `notes` and `ep` alongside the existing `aod`, and a new `PREFIXED_ONLY` list puts `literature-findings.md` in a third category between "check everything" and "skip": prefixed references are resolved as usual, bare ones are skipped as belonging to cited papers. The pass announces which mode it is in, so a reader of the output is not left thinking the file was fully checked.
+
+**What this can and cannot catch, stated at the site because the limitation is permanent:** a mistyped reference to our own work is caught; a mistyped reference to someone else's is not, and cannot be — we have no anchor list for BBKN or Shparlinski. That asymmetry is the reason the convention exists rather than a defect in it.
+
+Verified both ways: the file passes clean, and corrupting one `aod` and one `notes` reference produces exactly two DANGLING reports naming the right target documents.
+
+## Thirteenth batch: the three literature edits
+
+**Two decisions dropped, not deferred.** Running the CSP against Angel–Borja's surviving types and chasing the two-orbital criterion are both off the list: the exhaustive n = 10 and n = 12 batteries already validate the machinery more strongly than either would, so the marginal value does not justify the run.
+
+**Edit 3 — `aod` §5, δ versus c(n), at both sites.** §5's opening now carries the full chain of unconditional query lower bounds (Rivest–Vuillemin n²/16 → Kleitman–Kwiatkowski n²/9 → KSS n²/4 → Korneffel–Triesch → Scheidweiler–Triesch n²/3 − o(n²)) and states why our 0.026117 ≈ 0.013n² is **incomparable rather than losing**: δ measures *which properties* the method reaches exactly, c(n) measures *how many queries* are forced for all of them. A weak bound on all properties against full evasiveness on a restricted class. The second site found by grepping — `notes` OP8's "how much of the range is in play" paragraph, which quoted the same constant bare — now carries a one-line pointer.
+
+**Edit 4 — `aod` §3.6, two attribution columns.** The ladder table gained **"who proved / conjectured it"** and **"who connected it to this framework"**, because those come apart and the second is what a reader needs. The arithmetic inputs are nobody's novelty; what varies is who noticed this framework consumes them. BBKN supply the Chowla and ERH rungs; Shparlinski isolates the max-min as a named function and supplies the unconditional 1/4 rung (Thm 1) and the almost-all 0.677 rung (Cor. 3); **ours are the 0.679 update, the observation that the picture is one parameter θ, and the identification of (H) as its θ = 1 endpoint.** A fifth row was added for the ERH rung with a trap flagged: it is still quoted as the state of the art for all large n and is not, Shparlinski reaching n^{5/4+o(1)} unconditionally. The quantifier column is kept with a note that dropping it would mislead **in our favour**, the two strongest exponents both carrying exceptional sets. Two primary-source checks are flagged at the site rather than silently absorbed: the 1/4 rung's attribution is on Shparlinski's framing, not the original, and the Chowla row names a conjecture-type rather than a paper.
+
+**Edit 5 — the missing references.** Rivest–Vuillemin, Kleitman–Kwiatkowski, Korneffel–Triesch and Scheidweiler–Triesch added to `notes`, the last with the δ-versus-c(n) caveat attached so the number is not quoted bare from the bibliography. Angel–Borja and the two distinct Lutz papers were already correctly separated in the reference list, so edit 5's Lutz half needed nothing.
+
+**Framing deferred**, as instructed. The three consequences of the Jones–Zvonkin model — standing table at the front of `aod` §3, the polynomial-versus-exponential line in §3.5, the Catalan/Pillai caution on S1 and S2 — stay recorded in `literature-findings.md` items 14–16 and unactioned.
+
+*Caught by the refs pass on the way out:* the new §3.6 note said "Shparlinski's Theorem 1", which the pass resolved against our own documents and reported as dangling. Rewritten as "Shparlinski (2014, Thm 1)", which is also the form the file's own convention requires.
+
 ---
 
 ## Items inherited as closed from earlier passes

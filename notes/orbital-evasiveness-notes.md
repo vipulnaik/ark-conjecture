@@ -530,7 +530,7 @@ What actually governs the shape is economics, and it has a closed form. With c�
 
    This has also **grown harder as the computed density floor fell**. Since s ≤ 1/√δ − 1, a lower δ admits a larger s, and at the current minimum 0.026117 (n = 3239) the branches s = 4 and s = 5 are both reachable. Neither has a theorem, and neither is thin in the way s = 3 was: c − 1 = 4r with c a prime power and r prime carries no congruence forcing. The search clears them at every computed n, so nothing is unproved, but the theorem-side coverage erodes with each new minimum.
 
-   For orientation on how much of the range is in play: the branch-and-bound gives **min μ(n)/C(n,2) ≥ 0.026117** over all composite non-prime-power n ≤ 10⁶. It is a genuine bound but **not attained at n = 3239**, which reaches 0.043570, so the argmin sits elsewhere and the search wants rerunning; see `arithmetic-of-density.md` §5.1.
+   For orientation on how much of the range is in play: the branch-and-bound gives **min μ(n)/C(n,2) ≥ 0.026117** over all composite non-prime-power n ≤ 10⁶. (*Do not read that constant against the n²/3 of the query lower bounds* — δ is a threshold on which properties the method reaches exactly, not a fraction of queries forced. `arithmetic-of-density.md` §5 makes the distinction.) It is a genuine bound but **not attained at n = 3239**, which reaches 0.043570, so the argmin sits elsewhere and the search wants rerunning; see `arithmetic-of-density.md` §5.1.
 
 9. **(Does the whole reduction have a class-parametrised form?)** Everything in Part I is stated for Oliver's condition — p-group by cyclic by q-group. The natural question one level up is whether μ has a well-behaved analogue μ_𝒞(n) for a class 𝒞 given by a *layer word*, a prescribed normal series with factors of specified types, and whether the reduction to an arithmetic max–min is a feature of the shape of such words rather than of Oliver's in particular.
 
@@ -679,6 +679,10 @@ A **configuration** is what the enumeration ranges over: a choice of (p, q) and 
 - C. Umans, *The minimum equivalent DNF problem and shortest implicants*, JCSS 63 (2001); and the monotone case (PP-completeness) (§9.0).
 - P. Erdős, A. H. Stone, *On the structure of linear graphs*, Bull. AMS 52 (1946) (ex(n,H) for non-bipartite H; §9.4).
 - W. Mantel (1907) / P. Turán (1941) (ex(n,K₃) = ⌊n²/4⌋; §9.4).
+- R. L. Rivest, J. Vuillemin, *On recognizing graph properties from adjacency matrices*, Theoret. Comput. Sci. 3 (1976) (n²/16).
+- D. Kleitman, D. J. Kwiatkowski, *Further results on the Aanderaa–Rosenberg conjecture*, JCTB 28 (1980) (n²/9).
+- T. Korneffel, E. Triesch, *An asymptotic bound for the complexity of monotone graph properties*, Combinatorica 30 (2010), 735–743.
+- R. Scheidweiler, E. Triesch, *A lower bound for the complexity of monotone graph properties*, SIAM J. Discrete Math. 27 (2013), 257–265 (n²/3 − o(n²); the current best unconditional query bound — a different quantity from δ, see `arithmetic-of-density.md` §5).
 - M. R. Best, P. van Emde Boas, H. W. Lenstra, *A sharpened version of the Aanderaa–Rosenberg conjecture*, Math. Centrum Amsterdam ZW 30/74 (1974) (scorpion; the D(f) ≥ deg(f) bound of `small-degree-computation.md` §3.7).
 - D. Grieser, *Some results on the complexity of families of sets*, (scorpion complexity ≤ 6n − 10, sharpened to ≈ 6n − √(2n) − 6; `small-degree-computation.md` §9).
 - E. C. Milner, D. J. A. Welsh, *On the computational complexity of graph theoretical properties*, Proc. 5th British Comb. Conf. (1976).

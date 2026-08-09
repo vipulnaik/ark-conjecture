@@ -331,10 +331,12 @@ DOCNAME   = re.compile(r"`([\w-]+\.md)`")
 # filename form reports every aliased reference as dangling, which is worse than
 # not checking -- it trains the reader to ignore the pass.
 ALIAS = {"aod": "arithmetic-of-density.md",
+         "notes": "orbital-evasiveness-notes.md",
+         "ep": "enumeration-proof.md",
          "the notes": "orbital-evasiveness-notes.md",
          "these notes": "orbital-evasiveness-notes.md",
          "the companion": "enumeration-proof.md"}
-ALIAS_CITE = re.compile(r"`(aod)`")
+ALIAS_CITE = re.compile(r"`(aod|notes|ep)`")
 ROLE_AFTER = re.compile(r"^\s*(?:of|in)\s+(the notes|these notes|the companion)")
 # Words that follow "Theorem"/"Lemma" without naming one.
 NOT_A_LABEL = {"E", "A", "I", "N", "X", "The", "It", "This", "That", "If", "For",
@@ -343,7 +345,17 @@ NOT_A_LABEL = {"E", "A", "I", "N", "X", "The", "It", "This", "That", "If", "For"
 # describe states and cite items by name, and the literature notes cite other
 # people's numbered results, which resolve against their papers and not against
 # anything here.  Checking them produces only noise.
-NOT_OURS = re.compile(r"session-log|pending-checks|README|literature-findings", re.I)
+NOT_OURS = re.compile(r"session-log|pending-checks|README", re.I)
+# `literature-findings.md` is a special case rather than an exclusion.  It cites
+# BOTH our documents and other people's papers, in the same notation, and there
+# is no way to tell them apart from the number alone -- "section 5.1" is BBKN's
+# construction section and also our branch-and-bound section, a few lines apart.
+# So the file adopts a convention: every reference to one of OUR documents
+# carries an explicit `aod` / `notes` / `ep` prefix, and a bare section number
+# belongs to whichever paper the sentence names.  Here we check only the
+# prefixed ones and skip the rest, which is the most that can be checked and is
+# exactly what the convention was introduced to make possible.
+PREFIXED_ONLY = re.compile(r"literature-findings", re.I)
 
 def norm(label):
     """B', B′ and B’ are the same lemma.  Normalise the prime mark, or every
@@ -402,9 +414,12 @@ if A.only in ("all", "refs"):
     for d in DOCS:
         if NOT_OURS.search(d):
             if not A.quiet:
-                print(f"{d}: skipped -- logs and literature notes cite outward, "
-                      f"not into these documents")
+                print(f"{d}: skipped -- logs cite items by name, not by section")
             continue
+        prefixed_only = bool(PREFIXED_ONLY.search(d))
+        if prefixed_only and not A.quiet:
+            print(f"{d}: checking PREFIXED references only "
+                  f"(`aod`/`notes`/`ep`); bare sections belong to cited papers")
         try: txt = open(d).read()
         except OSError: continue
         for ln, line in enumerate(txt.split("\n"), 1):
@@ -420,6 +435,8 @@ if A.only in ("all", "refs"):
                 names += [x for x in ALIAS_CITE.finditer(line)
                           if 0 <= m.start() - x.end() <= 40]
                 role = ROLE_AFTER.match(line[m.end():])
+                if prefixed_only and not names and not role:
+                    continue          # bare section: belongs to a cited paper
                 if role:
                     target = ALIAS[role.group(1)]
                 elif names:
@@ -460,7 +477,12 @@ if A.only in ("all", "refs"):
                     continue
                 names = [x for x in DOCNAME.finditer(line)
                          if 0 <= m.start() - x.end() <= 40]
-                target = names[-1].group(1) if names else d
+                names += [x for x in ALIAS_CITE.finditer(line)
+                          if 0 <= m.start() - x.end() <= 40]
+                if prefixed_only and not names:
+                    continue          # bare result name: a cited paper's
+                nm = names[-1].group(1) if names else d
+                target = ALIAS.get(nm, nm)
                 if target not in known_docs:
                     continue
                 pool = RESS[target] | (RESS[d] if target != d else set())

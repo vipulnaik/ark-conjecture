@@ -455,12 +455,21 @@ Every class has at least one admissible d, so **(H) is locally soluble at every 
 
 **The route's strength is a single parameter.** The efficiency condition — that r − 1 carry a large prime-power divisor — is what couples this framework to the literature on shifted primes, and the coupling reduces to one exponent. Write θ for what can be guaranteed in P(r − 1) > r^θ. The foreign block then contributes qr ≥ r^{1+θ}, and with r of order n the family delivers roughly **n^{1+θ}**. Every result in this area is a value of θ:
 
-| input on shifted primes | θ | quantifier | edge bound |
-|---|---|---|---|
-| Bombieri–Vinogradov | 1/4 | all large n | n^{5/4+o(1)} |
-| Chowla-type | 1/2 | all large n | n^{3/2−ε} |
-| Baker–Harman, positive relative density; **0.679** (Li, 2025) | 0.677 → 0.679 | **almost all** n | n^{1.677} |
-| Elliott–Halberstam | → 1 | all large n | n^{2−o(1)} |
+| input on shifted primes | θ | quantifier | edge bound | who proved / conjectured it | who connected it to this framework |
+|---|---|---|---|---|---|
+| Bombieri–Vinogradov | 1/4 | all large n | n^{5/4+o(1)} | Bombieri, A. I. Vinogradov (1965) | **Shparlinski**, Thm 1 (2014) — unconditional, matching BBKN's ERH bound without ERH |
+| Chowla-type | 1/2 | all large n | n^{3/2−ε} | conjectural (Chowla) | **BBKN**, Thm 1.4(a) |
+| Baker–Harman, positive relative density | 0.677, now **0.679** | **almost all** n | n^{1.677} | Baker–Harman; 0.679 by **Runbo Li**, arXiv:2508.18285 (2025) | **Shparlinski**, Cor. 3 (2014); the 0.679 update is ours |
+| Elliott–Halberstam | → 1 | all large n | n^{2−o(1)} | conjectural (Elliott–Halberstam) | **Shparlinski**, §5 remark (2014), at n^{3/2} |
+| ERH | — | all large n | n^{5/4−ε} | conjectural | **BBKN**, Thm 1.4(b) — **superseded**: Shparlinski's Thm 1 reaches this unconditionally |
+
+> **Two attributions are being tracked here and they come apart, which is the point of the last two columns.** The arithmetic inputs are not ours and are not new; what varies is *who noticed that this framework consumes them*. BBKN state the θ = 1/2 and ERH rungs; Shparlinski isolates the max-min as a named function and supplies the unconditional 1/4 rung and the almost-all 0.677 rung; **what is ours is the 0.679 update, the observation that the whole picture is one parameter θ, and the identification of (H) as its θ = 1 endpoint.** A reader should be able to see at a glance that the ladder is a survey with two original entries rather than a contribution.
+>
+> **One row is a trap.** The ERH rung is still quoted in some presentations as the state of the art for all large n; it is not, since Shparlinski (2014, Thm 1) reaches n^{5/4+o(1)} unconditionally. Any comparison of ours against "the ERH bound" is against a superseded baseline.
+>
+> **The quantifier column is not decoration.** The two strongest exponents — 1.677 and 3/2 — both carry exceptional sets (O(x^{0.354}(log x)⁴) and O((log x)⁴) respectively). On the *all large n* row the unconditional state of the art is 5/4. Omitting the quantifiers would mislead **in our favour**, which is worse than misleading against us.
+>
+> *Primary-source check still owed:* the attribution of the θ = 1/4 rung to Bombieri–Vinogradov is taken from Shparlinski's framing rather than read off the original, and the Chowla row is a conjecture-type rather than a specific citation. Both want checking against primary sources before publication.
 
 Hypothesis (H) of §3.5 above is the **θ = 1 endpoint** of this ladder. Stating it that way is more informative than calling it a barrier: it places the hypothesis on a scale with a known current value rather than in a separate category.
 
@@ -866,6 +875,10 @@ Since the multiplicative engine vanishes in density, the asymptotic behaviour of
 ## 5. A single global lower bound
 
 The residue analysis gives eight different δ₀ across the 24 residue classes (§3.3). It is worth collapsing them into a single number that should hold everywhere, even at the cost of being loose.
+
+> **Read δ against the right literature, because the obvious comparison is a category error.** The known unconditional lower bounds on the number of *queries* forced by a nontrivial monotone property run Rivest–Vuillemin n²/16 → Kleitman–Kwiatkowski n²/9 → Kahn–Saks–Sturtevant n²/4 → Korneffel–Triesch → **Scheidweiler–Triesch n²/3 − o(n²)**, the current best. Our floor of 0.026117 is about 0.013n², a factor of 25 below that — and the two numbers are **incomparable, not competing**.
+>
+> **δ measures *which properties* the method reaches; c(n) measures *how many queries* are forced for all of them.** Scheidweiler–Triesch bound D(P) from below for every nontrivial monotone property. What δ does is different in kind: m\* ≥ δ·C(n,2) gives **full evasiveness** — exactly C(n,2) queries, the maximum possible — for every property of dimension below m\*. A weak bound on all properties and an exact result on a restricted class do not sit on the same scale, and a small δ next to a larger n²/3 says nothing about the strength of either.
 
 **Where the floor lives.** The worst residue is **n ≡ 23 (mod 24)** — the only one carrying both local obstructions *and* unable to reach the fused rung — with δ₀ = 0.05051. Almost every value that has ever set a running floor has been in n ≡ 11 (mod 12), which contains it; 8 of the 11 are ≡ 23 (mod 24) and the other three are ≡ 11, which is not a contradiction, since finite-n record holders are low from *supply* failure rather than from a low ceiling.
 
