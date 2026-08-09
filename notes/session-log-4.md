@@ -353,6 +353,16 @@ Run against v4 (1,666 rows to n = 2000): **every check passes**, group A and B c
 
 **The three tight instances coincide, and that is structural.** The tightest row for the feasibility criterion (slack 0.0004), for cᵢ ≥ δn (ratio 1.001) and for Fᵢ ≤ 1/δ (1.001) is the same one: **n = 1994 = `2x997`**. Not a coincidence — a single fused class n = F·c has δ = (c−1)/(Fc−1), so c = δn, F = 1/δ and Σ√Fᵢ = 1/√δ all hold to O(1/n) simultaneously. **The three bounds are one bound read on three axes**, which is why no amount of tightening one of them will move the others. Recorded in Part I, where the old tight row (n = 575, `23x25`, tight within one unit on both G.4 axes) is kept alongside as the v2-era instance.
 
+## Eighth batch: dehistoricization of `pending-checks.md`, and a speed constraint on `validate_table.py`
+
+**Dehistoricization.** Fourteen sites in `pending-checks.md` described how something came to be rather than what is true now — "two were false and shipped", "the conditions have had exactly one read, which found two defects", "three consecutive extensions each left a different subset behind", "the residue is 247 branches, not the 505 of the v2 figures". Each is rewritten as a live statement. Where the history carried a real warning it survives as one: T1 now opens with **"a step compressed to a clause tends not to survive being written out"** and lists the four steps as they currently stand rather than as a chronicle of failures; T3 states that **the direction to fear is permissive** rather than recounting which corrections went which way.
+
+**A speed constraint, stated in both places.** The suite runs in ~0.1 s on 1,700 rows, and that is what makes it something to run reflexively — before every certificate, after every batch, on a hunch — rather than a job to schedule. **A check that costs seconds gets skipped, and a skipped check is worth nothing**, so the budget is a design constraint and is now recorded as one in the module docstring and in A0b.
+
+The rule: every check stays **O(rows) or O(rows × parts)**, doing arithmetic on numbers already parsed out of the witness string. Explicitly out of scope: enumerating configurations, VF2 or isomorphism work, re-deriving B(n), sieving past NMAX, or anything whose cost grows with n rather than with the row count — all of which belong to `brute_compare.py` and the certificates.
+
+**The case that will tempt is named**, since it is the one a future check will hit: a check that wants to compare a row against *alternative configurations* rather than against a formula. That is a certificate's job; if it has to live here, budget it against the 0.1 s and say so at the check, so the next reader knows what is being protected. Measured for reference: CSV parsing alone is 0.025 s, so about a quarter of the total is unavoidable I/O and the 20 checks together cost roughly 0.2 s.
+
 ---
 
 ## Items inherited as closed from earlier passes

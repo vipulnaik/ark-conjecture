@@ -17,7 +17,7 @@ Ranked, so the sections below have a stated basis. This is not the order the ite
 1. **The table rebuild.** v4 reaches n = 2000; everything measured across the three documents is keyed to it and moves as it extends. → **R0**, and **R1** after every batch.
 2. **Exhaustiveness of the GAP stages.** The subdirect-product hole is undischarged. It degrades *evidence* rather than creating an error — a missed group could only have larger m\*, i.e. it would be a counterexample rather than a silent corruption — but it is the only non-circular check in the framework. **This is the one small-degree item the arithmetic programme depends on**, since Part I's two exhaustive comparisons rest on it. → `small-degree-verification.md` item 5
 3. **Part E's realisability construction.** Attainment's other leg, argued in general and spot-checked at eight configurations from n = 12 to 315. Unlike the certificate, it has no per-n verification. → **T2**
-4. **The eight necessary conditions of `fb_common.py`.** Both certificates rest on these and nothing else. What matters is their being *necessary* — that is what makes an empty candidate list a proof — and that is a different reading from checking each is true. A read of the file found three places where the enumeration was narrower than the shape space it is meant to cover; all are now widened, but the class of defect is the one that removes a real candidate silently. → **T3**
+4. **The eight necessary conditions of `fb_common.py`.** Both certificates rest on these and nothing else. What matters is their being *necessary* — that is what makes an empty candidate list a proof — and that is a different reading from checking each is true. The defect class to watch is an enumeration narrower than the shape space it must cover, which removes a real candidate silently and leaves the output looking clean. → **T3**
 
 ---
 
@@ -31,7 +31,7 @@ Ranked, so the sections below have a stated basis. This is not the order the ite
 
 1. **Finish the rebuild.**
 2. **Rerun all of R1** against it — that list is the whole downstream, and its second item is where the floor, the largest permitted s and the theorem residue get recounted.
-3. **Rebuild the branch-and-bound worklist**, which was pruned against a floor that has moved.
+3. **Rebuild the branch-and-bound worklist**, since its pruning is keyed to the density floor.
 
 ```bash
 python3 mu_enumerate_v2.py --nmax 2600 --fill-gaps --out mu_table_safe_v4.csv
@@ -69,12 +69,12 @@ python3 check_doc_figures.py mu_table_safe_v4.csv *.md
 - **`wide_cert.py`** — read the `settled by theorem:` line. At NMAX ≤ 10⁴ it prints NONE, because B_lo is small enough that the foreign-cap filter removes the s = 1 and s = 3 branches before the dispatch sees them, so a `--no-theorems` comparison there agrees *trivially* and is no evidence about E.1 / E.3 / E.4. `--menu` cross-checks pass 1 against the family menu; `--refresh` rebuilds the cached B_lo, which is rarely needed since the cache is keyed on everything that determines it.
 - **`check_doc_figures.py`** — `--quiet` for findings only, `--pass {figures,scope,prose,hygiene,census,refs}` for one pass; exits nonzero when anything is flagged. **Pass every `.md` that might be cited**, or `refs` reports live cross-document citations as dangling. And append the old maximum to `CHECKPOINTS` and a pattern to `SCOPE` in the same sitting, or figures written against the superseded range report as unexplained rather than as historical.
 
-**Two things this list no longer contains.**
+**Two things deliberately absent from this list.**
 
 - **`ladder_verify.py`** is not a per-batch check — it never reads the table, it scores explicit families. It belongs to **R7** and runs on its own schedule.
-- **`s7_scan.py` and `mu_fast.py` do not exist** in the working set, though earlier versions of this list called both. `validate_table.py` group B already covers the S4 / S5 / S7-at-F=2 congruence patterns `s7_scan.py` was for, so nothing is owed unless a new check is wanted.
+- **`s7_scan.py` and `mu_fast.py` do not exist** in the working set. `validate_table.py` group B already covers the S4 / S5 / S7-at-F=2 congruence patterns `s7_scan.py` would test, so nothing is owed unless a new check is wanted.
 
-**Do not extend the table without rerunning this list in full.** Three consecutive extensions each left a different subset of the documents behind — and the two mechanical passes that would have caught it, `refs` and the cross-term coefficient assertion, were only added afterwards.
+**Do not extend the table without rerunning this list in full.** An extension leaves a different subset of the documents behind each time, and the failure is silent: a stale figure reads as a claim about the current range. The two passes that catch it mechanically are `check_doc_figures.py --pass refs` and `validate_table.py`'s coefficient assertion.
 
 ## R7. Rerun `ladder_verify.py` to 10⁶
 
@@ -102,27 +102,27 @@ python3 ladder_verify.py 1000000
 
 ### T1. A second reading of the structural arguments
 
-Of this framework's compact structural steps, two were false and shipped (the ΓL(1) step, G.2), one was under-argued and is now fixed (B′), and one is proved only in a special case (C). A step compressed to a clause tends not to survive being written out.
+**A step compressed to a clause tends not to survive being written out**, and this framework's record bears that out: of its compact structural steps, one is false (the ΓL(1) step), one was false and is now repaired (the q-power block count), one needed two gaps filled (B′), and one holds only at prime c (Lemma C).
 
 So: **work through the parts that have had no close reading** — Part A's orbit decomposition, Part E's realisability construction, Part F's counting bounds — and expect roughly one finding per three arguments.
 
-*Human, because the value is in the independence.* A second pass by the same reader on the same evidence is worth much less than a first pass by someone else, which is what the B′ reading demonstrated.
+*Human, because the value is in the independence.* A second pass by the same reader on the same evidence is worth much less than a first pass by someone else.
 
 ### T2. Verify Part E's realisability construction per-n
 
-Attainment's other leg. Argued in general and spot-checked at eight configurations from n = 12 to 315; unlike the collapse certificate it has no per-n verification. The question is whether a per-n check is even the right shape here, or whether the general argument should be strengthened instead — that is a decision about where to spend effort, not a computation. **If** a per-n check is wanted, it is buildable and moves to §1.
+Attainment's other leg. It is argued in general and spot-checked at eight configurations from n = 12 to 315, and unlike the collapse certificate it has no per-n verification. The question is whether a per-n check is even the right shape here, or whether the general argument should be strengthened instead — that is a decision about where to spend effort, not a computation. **If** a per-n check is wanted, it is buildable and moves to §1.
 
 ### T3. A second read of the eight necessary conditions
 
-Now the whole trusted base for μ(n) = B(n), since both certificates were shown to pass with every Part E′ theorem disabled. The conditions have had exactly one read, which found two defects (both anti-permissive, both vacuous in range) and no soundness error. But the history is that getting them right took two prior corrections, *both in the permissive direction* — and a permissive error is the one that silently removes a real candidate.
+These are the whole trusted base for μ(n) = B(n): both certificates pass with every Part E′ theorem disabled, so nothing else carries weight in the per-n proof. They have had one read, which found four narrowings and no soundness error. **The direction to fear is permissive** — a condition that is not in fact necessary silently removes a real candidate and leaves an empty list looking like a proof — and every correction these conditions have needed has been of that kind.
 
 The specific question is not "is each condition true" but **"is each condition necessary"** — i.e. does every fallback configuration attaining B(n) really satisfy it. That is a different reading from the one already done, and it is the reading that matters.
 
 *Human, for the same reason as T1: the value is in the independence.*
 
-### T4. Literature checks — three read, one left, and two things to decide
+### T4. Literature checks — one read left, and two things to decide
 
-*Three of the four are now read and written up in `literature-findings.md` §§5–8. What is left for you is judgement, not reading.*
+*The reading is written up in `literature-findings.md` §§5–8. What is outstanding here is judgement, not reading.*
 
 **Still needs the paper: Shparlinski's Theorem 2 at prime powers.** His ladder uses the largest *prime* divisor of r − 1; our η uses the largest prime *power* divisor of the odd part plus the 2-part. They agree at r − 1 = 2q and differ otherwise. If the argument transfers, "(H) is the θ = 1 endpoint" is exact; if not, §3.6's caveat stays. A judgement about a proof's robustness, so it wants a human read.
 
@@ -155,13 +155,19 @@ Checks are grouped into three, and the group tells you what a result means:
 - **B. Exact claims, holding at every n** — Prop F.1, cap_F(η), S2's 1/F, layer-by-top-prime, S6 emptiness, Lemma C exposure, and the three congruence-gated patterns (S4 at c ≡ 1 mod 8; S7-at-F=2 at c ≡ 3 mod 4 bar the tie and p = 2; S5 at no congruence with u ≤ 9). A FAIL here is a real contradiction between table and documents.
 - **C. Density and distribution** — floor and the s/k bounds it implies, low-density tail, part-count distribution, census shares, odd-n shares, class-ceiling exceedance, median density by residue mod 24, foreign-block efficiency, and the ω(n) = 2 share. All INFO, each printing the **expected asymptotic value beside the measurement** so the comparison needs no reference to `arithmetic-of-density.md`. A gap here is data about convergence, not a failure.
 
-**Four checks were added after the shape-space correction, and they are the ones with no earlier counterpart:** the cyclic layer's global pairwise-coprimality condition (the corrected shape space's own admissibility rule, and the only check that would catch the enumerator *over*-correcting), the feasibility criterion Σ√Fᵢ ≤ 1/√δ that `aod` §6.1's shape counts are derived from, Part G.4's per-axis bounds, and the within-class cross **coefficient** — which is invisible to output, since the term never binds. Each has a negative control: breaking it makes the check FAIL.
+**Four of the group-B checks are the ones with no independent counterpart elsewhere, and are worth knowing by name:** the cyclic layer's global pairwise-coprimality condition (the corrected shape space's own admissibility rule, and the only check that would catch the enumerator *over*-correcting), the feasibility criterion Σ√Fᵢ ≤ 1/√δ that `aod` §6.1's shape counts are derived from, Part G.4's per-axis bounds, and the within-class cross **coefficient** — which is invisible to output, since the term never binds. Each has a negative control: breaking it makes the check FAIL.
 
 Together they cover every belief the three documents currently state: well-formedness and Lemmas B′/D2 on each witness, re-derivation of `mu_bound` from the witness by the G.3 formulas, Prop F.1, cap_F(η), the S4/S5/S7-at-F=2 congruence patterns, S6 emptiness, layer-by-top-prime, monotonicity against a baseline, and seven measured quantities (floor and the s/k bounds it implies, low-density tail, part-count distribution, census counts, class-ceiling exceedances, foreign-block efficiency, Lemma C exposure). Exits nonzero on any FAIL.
 
 Two extra modes cover the cases that would otherwise send you to the CSV. **`--baseline`** adds shape-migration and aggregate-movement reporting: which winners changed census row and in what direction, and how the floor, the low-density tail and the per-shape counts have moved on the common range. **`--explain N`** prints one row's full term breakdown — every intra, within-class-cross and cross term, which one binds, the twist and its F_mid/F_top split, the foreign block's η and u, and whether the value exceeds its class ceiling.
 
-It **replaces the by-hand checking** done in each review pass. **Amend it in the same pass whenever the model changes** — each check names the document section it comes from, so a stale check is findable from either end. Note what it does *not* do: it checks the table against the documents' model, not against mathematics. For independent evidence use `brute_compare.py`.
+It **replaces the by-hand checking** of each review pass. **Amend it in the same pass whenever the model changes** — each check names the document section it comes from, so a stale check is findable from either end. Note what it does *not* do: it checks the table against the documents' model, not against mathematics. For independent evidence use `brute_compare.py`.
+
+> **Keep it fast, and treat that as a design constraint rather than a nicety.** The whole suite runs in about **0.1 s on 1,700 rows**, which is what makes it something to run reflexively — before every certificate, after every batch, on any hunch — rather than a job to schedule. A check that costs seconds gets skipped, and a skipped check is worth nothing.
+>
+> So each check should stay **O(rows) or O(rows × parts)** with arithmetic on numbers already parsed from the witness. What does not belong here: enumerating configurations, VF2 or isomorphism work, re-deriving B(n), sieving past `NMAX`, or anything whose cost grows with n rather than with the row count. Those are `brute_compare.py`'s and the certificates' business, and they have their own items.
+>
+> The one place this bites is a check that wants to compare a row against alternatives rather than against a formula. If a new check needs that, it belongs in a certificate — and if it must live here, budget it against the 0.1 s and say so at the check, so the next person knows what they are protecting.
 
 ### A9. The unequal-matching-sizes dichotomy — rescoped: this **is** Open Problem 1, at odd p
 
@@ -177,7 +183,7 @@ It **replaces the by-hand checking** done in each review pass. **Amend it in the
 
 **Evidence meanwhile:** **no winner in the computed table has two matching classes of different sizes at odd p** (the p = 2 instances aside), and all seven winners with two matching classes have them equal. The enumerator imposes the true pairwise-coprimality condition rather than the full-twist version, so it would have found such a configuration had one been optimal below n = 1572. Checked automatically by `validate_table.py` (group B) on every extension.
 
-*Note the v4 witness at n = 551 is now `p=2 q=83: 3x128 + 1x167*` — a fused class of three 128-blocks, not the two distinct powers of 2. The 256 + 167\* + 128 configuration is still admissible and still makes the point about cyclicity; it is simply no longer the optimum there. Open Problem 1's worked instance should be restated as an admissible configuration rather than as a winner.*
+*Note that the winner at n = 551 is `p=2 q=83: 3x128 + 1x167*`, a fused class of three 128-blocks, not the two distinct powers of 2. The 256 + 167\* + 128 configuration is admissible and makes the point about cyclicity without being optimal there, so Open Problem 1's worked instance should be stated as an admissible configuration rather than as a winner.*
 
 ### A2. Promote E.3(ii) past the bare pair
 
@@ -186,7 +192,7 @@ The last theorem-side residue in the fallback collapse. With a leftover, the (r,
 Two things about its shape are worth recording before anyone spends time on it.
 
 - **No structural argument can work**, and that is already proved: cases (α)–(γ) of E″ show that within a fallback configuration's own partition the fallback reading is *forced*, so any promotion must compare across partitions of n — where additive supply enters and one is back at Hypothesis (H). So this is not a gap to be closed by a better case analysis.
-- **The residue is one class of 247 branches, not the 505 of the v2 figures**, all of them E.3(ii) pairwise-only: under the corrected shape space the largest permitted s over the computed range is 3, so the s = 4 and s = 5 branches are not reachable and only 7 values sit below δ = 1/16. So the target is narrower than it was, and it is a single shape.
+- **The residue is a single class of 247 branches**, all E.3(ii) pairwise-only. The largest permitted s over the computed range is 3, so the s = 4 and s = 5 branches — which have no theorem — are not reachable there, and only 7 values sit below δ = 1/16. So the target is one shape rather than a spread.
 
 Two questions for whoever picks it up, either of which would make it tractable rather than open-ended:
 

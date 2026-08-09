@@ -14,6 +14,21 @@ table grows -- those are printed so they can be copied back, not judged here.
     INFO   a figure to carry back into the documents, no verdict
     SKIP   nothing in range exercises the check
 
+KEEP IT FAST -- THIS IS A DESIGN CONSTRAINT, NOT A NICETY.  The whole suite runs
+in about 0.1 s on 1,700 rows, which is what makes it something to run reflexively:
+before every certificate, after every batch, on any hunch.  A suite that costs
+seconds gets skipped, and a skipped check is worth nothing.  So every check
+should stay O(rows) or O(rows * parts), doing arithmetic on numbers already
+parsed out of the witness string.
+
+What does NOT belong here: enumerating configurations, VF2 or isomorphism work,
+re-deriving B(n), sieving past NMAX, or anything whose cost grows with n rather
+than with the row count.  Those are `brute_compare.py`'s and the certificates'
+business.  The case that tempts is a check wanting to compare a row against
+ALTERNATIVE configurations rather than against a formula -- that belongs in a
+certificate, and if it must live here, budget it against the 0.1 s and say so at
+the check so the next reader knows what is being protected.
+
 WHAT THIS DOES NOT DO.  It checks the table against the documents' *model*, not
 against mathematics: it re-derives each configuration's score from its witness
 string and the Part G.3 formulas, so it will catch a table that disagrees with
