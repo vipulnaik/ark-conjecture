@@ -127,7 +127,7 @@ That is our §8 territory almost exactly — the same n, the same tool, the same
 
 ## 7. Erdős covering congruences vs the 2-power escape
 
-Not resolved this pass. This one is a mathematical check rather than a framing question and belongs with the open items, not here. The claim to verify is that covering congruences give a *positive density* of odd n with no 2^k + p representation — which would close the 2-power escape route of §3.3 rather than merely thin it to O(log n) values.
+**Resolved in the third pass below (item 9): yes.** Erdős (1950) constructed an infinite arithmetic progression of odd integers with no p + 2^k representation, and van der Corput proved independently the same year that the non-representable odd integers have positive lower density. So the 2-power escape route of §3.3 is closed on a positive-density set rather than thinned to O(log n) values. The companion positive result is Romanov (1934): a positive lower density of integers *are* of the form p + g^k, for any fixed g ≥ 2.
 
 ---
 
@@ -203,3 +203,80 @@ Neither implies the other. Ours is the stronger conclusion on a smaller class; t
 ## 8. What is still open in T4
 
 **Only the Shparlinski prime-power question**, and it needs the paper body. His Theorem 2 ladder is stated for the largest **prime** divisor of r − 1; our η is built from the largest prime **power** divisor of the odd part, together with the 2-part. The two agree when r − 1 = 2q and differ otherwise. If his argument transfers verbatim to the prime-power version, "(H) is the θ = 1 endpoint" is exact rather than approximate; if it does not, §3.6's caveat has to stay. This is a judgement about a proof's robustness, not a fact to look up.
+
+---
+
+# Third pass: precedents for the reduction itself
+
+*Not a check on a claim we make, but on the shape of the argument: where else has a combinatorial problem been reduced to an additive number-theory problem, and where has the additive input been shown semi-tight for the combinatorial method? Searched 2026-08. This bears on the framing decision in item 1 of "What remains", because it determines what is actually novel about the composition.*
+
+**How to state our pipeline abstractly**, since that is what the comparison needs: *contractibility and fixed points* → *Smith theory and Oliver's chain condition* → *which permutation groups of degree n admit a large minimum orbital* → *partition n into prime-power parts subject to a coprimality budget* → *quadratic optimisation for the balance point*. Two features are worth isolating. The arithmetic condition is **mixed** — additive in the partition, multiplicative in the divisibility and coprimality constraints among parts. And §§3, 4 and 6 close the loop, showing the additive input is close to best possible *for this method* rather than merely sufficient.
+
+## 9. Reductions to Goldbach-like conditions (question (a))
+
+**The honest headline: no precedent found where a combinatorial existence theorem is reduced to binary Goldbach itself.** Nearly everything a search surfaces runs the other way — the "Goldbach graph" is constructed so that the conjecture holds iff all finite Goldbach graphs are connected, which is a restatement rather than a reduction. Worth recording so that nobody cites it as precedent.
+
+**Bruck–Ryser–Chowla is the real precedent for the one-way direction.** If a projective plane of order n exists with n ≡ 1 or 2 (mod 4), then n is a sum of two squares. The pipeline is close to ours in shape: combinatorics → incidence matrix (AAᵀ = nI + J) → rational quadratic forms → Hasse–Minkowski and Hilbert symbols → representation of an integer by a binary form. Two things to take from it.
+
+- **The failure mode matches ours.** It eliminates 6, 14, 21, 22 but 10 = 1² + 3² escapes, and order 10 needed Lam's computation; 12, 15 and 18 remain out of reach. That is exactly our ceiling-versus-floor gap: a necessary arithmetic condition that thins the candidate set without closing it.
+- **The sufficiency side is as open as ours.** The prime power conjecture stands to BRC as our Open Problem 8 stands to §3.
+
+**Romanov + Erdős/van der Corput is the Goldbach-*flavoured* precedent, and it is the closest analogue to §3.4.** Verified: Romanov (1934) proved a positive lower density of integers representable as p + g^k for any fixed g ≥ 2 — so the statement is about prime **plus prime power**, which is our S3 shape, not about two primes. In the opposite direction Erdős (1950) introduced covering systems of congruences and constructed an infinite arithmetic progression of odd integers with no p + 2^k representation; van der Corput proved the positive lower density of the complement independently and in the same year.
+
+> **The parallel is structural and close.** A positive-density additive supply, defeated on an explicit congruence class by *local* obstructions, with the obstruction mechanism being covering congruences — which is precisely §3.4's local obstructions at ℓ = 2 and ℓ = 3 and the resulting mod-12 (then mod-24) classification. Our residues 7, 15, 23 mod 24 play the role of Erdős's progression.
+
+**And there is a sharper precedent still, which we should read.** Erdős asked whether *every* arithmetic progression of odd numbers containing no 2^k + p can be obtained from covering congruences, and the answer has been given affirmatively, together with a quantitative Romanov theorem on arithmetic progressions (Chen–Sun, *Acta Math. Sinica*, "On the density of integers of the form 2^k + p in arithmetic progressions"). That is the exact analogue of a claim we would like to make — that our obstructed residues are *only* the local ones — so the method there is worth reading before we assert anything of that shape about §3.4.
+
+*Correction to an earlier oral summary:* Erdős's covering construction is 1950, not the 1930s, and van der Corput's independent density result is the same year; Romanov's theorem is 1934 and is general in g, not special to g = 2.
+
+## 10. Two-way, semi-tight reductions (question (b))
+
+**Ruzsa–Szemerédi ↔ Roth/Behrend is the canonical precedent and the right methodological template to cite.** The (6,3)-problem — maximum edges with every edge in a unique triangle, equivalently a partition into linearly many induced matchings — has an upper bound from the regularity method and a nearly-quadratic lower bound derived from Behrend's progression-free sets. The reduction is genuinely bidirectional: Ruzsa and Szemerédi used the regularity method to give a graph-theoretic proof of Roth's theorem, and Behrend's construction bounds how well the graph method can possibly do. **That is semi-tightness in our sense** — improving the additive input improves the combinatorial bound and conversely — and it is the closest published analogue of what §§3, 4 and 6 do together.
+
+**The cyclic / abelian / nilpotent numbers line looks like our closest sibling and is worth reading, but the quantifier runs the other way — this is a *dual*, not a parallel.** n is a *cyclic number* — every group of order n is cyclic — precisely when gcd(n, φ(n)) = 1, implicit in Dickson (1905) and explicit in Szele (1947). Erdős (1948) proved C(x) ~ e^{−γ}x/log log log x, refined by Pollack to an asymptotic series in descending powers of log log log x. The nilpotent analogue is gcd(n, ψ(n)) = 1 with ψ(p^a) = (p^a − 1)(p^{a−1} − 1)⋯(p − 1); abelian is that plus cubefree.
+
+The surface resemblance is real and worth stating precisely, because it is what makes the difference visible: gcd(n, φ(n)) = 1 unpacks to **pᵢ ∤ (pⱼ − 1) for all i, j**, which is the same *kind* of divisibility constraint among prime factors as our cyclic-layer budget "q | r − 1". But the two use it for opposite purposes.
+
+> **The direction of the quantifier is reversed.**
+>
+> - **Cyclic numbers: ∀, and cyclicity is the conclusion.** The arithmetic condition is a *rigidity* hypothesis. It says n admits no divisibility coincidence anywhere among its prime factors, and therefore that *no* non-cyclic group of order n can be assembled. Cyclicity is what gets forced on every group of order n; the arithmetic is an obstruction to richness.
+> - **Ours: ∃, and cyclicity is an ingredient.** Cyclicity of Γ₁/Γ₂ is a *hypothesis of Oliver's chain*, i.e. a feature of the object we are building, and the coprimality budget is what a witness must satisfy in order to exist. We are not forcing anything to be cyclic; the cyclic layer is the good structure we are given to work with, and coprimality is a budget we spend on it. The arithmetic is a constraint on realisability.
+>
+> **This has an analytic consequence that settles whether the technique transfers.** A universally-quantified no-coincidence condition is a conjunction over all pairs of prime factors, which is why cyclic numbers are *sparse* — density → 0 like 1/log log log x. Our condition is existential over partitions: we need **one** admissible shape, not the absence of all bad ones, which is why §4 sees *positive* density. So Erdős's and Pollack's machinery is aimed at the wrong target for us. Their difficulty is bounding a sparse set defined by a conjunction; ours is lower-bounding a representation count, which is Bateman–Horn and Romanov territory (items 9 and 2), not log-log-log asymptotics.
+>
+> **What the line is still good for**, and why it stays in this file: it is the best existing precedent for *the same class of arithmetic condition* being extracted from a group-theoretic property of n and then studied for its own sake, and it is the standard against which "an arithmetic characterisation deserves a density theorem" is judged. Read it for how the result is *stated and positioned*, not for the technique.
+
+**A better structural sibling on the existential side: Hadamard matrix orders.** The question "for which n does a Hadamard matrix of order n exist" is existential like ours, and the supply is arithmetic in our sense: Paley (1933) gives order q + 1 for prime powers q ≡ 3 (mod 4) and 2(q + 1) for q ≡ 1 (mod 4), so the input is *primes and prime powers in arithmetic progressions* — the same Bateman–Horn-type supply our §3.5 draws on. Three points of contact:
+
+1. **Constructions compose**, via Sylvester doubling and the Kronecker product on orders n₁n₂, which is the analogue of our shapes combining — and the composition is *multiplicative* where ours is additive, which is exactly the axis on which our problem is harder.
+2. **The sufficiency side is the famous conjecture** (every order 4k), standing to the constructions as our Open Problem 8 stands to §3 — and as the prime power conjecture stands to BRC.
+3. **The density question is open in the same shape as ours**, and this is the useful find: *it is still not known whether the set of orders of Hadamard matrices has positive density*, with the known families being sparse subsequences of {4t}. What **is** provable from Paley plus doubling is a covering statement — every interval (x, 2x) contains a Hadamard order except (1,2), (2,4), (4,8), and H(x)/x → 1.
+
+> **That last point needs care, and the obvious reading of it is wrong.** It is tempting to say: positive density of Hadamard orders is open under better tools, so our §4 density claim must be either stronger or incomparable. **Neither — because we do not prove a density theorem.** We reduce to Bateman–Horn-type conjectures and read off what they would give. The Hadamard question is open *unconditionally*; ours is answered *conditionally*, and those are different statuses rather than competing strengths.
+>
+> **The genuine reconciliation is about the shape of the arithmetic supply, and it is worth stating because it explains both sides at once.** Paley needs a single prime power near n — n − 1, or (n/2) − 1 — and primes are sparse, so Paley-type orders are a density-zero set no matter what one assumes about them. We need a *representation* of n, n = c + r with both parts prime powers, and representation counts are governed by Hardy–Littlewood-type heuristics giving ~n/log²n representations, so conjecturally almost every admissible n has one. **Sparse-supply-of-primes versus positive-density-of-representations is the whole difference**, and it is the same difference that separates "q is prime" from "n is a sum of two primes".
+>
+> So the calibration to keep is narrower than I first wrote, and it cuts at the framing rather than at the mathematics: **the contribution is the reduction, not a density theorem.** §4 should say what it is conditional on, in the same breath as what it concludes — and the comparison worth drawing with Hadamard is that both fields sit downstream of hard prime-distribution input, with ours in the luckier position of needing a representation rather than a single prime.
+
+**Which places us in a recognisable genre: results conditional on Hypothesis H / Bateman–Horn.** That is where a precedent search should go next, and it is a different genre from items 9 and 10 — not "combinatorics reduces to additive number theory" but "a combinatorial theorem is proved *assuming* a prime-tuple conjecture, and the reduction is the contribution". The relevant question for us is how such papers state their standing: what is unconditional (our ceilings, §3), what is conditional (our densities, §4), and whether the conditional part is presented as a theorem or as a consequence. Getting that division explicit in §§3–4 matters more for a referee than any of the comparisons above.
+
+## 11. The sibling pipelines: topology → group theory → arithmetic
+
+**The spherical space form problem shares our first three arrows and is an iff.** A finite group acts freely on some sphere if and only if every subgroup of order p² or 2p is cyclic — Smith's p²-condition from cohomological periodicity, Milnor's 2p-condition from the geometry (every involution central), with sufficiency completed by Madsen–Thomas–Wall (1976). Note the *form* of the answer: conditions on subgroup orders, i.e. arithmetic conditions on the divisors of |G|, reached from a topological hypothesis through Smith theory.
+
+**What nobody in that literature does is take the last two arrows.** The chain stops at a group-theoretic characterisation; it does not go on to ask for the density of n admitting a group with a prescribed quantitative property, and there is no optimisation step fixing a constant.
+
+## 12. What this says about the framing decision
+
+Neither half of our pipeline is new on its own. *Topology reduces to arithmetic conditions on group order* is Smith, Milnor, Madsen–Thomas–Wall and Oliver. *Combinatorial existence reduces to additive number theory* is Bruck–Ryser–Chowla and Ruzsa–Szemerédi. **The claim available to us is the composition**, ending in a density statement over n with a quadratic optimisation fixing the constant. Three specifics look genuinely unprecedented, in decreasing order of confidence:
+
+1. **The mixed additive/multiplicative condition.** Cyclic numbers are purely multiplicative; Goldbach and Romanov purely additive. Requiring a partition of n into prime-power parts *whose twist and rotation orders are pairwise coprime in one cyclic layer* mixes the two, and the coprimality budget is what makes the shape space finite in a way neither pure setting is.
+2. **The quadratic optimisation as a load-bearing step.** cap_F(η) = η/(1 + √(Fη))² and its balance points produce the eight mod-24 ceilings; they are not decoration. Behrend's radius optimisation is the nearest analogue, but it optimises a *construction* rather than a ceiling on all constructions.
+3. **Semi-tightness shape by shape.** Ruzsa–Szemerédi's tightness is quantitative, in log factors. Ours is structural: §6 shows the feasible shape set is finite and §3 shows each class's ceiling is met to within 2%, so the additive input is nearly exhausted per shape rather than in aggregate.
+
+## 13. What to read next, in priority order
+
+1. **Chen–Sun on 2^k + p in arithmetic progressions** (item 9). The affirmative answer to Erdős's question is the exact analogue of "our obstructed residues are only the local ones", and the method may transfer to §3.4 directly.
+2. **Papers proving combinatorial theorems conditional on Hypothesis H / Bateman–Horn** (item 10). This is the genre we are actually in — the contribution is a reduction, not a density theorem — and the thing to learn is how such work divides its unconditional from its conditional claims and how it words the standing of the latter. The Hadamard comparison is settled and needs no further work: their supply is a single prime near n and is sparse regardless; ours is a representation of n and is conjecturally almost-all. Different supply shapes, not competing strengths. **Do not read Erdős 1948 / Pollack expecting a transferable technique** — the quantifier is reversed there, their set is sparse for a reason ours is not, and the value is in how the result is stated rather than in how it is proved.
+3. **Ruzsa–Szemerédi and Behrend**, for the semi-tightness framing and for how that literature states the two-way relationship in print.
+4. **Bruck–Ryser–Chowla**, for how a necessary-only arithmetic condition is presented alongside an open sufficiency conjecture — which is the situation §3 plus Open Problem 8 is in.
