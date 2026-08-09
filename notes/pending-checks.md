@@ -76,26 +76,38 @@ python3 check_doc_figures.py mu_table_safe_v4.csv *.md
 
 **Do not extend the table without rerunning this list in full.** An extension leaves a different subset of the documents behind each time, and the failure is silent: a stale figure reads as a claim about the current range. The two passes that catch it mechanically are `check_doc_figures.py --pass refs` and `validate_table.py`'s coefficient assertion.
 
-## R7. Consume the ladder worklist: compute B(n) on the weak values
+## R7. Consume the ladder worklist with the adaptive branch-and-bound
 
-*The 10⁶ ladder run is done (`ladder_weak_v4.txt`, 19,583 entries; findings in `session-log-4.md`). What is left is the branch-and-bound that turns those lower bounds into values of B(n) — and unlike the ladder run itself, this one **does need R0**, since its pruning is keyed to a floor read off the table.*
-
-The worklist entries are **lower** bounds from four explicit families, so an entry below a threshold does not say δ(n) is below it. What the list gives is the set of n where the families find least, ranked — which is exactly where computing B(n) is worth the cost. Three tiers, cheapest first:
-
-**Tier 1 — the 21 entries below 1/25 = 0.0400.** These are the only n in 10⁶ where the ladder leaves room for **s = 4**, the first fallback branch with no theorem. n = 1175, 3131, 3815, 4307, 4379, 4727, 7031, 7367, 7847, **8927**, 10127, 10679, 11183, 11819, 12575, 13559, 13919, 14063, 15023, 15503, 46127. Computing B(n) at each either closes the s = 4 question over 10⁶ or produces the first n that genuinely needs it.
-
-**Tier 2 — the 189 entries below the current table floor 0.045742**, of which only 4 are in v4 today. Any one of them coming in below the floor moves it, and the floor is what the s- and k-ladders are keyed to.
-
-**Tier 3 — the global minimum.** `arithmetic-of-density.md` §5.1's branch-and-bound should be rerun against the new worklist; its previous run used the 48,729-entry v2-era list, and the new one is 19,583. **Only one entry sits below 0.026117 — n = 8927 itself** — so the branch-and-bound has almost nothing left to eliminate, and the interesting question is whether B(8927) exceeds 0.02516 rather than whether some other n undercuts it.
+*The 10⁶ ladder run is done (`ladder_weak_v4.txt`, 19,583 entries; findings in `session-log-4.md`). What is left is turning those lower bounds into decisions about B(n) — and it is **one job, not three**, writing into the existing table.*
 
 ```bash
-python3 mu_enumerate_v2.py --nlist ladder_weak_tier1.txt --out mu_tier1.csv
-python3 mu_enumerate_v2.py --nlist ladder_weak_tier2.txt --out mu_tier2.csv
+python3 mu_enumerate_v2.py --nlist ladder_weak_v4.txt \
+        --floor 0.0400 --adaptive --out mu_table_safe_v4.csv
 ```
 
-**Cost warning.** `mu_enumerate_v2.py` runs at about n^2.9 per value, so a single n = 46,127 is roughly 10⁴ times the cost of an n = 2,000 row. Tier 1 is not a batch job — **sort it ascending and take values one at a time**, and expect the four five-figure entries to be individually expensive. n = 8927 is the one that matters most and is mid-range.
+**Why this and not a `--nlist` run per tier.** `--floor … --adaptive` is the branch-and-bound of `arithmetic-of-density.md` §5.1 run inside the job, and it does four things a plain run does not:
 
-**Do not overwrite the worklist.** `ladder_verify.py` now honours `LADDER_OUT` and the previous runs are evidence for figures in §3.7 and §5.2; keep each run's file named by version.
+- **Prunes on the supplied lower bound.** `ladder_weak_v4.txt`'s second column is read as LB(n); any n with LB(n) ≥ the current floor is skipped without computation, since LB(n) ≥ floor already proves δ(n) ≥ floor. At `--floor 0.0400` that disposes of 19,562 of the 19,583 entries for free.
+- **Rejects most survivors without computing B(n).** For an unpruned n it seeds the search at floor·C(n,2), so it only has to show *some* configuration clears the floor. Measured on the first 40 entries: n = 1175 is rejected at K = 2 — δ(1175) > 0.04 established without ever computing B(1175).
+- **Appends the exact row when it does compute one**, to `--out`, with the full schema and the witness — so the expensive values land in **the same CSV** rather than a side file that then needs merging. It only appends, never rewrites or reorders, and skips n already present.
+- **Reads the table back as prior knowledge.** An n already in `--out` is not skipped; its density is fed to the floor. So v4's existing 1,666 rows tighten the search rather than being ignored.
+
+**Set the floor to the question you are asking.** The floor is an interrogation threshold, not the known answer — and setting it to the current global floor would prune everything, 8927 included, since pruning triggers at LB ≥ floor.
+
+| `--floor` | what it settles | entries left after pruning |
+|---|---|---|
+| **0.0400** = 1/25 | whether any n in 10⁶ leaves room for **s = 4**, the first fallback branch with no theorem | 21 |
+| 0.045742 | whether anything undercuts the current table floor | 189 |
+| 0.02516 + ε | whether **B(8927) exceeds 0.02516**, which is what §5.1 now turns on | 1 |
+
+Run them in that order; each is a superset of the next in cost and the cheap one may answer the expensive one's question. `--nmax` acts as an upper cut-off on a `--nlist`, which is how to defer the four five-figure entries — at n^2.9 per value, the lone n = 46,127 costs roughly 10⁴ times an n = 2,000 row, so it is worth seeing the rest first.
+
+**Preconditions and cautions.**
+
+- **Needs R0 finished.** The pruning and the part-count cap are both keyed to a floor read off the table.
+- **Never combine with `--refined`.** The script refuses it, and the reason is worth knowing: adaptive mode appends rows to `--out`, the schema records no mode, so a refined row in an unconditional table would be undetectable and would corrupt every downstream figure.
+- **Rerun R1 afterwards.** The job adds rows, which is a table extension like any other.
+- **Do not overwrite the worklist.** `ladder_verify.py` honours `LADDER_OUT`; each run's file is the evidence for figures in §3.7 and §5.2.
 
 # §2. Thinking work
 

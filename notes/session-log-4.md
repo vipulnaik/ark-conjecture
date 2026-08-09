@@ -494,10 +494,18 @@ The [10², 10³) row moving from 935 to 575 is the fused rungs doing their job �
 - **The stale S7 note is gone**, replaced by a statement of what the list *is*: lower bounds, so an entry below a threshold does not mean δ(n) is below it — read it as the set of n worth computing B(n) at, ranked.
 - **The output filename is no longer hardwired.** `ladder_verify.py` honours `LADDER_OUT`, because each run's worklist is the evidence for figures in §3.7 and §5.2 and comparing two runs is the point of rerunning. Verified on a short run.
 
-### R7 rewritten from "do the run" to "consume the worklist"
+### R7 rewritten from "do the run" to "consume the worklist", as ONE job
 
-The run is done and needs nothing further. What replaces it is the branch-and-bound, in three tiers — the 21 sub-1/25 entries (the only n in 10⁶ where the ladder leaves room for **s = 4**, the first branch with no theorem), the 189 sub-floor entries, and the global minimum — **with a cost warning that was not there before**: at n^2.9 per value, the single entry at n = 46,127 costs about 10⁴ times an n = 2,000 row, so tier 1 is a sorted one-at-a-time job rather than a batch. Unlike the ladder run, this one **does** need R0, since the pruning is keyed to a floor read off the table.
+The run is done and needs nothing further. What replaces it is the branch-and-bound — and the right form is a **single adaptive job writing into `mu_table_safe_v4.csv`**, not a tier-per-`--nlist` run into side files. `mu_enumerate_v2.py --floor … --adaptive` is built for exactly this:
 
+- it **prunes on the worklist's own second column** (LB(n) ≥ floor proves δ(n) ≥ floor), which disposes of 19,562 of 19,583 entries for free at `--floor 0.0400`;
+- it **rejects most survivors without computing B(n)**, seeding the search at floor·C(n,2) so it need only show *some* configuration clears the floor — verified on the first 40 entries, where n = 1175 is rejected at K = 2 and δ(1175) > 0.04 is established with no exact value computed;
+- it **appends the exact row, full schema and witness, to `--out`** when it does compute one, so expensive values land in the same CSV instead of a side file needing a merge; append-only, never rewriting or reordering, skipping n already present;
+- it **reads `--out` back as prior knowledge**, so v4's existing 1,666 rows tighten the floor rather than being ignored.
+
+**The floor is the question, not the answer** — the one trap here. Setting `--floor` to the current global floor 0.02516 would prune *everything*, 8927 included, because pruning fires at LB ≥ floor and 8927's LB equals it. So the ladder is: 0.0400 asks whether any n leaves room for **s = 4** (21 entries survive pruning), 0.045742 asks whether anything undercuts the table floor (189), and 0.02516 + ε asks the one question §5.1 now turns on, namely whether **B(8927) > 0.02516** (1). Cheapest first, since the cheap run may answer the expensive one's question.
+
+Two cautions recorded with it. `--refined` with `--floor` is refused by the script, and the reason belongs in the item: adaptive mode appends to `--out`, the schema records no mode, so a refined row in an unconditional table would be undetectable and would corrupt every downstream figure. And the job is a table extension, so **R1 gets rerun afterwards** like any other batch.
 ---
 
 ## Items inherited as closed from earlier passes
