@@ -72,6 +72,13 @@ for i, x in enumerate(_A):
 # a future mu_enumerate.py run.
 ASYMPTOTIC = 2.5 - 6 ** 0.5
 
+# The worklist is EVIDENCE for figures quoted in arithmetic-of-density.md sections
+# 3.7 and 5.2, and comparing two runs is the point of rerunning -- so do not write
+# an unversioned file that the next run silently overwrites.  Override with
+# LADDER_OUT=... to name a run explicitly.
+import os as _os
+OUTFILE = _os.environ.get("LADDER_OUT", "ladder_weak.txt")
+
 # CEILINGS, REKEYED MOD 24 (2026-08).  The old table was keyed mod 12 and used
 # the UNFUSED rung throughout.  For odd n the shapes form a ladder
 #
@@ -428,11 +435,12 @@ if weak:
     print("  NOT counterexamples.  This script searches four families over a window,")
     print("  so it computes a LOWER BOUND on delta(n).  It is a worklist: computing")
     print("  B(n) at these n would tighten the global floor of section 5 of")
-    print("  arithmetic-of-density.md.  Written to ladder_weak.txt.")
-    print("  NOTE (2026-08): mu_enumerate.py does NOT yet model the S7 family, so at")
-    print("  some n THIS script now reports a larger value than the table does.  That")
-    print("  is the defect of enumeration-proof.md J0, not an error here.")
-    with open("ladder_weak.txt", "w") as fh:
+    print(f"  arithmetic-of-density.md.  Written to {OUTFILE}.")
+    print("  These are LOWER bounds, so an entry below a threshold does NOT mean")
+    print("  delta(n) is below it -- B(n) may be larger.  Read the list as the set")
+    print("  of n worth computing B(n) at, ranked by how little the four families")
+    print("  find there.")
+    with open(OUTFILE, "w") as fh:
         for n, d in weak:
             fh.write(f"{n} {d}\n")
     print("  first 15: " + ", ".join(f"{n}({d})" for n, d in weak[:15]))

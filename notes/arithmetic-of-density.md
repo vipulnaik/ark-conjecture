@@ -497,16 +497,20 @@ So the picture is not "computed below, conjectural above" with an unreachable ba
 | global floor δ ≥ 0.02516 | n ≤ 10⁶ | computed (§5); the branch-and-bound gives the stronger δ ≥ 0.026117 over the same range |
 | global floor δ ≥ 0.02 | n > 10⁶ | conjectural, ineffectively |
 
-**Where the verification is hardest is a middle range, and it is bounded.** The lower envelope of achievable density does not fall away as n grows — it dips and then recovers. Minimum bound over the 41,584-entry worklist, by decade:
+**Where the verification is hardest is a middle range, and it is bounded.** The lower envelope of achievable density does not fall away as n grows — it dips and then recovers. Minimum bound over the **19,583-entry** worklist, by decade:
 
 | n | entries | minimum bound | attained at |
 |---|---|---|---|
-| [10², 10³) | 2 | 0.03649 | 935 |
-| [10³, 10⁴) | 158 | **0.02516** | 8927 |
-| [10⁴, 10⁵) | 2,987 | 0.03045 | 11819 |
-| [10⁵, 10⁶) | 38,437 | 0.04125 | 134423 |
+| [10², 10³) | 2 | 0.04181 | 575 |
+| [10³, 10⁴) | 82 | **0.02516** | 8927 |
+| [10⁴, 10⁵) | 1,334 | 0.03045 | 11819 |
+| [10⁵, 10⁶) | 18,165 | 0.04125 | 134423 |
 
-and the per-block floors continue to rise thereafter — 0.04625, 0.04518, 0.04704, 0.04729, 0.04732, 0.04738, **0.04810** across the last seven blocks of 10⁵.
+and the per-block floors continue to rise thereafter — 0.04540, 0.04625, 0.04518, 0.04704, 0.04732, 0.04780, 0.04738, **0.04810** across the last eight blocks of 10⁵.
+
+> **The worklist is almost entirely one residue class, which is the mod-24 prediction landing hard.** Of the 19,583 entries, **19,568 — 99.92% — have n ≡ 23 (mod 24)**, with 14 at n ≡ 11 and exactly one at n ≡ 17. That is close to forced: the threshold is 0.050510, which *is* class 23's ceiling, so any other class appears only by falling well short of its own (higher) cap. So the 15 non-23 entries are the informative ones — n ≡ 11 has cap 0.06699 and n ≡ 17 has cap 0.10102, so those are values where the families underperform their class by 30% or more, and they are the cheapest place to look for a family the ladder is missing.
+
+> **The per-residue diagnostic saturates early, so extending N does not test it further.** Every one of the 24 per-class minima is attained below n ≈ 12,000 — the largest are n ≡ 11 at 11819 and n ≡ 23 at 8927 — so the min-ratio spread (0.327 at n ≡ 16 to 0.653 at n ≡ 20) is the same at N = 20,000 as at N = 10⁶. Read the spread as a statement about small n, and do not expect a wider scan to move it.
 
 **The dip has a structural explanation, and it is the two engines handing over.** Below ~500 the multiplicative shapes are still plentiful — S1 at every prime power, S2 wherever ω(n) = 2 with both factors prime powers, which is 57.5% of winners below n = 400 — and they carry densities far above any additive ceiling. Above ~10⁴ the additive families have enough supply near their balance points to sit close to those ceilings. **In between, S1 and S2 have thinned but S3, S4 and the fused rung have not yet saturated**, and the escapes of §4.3 are themselves at their least helpful. Every value that has ever set a running floor lies in this band: 575, 935, 2183, 2291, 2303, 3059, 3239, 3479, 8927.
 
@@ -931,20 +935,20 @@ The worklist admits a search that converges fast, because `ladder_verify` return
 
 is proved. What it does not license is reading that number as a *value* of μ: it is **not attained at n = 3239**, which reaches 0.043570 (seven copies of a 256-block plus an outside 1447-block, twist 241) and n = 3059 reaches 0.083906. The argmin has moved and the bound is no longer tight.
 
-**The rerun will be cheap, and should raise the floor.** The worklist under the corrected shape space has **41,584** entries, 14.7% fewer, and only **one** sits below 0.026117 — n = 8927 itself, whose B(n) already exceeds 0.02612. Two lie below 0.030 and 23 below 0.037524. So the true minimum below 10⁶ looks likely to land at or above **0.037524** (n = 2291), which would put the conjecture's margin above 1.8 rather than the 1.31 the old floor gave.
+**The rerun will be cheap, and should raise the floor.** The worklist under the corrected shape space has **19,583** entries, 60% fewer than the 48,729 the previous branch-and-bound consumed, and the tail below the current floor is thin: exactly **one** entry sits below 0.026117 — n = 8927 itself, at 0.02516 — with **one** below 0.030, **11** below 0.037524, and **21** below 1/25. So the branch-and-bound has almost nothing left to eliminate, and the operative question is no longer "does some other n undercut 8927" but "**does B(8927) exceed 0.02516**". If it does, the true minimum below 10⁶ lands at or above 0.03045 (n = 11819) and the conjecture's margin against 1/50 rises above 1.5.
 
 `mu_enumerate_v2.py --floor M --adaptive` runs the loop as one job: it seeds at M·C(n,2) so any configuration above the floor rejects n immediately, prunes candidates whose lower bound has risen above the current floor, computes B(n) exactly only for survivors, and adopts a lower value as the new floor — which in turn tightens Proposition F.1's part-count cap ⌊1/√M⌋ for everything after it.
 
 ### 5.2 The hard range is bounded on both sides, and it is small
 
-The worry motivating §3.5 — that between the computable range and the asymptotic one lies a middle where neither argument reaches — is answerable empirically, and the answer is favourable. Minimum lower bound over each decade of the 41,584-entry worklist:
+The worry motivating §3.5 — that between the computable range and the asymptotic one lies a middle where neither argument reaches — is answerable empirically, and the answer is favourable. Minimum lower bound over each decade of the 19,583-entry worklist:
 
 | n | values in worklist | minimum bound | attained at |
 |---|---|---|---|
-| [10², 10³) | 2 | 0.03649 | 935 |
-| [10³, 10⁴) | 158 | 0.02516 | 8927 |
-| [10⁴, 10⁵) | 2,987 | 0.03045 | 11819 |
-| [10⁵, 10⁶) | 38,437 | 0.04125 | 134423 |
+| [10², 10³) | 2 | 0.04181 | 575 |
+| [10³, 10⁴) | 82 | 0.02516 | 8927 |
+| [10⁴, 10⁵) | 1,334 | 0.03045 | 11819 |
+| [10⁵, 10⁶) | 18,165 | 0.04125 | 134423 |
 
 ## 6. Running the implication backwards, correctly
 
@@ -1122,7 +1126,7 @@ So: **the route yields robustness at floors well below the ceilings, and sharp s
 
 ## 8. Open questions specific to this document
 
-1. **Extend the branch-and-bound past 10⁶.** The search as run is complete below 10⁶ (§5) and gives δ ≥ 0.026117, but its argmin lies elsewhere under the corrected shape space and it wants rerunning first — the worklist there has 41,584 entries against 48,729, and only one below 0.026117. Pushing further needs `ladder_verify.py` run at a larger N, which is O(N²/log N) — 78 minutes to 10⁶, so 10⁷ is multi-day. The lower envelope has risen monotonically since [10³, 10⁴), so the expected return is confirmation rather than a new minimum; the value of doing it is in how far the pattern can be pushed, not in what it is likely to find. The reduction is essentially free: all but a handful of worklist entries are eliminated by comparing their lower bound against the running floor. Extending the range would replace the deliberately loose 1/50 in the conjecture with something close to the observed value.
+1. **Extend the branch-and-bound past 10⁶.** The search as run is complete below 10⁶ (§5) and gives δ ≥ 0.026117, but its argmin lies elsewhere under the corrected shape space and it wants rerunning first — the worklist there has 19,583 entries against 48,729, and only one below 0.026117. Pushing further needs `ladder_verify.py` run at a larger N, which is O(N²/log N) — 78 minutes to 10⁶, so 10⁷ is multi-day. The lower envelope has risen monotonically since [10³, 10⁴), so the expected return is confirmation rather than a new minimum; the value of doing it is in how far the pattern can be pushed, not in what it is likely to find. The reduction is essentially free: all but a handful of worklist entries are eliminated by comparing their lower bound against the running floor. Extending the range would replace the deliberately loose 1/50 in the conjecture with something close to the observed value.
 
 2. **Bound the s = 4 and s = 5 branches.** The only item here that is a gap in a *proof* rather than in evidence. *Recount after the rebuild:* at n = 3239 and 3059 the density rises sharply under the corrected shape space, so both leave the sub-1/25 set and the branch may narrow without any new theorem. E.1 caps s = 1 by the Mersenne constants and E.3(iii) caps the s = 2 repunit branch; s = 4 has neither, and is not thin enough for an E.4-style collapse. An absolute cap would have to come from the foreign block's twist, as in those two. The search clears it at every computed n, so nothing is unproved — but the gap widens as the floor falls.
 

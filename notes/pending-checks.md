@@ -76,23 +76,26 @@ python3 check_doc_figures.py mu_table_safe_v4.csv *.md
 
 **Do not extend the table without rerunning this list in full.** An extension leaves a different subset of the documents behind each time, and the failure is silent: a stale figure reads as a claim about the current range. The two passes that catch it mechanically are `check_doc_figures.py --pass refs` and `validate_table.py`'s coefficient assertion.
 
-## R7. Rerun `ladder_verify.py` to 10⁶
+## R7. Consume the ladder worklist: compute B(n) on the weak values
 
-The script scores the S7-at-F≥3 family at `F·orb(c, dmax)` and covers both F = 2 fused rungs, so its N = 20,000 worklist stands at **213** and the 10⁶ run wants redoing against it.
+*The 10⁶ ladder run is done (`ladder_weak_v4.txt`, 19,583 entries; findings in `session-log-4.md`). What is left is the branch-and-bound that turns those lower bounds into values of B(n) — and unlike the ladder run itself, this one **does need R0**, since its pruning is keyed to a floor read off the table.*
 
-**Read the per-residue diagnostics rather than discounting them.** Fusion lifts only the intra term, so a residue moves when the fix reaches it and does not when its class minimum is foreign-bound — n ≡ 11 (mod 24) is the worked case (§3.7), where every rung-B class minimum is foreign-bound and the residue correctly does not move. **A residue not moving is informative about which term binds, not about the model being wrong.** `ASYMPTOTIC` = 0.050510; expect roughly half of the 41,584 worklist entries the wider model produced. Current spread at 20,000 is 0.327–0.653.
+The worklist entries are **lower** bounds from four explicit families, so an entry below a threshold does not say δ(n) is below it. What the list gives is the set of n where the families find least, ranked — which is exactly where computing B(n) is worth the cost. Three tiers, cheapest first:
 
-*One coverage gap, and it loses values rather than soundness:* the S7-at-F≥3 family still models prime-power `F` with one fused class, where the enumerator allows any `Fmid` and composite `F` such as 6 = 2·3.
+**Tier 1 — the 21 entries below 1/25 = 0.0400.** These are the only n in 10⁶ where the ladder leaves room for **s = 4**, the first fallback branch with no theorem. n = 1175, 3131, 3815, 4307, 4379, 4727, 7031, 7367, 7847, **8927**, 10127, 10679, 11183, 11819, 12575, 13559, 13919, 14063, 15023, 15503, 46127. Computing B(n) at each either closes the s = 4 question over 10⁶ or produces the first n that genuinely needs it.
+
+**Tier 2 — the 189 entries below the current table floor 0.045742**, of which only 4 are in v4 today. Any one of them coming in below the floor moves it, and the floor is what the s- and k-ladders are keyed to.
+
+**Tier 3 — the global minimum.** `arithmetic-of-density.md` §5.1's branch-and-bound should be rerun against the new worklist; its previous run used the 48,729-entry v2-era list, and the new one is 19,583. **Only one entry sits below 0.026117 — n = 8927 itself** — so the branch-and-bound has almost nothing left to eliminate, and the interesting question is whether B(8927) exceeds 0.02516 rather than whether some other n undercuts it.
 
 ```bash
-python3 ladder_verify.py 1000000
+python3 mu_enumerate_v2.py --nlist ladder_weak_tier1.txt --out mu_tier1.csv
+python3 mu_enumerate_v2.py --nlist ladder_weak_tier2.txt --out mu_tier2.csv
 ```
 
-> **Independent of R0.** `ladder_verify.py` never reads the table: its only input is NMAX on the command line, and it scores four explicit families in closed form off a sieve. So it can run alongside the rebuild, and its output does not go stale when the table extends.
->
-> *What is not independent is the consumption.* The branch-and-bound of `arithmetic-of-density.md` §5.1 prunes this worklist against a running floor taken from B(n), so **settling the global density minimum** from the worklist does need R0. The worklist itself, the per-residue diagnostics and the global floor over the four families are all usable immediately.
->
-> **It writes `ladder_weak.txt` unversioned**, so a rerun overwrites it. The previous output (`ladder_weak_v3.txt`, 41,584 entries) is evidence for the figures currently quoted in §3.7 and §5.2 — keep it, or rename the new one, before comparing the two.
+**Cost warning.** `mu_enumerate_v2.py` runs at about n^2.9 per value, so a single n = 46,127 is roughly 10⁴ times the cost of an n = 2,000 row. Tier 1 is not a batch job — **sort it ascending and take values one at a time**, and expect the four five-figure entries to be individually expensive. n = 8927 is the one that matters most and is mid-range.
+
+**Do not overwrite the worklist.** `ladder_verify.py` now honours `LADDER_OUT` and the previous runs are evidence for figures in §3.7 and §5.2; keep each run's file named by version.
 
 # §2. Thinking work
 

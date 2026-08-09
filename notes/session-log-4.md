@@ -457,6 +457,47 @@ The Angel–Borja CSP validation question is left as a judgement with a recommen
 
 What this does **not** reach is J0a: the witness records a twist *order*, not the group the twist lives in, so no precondition check can test whether the stabiliser is of ΓL(1) type. T2 is reworded to that residue plus the priorities call about occasional GAP spot-checks at the shapes with the least construction evidence (S4 and S7-at-F≥3).
 
+## Eleventh batch: the 10⁶ ladder run reviewed
+
+*`ladder_weak_v4.txt` (19,583 entries) and `ladder_verify_1e6_output_v4.log`, 5,161 s to 10⁶.*
+
+### What the run confirms
+
+- **The worklist halved, as predicted.** 19,583 entries against the previous 41,584 — a ratio of 0.471, so "expect roughly half" was right. Against the 48,729 the branch-and-bound actually consumed, it is 60% smaller.
+- **The global floor is unchanged: δ ≥ 0.02516 at n = 8927, n ≡ 23 (mod 24).** So the S7 over-credit fix and the two fused rungs moved the worklist without moving the extremum, which is the outcome that leaves §5's figures intact.
+- **Zero values below 0.02 across all 10⁶.** §5's finite conjecture holds throughout the range, unconditionally, over the four families.
+- **The ladder never exceeds the table.** Over the 7 worklist entries that have a v4 row, the table is strictly better at 6 and ties at 1 — never worse. So the log's warning that the script "now reports a larger value than the table" is v3-era and no longer describes the pair; it has been removed from the script.
+
+### Two structural findings the run makes visible
+
+**The worklist is one residue class, and that is the mod-24 prediction landing hard.** Of 19,583 entries, **19,568 (99.92%) have n ≡ 23 (mod 24)**, with 14 at n ≡ 11 and exactly one at n ≡ 17. That is close to forced — the threshold 0.050510 *is* class 23's ceiling, so any other class appears only by falling well short of its own, higher cap. Which makes **the 15 non-23 entries the informative ones**: class 11 has cap 0.06699 and class 17 has 0.10102, so those are values where the families underperform their class by 30% or more, and they are the cheapest place to look for a family the ladder is missing. Recorded in §5.2.
+
+**The per-residue diagnostic saturates early, so a wider scan does not test it further.** All 24 per-class minima are attained below n ≈ 12,000 — the largest being n ≡ 11 at 11,819 and n ≡ 23 at 8,927 — which is why the min-ratio spread (0.327 at n ≡ 16 to 0.653 at n ≡ 20) is *identical* at N = 20,000 and at N = 10⁶. The spread was being quoted as a live diagnostic; it is a statement about small n and will not move. Also recorded in §5.2.
+
+### Figures updated
+
+The decade table appears twice in `arithmetic-of-density.md` (§5.1 and §5.2) and both were keyed to the 41,584-entry list. Recomputed from the new file:
+
+| n | entries | min bound | at |
+|---|---|---|---|
+| [10², 10³) | 2 | **0.04181** (was 0.03649) | **575** (was 935) |
+| [10³, 10⁴) | **82** (was 158) | 0.02516 | 8927 |
+| [10⁴, 10⁵) | **1,334** (was 2,987) | 0.03045 | 11819 |
+| [10⁵, 10⁶) | **18,165** (was 38,437) | 0.04125 | 134423 |
+
+The [10², 10³) row moving from 935 to 575 is the fused rungs doing their job — 935 was weak only because the old model missed a family there.
+
+**And the tail below the floor is now thin enough to change the question.** Exactly one worklist entry sits below 0.026117 (n = 8927 itself), one below 0.030, 11 below 0.037524, and 21 below 1/25. So the branch-and-bound has almost nothing left to eliminate, and §5.1's operative question is no longer "does some other n undercut 8927" but **"does B(8927) exceed 0.02516"**. Rewritten that way.
+
+### Script fixes
+
+- **The stale S7 note is gone**, replaced by a statement of what the list *is*: lower bounds, so an entry below a threshold does not mean δ(n) is below it — read it as the set of n worth computing B(n) at, ranked.
+- **The output filename is no longer hardwired.** `ladder_verify.py` honours `LADDER_OUT`, because each run's worklist is the evidence for figures in §3.7 and §5.2 and comparing two runs is the point of rerunning. Verified on a short run.
+
+### R7 rewritten from "do the run" to "consume the worklist"
+
+The run is done and needs nothing further. What replaces it is the branch-and-bound, in three tiers — the 21 sub-1/25 entries (the only n in 10⁶ where the ladder leaves room for **s = 4**, the first branch with no theorem), the 189 sub-floor entries, and the global minimum — **with a cost warning that was not there before**: at n^2.9 per value, the single entry at n = 46,127 costs about 10⁴ times an n = 2,000 row, so tier 1 is a sorted one-at-a-time job rather than a batch. Unlike the ladder run, this one **does** need R0, since the pruning is keyed to a floor read off the table.
+
 ---
 
 ## Items inherited as closed from earlier passes
