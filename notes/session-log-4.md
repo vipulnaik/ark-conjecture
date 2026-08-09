@@ -231,6 +231,57 @@ The band is quoted as 11–34 from forced IN ending at 10 edges and forced OUT s
 
 That makes the free band a **scheduling question rather than an analysis question**, which is why it has moved from §2b to §1 as **R8**, to be run after the table rebuild. The cheaper first move is recorded there: the five boundary classes decide whether the band moves, and they can be probed alone via `--classes`.
 
+## Fifth batch: the n = 12 artefacts, and the file reorganisation
+
+### `small-degree-review.md` folded into `small-degree-verification.md` and retired
+
+Two files describing one object is the drift risk this session has spent most of its time paying down — the A13–A16 findings were all cross-document duplicates going stale. The review's four corrections, three advances and one gap are now recorded **in the items they correct**, each labelled with the artefact it was checked against, and the review file is gone.
+
+The verification file's header now says what it is: internal state-tracking, with `small-degree-computation.md` as the account meant to be read. It also carries its own **Runs outstanding** section, so small-degree runs no longer compete for space in `pending-checks.md` §1.
+
+### `pending-checks.md` is now the arithmetic programme alone
+
+A10, A11, A11b, A12 and A12b have moved out. What remains is a single pointer plus one line in the risk ranking, naming the sole point of contact: **exhaustiveness of the GAP stages**, which licenses Part I's two non-circular comparisons. Nothing else in the small-degree file gates anything in the arithmetic programme.
+
+### Every n = 12 claim verified, and four counts pinned
+
+Against the n = 12 `groups_out.txt`, `done_keys.txt`, `ark_gap.log` and `consume_gap.log`:
+
+- **census 7,115 = 295 + 657 + 67 + 6,096**, p-groups splitting 6,004 / 88 / 2 / 2; by stage **A 194, B 969, B2 28, C 5,924**; all lines well formed with 66-entry maps;
+- **max m\* = 18 over all 7,115 groups**, attained by **8 groups / 1 orbital partition / 3 (partition, prime) conditions** — the three quantities the surrounding documents kept conflating into "six ways" or "seven ways";
+- **`B2:4x3:4.1` = T(4,4) ≀ T(3,1) is among the attainers**, which is the direct confirmation that (𝔽₄⋊C₃)≀C₃ attains the optimum rather than a consistency argument;
+- **one attainer has tag `0`** — `A:166` = T(12,166), order 576, a trivial top. So the claim that the attainers sit at q = 2 and q = 3 was not just wrong but understated the result: a trivial top gives χ = 1 exactly, so the optimum is witnessed by the harshest condition available;
+- **9,238 groups built and dropped** (16,353 keys against 7,115 emitted), 56% of what GAP constructed — the bound on what raising `MAXT` could add;
+- **no multi-prime tag at either degree**, 0 of 7,115 at n = 12 and 0 of 967 at n = 10.
+
+### The dedup count is hostage to the canonical form, and that is worth knowing
+
+Reproducing the `--maxt` truncation table meant reimplementing `_orbital_canon`. Two natural attempts **reproduced the group counts exactly and the condition counts not at all**: a plain two-colour layering (points versus interchangeable orbital classes) gives 162 distinct conditions at `--maxt 8`, and colouring the class vertices by size alone gives 186, against the shipped key's **230**. Only the shipped form — class vertices coloured by (size, degree-profile) — reproduces the log.
+
+So a 30% swing sits in a detail of the key, in the same direction as `consume_gap.py`'s own note about an earlier attempt over-splitting sevenfold. **The count should never be quoted without naming the form that produced it.** With the right form the table is:
+
+| `--maxt` | 4 | 5 | 6 | 7 | **8** | 10 | **12** |
+|---|---|---|---|---|---|---|---|
+| distinct conditions | 36 | 73 | **125** | 169 | **230** | 339 | **425** |
+
+`--maxgroups 200` drops 3 conditions; **`--maxt 8` drops 195**. The honest reading of the `--maxt 6` lever is "we use 54% of the available conditions today; that would use 29%".
+
+### The n = 10 dedup audit closes item 7, and it changes what the n = 10 SAT means
+
+With the n = 10 `groups_out.txt` finally in hand (967 lines, 45-entry maps — the file collision is now flagged in the artefacts item, since each upload has overwritten the other), the audit runs in seconds against the shipped `_orbital_canon`.
+
+**Distinct (partition, prime) conditions at n = 10:** 123 at `--maxt 8`, **167 at `--maxt 10`**, 189 over the whole file. The published runs kept **57** and **75**. So the old invariant key merged the Oliver side roughly three to one — **40 kept where 125 exist** — and the n = 10 CSP was solved on **45% of the available conditions**.
+
+Sorting out what that touches was the useful part:
+
+- **μ(10) = 20 is unaffected**, because it is read off the group file rather than the battery: max m\* is 20 over the 268 Oliver groups and over all 967. The same holds for μ(12) = 18. So the arithmetic programme's two non-circular comparisons are untouched, and that is now said explicitly at the top of the file.
+- **The SAT is weakened in the direction that matters.** Fewer conditions is an easier system, so a positive verdict does not transfer upward. "The CSP is satisfiable at n = 10" should read "satisfiable on the 75-condition battery" wherever it appears.
+- **The χ kill is unaffected**, since `chi_test.py` evaluates one property's down-closure and never consults the battery. Which is a reason to weight it more heavily than the SAT: it is the one result the truncation cannot reach.
+
+That makes rerunning the n = 10 CSP on the full battery the cheapest of the three outstanding runs and the only one whose outcome could settle a degree outright — added to Runs outstanding ahead of the n = 12 work.
+
+**And the same three-quantity confusion resolves at n = 10 as at n = 12:** m\* = 20 is attained by **8 groups** (`A:17`–`A:20`, `A:27`, `A:28`, `A:33`, and `B2:5x2:3.1` = T(5,3)≀T(2,1)), all with orbital sizes [20, 25], forming **1 partition** and **2 conditions**. The wreath is among them, so AGL(1,5)≀C₂ is confirmed rather than assumed, and `A:18` carries tag `0` — a trivial top, χ = 1 exactly. Census: 967 = 95 + 159 + 14 + 699, stages A 24 / B 319 / B2 6 / C 618.
+
 ---
 
 ## Items inherited as closed from earlier passes
