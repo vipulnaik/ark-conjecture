@@ -363,6 +363,80 @@ The rule: every check stays **O(rows) or O(rows × parts)**, doing arithmetic on
 
 **The case that will tempt is named**, since it is the one a future check will hit: a check that wants to compare a row against *alternative configurations* rather than against a formula. That is a certificate's job; if it has to live here, budget it against the 0.1 s and say so at the check, so the next reader knows what is being protected. Measured for reference: CSV parsing alone is 0.025 s, so about a quarter of the total is unavoidable I/O and the 20 checks together cost roughly 0.2 s.
 
+## Ninth batch: A2 and A9 closed, T1–T5 dug into
+
+*A review pass by a second reader over the two open §2b items and the five human items, with the code and document changes it produced.*
+
+### A2 — closed. The leftover twist cap, and E″ at 90,299 of 90,299
+
+**The two values E″ could not settle below 10⁵ were one shape, not two accidents.** n = 50,817 has (c, r, L) = (20327, 10163, 20327) and n = 89,697 has (35879, 17939, 35879): both are n = 5r + 2 with c = 2r + 1 and **leftover exactly c**. So the empirical half of A2's second question was already answered — L = c was the only obstructed leftover in range.
+
+**The mechanism question resolves into a lemma, and the lemma is about twists rather than sizes.**
+
+> **Lemma (leftover twist cap).** In any admissible configuration containing a foreign block of prime size r, every p-characteristic class of F blocks of size c has minimum intra-orbital at most F·orb(c, d), where d = qpart(c−1, q) times the largest divisor of the remainder coprime to r and to F_mid.
+>
+> *Proof.* The twist has order coprime to p, so it embeds in (cyclic layer) × (top q-group). The cyclic layer already carries the foreign block's translations C_r — Lemma B′ puts them there — and the block rotation C_{F_mid}, and one cyclic group forces pairwise-coprime orders. So the non-q part of the twist is coprime to r and to F_mid, and only the q-part can lie in the top layer. ∎
+
+Every ingredient is an already-proven necessary condition: this is the SAFE `dmax` reasoning applied to a branch that was not using it, which is exactly the "stripping all F_mid values would be a free tightening" that the SAFE scoping note predicted. **At L = c with c − 1 = 2r the shape dies twice over** — the r is stripped by coprimality and, for the odd q that survive the foreign gate, the q-part is 1, leaving d | 2 and an intra term of orb(c, 2) = c ≪ B; the q = 2 reading dies earlier at orb(r, 2) = r < B. The q-pinning corollary A2 asked about falls out the same way: a foreign leftover of size c needs q | c − 1 = 2r, forcing q = 2, dead at the same gate.
+
+**Implementation, and the F = 2 surprise.** Tightening `single_part_ok` alone exposed a second reading: with L = c dead at F = 1, the loop advances to **F = 2 with leftover 0**, which passes the permissive gates. The same lemma applied to the *main* class kills it — at odd q, F_mid = 2 strips the 2 and the foreign r strips the r, so dmax = 1. So condition (4) now reads F·orb(c, dmax) rather than F·C(c,2) throughout `pair_candidates`, with matching caps in `single_part_ok` and `multi_part_ok`.
+
+**Evidence.**
+
+| check | result |
+|---|---|
+| old-vs-new over all (n, c, r), n ≤ 2000 | 501,046 pairs; **0 candidates gained** (the unsound direction), 0 verdicts changed |
+| `fallback_cert.py` v4, both modes | identical: 0 candidates, 1,673/1,920 dispatched, 247-branch residue, s ≤ 3 |
+| `wide_cert.py` 10⁵, both modes | **0 unresolved of 90,299** |
+
+One honesty note carried into the documents: at 10⁵ the theorem dispatch settles nothing (every live pair has s ∈ {2, 4, 6}), so that 100% is automatically theorem-free and the mode comparison there is vacuous. The comparison that carries weight remains `fallback_cert.py`'s.
+
+**What is left of A2 is only the *global* promotion of E.3(ii) to a theorem over all n**, which was never A2's ask. The item is removed; the "all but two values" figures are updated in five places.
+
+### A9 — closed, and the stated dichotomy was wrong
+
+**The premise fails against Part E.** A9 assumed distinct p-characteristic classes need pairwise-coprime twists, so that at odd p — where both twists are even — at most one could keep its 2-part. **They need no such thing.** Part E's construction carries every p-characteristic twist on **one diagonal generator of the cyclic layer**, whose image in each class is that class's full twist; only the generator's total order must be coprime to the foreign primes and the F_mid values. So the p = 2 versus odd-p asymmetry does not exist, and even the n = 551 framing — "works because 255 and 127 are coprime" — cites a condition that was never required. The documents disagreed with themselves here, between §6.2 and Part E, and Part E is right.
+
+**What actually governs the shape is a density ceiling.** For the unfused two-class case, c′ ≤ c/p and c + c′ ≤ n give c′ ≤ n/(p+1), and the configuration's minimum is at most C(c′,2), so
+
+> **δ ≤ (c′/n)² ≤ 1/(p+1)²** — 1/9 at p = 2, **1/16 at p = 3**, 1/36 at p ≥ 5.
+
+Unequal-size shapes are therefore *infeasible* above 1/9 at any p, and above 1/16 unless p = 2. Only p = 3 can compete anywhere near the floor. **Measured over v4:** 654 of 1,666 values admit an unequal odd-p configuration at full diagonal twist, **none wins, none comes within 10% of B(n)**, best ratio 0.236·B at n = 1007.
+
+So the one-size presupposition of §6.2 is **false but harmless**: unequal-size shapes exist at every p and are escapes rather than competitors, exactly like the fusion shapes and the c = 2^a family. Consequences written into §6.2 — the one-size counts are exact above δ₀ = 1/9, the partition factor applies only below, and the "penalised" column's justification is now the ceiling rather than a twist-parity argument. **The single standing check is p = 3 against the δ ≤ 1/16 tail**, folded into that section rather than left as an item. A9 is removed.
+
+### T1 — Parts A, E, F read; one substantive finding
+
+**Part A: sound.** The decomposition m\* ≤ min(minᵢ Mᵢ, min sᵢsⱼ) is correct with both terms needed, the identification of Γ's pair-orbits in Oᵢ with those of Γ|₍Oᵢ₎ holds, and the fixed-point domination clause is consistent with the n = 6 gate elsewhere.
+
+**Part E: the coefficient's "upper bound by divisibility" is false as stated, and it happens not to matter.** Part E claimed the minimum pair-orbital of a transitive group of degree F is ≤ F (odd F) or F/2 (even) "by divisibility: for a transitive group of prime-power degree ℓᵃ every orbital has ℓ-power size". The parenthetical is false for general transitive groups — S₄ on 4 points has a pair-orbital of size 6 — and the admissible block-permuters are not all ℓ-groups, since F = F_mid·F_top need not be a prime power. **Witness: AGL(1,5) = C₅⋊C₄**, cyclic part in the middle layer and 2-group on top, is 2-transitive on 5 blocks, so its only within-class cross orbital has size 10c² against the coefficient's 5c².
+
+Nothing breaks, and the reason is worth having explicitly: **coeff·c² ≥ F·C(c,2) ≥ F·orb(c, dmax) always**, so the cross term can never be the binding reason a score under-counts a group — the intra cap binds first — and μ ≤ B_safe survives untouched. B_refined and the constructions are unaffected, the regular C_F action attaining the coefficient exactly. The fix is scoping, applied in Part E and in §9.7's orbital count: both describe **the constructed family**, not every Oliver group.
+
+**Part F: arithmetic verified, one wobble.** F.1's proof and the self-certification argument are clean, F.3 and the s-versus-k box are correct, and the new n = 1994 triple-saturation datum is consistent with "F.1 is tight". F.2's chain `sᵢ² ≥ Fᵢ(2m* + sᵢ) ≥ 4m*` silently discards the Fᵢsᵢ term; the inequality holds, and the step is now written out.
+
+**Also found: two stale banners.** Part A's headnote and Part E's opening both still carried pre-repair framing, Part E literally opening "the completeness half of this Part is false as it stands" — which contradicted the corrected Part 0 and the header's sandwich. Both rewritten to state what each half rests on.
+
+### T3 — necessity read of all eight conditions, written into the file
+
+Verdicts: **(1)** definitional for the branch. **(2)** necessary — B′ forces the foreign twist into the top layer, so it is a q-power dividing r − 1; trivial twist is the '\*' branch, gated on r ≥ B. **(3)** necessary, twist divides the q-part and orb is monotone. **(4)** necessary by the leftover twist cap above — this is the condition A2's work produced, and the load-bearing one. **(5)** necessary by counting. **(6)** **not independently necessary** — the AGL(1,5) finding above — but implied by (4), since coeff·c² ≥ F·C(c,2), so it can never wrongly exclude; reclassified in the header as a tripwire with an explicit instruction not to promote it. **(7)** necessary by counting on each leftover part. **(8)** necessary per part, with the subset-sum reachability over-approximating. `e3ii_resolves` is correctly a domination rather than a necessity and sits behind the theorem switch.
+
+**Net: seven necessities sound, one redundant-but-harmless, one repair produced.** All eight arguments are now recorded in `fb_common.py`'s header, so the outstanding human read is scrutiny of those arguments rather than reconstruction of them.
+
+### T4 — the transfer question closes, in our favour and trivially
+
+The worry inverts. **The largest prime-power divisor of r − 1 is at least the largest prime divisor**, so if a prime q ≥ r^θ divides r − 1 then the q-part of r − 1 is at least q ≥ r^θ. Every unconditional shifted-prime result therefore imports **verbatim** as a lower bound on this framework's quantity — Goldfeld / Motohashi / Hooley-type θ ≈ 0.6–0.677, the 0.679 refinement, and the density results of the form lim inf |{p ≤ x : P(p−1) ≥ p^c}|/π(x) ≥ 1 − c for c ≤ 1/2 with their subsequent improvements — with no transfer of proof and no loss. §3.6's caveat is replaced by the domination, and "(H) is the θ = 1 endpoint" needs no qualification.
+
+**The converse does not hold**, and §3.6 now says so: an upper bound on P(r − 1) gives no upper bound on our η, so the ladder's *ceiling* arguments and the level-of-distribution barrier are about the literature's quantity and not automatically about ours.
+
+The Angel–Borja CSP validation question is left as a judgement with a recommendation against, on the ground that the n = 10 and n = 12 exhaustive batteries already validate the machinery more strongly than any single external instance.
+
+### T2 and T5 — recommendations on the record
+
+**T2:** verify *preconditions* per-n in `validate_table.py` (diagonal carrier coprime to foreigns and F_mids, each foreign r with its q-part twist, F_top a q-power) and leave group construction as an occasional GAP spot-check. J0a — the stabiliser assumption — is the one thing no precondition check reaches and stays a human item.
+
+**T5:** fence rather than close. The a > 1 exposure is asserted per row by `validate_table.py` at 0 of 1,677 parts on every extension, the Galois obstruction makes a proof hard, and the payoff is a case the data says never binds. Trigger for reopening: the tripwire firing, not a review cycle.
+
 ---
 
 ## Items inherited as closed from earlier passes

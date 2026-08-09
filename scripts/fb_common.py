@@ -200,6 +200,44 @@ def theorem_report(A, n, B, caps_m, caps_r):
     return all(ok for ok, _ in per.values()), sm, per
 
 # --------------------------------------------- necessary conditions (1)-(8)
+#
+# NECESSITY, CONDITION BY CONDITION.  What makes an empty candidate list a proof
+# is that each condition below is NECESSARY for a fallback configuration to
+# attain B(n) -- not merely true of the ones we know about.  A condition that is
+# not in fact necessary silently discards a real candidate, which is the one
+# error class this file cannot detect from its own output.  So:
+#
+#   (1) r | c-1, r prime != p             definitional for the branch (Lemma C's
+#                                         trigger).
+#   (2) q | r-1, or the '*' branch        necessary: Lemma B' forces the foreign
+#                                         twist into the top layer, so it is a
+#                                         q-power dividing r-1; a trivial twist
+#                                         leaves the block worth only r, which is
+#                                         the '*' branch, gated on r >= B.
+#   (3) orb(r, qpart(r-1,q)) >= B         necessary: the twist divides the q-part
+#                                         and orb is monotone in it.
+#   (4) F * orb(c, dmax) >= B             necessary by the leftover twist cap: the
+#                                         twist's non-q part lies in the cyclic
+#                                         layer, which already carries C_r and
+#                                         C_Fmid, and one cyclic group forces
+#                                         pairwise-coprime orders.
+#   (5) F * c * r >= B                    necessary by counting: the cross class
+#                                         holds F*c*r pairs in total.
+#   (6) coeff(F) * c^2 >= B               NOT independently necessary -- see below.
+#   (7) leftover floors                   necessary by counting on each leftover
+#                                         part's cross classes and its own intra.
+#   (8) leftover composability            necessary per part by (3)/(4)-type
+#                                         arguments; the subset-sum reachability
+#                                         over-approximates, hence permissive.
+#
+# ON (6).  The within-class cross coefficient is exact for the Part E
+# construction (block-permuting group the regular C_F) and is NOT an upper bound
+# over all admissible block-permuters: F = Fmid*Ftop need not be a prime power, so
+# the permuter may be 2-transitive on the blocks -- AGL(1,5) on 5 of them -- and
+# then the single cross orbital is 10c^2 rather than 5c^2.  So (6) is kept as a
+# TRIPWIRE rather than relied on as a necessity, and it cannot wrongly exclude
+# anything, because coeff*c^2 >= F*C(c,2) >= F*orb(c,dmax) means (4) binds first
+# in every case.  Do not promote it to an independent condition.
 
 def intra_floor(B):
     """Smallest part size that can carry an intra-orbital of size B at all,
