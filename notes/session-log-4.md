@@ -201,6 +201,36 @@ With the resume rule fixed, rerunning the 54 CAP classes at a larger `--nodecap`
 
 Sequencing note: a `--nodecap` escalation is precisely a budget-limited run, and resuming its memo was the route to a spurious NON-EVASIVE, so the `adversary.py` fix had to come first. Any `adversary_memo.pkl` predating it must be deleted rather than resumed.
 
+## Fourth batch: the n = 10 artefacts
+
+### Every A11 claim the artefacts can settle, settled
+
+Verified directly against `ckpt_catalog.pkl`, `ckpt_order.pkl`, `solution1.pkl` and `probe_results.csv`:
+
+| claim | result |
+|---|---|
+| catalog size V | **1,242**, order matrix 1,242 rows |
+| solution1 split | **214 IN / 1,028 OUT** |
+| §9.7's "the skeleton contains 2K₅ and not K₅,₅" | **confirmed** — 2K₅ at catalog index 2 with x = 1, K₅,₅ at index 1 with x = 0 |
+| catalog complement-closed, no self-complementary class | **confirmed** — 0 complements absent, 0 self-complementary |
+| involution cross-check on the probe record | **30 confirmed pairs, 0 violations**, 15 forced classes whose complement is unprobed |
+| monotonicity of solution1 against the order matrix | **0 violations** |
+| probe record shape | **817 probes over 409 classes: 25 IN, 20 OUT, 310 free, 54 CAP** |
+
+One incidental note for anyone reproducing this: the checkpoints pickle `ark_intersect.Catalog`, so unpickling needs `oliver_mu` importable even though nothing in it is used for the read. A two-function shim suffices.
+
+### The free band, quantified — and the CAP tail is where the time went
+
+The band is quoted as 11–34 from forced IN ending at 10 edges and forced OUT starting at 35. Resolving the CAP set by edge count says exactly how unestablished that is:
+
+- **49 of the 54 CAP classes sit strictly inside 11–34** — the interior of the band is unknown, not free.
+- **The remaining five sit at 9, 10, 10, 35 and 36** — on both boundaries. So the band's *edges* are not pinned either, and a boundary probe resolving the wrong way would move the band rather than merely fill it in.
+- Exactly one pinning capped per CAP class (**0 classes had both capped**), so the rerun is 54 probes, not 108.
+
+**The cost accounting is the useful part, because it explains the deferral.** The 817 probes took **32.8 h**, and the 54 CAP probes took **23.0 h** of that — **70% of the total spent on the probes that returned nothing**, median 1,180 s and worst 6,307 s, all at `--nodecap 5000000`. A rerun at 10× the budget plausibly costs 200+ h and is not bounded above by anything in the record, since a CAP is by definition a probe that had not finished.
+
+That makes the free band a **scheduling question rather than an analysis question**, which is why it has moved from §2b to §1 as **R8**, to be run after the table rebuild. The cheaper first move is recorded there: the five boundary classes decide whether the band moves, and they can be probed alone via `--classes`.
+
 ---
 
 ## Items inherited as closed from earlier passes

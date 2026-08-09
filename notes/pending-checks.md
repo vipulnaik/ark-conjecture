@@ -91,6 +91,25 @@ The script scores the S7-at-F≥3 family at `F·orb(c, dmax)` and covers both F 
 python3 ladder_verify.py 1000000
 ```
 
+## R8. Rerun the 54 CAP probes to establish the free band
+
+*A long run, not analysis: this belongs after the table rebuild, since it wants the same machine time R0 does.*
+
+The forced sets stop at 10 edges (IN) and start at 35 (OUT), so the free band is quoted as 11–34. **That band is not measured.** Against the current record: 409 classes probed, **25 IN (0–10 edges), 20 OUT (35–45), 310 free, 54 CAP (9–36)** — and of the 54 CAP classes, **49 sit strictly inside 11–34** while the other five sit at 9, 10, 10, 35 and 36, i.e. exactly on the two boundaries. So neither the band's interior nor its edges are established, and the runbook's escalation rule (static band ⟹ stage FULL) is keyed on a number no probe supports.
+
+```bash
+python3 probe_backbone.py --nodecap 50000000     # retries every CAP, skips exact verdicts
+```
+
+**Cost, from the record's own timings.** The 817 probes took **32.8 h**, of which the 54 CAP probes took **23.0 h** — 70% of the total spent on the probes that returned nothing, median 1,180 s and worst 6,307 s each, all against `--nodecap 5000000`. A rerun at 10× the budget therefore plausibly costs **200+ h** and is not obviously bounded, since a CAP is by definition a probe that had not finished. Two things make that tolerable: exactly one pinning capped per CAP class (0 classes had both capped), so each needs one probe rather than two; and the run is checkpointed per probe and stoppable between them.
+
+**Sequencing and preconditions.**
+
+- Run after R0. It competes with the rebuild for the same machine, and nothing upstream depends on the band.
+- **Consider a partial run first.** The 49 interior classes are what the band claim needs; the 5 boundary ones (edges 9, 10, 10, 35, 36) decide whether the *boundaries* move, which is the cheaper and more decisive question — pass them via `--classes`.
+- Rows in the existing record predate the `nodecap` column, so all 54 are retried whatever budget is given. That is intended, but it means there is no partial credit from the previous run.
+- **Delete any `adversary_memo.pkl`** before any escalation that reaches the adversary search; a budget-limited run was the route to a spurious NON-EVASIVE.
+
 # §2. Thinking work
 
 ## §2a. Needs human thought
@@ -180,20 +199,6 @@ It **replaces the by-hand checking** done in each review pass. **Amend it in the
 
 By §9.7 the χ constraint is decisive at t ≤ 3 and weak by t ≥ 4, but 93% of the battery's Σ2^t cost sits at t ≥ 7 (31 groups, 16,128 of 17,356). High-t groups do generate catalog classes and monotonicity couplings, so this is not an argument to drop them — but the battery is selected by m\* and cost, never by constraint strength, and the trade is unmeasured. Cheap test: solve the t ≤ 6 sub-battery (44 groups, 7% of the cost) and see how much backbone survives. If most does, n = 12 becomes tractable.
 
-### A11. Establish the free band — the rerun now works, and needs the checkpoints
-
-Forced IN runs to 10 edges and forced OUT from 35, but the 54 CAP probes span **9–36**, straddling both boundaries. So "band = 11–34, static" is not a measurement, and the runbook's escalation rule (static band ⟹ stage FULL) is being applied to an unestablished number. The remedy — rerun the CAP classes at a larger `--nodecap` — **was a silent no-op until the resume rule was fixed** (see `session-log-4.md`); it now retries them, records the budget each verdict was taken at, and summarises from the latest row.
-
-```bash
-python3 probe_backbone.py --nodecap 50000000        # retries every CAP, skips exact verdicts
-```
-
-> **Needs the n = 10 checkpoints and the probe record**: `ckpt_groups.pkl`, `ckpt_catalog.pkl`, `ckpt_order.pkl` and `probe_results.csv`. The script itself is now verified end-to-end on a synthetic four-class battery, both directions of the resume rule included.
->
-> **Read the CAP rows' `nodecap` column first.** Rows written before that column existed are retried rather than trusted, so the first rerun will redo all 54 whatever budget it is given. That is the intended conservative behaviour, and it means the first rerun costs a full CAP sweep.
->
-> **Delete any `adversary_memo.pkl` predating the memo fix** before any escalation that reaches the adversary search; a budget-limited run was the route to a spurious NON-EVASIVE.
-
 ### A12b. Corrections to `small-degree-verification.md` -- see `small-degree-review.md`
 
 Four corrections and one reordering. **m* = 18 at n = 12 is attained by 8 groups / 1 orbital partition / 3 distinct (partition, prime) conditions** -- that document is right, section 8.11's "six ways" is wrong, and my own "seven ways" missed the wreath `B2:4x3:4.1` = T(4,4) wr T(3,1), whose presence is the direct confirmation that (F4:C3) wr C3 attains the optimum. **Its item 5b's "the eight attainers sit at q = 2 and q = 3" is wrong**: one is `A:166`, a **trivial top**, so the optimum is witnessed by the harshest condition available. **Its item 4's CAP range is 9-36, not 12-36**, which matters because forced-IN ends at 10 and forced-OUT begins at 35, so the CAPs straddle both boundaries. **Its item 6 is answerable**: the `+` diagnostic returns 0 at both degrees, 8,082 groups, so either the files predate the change or no group admits two usable q -- and if a fresh re-emission also yields none, the lcm strengthening should be **retired**, not left as dead code carrying the A10(b) hazard.
@@ -220,11 +225,13 @@ Four corrections and one reordering. **m* = 18 at n = 12 is attained by 8 groups
 
 **One more observation across both degrees.** No group at n = 10 or n = 12 carries a **multi-prime tag** — tags are `0`, `2`, `3` and `P*` at both. So the `+`-separated tag and the lcm strengthening in `stage4_fast.py` / `probe_backbone.py`, which Appendix B flags as "available and unused", **has never fired in 8,082 groups**. Worth understanding why before treating it as a live strengthening, especially as it carries the A10(b) soundness hazard.
 
-### A11b. Artefacts still wanted -- see `gap_data_wanted.md`
+### A11b. Artefacts still wanted — down to the n = 12 side
 
-Those sections assert roughly twenty numbers; three are verifiable from the uploaded n = 10 checkpoints and the rest are not. Priority order: **groups_out.txt at n = 10** (the 967 / 268 / 699 headline, unreachable from `ckpt_groups.pkl`, which holds only the 75 post-selection survivors), **groups_out.txt at n = 12** (a census that has already been wrong once, 8,819 to 7,115, plus the m* = 18 six-ways claim underpinning the wreath clause), **a stage-4 solution pickle** (unlocks the section 8.9 backbone, section 9.7's "the skeleton contains 2K5" claim, and makes `chi_test.py` runnable so section 8.12's chi kill can be reproduced), and **stage4_fast.py / probe_backbone.py** (unreviewed, and where the A10(b) lcm hazard would land).
+The n = 10 artefacts are in hand and every claim they can settle is settled (see `session-log-4.md`). What is still wanted:
 
-*Verified meanwhile:* section 8.11's order-matrix acceptance reproduces exactly (V = 1,242, 249,711 true entries, density 0.162, reflexive, antisymmetric, transitive on samples); the catalog is **complement-closed with no self-complementary class**, confirming section 8.9's involution as a property of the object; and m* = 20 at n = 10 from AGL(1,5) wr C2, with 2K5 and K5,5 sitting at catalog indices 2 and 1.
+- **`groups_out.txt` at n = 12.** A census that has been wrong once (8,819 → 7,115), plus the m\* = 18 attainer count underpinning the wreath clause. The file currently in the working set is the n = 12 one, so this may already be available — confirm which degree it holds before quoting either census.
+- **`stage4_fast.py`.** Unreviewed, and the only remaining place the lcm hazard could land; `probe_backbone.py`'s copy of that logic is now checked and the tag path is legitimate there.
+- **`dedup_audit.py`'s input at n = 10.** A12b item 7 closes in two minutes once the n = 10 `groups_out.txt` is present alongside the n = 12 one.
 
 ### A2. Promote E.3(ii) past the bare pair
 
