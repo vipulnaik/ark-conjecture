@@ -20,7 +20,7 @@ that survives may be spurious; a real one is never discarded.  In particular the
 certificate is sound against any B <= B_safe(n), which is what lets wide_cert.py
 substitute a lower bound.
 """
-from math import comb, isqrt
+from math import comb, isqrt, gcd
 
 # ---------------------------------------------------------------- theorem switch
 #
@@ -233,7 +233,37 @@ def single_part_ok(A, L, B, p, q, r):
         if not pp:
             continue
         if pp[0] == p:
-            if F * comb(c2, 2) >= B:
+            # The p-characteristic cap is NOT F * C(c2, 2).  The part's twist has
+            # order dividing c2 - 1 and coprime to p, so it embeds in
+            # (cyclic layer) x (top q-group); the cyclic layer already carries
+            # the foreign block's translations C_r (Lemma B-prime puts them
+            # there), and a cyclic group forces pairwise-coprime orders.  Hence
+            # the cyclic part of the twist is coprime to r, and only the q-part
+            # may hide in the top layer.  The largest admissible twist is
+            # therefore qpart(c2-1, q) * (largest divisor of the rest coprime to
+            # r) -- the same dmax logic as SAFE, applied to the leftover.
+            #
+            # This is what resolves the leftover L = c at c = 2r + 1: there
+            # c2 - 1 = 2r, the r is stripped by coprimality and (for odd q not
+            # dividing 2r) the q-part is 1, so dmax = 2 and the intra caps at
+            # orb(c2, 2) = c2, far below B.  Without this cap the full C(c2, 2)
+            # keeps the branch alive and the two n = 5r + 2 values below 10^5
+            # (50817, 89697) stay unresolved.
+            #
+            # Soundness: coprimality-to-r is a proven necessary condition (the
+            # cyclic layer is one cyclic group); exempting the whole q-part is
+            # permissive; ignoring OTHER leftover parts' contents is permissive.
+            # The '*' branch has no fixed q, so it keeps the full C(c2, 2) --
+            # permissive, and that branch is gated on r >= B anyway.
+            if q == '*':
+                cap_i = F * comb(c2, 2)
+            else:
+                dq2 = qpart(c2 - 1, q)
+                rest = (c2 - 1) // dq2
+                while rest % r == 0:
+                    rest //= r
+                cap_i = F * orb(c2, dq2 * rest)
+            if cap_i >= B:
                 return True
         elif pp[1] == 1 and c2 != r:
             capf = foreign_cap(A, c2) if q == '*' else orb(c2, qpart(c2 - 1, q))
@@ -262,8 +292,20 @@ def multi_part_ok(A, L, B, p, q, r, limit=60):
         # F_top is a q-power, so restricting here would drop real parts.  The
         # `q == '*'` branch previously stopped at F = 1, which was the same
         # restriction in its sharpest form.
+        # Same twist cap as in single_part_ok: for a fixed prime q the part's
+        # twist is qpart(cj-1, q) times the r-coprime remainder, since the
+        # cyclic layer already holds C_r and is one cyclic group.  C(cj, 2) is
+        # kept only in the '*' branch, which is gated on r >= B.
+        if q == '*':
+            capc = comb(cj, 2)
+        else:
+            dqj = qpart(cj - 1, q)
+            restj = (cj - 1) // dqj
+            while restj % r == 0:
+                restj //= r
+            capc = orb(cj, dqj * restj)
         for F in range(1, L // cj + 1):
-            if F * comb(cj, 2) >= B:
+            if F * capc >= B:
                 pcands.append(F * cj)
         cj *= p
     if len(fcands) + len(pcands) > limit:
@@ -364,7 +406,31 @@ def pair_candidates(A, n, B, c, r, p, skip_settled=None):
             # permissive, hence sound, but wrong, and it would silently become
             # anti-permissive if this expression were ever reused with the
             # inequality the other way round.
-            ok = (F * comb(c, 2) >= B and F * c * r >= B and
+            # The intra cap is F * orb(c, dmax), NOT F * C(c, 2).  dmax is the
+            # SAFE cap specialised to this branch: the twist's q-part may sit in
+            # the top layer, and everything else sits in the cyclic layer, which
+            # already carries the foreign translations C_r and the block
+            # rotation C_Fmid -- one cyclic group, so pairwise-coprime orders.
+            # Both strips are proven necessary conditions, so the cap is a true
+            # upper bound on any admissible twist in this branch and the
+            # tightening is sound.  It is also what resolves the F = 2 reading
+            # of n = 5r + 2 at c = 2r + 1: there c - 1 = 2r, r is stripped by
+            # the foreign coprimality and 2 by F_mid = 2, so dmax = qpart and
+            # the intra collapses to O(c) at odd q.
+            if q == '*':
+                intra_cap = F * comb(c, 2)
+            else:
+                dqc = qpart(c - 1, q)
+                restc = (c - 1) // dqc
+                while restc % r == 0:
+                    restc //= r
+                fmid = F // qpart(F, q)
+                g = gcd(restc, fmid)
+                while g > 1:
+                    restc //= g
+                    g = gcd(restc, fmid)
+                intra_cap = F * orb(c, dqc * restc)
+            ok = (intra_cap >= B and F * c * r >= B and
                   (F == 1 or (F if F % 2 else F // 2) * c * c >= B))
             if ok:
                 lo = leftover_ok(A, n - F * c - r, B, p, q, r, F * c)
