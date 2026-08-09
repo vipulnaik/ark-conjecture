@@ -108,13 +108,14 @@ Parts A, E and F have had one close reading each; what is outstanding is a readi
 
 **Where to look, in order.** Part E's realisability construction is the least-defended thing the framework relies on — it exhibits groups and nothing checks it per-n (T2). Part B′'s socle argument has had one reading and no independent scrutiny. Part 0's completeness is the step with the worst record, and it is the sole support for μ ≤ B_safe. Expect roughly one finding per three arguments.
 
-### T2. Decide the shape of Part E's realisability verification
+### T2. Part E's realisability: preconditions are checked, construction is not
 
-Attainment's other leg: argued in general, spot-checked at eight configurations from n = 12 to 315, with no per-n verification. **The decision is what to verify, not whether to.**
+The preconditions check is **built and passing** — see `session-log-4.md`. `validate_table.py` group A now asserts per winner row that the Part E build's ingredients exist: F_top a q-power, every foreign block scored above r actually having q | r − 1 (live at 1,034 rows), and the **diagonal carrier's order coprime to every foreign prime and every F_mid in the configuration** (live at 1,239 rows). That last is deliberately stricter than SAFE's `dmax`, which strips only a class's own F_mid — looseness is safe for an upper bound but not for a construction, and attainment needs the construction.
 
-A **preconditions** check is cheap and belongs in `validate_table.py` — per winner row, assert that the construction's ingredients exist: the diagonal carrier's order coprime to the foreign primes and the F_mid values, each foreign r carrying its q-part twist, F_top a q-power. That is O(rows) and fits the speed budget. **Actually building each group is GAP work** and belongs as an occasional spot-check rather than a per-n run; the n = 10 and n = 12 exhaustive batteries already carry most of that weight.
+**What is left for a human, and it is the part a check cannot reach.**
 
-What no precondition check can reach is **J0a**: the construction assumes a matching block's twist lies in the field's multiplicative group, whereas the stabiliser of a primitive affine group of degree p^a may be any irreducible subgroup of GL(a, p). That cannot inflate B_safe, which already credits C(c,2), but it is an unstated assumption bearing on attainment and it stays here.
+- **Whether to build groups at all, and how often.** Preconditions existing is not the same as the group existing. The n = 10 and n = 12 exhaustive batteries plus eight hand-built configurations from n = 12 to 315 are the current evidence; a decision about whether to add occasional GAP spot-checks at new shapes — S4 and S7-at-F≥3 are the ones with the least construction evidence — is a priorities call.
+- **J0a, the stabiliser assumption.** The construction takes a matching block's twist inside the field's multiplicative group, whereas the stabiliser of a primitive affine group of degree p^a may be any irreducible subgroup of GL(a, p). This cannot inflate B_safe, which already credits C(c,2), but it is an unstated assumption bearing on attainment. **No precondition check reaches it**, because the witness records a twist order and not the group the twist lives in. Either justify the restriction or scope the realisability claim to it.
 
 ### T3. Independent necessity read of the eight conditions
 
@@ -149,7 +150,7 @@ A question about the *sharpness* of the search rather than about the results: dr
 
 Checks are grouped into three, and the group tells you what a result means:
 
-- **A. Table integrity** — is the file a well-formed enumeration at all? Well-formedness, Lemmas B′ and D2 on each witness, re-derivation of `mu_bound` from the witness by the G.3 formulas, the density column, certification, and monotonicity against a baseline. A FAIL here is a bug in the run or the parser, and nothing downstream is meaningful until it clears.
+- **A. Table integrity** — is the file a well-formed enumeration at all? Well-formedness, Lemmas B′ and D2 on each witness, re-derivation of `mu_bound` from the witness by the G.3 formulas, the density column, certification, monotonicity against a baseline, and the **Part E preconditions** (T2) — whether the construction's ingredients exist at each row, which the score re-derivation would not notice. A FAIL here is a bug in the run or the parser, and nothing downstream is meaningful until it clears.
 - **B. Exact claims, holding at every n** — Prop F.1, cap_F(η), S2's 1/F, layer-by-top-prime, S6 emptiness, Lemma C exposure, and the three congruence-gated patterns (S4 at c ≡ 1 mod 8; S7-at-F=2 at c ≡ 3 mod 4 bar the tie and p = 2; S5 at no congruence with u ≤ 9). A FAIL here is a real contradiction between table and documents.
 - **C. Density and distribution** — floor and the s/k bounds it implies, low-density tail, part-count distribution, census shares, odd-n shares, class-ceiling exceedance, median density by residue mod 24, foreign-block efficiency, and the ω(n) = 2 share. All INFO, each printing the **expected asymptotic value beside the measurement** so the comparison needs no reference to `arithmetic-of-density.md`. A gap here is data about convergence, not a failure.
 

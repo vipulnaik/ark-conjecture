@@ -599,6 +599,98 @@ def c_g4_axes(R, base):
     return ("FAIL" if bad else "PASS", msg, bad[:5])
 
 
+@check("A", "the Part E construction's ingredients exist for this witness",
+       "ep Part E, realisability; pending-checks T2")
+def c_realisable(R, base):
+    """Preconditions for realisability, per row -- NOT a construction.
+
+    Part E builds a group for every admitted configuration, and the build has
+    ingredients that either exist at a given witness or do not.  Nothing else in
+    this suite tests them: group A re-derives the SCORE from the witness, which
+    would be unchanged if the group were unbuildable.  Three preconditions are
+    decidable from the witness string alone, which is what keeps this O(rows):
+
+      (a) F_top is a q-power and F = F_top * F_mid with F_mid coprime to q.  The
+          top layer is a q-group, so the part of the block count living there
+          must be a q-power; the rest is the cyclic layer's business.  This one
+          is a TRIPWIRE on the parser rather than a test of the table -- F_top is
+          computed as qpart(F, q), so the property holds identically unless the
+          witness parse or qpart is wrong.
+      (b) A foreign block scored above r must actually have q | r - 1.  Lemma B'
+          forces its twist into the top q-group, so a foreign block is worth more
+          than its own size only if q divides r - 1.  A row scoring a foreign
+          block higher than r without that divisibility would be crediting a
+          twist the chain cannot hold.
+      (c) THE DIAGONAL CARRIER EXISTS.  Part E carries every p-characteristic
+          twist on ONE generator of the cyclic layer, whose order is lcm of the
+          per-class twists.  That layer also holds the foreign translations C_r
+          and the block rotations C_Fmid, and it is one cyclic group -- so the
+          carrier's order must be coprime to every foreign prime and every F_mid
+          in the configuration, not merely to the class's own.
+
+    Reported with a LIVE count per sub-check, because a precondition check that
+    is vacuous is worse than none: it reads as reassurance.  Over v4 to n = 2000
+    the counts are 1,034 rows for (b) and 1,239 for (c), so neither is idle.
+
+    Note (c) is STRICTER than SAFE's dmax, which strips only the class's own
+    F_mid.  That is deliberate and is the point of the check: SAFE is free to be
+    loose because looseness is safe for an upper bound, but the CONSTRUCTION is
+    not, and attainment needs the construction.  A FAIL here would mean a scored
+    row whose Part E group cannot be built as described -- which is a gap in
+    attainment, not in the bound, so it is reported as group A (investigate
+    before trusting the row) rather than as a contradiction with the documents."""
+    bad_a, bad_b, bad_c, tested, live_b, live_c = [], [], [], 0, 0, 0
+    for r in R:
+        if r.q is None or r.p is None:
+            continue
+        tested += 1
+        foreigns = [c for _, c, f in r.cls if f]
+        fmids = []
+        for F, c, f in r.cls:
+            if f:
+                continue
+            ft = qpart(F, r.q)
+            fm = F // ft
+            fmids.append(fm)
+            # (a) is a tripwire, not a live test: ft is DEFINED as qpart(F, q)
+            # here, so fm is coprime to q identically and this can only fire if
+            # the witness parser or qpart is broken.  Kept because that is a real
+            # failure mode and costs one modulo, but do not read a PASS on (a) as
+            # evidence about the table.
+            if fm % r.q == 0:
+                bad_a.append((r.n, F, r.q, r.witness))
+        # (b)
+        if foreigns:
+            live_b += 1
+        for c in foreigns:
+            if orb(c, qpart(c - 1, r.q), False) > c and (c - 1) % r.q:
+                bad_b.append((r.n, c, r.q, r.witness))
+        # (c) the carrier's order, built from each class's dmax
+        carrier = 1
+        for F, c, f in r.cls:
+            if f:
+                continue
+            ft = qpart(F, r.q)
+            dq = qpart(c - 1, r.q)
+            dmax = dq * coprime_part((c - 1) // dq, F // ft)
+            # only the non-q part of the twist sits in the cyclic layer
+            cyc = dmax // qpart(dmax, r.q)
+            carrier = carrier * cyc // math.gcd(carrier, cyc)
+        others = foreigns + [m for m in fmids if m > 1]
+        if carrier > 1 and others:
+            live_c += 1
+        for o in others:
+            if math.gcd(carrier, o) > 1:
+                bad_c.append((r.n, carrier, o, r.witness))
+                break
+    bad = bad_a + bad_b + bad_c
+    return ("FAIL" if bad else "PASS",
+            f"{tested} rows: {len(bad_a)} block-count (tripwire), "
+            f"{len(bad_b)} foreign-twist "
+            f"(live at {live_b} rows), {len(bad_c)} diagonal-carrier "
+            f"(live at {live_c} rows) violations", bad[:5])
+
+
 @check("B", "S6 (two foreign blocks) wins nowhere", "aod section 4.2")
 def c_s6(R, base):
     rows = [(r.n, r.witness) for r in R if r.shape == "S6"]

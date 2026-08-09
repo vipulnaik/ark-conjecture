@@ -437,6 +437,26 @@ The Angel–Borja CSP validation question is left as a judgement with a recommen
 
 **T5:** fence rather than close. The a > 1 exposure is asserted per row by `validate_table.py` at 0 of 1,677 parts on every extension, the Galois obstruction makes a proof hard, and the payoff is a case the data says never binds. Trigger for reopening: the tripwire firing, not a review cycle.
 
+## Tenth batch: T2's preconditions check, built and measured
+
+**Built as a group-A check**, not group B, and the placement is the argument: a failure here would mean a scored row whose Part E group cannot be built as described — a gap in *attainment*, not a contradiction with the documents, so "investigate before trusting the row" is the right reading. Three preconditions, all decidable from the witness string alone, which is what keeps it O(rows):
+
+| sub-check | what it asserts | status over v4 |
+|---|---|---|
+| **(a)** F_top a q-power, F_mid coprime to q | the top layer is a q-group, so the block count's top part must be a q-power | 0 violations — **tripwire only** |
+| **(b)** a foreign block scored above r has q \| r − 1 | Lemma B′ forces its twist into the top q-group, so it is worth more than its own size only if q divides r − 1 | 0 violations, **live at 1,034 rows** |
+| **(c)** the diagonal carrier exists | Part E carries every p-characteristic twist on one cyclic-layer generator, so its order must be coprime to every foreign prime **and every F_mid in the configuration** | 0 violations, **live at 1,239 rows** |
+
+**(c) is deliberately stricter than SAFE's `dmax`**, which strips only a class's own F_mid. That is the point rather than an inconsistency: looseness is safe for an upper bound and is why SAFE stays independent of Lemma C, but the *construction* has no such licence, and attainment needs the construction. The check tests what Part E claims, not what SAFE assumes.
+
+**Honest about (a).** It is vacuous by construction — F_top is computed as `qpart(F, q)`, so F_mid is coprime to q identically, and the sub-check can only fire if the witness parser or `qpart` is broken. Kept, because that is a real failure mode and costs one modulo, but labelled a tripwire in the output so a PASS on (a) is not read as evidence about the table. **A precondition check that is vacuous is worse than none — it reads as reassurance** — which is why (b) and (c) print their live counts beside their violation counts.
+
+**Negative controls: all three sub-checks fire when broken.** (b) and (c) were also confirmed non-vacuous by counting live rows independently of the check itself.
+
+**Speed: within budget, no measurable cost.** The suite runs at 0.165–0.192 s on 1,666 rows against 0.20–0.22 s before the check was added — i.e. the addition is lost in run-to-run variance on this container, which is what O(rows) with parts ≤ 3 predicts. The per-row work is a handful of gcds and one lcm, no allocation beyond a three-element list. **Nothing here needs the 0.1 s exemption clause.**
+
+What this does **not** reach is J0a: the witness records a twist *order*, not the group the twist lives in, so no precondition check can test whether the stabiliser is of ΓL(1) type. T2 is reworded to that residue plus the priorities call about occasional GAP spot-checks at the shapes with the least construction evidence (S4 and S7-at-F≥3).
+
 ---
 
 ## Items inherited as closed from earlier passes
