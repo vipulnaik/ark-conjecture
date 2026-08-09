@@ -21,7 +21,14 @@ with it 99.91%, and the multi-part leftover check closes the remaining 0.09%.
 Any n where candidates survive is reported as UNRESOLVED AT B_lo -- it needs the
 true B(n) to settle and is NOT a counterexample.
 
-Usage: python3 wide_cert.py NMAX
+--no-theorems disables every Part E-prime clause: `branch_settled` dispatches
+nothing, so all branches reach the search, and `e3ii_resolves` stops resolving.
+A run in that mode rests only on the eight necessary conditions of fb_common.py
+being necessary -- a much smaller trusted base -- so it is the mode to quote, and
+it should agree with the normal run exactly.  If it ever stops agreeing while the
+normal run passes, the error is localised to E.1 / E.3 / E.4 or their tables.
+
+Usage: python3 wide_cert.py NMAX [--no-theorems] [--menu] [--refresh]
 """
 import importlib.util, os, sys, time, bisect, hashlib
 from math import comb
@@ -35,6 +42,18 @@ me = importlib.util.module_from_spec(spec); me.__name__ = "me"
 spec.loader.exec_module(me)
 
 NMAX = int(_A[1]) if len(_A) > 1 and not _A[1].startswith('-') else 10000
+NO_THM = '--no-theorems' in _A
+fb.set_use_theorems(not NO_THM)
+if NO_THM:
+    print("--no-theorems: every s-branch goes to the search; E.1, E.3(ii), "
+          "E.3(iii), E.4,\n               Lemma E.2's bound and the MERSENNE / "
+          "REPUNIT3 tables are all unused.")
+# The cache key must include the mode, or a --no-theorems run silently reuses a
+# B_lo computed under the other one.  B_lo does not actually depend on the
+# theorems -- pass 1 never consults them -- but keying on the mode anyway costs
+# one recompute and removes the question, which is the same reasoning as keying
+# the cache on SCAN_CAP rather than on NMAX alone.
+_MODE = 'nothm' if NO_THM else 'thm' 
 A = fb.Arith(NMAX + 2)
 caps_m, caps_r = fb.cap_mersenne(A, NMAX), fb.cap_repunit(A, NMAX)
 
@@ -132,6 +151,7 @@ t1 = time.time()
 _SIG = hashlib.sha1("|".join([
     str(SCAN_CAP), str(WEAK),
     three_part_lo.__doc__ or "", two_part_lo.__doc__ or "", fused_lo.__doc__ or "",
+    _MODE,
     str(three_part_lo.__code__.co_code), str(two_part_lo.__code__.co_code),
     str(fused_lo.__code__.co_code), str(near.__code__.co_code),
 ]).encode()).hexdigest()[:10]
@@ -194,6 +214,13 @@ print(f"pass 2: permitted s <= {S_TOP}; candidate values per s: "
 
 cand = {}
 pairs_seen = pairs_live = items = 0
+# Count what the dispatch actually settles, per s.  Without this the
+# --no-theorems comparison is easy to over-read: if the dispatch never fires,
+# the two modes agree trivially and the run is no evidence about E.1 / E.3 / E.4
+# at all.  Whether it fires depends on which s reach the loop, and the
+# foreign-cap filter (hi == 0) removes whole s-branches before the dispatch sees
+# them -- so this has to be measured rather than assumed.
+live_by_s, dispatched = {}, {}
 for r in range(3, NMAX, 2):
     if not A.is_prime(r):
         continue
@@ -221,7 +248,9 @@ for r in range(3, NMAX, 2):
                 continue
             B = Blo[n]
             ok_thm, _ = fb.branch_settled(A, n, B, s_this, caps_m, caps_r)
+            live_by_s[s_this] = live_by_s.get(s_this, 0) + 1
             if ok_thm:
+                dispatched[s_this] = dispatched.get(s_this, 0) + 1
                 continue
             items += 1
             got = fb.pair_candidates(A, n, B, c, r, p)
@@ -229,6 +258,16 @@ for r in range(3, NMAX, 2):
                 cand.setdefault(n, []).extend(got)
 print(f"        {pairs_seen} (c,r,s) pairs, {pairs_live} with a nonempty window, "
       f"{items} (pair, n) checks after theorem dispatch  ({time.time()-t0:.0f}s)")
+print(f"        live (pair, n) by s: "
+      + ", ".join(f"s={k}: {v}" for k, v in sorted(live_by_s.items()))
+      + ("  |  settled by theorem: "
+         + ", ".join(f"s={k}: {v}" for k, v in sorted(dispatched.items()))
+         if dispatched else "  |  settled by theorem: NONE"))
+if not dispatched and not NO_THM:
+    print("        NOTE: the dispatch settled nothing at this NMAX, so a")
+    print("        --no-theorems run here would agree TRIVIALLY and is no evidence")
+    print("        about E.1 / E.3 / E.4.  The s-branches those theorems cover")
+    print("        (s = 1 and s = 3) are removed earlier by the foreign-cap filter.")
 
 for n in no_bound:
     cand.setdefault(n, []).append(('NO-LOWER-BOUND',))
@@ -245,8 +284,15 @@ print("from proven lower bounds alone.  Unresolved values need the true B(n) and
 print("are NOT counterexamples.  Over the range where both certificates run, the")
 print("true-table certificate (fallback_cert.py, 2008 values to n = 3239) agrees.")
 print()
-print("The theorem dispatch in pass 2 is an optimisation, not part of the proof:")
-print("with `branch_settled` stubbed to False the run gives identical output at")
-print("NMAX = 10^4 and 10^5, including the same two unresolved values.  So this")
-print("certificate, like fallback_cert.py, rests only on the necessary conditions")
-print("of fb_common.py being necessary.")
+print("The theorem dispatch in pass 2 is an optimisation, not part of the proof.")
+if NO_THM:
+    print("THIS RUN USED NONE OF IT: --no-theorems was set, so every s-branch went")
+    print("to the search and no Part E-prime clause was consulted.  The result above")
+    print("therefore rests only on the eight necessary conditions of fb_common.py")
+    print("being necessary.  Compare it against a normal run at the same NMAX; they")
+    print("should agree exactly, including on the unresolved values.")
+else:
+    print("Rerun with --no-theorems to establish that: it stubs the dispatch and")
+    print("drops the E.3(ii) resolution, so the run rests only on the eight")
+    print("necessary conditions of fb_common.py being necessary.  Doing this on each")
+    print("extension is cheap and localises any error in E.1 / E.3 / E.4 at once.")

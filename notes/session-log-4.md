@@ -282,6 +282,26 @@ That makes rerunning the n = 10 CSP on the full battery the cheapest of the thre
 
 **And the same three-quantity confusion resolves at n = 10 as at n = 12:** m\* = 20 is attained by **8 groups** (`A:17`–`A:20`, `A:27`, `A:28`, `A:33`, and `B2:5x2:3.1` = T(5,3)≀T(2,1)), all with orbital sizes [20, 25], forming **1 partition** and **2 conditions**. The wreath is among them, so AGL(1,5)≀C₂ is confirmed rather than assumed, and `A:18` carries tag `0` — a trivial top, χ = 1 exactly. Census: 967 = 95 + 159 + 14 + 699, stages A 24 / B 319 / B2 6 / C 618.
 
+## Sixth batch: R2's `--no-theorems`
+
+### The flag, and where it lives
+
+`fb_common` gained a module-level `USE_THEOREMS` with a `set_use_theorems` setter — a setter rather than a bare global because a caller doing `from fb_common import USE_THEOREMS` would otherwise bind a stale copy. With it off, `branch_settled` returns False for every s and `e3ii_resolves` returns False, so nothing is dispatched and no Part E′ clause is consulted. `wide_cert.py --no-theorems` wires it up, keys its pass-1 cache on the mode (B_lo does not depend on the theorems, but keying anyway costs one recompute and removes the question), and rewrites its closing paragraph to say which mode actually ran instead of asserting a result from a previous session.
+
+`fallback_cert.py` is not in the working set, so its flag is one line still to add against the same setter.
+
+**Switch verified live by direct call**, not just by the runs agreeing: with theorems on, 2 of 5 s-branches dispatch at a sample n (E.1 at s = 1, E.4 at s = 3) and `e3ii_resolves` returns True; with them off, 0 and False.
+
+### Runs at NMAX = 3,000 and 10,000 — and why their agreement proves nothing
+
+Both modes: **0 unresolved of 2,533** at NMAX = 3,000 and **0 of 8,719** at 10,000, 100% certified, identical pass-2 counts.
+
+The identical counts were the tell. If the dispatch were settling anything, disabling it would push those branches into the search and the check count would rise. It did not move, so I instrumented it: **at both ranges the dispatch settles nothing.** Every live `(pair, n)` has s = 2 (4,539 at NMAX = 10⁴) or s = 4 (7), and the s = 1 and s = 3 branches that E.1 and E.4 cover never reach the dispatch — the foreign-cap filter (`hi == 0`) removes them first, since a small foreign block's own cap falls below every B_lo in the list.
+
+So **the two modes agree trivially at these ranges, and the run is no evidence whatever about E.1 / E.3 / E.4.** That is a trap worth closing in code rather than in a note, so pass 2 now reports live checks by s beside how many the theorems settled, and prints an explicit warning when the dispatch fired zero times.
+
+Two consequences worth carrying forward. Whether the dispatch ever fires at 10⁶ is now a specific question — and if it never does, the standing claim that the Part E′ theorems are "commentary over the certified range" is true of `wide_cert.py` for a duller reason than intended: not that the search independently clears the branches they dispatch, but that those branches never arrive. The real test of those theorems is `fallback_cert.py` against the true table, where B is larger and the foreign-cap filter is less aggressive.
+
 ---
 
 ## Items inherited as closed from earlier passes

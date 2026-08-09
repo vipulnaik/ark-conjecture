@@ -22,6 +22,27 @@ substitute a lower bound.
 """
 from math import comb, isqrt
 
+# ---------------------------------------------------------------- theorem switch
+#
+# The Part E-prime theorems (E.1, E.3(ii), E.3(iii), E.4, Lemma E.2's bound on
+# L(a), and the hardcoded MERSENNE / REPUNIT3 tables) are an OPTIMISATION, not
+# part of the proof: a branch they dispatch is never searched, so an error in one
+# of them -- or in its implementation -- would silently remove a real candidate.
+# Setting USE_THEOREMS = False makes every branch go to the search and drops the
+# E.3(ii) resolution, so a run in that mode rests only on the eight necessary
+# conditions below being necessary.  That is a much smaller trusted base than the
+# module's structure suggests, and it is worth re-establishing on every extension
+# rather than living in a log: if the two modes ever disagree while the normal
+# run passes, the error is localised to E.1 / E.3 / E.4 or their tables at once.
+USE_THEOREMS = True
+
+def set_use_theorems(flag):
+    """Callers should go through this rather than assigning the global, so that
+    `from fb_common import USE_THEOREMS` in a caller cannot silently bind a stale
+    copy of the value."""
+    global USE_THEOREMS
+    USE_THEOREMS = bool(flag)
+
 # ---------------------------------------------------------------- arithmetic
 
 def sieve_spf(N):
@@ -147,7 +168,12 @@ def s_max(n, B):
 
 def branch_settled(A, n, B, s, caps_m, caps_r):
     """Is the s-branch at this n settled by theorem alone?  Returns
-    (True, reason) or (False, reason)."""
+    (True, reason) or (False, reason).
+
+    Under --no-theorems this answers False for every branch, so nothing is
+    dispatched and every branch reaches the search."""
+    if not USE_THEOREMS:
+        return False, "theorems disabled (--no-theorems)"
     if s == 1:
         for a, cap in caps_m.items():
             if 2 ** (a + 1) - 1 <= n and cap >= B:
@@ -296,7 +322,14 @@ def e3ii_resolves(A, n, c, r, F, L):
     re-type the leftover parts, and the commonest case L = c fails outright: two
     blocks of the same prime c would be two equal foreign parts, which Part E
     forbids (they would place C_c x C_c in the cyclic layer), and fusing them is
-    forbidden too.  Those cases stay open -- Part J item 2."""
+    forbidden too.  Those cases stay open -- Part J item 2.
+
+    Under --no-theorems this returns False, so the pair is kept as a candidate
+    rather than resolved.  That is the anti-permissive direction on purpose: the
+    point of the mode is that a surviving-candidate list computed without any
+    Part E-prime clause should still be empty."""
+    if not USE_THEOREMS:
+        return False
     return F == 1 and L == 0 and c == 2 * r + 1 and A.is_prime(c)
 
 def pair_candidates(A, n, B, c, r, p, skip_settled=None):
