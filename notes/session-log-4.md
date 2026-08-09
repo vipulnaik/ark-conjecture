@@ -302,6 +302,57 @@ So **the two modes agree trivially at these ranges, and the run is no evidence w
 
 Two consequences worth carrying forward. Whether the dispatch ever fires at 10⁶ is now a specific question — and if it never does, the standing claim that the Part E′ theorems are "commentary over the certified range" is true of `wide_cert.py` for a duller reason than intended: not that the search independently clears the branches they dispatch, but that those branches never arrive. The real test of those theorems is `fallback_cert.py` against the true table, where B is larger and the foreign-cap filter is less aggressive.
 
+### R2 closed: `fallback_cert.py --no-theorems`, and here the check is not vacuous
+
+Same switch, wired to `fb.set_use_theorems`, plus an internal assertion that no branch is dispatched when the flag is set — cheap, and it catches a future refactor that reintroduces a theorem call bypassing the switch.
+
+**Against v4 (1,666 values to n = 2000):**
+
+| | normal | `--no-theorems` |
+|---|---|---|
+| candidates surviving | **0** | **0** |
+| values fully settled by theorem | 1,419 / 1,666 (85.2%) | 0 |
+| s-branches dispatched | **1,673 / 1,920 (87.1%)** | 0 |
+| theorem-side residue | 247 branches, all E.3(ii) pairwise-only | — |
+| largest permitted s | 3 | 3 |
+
+**This is the run where `--no-theorems` carries weight**, and the contrast with `wide_cert.py` is the point. There the dispatch settles nothing at NMAX ≤ 10⁴, so the two modes agree trivially. Here 1,673 branches really are dispatched in the normal run, so switching them off genuinely moves work into the search — and the candidate list is still empty. E.1, E.3(ii), E.3(iii), E.4, Lemma E.2's bound and the `MERSENNE` / `REPUNIT3` tables are therefore commentary for the per-n proof, established rather than asserted.
+
+**The recount R4 wanted falls out of the same run**, and the v2-era figures in `enumeration-proof.md` are now updated: 1,419 of 1,666 settled (was 1,503 of 2,008), 1,673 of 1,920 branches (was 2,062 of 2,572), and the residue is **one class of 247 branches** rather than 505 plus an s = 4 and an s = 5 branch. The s ≥ 4 branches are gone because **the largest permitted s over v4 is 3** — the corrected shape space lifted the density floor enough to close them, which is the reversal `arithmetic-of-density.md` §7 predicted might happen.
+
+### R4 folded into R1, and R1's command list rebuilt
+
+**R4 was a duplicate.** Its three commands were a strict subset of R1's; what was not duplicated was the *reading* — that the density floor, the largest permitted s and the theorem residue move together, and that s = 4 is the first branch with no theorem. That belongs beside the command that prints those three numbers, not in a separate item, so it is now the `fallback_cert.py` bullet in R1 and R4 is gone. The trigger survives verbatim: if `largest permitted s` ever prints 4, the theorem-side coverage has a hole.
+
+**Four fixes to R1's list, checked against the scripts as they stand rather than as they were.**
+
+- **`wide_cert.py` could not run as written.** Its default `MU_ENUMERATE` is `mu_enumerate.py`, which no longer exists, so the import fails on load — verified by running it both ways. The list now carries `MU_ENUMERATE=$PWD/mu_enumerate_v2.py`.
+- **`s7_scan.py` and `mu_fast.py` do not exist**, and both were in the list. Rather than leave them as plausible-looking commands, they are named as absent, with the note that `validate_table.py` group B already covers the congruence patterns `s7_scan.py` was for — so nothing is owed unless a new check is wanted.
+- **`ladder_verify.py` was in the wrong item.** It never reads the table; it scores explicit families, so it is not a per-batch check at all. Moved out to R7, which runs on its own schedule.
+- **The order is now the list**, rather than a note after it saying which to run first. `validate_table.py` gates the rest, so it sits second, immediately after the run that produced the batch.
+
+Each entry also says what to read off the output, since several of these scripts print a headline that is not the interesting part — the `fallback_cert.py` floor/s/residue triple, and `wide_cert.py`'s `settled by theorem:` line, which prints NONE at NMAX ≤ 10⁴ and makes a `--no-theorems` comparison there worthless.
+
+Also corrected in the same pass: R0's command used `scripts/` and `outputs/` prefixes the rest of the file does not, and omitted `--fill-gaps` — which matters, because plain resume continues after the *last* row and never fills holes a targeted run left.
+
+## Seventh batch: four checks added to `validate_table.py`
+
+Run against v4 (1,666 rows to n = 2000): **every check passes**, group A and B clean, exit 0 — matching what the periodic runs have been reporting. What was missing was coverage of claims added since the shape-space correction, so four checks are new, each with a negative control confirming that breaking it makes the check FAIL.
+
+**1. The cyclic layer's global pairwise-coprimality condition.** *This is the one with no earlier counterpart and the one that matters most.* The corrected shape space splits a block count as F = F_mid·F_top with F_mid coming from the cyclic layer — one shared generator — so every F_mid and every foreign block size must be pairwise coprime across the whole configuration. Nothing tested it. And the direction is worth naming: every other check guards against the enumerator being too *restrictive*, whereas a violation here would mean it has **over-corrected**, admitting a configuration no Oliver group realises, which inflates B and breaks the upper bound. Passes at 0 of 319 winners carrying two or more cyclic-layer orders. (Twists are deliberately out of scope: SAFE scores at F·orb(c, dmax) with dmax already stripped of F_mid, so the witness string does not record which twist was used and there is nothing to test against.)
+
+**2. The feasibility criterion Σ√Fᵢ ≤ 1/√δ.** `aod` §6.1's shape counts are derived from it, so a violation would invalidate the covering statement's arithmetic rather than a single row. 0 of 1,666.
+
+**3. Part G.4's per-axis bounds**, cᵢ ≥ δn and Fᵢ ≤ 1/δ. These bound the enumeration's cost, so a violation would mean the cost model is wrong and not just the prose. 0 violations on both axes.
+
+**4. The within-class cross coefficient** (added in an earlier batch, noted here for completeness) — invisible to output, since the term never binds.
+
+### One scoping correction, and one structural finding
+
+**The unequal-matching-sizes check was asserting something the documents deny.** It flagged any winner with two matching classes of different sizes, but at p = 2 that configuration is *admissible* and the counterexample is in the documents: n = 551 = 256 + 167\* + 128 has c − 1 = 255 and c′ − 1 = 127 both odd and coprime, so both twists are full and the cyclic layer is genuinely cyclic. A FAIL there would have contradicted `aod` §6.5's second escape. The check is now scoped to **odd p**, which is what Open Problem 1 actually leaves open, and p = 2 instances are counted and reported as INFO — worth knowing about, not a failure.
+
+**The three tight instances coincide, and that is structural.** The tightest row for the feasibility criterion (slack 0.0004), for cᵢ ≥ δn (ratio 1.001) and for Fᵢ ≤ 1/δ (1.001) is the same one: **n = 1994 = `2x997`**. Not a coincidence — a single fused class n = F·c has δ = (c−1)/(Fc−1), so c = δn, F = 1/δ and Σ√Fᵢ = 1/√δ all hold to O(1/n) simultaneously. **The three bounds are one bound read on three axes**, which is why no amount of tightening one of them will move the others. Recorded in Part I, where the old tight row (n = 575, `23x25`, tight within one unit on both G.4 axes) is kept alongside as the v2-era instance.
+
 ---
 
 ## Items inherited as closed from earlier passes

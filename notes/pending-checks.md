@@ -29,62 +29,52 @@ Ranked, so the sections below have a stated basis. This is not the order the ite
 
 `mu_table_safe_v4.csv` reaches n = 2000 and extends at roughly n^2.9 per value. What is left:
 
-1. **Finish the rebuild.** ~n^2.9 per value.
-2. **Rerun everything in R1** against it.
+1. **Finish the rebuild.**
+2. **Rerun all of R1** against it — that list is the whole downstream, and its second item is where the floor, the largest permitted s and the theorem residue get recounted.
 3. **Rebuild the branch-and-bound worklist**, which was pruned against a floor that has moved.
 
 ```bash
-python3 scripts/mu_enumerate_v2.py --nmax 2600 --out outputs/mu_table_safe_v4.csv
+python3 mu_enumerate_v2.py --nmax 2600 --fill-gaps --out mu_table_safe_v4.csv
 ```
 
 **Quote figures from v4 only.** v3 is over-credited on fused shapes and v2 predates the corrected shape space, so both understate or misattribute; v4 is at or above v2 at every common value, which is the signature to check on each batch.
 
 ## R1. Routine, after any new batch of table values
 
-Every one of these is a per-n statement that does not extend itself. Point them all at **v4**.
+Every one of these is a per-n statement that does not extend itself, and none of them extends with the table. Point them all at **v4**. **Run in this order** — the first gates the rest.
 
 ```bash
+# 0. extend the table (this IS the batch; --fill-gaps, not plain resume)
 python3 mu_enumerate_v2.py --nmax 2600 --fill-gaps --out mu_table_safe_v4.csv
-python3 fallback_cert.py mu_table_safe_v4.csv --verbose
-python3 wide_cert.py 100000
+
+# 1. cheapest, and gates everything: is the file a well-formed enumeration?
 python3 validate_table.py mu_table_safe_v4.csv --baseline mu_table_safe_v2.csv
-python3 check_doc_figures.py mu_table_safe_v4.csv *.md          # five passes, incl. refs
-python3 ladder_verify.py 200000
-python3 s7_scan.py mu_table_safe_v4.csv --nmax 2600
-```
 
-**Run `validate_table.py` first** — it is the cheapest and it gates the rest: a FAIL in its group A means the run itself is broken and nothing downstream is meaningful. `--explain N` gives one row's term breakdown, `--quiet` shows failures only. `check_doc_figures.py`: `--quiet` for findings only, `--pass {figures,scope,prose,hygiene,census,refs}` for one pass; exits nonzero when anything is flagged. **`--pass refs` resolves every section and named-result citation** against what the documents actually contain, so pass every `.md` that might be cited or its references report as dangling. `mu_enumerate_v2.py`: `--nlist FILE`, `--n`, `--check`, `--quiet`, `--refined`. `--fill-gaps` matters because plain resume continues after the *last* row, so holes a targeted run left are never filled. `wide_cert.py`: `--menu`, `--refresh`.
-
-**Do not extend the table without rerunning R1 in full.** Three consecutive extensions each left a different subset of the documents behind.
-
-## R2. `--no-theorems`: done for `wide_cert.py`, blocked for `fallback_cert.py`
-
-`wide_cert.py --no-theorems` now disables every Part E′ clause — `branch_settled` dispatches nothing and `e3ii_resolves` stops resolving — so a run in that mode rests only on the eight necessary conditions of `fb_common.py` being necessary. The switch lives in `fb_common.set_use_theorems`, so `fallback_cert.py` needs only its own flag wired to the same call.
-
-```bash
-MU_ENUMERATE=$PWD/mu_enumerate_v2.py python3 wide_cert.py 1000000
-MU_ENUMERATE=$PWD/mu_enumerate_v2.py python3 wide_cert.py 1000000 --no-theorems
-python3 fallback_cert.py mu_table_safe_v4.csv --no-theorems    # NEEDS THE FLAG
-```
-
-> **`fallback_cert.py` is not in the working set.** One line, wired to `fb.set_use_theorems(not args.no_theorems)`.
-
-**Read the new dispatch diagnostic before quoting agreement.** Pass 2 now reports live `(pair, n)` checks by s alongside how many the theorems settled. **At NMAX = 3,000 and 10,000 the dispatch settles nothing** — every live pair has s ∈ {2, 4}, and the s = 1 and s = 3 branches that E.1 and E.4 cover are removed earlier by the foreign-cap filter (`hi == 0`). So at those ranges the two modes agree *trivially* and the run is no evidence at all about E.1 / E.3 / E.4; the script now says so rather than letting the agreement be over-read. Whether the dispatch ever fires at 10⁶ is the thing to check — if it does not, the "theorems are commentary over the certified range" claim is true of `wide_cert.py` for a duller reason than intended, and the real test of those theorems is `fallback_cert.py` against the true table.
-
-*Verified at NMAX = 3,000 and 10,000: both modes give 0 unresolved of 2,533 and of 8,719, 100% certified, identical pass-2 counts.* The switch itself is confirmed live by direct call — with theorems on, 2 of 5 s-branches dispatch at a sample n and `e3ii_resolves` returns True; with them off, 0 and False.
-
-## R4. Rerun `fallback_cert.py` against v4, and recount the low-density tail
-
-At v4's n ≤ 2000 frontier the δ ≤ 1/16 set is **7 values** — n = 527, 1159, 1175, 1739, 1763, 1817, 1943 — and the floor is **0.045742 at n = 1817**. Everything downstream of the floor moves with it: Proposition F.1's part-count cap, Corollary F.3's k ≤ 3 threshold, the s-ladder of the Corollary after E.3, and the "505 branches" residue of A2, all of which are quoted from v2.
-
-**The s-branch margin is the thing to watch.** The current floor gives s ≤ 1/√δ − 1 = 3.68, so s ≤ 3 and E.1 / E.3(iii) / E.4 close every branch. The margin to δ = 1/25, where s = 4 reopens and no theorem covers it, is 0.0457 against 0.0400 — one extension could close it. **Recheck at every extension**; the trigger is the first n with δ ≤ 1/25.
-
-```bash
+# 2. the per-n collapse proof, then the same run with the trusted base shrunk
 python3 fallback_cert.py mu_table_safe_v4.csv --verbose
-python3 validate_table.py mu_table_safe_v4.csv --baseline mu_table_safe_v2.csv
+python3 fallback_cert.py mu_table_safe_v4.csv --no-theorems
+
+# 3. the wide certificate.  MU_ENUMERATE IS REQUIRED: the default is
+#    mu_enumerate.py, which no longer exists, and the import fails on load.
+MU_ENUMERATE=$PWD/mu_enumerate_v2.py python3 wide_cert.py 100000
+
+# 4. the documents against the table (five passes, incl. refs)
+python3 check_doc_figures.py mu_table_safe_v4.csv *.md
 ```
 
-What to read off it: how many s-branches the certificate reports at each s (v2 gives 505 at the s = 2 open promotion, 4 at s = 4, 1 at s = 5); whether any n reports s = 4 at all; and the k ≤ 3 open tail, which Part I gives as 45 of 1,921 from v2. **Recount before quoting any of those numbers** — the v4 tail is a different set, not a subset.
+**What each one is for, and what to read off it.**
+
+- **`validate_table.py`** — a FAIL in **group A** means the run itself is broken and nothing downstream is meaningful; a FAIL in **group B** is a real contradiction between table and documents; **group C** is INFO, each line printing the expected asymptotic beside the measurement. `--explain N` gives one row's full term breakdown, `--quiet` shows failures only, `--baseline` adds shape-migration reporting, which is how winners changing census row become visible.
+- **`fallback_cert.py`** — the headline is *0 candidates*. Then read three numbers, because **the low-density recount lives here**: the **density floor**, the **largest permitted s**, and the **theorem residue**. They move together, since s ≤ 1/√δ − 1 means a falling floor admits a larger s, and **s = 4 is the first branch with no theorem covering it**. At the current floor of 0.045742 (n = 1817) the bound is 3.68, so s ≤ 3 and E.1 / E.3(iii) / E.4 close everything but one class of 247 E.3(ii) branches. **The margin to δ = 1/25, where s = 4 reopens, is 0.0457 against 0.0400 — one extension could close it.** If `largest permitted s` ever prints 4, `enumeration-proof.md`'s Corollary after E.3 and Part I's tail figures both want re-deriving rather than recounting. The `--no-theorems` run should agree exactly, and the agreement is not vacuous here: 1,673 of 1,920 branches are dispatched in the normal run, so disabling them genuinely moves work into the search.
+- **`wide_cert.py`** — read the `settled by theorem:` line. At NMAX ≤ 10⁴ it prints NONE, because B_lo is small enough that the foreign-cap filter removes the s = 1 and s = 3 branches before the dispatch sees them, so a `--no-theorems` comparison there agrees *trivially* and is no evidence about E.1 / E.3 / E.4. `--menu` cross-checks pass 1 against the family menu; `--refresh` rebuilds the cached B_lo, which is rarely needed since the cache is keyed on everything that determines it.
+- **`check_doc_figures.py`** — `--quiet` for findings only, `--pass {figures,scope,prose,hygiene,census,refs}` for one pass; exits nonzero when anything is flagged. **Pass every `.md` that might be cited**, or `refs` reports live cross-document citations as dangling. And append the old maximum to `CHECKPOINTS` and a pattern to `SCOPE` in the same sitting, or figures written against the superseded range report as unexplained rather than as historical.
+
+**Two things this list no longer contains.**
+
+- **`ladder_verify.py`** is not a per-batch check — it never reads the table, it scores explicit families. It belongs to **R7** and runs on its own schedule.
+- **`s7_scan.py` and `mu_fast.py` do not exist** in the working set, though earlier versions of this list called both. `validate_table.py` group B already covers the S4 / S5 / S7-at-F=2 congruence patterns `s7_scan.py` was for, so nothing is owed unless a new check is wanted.
+
+**Do not extend the table without rerunning this list in full.** Three consecutive extensions each left a different subset of the documents behind — and the two mechanical passes that would have caught it, `refs` and the cross-term coefficient assertion, were only added afterwards.
 
 ## R7. Rerun `ladder_verify.py` to 10⁶
 
@@ -97,6 +87,12 @@ The script scores the S7-at-F≥3 family at `F·orb(c, dmax)` and covers both F 
 ```bash
 python3 ladder_verify.py 1000000
 ```
+
+> **Independent of R0.** `ladder_verify.py` never reads the table: its only input is NMAX on the command line, and it scores four explicit families in closed form off a sieve. So it can run alongside the rebuild, and its output does not go stale when the table extends.
+>
+> *What is not independent is the consumption.* The branch-and-bound of `arithmetic-of-density.md` §5.1 prunes this worklist against a running floor taken from B(n), so **settling the global density minimum** from the worklist does need R0. The worklist itself, the per-residue diagnostics and the global floor over the four families are all usable immediately.
+>
+> **It writes `ladder_weak.txt` unversioned**, so a rerun overwrites it. The previous output (`ladder_weak_v3.txt`, 41,584 entries) is evidence for the figures currently quoted in §3.7 and §5.2 — keep it, or rename the new one, before comparing the two.
 
 # §2. Thinking work
 
@@ -159,6 +155,8 @@ Checks are grouped into three, and the group tells you what a result means:
 - **B. Exact claims, holding at every n** — Prop F.1, cap_F(η), S2's 1/F, layer-by-top-prime, S6 emptiness, Lemma C exposure, and the three congruence-gated patterns (S4 at c ≡ 1 mod 8; S7-at-F=2 at c ≡ 3 mod 4 bar the tie and p = 2; S5 at no congruence with u ≤ 9). A FAIL here is a real contradiction between table and documents.
 - **C. Density and distribution** — floor and the s/k bounds it implies, low-density tail, part-count distribution, census shares, odd-n shares, class-ceiling exceedance, median density by residue mod 24, foreign-block efficiency, and the ω(n) = 2 share. All INFO, each printing the **expected asymptotic value beside the measurement** so the comparison needs no reference to `arithmetic-of-density.md`. A gap here is data about convergence, not a failure.
 
+**Four checks were added after the shape-space correction, and they are the ones with no earlier counterpart:** the cyclic layer's global pairwise-coprimality condition (the corrected shape space's own admissibility rule, and the only check that would catch the enumerator *over*-correcting), the feasibility criterion Σ√Fᵢ ≤ 1/√δ that `aod` §6.1's shape counts are derived from, Part G.4's per-axis bounds, and the within-class cross **coefficient** — which is invisible to output, since the term never binds. Each has a negative control: breaking it makes the check FAIL.
+
 Together they cover every belief the three documents currently state: well-formedness and Lemmas B′/D2 on each witness, re-derivation of `mu_bound` from the witness by the G.3 formulas, Prop F.1, cap_F(η), the S4/S5/S7-at-F=2 congruence patterns, S6 emptiness, layer-by-top-prime, monotonicity against a baseline, and seven measured quantities (floor and the s/k bounds it implies, low-density tail, part-count distribution, census counts, class-ceiling exceedances, foreign-block efficiency, Lemma C exposure). Exits nonzero on any FAIL.
 
 Two extra modes cover the cases that would otherwise send you to the CSV. **`--baseline`** adds shape-migration and aggregate-movement reporting: which winners changed census row and in what direction, and how the floor, the low-density tail and the per-shape counts have moved on the common range. **`--explain N`** prints one row's full term breakdown — every intra, within-class-cross and cross term, which one binds, the twist and its F_mid/F_top split, the foreign block's η and u, and whether the value exceeds its class ceiling.
@@ -188,7 +186,7 @@ The last theorem-side residue in the fallback collapse. With a leftover, the (r,
 Two things about its shape are worth recording before anyone spends time on it.
 
 - **No structural argument can work**, and that is already proved: cases (α)–(γ) of E″ show that within a fallback configuration's own partition the fallback reading is *forced*, so any promotion must compare across partitions of n — where additive supply enters and one is back at Hypothesis (H). So this is not a gap to be closed by a better case analysis.
-- **The "505 branches" figure is v2-era and is probably much smaller.** Under the corrected shape space the fallback question is narrow in range: s ≤ 3 everywhere, and only 7 values sit below δ = 1/16. The first move is a recount, not a proof — **R4**.
+- **The residue is one class of 247 branches, not the 505 of the v2 figures**, all of them E.3(ii) pairwise-only: under the corrected shape space the largest permitted s over the computed range is 3, so the s = 4 and s = 5 branches are not reachable and only 7 values sit below δ = 1/16. So the target is narrower than it was, and it is a single shape.
 
 Two questions for whoever picks it up, either of which would make it tractable rather than open-ended:
 

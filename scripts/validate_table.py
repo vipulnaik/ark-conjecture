@@ -459,17 +459,129 @@ def c_s5(R, base):
             f"u = {dict(sorted(us.items()))}", big[:5])
 
 
-@check("B", "no winner has two matching classes of different sizes", "aod section 6.2, A9")
+@check("B", "no winner has two matching classes of different sizes AT ODD p",
+       "aod section 6.2, A9")
 def c_equal_sizes(R, base):
-    bad, multi = [], 0
+    """Scoped to odd p on purpose.
+
+    At p = 2 the claim is FALSE and the counterexample is in the documents:
+    n = 551 = 256 + 167* + 128 has c - 1 = 255 and c' - 1 = 127 both odd and
+    coprime, so both twists are full and the cyclic layer is genuinely cyclic.
+    A check that flagged it would be contradicting `aod` section 6.5's second
+    escape.  What is open is the ODD-p case, which is Open Problem 1 in general
+    form, so that is what is asserted; p = 2 instances are counted and reported
+    as INFO in the message, since a new one is worth knowing about but is not a
+    failure."""
+    bad, twos, multi = [], [], 0
     for r in R:
-        sizes = {c for F, c, f in r.cls if not f}
-        if sum(1 for F, c, f in r.cls if not f) > 1:
-            multi += 1
-            if len(sizes) > 1:
-                bad.append((r.n, r.witness))
+        match = [(F, c) for F, c, f in r.cls if not f]
+        if len(match) < 2:
+            continue
+        multi += 1
+        if len({c for _, c in match}) > 1:
+            (twos if r.p == 2 else bad).append((r.n, r.witness))
     return ("FAIL" if bad else "PASS",
-            f"{multi} winners have >1 matching class; {len(bad)} have unequal sizes", bad[:5])
+            f"{multi} winners have >1 matching class; {len(bad)} unequal at odd p, "
+            f"{len(twos)} at p = 2 (permitted -- the n = 551 escape)",
+            (bad or twos)[:5])
+
+
+@check("B", "the cyclic layer is admissible: every Fmid and every foreign prime "
+            "pairwise coprime", "ep Part 0, corrected shape space")
+def c_cyclic_layer(R, base):
+    """The global condition the 2026 shape-space correction introduced, and the
+    one nothing else here tests.
+
+    A class of F blocks splits as F = Fmid * Ftop with Ftop the q-part; Fmid comes
+    from the CYCLIC layer, which is one shared generator, so every Fmid, every
+    cyclic-layer twist and every foreign block size must be PAIRWISE COPRIME
+    across the whole configuration.  That coupling is exactly what the old
+    q-power-only reading of the block count missed, so a winner violating it
+    would mean the enumerator has over-corrected -- admitting a configuration no
+    Oliver group realises, which inflates B and breaks the upper bound.
+
+    Only Fmid and the foreign sizes are checked here.  The twists are not, because
+    SAFE scores a matching part at F*orb(c, dmax) with dmax already stripped of
+    Fmid, so the witness string does not record which twist was used and there is
+    nothing to test against."""
+    bad, tested = [], 0
+    for r in R:
+        if r.q is None:
+            continue
+        orders = []
+        for F, c, f in r.cls:
+            if f:
+                orders.append(c)                 # foreign translations C_r
+            else:
+                ft = qpart(F, r.q)
+                fm = F // ft
+                if fm > 1:
+                    orders.append(fm)            # Fmid, from the cyclic layer
+        orders = [o for o in orders if o > 1]
+        if len(orders) < 2:
+            continue
+        tested += 1
+        for i in range(len(orders)):
+            for j in range(i + 1, len(orders)):
+                if math.gcd(orders[i], orders[j]) > 1:
+                    bad.append((r.n, orders[i], orders[j], r.witness))
+                    break
+    return ("FAIL" if bad else "PASS",
+            f"{len(bad)} of {tested} winners with >=2 cyclic-layer orders violate "
+            f"pairwise coprimality", bad[:5])
+
+
+@check("B", "the feasibility criterion sum(sqrt(F_i)) <= 1/sqrt(delta)",
+       "aod section 6.1")
+def c_feasibility(R, base):
+    """One criterion that replaces three, and is strictly sharper than their
+    conjunction: it gives Prop F.1's k <= 1/sqrt(delta) at every F_i = 1, and
+    F <= 1/delta -- NOT 1/sqrt(delta), which is the natural-looking but wrong
+    bound.  Checked because `aod` section 6.1's shape counts are derived from it,
+    so a violation would invalidate the covering statement's arithmetic rather
+    than just a row."""
+    bad, tight = [], None
+    for r in R:
+        if r.delta <= 0:
+            continue
+        lhs = sum(math.sqrt(F) for F, _, _ in r.cls)
+        rhs = 1 / math.sqrt(r.delta)
+        if lhs > rhs + 1e-9:
+            bad.append((r.n, round(lhs, 4), round(rhs, 4), r.witness))
+        slack = rhs - lhs
+        if tight is None or slack < tight[1]:
+            tight = ((r.n, r.witness), slack)
+    msg = f"{len(bad)} of {len(R)} violate"
+    if tight:
+        msg += f"; tightest n = {tight[0][0]} (`{tight[0][1].strip()}`), slack {tight[1]:.4f}"
+    return ("FAIL" if bad else "PASS", msg, bad[:5])
+
+
+@check("B", "Part G.4's per-axis bounds: c_i >= delta*n and F_i <= 1/delta",
+       "ep Part G.4")
+def c_g4_axes(R, base):
+    """The bounds that make the search finite along every axis, and the ones Part
+    G.4 reports as holding at 3,053 of 3,053 fused witnesses.  Worth asserting
+    rather than citing: they are what bound the enumeration's cost, so if a row
+    ever violates one the cost model is wrong, not merely the prose."""
+    badc, badF, tightc, tightF = [], [], None, None
+    for r in R:
+        if r.delta <= 0:
+            continue
+        for F, c, _ in r.cls:
+            if c < r.delta * r.n - 1e-9:
+                badc.append((r.n, c, round(r.delta * r.n, 2)))
+            if F > 1 / r.delta + 1e-9:
+                badF.append((r.n, F, round(1 / r.delta, 2)))
+            sc = c / (r.delta * r.n)
+            sF = (1 / r.delta) / F
+            if tightc is None or sc < tightc[1]: tightc = (r.n, sc)
+            if tightF is None or sF < tightF[1]: tightF = (r.n, sF)
+    bad = badc + badF
+    msg = (f"{len(badc)} block-size and {len(badF)} fusion-count violations; "
+           f"tightest c/(delta*n) = {tightc[1]:.3f} at n = {tightc[0]}, "
+           f"tightest (1/delta)/F = {tightF[1]:.3f} at n = {tightF[0]}")
+    return ("FAIL" if bad else "PASS", msg, bad[:5])
 
 
 @check("B", "S6 (two foreign blocks) wins nowhere", "aod section 4.2")
