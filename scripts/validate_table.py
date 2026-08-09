@@ -170,12 +170,25 @@ def score(r):
                 # argument actually bounds is the minimum pair-orbital of a
                 # transitive group of degree F, which is F/2 for even F and F for
                 # odd F.  Both shipped enumerators key on F's parity.
-                terms.append((F if F % 2 else F // 2) * c * c)
+                terms.append(_cross_term(F, c))
     sizes = [F * c for F, c, _ in r.cls]
     for i in range(len(sizes)):
         for j in range(i + 1, len(sizes)):
             terms.append(sizes[i] * sizes[j])
     return min(terms) if terms else 0
+
+
+def _cross_term(F, c):
+    """The within-class cross term of a class of F blocks of size c.
+
+    Factored out of `score` so that `c_cross_coeff` asserts the same expression
+    the scorer uses rather than a copy of it -- a check that recomputes its own
+    assumption cannot fail.  The coefficient is F for odd F and F/2 for even F:
+    it bounds the minimum pair-orbital of a transitive group of degree F, and
+    the halving is the l = 2 case of the divisibility argument, not a fact about
+    the top prime.
+    """
+    return (F if F % 2 else F // 2) * c * c
 
 
 # mod-24 class ceilings, aod section 3.3.5
@@ -331,6 +344,58 @@ def c_capF(R, base):
         if r.delta > cap + 1e-9:
             bad.append((r.n, round(r.delta, 6), round(cap, 6)))
     return ("FAIL" if bad else "PASS", f"{len(bad)} of {tested} one-foreign rows exceed", bad[:5])
+
+
+@check("B", "the within-class cross coefficient is keyed on F's parity, not on q",
+       "ep Part E, box 'The parity is F's, not q's'")
+def c_cross_coeff(R, base):
+    """Assert the COEFFICIENT, because the resulting minimum cannot see it.
+
+    The within-class cross term is (F/2)c^2 for even F and F*c^2 for odd F,
+    against an intra term of at most F*c(c-1) -- so at F = 2 the cross term sits
+    a factor c/(c-1) above the intra term and never binds.  A wrong coefficient
+    there produces byte-identical output: same mu_bound, same witness, same
+    density, so group A's re-derivation passes and no measured figure moves.
+    Keying it on q is correct wherever F is forced to be a q-power, since even F
+    then means q = 2, which is why the wrong rule survives in prose and in hand
+    checks.  The direction that matters is that the q-keyed reading is LARGER at
+    odd q with even F, so a lower-bound script carrying it over-credits.
+
+    BE CLEAR ABOUT WHAT THIS CAN AND CANNOT CATCH.  Rescoring the table under
+    the q-keyed rule and asking which reading `mu_bound` matches is **vacuous
+    while the term never binds**: both readings give the same score, so no row
+    can discriminate.  What is asserted instead is the coefficient `score()`
+    computes, row by row, against the rule written out here -- which catches a
+    regression in the scorer, the thing actually at risk.  The rescoring is kept
+    as a live tripwire: it acquires teeth the moment `binds` is nonzero, and the
+    check says so rather than reporting a pass it did not earn."""
+    wrong, binds, tested, discriminating = [], 0, 0, 0
+    for r in R:
+        for F, c, foreign in r.cls:
+            if foreign or F <= 1:
+                continue
+            tested += 1
+            fkey = (F if F % 2 else F // 2) * c * c
+            qkey = (F if r.q % 2 else F // 2) * c * c
+            ft = qpart(F, r.q); fm = F // ft
+            dq = qpart(c - 1, r.q)
+            dmax = dq * coprime_part((c - 1) // dq, fm)
+            intra = F * orb(c, dmax, r.p == 2)
+            if fkey <= intra:
+                binds += 1
+            if fkey != qkey:
+                discriminating += 1
+                # Only here can the table distinguish the two rules at all, and
+                # only if the term also binds.
+                if fkey <= intra and r.B == qkey and r.B != fkey:
+                    wrong.append((r.n, F, r.q, fkey, qkey))
+            # The assertion proper: the shipped scorer must use F's parity.
+            if _cross_term(F, c) != fkey:
+                wrong.append((r.n, F, c, _cross_term(F, c), fkey))
+    msg = (f"{tested} fused classes, {discriminating} where the two rules differ; "
+           f"the term binds at {binds} (so the table-rescoring tripwire is "
+           f"{'LIVE -- read the rows below' if binds else 'dormant, as expected'})")
+    return ("FAIL" if wrong else "PASS", msg, wrong[:5])
 
 
 @check("B", "S2 winners sit at density (c-1)/(Fc-1), i.e. 1/F up to O(1/n)", "aod section 2.1")

@@ -13,6 +13,14 @@ union-graph iso classes across a battery of groups:
   (c) chi condition per group.
 UNSAT => ARK proved unconditionally at n by this battery.
 SAT   => residual counterexample search space; report backbone.
+
+SOUNDNESS DIRECTION.  The useful answer here is UNSAT, so the dangerous error is
+an UNJUSTIFIED CONSTRAINT, not a missing one: dropping a condition can only turn
+a real UNSAT into a spurious SAT, which loses a result, while adding one nobody
+justified turns a real SAT into a spurious PROOF OF ARK.  Every approximation
+below therefore errs weak.  See `top_prime` for the specific case -- the top
+prime is read off the twist, so it is not verified, so the congruence is enforced
+for one q and never for an lcm.
 """
 import sys
 from itertools import combinations
@@ -47,31 +55,49 @@ def top_prime(group):
     """Smallest usable top prime for this group, or None for a trivial top layer
     (chi = 1 exactly).
 
-    Two known weaknesses, both in the SAFE direction (a weaker condition can only
-    admit more solutions, never wrongly report UNSAT), recorded here rather than
-    silently inherited:
+    WHAT THIS READS, AND WHY IT IS NOT A TOP PRIME.  The value comes off the
+    TWIST prime of each part, which lives in the CYCLIC layer, not in the top
+    q-group.  A twist prime need not be a valid top prime for any Oliver chain
+    of the group.  The consequences split by direction, and only one is safe:
 
-    (1) It reads q off the TWIST prime, so it never takes the trivial-top reading
-        even where one exists.  At n = 9, AGL(1,9) = F_9 : C_8 can be read with
-        the twist in the cyclic layer and a trivial top, giving chi = 1 EXACTLY;
-        this function returns 2 and the caller enforces only chi = 1 mod 2.  This
-        is the loss that notes section 8.7' rule (ii) quantifies at 111 conditions
-        for n = 10.  IsOliverTop in ark_gap.g does take the trivial-top reading,
-        so only this legacy path is affected.
-    (2) A group admitting chains with several top primes forces the congruence
-        modulo each, hence modulo their lcm -- strictly stronger than any single
-        one.  Returning a single q discards that.
+      * Enforcing chi == 1 (mod q) for a q that IS valid, or for a weaker
+        modulus than the truth, can only ADMIT more solutions.  A weaker
+        constraint never turns a real SAT into a spurious UNSAT, so returning a
+        single q -- the smallest -- is sound for a CSP whose useful answer is
+        UNSAT.
+      * Enforcing the congruence modulo the LCM of several such q is NOT sound.
+        The lcm strengthening is legitimate only when every q in the set is
+        verified against an actual normal subgroup witnessing an Oliver chain
+        with that top prime, which is what `IsOliverTop` in `ark_gap.g` does and
+        what this function does not do.  At the group named below --
+        AGL(1,5)[d=4] x F7:C3 at n = 12 -- q = 2 is valid and q = 3 appears not
+        to be, so mod 6 would impose a constraint nothing justifies.  On a CSP
+        whose useful answer is UNSAT, an unjustified constraint is A SPURIOUS
+        PROOF OF ARK.
 
-    Previously this asserted len(qs) == 1, which CRASHED on any group whose parts
-    carry twists of different primes -- e.g. AGL(1,5)[d=4] x F7:C3 at n = 12, a
-    group the template itself generates, so __main__'s n = 12 pass died on it.
-    We now return the smallest and expose the full set as .top_primes."""
+    So the set is deliberately exposed as `.twist_primes` and NOT as
+    `.top_primes`: there is no attribute here an lcm may legitimately be taken
+    over.  Callers wanting the strengthening must take it over `ark_gap.g`'s
+    `+`-separated tag, where each q has been verified.
+
+    A second, milder loss, in the same safe direction: reading q off the twist
+    means the trivial-top reading is never taken even where one exists.  At
+    n = 9, AGL(1,9) = F_9 : C_8 can be read with the twist in the cyclic layer
+    and a trivial top, giving chi = 1 EXACTLY; this returns 2 and the caller
+    enforces only chi = 1 mod 2.
+
+    One shape to avoid reintroducing: asserting len(qs) == 1 crashes on any group
+    whose parts carry twists of different primes, which the template itself
+    generates -- AGL(1,5)[d=4] x F7:C3 again.
+    """
     qs = set()
     for part in group.desc_parts:
         if part.startswith('F') and ':C' in part:
             tw = int(part.split(':C')[1])
             if tw > 1: qs.add(prime_power(tw)[0])
-    group.top_primes = sorted(qs)
+    # Named for what it is.  Anything reading `.top_primes` off this legacy path
+    # was reading twist primes and must be repaired rather than re-pointed.
+    group.twist_primes = sorted(qs)
     if not qs: return None
     return min(qs)
 

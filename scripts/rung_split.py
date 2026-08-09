@@ -22,8 +22,11 @@ For n = 2c + r with c a prime power and r prime, the three readings score:
     S7   min( 2*orb(c, odd(c-1)),  2*c*c,  orb(r, t) over ODD q,  2*c*r )
     S5   min( 2*C(c,2),          c*c,  orb(r, t) at q = 2,      2*c*r )
 
-The within-class cross term is F*c^2 for odd q and (F/2)*c^2 for q = 2, which
-is why S7 carries 2*c*c and S5 carries c*c.
+The within-class cross term is F*c^2 for ODD F and (F/2)*c^2 for EVEN F -- keyed
+on the parity of the BLOCK COUNT, not on the top prime -- keying it on q is right
+only where F is forced to be a q-power, so that even F means q = 2.  Both S7 at
+F = 2 and S5 have F = 2, so both carry c*c.  The term never binds either way,
+since 2*orb(c,d) <= c(c-1) < c^2.
 
 The c/n window is each residue's own balance point plus or minus 0.05, which is
 count_check.py's convention.  Use --flat LO,HI to compare against a single
@@ -150,7 +153,7 @@ for n in range(A.nmin | 1, A.nmax + 1, 2):
             continue
         ch2 = base[c] == 2
         v4 = min(comb(c, 2), c * c, ORB_ANY[r], c * r)
-        v7 = min(2 * orb(c, oddpart(c - 1), ch2), 2 * c * c, ORB_ODD[r], 2 * c * r)
+        v7 = min(2 * orb(c, oddpart(c - 1), ch2), c * c, ORB_ODD[r], 2 * c * r)
         v5 = min(2 * comb(c, 2), c * c, ORB_TWO[r], 2 * c * r)
         for v, tag in ((v4, "S4"), (v7, "S7"), (v5, "S5")):
             if v > best:

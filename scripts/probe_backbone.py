@@ -49,6 +49,36 @@ edges = [cat.reps[i].number_of_edges() for i in range(V)]
 NVERT = cat.reps[0].number_of_nodes()
 NFULL = NVERT * (NVERT - 1) // 2
 
+# `cat.classify` APPENDS a new representative when it does not recognise a
+# graph, so calling it during a probe or during the involution check can grow the
+# catalog underneath `V`, `order` and `edges` -- all of which were sized once, at
+# load.  A later index would then be out of range for `order`, or silently absent
+# from it.  Every lookup here is of a graph that must ALREADY be in the catalog,
+# so use a read-only variant and fail loudly if that assumption is wrong.
+_CERT = {}
+def cat_lookup(G, what):
+    """Index of G's class in the catalog, without mutating it."""
+    if not _CERT:
+        for i, H in enumerate(cat.reps):
+            _CERT[_key(H)] = i
+    k = _key(G)
+    if k not in _CERT:
+        raise KeyError(f"{what}: graph with {G.number_of_edges()} edges is not "
+                       f"in the catalog; classify() would have appended it and "
+                       f"grown V past the order matrix")
+    return _CERT[k]
+
+def _key(G):
+    """Isomorphism key. Uses the catalog's own notion when it exposes one, so
+    this cannot disagree with `classify` about what counts as the same class."""
+    if hasattr(cat, 'cert'):
+        return cat.cert(G)
+    import networkx as _nxk
+    import pynauty as _pn
+    nv = G.number_of_nodes()
+    return _pn.certificate(_pn.Graph(nv, adjacency_dict={
+        v: list(G.neighbors(v)) for v in range(nv)}))
+
 def log(m):
     line = f"{time.strftime('%H:%M:%S')}  {m}"
     print(line, flush=True)
@@ -72,6 +102,20 @@ def parse_q(tag):
     m = 1
     for q in qs:
         m = m * q // gcd(m, q)
+    if len(qs) > 1:
+        # The lcm strengthening is legitimate HERE and only here, because the tag
+        # is emitted by ark_gap.g's IsOliverTop, which verifies each q against an
+        # actual normal subgroup witnessing a chain with that top prime.  The
+        # same lcm taken over ark_intersect.py's twist primes would NOT be, since
+        # a twist prime need not be a valid top prime -- and on a CSP whose useful
+        # answer is UNSAT, an unjustified constraint is a spurious proof of ARK.
+        #
+        # Logged because it has reportedly never fired across 8,082 groups at
+        # n = 10 and n = 12, so its first firing is either a new capability or a
+        # sign the tag is being produced by something other than IsOliverTop.
+        # Either way it should not pass unnoticed.
+        log(f"multi-prime tag {tag!r}: enforcing chi = 1 mod lcm = {m} "
+            f"(verified top primes {qs})")
     return m
 
 oliver = [g for g in groups if not g['tag'].startswith('P')]
@@ -113,7 +157,9 @@ def group_ok(gi, x):
 def solve(pin_class, pin_val, nodecap):
     """Returns 'SAT', 'UNSAT', or 'CAP'."""
     x = [None] * V
-    x[cat.classify(set())] = 1
+    import networkx as _nxe
+    _empty = _nxe.Graph(); _empty.add_nodes_from(range(NVERT))
+    x[cat_lookup(_empty, 'empty graph')] = 1
     for i in range(V):
         if edges[i] == NFULL: x[i] = 0
     pend = None
@@ -240,22 +286,56 @@ else:
 log(f"targets ({len(targets)}): " + ", ".join(
     f"{c}(e={edges[c]})" for c in targets[:25]) + (" ..." if len(targets) > 25 else ""))
 
-done = set()
+# RESUME RULE.  A CAP row records "undetermined at the budget that run used",
+# not a verdict -- and the whole point of a larger --nodecap is to retry exactly
+# those.  Treating every recorded (c, v) as done therefore makes the documented
+# remedy a silent no-op: the rerun skips the CAP probes it was launched for and
+# reprints the same tally.  So a CAP row is skipped only when the budget it was
+# taken at was at least the current one, which needs the budget recorded.  Rows
+# from before that column existed have no budget to compare, so they are RETRIED
+# rather than trusted -- the conservative direction, since the alternative is
+# quoting a free band that was never established.
+CAP_UNKNOWN_BUDGET = -1
+done = {}
 if os.path.exists('probe_results.csv'):
     for r in csv.reader(open('probe_results.csv')):
-        if r and r[0] != 'class': done.add((int(r[0]), int(r[1])))
+        if not r or r[0] == 'class':
+            continue
+        cap_at = int(r[5]) if len(r) > 5 and r[5] not in ('', 'None') else CAP_UNKNOWN_BUDGET
+        done[(int(r[0]), int(r[1]))] = (r[2], cap_at)
+
+def already_done(c, v):
+    rec = done.get((c, v))
+    if rec is None:
+        return False
+    result, cap_at = rec
+    if result != 'CAP':
+        return True                       # SAT and UNSAT are exact; never redo
+    if cap_at == CAP_UNKNOWN_BUDGET:
+        return False                      # unknown budget: retry
+    return cap_at >= args.nodecap         # only skip a CAP taken at >= this cap
+
+retry = [(c, v) for (c, v), (res_, cap_at) in sorted(done.items())
+         if res_ == 'CAP' and not already_done(c, v)]
+if retry:
+    log(f"{len(retry)} CAP probe(s) will be RETRIED at --nodecap {args.nodecap}: "
+        + ", ".join(f"{c}/{v}" for c, v in retry[:20])
+        + (" ..." if len(retry) > 20 else ""))
+
 fh = open('probe_results.csv', 'a', newline='')
 cw = csv.writer(fh)
-if not done: cw.writerow(['class', 'pinned_value', 'result', 'edges', 'nodes_note'])
+if not done:
+    cw.writerow(['class', 'pinned_value', 'result', 'edges', 'nodes_note', 'nodecap'])
 
 forced_in, forced_out = [], []
 for c in targets:
     for v in (0, 1):
-        if (c, v) in done: continue
+        if already_done(c, v): continue
         t0 = time.time()
         log(f"probing class {c} (e={edges[c]}) pinned {v} ...")
         res = solve(c, v, args.nodecap)
-        cw.writerow([c, v, res, edges[c], f"{time.time()-t0:.0f}s"]); fh.flush()
+        cw.writerow([c, v, res, edges[c], f"{time.time()-t0:.0f}s", args.nodecap])
+        fh.flush()
         log(f"class {c} (e={edges[c]}) pinned {v}: {res} ({time.time()-t0:.0f}s)")
         if v == 0 and res == 'UNSAT': forced_in.append(c)
         if v == 1 and res == 'UNSAT': forced_out.append(c)
@@ -264,6 +344,9 @@ for c in targets:
 # IN/OUT lists (as section 8.9 did) hides an inconclusive remainder that at n = 10
 # ran to 54 of 817 probes, concentrated at 12-36 edges, i.e. straight through the
 # free middle band whose freeness sections 8.6 and 8.9' reason from.
+# Read the LAST record for each (c, v): a retried CAP appends a new row rather
+# than rewriting the old one, so taking the first would report the superseded
+# verdict and undo the retry in the summary.
 res = {}
 for r in csv.reader(open('probe_results.csv')):
     if r and r[0] != 'class':
@@ -297,7 +380,7 @@ try:
     import networkx as _nx
     comp_of = {}
     for i in range(V):
-        comp_of[i] = cat.classify(set(_nx.complement(cat.reps[i]).edges()))
+        comp_of[i] = cat_lookup(_nx.complement(cat.reps[i]), f'complement of {i}')
     assert len(cat.reps) == V, "catalog grew during complement lookup"
     viol, unpr = [], []
     for c, d in res.items():

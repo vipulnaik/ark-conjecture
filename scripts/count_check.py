@@ -290,7 +290,15 @@ for n in cands:
         continue
     a = count(n, q)
     W = HI - LO
-    denom = math.log(A.centre * n) * math.log((1 - 2 * A.centre) * n) if A.centre < 0.5 else 1
+    if A.centre >= 0.5:
+        # The non-dq path is the three-part family n = 2c + r, so a centre at or
+        # above 1/2 leaves no room for the foreign block and the two log factors
+        # below are not defined.  Falling back to denom = 1 would drop BOTH log
+        # factors and return a prediction too large by log^2 n with nothing in
+        # the output saying so, so fail loudly instead.
+        sys.exit("--centre >= 0.5 is meaningless for the three-part system; "
+                 "use --parts 2 (which defaults to centre 1/2) or --dq")
+    denom = math.log(A.centre * n) * math.log((1 - 2 * A.centre) * n)
     pred = singular(n, q) * (W * n / (q if q else 1)) / max(denom, 1e-9)
     if a == 0: zero += 1
     rows.append((n, a, pred, a / pred if pred > 0 else 0.0))

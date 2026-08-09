@@ -39,8 +39,19 @@ n = reps[0].number_of_nodes(); F = factorial(n)
 def cert(G):
     return pynauty.certificate(pynauty.Graph(n, adjacency_dict={v: list(G.neighbors(v)) for v in range(n)}))
 def autorder(G):
+    """|Aut(G)|, from pynauty's (mantissa, exponent) pair.
+
+    The mantissa is a float, so for a large automorphism group the product can
+    land off the integer.  That matters here beyond tidiness: every term of S is
+    n!/|Aut|, and S is the decisive quantity -- S != 0 is the EVASIVE verdict --
+    so a silently wrong order does not raise, it just returns the wrong S.  The
+    orbit-counting identity gives the check for free: |Aut| must divide n!."""
     g = pynauty.autgrp(pynauty.Graph(n, adjacency_dict={v: list(G.neighbors(v)) for v in range(n)}))
-    return round(g[1] * 10 ** g[2])          # mantissa * 10^exp, rounded once
+    order = round(g[1] * 10 ** g[2])          # mantissa * 10^exp, rounded once
+    assert order >= 1 and F % order == 0, (
+        f"|Aut| = {order} does not divide {n}! = {F}; the mantissa/exponent "
+        f"product has lost precision and every n!/|Aut| term would be wrong")
+    return order
 
 IN = [i for i in range(len(reps)) if sol[i] == 1]
 # maximal IN classes = generators of the minimal extension

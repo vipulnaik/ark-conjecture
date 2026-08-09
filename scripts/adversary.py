@@ -23,6 +23,14 @@ Verdicts: EVASIVE / NON-EVASIVE are exact; BUDGET means the node budget was
 exhausted (rerun larger -- the memo is persisted to adversary_memo.pkl and
 reloaded, so reruns resume most of the work).
 
+MEMO SOUNDNESS.  A node is recorded only once its value is DECIDED: the budget
+test in `survive` runs before the result is written, so an exhausted subtree
+never leaves memo[key] = False behind.  This matters because False is also the
+genuine "does not survive" answer, and a resumed run reading a poisoned entry
+would report NON-EVASIVE -- the counterexample-found verdict -- from a node
+nobody ever evaluated.  A run that ends in BUDGET therefore does not overwrite
+the memo file at all; resume from a file no exhausted run has touched.
+
 Usage:
   python3 adversary.py --demo scorpion --n 6        # validation, increasing
   python3 adversary.py --demo matching --n 6        # validation, decreasing
@@ -157,7 +165,10 @@ def survive(L, A, k):
         beat[0] = time.time()
         log(f"  ... nodes {nodes[0]}, memo {len(memo)}, depth {k}, "
             f"{nodes[0]/(time.time()-t0):.0f}/s")
-        # persist memo periodically so a hard kill loses at most this interval
+        # Persist periodically so a hard kill loses at most this interval.  Safe
+        # only because `survive` bails out before recording an undecided node:
+        # every entry in `memo` is a decided value, so a partial file is a
+        # correct prefix rather than a poisoned one.
         pickle.dump(memo, open(args.memo_file + '.tmp', 'wb'))
         os.replace(args.memo_file + '.tmp', args.memo_file)
     if not undetermined(L, A): return False
@@ -168,9 +179,20 @@ def survive(L, A, k):
     for i in range(N):
         bit = 1 << i
         if (L | A) & bit: continue
-        if not (survive(L | bit, A, k + 1) or survive(L, A | bit, k + 1)):
+        keeps = survive(L | bit, A, k + 1) or survive(L, A | bit, k + 1)
+        # BUDGET CHECK FIRST.  A child returns False both when it genuinely
+        # fails to survive and when the node budget ran out underneath it, and
+        # the two are indistinguishable here.  If this test sits after the
+        # `res = False; break` below, an exhausted subtree writes memo[key] =
+        # False for a node whose value is UNKNOWN -- and the memo is pickled in
+        # the heartbeat and in the `finally`, then reloaded on the next run,
+        # which the docstring recommends.  The failure mode is a spurious
+        # NON-EVASIVE: the counterexample-found verdict, reached by resuming a
+        # poisoned memo.  So bail out before recording anything.
+        if out_of_budget[0]:
+            return False
+        if not keeps:
             res = False; break
-        if out_of_budget[0]: return False
     memo[key] = res
     return res
 
@@ -178,8 +200,18 @@ sys.setrecursionlimit(20000)
 try:
     r = survive(0, 0, 0)
 finally:
-    pickle.dump(memo, open(args.memo_file, 'wb'))
-verdict = 'BUDGET EXHAUSTED (rerun with larger --budget; memo persisted)' \
+    # Only persist a memo whose every entry was decided.  Entries written before
+    # exhaustion are sound (see the budget check in `survive`), but the run may
+    # have been killed between the heartbeat and here, so the invariant is
+    # restated where the file is written rather than trusted from a distance.
+    if out_of_budget[0]:
+        log(f"budget exhausted: NOT overwriting {args.memo_file}; the in-memory "
+            f"memo is sound but partial, and a resumed run must start from a "
+            f"file no exhausted run has touched")
+    else:
+        pickle.dump(memo, open(args.memo_file, 'wb'))
+verdict = 'BUDGET EXHAUSTED (rerun with larger --budget; the memo file is left ' \
+          'untouched -- see MEMO SOUNDNESS in the docstring)' \
           if out_of_budget[0] else ('EVASIVE' if r else 'NON-EVASIVE: a decision tree of depth < C(n,2) exists')
 log(f"n={n} N={N}: {verdict}")
 log(f"nodes {nodes[0]}, canonical states {len(memo)}, "

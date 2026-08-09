@@ -15,6 +15,11 @@ def load(path):
     if not isinstance(st, dict):
         sys.exit(f"{path}: unrecognized (not a dict)")
     if 'order' in st:
+        # v1/v3-final format.  A dense 'order' key is only written on
+        # completion, so there is no partial state to detect here -- unlike the
+        # 'rows' and 'TU' formats below, which are checkpointed mid-run and are
+        # explicitly tested for completeness.  Stated because the asymmetry
+        # looks like a missing check.
         order = st['order']
         return [[bool(x) for x in row] for row in order], None
     if 'rows' in st:

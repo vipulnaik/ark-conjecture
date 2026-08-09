@@ -273,8 +273,16 @@ def achieved(n, stop_at=None):
                 dodd //= 2
             eB = EFF_ODD[r]
             if eB > 0:
+                # Within-class cross carries F/2 = 1 because F = 2 is EVEN --
+                # the coefficient is keyed on the parity of the BLOCK COUNT,
+                # not on the top prime.  Writing 2*c*c here would not change any
+                # reported figure, since 2*orb(c,d) <= c(c-1) < c^2 means the
+                # term never binds -- but this is a lower-bound script, where an
+                # over-credit is the dangerous direction, so it must be right for
+                # a reason rather than by accident.  Rung B' below is the same
+                # rule at F = 2.
                 v = min(2 * orb_ld(c, dodd, bp == 2), eB * comb(r, 2),
-                        2 * c * c, 2 * c * r)
+                        c * c, 2 * c * r)
                 if v > best * C:
                     best = v / C
                     if stop_at and best > stop_at:

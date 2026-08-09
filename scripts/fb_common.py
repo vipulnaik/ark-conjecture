@@ -191,9 +191,14 @@ def intra_floor(B):
 
 def single_part_ok(A, L, B, p, q, r):
     """Can the leftover L be ONE admissible part whose own intra term reaches B?
-    q may be '*' for the generic branch, over-approximated permissively."""
-    Fs = ([f for f in range(1, L + 1) if L % f == 0] if q == '*'
-          else [q ** i for i in range(64) if q ** i <= L])
+    q may be '*' for the generic branch, over-approximated permissively.
+
+    Note the block count F ranges over ALL divisors of L, not over q-powers.
+    Under the corrected shape space F = F_mid * F_top with only F_top a q-power,
+    so a q-power-only list would be a restriction in the ANTI-permissive
+    direction -- it could discard a real leftover and turn an inconclusive n
+    into a spurious proof."""
+    Fs = [f for f in range(1, L + 1) if L % f == 0]
     for F in Fs:
         if L % F:
             continue
@@ -227,13 +232,13 @@ def multi_part_ok(A, L, B, p, q, r, limit=60):
     pcands = []
     cj = p
     while cj <= L:
-        F = 1
-        while F * cj <= L:
+        # F over every integer, not over q-powers: F = F_mid * F_top and only
+        # F_top is a q-power, so restricting here would drop real parts.  The
+        # `q == '*'` branch previously stopped at F = 1, which was the same
+        # restriction in its sharpest form.
+        for F in range(1, L // cj + 1):
             if F * comb(cj, 2) >= B:
                 pcands.append(F * cj)
-            if q == '*':
-                break
-            F *= q
         cj *= p
     if len(fcands) + len(pcands) > limit:
         return None
@@ -271,6 +276,13 @@ def e3ii_resolves(A, n, c, r, F, L):
     p-characteristic at full twist plus the c-block foreign.  Three facts make
     that a proof of collapse at this n rather than a heuristic:
 
+      * it IS an admissible configuration: the chain is F_r <| F_r : (C_{r-1} x
+        F_c) <| Gamma, whose middle layer is cyclic because gcd(r-1, c) = 1.
+        That gcd is not immediate -- gcd(r-1, 2r+1) = gcd(r-1, 3), so what has
+        to be ruled out is 3 | r-1 -- and it holds because r == 1 (mod 3) would
+        force 3 | 2r+1 = c, killing the primality of c unless c = 3.  Stating
+        the conclusion without this step is the gap worth naming: "gcd(r-1, c)
+        = 1" does not follow from anything about safe primes on its own;
       * it scores min(C(c,2), C(r,2), cr), and the fallback reading scores
         min(C(c,2), orb(r,t), cr) with orb(r,t) <= C(r,2), so the re-reading
         scores at least as much;
@@ -304,10 +316,23 @@ def pair_candidates(A, n, B, c, r, p, skip_settled=None):
         t = 1 if q == '*' else qpart(r - 1, q)
         if orb(r, t) < B:
             continue
-        F = 1
-        while F <= Fmax:
+        # F over every integer up to Fmax.  A q-power ladder here is the
+        # pre-correction shape space: F = F_mid * F_top with F_mid drawn from the
+        # cyclic layer, so F need only be coprime to what that layer already
+        # carries.  Enumerating all F is permissive -- some are inadmissible on
+        # the coprimality budget -- which is the required direction.
+        for F in range(1, Fmax + 1):
+            # Within-class cross: the coefficient is F for ODD F and F/2 for
+            # EVEN F, keyed on the parity of the block count and not on the top
+            # prime.  Reading it off q is correct only where F is forced to be a
+            # q-power, since even F then means q = 2; under the corrected shape
+            # space the two come apart.  Here the q-keyed form is the LARGER of
+            # the two at odd q with even F, so it made `ok` true more often --
+            # permissive, hence sound, but wrong, and it would silently become
+            # anti-permissive if this expression were ever reused with the
+            # inequality the other way round.
             ok = (F * comb(c, 2) >= B and F * c * r >= B and
-                  (F == 1 or (F if q == '*' or q % 2 else F // 2) * c * c >= B))
+                  (F == 1 or (F if F % 2 else F // 2) * c * c >= B))
             if ok:
                 lo = leftover_ok(A, n - F * c - r, B, p, q, r, F * c)
                 if lo is False:
@@ -321,7 +346,4 @@ def pair_candidates(A, n, B, c, r, p, skip_settled=None):
                     break                       # dominated by the (r,r) re-reading
                 out.append((p, q, F, c, r, s, L))
                 break
-            if q == '*':
-                break
-            F *= q
     return out

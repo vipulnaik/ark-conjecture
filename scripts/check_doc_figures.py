@@ -2,13 +2,14 @@
 """
 check_doc_figures.py -- catch claims that a table extension has made stale.
 
-Written after three consecutive extensions each left a different subset of the
-documents behind.  Rewritten after the 2026-08 review, which found that the two
-worst defects were NOT stale figures: they were an argument whose scope had
-silently expired (a corollary assuming every computed value has delta > 1/25,
-after the floor fell to 0.026117) and a status claim contradicting itself three
-ways ("the search terminates" / "one value remains" / "completing these three").
-A figure sweep sees neither.  So this script runs four passes.
+Every table extension leaves some subset of the documents behind, and the ways
+it does that are not all figures.  Two failure modes a figure sweep cannot see:
+an argument whose SCOPE has silently expired (a corollary assuming every
+computed value has delta > 1/25, once the floor falls below that), and a status
+claim contradicting itself ("the search terminates" / "one value remains").  A
+third is invisible even to those: a reference to a section or a named result
+that no longer exists, which excising or renumbering a section creates and
+which nothing else notices.  So this script runs five passes.
 
   PASS 1  FIGURES.  Range-dependent quantities the prose quotes.  Every quantity
           is recomputed at each historical checkpoint as well as at the current
@@ -37,6 +38,13 @@ A figure sweep sees neither.  So this script runs four passes.
           compared across files, and any S-number present in one census but not
           the other, or carrying a different shape description, is reported.
 
+  PASS 6  REFS.  Every section reference and every named-result citation is
+          resolved against the headings and bolded statements actually present
+          in the documents.  Dangling ones are reported with the nearest
+          candidates.  This is the pass for the failure mode the other four are
+          blind to: excising a section leaves its inbound pointers behind, and
+          a reader following one has no way to tell a typo from a move.
+
   PASS 4  HYGIENE.  Doubled sentence fragments and doubled bold runs, which
           ad-hoc string replacement produces and which no reader catches.
 
@@ -54,7 +62,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("table")
 ap.add_argument("docs", nargs="+")
 ap.add_argument("--pass", dest="only", default="all",
-                choices=["all", "figures", "scope", "prose", "hygiene", "census"])
+                choices=["all", "figures", "scope", "prose", "hygiene", "census", "refs"])
 ap.add_argument("--quiet", action="store_true", help="findings only")
 A = ap.parse_args()
 DOCS = [d for d in A.docs if d.endswith(".md")]
@@ -82,9 +90,14 @@ def omega(x):
 for r in rows:
     r["omega"] = omega(r["n"])
 
-# Checkpoints: every n at which the table has previously been quoted, plus the
-# current maximum.  Add to this list whenever a range is quoted in the prose.
-CHECKPOINTS = sorted({c for c in [1540, 2007, 2212, 2298, 2376, NMAX] if c <= NMAX})
+# Checkpoints: every n at which the table has been quoted at some point, plus the
+# current maximum.  A figure written against an older frontier then reports as
+# "correct for n <= C" rather than as unexplained.
+#
+# APPEND THE OLD MAXIMUM ON EVERY TABLE EXTENSION.  Two minutes, and skipping it
+# turns every historical figure in the documents into noise in PASS 1.
+CHECKPOINTS = sorted({c for c in [1306, 1428, 1540, 1572, 2000, 2007, 2212,
+                                  2298, 2376, NMAX] if c <= NMAX})
 
 def quantities(sub):
     if not sub:
@@ -216,6 +229,15 @@ SCOPE = [
     (re.compile(r"(?:δ|delta) (?:>|exceeds) 1/(\d+)\b[^.]{0,40}forces"), "inv"),
     (re.compile(r"no computed value (?:falls |is |lies )?below ([\d.]+)"), "abs"),
     (re.compile(r"the weakest density anywhere[^.]{0,40}is ([\d.]+)"), "abs"),
+    # A floor stated as the minimum of the table, in any of the phrasings used.
+    (re.compile(r"(?:smallest|minimum|lowest) density is \*\*?([\d.]+)"), "abs"),
+    (re.compile(r"density floor[^.]{0,30}(?:is|at) \*\*?([\d.]+)"), "abs"),
+    (re.compile(r"floor (?:of|is|at) \*\*?([\d.]+)\*?\*? \(n = \d+\)"), "abs"),
+    # The s-ladder and part-count ladders, which are theorems whose SCOPE moves.
+    (re.compile(r"s (?:≤|<=) 1/√(?:δ|delta) − 1 = ([\d.]+)"), "sval"),
+    (re.compile(r"(?:δ|delta) (?:≤|<=|<) 1/(\d+)[^.]{0,60}(?:set|values|tail)"), "inv"),
+    # Counts of the low-density tail, which move with the floor.
+    (re.compile(r"(?:δ|delta) (?:≤|<=|<) 1/(\d+) set (?:holds|is) \*\*(\d+)"), "inv"),
 ]
 
 if A.only in ("all", "scope"):
@@ -231,6 +253,22 @@ if A.only in ("all", "scope"):
             for pat, kind in SCOPE:
                 for m in pat.finditer(probe):
                     raw = m.group(1)
+                    if kind == "sval":
+                        # "s <= 1/sqrt(delta) - 1 = X" is arithmetic on the floor,
+                        # so it is stale the moment the floor moves, whatever the
+                        # surrounding theorem says.
+                        try: quoted = float(raw)
+                        except ValueError: continue
+                        actual = 1.0 / floor ** 0.5 - 1
+                        seen = True
+                        if abs(quoted - actual) > 0.005 and not ARCHIVE.search(d):
+                            findings += 1
+                            print(f"{d} L{ln}  *** STALE *** s-bound {quoted:.4g} "
+                                  f"against {actual:.4g} at the current floor")
+                            print(f"   {line.strip()[:150]}\n")
+                        elif not A.quiet:
+                            print(f"{d} L{ln}  [ok] s-bound {quoted:.4g}")
+                        continue
                     try: thr = 1.0 / float(raw) if kind == "inv" else float(raw)
                     except ValueError: continue
                     below = sorted(r["n"] for r in rows if r["density"] < thr)
@@ -259,6 +297,194 @@ if A.only in ("all", "scope"):
         print("no threshold assertion recognised.")
     print("\nNOTE: these patterns are a WHITELIST. Silence means 'nothing recognised',")
     print("not 'nothing to find'. Add a pattern whenever a new range assertion is written.")
+
+# ------------------------------------------------------------------ PASS 6 refs
+#
+# Excising or renumbering a section leaves its inbound pointers behind, and
+# nothing else in this script notices: the pointer is not a figure, not a
+# threshold and not a status word.  A reader who follows one cannot tell a typo
+# from a move, which is worse than a wrong number -- a wrong number at least
+# announces itself against the table.
+#
+# Two kinds of anchor are collected per document.  SECTIONS come from headings
+# and are keyed by their dotted number.  RESULTS come from the bolded statement
+# openers this project uses ("> **Theorem 3.1 (...)**", "**Lemma B'**") and are
+# keyed by kind plus label.  A citation resolves against the document named
+# nearest before it on the same line, if any, and against its own document
+# otherwise -- which is exactly how the prose reads.
+
+SEC_DEF   = re.compile(r"^#{2,4}\s+(?:Part\s+[IVX]+\s+—\s+)?(\d+(?:\.\d+)*)\.?\s")
+APX_DEF   = re.compile(r"^#{2,4}\s+Appendix\s+([A-Z])\b")
+PART_DEF  = re.compile(r"^#{2,3}\s+Part\s+([A-Z]\d*(?:['′])?)\b")
+RESULT_KINDS = r"Theorem|Lemma|Proposition|Corollary|Conjecture|Hypothesis"
+RESULT_DEF = re.compile(r"\*\*(" + RESULT_KINDS + r")\s+([A-Z0-9][\w.'′]*)")
+# Subsections in these documents are bolded run-in headings ("**2.4 The coherence
+# conditions...**", "**9.5' Formula shape complexity**") rather than markdown
+# headings, so they must be collected too or every reference to one dangles.
+BOLD_SEC  = re.compile(r"^\*\*(\d+(?:\.\d+)*(?:['′])?)\s+\S")
+# Citations.  The section form tolerates the double-section sign and a range.
+SEC_CITE  = re.compile(r"§§?\s?(\d+(?:\.\d+)*)")
+RES_CITE  = re.compile(r"\b(" + RESULT_KINDS + r")\s+([A-Z0-9][\w.'′]*)")
+DOCNAME   = re.compile(r"`([\w-]+\.md)`")
+# These documents refer to each other by short alias as well as by filename, and
+# by role ("of the notes", "of the companion").  A checker that only knows the
+# filename form reports every aliased reference as dangling, which is worse than
+# not checking -- it trains the reader to ignore the pass.
+ALIAS = {"aod": "arithmetic-of-density.md",
+         "the notes": "orbital-evasiveness-notes.md",
+         "these notes": "orbital-evasiveness-notes.md",
+         "the companion": "enumeration-proof.md"}
+ALIAS_CITE = re.compile(r"`(aod)`")
+ROLE_AFTER = re.compile(r"^\s*(?:of|in)\s+(the notes|these notes|the companion)")
+# Words that follow "Theorem"/"Lemma" without naming one.
+NOT_A_LABEL = {"E", "A", "I", "N", "X", "The", "It", "This", "That", "If", "For",
+               "In", "Its", "Two", "One", "Three", "Both", "So", "But", "And"}
+# Files whose references are not ours to maintain: the logs and the pending list
+# describe states and cite items by name, and the literature notes cite other
+# people's numbered results, which resolve against their papers and not against
+# anything here.  Checking them produces only noise.
+NOT_OURS = re.compile(r"session-log|pending-checks|README|literature-findings", re.I)
+
+def norm(label):
+    """B', B′ and B’ are the same lemma.  Normalise the prime mark, or every
+    citation that picks a different one reports as dangling."""
+    return label.replace("′", "'").replace("’", "'")
+
+def collect_anchors(docs):
+    secs, ress = collections.defaultdict(set), collections.defaultdict(set)
+    for d in docs:
+        try: txt = open(d).read()
+        except OSError: continue
+        for line in txt.split("\n"):
+            m = SEC_DEF.match(line)
+            if m:
+                num = m.group(1)
+                secs[d].add(num)
+                # A subsection implies its parents are addressable too.
+                bits = num.split(".")
+                for k in range(1, len(bits)):
+                    secs[d].add(".".join(bits[:k]))
+            m = APX_DEF.match(line)
+            if m: secs[d].add("Appendix " + m.group(1))
+            m = PART_DEF.match(line)
+            if m: secs[d].add("Part " + m.group(1))
+            m = BOLD_SEC.match(line.strip())
+            if m:
+                num = m.group(1).rstrip("'′")
+                secs[d].add(num)
+                bits = num.split(".")
+                for k in range(1, len(bits)):
+                    secs[d].add(".".join(bits[:k]))
+            for m in RESULT_DEF.finditer(line):
+                ress[d].add((m.group(1), norm(m.group(2).rstrip("."))))
+    return secs, ress
+
+def near(label, pool):
+    """Candidates worth offering: same kind, or the same number under a
+    different kind -- the two ways a citation usually goes wrong."""
+    kind, num = label
+    same_kind = sorted(n for k, n in pool if k == kind)
+    same_num  = sorted(k for k, n in pool if n == num)
+    out = []
+    if same_num: out.append("exists as " + "/".join(f"{k} {num}" for k in same_num))
+    if same_kind:
+        close = [n for n in same_kind if n[:1] == num[:1]]
+        if close: out.append(f"{kind} " + ", ".join(close[:6]))
+    return "; ".join(out)
+
+if A.only in ("all", "refs"):
+    print("\n" + "=" * 72); print("PASS 6  REFS"); print("=" * 72)
+    SECS, RESS = collect_anchors(DOCS)
+    known_docs = set(DOCS)
+    print(f"anchors: " + ", ".join(
+        f"{d} ({len(SECS[d])} sections, {len(RESS[d])} results)" for d in DOCS) + "\n")
+    dangling = 0
+    for d in DOCS:
+        if NOT_OURS.search(d):
+            if not A.quiet:
+                print(f"{d}: skipped -- logs and literature notes cite outward, "
+                      f"not into these documents")
+            continue
+        try: txt = open(d).read()
+        except OSError: continue
+        for ln, line in enumerate(txt.split("\n"), 1):
+            if line.lstrip().startswith("#"):
+                continue                      # a heading defines, it does not cite
+            for m in SEC_CITE.finditer(line):
+                # Resolve against the last document named before this point.
+                # A document name binds a following reference only if it is close
+                # by; "`aod.md` §6 ... and §9 of these notes" is a real sentence
+                # shape, and a greedy binding mis-attributes the second.
+                names = [x for x in DOCNAME.finditer(line)
+                         if 0 <= m.start() - x.end() <= 40]
+                names += [x for x in ALIAS_CITE.finditer(line)
+                          if 0 <= m.start() - x.end() <= 40]
+                role = ROLE_AFTER.match(line[m.end():])
+                if role:
+                    target = ALIAS[role.group(1)]
+                elif names:
+                    nm = max(names, key=lambda x: x.end()).group(1)
+                    target = ALIAS.get(nm, nm)
+                else:
+                    target = d
+                if target not in known_docs:
+                    continue                  # not passed in; cannot judge
+                if m.group(1) in SECS[target]:
+                    continue
+                # Resolving to the wrong document is a different defect from
+                # citing something that does not exist, and only the second is
+                # worth interrupting a read for.
+                elsewhere = [x for x in DOCS if m.group(1) in SECS[x]]
+                if elsewhere:
+                    if not A.quiet:
+                        print(f"{d} L{ln}  [elsewhere] §{m.group(1)} is in "
+                              f"{', '.join(elsewhere)}, not {target}")
+                    continue
+                dangling += 1
+                cands = sorted(x for x in SECS[target]
+                               if x.split(".")[0] == m.group(1).split(".")[0]
+                               and "." not in x[:1])
+                print(f"{d} L{ln}  *** DANGLING *** §{m.group(1)} "
+                      f"not in {target}")
+                print(f"   {line.strip()[:140]}")
+                if cands:
+                    print(f"   {target} has: {', '.join(cands[:12])}")
+                print()
+            for m in RES_CITE.finditer(line):
+                kind, num = m.group(1), m.group(2).rstrip(".")
+                # "Theorem 2.3's inequality" cites Theorem 2.3.
+                num = norm(num)
+                if num.endswith("'s"):
+                    num = num[:-2]
+                if num in NOT_A_LABEL or not re.match(r"[A-Z0-9]", num):
+                    continue
+                names = [x for x in DOCNAME.finditer(line)
+                         if 0 <= m.start() - x.end() <= 40]
+                target = names[-1].group(1) if names else d
+                if target not in known_docs:
+                    continue
+                pool = RESS[target] | (RESS[d] if target != d else set())
+                if (kind, num) in pool:
+                    continue
+                # A result may be stated in one document and cited from the other
+                # without naming it, which is normal in this project.
+                if any((kind, num) in RESS[x] for x in DOCS):
+                    if not A.quiet:
+                        where = [x for x in DOCS if (kind, num) in RESS[x]]
+                        print(f"{d} L{ln}  [elsewhere] {kind} {num} is stated in "
+                              f"{', '.join(where)}, not {target}")
+                    continue
+                dangling += 1
+                print(f"{d} L{ln}  *** DANGLING *** {kind} {num} is stated nowhere")
+                print(f"   {line.strip()[:140]}")
+                hint = near((kind, num), set().union(*RESS.values()) if RESS else set())
+                if hint: print(f"   nearest: {hint}")
+                print()
+    findings += dangling
+    print(f"{dangling} dangling reference(s).")
+    print("A reference resolving to the wrong document is NOT reported as dangling")
+    print("when the target exists somewhere; that case prints as [elsewhere] and is")
+    print("shown only without --quiet, since cross-document citation is normal here.")
 
 # ----------------------------------------------------------------- PASS 3 prose
 
