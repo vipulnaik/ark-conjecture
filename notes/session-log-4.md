@@ -579,6 +579,24 @@ with sd 0.146 → 0.103 → 0.092, and zero values lacking a solution in the win
 
 **The general hazard, now named in the item:** *both* too much and too little uniformity relative to the pseudorandom model produce surprises, and which regime one is in depends on the modulus range. An argument quoting an irregularity result without checking its moduli reach ours will reach the wrong conclusion and look right doing so.
 
+## Seventeenth batch: eliminating SAFE mode — and a defect in the A2 tightening
+
+**The question was how to make SAFE mode structurally unnecessary. Working it through found that the A2 tightening had quietly assumed the answer.**
+
+**The route.** SAFE over-counts a p-characteristic part relative to REFINED on exactly one axis: REFINED strips the twist by the foreign primes dividing c − 1, SAFE does not. If that strip were unconditionally *necessary*, the refined score would itself be an upper bound and B_refined = B_safe = μ would hold by construction — no per-n certificate needed. The strip is Lemma C.
+
+**The defect.** A2's condition (4) already applies the strip, and its stated proof was: *the cyclic layer carries C_r and C_Fmid, and one cyclic group forces pairwise-coprime orders.* **That argument is invalid, and Part D of `enumeration-proof.md` says so in a pitfall box** — a single cyclic generator can act as a twist of order d on one part and as a translation of order r on another, giving ⟨g⟩ cyclic of order lcm(d, r) with nothing forced. What actually proves Lemma C is conjugation: a top-layer element induces the identity on the twist but the twist's own order on the foreign part. And that argument closes **only at prime c** — at c = p^a with a > 1 the top element may act through the Galois part of ΓL(1, p^a), whose induced power map has q-power order just as the foreign multiplier does.
+
+So condition (4) was resting on an unproved lemma at a > 1. Conditions in `fb_common.py` must be **necessary**; a condition that is not silently discards a real candidate, which is the one error class the certificate cannot detect from its own output.
+
+**The fix and its cost.** The foreign-prime strip is now scoped to a = 1 in all three sites (`pair_candidates`, `single_part_ok`, `multi_part_ok`), with the pitfall recorded at the site so the cyclicity argument is not reintroduced. **The scoping is not vacuous:** the strip changes condition (4)'s verdict on 630,477 branches at n ≤ 2000, of which **53,807 have c a proper prime power**.
+
+**Everything still holds.** `fallback_cert` against v4: 0 candidates, both modes. `wide_cert` at 10⁵: **0 unresolved of 90,299** — the A2 closures survive, because c = 20327 and c = 35879 are both *prime*, so Lemma C applies there and the strip is licensed. Direction regression against the pre-A2 baseline over 501,046 pairs: 0 gained, 0 removed.
+
+**T5 rescoped from "fence it" to "close it".** The item previously recommended not closing the Lemma C gap, on the ground that exposure was zero and confined to attainment. That is no longer true — the lemma now sits inside the trusted base for μ(n) = B(n) — and closing it is the structural route to eliminating SAFE mode. Two routes are recorded: prove the Galois incompatibility, or **dominate** the a > 1 configurations as Lemma D2 dominates the fused-foreign case. The second looks more tractable and has supporting evidence: 0 of 2,178 p-characteristic parts in a computed winner have both a > 1 and a foreign prime dividing c − 1.
+
+*The general lesson, which is the third instance this session:* an argument that is valid at the boundary case (a = 1, or the full board, or a q-power block count) and asserted through the general case is this framework's characteristic failure. All three times the invalid step was a compact structural clause, and all three times the correct proof existed elsewhere in the documents under a different name.
+
 ---
 
 ## Items inherited as closed from earlier passes

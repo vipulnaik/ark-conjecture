@@ -298,8 +298,9 @@ def single_part_ok(A, L, B, p, q, r):
             else:
                 dq2 = qpart(c2 - 1, q)
                 rest = (c2 - 1) // dq2
-                while rest % r == 0:
-                    rest //= r
+                if pp[1] == 1:          # Lemma C: proved only at prime blocks
+                    while rest % r == 0:
+                        rest //= r
                 cap_i = F * orb(c2, dq2 * rest)
             if cap_i >= B:
                 return True
@@ -339,8 +340,9 @@ def multi_part_ok(A, L, B, p, q, r, limit=60):
         else:
             dqj = qpart(cj - 1, q)
             restj = (cj - 1) // dqj
-            while restj % r == 0:
-                restj //= r
+            if cj == p:                 # Lemma C: proved only at prime blocks
+                while restj % r == 0:
+                    restj //= r
             capc = orb(cj, dqj * restj)
         for F in range(1, L // cj + 1):
             if F * capc >= B:
@@ -460,8 +462,22 @@ def pair_candidates(A, n, B, c, r, p, skip_settled=None):
             else:
                 dqc = qpart(c - 1, q)
                 restc = (c - 1) // dqc
-                while restc % r == 0:
-                    restc //= r
+                # The foreign-prime strip is LEMMA C, and Lemma C is proved only
+                # for a PRIME block.  At c = p^a with a > 1 the conjugation
+                # argument does not close -- the top q-element may act through
+                # the Galois part of Gamma-L(1, p^a), and its induced power map
+                # then has q-power order just as the twist multiplier on the
+                # foreign part does, so the two are not incompatible.  Cyclicity
+                # of Gamma_1/Gamma_2 alone does NOT substitute: a single cyclic
+                # generator can act as a twist on one part and a translation on
+                # another, so a direct-product-must-be-cyclic argument proves
+                # nothing here (Part D's pitfall box).  Applying the strip at
+                # a > 1 would be ANTI-permissive -- it would discard candidates
+                # on an unproved lemma, which is the one error class this file
+                # cannot detect from its own output.
+                if A.prime_power(c)[1] == 1:
+                    while restc % r == 0:
+                        restc //= r
                 fmid = F // qpart(F, q)
                 g = gcd(restc, fmid)
                 while g > 1:
