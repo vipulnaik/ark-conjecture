@@ -900,6 +900,8 @@ Since the multiplicative engine vanishes in density, the asymptotic behaviour of
 
 ## 5. A single global lower bound
 
+> **The constants of this section are contingent on a group-theoretic accident, and it is worth knowing which one.** Every ceiling here traces to a block being **2-transitive** — AGL(1, c) has a single orbital of size C(c,2), so a block can carry full density, and the optimisation below is what one does *once that is given*. Solvable 2-transitive groups exist at every prime power, which is why the method has anything to optimise. **They do not exist 3-transitively above degree 4**, so at k = 3 the whole ceiling apparatus vanishes and the best available threshold is Θ(n²) against C(n,3) — see `three-uniform-note.md`. The optimisation is not the heart of the method; it is the dividend of 2-transitivity.
+
 The residue analysis gives eight different δ₀ across the 24 residue classes (§3.3). It is worth collapsing them into a single number that should hold everywhere, even at the cost of being loose.
 
 > **Read δ against the right literature, because the obvious comparison is a category error.** The known unconditional lower bounds on the number of *queries* forced by a nontrivial monotone property run Rivest–Vuillemin n²/16 → Kleitman–Kwiatkowski n²/9 → Kahn–Saks–Sturtevant n²/4 → Korneffel–Triesch → **Scheidweiler–Triesch n²/3 − o(n²)**, the current best. Our floor of 0.026117 is about 0.013n², a factor of 25 below that — and the two numbers are **incomparable, not competing**.

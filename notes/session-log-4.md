@@ -688,6 +688,32 @@ Untouched by the gap: the diagonal-translation step (Γ₁/Γ₂ cannot hold C_r
 
 Parts A, C, F, G, H, I and J cohere with the current model; the sandwich statement in the header matches Part E′'s figures (90,299 of 90,299) and Part I's; the census, the six worked cases apart from B and F, the lemma index's other rows, and the Part 0 picture proof all check out. The E″ material added this session sits consistently with Part D2 — except for the D2 gap above, which they share.
 
+## Twenty-second batch: the 3-uniform note
+
+**Written as a design document and as a fresh-eyes pass**, on the reasoning that running the machinery where the answers are not already known is a better test of it than re-reading. `three-uniform-note.md`, with statuses attached: the orbit law is verified exhaustively, the shape ranking is empirical over n ≤ 52 and explicitly not proved, the adaptation notes are a reading rather than a rewrite.
+
+### The orbit law, which is the one genuinely new piece
+
+> **orb₃(c, d) = min(c·d/κ, C(c,3)) with κ = 3 if 3 | d, else 2 if 2 | d, else 1** — verified at **32 of 32** (c, d) pairs over c ∈ {5,…,23}.
+
+And it generalises: with **κ_k(d) = max{m ≤ k : m | d}**, orb_k(c, d) = min(c·d/κ_k(d), C(c,k)), of which the familiar k = 2 law is the case k = 2. The reason the density collapses falls straight out — the twist buys a factor d, the stabiliser can give back at most a factor k, so the numerator is Θ(c²) at every k while C(c,k) grows.
+
+### What inverts, and it echoes things already in the k = 2 documents
+
+Fusion and prime-power blocks — the two things k = 2 exploits — are both **actively bad** at k = 3, by mechanisms already present in our documents under other names. Fused blocks admit same-position triples of size ≤ C(F,3)·c, which is **Lemma D2's offset-0 class one dimension up**; prime-power blocks admit affine lines, which is the additive structure Lemma C's a > 1 case worries about. Measured: n = 35 as `5x7` gives 70, n = 26 as `9 + 17*` gives 12, against 253 for `23 + 29*` at n = 52.
+
+So the k = 3 optimum is **unfused, two prime blocks**, and the arithmetic requirement *relaxes* to binary Goldbach — giving μ₃(n) ≳ n²/8, or n²/12 when both blocks are ≡ 1 (mod 3). Almost all n, unconditionally.
+
+### Why the k = 2 constants exist at all
+
+Because AGL(1, c) is 2-transitive and hands a block full density. The k = 3 analogue would need 3-transitivity, and **there are no solvable 3-transitive groups of degree > 4** — the 3-transitive affine groups are AGL(d,2), and GL(d,2) is simple for d ≥ 3. Oliver chain groups are solvable, so the mechanism is *excluded*, not merely unfound.
+
+**A sentence saying so is now in `aod` §3**, because it changes how that section should be read: the optimisation is not the heart of the method, it is the dividend of 2-transitivity. Three related observations are recorded in the note's §7 — the constants are contingent rather than structural; fusion and prime-power blocks are k = 2 luxuries; and the arithmetic difficulty of §3.5 is the price of chasing constant density rather than something intrinsic, since at k = 3 the supply question collapses to Goldbach.
+
+### Literature
+
+`literature-findings.md` item 22 corrects the natural assumption that weak evasiveness stops at k = 3 — **Black covers all k**, same paper as item 4. What is not covered anywhere found so far is a *dimension threshold* at k ≥ 3, which is what this machinery produces and Black's does not.
+
 ---
 
 ## Items inherited as closed from earlier passes

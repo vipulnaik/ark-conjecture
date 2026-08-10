@@ -432,3 +432,11 @@ So there is **one wall, and it is not at the top rung** — it is the gap betwee
 
 1. **Do prime-*power* divisors buy anything at the endpoint?** What our shapes need is t a prime power, not a prime, and §3.6's domination shows that is never worse. But at bounded cofactor, t = q^e with e ≥ 2 gives r = m·q^e + 1, which is *sparser* than the prime case, so the expectation is that it buys nothing. Worth one hour to confirm, since the domination argument makes it easy to state carelessly in our favour.
 2. **Might bounded-cofactor supply be provable on average over n even though it is open per-n?** This is the Skorobogatov–Sofos angle of item 15 pointed at the endpoint rather than at `aod` §4's shape families. It is the one live hope in this item.
+
+## 22. The k-uniform hypergraph case: what the literature covers, and a correction
+
+**Correction to a natural assumption.** It is easy to believe the weak-evasiveness result was extended to 3-uniform hypergraphs and no further. Kulkarni–Qiao–Sun did k = 3, but **Black covers all k** — *Monotone Properties of k-Uniform Hypergraphs Are Weakly Evasive*, ITCS 2015 / ACM ToCT 2019, the same paper as item 4. So k > 3 is not open at that level; it is done.
+
+**What is not done, and where our machinery has something to say.** Black's target is weak evasiveness, Ω(n^k) — an asymptotic query bound with no dimension threshold. Our apparatus produces something different in kind: a threshold m\*(n) below which a property is *fully* evasive. Nobody appears to have run Oliver-group machinery at k ≥ 3, and doing so gives a non-vacuous statement. `three-uniform-note.md` works it out.
+
+**The headline, since it bears on how §3 of `aod` should be read.** At k ≥ 3 the *constant-density* apparatus dies — the mod-24 ceilings, the balance-point optimisation, the whole §3 structure — because those ride on 2-transitivity, and **there are no solvable 3-transitive groups of degree > 4**. What survives is the criterion and an Ω(n²) threshold with an explicit constant, from a different corner of the shape space than the one k = 2 uses. So §3's constants are a k = 2 phenomenon resting on a group-theoretic accident, not on anything general about the method — worth one sentence there.
