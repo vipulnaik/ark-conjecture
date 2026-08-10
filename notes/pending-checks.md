@@ -14,10 +14,11 @@
 
 Ranked, so the sections below have a stated basis. This is not the order the items appear in.
 
-1. **The table rebuild.** v4 reaches n = 2000; everything measured across the three documents is keyed to it and moves as it extends. → **R0**, and **R1** after every batch.
-2. **Exhaustiveness of the GAP stages.** The subdirect-product hole is undischarged. It degrades *evidence* rather than creating an error — a missed group could only have larger m\*, i.e. it would be a counterexample rather than a silent corruption — but it is the only non-circular check in the framework. **This is the one small-degree item the arithmetic programme depends on**, since Part I's two exhaustive comparisons rest on it. → `small-degree-verification.md` item 5
-3. **Part E's realisability construction.** Attainment's other leg, argued in general and spot-checked at eight configurations from n = 12 to 315. Unlike the certificate, it has no per-n verification. → **T2**
-4. **The eight necessary conditions of `fb_common.py`.** Both certificates rest on these and nothing else. What matters is their being *necessary* — that is what makes an empty candidate list a proof — and that is a different reading from checking each is true. The file now carries a per-condition necessity argument, so what is exposed is the quality of those eight arguments, and in particular condition (4)'s cyclic-layer stripping, which is the load-bearing one. The defect class to watch is an enumeration narrower than the shape space it must cover: it removes a real candidate silently and leaves the output looking clean. → **T3**
+1. **Lemma D2's coverage.** Its last step assumes the block-permuting group has prime-power degree, which the corrected shape space does not force. If it fails, the enumeration is missing shapes and μ ≤ B_safe is what breaks — the same failure mode as the q-power block count. → **A18**
+2. **The table rebuild.** v4 reaches n = 2000; everything measured across the three documents is keyed to it and moves as it extends. → **R0**, and **R1** after every batch.
+3. **Exhaustiveness of the GAP stages.** The subdirect-product hole is undischarged. It degrades *evidence* rather than creating an error — a missed group could only have larger m\*, i.e. it would be a counterexample rather than a silent corruption — but it is the only non-circular check in the framework. **This is the one small-degree item the arithmetic programme depends on**, since Part I's two exhaustive comparisons rest on it. → `small-degree-verification.md` item 5
+4. **Part E's realisability construction.** Attainment's other leg, argued in general and spot-checked at eight configurations from n = 12 to 315. Unlike the certificate, it has no per-n verification. → **T2**
+5. **The eight necessary conditions of `fb_common.py`.** Both certificates rest on these and nothing else. What matters is their being *necessary* — that is what makes an empty candidate list a proof — and that is a different reading from checking each is true. The file now carries a per-condition necessity argument, so what is exposed is the quality of those eight arguments, and in particular condition (4)'s cyclic-layer stripping, which is the load-bearing one. The defect class to watch is an enumeration narrower than the shape space it must cover: it removes a real candidate silently and leaves the output looking clean. → **T3**
 
 ---
 
@@ -214,6 +215,26 @@ The claim is that the odd-n win shares tend to **1 : 1 : 2**. It rests not on th
 ## §2b. Claude can pick these off
 
 *Self-contained analysis against the existing files. No new materials needed.*
+
+### A18. Lemma D2's last step does not cover every admissible block-permuting group
+
+**Priority: this is the highest-exposure open item in the arithmetic programme**, above T5, because it bears on the shape space rather than on the collapse.
+
+D2 concludes that an orbit of F ≥ 2 fused *outside* blocks carries a class of at most (F/2)·r or F·r pairs, hence m\* ≤ |O|/2, hence outside blocks are never fused. The last step invokes the divisibility argument for a transitive group of **prime-power degree**. Under the corrected shape space F = F_mid·F_top need not be a prime power, and the permuting group need not be an ℓ-group.
+
+**Witness, computed:** AGL(1,5) = C₅⋊C₄ — C₅ in the cyclic layer, C₄ on top — is solvable, fits the chain, and is 2-transitive on 5 blocks, so its only pair-orbital has size **10 = C(5,2)**, not ≤ 5. The offset-0 class would then be 10r = 2|O|.
+
+**Why it matters more than T5.** D2 supports Corollary D2′ and hence the block-count split F = F_mid·F_top — the corrected shape space itself. If outside blocks can be fused, the enumeration is missing shapes and **μ ≤ B_safe** is what fails, which is exactly how the q-power block count failed. The constructions and B_refined are unaffected either way.
+
+**Untouched by the gap:** the diagonal-translation step (Γ₁/Γ₂ cannot hold C_r^F), and the r = q case.
+
+**Three routes, cheapest first.**
+
+1. **Show a 2-transitive block-permuting group is inadmissible here.** The twist on each block and the diagonal translations must fit the chain alongside the permuter; that may fail independently, in which case the lemma is fine and only its proof needs rewriting.
+2. **Bound the other classes.** With a 2-transitive permuter the nonzero-offset classes may be small enough to restore m\* ≤ |O|/2 by a different route.
+3. **Enumerate.** Score fused-outside-block configurations explicitly — the class structure is offset-0 at (min block-pair orbital)·r, nonzero offsets grouped by the twist's orbits on ℤ_r^× — and check whether any beats B(n) in range. This is the same shape of check that found n = 308, and it is the one that would turn a suspicion into a defect or dismiss it.
+
+**Do not quote the table as evidence.** No fused-outside-block configuration appears in it, but the table is computed from an enumeration that excludes them by construction.
 
 ### A0b. `validate_table.py` — run this on every table extension
 

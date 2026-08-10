@@ -655,6 +655,39 @@ Both die because the p-characteristic part cannot fit. And the mechanism is the 
 
 **T5 gained a five-row status table** so the remaining work can be costed piece by piece rather than as one ambition: e = 1 above 1/9 closed, e = 1 below 1/9 a bounded search, e ≥ 2 enumerable at sparse n, q = 2 needing domination, and Lemma C at a > 1 as the prerequisite for the p-characteristic half.
 
+## Twenty-first batch: full read of `enumeration-proof.md`
+
+*Start to finish, for coherence rather than for figures. Nine fixes, and one finding that outranks everything currently open.*
+
+### The finding: Lemma D2's last step
+
+D2 concludes that an orbit of F ≥ 2 fused *outside* blocks carries a class of at most (F/2)·r or F·r pairs, hence m\* ≤ |O|/2, hence outside blocks are never fused. Its final step invokes "the minimum pair-orbital of a transitive group of prime-power degree F is F/2 or F — the divisibility argument of Part E applies verbatim."
+
+**That argument was scoped earlier this session** to the regular C_F action of the Part E construction, because it is *not* a bound over all admissible permuters. D2 inherits the same defect one level down, and here the block-permuting group need not have prime-power degree at all: under the corrected shape space F = F_mid·F_top.
+
+**Witness, computed rather than conjectured:** AGL(1,5) = C₅⋊C₄, with C₅ in the cyclic layer and C₄ on top, is solvable, fits the chain, and is 2-transitive on 5 blocks — pair-orbital sizes `[10]`, a single class of size C(5,2). Against D2's claimed F·r = 5r, the offset-0 class is 10r = 2|O|, and "at most |O|/2" does not follow.
+
+**Why this outranks T5 and everything else open.** Part E's coefficient error was harmless because the intra term binds first. D2's conclusion supports Corollary D2′ and therefore **the block-count split F = F_mid·F_top — the corrected shape space itself.** If outside blocks can be fused, the enumeration is missing shapes, and what fails is **μ ≤ B_safe**: precisely how the q-power block count failed. The constructions and B_refined are unaffected.
+
+Untouched by the gap: the diagonal-translation step (Γ₁/Γ₂ cannot hold C_r^F for F ≥ 2) and the r = q case. Recorded as a GAP box in Part D2, with D2′ marked *subject to it*, and as **A18** in `pending-checks.md` at the top of the risk ranking, with three routes costed — show a 2-transitive permuter is inadmissible; bound the other classes instead; or enumerate fused-outside-block configurations and check whether any beats B(n).
+
+**And a caution recorded with it:** the table contains no fused-outside-block configuration, but the table is computed from an enumeration that excludes them by construction, so it is not evidence.
+
+### Eight coherence fixes
+
+- **Lemma D1 was listed as unproved in the inventory** ("needs writing down") and as proved in the index one screen later; it *is* proved in Part D2. Inventory corrected.
+- **Lemma C's dependency claim was stale in three places.** "Does not affect B_safe" is still true of the bound, but `fb_common.py`'s condition (4) now uses Lemma C's conclusion, so the lemma bears on the **collapse**. The inventory entry, the index row and the closing note all say so, and note that closing a > 1 would remove the last obstacle to replacing B_safe by B_refined outright.
+- **Worked case B presented B(308) = 3775 as current** and called the configuration "the defect". Rewritten: 4134 *is* B(308), and 3775 is what a q-power-only count would give.
+- **Worked case F was framed as old-witness/new-witness.** Rewritten as a statement about the configuration, with the branch-and-bound consequence kept.
+- **The header's "on the word proved" paragraph** still narrated the G.2 repair history. Rewritten as two named false steps plus the recurring near-repair pattern.
+- **A stray parenthesis in the B_safe box** left "This is what `mu_enumerate_v2.py` computes" attached to an aside about `brute.py` rather than to the definition. Separated.
+- **"It rests on Part 0's completeness and on nothing else"** overstated: μ ≤ B_safe also needs the cap F·orb(c, dmax) to be valid. Corrected.
+- The risk ranking in `pending-checks.md` gains A18 at position 1, pushing the table rebuild to 2.
+
+### What read clean
+
+Parts A, C, F, G, H, I and J cohere with the current model; the sandwich statement in the header matches Part E′'s figures (90,299 of 90,299) and Part I's; the census, the six worked cases apart from B and F, the lemma index's other rows, and the Part 0 picture proof all check out. The E″ material added this session sits consistently with Part D2 — except for the D2 gap above, which they share.
+
 ---
 
 ## Items inherited as closed from earlier passes
