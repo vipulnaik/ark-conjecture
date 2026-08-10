@@ -597,6 +597,17 @@ So condition (4) was resting on an unproved lemma at a > 1. Conditions in `fb_co
 
 *The general lesson, which is the third instance this session:* an argument that is valid at the boundary case (a = 1, or the full board, or a q-power block count) and asserted through the general case is this framework's characteristic failure. All three times the invalid step was a compact structural clause, and all three times the correct proof existed elsewhere in the documents under a different name.
 
+## Eighteenth batch: §2b restored after a truncating edit
+
+**What happened.** The T5 rewrite of the previous batch was applied as `s[:i] + new` — replacing everything from T5 to the end of the file rather than T5 alone. T5 was the last item in §2a, so the deletion took **all of §2b with it**, including A0b, which is a standing item rather than a closeable one. Caught on review, not by any check.
+
+**Restored, with this session's amendments re-applied** rather than reverting to the pre-session text: group A now names the Part E preconditions from T2; group B lists the four checks added since (cyclic-layer coprimality, the feasibility criterion, G.4's per-axis bounds, the cross coefficient), each flagged as having no independent counterpart elsewhere and a negative control; and the speed-budget box is intact. T5a was also reordered to follow T5 rather than precede it.
+
+**Two lessons, and the second is the operational one.**
+
+1. **A truncating slice is the one edit pattern with no partial failure mode.** `str_replace` on a bounded region fails loudly when the anchor is missing; `s[:i] + new` silently discards the tail, and the tail is invisible in the diff if nothing after it is being examined. Prefer replacing a bounded region — `s[:i] + new + s[j:]` — even when the item is believed to be last, because "believed to be last" is exactly the assumption that breaks.
+2. **Nothing would have caught this.** `check_doc_figures.py` reports 0 dangling references either way, since the deleted section contained no cross-references into the mathematical documents. A missing *section* is not a class of error any current check looks for. Worth considering a hygiene check that asserts the presence of the standing items by name — A0b in particular, since it is the one item designed never to close.
+
 ---
 
 ## Items inherited as closed from earlier passes
