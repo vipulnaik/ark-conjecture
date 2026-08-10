@@ -615,6 +615,25 @@ The survivors at 10⁴ before the multi-part check were themselves informative: 
 >
 > **And pinning reaches only half the leftover.** It constrains *foreign* leftover parts. A p-characteristic leftover part is not pinned by q at all; what bounds it is the leftover twist cap below, which is Lemma C and is proved only at prime c. So an unconditional treatment needs both halves, and each has its own gap — pinning fails at q = 2 and large e, the twist cap at a > 1.
 >
+> **The e = 1 branch, worked as far as it goes — and it does not close by counting.** Take the main branch: e = 1 with q odd. Three size bounds are available, each from a part's own intra term against B:
+>
+> - the p-characteristic part of total size S = F·c has F·C(c,2) ≤ S·c/2 ≤ S²/2, so **S ≥ √(2B)**;
+> - each foreign part r has orb(r, ·) ≤ C(r,2) < r²/2, so **r ≥ √(2B)**, and likewise r_j;
+> - with B = δ·C(n,2), √(2B) ≈ n√δ.
+>
+> Three parts each of size ≥ n√δ give 3n√δ ≤ n, i.e. **δ ≤ 1/9** — which is Proposition F.1 at k = 3 and nothing new. *Adding the pinning does not improve it:* r_j ≥ q + 1 with q ≥ B/r gives n ≥ √(2B) + r + max(√(2B), B/r) ≥ 3.54√B, hence δ ≤ 0.16, **weaker** than 1/9. So above density 1/9 the branch is empty for part-counting reasons already known, and below it **counting alone cannot close the branch**; what remains is the specific arithmetic of the pinned positions.
+>
+> **What that arithmetic gives, measured over v4.** Across every e = 1 odd-q foreign part passing the gate at n ≤ 2000, the leftover holds **24,322 candidate positions r_j ≡ 1 (mod q)**, of which exactly **4 are admissible** — prime, distinct from r, and passing their own gate — and those four are two configurations counted twice by symmetry:
+>
+> | n | δ | q | r | r_j | space left |
+> |---|---|---|---|---|---|
+> | 779 | 0.0706 | 73 | 293 | 439 | **47** |
+> | 1943 | 0.0577 | 137 | 823 | 1097 | **23** |
+>
+> Both die on the p-characteristic part, which needs S ≥ √(2B) — 207 at n = 779 and 467 at n = 1943 — against 47 and 23 of remaining space. The pinning forces r_j well above its own floor (439 against 207; 1097 against 467), and it is that excess, not the generic bound, that leaves no room.
+>
+> **So the status of e = 1 is: empty over the computed range, by a finite check rather than by a theorem.** Above δ = 1/9 it is closed unconditionally by F.1. Below, it reduces to enumerating the ≤ 2/δ pinned positions at each n and testing each — which is what `fallback_cert.py` does, and which is why this branch has never produced a candidate. That is a reduction to a bounded search, not an elimination.
+
 > **So the realistic target is not "eliminate the fallback branch unconditionally"** but: *conditional on δ ≥ δ₀, the fallback branch reduces to the q = 2 and large-e cases together with the a > 1 case* — a named finite residue rather than an open problem. That is a statable lemma and it is closer than it looks.
 
 *A free diagnostic.* **B_safe − B_refined is exactly the width of the interval containing μ(n)**, computable by running both modes. It is zero wherever the certificate passes, and if the certificate ever fails nothing becomes wrong — both endpoints stay valid and the sandwich merely opens.

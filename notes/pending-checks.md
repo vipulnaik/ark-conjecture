@@ -172,6 +172,18 @@ These are the whole trusted base for μ(n) = B(n): both certificates pass with e
 
 **The realistic target is narrower than "eliminate SAFE", and worth stating as such.** `enumeration-proof.md` Part E″ now carries the general form of q-pinning: the foreign gate forces t ≥ δn/2, hence a bounded cofactor u ≤ 2/δ and a top prime q ≥ (δn/2)^{1/e}, hence every *foreign* leftover part is pinned to r_j ≡ 1 (mod q) with at most 2/δ positions at e = 1. Measured, that branch is usually killed outright — median 0 admissible positions, maximum 9. **Conditional on a floor δ ≥ δ₀, the fallback branch therefore reduces to a named finite residue:** the q = 2 and large-e cases, where pinning is vacuous or weak, together with the a > 1 case, where the twist cap is Lemma C. Step 1 is the only place δ enters, so the unconditional version dies with the asymptotic floor — this route is conditional on the same hypothesis the density ceilings are.
 
+**Where each piece now stands, so the remaining work can be costed.**
+
+| piece | status |
+|---|---|
+| e = 1, δ > 1/9 | **closed unconditionally** — Proposition F.1 at k = 3; three parts each of size ≥ n√δ do not fit |
+| e = 1, δ ≤ 1/9 | **reduced to a bounded search**: ≤ 2/δ pinned positions per n. Empty over v4 — 4 admissible of 24,322 positions, all killed by the p-characteristic part not fitting. Not a theorem |
+| e ≥ 2 | supply of admissible foreign blocks is density zero in n; enumerable at the sparse n where it exists |
+| q = 2 | pinning vacuous, family exponential; needs domination rather than supply |
+| p-characteristic half of the leftover | **Lemma C at a > 1** — the prerequisite below |
+
+*Counting alone does not close e = 1 below 1/9, and adding the pinning does not help:* the pinned bound n ≥ 3.54√B gives δ ≤ 0.16, weaker than F.1's 1/9. What closes the computed range is the specific arithmetic of the pinned positions, not a size argument.
+
 **Two routes, and the second may be easier.**
 
 1. **Prove it.** Show a q-element of Γ inducing a Galois automorphism on a p^a-block is incompatible with the chain. This is the hard direction and shares an obstruction with the ΓL(1) step.

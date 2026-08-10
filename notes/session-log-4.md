@@ -632,6 +632,29 @@ So condition (4) was resting on an unproved lemma at a > 1. Conditions in `fb_co
 
 **S1–S7 untouched**, deliberately. The regime split is orthogonal to the census: it classifies a configuration's foreign block by the arithmetic of its twist, where S-numbers classify by part structure. Every existing name, cross-reference and script string is unchanged.
 
+## Twentieth batch: the standing-table row, and how far e = 1 actually closes
+
+**The row, and the reason it is worded defensively.** `literature-findings.md` item 16's table now carries the fallback branch, split into four rows rather than one, because the pieces have genuinely different statuses and a single row would have implied more than is true. A note above the table says the thing most likely to be misread: **the branch has been characterised, not closed** — B_refined = B_safe is still a per-n certificate, and the characterisation is itself conditional at two separate points.
+
+**Attempting to close e = 1 produced a modest positive result and a clear negative one.**
+
+*Positive.* Above δ = 1/9 the branch is **closed unconditionally**, and by something already in hand: each of the three parts needs size ≥ √(2B) ≈ n√δ from its own intra term against B, so 3n√δ ≤ n forces δ ≤ 1/9. That is Proposition F.1 at k = 3 — no new argument, but it had not been applied to this branch.
+
+*Negative, and worth recording so nobody repeats it.* **Adding the pinning does not improve that bound.** With r_j ≥ q + 1 and q ≥ B/r, the chain gives n ≥ √(2B) + r + max(√(2B), B/r) ≥ 3.54√B, hence δ ≤ 0.16 — **weaker** than F.1's 1/9. So the pinning, which looks like the powerful ingredient, contributes nothing at the level of size counting. Below 1/9, counting alone cannot close the branch by any of these routes.
+
+**What does close the computed range is arithmetic, and it is worth seeing how thin the survivors are.** Over every e = 1 odd-q foreign part passing the gate at n ≤ 2000, the leftover holds **24,322 pinned positions r_j ≡ 1 (mod q)**, of which **4 are admissible** — prime, distinct from r, own gate passing. Those four are two configurations counted twice:
+
+| n | δ | q | r | r_j | space left | S needed |
+|---|---|---|---|---|---|---|
+| 779 | 0.0706 | 73 | 293 | 439 | 47 | 207 |
+| 1943 | 0.0577 | 137 | 823 | 1097 | 23 | 467 |
+
+Both die because the p-characteristic part cannot fit. And the mechanism is the pinning after all, just not through the size bound: it forces r_j **well above** its own floor — 439 against 207, 1097 against 467 — and that excess is what leaves no room. The generic inequality does not see this; the specific residue class does.
+
+**So the honest status of e = 1 is "empty over the computed range, by a bounded search".** Above 1/9 a theorem, below it a per-n check with ≤ 2/δ positions to test — which is what `fallback_cert.py` has been doing all along, and why this branch has never produced a candidate. A reduction to a bounded search is not an elimination, and Part E″ now says so in those words.
+
+**T5 gained a five-row status table** so the remaining work can be costed piece by piece rather than as one ambition: e = 1 above 1/9 closed, e = 1 below 1/9 a bounded search, e ≥ 2 enumerable at sparse n, q = 2 needing domination, and Lemma C at a > 1 as the prerequisite for the p-characteristic half.
+
 ---
 
 ## Items inherited as closed from earlier passes
