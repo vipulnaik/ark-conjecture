@@ -158,6 +158,26 @@ These are the whole trusted base for μ(n) = B(n): both certificates pass with e
 
 **Deferred: the framing decision.** Jones–Zvonkin's programme (arXiv:2106.00346 and four companions) is the model for how this genre states its standing — conditional on Bateman–Horn, labelled as such in the abstract, with the conjecture validated numerically at the range used. Three consequences are recorded in `literature-findings.md` items 14–16 and are *not* being acted on yet: a standing table at the front of `aod` §3 dividing unconditional from conditional from conjectural; the polynomial-versus-exponential line in `aod` §3.5, since shapes needing prime powers of unbounded exponent are Mersenne-like and outside Bateman–Horn; and the Catalan/Pillai caution where both parts are proper prime powers, which is our S1 and S2 and which `aod` §6 currently treats as amply supplied.
 
+### T5a. Re-derive §3.9.1.2's competing-rates argument on every revision
+
+*Flagged because each pass over this argument has produced a different picture, and every version so far has been plausible and at least partly wrong.*
+
+The claim is that the odd-n win shares tend to **1 : 1 : 2**. It rests not on the singular-series computation but on a second step — that the *argmax* over c-classes lands in a class with probability equal to that class's share of the pool — and that step is an extreme-value claim, not a counting one. What decides it is which of several competing effects is largest, and the accounting has been revised twice:
+
+| effect | size | status |
+|---|---|---|
+| log-factor bias between the D- and 2D-systems | Θ(1/log n) | real; drives the finite-n tilt in the table |
+| count noise over the window | O(log^{3/2}n/√n) | real; vanishes far faster |
+| Bateman–Horn secondary term | Θ(1/log n) | **same order as the bias**; partially cancels between systems, remainder uncontrolled |
+| singular-series ratio fluctuating with n | would be Θ(1) | **identically zero** — the root count is a condition on h = (n−1)/2 alone, D-independent for the pair compared |
+
+**Two things to re-check whenever this section is touched.**
+
+1. **Do not appeal to Maier / Friedlander–Granville irregularity.** Those theorems need moduli growing like x/(log x)^A, or short intervals of length (log x)^A. Our moduli are fixed and small, where Siegel–Walfisz gives error smaller than any power of 1/log n. This is the **high**-uniformity regime, and high uniformity lets the 1/log n bias steer the argmax rather than drowning it — the opposite of what the irregularity literature would suggest if applied out of range.
+2. **Recheck the D-independence when the family widens.** 𝔖_D/𝔖_{2D} = 1 is a fact about D = 4 versus D = 8, verified numerically over 8,333 values in each of two bands. It **fails** at ℓ = 3 between D = 6 and D = 12, where the degenerate branch ℓ | D/2 fires. Any comparison involving those D values reopens the whole argument, and the generalised family of `mu-theta-n2-note.md` is exactly where that happens.
+
+**The general hazard worth naming**, since it has now bitten twice in this section: *both* too much and too little uniformity relative to the pseudorandom model produce surprises, and which regime one is in depends on the modulus range. An argument that quotes an irregularity result without checking that its moduli reach ours will reliably reach the wrong conclusion, and will look right while doing so.
+
 ### T5. Whether to close the Lemma C gap at all
 
 A question about the *sharpness* of the search rather than about the results: dropping Lemma C can only enlarge the configuration space, B_safe does not use it, Part E's construction uses it only as a sufficient condition, and the measured exposure is zero. What it is load-bearing for is `--refined`, the `fallback` bookkeeping, and the reasoning inside E′. So the call is whether the E′ argument is worth repairing at a > 1 or whether it should simply be scoped to prime c.

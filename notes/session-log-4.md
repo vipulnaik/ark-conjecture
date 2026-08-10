@@ -567,6 +567,18 @@ with sd 0.146 → 0.103 → 0.092, and zero values lacking a solution in the win
 
 *Lesson worth carrying:* the original two rows were not chosen dishonestly, they were chosen as "the largest deviations", and at the time the largest happened to be the two high ones. But "largest deviation" and "largest deviation in each direction" are different selections, and only the second tests the mechanism being claimed.
 
+## Sixteenth batch: §3.9.1.2's competing rates, and a third effect that turned out to be zero
+
+**The hypothesis.** §3.9.1.2 weighs two effects — a Θ(1/log n) log-factor bias and O(log^{3/2}n/√n) count noise — and then worries that the Bateman–Horn secondary term is *also* Θ(1/log n) and could flip the drift's sign. A natural third candidate would dominate both: the **singular-series ratio between the two systems, fluctuating with n**, since 𝔖 depends on which primes divide n and n−1, those jump irregularly, and the factors are Θ(1). Had it existed and been symmetric, it would have decided the argmax and made 1 : 1 : 2 follow from pool shares regardless of the model's secondary term.
+
+**It is identically zero, and the reason is a one-line identity.** With f₁ = q, f₂ = Dq + 1, f₃ = h − (D/2)q and h = (n−1)/2, the root collisions are f₁ = f₃ ⟺ h ≡ 0 (mod ℓ) and f₂ = f₃ ⟺ h ≡ −1/2 (mod ℓ) — **both conditions on h alone, with no D in them.** The only D-dependence is the degenerate branch ℓ | D/2, which for D = 4 against D = 8 never fires at odd ℓ. Measured: 𝔖_D/𝔖_{2D} = 1.0000 at every n ≡ 7 and every n ≡ 15 (mod 24) across [10⁵, 3×10⁵] and [10⁶, 1.2×10⁶], 8,333 values each; and a direct sweep of root counts over ℓ ≤ 41 and n < 20,000 finds **0 disagreements** between D = 4 and D = 8. The branch is not vacuous in general — at ℓ = 3 the counts *do* differ between D = 6 and D = 12 — so this is a fact about the pair compared, not a principle.
+
+**Which cuts against the softer reading rather than for it.** With no Θ(1) fluctuation available, the Θ(1/log n) bias really is what steers the argmax, and the residue classes offer no rescue: the moduli are fixed and small (c mod 8, n mod 24), where Siegel–Walfisz gives error smaller than any fixed power of 1/log n. That is the **high**-uniformity regime. Maier and Friedlander–Granville irregularity needs moduli growing like x/(log x)^A or short intervals of length (log x)^A, and does not reach here — so appealing to it would be quoting a theorem out of its range, and would give the wrong sign. The finite-n tilt in the table is real and the convergence is genuinely slow.
+
+**Recorded as `pending-checks.md` T5a, a standing re-derivation item**, because each pass over this argument has produced a different picture and every version so far has been plausible and at least partly wrong. The item carries the four-effect table with sizes and status, the instruction not to appeal to irregularity results out of their modulus range, and the trigger for reopening: D-independence fails at ℓ = 3 between D = 6 and D = 12, which is exactly the generalised family of `mu-theta-n2-note.md`.
+
+**The general hazard, now named in the item:** *both* too much and too little uniformity relative to the pseudorandom model produce surprises, and which regime one is in depends on the modulus range. An argument quoting an irregularity result without checking its moduli reach ours will reach the wrong conclusion and look right doing so.
+
 ---
 
 ## Items inherited as closed from earlier passes
