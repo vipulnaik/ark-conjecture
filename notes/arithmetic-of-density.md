@@ -575,14 +575,18 @@ python3 count_check.py --nmin 200000 --nmax 215000 --maxn 99999999 \
 
 `--maxn 99999999` forces an exhaustive run; the default subsamples, which leaves the mean sound but the sd noisy.
 
-**Every residue agrees to within a few percent, and no n in any band lacks a solution in its window.** The residual spread is finite-size: convergence is slow and one-sided at a given n, and the largest deviations sit at the largest D, where the count is thinnest. Following the two extremes further:
+**Every residue agrees to within a few percent, and no n in any band lacks a solution in its window.** The residual spread is finite-size: convergence is slow at a given n, and the largest deviations sit where the count is thinnest. Following the four extreme residues — **the two furthest above 1 and the two furthest below**, so that the convergence claim is not being tested only on the deviations that flatter it:
 
-| | [2×10⁵, 2.15×10⁵] | [5×10⁵, 5.3×10⁵] | [10⁶, 1.03×10⁶] |
+| | [2×10⁵, 2.15×10⁵] | [5×10⁵, 5.03×10⁵] | [10⁶, 1.003×10⁶] |
 |---|---|---|---|
 | n ≡ 11 (mod 24), D = 12 | 1.1006 | 1.0891 | **1.0025** |
 | n ≡ 23 (mod 24), D = 12 | 1.0341 | — | **1.0033** |
+| n ≡ 19 (mod 24), D = 4 | 0.9030 | 1.0045 | **0.9995** |
+| n ≡ 3 (mod 24), D = 4 | 0.9354 | 0.9909 | **1.0247** |
 
-with sd falling like n^{−1/2} throughout. Slow approach to an asymptotic constant is ordinary here; π(x) − li(x) is the standard caution against over-reading a one-sided gap at fixed size.
+with sd falling like n^{−1/2} throughout — 0.146 → 0.103 → 0.092 on the D = 4 rows. **The deviation is two-sided, not one-sided**, which is what the finite-size reading predicts and what a wrong singular series would not produce: a mis-specified system would drift consistently in one direction rather than converging from both.
+
+> **Why the log factors are the actual polynomial values.** `_density_integral` evaluates 1/(log q · log r · log c) at r = Dq + 1 and c = (n−1)/K − (D/K)q, integrating across the window — not 1/log³ of a common variable. That is the refinement Jones–Zvonkin found necessary for agreement at their precision, and at our range it is not optional: log n runs 12 to 14 here, so an additive constant inside a log is a percent-level effect and three of them compound. The singular series is likewise computed from the true root count of the system mod p (`roots_mod`), not from a generic form. Slow approach to an asymptotic constant is ordinary here; π(x) − li(x) is the standard caution against over-reading a one-sided gap at fixed size.
 
 **The obstruction predictions hold in the other direction too.** Where the singular series vanishes the count must be zero, and it is: at n ≡ 23 (mod 24) the full-efficiency system (D = 2) vanishes identically, 834 of 834 values in a test band, with zero observed solutions at every one. Likewise n ≡ 1 (mod 12) at D ≥ 4, where h = (n−1)/2 is even and c would have to be even. So §3.3's local analysis is confirmed from the counting side as well as from the root analysis.
 

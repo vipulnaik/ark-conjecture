@@ -99,18 +99,22 @@ So the co-author's point is right and stronger than stated: it is not merely tha
 
 **This is not a defect in our result, but it is a defect in how `aod` §5 currently reads.** The two statements are different in kind. Scheidweiler–Triesch lower-bound D(P) for *every* nontrivial monotone property; our m\* ≥ δ·C(n,2) gives **full evasiveness** — exactly C(n,2) queries — for properties of dimension below m\*. A weak bound on all properties and an exact result on a restricted class are incomparable. But `aod` §5 does not currently say so, and a referee will read any Θ(n²) framing as competing with n²/3 and losing. Fix it before submission; cite Scheidweiler–Triesch and Korneffel–Triesch in the same block.
 
-## 4. Black's spacing — narrower group class, weaker conclusion, so probably no conflict
+## 4. Black's spacing — the framework subsumes a route we later re-derived; now the key comparison, not a side check
 
-Timothy Black, *Monotone Properties of k-Uniform Hypergraphs Are Weakly Evasive*, ITCS 2015 / ACM Trans. Comput. Theory (2019), doi 10.1145/3313908; UChicago dissertation 2019.
+Timothy Black, *Monotone Properties of k-Uniform Hypergraphs Are Weakly Evasive*, ITCS 2015 / ACM Trans. Comput. Theory (2019), doi 10.1145/3313908; UChicago dissertation 2019. Building on Kulkarni–Qiao–Sun for 3-graphs.
 
-He formalises "orbit augmentation sequences" of sets with group actions and shows that a parameter called the **spacing** lower-bounds decision-tree complexity for any nontrivial monotone Γ-invariant property — **assuming all the groups involved are p-groups**, and concluding *weak* evasiveness (Ω(n)).
+He formalises **orbit augmentation sequences** of sets with group actions and shows that a parameter called the **spacing** lower-bounds decision-tree complexity for any nontrivial monotone Γ-invariant property — **assuming all the groups involved are p-groups** — concluding *weak* evasiveness, Ω(n). He notes the argument is elementary and self-contained modulo basic group theory, unlike the KSS topological route plus heavy number theory that KQS used for 3-graphs.
 
-Two structural differences from m\*(Γ), both of which suggest the parameters are incomparable rather than one subsuming the other:
+Two structural differences from m\*(Γ), which still look like incomparability rather than subsumption:
 
 - **Group class.** Spacing requires p-groups throughout; Oliver groups (p-group ⊳ cyclic ⊳ q-group) are strictly more general, and every winner in our table with a foreign block is outside the p-group case.
 - **Conclusion.** Spacing gives weak evasiveness; m\* gives a *dimension threshold below which a property is fully evasive*.
 
-So the co-author's guess that "he restricts to p-groups where Oliver groups are more general, which would be a point in our favour" looks right, but **this is the one item I could not settle from abstracts alone** — the actual definition of spacing is in the paper body and I have not read it. If spacing turns out to be a genuine generalisation of m\* restricted to p-groups, that is worth knowing; it would make our Theorem 2.3 the Oliver-group analogue of his framework and give a natural way to cite him.
+> **This item was left unread for three passes and that had a cost — see item 17.** A sub-board/Fourier-degree route was derived from scratch, presented as promising, and only pinned down after a challenge exposed that it needs a p-group hypothesis — which is exactly the hypothesis Black's theorem states. **An unread item on a reading list is a live hazard, not a deferred task:** it does not merely delay a finding, it allows work to be done twice and claimed once.
+
+**The question that replaces "read it": does our group data give better spacing at composite non-prime-power n than the sequences already in the literature?** Black's target is the asymptotic regime, Ω(n) out of C(n,2). Ours is constants near C(n,2) at specific n, which is what the whole δ apparatus exists for and which his framework does not chase. Those are different objectives over the same machinery, so the comparison is concrete: compute spacing for the orbit augmentation sequences our batteries supply and see whether it beats the standard constructions at the n we care about.
+
+## 4a. Item 17 below supersedes the framing of this item
 
 ## 5. The Θ(n²) / Hardy–Littlewood reframing — searched for, not found
 
@@ -146,7 +150,7 @@ That is `notes` §8 territory almost exactly — the same n, the same tool, the 
 ## What remains
 
 0. **Read Angel–Borja** (item 6), before writing anything about n = 10. Same degree, same tool, same target; unknown overlap.
-1. **Read Black's spacing definition** (item 4). The only one of the original four where I could not get past the abstract. *(Items 2 and 3 below are resolved — see the second pass; item 4's actions now live in `pending-checks.md` T4.)*
+1. ~~**Read Black's spacing definition** (item 4).~~ **Superseded by items 4 and 17.** The framework is now identified; what replaces "read it" is a specific comparison — does our group data give better *spacing* at composite non-prime-power n than the sequences already in the literature? *(Items 2 and 3 below are resolved — see the second pass; item 4's other actions live in `pending-checks.md` T4.)*
 2. **Check whether Shparlinski's Theorem 2 survives the prime-power version of α** (item 2). If it does, "the γ = 1 endpoint" is a clean and accurate framing for (H); if not, we need a different way to say it.
 3. **Read Scheidweiler–Triesch and Korneffel–Triesch properly** (item 3). I have n²/3 secondhand; the primary source should be checked before it goes in a comparison table.
 4. **Decide the framing** (item 1). Not a literature question any more — the literature is now clear. It is a decision about what the paper claims, and it should be made before more writing happens, because it determines whether `aod` §3 is a contribution or a recap.
@@ -333,3 +337,92 @@ The division we should state explicitly, in `arithmetic-of-density.md` §3's ope
 | the global floor conjecture (`aod` §5) | **conjectural**, verified to 10⁶ over four families | — |
 
 The Jones–Zvonkin practice suggests putting this table near the front and labelling every density statement at first mention. What we should *not* do is what an earlier draft of this file drifted towards — comparing our conditional density against other fields' unconditional open problems as though they were competing strengths.
+
+---
+
+# Fifth pass: the sub-board route, and what already exists
+
+## 17. The sub-board Fourier-degree route is Black's spacing framework
+
+*Recorded because it was derived independently in this project before the literature was checked, and the record of that is more useful than the result.*
+
+**The route.** Deterministic query complexity satisfies D(P) ≥ deg(P) (Best–van Emde Boas–Lenstra), and deg(P) ≥ |S| whenever the Fourier coefficient at an edge set S is nonzero. For a down-closed P that coefficient is A(S) = Σ_{T⊆S} (−1)^{|T|}[T ∈ P]. **If Γ is a p-group and S is Γ-invariant**, orbits of Γ on subsets of S have p-power size, so non-fixed orbits vanish mod p and A(S) ≡ Σ over unions-of-Γ-orbitals-inside-S (mod p) — a sum over 2^t terms rather than 2^{|S|}. If that is ≢ 0 mod p then A(S) ≠ 0 and **D(P) ≥ |S|**. Taking S to be everything but the smallest orbital gives bounds close to C(n,2).
+
+**The p-group hypothesis is not optional, and the way it was found is worth recording.** The first version of this argument used Oliver-chain groups and Γ-invariant subsets. That is wrong: orbit sizes are |Γ|/|stab| and are divisible by q only when Γ is a q-group. On the full board the corresponding statement survives because the argument runs through Oliver's theorem and acyclicity, not through raw orbit counting — the conclusion was transported to sub-boards without the proof. The error surfaced from the question "couldn't you pick a trivial group?", which is the right probe: Γ = 1 makes every subset invariant, so the reduction is vacuous and the cost is 2^{|S|}, exposing that the strength comes from the group's orbit structure and not from the sub-board being large.
+
+**Measured on the n = 10 artefacts.** Restricted to the p-group battery, where the congruence is elementary and certain, the test fires on 915 sub-boards, the largest being **|S| = 42 of 45** via `B:7+1+1+1` (a C₇ on seven points with three fixed, p = 7, A = −5). Against n²/3 = 33.3 at n = 10. The largest board is also the ceiling for this route in that battery, since the smallest orbital available is 3.
+
+**This is Black's spacing framework**, item 4: orbit augmentation sequences, p-groups throughout, a spacing parameter lower-bounding D. The mechanism is not ours and the n = 10 number is best described as a spacing-like certificate.
+
+**Two things survive the collision, and they are worth keeping separate from the mechanism.**
+
+1. **It is a certificate, not a theorem.** Whether A(S) ≢ 0 mod p is a fact about the particular P; nothing forces it. So it does not by itself give c(n) ≥ C(n,2) − ε. Getting a bound on c(n) needs the test to fire for *every* high-dimensional P, which is exactly what a CSP over the property is for — but that is real work.
+2. **The optimisation runs opposite to our battery selection.** This route wants **many small orbitals**; the max-m\\* search wants the reverse, and discards precisely the useful groups. That is the same inversion the two-orbital criterion has, and a second reason `pending-checks.md`'s note about the battery being selected by m\\* and cost rather than by constraint strength matters.
+
+## 18. Chakrabarti–Khot–Shi — "closer than n²/3" already exists for restricted classes
+
+*Evasiveness of Subgraph Containment and Related Properties*, SIAM J. Comput. 31 (2001). For subgraph containment and a fairly large related class they prove evasiveness on an arithmetic progression of n, giving a **½n² − O(n)** lower bound on decision-tree complexity, and evasiveness for all sufficiently large n for minor-closed properties.
+
+**Calibration for any "beat n²/3" ambition:** for restricted property classes the literature is already at ½n² − O(n), i.e. essentially C(n,2), not at n²/3. The n²/3 figure is the bound for *all* nontrivial monotone properties. A result of ours aiming between the two must be explicit about which class it quantifies over, or it will be read as improving n²/3 when it is really re-deriving a weaker version of the restricted-class results.
+
+## 19. An attribution to check on the n²/3 bound
+
+At least one survey attributes the Ω(n²/3) bound to **unpublished work of Santha and Yao**, not to Scheidweiler–Triesch. We currently cite Scheidweiler–Triesch (SIAM J. Discrete Math. 27, 2013) alone, in `aod` §5 and in the `notes` reference list. **Check which is right before publication** — plausibly both exist, the published bound and an earlier unpublished one, but a citation naming only one of them is a claim about priority that we have not verified.
+
+## 20. Jones–Zvonkin is a programme, not a paper — and they say so themselves
+
+The observation is right and it is worth recording as a programme rather than as a single model paper. The pattern repeats across at least five works:
+
+| target | the object whose existence needs a prime value | where |
+|---|---|---|
+| dessins d'enfants | degrees p, p+1 for type (3,2,p) dessins | *Klein's ten planar dessins of degree 11, and beyond*, arXiv:2104.12015 |
+| permutation groups | (qⁿ−1)/(q−1) prime — the last gap in classifying groups of prime degree | *Projective primes and the Bateman–Horn Conjecture*, arXiv:2106.00346 |
+| block designs | Amarra–Devillers–Praeger quadratics taking prime power values | arXiv:2105.03915 |
+| permutation groups, again | Hujdurović–Kutnar–Kuzma–Marušič–Miklavič–Orel intersection densities, via cyclotomic polynomials | Trudy IMM 29 (2023) |
+| finite simple groups | Peter Neumann's question on simple groups of order a product of six primes | — |
+
+Their own positioning, from the block-designs paper: the paper and its companion "represent its first application to block designs, just as [19, 20] are the first in the areas of dessins d'enfants and permutation groups." **They are explicitly in the business of introducing the Bateman–Horn Conjecture into new areas.** Zvonkin also has a survey talk, *In Praise of the Bateman–Horn Conjecture*.
+
+**The recipe, which is stable across all five.** (i) Find a construction in the literature whose existence depends on a polynomial taking prime or prime-power values. (ii) Verify Bunyakovsky's conditions (a), (b), (c) for that polynomial by elementary argument — this is the "closing the gap" step and is usually a page or two, e.g. the discriminant being a perfect square exactly at triangular numbers. (iii) Compute BHC estimates, using Li's modification, against extensive search. (iv) Conclude *strong evidence*, never a theorem.
+
+**Three consequences for us.**
+
+1. **The genre has active practitioners who are looking for new areas, and evasiveness is an obvious one.** ARK reduces to prime-power representation questions; nobody has published that framing. This is simultaneously an opportunity — the natural people to cite, and plausibly to talk to — and a reason not to sit on the framing indefinitely.
+2. **Our contribution is larger than theirs in the same genre, and the difference is worth naming precisely.** In every Jones–Zvonkin paper the combinatorial content is *cited*: someone else's construction, one polynomial, and the work is the number-theoretic verification. Ours constructs the reduction itself — a whole shape space with a coprimality budget, a finiteness theorem for it, and a two-sided semi-tightness relating the additive input to the combinatorial method. **We supply steps (0) and (i) as well as (ii)–(iv).** That is the sentence the framing decision should turn on.
+3. **Our step (ii) is the one that is missing.** They verify Bunyakovsky conditions for their polynomials explicitly and elementarily. `aod` §3.5 asserts an ample supply from Bateman–Horn-type heuristics but does not, for each shape family, check the analogue — that the relevant polynomial system satisfies Schinzel's conditions and has no fixed prime divisor. **That check is elementary and we have not done it.** It is the concrete next step for `aod` §3.5, and it interacts with the polynomial-versus-exponential line of item 14: the shapes with unbounded exponent have no polynomial to check, which is itself the finding.
+
+*One uncertainty to resolve:* "Li's recent modification of the Bateman–Horn Conjecture" is cited throughout their recent papers. Whether this is the same Runbo Li as the 0.679 shifted-prime improvement (arXiv:2508.18285) that `aod` §3.6 now cites is **not established** — the names coincide and the areas are adjacent, but I have not checked. Do not conflate them in print without confirming.
+
+## 21. Where the hardness actually sits: one wall, not two bottlenecks
+
+*A natural reading is that the difficulty splits in two — a Goldbach part and a shifted-prime part — with the Goldbach part essentially solved and the shifted-prime part capped at θ = 0.679 by Baker–Harman machinery, so that the shifted primes are the binding constraint and Goldbach adds only a log-power penalty on top. The first half of that is right. The second half describes the obstacle as a cap when it is a discontinuity, and the distinction matters for how `aod` §3.6 should read.*
+
+**The Goldbach half is as described, and the combination has already been done.** Binary Goldbach for almost all even n, and ternary for all large odd n, supply what our two- and three-part families need in exactly the quantifier we care about, at a cost of 1/log²n or 1/log³n in the representation count — log powers, never exponents. Nothing on that side touches θ.
+
+One refinement rather than an objection: the two conditions are **not sequential filters**. We need the foreign prime r to lie in the shifted-prime set *within* a Goldbach representation, and an almost-all Goldbach theorem supplies *some* representation, not one whose summand lands in a prescribed positive-density subset of the primes. That is a bilinear equidistribution question, not an intersection. It is also already solved at the rungs: **Shparlinski's Corollary 3 is precisely this combination**, its "almost all n" quantifier being the Goldbach-side averaging layered over Baker–Harman.
+
+**The shifted-prime half is not a cap, for two reasons.**
+
+*First, no θ < 1 reaches the regime our constants live in.* If P(r − 1) ≈ r^θ then
+
+> η = 2t/(r − 1) ≈ 2r^{θ−1} → 0,  so  δ ≈ cap(η) ~ η ~ n^{θ−1} → 0,
+
+and the orbital size is m\* ~ n^{1+θ} — which is exactly the ladder's edge bounds in §3.6. So **the whole ladder below θ = 1 delivers a vanishing density.** The constants of §3.3 — 1/4, 3 − 2√2, (5 − 2√6)/2 — exist only at the θ = 1 endpoint. Improving 0.679 to 0.9 moves an exponent and still leaves δ → 0, hence no dimension threshold and no evasiveness conclusion. **This is the point §3.6 currently obscures** by presenting the rungs as progress toward the endpoint: they are progress on a different quantity.
+
+*Second, above the top rung the problem changes class.* Constant η forces a **bounded cofactor**: r − 1 = m·t with m ≤ 2/η. That is the Sophie Germain / safe-prime regime, and the literature is explicit that it is not a harder version of the same question — it is not known, for any ε > 0 however small, whether there are infinitely many primes p with P(p − 1) > p^{1−ε}, and P(p − 1) = (p − 1)/2 is the Sophie Germain case, itself not known infinite (see e.g. the survey discussion in arXiv:1311.2527, which also records Goldfeld's κ(1/2) ≥ 1/2). So in the range θ ∈ (0.679, 1) **infinitude itself is open**, not merely density. Sieve improvements approach the endpoint asymptotically in θ and never cross into it.
+
+**Consequences.**
+
+| | status |
+|---|---|
+| Goldbach supply, binary and ternary | essentially solved; log-power cost; already combined with the ladder by Shparlinski |
+| shifted primes, θ ≤ 0.679 | positive relative density (Baker–Harman, Li); yields δ → 0 |
+| shifted primes, θ ∈ (0.679, 1) | **infinitude open**, not just density |
+| shifted primes, θ = 1 (bounded cofactor) | Sophie Germain regime; Hardy–Littlewood / Bateman–Horn class |
+
+So there is **one wall, and it is not at the top rung** — it is the gap between the top rung and the endpoint, and no sieve improvement crosses it. This is also why (H) belongs in the Bateman–Horn class rather than being a strengthened Baker–Harman, and why the Goldbach half becomes moot at the endpoint: one cannot average over a set not known to be infinite.
+
+**Two things unverified, flagged rather than asserted.**
+
+1. **Do prime-*power* divisors buy anything at the endpoint?** What our shapes need is t a prime power, not a prime, and §3.6's domination shows that is never worse. But at bounded cofactor, t = q^e with e ≥ 2 gives r = m·q^e + 1, which is *sparser* than the prime case, so the expectation is that it buys nothing. Worth one hour to confirm, since the domination argument makes it easy to state carelessly in our favour.
+2. **Might bounded-cofactor supply be provable on average over n even though it is open per-n?** This is the Skorobogatov–Sofos angle of item 15 pointed at the endpoint rather than at `aod` §4's shape families. It is the one live hope in this item.

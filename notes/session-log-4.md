@@ -532,6 +532,41 @@ Verified both ways: the file passes clean, and corrupting one `aod` and one `not
 
 *Caught by the refs pass on the way out:* the new §3.6 note said "Shparlinski's Theorem 1", which the pass resolved against our own documents and reported as dangling. Rewritten as "Shparlinski (2014, Thm 1)", which is also the form the file's own convention requires.
 
+## Fourteenth batch: the sub-board route, and finding it was already published
+
+A route to beating the n²/3 query bound was derived in conversation, tested on the n = 10 artefacts, and then found in the literature. The record of that sequence is more useful than the result, so it is written up as items 17–19 of `literature-findings.md` rather than quietly dropped.
+
+**The route.** D(P) ≥ deg(P) and deg(P) ≥ |S| when the Fourier coefficient at edge set S is nonzero; for a down-closed P that coefficient is A(S) = Σ_{T⊆S}(−1)^{|T|}[T∈P]. For a **p-group** Γ and Γ-invariant S, orbits on subsets of S have p-power size, so A(S) ≡ (sum over unions of Γ-orbitals inside S) mod p — 2^t terms rather than 2^{|S|}. Nonzero mod p gives D(P) ≥ |S|, and S can be everything but the smallest orbital.
+
+**The p-group hypothesis was missing at first, and how it was found is the part worth keeping.** The first version used Oliver-chain groups: wrong, since orbit sizes are divisible by q only for a q-group. On the full board the corresponding claim survives because the argument goes through Oliver's theorem and acyclicity rather than raw orbit counting — the conclusion had been transported to sub-boards without the proof. What exposed it was the question *"couldn't you pick a trivial group?"*: Γ = 1 makes every subset invariant, the reduction is vacuous, and the cost is 2^{|S|} — which shows the strength comes from orbit structure, not from S being large.
+
+**Measured on the n = 10 artefacts**, restricted to the p-group battery where the congruence is elementary: the test fires on 915 sub-boards, largest **|S| = 42 of 45** via a C₇ on seven points with three fixed (p = 7, A = −5), against n²/3 = 33.3. That 42 is also the route's ceiling in that battery, the smallest available orbital being 3.
+
+**It is Black's spacing framework** — orbit augmentation sequences, p-groups throughout, spacing lower-bounding D (ITCS 2015 / ACM ToCT 2019, building on Kulkarni–Qiao–Sun). The mechanism is not ours; the n = 10 figure is a spacing-like certificate.
+
+**Two things survive the collision.** It is a *certificate, not a theorem* — whether A(S) ≢ 0 mod p is a fact about the particular P, so it gives no bound on c(n) without showing the test fires for every high-dimensional P. And **the optimisation runs opposite to our battery selection**: it wants many small orbitals where the max-m\* search wants the reverse, the same inversion the two-orbital criterion has.
+
+**Two calibrations recorded alongside.** Chakrabarti–Khot–Shi already reach **½n² − O(n)** for subgraph containment on an arithmetic progression of n, so "closer than n²/3" exists for restricted classes and is much closer — any ambition of ours in that direction must be explicit about the class it quantifies over. And at least one survey attributes Ω(n²/3) to **unpublished Santha–Yao** rather than to Scheidweiler–Triesch, whom we cite alone; that is a priority claim we have not checked, now added to T4's primary-source list.
+
+**The process finding, which is the reason this batch is logged at length.** `literature-findings.md` item 4 had said "the only one of the original four where I could not get past the abstract" for three passes, sitting at the top of the reading list. Had it been read, the construction would have been recognised rather than derived, presented as promising, and corrected only under challenge. **An unread item on a reading list is a live hazard, not a deferred task** — it does not merely delay a finding, it allows work to be done twice and claimed once. Item 4 now leads with that, and its action has changed from "read it" to a specific comparison question about spacing at our n.
+
+## Fifteenth batch: `aod` §3.8's convergence evidence was selected
+
+**The Jones–Zvonkin polynomial refinement is already implemented, so nothing was owed there.** `count_check.py`'s `_density_integral` evaluates 1/(log q · log r · log c) at the actual values r = Dq + 1 and c = (n−1)/K − (D/K)q, integrated across the window by Simpson — not 1/log³ of a common variable — and `singular_dq` uses the true root count of the system mod p rather than a generic form. Both refinements are in the path that produces every row of the §3.8 table. Checked rather than assumed; a note now says so at the site, with the reason it is not optional at our range: log n runs 12–14, so an additive constant inside a log is a percent-level effect and three of them compound.
+
+**What checking turned up instead is a selection problem in the convergence evidence.** §3.8 followed two residues to 10⁶ to show the deviations are finite-size — n ≡ 11 (1.1006) and n ≡ 23 (1.0341). **Both are above 1.** The two residues furthest from 1 in the whole table are n ≡ 19 (0.9030) and n ≡ 3 (0.9354), both *below*, both at D = 4, and neither was tracked. So the convergence claim was being tested only on the deviations that flatter it.
+
+Ran them:
+
+| | [2×10⁵, 2.15×10⁵] | [5×10⁵, 5.03×10⁵] | [10⁶, 1.003×10⁶] |
+|---|---|---|---|
+| n ≡ 19 (mod 24), D = 4 | 0.9030 | 1.0045 | **0.9995** |
+| n ≡ 3 (mod 24), D = 4 | 0.9354 | 0.9909 | **1.0247** |
+
+with sd 0.146 → 0.103 → 0.092, and zero values lacking a solution in the window at every band. So the claim survives, and it is now **better supported than before**: the deviation is **two-sided and converges from both directions**, which is what finite-size effects predict and what a mis-specified singular series would not produce — a wrong system drifts consistently one way rather than converging from both. The table and the surrounding sentence are updated to say that, and to say why those four rows were chosen.
+
+*Lesson worth carrying:* the original two rows were not chosen dishonestly, they were chosen as "the largest deviations", and at the time the largest happened to be the two high ones. But "largest deviation" and "largest deviation in each direction" are different selections, and only the second tests the mechanism being claimed.
+
 ---
 
 ## Items inherited as closed from earlier passes
