@@ -170,6 +170,8 @@ These are the whole trusted base for μ(n) = B(n): both certificates pass with e
 
 **What the closure would buy, and it is now the main prize.** With Lemma C at a > 1, the foreign-prime strip becomes unconditionally necessary, and the SAFE cap can be replaced by the refined one everywhere. That is the structural route to **eliminating SAFE mode as ever necessary for the optimum**: not a per-n certificate that the optimum happens to be fallback-free, but a proof that the refined score is itself an upper bound, collapsing B_refined = B_safe = μ by construction rather than by computation.
 
+**The realistic target is narrower than "eliminate SAFE", and worth stating as such.** `enumeration-proof.md` Part E″ now carries the general form of q-pinning: the foreign gate forces t ≥ δn/2, hence a bounded cofactor u ≤ 2/δ and a top prime q ≥ (δn/2)^{1/e}, hence every *foreign* leftover part is pinned to r_j ≡ 1 (mod q) with at most 2/δ positions at e = 1. Measured, that branch is usually killed outright — median 0 admissible positions, maximum 9. **Conditional on a floor δ ≥ δ₀, the fallback branch therefore reduces to a named finite residue:** the q = 2 and large-e cases, where pinning is vacuous or weak, together with the a > 1 case, where the twist cap is Lemma C. Step 1 is the only place δ enters, so the unconditional version dies with the asymptotic floor — this route is conditional on the same hypothesis the density ceilings are.
+
 **Two routes, and the second may be easier.**
 
 1. **Prove it.** Show a q-element of Γ inducing a Galois automorphism on a p^a-block is incompatible with the chain. This is the hard direction and shares an obstruction with the ΓL(1) step.

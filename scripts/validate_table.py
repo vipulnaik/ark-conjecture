@@ -718,6 +718,41 @@ def c_lemmaC(R, base):
 # C. DENSITY AND DISTRIBUTION, AGAINST THE ASYMPTOTIC MODEL
 # ==========================================================================
 
+@check("C", "regime split of winners' foreign blocks by the twist exponent",
+       "aod section 3.5.6")
+def c_regime(R, base):
+    """Which of the three families a winner's foreign block belongs to.
+
+    Written as t = q^e with cofactor u = (r-1)/t, the fallback families split by
+    e: e = 1 is linear in q and behaves like any other parametric family; e >= 2
+    has a supply of admissible foreign blocks that is sparse (about N^(1/e) up to
+    N), so it is available only at a density-zero set of n; q = 2 is exponential
+    and outside Bateman-Horn altogether.  That split is what decides whether a
+    per-shape argument is available, so it is worth measuring on every extension
+    rather than quoting a figure from one pass.  INFO: no value is a failure."""
+    cnt = {"e=1": 0, "e>=2": 0, "q=2": 0}
+    umax = 0
+    for r in R:
+        if r.q is None:
+            continue
+        for F, c, f in r.cls:
+            if not f:
+                continue
+            t = qpart(c - 1, r.q)
+            if t <= 1:
+                continue
+            e, x = 0, t
+            while x % r.q == 0:
+                x //= r.q; e += 1
+            umax = max(umax, (c - 1) // t)
+            cnt["q=2" if r.q == 2 else ("e=1" if e == 1 else "e>=2")] += 1
+    tot = sum(cnt.values()) or 1
+    return ("INFO",
+            f"e=1 {cnt['e=1']} ({100*cnt['e=1']/tot:.1f}%), e>=2 {cnt['e>=2']}, "
+            f"q=2 {cnt['q=2']}; largest cofactor u = {umax} "
+            f"(predicted <= 2/delta = {2/min(x.delta for x in R if x.delta>0):.0f})", [])
+
+
 @check("C", "density floor, and the s- and k-bounds it implies", "ep Part E-prime, Prop F.1",
        expect="asymptotically delta >= 0.050510 = (5-2sqrt6)/2, attained at n = 23 (mod 24); "
               "the finite-range floor should RISE with n as the omega(n)=2 population thins")

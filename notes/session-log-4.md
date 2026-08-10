@@ -608,6 +608,30 @@ So condition (4) was resting on an unproved lemma at a > 1. Conditions in `fb_co
 1. **A truncating slice is the one edit pattern with no partial failure mode.** `str_replace` on a bounded region fails loudly when the anchor is missing; `s[:i] + new` silently discards the tail, and the tail is invisible in the diff if nothing after it is being examined. Prefer replacing a bounded region — `s[:i] + new + s[j:]` — even when the item is believed to be last, because "believed to be last" is exactly the assumption that breaks.
 2. **Nothing would have caught this.** `check_doc_figures.py` reports 0 dangling references either way, since the deleted section contained no cross-references into the mathematical documents. A missing *section* is not a class of error any current check looks for. Worth considering a hygiene check that asserts the presence of the standing items by name — A0b in particular, since it is the one item designed never to close.
 
+## Nineteenth batch: the regime split, with S1–S7 left alone
+
+**The framing correction that produced this.** A first attempt described the fallback configurations as needing an *extension* to the notion of a shape, on the ground that their parts are linked by r | c − 1. That was wrong: `aod` §3.3's system is already three conditions in **one** variable, and the coprimality budget and distinct-foreign-prime rule are inter-part constraints too. Linkage is the norm here, not a distinguishing feature — and the q-reparametrisation proposed as new is what `count_check.py --dq` has always done.
+
+**What actually separates the families is the degree of the system in its natural variable**, which for these is the top prime q. Writing the foreign twist as t = q^e with cofactor u = (r−1)/t, the gate forces t ≥ δn/2, hence u ≤ 2/δ and q ≥ (δn/2)^{1/e}, and three regimes follow:
+
+| regime | r in terms of q | supply of admissible r near δn | standing |
+|---|---|---|---|
+| e = 1 | linear | positive density | an ordinary parametric family |
+| e ≥ 2 fixed | degree e | ~N^{1/e}, **density zero** | Bateman–Horn, available at almost no n |
+| q = 2, e varying | exponential | — | outside Bateman–Horn |
+
+**A reasoning error corrected before it reached a document.** The density-zero claim was first justified as "n grows like q^e", which is wrong — n is given, not constructed. The correct reason is that the *primes* with r − 1 = u·q^e and bounded u are sparse, so the chance one lands in the window near δn is n^{1/e−1} → 0. Sparsity in the supply of foreign blocks, not in n. Both give density zero; only one suggests the right repair, so §3.5.6 states it explicitly.
+
+**Which explains, rather than excuses, the per-n certificate.** A family available at a density-zero set of n cannot be dispatched per shape, because where it *is* available it may be the optimum. Part E′ now says so: the per-n certificate is the right instrument, not a stopgap.
+
+**And it identifies the two q-pinning escapes as one phenomenon.** e ≥ 2 and q = 2 are both where the family stops being polynomial in q; q = 2 is §3.3.2's Fermat branch, and it is exactly where r_j ≡ 1 (mod 2) makes pinning vacuous. This is the polynomial-versus-exponential line `literature-findings.md` item 14 asked for, arrived at from our own side.
+
+**Edits.** `aod` gained §3.5.6 (the three regimes, with the sparsity caveat) and a note in §6.2 that linkage is normal; `enumeration-proof.md` gained the general q-pinning box in Part E″ — five steps, the conditionality at step 1, the two escapes with measured sizes, and the observation that pinning reaches only the *foreign* half of the leftover while the p-characteristic half needs Lemma C — plus the per-n rationale in E′. T5 now states the realistic target: conditional on δ ≥ δ₀, the branch reduces to a named finite residue.
+
+**Scripts: diagnostics only, no behavioural change.** Nothing computed differently — the certificates already enumerate every branch regardless of e. Two reporting additions so the split is measured rather than quoted: `fallback_cert.py` reports the regime census over gate-passing foreign parts (**28,758 / 3,363 / 709 — e = 1 at 87.6%**), and `validate_table.py` group C reports the split over winners (**81.3% / 148 / 45**, largest cofactor u = 12 against the predicted ceiling 44). Suite still runs in 0.154 s, inside the budget.
+
+**S1–S7 untouched**, deliberately. The regime split is orthogonal to the census: it classifies a configuration's foreign block by the arithmetic of its twist, where S-numbers classify by part structure. Every existing name, cross-reference and script string is unchanged.
+
 ---
 
 ## Items inherited as closed from earlier passes

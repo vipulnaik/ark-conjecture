@@ -451,6 +451,24 @@ Every class has at least one admissible d, so **(H) is locally soluble at every 
 
 **What this means for the framework.** The ladder's conditional results should be read as conditional on a *parametric* hypothesis of Goldbach type, not on Bateman–Horn. The distinction matters in two places. It explains why §3.4's window analysis is needed at all: for a fixed system one would simply count solutions up to X, whereas here the solutions live in a window proportional to n and one must check that the window does not shrink. And it explains why §6's covering formulation is the right shape — a disjunction over a finite family of parametric systems is exactly what a lower bound on μ can deliver, and is strictly weaker than any single system's solvability.
 
+#### 3.5.6 Which families are polynomial in q, and which are not
+
+**The shapes of §6 already link their parts, so linkage is not what distinguishes the fallback families.** §3.3's system is three conditions in *one* variable — f₁(r) = r, f₂(r) = (r−1)/2, f₃(r) = (n−r)/2 — because c is determined by r and n; the coprimality budget and the distinct-foreign-prime rule are inter-part constraints too. What varies between families is not whether the parts are linked but **the degree of the system in its natural variable**, and for the fallback families that variable is the top prime q rather than a block size. `count_check.py --dq D` already scans this way: r = Dq + 1 and c = h − (D/K)q.
+
+Write a foreign block's twist as t = q^e and its cofactor as u = (r − 1)/t. The gate orb(r, t) ≥ B forces **t ≥ B/r ≥ δn/2**, hence **u ≤ 2/δ** and **q ≥ (δn/2)^{1/e}**. Three regimes follow, and they are genuinely different objects:
+
+| regime | r as a function of q | supply of admissible r near δn | standing |
+|---|---|---|---|
+| **e = 1** | r = uq + 1, **linear** | positive density | an ordinary parametric family, no different from S3's |
+| **e ≥ 2 fixed** | r = u·q^e + 1, degree e | ~N^{1/e} up to N, so **density zero** | still Bateman–Horn, but available at almost no n |
+| **q fixed, e varying** (in practice q = 2) | r = u·2^e + 1, **exponential** | — | **outside Bateman–Horn**: no polynomial to apply it to |
+
+> **The middle column is where the reasoning is easy to get wrong, so it is worth stating carefully.** The density-zero claim is *not* that n must be of the form u·q^e — n is given, not constructed. It is that the primes with r − 1 = u·q^e and u bounded are themselves sparse, about N^{1/e} up to N, so the chance that one lands in the window near δn is about n^{1/e−1} → 0. The sparsity is in the **supply of foreign blocks**, not in n, and the two would suggest different repairs.
+
+**This is the polynomial-versus-exponential line that Jones–Zvonkin draw explicitly** and that `literature-findings.md` item 14 asks us to draw: their Mersenne-like families are outside the conjecture's scope for exactly the reason the third row is. Ours coincides with the **Fermat** branch of §3.3.2, r − 1 = 2^a, which is also where the q-pinning of `enumeration-proof.md` Part E″ goes vacuous — a modulus of 2 constrains nothing. So the two escapes are one phenomenon seen twice: the family stops being polynomial in q.
+
+**Consequence for how the collapse is certified.** A family whose members are available at a density-zero set of n cannot be dispatched by a per-shape argument, because at the sparse n where it *is* available it may well be the optimum. **That is why `enumeration-proof.md` Part E′ certifies the collapse per n rather than per shape** — the per-n certificate is the right instrument for a family with density-zero members, not a stopgap for a missing theorem.
+
 ### 3.6 What the conjectures give: the shifted-prime ladder, and effectivity
 
 **The route's strength is a single parameter.** The efficiency condition — that r − 1 carry a large prime-power divisor — is what couples this framework to the literature on shifted primes, and the coupling reduces to one exponent. Write θ for what can be guaranteed in P(r − 1) > r^θ. The foreign block then contributes qr ≥ r^{1+θ}, and with r of order n the family delivers roughly **n^{1+θ}**. Every result in this area is a value of θ:
@@ -1019,6 +1037,8 @@ Writing **L = 1/√δ₀** and **N(δ₀)** for the number of shapes the criteri
 So a block needs a *bounded fraction* of its multiplicative group, not all of it: at x = 0.3 and δ₀ = 0.05 the fraction may be as low as about 0.55. Cyclicity of Γ₁/Γ₂ then requires the twist orders {d_i} of the distinct classes, together with the foreign translation orders {r_b}, to be **pairwise coprime** — it does not require the full C_{c_i−1} to embed.
 
 **Two classes of equal size cost nothing**, because they can share a single *diagonal* twist: one C_d acting on both, contributing one factor rather than two. That is Theorem 2.1's construction and it is why S4 exists at all.
+
+> **Linkage between parts is normal here, and is not what distinguishes one family from another.** §3.3's system is three conditions in a single variable, because c is determined by r and n; the coprimality budget and the distinct-foreign-prime rule are inter-part constraints as well. So a shape is not a set of independent size variables, and a family that adds a divisibility relation between two parts is not thereby a new kind of object. What separates families is the **degree of the system in its natural variable** — see §3.5.6, where the fallback families split into linear, higher-degree and exponential according to the exponent in the foreign twist.
 
 **Two classes of unequal size are admissible, at every p — and the reason they do not appear is economic, not structural.** It is tempting to argue that independent twists d, d′ must be coprime, so at most one may be even and the other loses a factor 2, and that at odd p this is fatal. **That argument does not apply.** Part E's construction carries every p-characteristic twist on **one diagonal generator of the cyclic layer**, whose image in each class is that class's full twist; distinct p-characteristic classes therefore need no coprimality between their twist orders at all. What the cyclic layer requires is that the generator's total order be coprime to the foreign translation orders {r_b} and to the block-rotation orders {F_mid}. So the p = 2 versus odd-p asymmetry that this section used to turn on does not exist, and the n = 551 witness below works for a more general reason than the coprimality of 255 and 127.
 
