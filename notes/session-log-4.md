@@ -1183,6 +1183,40 @@ Also: §5.4's unconstrained two-part ceiling now points forward to §5.7 as its 
 
 *Worth noting the sequence:* the previous batch's edit was a correctness fix that introduced a formatting break, and the formatting break was invisible to every check that existed. Both halves of that are typical — edits that add columns are exactly the edits that forget separators, and structural damage is what a content-oriented checker misses.
 
+## Fiftieth batch: §6 on escapes, and the last of the "balance point disappears" residue
+
+**The stale clause.** §5.5 still read "what it does *not* consume is the balance-point analysis of `aod` §3.2–3.3: no ceilings by residue class, no cap_F, no mod-24 classification". Every clause of that is now false — §5.7 *is* a ceiling table by residue class, §5.6.3 *is* a mod-24 classification, and the balance points are literally k = 2's. Rewritten: what k = 3 does not consume is the **term-type comparison**, and "what looked at first like the disappearance of the whole optimisation is the disappearance of one of its two ingredients." Same correction applied to §4.4's summary sentence.
+
+**§1 and §5's blurb now say so up front**, which is where a reader would otherwise form the wrong expectation. §1 gains: replacing the scoring function changes which term binds, and one might expect the balance-point analysis to go with it — it does not, since the allocation depends only on the *ratio* of efficiencies. So "the whole apparatus up to **and including the optimisation** is k-agnostic", and what is k-specific is the map from a part's arithmetic to its efficiency, not what is done with the efficiencies.
+
+**New §6, paralleling `aod` §4.** Three escapes, with §5.8's worked example moved in as §6.2 and the sandwich discussion renumbered to §5.8:
+
+- **6.1 the Galois escape** — hold the partition fixed, turn on Γ(d, a). Available only at 2^a with a a prime power ≥ 5, and it fixes the top prime, so it pays off only when the foreign prime satisfies **q² | r − 1** rather than merely q | r − 1. **No k = 2 counterpart**, since the Galois part is inert there.
+- **6.2** the same at n = 133.
+- **6.3 the full-density blocks** c ∈ {5, 8, 32}. Worth stating as an escape because of the contrast: **a phenomenon that is generic at k = 2 — δ = 1 at every prime power — becomes a three-element list at k = 3.** That is the sharpest single illustration of the difference between the two.
+- **6.4 the Fermat escape**, unchanged in mechanism but worth *one factor of two more* at k = 3 by §5.6.4, with the free-S7 class narrowing from c ≡ 3 (mod 4) to c ≡ 11 (mod 12).
+- **6.5** why none of them moves the asymptotics.
+
+Counts are recorded as order-of-magnitude (O(n/log n) for 6.1 and 6.4, finite for 6.3) and the status table says so — unlike `aod` §4.3, these have not been converted from representation counts to counts of n.
+
+## Fifty-first batch: consistency sweep of §§7–10
+
+Ten edits, all of them removing statements the later sections had overtaken. No expansion.
+
+**§7.** The constant table now notes that §6's escapes exceed every row where they apply — which is what makes it a statement about the balanced family rather than about n, the same caveat `aod` §3.3.5 carries. Minor wording on the allocation sentence.
+
+**§8.** Four rows were stale.
+- **Part A** said "the min is still over term types"; by §4.1 only the 3+0+0 terms ever bind, so the min is over those alone.
+- **`aod` §3** said "does not transfer". Half of it does: the term-type comparison and the δ constants do not, but the ceilings by residue class, the mod-24 classification and the balance points all do, recomputed as §§5.6–5.7 with β₃ replacing δ.
+- **`aod` §3.5–3.6** still carried "what drops away is the balance-point analysis" — the last surviving copy of that error. Now reads "transfers intact. Nothing here needs re-deriving."
+- **A row for `aod` §4 was missing entirely** now that §6 exists: transfers with one addition, the Fermat escape surviving with a larger prize, the full-density blocks shrinking from an infinite family to three, and the Galois escape new.
+
+**§9.** Item 1 conflated two claims. The *constants* are contingent on solvable 2-transitivity; the *optimisation* is not, and survives verbatim with balance points included. Reworded to "it is the block, not the optimisation, that k = 3 takes away", which is both true and the sharper statement. Item 4's closing clause "what k = 3 removes is the balance-point optimisation" corrected to "the term-type comparison". Header said "three things" over four items.
+
+**§10.** Item 2 asked for something already done — §2.2.2's criterion was proved necessary as well as sufficient — so it is trimmed to the stabiliser step, with the two genuinely untested clauses named (gain factor at a = 25, m < a at a = 10, both out of computational reach). Item 1 gains the k = 3 enumerator as the other half of completeness, since its absence is exactly why §6.2's "optimal" is qualified. Two items added: finishing rows 7, 15, 23 of the ceiling table, and converting §6's escape counts from representation counts to counts of n.
+
+All passes clean afterwards, including the new table pass at 89 tables.
+
 ---
 
 ## Items inherited as closed from earlier passes

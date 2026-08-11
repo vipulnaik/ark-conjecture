@@ -17,11 +17,13 @@
 | §5 the additive engine | the allocation formula is **derived**; the ceiling is a bound, and the table is a search |
 | §5.6 the mod-12/24 law | **derived**, and verified at every odd prime power c ≤ 83 |
 | §5.7 the ceiling table | **derived** from §5.2 with η imported from `aod`; three rows provisional |
-| §5.8 the n = 133 example | measured; the comparison is a **search over a hand-specified family**, not an enumeration |
-| §5.9 the k = 3 sandwich | a reading of what would be required; no k = 3 certificate exists |
-| §6 what it buys | the Ω(n²) threshold follows from §2.1; **the constant and the arithmetic requirement are open** |
-| §7 adapting the proofs | a reading, not a rewrite |
-| §8 what it says about k = 2 | commentary |
+| §6.2 the n = 133 example | measured; the comparison is a **search over a hand-specified family**, not an enumeration |
+| §5.8 the k = 3 sandwich | a reading of what would be required; no k = 3 certificate exists |
+| §6 the escapes | the mechanisms are derived; the **counts are order-of-magnitude**, not proved |
+| §7 what it buys | the Ω(n²) threshold follows from §2.1; **the constant and the arithmetic requirement are open** |
+| §8 adapting the proofs | a reading, not a rewrite |
+| §9 what it says about k = 2 | commentary |
+| §10 open items | a to-do list, not results |
 
 Treat this as a design document. Where a claim is measured rather than proved, it is measured over n ≤ 52 and small blocks, which at k = 3 is a very short range.
 
@@ -35,7 +37,9 @@ Treat this as a design document. Where a claim is measured rather than proved, i
 
 **The sandwich.** B_refined ≤ μ₃ ≤ B_safe has the same shape, with the same reasons, once the scoring function is replaced.
 
-**So the whole apparatus up to the scoring function is k-agnostic.** That is worth knowing in itself: it locates everything k-specific in one place.
+**And the optimisation transfers too, which is less obvious.** Replacing the scoring function changes which term binds, and one might expect the balance-point analysis of `aod` §3.3 to go with it. It does not: the allocation of n among the parts is the same quadratic optimisation, with the same closed form and — in the generic case — the *same balance points row for row* (§5.2, §5.7). What is k-specific is the map from a part's arithmetic to its efficiency, not what is then done with the efficiencies.
+
+**So the whole apparatus up to and including the optimisation is k-agnostic.** That is worth knowing in itself: it locates everything k-specific in one place, the orbit function.
 
 ## 2. The orbit law at k = 3
 
@@ -226,7 +230,7 @@ The mod-24 ceilings, the cap_F(η) optimisation and the balance points are a **k
 
 ## 4. The configuration census at k = 3
 
-*The same shapes as `enumeration-proof.md`'s census, keyed by the same S-numbers, asked at k = 3. **Comprehensiveness is not claimed** — this is the k = 2 list re-analysed, not a fresh enumeration, and §9 records what a completeness argument would have to add. S-numbers are append-only, as in the k = 2 documents.*
+*The same shapes as `enumeration-proof.md`'s census, keyed by the same S-numbers, asked at k = 3. **Comprehensiveness is not claimed** — this is the k = 2 list re-analysed, not a fresh enumeration, and §10 records what a completeness argument would have to add. S-numbers are append-only, as in the k = 2 documents.*
 
 ### 4.1 The structural simplification: only intra terms bind
 
@@ -296,9 +300,9 @@ The third argument of orb₃ is not decoration in the census: it changes one row
 >
 > All admissible, but all weak: **the twist is stuck at t = 5 whatever r is**, so the foreign block contributes only 5r/κ₃ — **linear in n**. So a configuration that spends its top prime on the Galois gain typically gets a superb matching block and a foreign block that immediately becomes the binding term.
 >
-> **But "typically" is the right word, and the exception is instructive — see §5.8.** The twist is stuck at t = 5 only because 25 ∤ r − 1 for those r. Choosing the foreign block from the primes with **r ≡ 1 (mod q²)** instead of merely r ≡ 1 (mod q) lifts the twist to q² for no extra size, and the trade can then come out positive. At n = 133 = 32 + 101 it does: 101 − 1 = 4·25, so t = 25 and the foreign block scores 2525 rather than 505, which is enough to make the Galois part worth a factor of 2.5 overall. **The coupling is a strong presumption against combining the two, not a prohibition** — it costs a specific congruence condition on r, and the condition is satisfiable.
+> **But "typically" is the right word, and the exception is instructive — see §6.2.** The twist is stuck at t = 5 only because 25 ∤ r − 1 for those r. Choosing the foreign block from the primes with **r ≡ 1 (mod q²)** instead of merely r ≡ 1 (mod q) lifts the twist to q² for no extra size, and the trade can then come out positive. At n = 133 = 32 + 101 it does: 101 − 1 = 4·25, so t = 25 and the foreign block scores 2525 rather than 505, which is enough to make the Galois part worth a factor of 2.5 overall. **The coupling is a strong presumption against combining the two, not a prohibition** — it costs a specific congruence condition on r, and the condition is satisfiable.
 
-**Consequence for the ranking.** The Galois part is worth using **usually only in a pure-matching configuration** — S1, or S2 with F a power of the same q. The moment a foreign block is present, fixing q to a prime dividing a is normally a bad trade: q must be small enough to divide a, hence far too small to give the foreign block a twist of order r **unless r is chosen from the thinner set with q^e | r − 1 for some e ≥ 2** (§5.8). This is the first place in the census where a choice that improves one part actively damages another, and it is why S1's δ₃ = 1 at n = 32 does not propagate to *most* composite n — but at the n where the congruence can be met, it partially does.
+**Consequence for the ranking.** The Galois part is worth using **usually only in a pure-matching configuration** — S1, or S2 with F a power of the same q. The moment a foreign block is present, fixing q to a prime dividing a is normally a bad trade: q must be small enough to divide a, hence far too small to give the foreign block a twist of order r **unless r is chosen from the thinner set with q^e | r − 1 for some e ≥ 2** (§6.2). This is the first place in the census where a choice that improves one part actively damages another, and it is why S1's δ₃ = 1 at n = 32 does not propagate to *most* composite n — but at the n where the congruence can be met, it partially does.
 
 ### 4.4 The shifted-prime condition survives, and it is what separates the shapes
 
@@ -323,13 +327,13 @@ A factor of three, entirely from the arithmetic of 18 = 2·3².
 - **S2**, needing n = F·c with c a prime power and F = F_mid·F_top;
 - more generally, configurations whose parts are *all* p-characteristic for one p, i.e. n a sum of powers of a single prime with admissible multiplicities.
 
-Those are density-zero sets. **Every other n needs at least one foreign block, hence a shifted prime**, so the supply question at k = 3 is the k = 2 question over again — Bateman–Horn for the matching parts, shifted primes for the foreign one — with only the balance-point analysis removed.
+Those are density-zero sets. **Every other n needs at least one foreign block, hence a shifted prime**, so the supply question at k = 3 is the k = 2 question over again — Bateman–Horn for the matching parts, shifted primes for the foreign one — with only the intra-versus-cross comparison removed — the balance-point analysis itself survives unchanged (§5.7).
 
-> **Consequence for §6's constants.** The S3 row's n²/(4κ) tacitly assumed t of order r, i.e. a safe-prime-like foreign block. Without that assumption the row is r·t/κ, which is n^{1+θ} at best and can be as small as Θ(n) when the only available q-power divisor of r − 1 is 2. The constants below are therefore **conditional on the same shifted-prime input as the k = 2 ceilings**, and only S1 and S2 are unconditional.
+> **Consequence for §7's constants.** The S3 row's n²/(4κ) tacitly assumed t of order r, i.e. a safe-prime-like foreign block. Without that assumption the row is r·t/κ, which is n^{1+θ} at best and can be as small as Θ(n) when the only available q-power divisor of r − 1 is 2. The constants below are therefore **conditional on the same shifted-prime input as the k = 2 ceilings**, and only S1 and S2 are unconditional.
 
 ## 5. The additive engine at k = 3
 
-*The counterpart of `arithmetic-of-density.md` §3. There, the engine has to balance three competing term types and the analysis is mostly about which one binds in which residue class. Here only intra terms bind (§4.1), so the engine is simpler in structure and the whole difficulty relocates into a single per-part quantity. Written fresh rather than transported, with the worked example and the sandwich discussion collected at the end as §§5.8–5.9.*
+*The counterpart of `arithmetic-of-density.md` §3. There the engine does two things at once: it decides which of three competing term types binds, and it allocates n among the parts. **At k = 3 only the first disappears** — intra terms always bind (§4.1) — while the allocation survives as the same quadratic optimisation, with the same closed form and, generically, the same balance points row for row (§5.7). So the difficulty relocates into a single per-part quantity rather than vanishing. Written fresh rather than transported; the sandwich discussion is at the end as §5.8, and the escapes have their own section (§6).*
 
 ### 5.1 The objective
 
@@ -389,7 +393,7 @@ which at κ_c = κ_r = 1 and η₃ = 1 is **n²/4**. That is the k = 3 ceiling f
 
 against a ceiling of n²/4 = 225, 2025, 4422, 15625. So the engine runs at roughly a quarter of ceiling, and the shortfall is arithmetic: either η₃ < 1 or the sizes cannot be put where the allocation wants them.
 
-> **The n = 133 row is computed without the Galois part and so understates it.** With m = 5 the matching block rises from 992 to 4960 and the foreign block binds at 2525 — see §5.8 below, which is this section's allocation problem worked at a single n.
+> **The n = 133 row is computed without the Galois part and so understates it.** With m = 5 the matching block rises from 992 to 4960 and the foreign block binds at 2525 — see §6.2, which is this section's allocation problem worked at a single n.
 
 ### 5.5 What the engine needs from number theory
 
@@ -398,9 +402,9 @@ Reading §5.3 off, the engine consumes exactly two arithmetic inputs:
 1. **A matching block of prescribed size**, i.e. n's decomposition into prime powers with an admissible coprimality budget. This is `aod` §3.5's Bateman–Horn material, unchanged.
 2. **A foreign prime with η₃ bounded below**, i.e. r − 1 carrying a q-power divisor of order r. This is `aod` §3.6's shifted-prime ladder, unchanged, and it is the same **θ = 1 endpoint** — η₃ bounded below is exactly the bounded-cofactor regime.
 
-**What it does *not* consume** is the balance-point analysis of `aod` §3.2–3.3: no ceilings by residue class, no cap_F, no mod-24 classification. Those exist at k = 2 to decide which of three term types binds, and at k = 3 the answer is always "the intra term of the weakest part".
+**What it does *not* consume** is the *term-type* comparison of `aod` §3.2 — which of intra, within-class cross and between-orbit binds — since at k = 3 the answer is always "the intra term of the weakest part". **Everything else survives**: there are still ceilings by residue class (§5.7), still a mod-24 classification (§5.6.3), and the balance points are literally k = 2's. What looked at first like the disappearance of the whole optimisation is the disappearance of one of its two ingredients.
 
-> So the k = 3 engine is **the k = 2 engine with the optimisation removed and the supply questions intact** — which is the precise form of the claim that k = 3 is not arithmetically easier (§4.4). The simplification is real but it is in the combinatorics, not the number theory.
+> So the k = 3 engine is **the k = 2 engine with the *term-type* comparison removed and everything else intact** — the allocation, its balance points and the supply questions all survive — which is the precise form of the claim that k = 3 is not arithmetically easier (§4.4). The simplification is real but it is in the combinatorics, not the number theory.
 
 ### 5.6 The mod-12 and mod-24 structure, and how S4 / S5 / S7 change
 
@@ -498,9 +502,39 @@ the k = 3 analogue of δ. (At k = 2, δ = m\*/C(n,2) ≈ 2m\*/n², so β₂ = δ
 
 > **Read these as ceilings of the family, exactly as at k = 2.** They say what the balanced shape guarantees in the class, not what n can achieve: a single Galois block reaches β₃ ≈ 4.84 (§5.3) and n = 32 reaches β₃ = 4.84 outright, far above every row. The rows are floors for m\*₃, not bounds on it.
 
-### 5.8 A worked example: n = 133, and how the foreign twist is chosen
+### 5.8 What the sandwich would look like at k = 3
 
-*A worked instance of §5.2's allocation problem, in the two-part case. The foreign block is usually the binding term (§4.4) and the Galois part fixes the top prime (§4.3); this example shows the two constraints interacting, and the design move that resolves them.*
+*The k = 2 framework runs on B_refined ≤ μ ≤ B_safe with the gap coming from exactly one place. The gap is different at k = 3, and the k = 2 SAFE cap does not transfer. Recorded because a k = 3 implementation would otherwise have to rediscover all three points.*
+
+**First, n = 133 is fallback-free.** At k = 2, "fallback" means Lemma C strictly reduces a matching block's twist, i.e. the twist shares a prime with a foreign block. At n = 133 the matching twist is 31 and the foreign prime is 101, and gcd(31, 101) = 1, so **Lemma C never bites** — refined and safe scorings agree there. The configuration is also consistent in the new sense of §4.3: the Galois part needs q = 5 and the foreign twist needs q = 5, and both are met by the *same* q. Nothing is credited that the group cannot deliver.
+
+**But k = 3 adds a second fallback axis, with no k = 2 counterpart.** The Galois gain is a property of a single block — it depends on that block's a — while **the top prime is global**. A configuration with matching blocks 32 (a = 5) and 128 (a = 7) would be credited orb₃(32, 31, 5) and orb₃(128, 127, 7) by any per-block scoring, but q would have to be both 5 and 7. That credit is unachievable, and such configurations are fallback configurations in the k = 3 sense. A certificate would need conditions ruling them out **alongside** the Lemma C ones — the two axes are independent, since one is about twists sharing primes with foreign blocks and the other about Galois parts disagreeing on q.
+
+**Second, and more seriously: the k = 2 SAFE cap does not transfer.** SAFE works at k = 2 because **orb(c, c−1) = C(c,2) exactly** — at full twist the crude bound is attained, so F·C(c,2) is tight except where Lemma C bites, which is what keeps the sandwich narrow. At k = 3 that fails: C(c,3) ≈ c³/6 against an achievable c·d·m/κ₃ ≤ c(c−1)a/κ₃ ≈ c², so a C(c,3)-style cap **over-credits by a factor of order c/(6a)** and the sandwich would be a factor of n wide — useless.
+
+> **The sharper statement is §3.1 again, in a third role.** C(c,3) is attained exactly at c ∈ {5, 8, 32}. So the three solvable 3-homogeneous blocks are precisely the blocks where the naive SAFE cap is tight, and nowhere else. The classification that limits full density is the same one that limits how crude a safe scoring can afford to be.
+
+**So SAFE and REFINED largely collapse into each other at k = 3.** A usable safe scoring would have to be F·min(c·d·m/κ₃, C(c,3)) — essentially the true formula rather than a crude over-credit — and the residual gap is not Lemma C's twist-stripping but the global-q coupling above.
+
+> **A soundness trap worth naming before anyone writes the code.** A k = 3 SAFE that simply *ignores* the Galois part — by analogy with k = 2, where it is provably inert (J0a) — would credit orb₃(c, d, 1). That is **smaller** than the achievable orb₃(c, d, a) by a factor of q on the blocks of §2.2.2. It is not a loose upper bound; it is not an upper bound at all. Any k = 3 scoring must carry m, which is why §2.3's notation takes three arguments.
+
+## 6. The escapes
+
+*The counterpart of `arithmetic-of-density.md` §4. An **escape** is a configuration that exists at only a thin set of n but, where it exists, beats what the balanced family of §5 guarantees. At k = 2 the escapes are the Fermat and safe-prime routes, reaching O(n/log n) values. At k = 3 there are three, and one of them has no k = 2 counterpart at all.*
+
+### 6.1 The Galois escape
+
+**The move.** Hold the partition fixed and turn on the Galois part: replace Γ(d, 1) by Γ(d, a) on a matching block. By §2.2.2 this multiplies that block's value by q = the least prime divisor of a, and by §5.2 it multiplies the block's efficiency by the same factor — so the block can be made *smaller* and the rest of n reallocated.
+
+**Why it is an escape rather than a routine improvement.** It is available only when p = 2, gcd(d, 6) = 1 and a = q^e with q ≥ 5 (§2.2.2's Oliver-constrained corollary), so the matching block must be 2^a with a a prime power ≥ 5 — the blocks 32, 128, 2048, 8192, … a set of density zero and, being Mersenne-adjacent in the twist condition, thin even among those. And it comes with the coupling of §4.3: taking it fixes the top prime at q, and every foreign block in the configuration then needs q | r − 1.
+
+**So it is a trade, and the congruence decides it.** With only q | r − 1 the foreign twist is generically t = q and the block contributes q·r, linear in n — the Galois gain on one part is paid for by crippling the other. With **q² | r − 1** the twist is q² and the trade comes out positive. §6.2 works the smallest case.
+
+**Count.** The matching side needs a ∈ {5, 7, 11, 13, 25, …}, so O(log n) block sizes below n; the foreign side needs a prime r ≡ 1 (mod q²) in the right window, which is a positive proportion of primes by Dirichlet. The binding constraint is the first, so this escape reaches **O(n/log n) values of n** — the same order as the k = 2 escapes, for a different reason.
+
+### 6.2 The Galois escape, worked: n = 133
+
+*The escape of §6.1 at a single n, and the cleanest instance of the pattern: the partition is held fixed and the Galois twist is added, which is only worth doing because a congruence on the foreign prime happens to be satisfiable.*
 
 **The configuration.** n = 133 = 32 + 101, with the chain
 
@@ -545,23 +579,26 @@ The near-balanced split 43 + 43 + 47 is second and loses by more than half. Wort
 
 > **Caveat, and it is a real difference from k = 2.** At k = 2 this kind of statement is backed by `mu_enumerate_v2.py`, which enumerates the whole shape space, plus `brute.py` as an independent check. **Here there is no such enumerator.** The comparison above is a search over a hand-specified family — at most two matching and at most two foreign parts, one top prime — and it relies on §4.1's claim that cross terms never bind, which is itself measured rather than proved. So "optimal" means *best in the family searched*, and the k = 3 census has no counterpart to the k = 2 completeness machinery. Building one is §9's first item.
 
-### 5.9 What the sandwich would look like at k = 3
 
-*The k = 2 framework runs on B_refined ≤ μ ≤ B_safe with the gap coming from exactly one place. The gap is different at k = 3, and the k = 2 SAFE cap does not transfer. Recorded because a k = 3 implementation would otherwise have to rediscover all three points.*
+### 6.3 The full-density blocks
 
-**First, n = 133 is fallback-free.** At k = 2, "fallback" means Lemma C strictly reduces a matching block's twist, i.e. the twist shares a prime with a foreign block. At n = 133 the matching twist is 31 and the foreign prime is 101, and gcd(31, 101) = 1, so **Lemma C never bites** — refined and safe scorings agree there. The configuration is also consistent in the new sense of §4.3: the Galois part needs q = 5 and the foreign twist needs q = 5, and both are met by the *same* q. Nothing is credited that the group cannot deliver.
+By §3.1 the blocks c ∈ {5, 8, 32} are 3-homogeneous, so a single such block has orb₃ = C(c,3) and efficiency far above anything else available: at c = 32 with the Galois part, e ≈ 4.84 against a typical matching block's 1/2. **n = 32 attains β₃ = 4.84 outright**, against a class ceiling of 0.125.
 
-**But k = 3 adds a second fallback axis, with no k = 2 counterpart.** The Galois gain is a property of a single block — it depends on that block's a — while **the top prime is global**. A configuration with matching blocks 32 (a = 5) and 128 (a = 7) would be credited orb₃(32, 31, 5) and orb₃(128, 127, 7) by any per-block scoring, but q would have to be both 5 and 7. That credit is unachievable, and such configurations are fallback configurations in the k = 3 sense. A certificate would need conditions ruling them out **alongside** the Lemma C ones — the two axes are independent, since one is about twists sharing primes with foreign blocks and the other about Galois parts disagreeing on q.
+This is the k = 3 analogue of S1's δ = 1 at k = 2 — with the difference that at k = 2 it holds at *every* prime power and is therefore not an escape at all but the main term, while at k = 3 Kantor's classification makes it a list of three. **A phenomenon that is generic at k = 2 becomes an escape at k = 3**, which is the sharpest single illustration of what changes between the two.
 
-**Second, and more seriously: the k = 2 SAFE cap does not transfer.** SAFE works at k = 2 because **orb(c, c−1) = C(c,2) exactly** — at full twist the crude bound is attained, so F·C(c,2) is tight except where Lemma C bites, which is what keeps the sandwich narrow. At k = 3 that fails: C(c,3) ≈ c³/6 against an achievable c·d·m/κ₃ ≤ c(c−1)a/κ₃ ≈ c², so a C(c,3)-style cap **over-credits by a factor of order c/(6a)** and the sandwich would be a factor of n wide — useless.
+**Count: three values of n, plus whatever they contribute as blocks inside larger configurations.** As a whole-n shape it is finite; as a *block* it feeds §6.1, since c = 32 is both 3-homogeneous and the smallest Galois block.
 
-> **The sharper statement is §3.1 again, in a third role.** C(c,3) is attained exactly at c ∈ {5, 8, 32}. So the three solvable 3-homogeneous blocks are precisely the blocks where the naive SAFE cap is tight, and nowhere else. The classification that limits full density is the same one that limits how crude a safe scoring can afford to be.
+### 6.4 The Fermat escape (S5)
 
-**So SAFE and REFINED largely collapse into each other at k = 3.** A usable safe scoring would have to be F·min(c·d·m/κ₃, C(c,3)) — essentially the true formula rather than a crude over-credit — and the residual gap is not Lemma C's twist-stripping but the global-q coupling above.
+Unchanged in mechanism from `aod` §4.3: putting the block swap in the top layer forces q = 2, so the matching twist survives intact but the foreign twist is the 2-part of r − 1, and η₃ is large only when r = 2^a·u + 1 with u small. That is O(log n) candidates per n, hence O(n/log n) values reached.
 
-> **A soundness trap worth naming before anyone writes the code.** A k = 3 SAFE that simply *ignores* the Galois part — by analogy with k = 2, where it is provably inert (J0a) — would credit orb₃(c, d, 1). That is **smaller** than the achievable orb₃(c, d, a) by a factor of q on the blocks of §2.2.2. It is not a loose upper bound; it is not an upper bound at all. Any k = 3 scoring must carry m, which is why §2.3's notation takes three arguments.
+**What changes at k = 3 is the size of the prize**, by §5.6.4: the matching-side ratio S5 : S7 is 2^{v−1} at k = 2 but 2^v when 3 | c − 1, so the escape is worth one factor of two more on those blocks — and correspondingly the class where S7 wins for free narrows from c ≡ 3 (mod 4) to c ≡ 11 (mod 12).
 
-## 6. What the k = 3 statement buys
+### 6.5 What the escapes do not change
+
+All three are thin — O(n/log n) or finite — so none of them moves the asymptotic picture of §3.2: β₃ is bounded by the class ceilings of §5.7 for almost all n, and δ₃ = β₃·6/n → 0 regardless. Their role is the same as at k = 2: they are why the ceiling table is a statement about *what the balanced family guarantees* rather than about what n can achieve, and they are where the largest computed values live.
+
+## 7. What the k = 3 statement buys
 
 The dimension-threshold reading survives even though the density does not:
 
@@ -577,41 +614,44 @@ That rules out every sparse property — the same service BBKN's Ω(n log n) per
 > | n = 2c, c a prime power | S2 at F = 2 | **n²/(2κ₃)** | 1/(2κ₃) | nothing |
 > | n = c + r\*, r prime | S3 | **r·t/κ₃**, i.e. n^{1+θ} at best | per §5.7 | **the shifted-prime condition** (§4.4) |
 >
-> with κ₃ ∈ {1, 2, 3, 6} as in §2.3, and m ∈ {1, a} chosen per §4.3. **Only the first two rows are unconditional**, and both need n of a special multiplicative form, so they cover a density-zero set. For general n the bound is n^{1+θ}, and reaching Ω(n²) needs θ = 1 — the same endpoint as the k = 2 ceilings.
+> with κ₃ ∈ {1, 2, 3, 6} as in §2.3, and m ∈ {1, a} chosen per §4.3. **Only the first two rows are unconditional**, and both need n of a special multiplicative form, so they cover a density-zero set. For general n the bound is n^{1+θ}, and reaching Ω(n²) needs θ = 1 — the same endpoint as the k = 2 ceilings. The escapes of §6 exceed every row here where they apply, and are why the ceiling table is a statement about the balanced family rather than about n.
 >
-> **The arithmetic requirement is the k = 2 requirement, minus the term-type comparison.** What k = 3 removes is the choice of *which kind of term* binds: only intra terms do. It does **not** remove the allocation between parts — which by §5.7 has the same balance point as k = 2 — nor the shifted-prime condition, which comes from Lemma B′ rather than from the pairing (§4.4). So general n still needs a foreign block with a large q-power divisor of r − 1, and `aod` §3.5–3.6's supply analysis transfers essentially intact.
+> **The arithmetic requirement is the k = 2 requirement, minus the term-type comparison.** What k = 3 removes is the choice of *which kind of term* binds: only intra terms do. It does **not** remove the allocation between parts, which by §5.7 has the same balance points as k = 2, nor the shifted-prime condition, which comes from Lemma B′ rather than from the pairing (§4.4). So general n still needs a foreign block with a large q-power divisor of r − 1, and `aod` §§3.5–3.6's supply analysis transfers essentially intact.
 
-## 7. Adapting the proofs, part by part
+## 8. Adapting the proofs, part by part
 
 | part of `enumeration-proof.md` | at k = 3 |
 |---|---|
 | **Part 0** (shape space) | **unchanged**; the picture proof's step 1 and step 2 are about chunks and blocks, not pairs |
-| **Part A** (orbits and crosses) | **restructured**: a 3-set meets the chunks in a partition of 3, so there are *three* term types (3+0+0, 2+1+0, 1+1+1) rather than two. The min is still over term types |
+| **Part A** (orbits and crosses) | **restructured**: a 3-set meets the chunks in a partition of 3, so there are *three* term types (3+0+0, 2+1+0, 1+1+1) rather than two — but by §4.1 only the first ever binds, so the min is over the 3+0+0 terms alone |
 | **Part B, B′** (per-orbit classification) | **unchanged** — statements about blocks |
 | **Part C** (valency recursion) | **needs redoing**: the counting bound B₀ is pair-specific; the analogue would bound μ₃ by a partition-only quantity, and the two-part reduction would need re-verifying |
 | **Part D, D2** | **unchanged as stated**; D1's margin widens (F < F³ rather than F < F²) and D2 inherits the k = 2 gap of `pending-checks.md` A18 |
 | **Part E** (value formula) | **replace orb by orb₃(c, d, m)** and add the 1+1+1 cross term Fᵢcᵢ·Fⱼcⱼ·F_lc_l. The within-class cross term splits into sub-cases by how the 3-set distributes across the F blocks; these have not been worked out, and by §4.1 none of them binds |
-| **Part E′, E″** (collapse) | **structure survives, but the fallback question gains a second axis** — Lemma C's strip, *and* the global-q coupling between per-block Galois gains (§5.9). The k = 2 SAFE cap does not transfer |
+| **Part E′, E″** (collapse) | **structure survives, but the fallback question gains a second axis** — Lemma C's strip, *and* the global-q coupling between per-block Galois gains (§5.8). The k = 2 SAFE cap does not transfer |
 | **Part F** (search is bounded) | **easier**: orb₃ ≤ c(c−1)/κ₃ caps each part harder than C(c,2) does, so the feasibility criterion tightens; the constant has not been re-derived |
 | **Part G** (nested towers) | **unchanged** |
-| **`aod` §3** (ceilings) | **does not transfer** — see §3 above |
-| **`aod` §3.5–3.6** (supply) | **transfers essentially intact**. Lemma B′ is k-independent, so a foreign block's twist is still a q-power divisor of r − 1 and the shifted-prime ladder still governs it (§4.4). What drops away is the *balance-point* analysis, since only intra terms bind. The θ = 1 endpoint is still what Ω(n²) needs at general n |
+| **`aod` §3** (ceilings) | **partly transfers.** The *term-type* comparison does not (§4.1) and neither do the δ constants (§3). The ceilings by residue class, the mod-24 classification and the balance points all do — recomputed as §§5.6–5.7, with β₃ = m\*₃/n² replacing δ |
+| **`aod` §3.5–3.6** (supply) | **transfers intact.** Lemma B′ is k-independent, so a foreign block's twist is still a q-power divisor of r − 1 and the shifted-prime ladder still governs it (§4.4). The θ = 1 endpoint is still what Ω(n²) needs at general n. Nothing here needs re-deriving |
+| **`aod` §4** (escapes) | **transfers with one addition** — §6. The Fermat escape survives with a larger prize (§6.4), the full-density blocks shrink from an infinite family to three (§6.3), and the **Galois escape is new** (§6.1) |
 | **`aod` §6** (finite shape space) | **transfers with different constants**; the feasibility criterion needs re-deriving from orb₃ |
 
-## 8. What this says about k = 2, read backwards
+## 9. What this says about k = 2, read backwards
 
-The exercise was partly a fresh-eyes pass, and three things about the k = 2 programme look different from here.
+The exercise was partly a fresh-eyes pass, and four things about the k = 2 programme look different from here.
 
-1. **The constants are contingent, not structural.** δ = 1/4, the mod-24 ceilings, the balance points — all of it exists because solvable 2-transitive groups happen to exist at every prime power. That is a fact about the classification of solvable 2-transitive groups, not about evasiveness. `aod` §3 currently reads as though the optimisation is the heart of the method; it is more accurate to say the optimisation is what you get to do *once* 2-transitivity has handed you a full-density block.
+1. **The *constants* are contingent; the *optimisation* is not.** δ = 1/4 and the values in the mod-24 table exist because solvable 2-transitive groups happen to exist at every prime power — a fact about that classification, not about evasiveness, and it fails at k = 3 (§3.1). But the allocation those constants come out of survives verbatim, balance points included (§5.7). `aod` §3 currently reads as though the optimisation is the heart of the method; it is more accurate to say the optimisation is what you get to do *once* 2-transitivity has handed you a full-density block — and that it is the block, not the optimisation, that k = 3 takes away.
 2. **Blocks of size 3^a are a k = 2 luxury.** They are penalised at k = 3 by a mechanism the k = 2 documents already contain in another guise — the additive subgroup structure that Lemma C's a > 1 case worries about, reappearing as §2.2.1's affine lines. That the same structure shows up as an *obstruction* one dimension up is a hint that it is load-bearing, and worth watching at k = 2 too.
 3. **The Galois part is invisible at k = 2, and not for a deep reason.** J0a — whether the twist may act semilinearly — is an unresolved assumption in the k = 2 documents bearing on attainment. It is unresolved partly because it never *matters* there: §2.2.2 shows the minimum on 2-sets is unchanged by the Galois part at every block, because the fixed field 𝔽_p always contains a 2-subset. At k = 3 that fails exactly in characteristic 2, and the question acquires teeth. So J0a's dormancy at k = 2 is an accident of p ≥ k = 2, not evidence that the assumption is harmless in general — and if the k = 2 shape space were ever indexed by ΓL rather than GL twists, nothing would change, which is itself worth knowing.
 
-4. **The arithmetic difficulty is not the price of chasing constant density.** It is tempting to think it is — drop the constant, and the number theory should get easier. It does not: §4.4 shows the shifted-prime condition survives at k = 3 in full force, because it comes from Lemma B′ rather than from the pairing. What k = 3 removes is the balance-point optimisation, not the supply question.
+4. **The arithmetic difficulty is not the price of chasing constant density.** It is tempting to think it is — drop the constant, and the number theory should get easier. It does not: §4.4 shows the shifted-prime condition survives at k = 3 in full force, because it comes from Lemma B′ rather than from the pairing. What k = 3 removes is the term-type comparison, not the supply question and not the allocation.
 
-## 9. Open, if anyone takes this further
+## 10. Open, if anyone takes this further
 
-1. **Establish completeness of the census.** §4 re-analyses the k = 2 shape list; it does not show that list is exhaustive at k = 3. What a completeness argument would need: that Parts B, B′, D1, D2 still classify the admissible blocks (they are k-independent, so this should be routine), plus a k = 3 analogue of Part 0's step 3 — and, specifically, a bound ruling out configurations so unequal that a **cross** term binds after all, which §4.1's degree count makes unlikely but does not exclude at small n. Locating the crossover between the quadratic intra term and the cubic cross terms is the concrete first step.
-2. **Prove the orbit law's stabiliser step** properly rather than modulo the routine argument in §2.1, and settle whether the three sufficient conditions of §2.2.2 are also necessary — the c = 32 computation shows they are jointly sharp at the smallest case, not that no fourth mechanism exists.
+1. **Establish completeness of the census.** §4 re-analyses the k = 2 shape list; it does not show that list is exhaustive at k = 3. What a completeness argument would need: that Parts B, B′, D1, D2 still classify the admissible blocks (they are k-independent, so this should be routine), plus a k = 3 analogue of Part 0's step 3 — and, specifically, a bound ruling out configurations so unequal that a **cross** term binds after all, which §4.1's degree count makes unlikely but does not exclude at small n. Locating the crossover between the quadratic intra term and the cubic cross terms is the concrete first step. **Building a k = 3 enumerator** — the counterpart of `mu_enumerate_v2.py`, whose absence is why §6.2's "optimal" means only "best in the family searched" — is the other half of the same item.
+2. **Prove the orbit law's stabiliser step** properly rather than modulo the routine argument in §2.1. (§2.2.2's criterion *is* proved necessary as well as sufficient; what remains untested there are the two clauses out of computational reach — the gain factor being the least prime divisor of a, first distinguishable at a = 25, and m < a never gaining, first distinguishable at a = 10.)
 3. **Redo Part C** — the partition-only bound and its two-part reduction are the only genuinely pair-specific piece of the structural chain.
 4. **Decide whether the threshold statement is new.** Black's framework does not produce dimension thresholds, and no other k ≥ 3 work found so far does; but the k = 2 literature is deep enough that a threshold statement may exist in some form.
-5. **k ≥ 4.** The orbit law generalises (κ_k(d) = max{m ≤ k : m | d}), so the same analysis runs; the threshold degrades to Θ(n²) against C(n,k) throughout, and the shape ranking presumably inverts further.
+5. **Finish rows 7, 15 and 23 of the ceiling table** (§5.7). They are decided at k = 2 by a tie that §5.6.4 disturbs, and the entries there are lower bounds rather than ceilings. This is contained work: run §5.6.3's c mod 24 analysis against each rung.
+6. **Convert §6's escape counts** from representation counts to counts of n, as `aod` §4.3 does. They are currently order-of-magnitude.
+7. **k ≥ 4.** The orbit law generalises (κ_k(d) = max{m ≤ k : m | d}), so the same analysis runs; the threshold degrades to Θ(n²) against C(n,k) throughout, and the shape ranking presumably inverts further.
