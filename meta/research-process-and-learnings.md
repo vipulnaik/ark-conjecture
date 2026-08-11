@@ -290,7 +290,7 @@ A few points of comparison:
 ### Document state management
 
 I managed document state in git (in repositories synced to GitHub),
-initially the [working-drafts repo's ark-conjecture
+initially the [working-drafts repo's ark
 folder](https://github.com/vipulnaik/working-drafts/tree/master/ark)
 and later the [ark-conjecture
 repo](https://github.com/vipulnaik/ark-conjecture). All conversations
