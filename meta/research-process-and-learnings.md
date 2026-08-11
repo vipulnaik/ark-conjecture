@@ -351,6 +351,26 @@ research:
   for the ARK conjecture work is described further down in this
   section.
 
+  It's worth noting that this is nowhere near completely eliminating
+  the need for human collaborators; even with fresh sessions, biases
+  in the prompt framing can lead to blind spots that the LLM fails to
+  uncover. Human collaborators with the right domain perspective and
+  genuine fresh eyes can bring more critical judgment to the overall
+  framing and direction. This is true even if they themselves have to
+  use LLMs to help them refine their judgment, because the *prompts*
+  they use with the LLMs are coming from a different
+  perspective. Indeed, in the ARK conjecture case, several framing
+  errors were identified by Raghav in his own Claude session that
+  Vipul didn't get in his Claude sessions. It's unclear if Vipul's
+  Claude sessions would *eventually* have identified these, but the
+  fresh human perspective, at minimum, *sped up* the process.
+
+  Even so, it does create a multiplier effect on however many huamn
+  collaborators are available. So a sole author can get way more
+  perspectives that would normally need a collaborator or human
+  reviewer, and 2 authors together can also get way more perspectives
+  than what they can humanly articulate.
+
 * Since the LLM's writing, while cringe in many ways, is good enough
   to manage state during the initial exploratory phase, a lot of the
   writing workload is reduced, and writing can be deferred to the end
