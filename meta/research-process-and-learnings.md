@@ -488,6 +488,27 @@ going into too many problem-specific details:
   able to execute on most of the details, and Fable was able to prove
   or disprove the difficult lemmas.
 
+  * For instance, early on, I had the sense that the group theory
+    content (currently living in
+    [enumeration-proof.md](../notes/enumeration-proof.md)) should be
+    able to reduce the group theory to some kind of combinatorial
+    search of arithmetic configurations, and that the reduction should
+    be two-way, i.e., there should be a correspondence between
+    arithmetic configurations (partitions with divisibility
+    constraints) and the kinds of groups we were looking for. While
+    establishing all details required work, my intuition that this
+    should just be a matter of working through the cases was important
+    because the default LLM tendency was just to throw up its hands
+    and not push hard on this.
+
+  * I had a similar sense within the arithmetic part of the problem:
+    that it should be possible to translate the problem into a bunch
+    of cases based on the residue (congruence class) for a modulus and
+    work out all the cases, and when there were two different
+    optimization problems that had moduli of 8 and 12 respectively,
+    using a modulus of 24 would allow these to be combined into one
+    giant table.
+
 * I often had better presentational ideas (that were important not
   just presentationally but because the presentation of one step would
   be the informational input to the other), such as: this stuff would
