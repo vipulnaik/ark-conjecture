@@ -1,0 +1,3 @@
+# Research process
+
+The project started through a chat session between Vipul Naik and Claude Fable 5, where Vipul asked Claude to look at BBKN and come up with a good abstraction, then push the number theory as far as possible. After initially claiming the Chowla-based n^{3/2} as best, Fable eventually came up with a version of the construction we finally used, and brought Hardy-Littlewood/Bateman-Horn into play.
