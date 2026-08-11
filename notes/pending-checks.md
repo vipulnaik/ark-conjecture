@@ -17,8 +17,7 @@ Ranked, so the sections below have a stated basis. This is not the order the ite
 1. **The table rebuild.** v4 reaches n = 2000; everything measured across the three documents is keyed to it and moves as it extends. → **R0**, and **R1** after every batch.
 2. **Exhaustiveness of the GAP stages.** The subdirect-product hole is undischarged. It degrades *evidence* rather than creating an error — a missed group with larger m\* would be a counterexample rather than a silent corruption, and one with smaller m\* changes nothing — but it is the only non-circular check in the framework. **This is the one small-degree item the arithmetic programme depends on**, since Part I's two exhaustive comparisons rest on it. → `small-degree-verification.md` item 5
 3. **Part E's realisability construction.** Attainment's other leg, argued in general and spot-checked at eight configurations from n = 12 to 315. Unlike the certificate, it has no per-n verification. → **T2**
-4. *(retired)* **The k = 3 Galois admissibility predicate** is implemented in `k3_galois.py`, and the first n at which the superseded reading would have erred is 2³⁵ — so it never threatened anything computed. → **A19**
-5. **The eight necessary conditions of `fb_common.py`.** Both certificates rest on these and nothing else. What matters is their being *necessary* — that is what makes an empty candidate list a proof — and that is a different reading from checking each is true. The file now carries a per-condition necessity argument, so what is exposed is the quality of those eight arguments, and in particular condition (4)'s cyclic-layer stripping, which is the load-bearing one. The defect class to watch is an enumeration narrower than the shape space it must cover: it removes a real candidate silently and leaves the output looking clean. → **T3**
+4. **The eight necessary conditions of `fb_common.py`.** Both certificates rest on these and nothing else. What matters is their being *necessary* — that is what makes an empty candidate list a proof — and that is a different reading from checking each is true. The file carries a per-condition necessity argument, so what is exposed is the quality of those eight arguments, and in particular condition (4)'s cyclic-layer stripping, which is the load-bearing one. The defect class to watch is an enumeration narrower than the shape space it must cover: it removes a real candidate silently and leaves the output looking clean. → **T3**
 
 ---
 
@@ -59,7 +58,7 @@ python3 fallback_cert.py mu_table_safe_v4.csv --no-theorems
 #    mu_enumerate.py, which no longer exists, and the import fails on load.
 MU_ENUMERATE=$PWD/mu_enumerate_v2.py python3 wide_cert.py 100000
 
-# 4. the range-scoped half of Lemma D2's domination (A18)
+# 4. the range-scoped half of Lemma D2's domination
 python3 a18_verify.py mu_table_safe_v4.csv
 
 # 5. the documents against the table (five passes, incl. refs)
@@ -72,9 +71,9 @@ python3 check_doc_figures.py mu_table_safe_v4.csv *.md
 - **`fallback_cert.py`** — the headline is *0 candidates*. Then read three numbers, because **the low-density recount lives here**: the **density floor**, the **largest permitted s**, and the **theorem residue**. They move together, since s ≤ 1/√δ − 1 means a falling floor admits a larger s, and **s = 4 is the first branch with no theorem covering it**. At the current floor of 0.045742 (n = 1817) the bound is 3.68, so s ≤ 3 and E.1 / E.3(iii) / E.4 close everything but one class of 247 E.3(ii) branches. **The margin to δ = 1/25, where s = 4 reopens, is 0.0457 against 0.0400 — one extension could close it.** If `largest permitted s` ever prints 4, `enumeration-proof.md`'s Corollary after E.3 and Part I's tail figures both want re-deriving rather than recounting. The `--no-theorems` run should agree exactly, and the agreement is not vacuous here: 1,673 of 1,920 branches are dispatched in the normal run, so disabling them genuinely moves work into the search.
 - **`wide_cert.py`** — read the `settled by theorem:` line. At NMAX ≤ 10⁴ it prints NONE, because B_lo is small enough that the foreign-cap filter removes the s = 1 and s = 3 branches before the dispatch sees them, so a `--no-theorems` comparison there agrees *trivially* and is no evidence about E.1 / E.3 / E.4. `--menu` cross-checks pass 1 against the family menu; `--refresh` rebuilds the cached B_lo, which is rarely needed since the cache is keyed on everything that determines it.
 - **`k3_galois.py`** — the k = 3 Galois admissibility predicate, with a self-test covering the a = 35 witness, the superset relation against the naive reading, and the gain-versus-top-prime distinction. Import it; do not re-derive it.
-- **`khomog_verify.py`** — the k-homogeneity claims underlying the hypothesis table of `orbital-evasiveness-notes.md` §1: the c ≡ 3 (mod 4) half-twist case at k = 2, and the two full-density degrees 8 and 32 at k = 3 with the sharpness of the order bound that makes the list finite. Static; one run per environment.
-- **`a18_rq_verify.py`** — nine static checks on the r = q half of Lemma D2: the exhaustive (2,5) subgroup scan, the (3,7) rank-2 eigenvector group, and the tightness and twist-collapse controls. Nothing in it depends on the table, so it needs no rerun on extension; one run per environment.
-- **`a18_verify.py`** — three passes: the n = 85 witness's orbitals, its Oliver chain, and the fused-outside domination bound against every row. Only the third can move with the table, and it is the one that matters: it is a **range-scoped** claim, so a table extension can invalidate it silently. Exits nonzero on any failure.
+- **`khomog_verify.py`** — the k-homogeneity claims underlying the hypothesis table of `orbital-evasiveness-notes.md` §1: the c ≡ 3 (mod 4) half-twist case at k = 2, and the five full-density degrees {3, 4, 5, 8, 32} at k = 3, with the sharpness of the order bound that makes the list finite. Static; one run per environment.
+- **`a18_rq_verify.py`** — nine static checks on Lemma D2q, the r = q half: the exhaustive (2,5) subgroup scan, the (3,7) rank-2 eigenvector group, and the tightness and twist-collapse controls. Nothing in it depends on the table, so it needs no rerun on extension; one run per environment.
+- **`a18_verify.py`** — Lemma D2's witnesses and its range-scoped half: the n = 85 and n = 91 orbitals and chains, the 2-homogeneity of the n = 91 permuter, and the fused-outside domination bound against every row. Only the third can move with the table, and it is the one that matters: it is a **range-scoped** claim, so a table extension can invalidate it silently. Exits nonzero on any failure.
 - **`check_doc_figures.py`** — `--quiet` for findings only, `--pass {figures,scope,prose,hygiene,census,refs,tables}` for one pass; exits nonzero when anything is flagged. **Pass every `.md` that might be cited**, or `refs` reports live cross-document citations as dangling. And append the old maximum to `CHECKPOINTS` and a pattern to `SCOPE` in the same sitting, or figures written against the superseded range report as unexplained rather than as historical.
 
 **Two things deliberately absent from this list.**
@@ -106,7 +105,7 @@ python3 mu_enumerate_v2.py --nlist ladder_weak_v4.txt \
 |---|---|---|
 | **0.0400** = 1/25 | whether any n in 10⁶ leaves room for **s = 4**, the first fallback branch with no theorem | 21 |
 | 0.045742 | whether anything undercuts the current table floor | 189 |
-| 0.02516 + ε | whether **B(8927) exceeds 0.02516**, which is what §5.1 now turns on | 1 |
+| 0.02516 + ε | whether **B(8927) exceeds 0.02516**, which is what §5.1 turns on | 1 |
 
 Run them in that order; each is a superset of the next in cost and the cheap one may answer the expensive one's question. `--nmax` acts as an upper cut-off on a `--nlist`, which is how to defer the four five-figure entries — at n^2.9 per value, the lone n = 46,127 costs roughly 10⁴ times an n = 2,000 row, so it is worth seeing the rest first.
 
@@ -125,7 +124,7 @@ Run them in that order; each is a superset of the next in cost and the cheap one
 
 ### T1. Independent reading of the structural arguments
 
-**A step compressed to a clause tends not to survive being written out**, and this framework's record bears that out: of its compact structural steps, one is false (the ΓL(1) step), one was false and is now repaired (the q-power block count), one needed two gaps filled (B′), one holds only at prime c (Lemma C), one was an exclusion that is only a domination (Lemma D2, whose conclusion fails outright at F ≥ 3), and one was an upper-bound claim that is only an attained value (the within-class cross coefficient, now scoped to the construction). The recurring shape is a case analysis run over the wrong partition of cases, and in four of the six the false clause quoted a small or regular group's behaviour as if it bounded every admissible one.
+**A step compressed to a clause tends not to survive being written out**, and this framework's record bears that out: of its compact structural steps, one is false (the ΓL(1) step), one was false and has been repaired (the q-power block count), one needed two gaps filled (B′), one holds only at prime c (Lemma C), one was an exclusion that is only a domination (Lemma D2, whose conclusion fails outright at F ≥ 3), and one was an upper-bound claim that is only an attained value (the within-class cross coefficient, scoped to the construction). The recurring shape is a case analysis run over the wrong partition of cases, and in four of the six the false clause quoted a small or regular group's behaviour as if it bounded every admissible one.
 
 Parts A, E and F have had one close reading each; what is outstanding is a reading by **someone who has not read them before**. A second pass by the same reader on the same evidence is worth much less than a first pass by another, which is the whole reason this is a human item rather than a script.
 
@@ -133,7 +132,7 @@ Parts A, E and F have had one close reading each; what is outstanding is a readi
 
 ### T2. Part E's realisability: preconditions are checked, construction is not
 
-The preconditions check is **built and passing** — see `session-log-4.md`. `validate_table.py` group A now asserts per winner row that the Part E build's ingredients exist: F_top a q-power, every foreign block scored above r actually having q | r − 1 (live at 1,034 rows), and the **diagonal carrier's order coprime to every foreign prime and every F_mid in the configuration** (live at 1,239 rows). That last is deliberately stricter than SAFE's `dmax`, which strips only a class's own F_mid — looseness is safe for an upper bound but not for a construction, and attainment needs the construction.
+The preconditions check is **built and passing** — see `session-log-4.md`. `validate_table.py` group A asserts per winner row that the Part E build's ingredients exist: F_top a q-power, every foreign block scored above r actually having q | r − 1 (live at 1,034 rows), and the **diagonal carrier's order coprime to every foreign prime and every F_mid in the configuration** (live at 1,239 rows). That last is deliberately stricter than SAFE's `dmax`, which strips only a class's own F_mid — looseness is safe for an upper bound but not for a construction, and attainment needs the construction.
 
 **What is left for a human, and it is the part a check cannot reach.**
 
@@ -144,15 +143,13 @@ The preconditions check is **built and passing** — see `session-log-4.md`. `va
 
 These are the whole trusted base for μ(n) = B(n): both certificates pass with every Part E′ theorem disabled, so nothing else carries weight in the per-n proof. The question is not "is each condition true" but **"is each condition necessary"** — does every fallback configuration attaining B(n) really satisfy it. **The direction to fear is permissive**: a condition that is not in fact necessary silently removes a real candidate and leaves an empty list looking like a proof, and it is invisible from the certificate's own output.
 
-`fb_common.py` now carries a per-condition necessity argument in the header, so **what is outstanding is scrutiny of those eight arguments rather than the reconstruction of them**. Two places to press hardest, both flagged in that header: condition (4)'s cyclic-layer stripping, which is the load-bearing one and the newest; and condition (6), which is *not* independently necessary and is retained only as a tripwire — check that nothing has come to rely on it.
+`fb_common.py` carries a per-condition necessity argument in the header, so **what is outstanding is scrutiny of those eight arguments rather than the reconstruction of them**. Two places to press hardest, both flagged in that header: condition (4)'s cyclic-layer stripping, which is the load-bearing one and the newest; and condition (6), which is *not* independently necessary and is retained only as a tripwire — check that nothing has come to rely on it.
 
 *Human, for the same reason as T1: the value is in the independence.*
 
-### T4. Literature: three edits made, one investigation outstanding, framing deferred
+### T4. Literature: one investigation outstanding, framing deferred
 
-*Four passes are written up in `literature-findings.md`, which carries a reference convention — every citation of our own documents is prefixed `` `aod` ``, `` `notes` ``, `` `ep` ``, and a bare § belongs to a cited paper. The two decisions that used to sit here (running our CSP against Angel–Borja's surviving types; chasing the two-orbital criterion computationally) are **dropped as not worth doing** — the exhaustive n = 10 and n = 12 batteries already validate the machinery more strongly than either would.*
-
-**The three edits are done** — `aod` §5's δ-versus-c(n) distinction with the Rivest–Vuillemin-to-Scheidweiler–Triesch chain and a pointer from `notes` OP8; `aod` §3.6's domination replacing the transfer caveat, plus attribution columns on the ladder table; and the missing query-bound references. Details in `session-log-4.md`.
+*Four passes are written up in `literature-findings.md`, which carries a reference convention — every citation of our own documents is prefixed `` `aod` ``, `` `notes` ``, `` `ep` ``, and a bare § belongs to a cited paper. Two candidate follow-ups — running our CSP against Angel–Borja's surviving types, and chasing the two-orbital criterion computationally — are **deliberately not on the list**: the exhaustive n = 10 and n = 12 batteries already validate the machinery more strongly than either would.*
 
 **Outstanding, and it is the item with the most upside in this file.** Skorobogatov–Sofos (*Inventiones* 231, 2023) prove Schinzel's Hypothesis on average and use it to get a *positive proportion* of varieties with rational points — the move being that one does not need the full conjecture, only that most polynomials satisfying the obvious necessary condition represent at least one prime. **That is structurally `aod` §4**, which needs not an asymptotic at every n but only that for almost every admissible n *some* shape in `aod` §6's finite feasible set is realised. If the averaging works over our shape families, §4's density claim moves from conditional to unconditional, which changes what the paper is. Obstacles to check: the coprimality budget means our family is not a generic family of polynomials, and their result is for linear polynomials in several variables, which fits our two-part shapes better than the fused ones. **Read before `aod` §4 is written, not after.**
 
@@ -166,21 +163,21 @@ These are the whole trusted base for μ(n) = B(n): both certificates pass with e
 
 **Deferred: the framing decision.** Jones–Zvonkin's programme (arXiv:2106.00346 and four companions) is the model for how this genre states its standing — conditional on Bateman–Horn, labelled as such in the abstract, with the conjecture validated numerically at the range used. Three consequences are recorded in `literature-findings.md` items 14–16 and are *not* being acted on yet: a standing table at the front of `aod` §3 dividing unconditional from conditional from conjectural; the polynomial-versus-exponential line in `aod` §3.5, since shapes needing prime powers of unbounded exponent are Mersenne-like and outside Bateman–Horn; and the Catalan/Pillai caution where both parts are proper prime powers, which is our S1 and S2 and which `aod` §6 currently treats as amply supplied.
 
-### T5. Close the Lemma C gap at a > 1 — now load-bearing, not optional
+### T5. Close the Lemma C gap at a > 1 — load-bearing, not optional
 
-*Rescoped. This item previously recommended fencing rather than closing, on the ground that the exposure was zero. That is no longer true: the fallback certificate's condition (4) uses Lemma C's conclusion, so the lemma now sits inside the trusted base for μ(n) = B(n) rather than only inside attainment.*
+*The fallback certificate's condition (4) uses Lemma C's conclusion, so the lemma sits inside the trusted base for μ(n) = B(n) and not only inside attainment. That is what makes closing it load-bearing rather than tidy.*
 
 **What Lemma C says and where it is proved.** A twist of order d in the cyclic layer of a p-characteristic part shares no prime with any outside block of prime size r: gcd(d, r) = 1. Proved when the block has **prime** size — conjugation by a top-layer element induces the identity on the twist there but the twist's own order on the foreign part, which is impossible if they share a prime. **Open at c = p^a with a > 1**, because the top element may act through the Galois part of ΓL(1, p^a) and its induced power map then has q-power order, exactly as the multiplier on the foreign part does, so the two are not incompatible and the argument does not close. This is the same failure mode as the ΓL(1) step of Part B.
 
 > **Do not try to replace the conjugation argument with cyclicity.** "The twist and the foreign translations generate a direct product inside a cyclic group, so their orders are coprime" is **invalid**, and Part D says so in a pitfall box: a single cyclic generator can act as a twist of order d on one part and as a translation of order r on another, in which case ⟨g⟩ is cyclic of order lcm(d, r) and nothing is forced. Any repair of this item must go through conjugation or through domination, not through cyclicity.
 
-**Why the exposure changed.** The A2 tightening gave `fb_common.py`'s condition (4) the cap F·orb(c, dmax) with dmax stripped of the foreign primes — which *is* Lemma C's conclusion. Conditions in that file must be **necessary**, and a condition that is not necessary silently discards a real candidate. So the strip is now scoped to a = 1 in code, where the lemma is proved. **Measured:** the strip changes condition (4)'s verdict on 630,477 branches at n ≤ 2000, of which **53,807 have c a proper prime power** — so this is not a vacuous scoping, even though no candidate list changes emptiness either way (0 gained, 0 removed against the pre-A2 baseline over 501,046 pairs).
+**Where the exposure comes from.** The A2 tightening gave `fb_common.py`'s condition (4) the cap F·orb(c, dmax) with dmax stripped of the foreign primes — which *is* Lemma C's conclusion. Conditions in that file must be **necessary**, and a condition that is not necessary silently discards a real candidate. The strip is therefore scoped to a = 1 in code, where the lemma is proved. **Measured:** the strip changes condition (4)'s verdict on 630,477 branches at n ≤ 2000, of which **53,807 have c a proper prime power** — so this is not a vacuous scoping, even though no candidate list changes emptiness either way (0 gained, 0 removed against the pre-A2 baseline over 501,046 pairs).
 
-**What the closure would buy, and it is now the main prize.** With Lemma C at a > 1, the foreign-prime strip becomes unconditionally necessary, and the SAFE cap can be replaced by the refined one everywhere. That is the structural route to **eliminating SAFE mode as ever necessary for the optimum**: not a per-n certificate that the optimum happens to be fallback-free, but a proof that the refined score is itself an upper bound, collapsing B_refined = B_safe = μ by construction rather than by computation.
+**What the closure would buy, and it is the main prize here.** With Lemma C at a > 1, the foreign-prime strip becomes unconditionally necessary, and the SAFE cap can be replaced by the refined one everywhere. That is the structural route to **eliminating SAFE mode as ever necessary for the optimum**: not a per-n certificate that the optimum happens to be fallback-free, but a proof that the refined score is itself an upper bound, collapsing B_refined = B_safe = μ by construction rather than by computation.
 
-**The realistic target is narrower than "eliminate SAFE", and worth stating as such.** `enumeration-proof.md` Part E″ now carries the general form of q-pinning: the foreign gate forces t ≥ δn/2, hence a bounded cofactor u ≤ 2/δ and a top prime q ≥ (δn/2)^{1/e}, hence every *foreign* leftover part is pinned to r_j ≡ 1 (mod q) with at most 2/δ positions at e = 1. Measured, that branch is usually killed outright — median 0 admissible positions, maximum 9. **Conditional on a floor δ ≥ δ₀, the fallback branch therefore reduces to a named finite residue:** the q = 2 and large-e cases, where pinning is vacuous or weak, together with the a > 1 case, where the twist cap is Lemma C. Step 1 is the only place δ enters, so the unconditional version dies with the asymptotic floor — this route is conditional on the same hypothesis the density ceilings are.
+**The realistic target is narrower than "eliminate SAFE", and worth stating as such.** `enumeration-proof.md` Part E″ carries the general form of q-pinning: the foreign gate forces t ≥ δn/2, hence a bounded cofactor u ≤ 2/δ and a top prime q ≥ (δn/2)^{1/e}, hence every *foreign* leftover part is pinned to r_j ≡ 1 (mod q) with at most 2/δ positions at e = 1. Measured, that branch is usually killed outright — median 0 admissible positions, maximum 9. **Conditional on a floor δ ≥ δ₀, the fallback branch therefore reduces to a named finite residue:** the q = 2 and large-e cases, where pinning is vacuous or weak, together with the a > 1 case, where the twist cap is Lemma C. Step 1 is the only place δ enters, so the unconditional version dies with the asymptotic floor — this route is conditional on the same hypothesis the density ceilings are.
 
-**Where each piece now stands, so the remaining work can be costed.**
+**Where each piece stands, so the remaining work can be costed.**
 
 | piece | status |
 |---|---|
@@ -197,7 +194,7 @@ These are the whole trusted base for μ(n) = B(n): both certificates pass with e
 1. **Prove it.** Show a q-element of Γ inducing a Galois automorphism on a p^a-block is incompatible with the chain. This is the hard direction and shares an obstruction with the ΓL(1) step.
 2. **Dominate it.** Show that configurations with a > 1 *and* a foreign prime dividing c − 1 are beaten by some other configuration, as the fused-foreign case is by Lemma D2. Evidence that this is the right shape: **0 of the 2,178 p-characteristic parts in a computed winner have both a > 1 and a foreign prime dividing c − 1**, so the configurations in question never win in range. A domination lemma would close the item without touching the Galois question.
 
-**Tripwire, unchanged and still worth keeping.** `validate_table.py` asserts per row that no winner has a proper prime power c with a foreign prime dividing c − 1 — 0 of 1,677 parts, rechecked on every extension. That now guards attainment *and* flags the first n where route 2's domination would have to be checked directly.
+**Tripwire, worth keeping.** `validate_table.py` asserts per row that no winner has a proper prime power c with a foreign prime dividing c − 1 — 0 of 1,677 parts, rechecked on every extension. That guards attainment *and* flags the first n where route 2's domination would have to be checked directly.
 
 ### T5a. Re-derive §3.9.1.2's competing-rates argument on every revision
 
@@ -217,25 +214,11 @@ The claim is that the odd-n win shares tend to **1 : 1 : 2**. It rests not on th
 1. **Do not appeal to Maier / Friedlander–Granville irregularity.** Those theorems need moduli growing like x/(log x)^A, or short intervals of length (log x)^A. Our moduli are fixed and small, where Siegel–Walfisz gives error smaller than any power of 1/log n. This is the **high**-uniformity regime, and high uniformity lets the 1/log n bias steer the argmax rather than drowning it — the opposite of what the irregularity literature would suggest if applied out of range.
 2. **Recheck the D-independence when the family widens.** 𝔖_D/𝔖_{2D} = 1 is a fact about D = 4 versus D = 8, verified numerically over 8,333 values in each of two bands. It **fails** at ℓ = 3 between D = 6 and D = 12, where the degenerate branch ℓ | D/2 fires. Any comparison involving those D values reopens the whole argument, and the generalised family of `mu-theta-n2-note.md` is exactly where that happens.
 
-**The general hazard worth naming**, since it has now bitten twice in this section: *both* too much and too little uniformity relative to the pseudorandom model produce surprises, and which regime one is in depends on the modulus range. An argument that quotes an irregularity result without checking that its moduli reach ours will reliably reach the wrong conclusion, and will look right while doing so.
+**The general hazard worth naming**, having bitten twice in this section: *both* too much and too little uniformity relative to the pseudorandom model produce surprises, and which regime one is in depends on the modulus range. An argument that quotes an irregularity result without checking that its moduli reach ours will reliably reach the wrong conclusion, and will look right while doing so.
 
-## §2b. Claude can pick these off
+## §2b. Self-contained items
 
-*Self-contained analysis against the existing files. No new materials needed.*
-
-### A19. RESOLVED: the k = 3 Galois admissibility predicate is implemented
-
-*Predicate stated and proved in `three-uniform-note.md` §2.2.2; implemented in **`k3_galois.py`**, whose self-test is the verification. The k = 3 enumerator, when built (§10 item 1 there), imports it rather than re-deriving it — which was the whole point of doing this before any code existed.*
-
-**What the module provides.** `galois_admissible(a, d)` returns `None` or a split `{a_prime, top, q, gain, splits}` for a matching block c = 2^a with twist d. It enforces the full criterion — p = 2, m = a, gcd(a,6) = gcd(d,6) = 1, d | 2^a − 1 — together with the layer split **∃ a′ | a with d | 2^{a/a′} − 1, gcd(d, a′) = 1, and a/a′ a prime power**. `naive_admissible` is kept only so the self-test can demonstrate the gap; it is marked never to be used for scoring.
-
-**Three things the implementation settled that the prose had not.**
-
-1. **Gain and top prime are different quantities.** The gain is **lpf(a)**; the top prime is **q = lpf(a/a′)**. They coincide exactly when a is a prime power, which is why the superseded reading could conflate them invisibly. Conflating them in the enumerator would be the natural next error.
-2. **The twist selects the top prime at fixed block size.** At a = 35, d = 31 splits with a′ = 7 giving q = 5, while d = 127 splits with a′ = 5 giving q = 7 — same block, same gain 5, different top prime. Since §4.3 couples q to every foreign block (each needs q | r − 1), this is usable freedom, and it does not exist under the naive predicate where a = q^e fixes q.
-3. **The first affected n is 2³⁵.** The added block sizes are the a coprime to 6 that are not prime powers — {35, 55, 65, …}, all with lpf(a) = 5, hence all low-gain. Because the shape is n = c = 2^a, the block size determines n, so the error is not spread thin: at n = 2³⁵ the naive predicate credits gain 1 against a true gain of 5, making the bound a factor of 5 too small and therefore not an upper bound. That is ≈ 3.4 × 10¹⁰, so **this was never a computational risk and is purely a theorem-statement one** — which downgrades the item's urgency while confirming its substance.
-
-**What this does not touch.** Characteristic 2, gcd(a,6) = 1, gcd(d,6) = 1, §4.3's top-prime coupling in general, and the O(n/log n) escape count of §6.1 — the added a values are O(log n) in number like the rest, so no count changes.
+*Analysis against the existing files, needing no new materials. **This section is currently empty of open items** — the discretionary ones have been closed, and what remains below is the reference for `validate_table.py`, which is a standing runbook entry rather than a task. The next self-contained work is in §2a, where T2 is the ranked exposure.*
 
 ### A0b. `validate_table.py` — run this on every table extension
 
@@ -249,7 +232,7 @@ Checks are grouped into three, and the group tells you what a result means:
 
 **Four of the group-B checks have no independent counterpart elsewhere, and are worth knowing by name:** the cyclic layer's global pairwise-coprimality condition (the corrected shape space's own admissibility rule, and the only check that would catch the enumerator *over*-correcting), the feasibility criterion Σ√Fᵢ ≤ 1/√δ that `aod` §6.1's shape counts are derived from, Part G.4's per-axis bounds, and the within-class cross **coefficient** — which is invisible to output, since the term never binds. Each has a negative control: breaking it makes the check FAIL.
 
-Together they cover every belief the three documents currently state. Exits nonzero on any FAIL.
+Together they cover every belief the three documents state. Exits nonzero on any FAIL.
 
 Two extra modes cover the cases that would otherwise send you to the CSV. **`--baseline`** adds shape-migration and aggregate-movement reporting: which winners changed census row and in what direction, and how the floor, the low-density tail and the per-shape counts have moved on the common range. **`--explain N`** prints one row's full term breakdown — every intra, within-class-cross and cross term, which one binds, the twist and its F_mid/F_top split, the foreign block's η and u, and whether the value exceeds its class ceiling.
 
