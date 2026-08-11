@@ -38,9 +38,10 @@ USE_THEOREMS = True
 
 # Diagnostic hook.  A strip that fires where it is not licensed produces exactly
 # the same (empty) candidate list as a correct run, so the failure is invisible
-# in the output.  Set this to a list to record every (p, a, r, B, bound) where
-# the gate DECLINED to strip; an empty trace on a run that used to strip
-# unconditionally at a = 1 is the signal that the old code was over-stripping.
+# in the output.  Set this to a list to record every strip DECISION as
+# (p, a, r, B, bound, licensed) -- both the fires and the declines, since the
+# interesting quantity is how often the gate changes the answer, and that cannot
+# be read off the candidate list at all.
 _STRIP_TRACE = None
 
 
@@ -355,15 +356,16 @@ def single_part_ok(A, L, B, p, q, r):
                 # silently discards a real candidate -- hence the assertion.
                 if rest % r == 0:
                     bound = sharing_bound(p, pp[1], r)
-                    if bound < B:
+                    licensed = bound < B
+                    if _STRIP_TRACE is not None:
+                        _STRIP_TRACE.append((p, pp[1], r, B, bound, licensed))
+                    if licensed:
                         while rest % r == 0:
                             rest //= r
                         assert sharing_bound(p, pp[1], r) < B, (
                             "condition (4): stripped the foreign prime %d from a "
                             "p=%d^%d block's twist without Corollary C' licensing "
                             "it (bound %d >= B %d)" % (r, p, pp[1], bound, B))
-                    elif _STRIP_TRACE is not None:
-                        _STRIP_TRACE.append((p, pp[1], r, B, bound))
                 cap_i = F * orb(c2, dq2 * rest)
             if cap_i >= B:
                 return True
@@ -525,22 +527,36 @@ def pair_candidates(A, n, B, c, r, p, skip_settled=None):
             else:
                 dqc = qpart(c - 1, q)
                 restc = (c - 1) // dqc
-                # The foreign-prime strip is LEMMA C, and Lemma C is proved only
-                # for a PRIME block.  At c = p^a with a > 1 the conjugation
-                # argument does not close -- the top q-element may act through
-                # the Galois part of Gamma-L(1, p^a), and its induced power map
-                # then has q-power order just as the twist multiplier on the
-                # foreign part does, so the two are not incompatible.  Cyclicity
-                # of Gamma_1/Gamma_2 alone does NOT substitute: a single cyclic
-                # generator can act as a twist on one part and a translation on
-                # another, so a direct-product-must-be-cyclic argument proves
-                # nothing here (Part D's pitfall box).  Applying the strip at
-                # a > 1 would be ANTI-permissive -- it would discard candidates
-                # on an unproved lemma, which is the one error class this file
-                # cannot detect from its own output.
-                if A.prime_power(c)[1] == 1:
-                    while restc % r == 0:
-                        restc //= r
+                # The foreign-prime strip is licensed by Corollary C' (Part D),
+                # not by the old unconditional form of Lemma C, which is false:
+                # a cyclic-layer twist CAN share a prime with an outside block,
+                # at prime and prime-power blocks alike.  What holds is the
+                # coupling -- the shared prime forces every multiplier on the
+                # outside part into <p mod r>, so its twist order divides
+                # ord_r(p) | a -- and hence any configuration KEEPING the share
+                # carries a class of at most sharing_bound(p, a, r).  When that
+                # is below B such a configuration cannot attain B, so discarding
+                # it is sound and the strip is a NECESSARY condition.
+                #
+                # The licence is local to (p, a, r): no n, no density floor, no
+                # threshold on the table.  Getting it wrong in the permissive
+                # direction (declining to strip) is safe; getting it wrong the
+                # other way silently discards a real candidate, which is the one
+                # error class this file cannot detect from its own output --
+                # hence the assertion rather than a bare `if`.
+                if restc % r == 0:
+                    _a = A.prime_power(c)[1]
+                    _bd = sharing_bound(p, _a, r)
+                    _lic = _bd < B
+                    if _STRIP_TRACE is not None:
+                        _STRIP_TRACE.append((p, _a, r, B, _bd, _lic))
+                    if _lic:
+                        while restc % r == 0:
+                            restc //= r
+                        assert sharing_bound(p, _a, r) < B, (
+                            "condition (4): stripped foreign prime %d from a "
+                            "p=%d^%d block's twist unlicensed (bound %d >= B %d)"
+                            % (r, p, _a, _bd, B))
                 fmid = F // qpart(F, q)
                 g = gcd(restc, fmid)
                 while g > 1:

@@ -166,37 +166,32 @@ These are the whole trusted base for μ(n) = B(n): both certificates pass with e
 
 **Deferred: the framing decision.** Jones–Zvonkin's programme (arXiv:2106.00346 and four companions) is the model for how this genre states its standing — conditional on Bateman–Horn, labelled as such in the abstract, with the conjecture validated numerically at the range used. Three consequences are recorded in `literature-findings.md` items 14–16 and are *not* being acted on yet: a standing table at the front of `aod` §3 dividing unconditional from conditional from conjectural; the polynomial-versus-exponential line in `aod` §3.5, since shapes needing prime powers of unbounded exponent are Mersenne-like and outside Bateman–Horn; and the Catalan/Pillai caution where both parts are proper prime powers, which is our S1 and S2 and which `aod` §6 currently treats as amply supplied.
 
-### T5. Rerun the certificate against condition (4)'s lifted strip
+### T5. Condition (4)'s strip is licensed at every a — and currently changes nothing
 
-*The mathematics is settled (`enumeration-proof.md` Part D, Corollary C′) and **the code change is made**: `fb_common.py` now gates the foreign-prime strip on the licence itself rather than on the block exponent. What is outstanding is one rerun that cannot change the verdict and one measurement that has not been taken.*
+*The mathematics is settled (`enumeration-proof.md` Part D, Corollary C′), the code change is made in `fb_common.py`, and the certificate has been rerun in both modes: **0 candidates at all 2,186 values**, unchanged. What this item now records is why the change is worth having anyway, and one figure that should be retired.*
 
-**How the gate works, and why it needs no threshold on n.** Condition (4) caps a leftover p-characteristic part by stripping the foreign prime r from its twist. Corollary C′ licenses that strip exactly when a configuration retaining the share cannot reach B — and the sharing bound is **local to (p, a, r)**:
+**The gate.** Condition (4) caps a leftover p-characteristic part by stripping the foreign prime r from its twist. Corollary C′ licenses that strip exactly when a configuration retaining the share cannot reach B, and the sharing bound is **local to (p, a, r)**:
 
 > **sharing_bound(p, a, r) = min(r·ord_r(p), C(r,2))**, and the strip is sound iff this is **< B**.
 
-No n, no density floor, no threshold on the table. The earlier global form of this gate — requiring B(n) > n·log₂n, which fails at 34 tabulated values — was the same statement bounded crudely; the local version is sharper everywhere and has no small-n carve-out. The strip only ever acts when r | p^a − 1, i.e. when ord_r(p) | a, so on every other (p, a, r) the gate is vacuous either way.
+No n, no density floor, no threshold on the table. At **a = 1** the coupling forces ord_r(p) = 1, so the bound is r and the licence reads r < B — the condition the previous unconditional a = 1 strip was assuming without stating. The strip only ever acts when r | p^a − 1, i.e. ord_r(p) | a; elsewhere the gate is vacuous either way. Both strip sites are gated: the primary block in `pair_candidates` and the leftover in `single_part_ok`.
 
-At **a = 1** the coupling forces ord_r(p) = 1, so the bound is r and the licence reads r < B. That is the condition the previous unconditional a = 1 strip was assuming without stating; it holds at every tabulated n, but it is a condition and the code now tests it.
-
-**Measured against the shipped version**, on 1,043,424 `single_part_ok` calls spanning the table's (n, B) pairs and a grid of (L, p, q, r):
+**Measured on the real enumeration, and the result is that nothing moves.** Instrumenting every strip decision the certificate actually reaches, over the whole table:
 
 | | count |
 |---|---|
-| verdicts differing | 121 |
-| **new True where old False** (would be unsound) | **0** |
-| new False where old True (strictly stronger filter) | 121 |
-| licensing assertion firing | 0 |
+| strip decisions reached | **74** |
+| at a = 1, where the new gate declines | 0 |
+| at a > 1, where the new gate strips | **0** |
+| verdict changes against the shipped version | **0** |
 
-and on a (p, a, r, B) grid restricted to r | p^a − 1, the new gate strips at **245 of 324** points where the old one did not, with **0** regressions. So the change is substantive rather than cosmetic, and it moves in the sound direction only.
+**The a > 1 branches never reach the strip at all**: 129,878 of them enter `pair_candidates`, 120,389 survive the divisibility and theorem-dispatch filters, and **every one dies at the foreign cap** `orb(r, t) < B` before condition (4) is evaluated. So at the current frontier the foreign block's own cap already excludes every proper-prime-power branch, and the lift is **provably vacuous** — correct, but inert.
 
-**Why the rerun cannot change the collapse result.** Condition (4) is a *necessary* condition used to discard branches. Strengthening it discards more, so the candidate list can only shrink — and `fallback_cert.py` already reports **0 candidates at all 2,186 values**, with theorems and with `--no-theorems`. The rerun is therefore a regression check on the implementation, not a step in the proof.
+**Retire the 630,477-branch figure.** This item used to record that the strip changes condition (4)'s verdict on 630,477 branches at n ≤ 2000, of which 53,807 have c a proper prime power. That is **not reproducible against the current code**: condition (4) is evaluated **30 times** at n ≤ 2000 and 74 times over the whole table, with **0** proper-prime-power evaluations at either. The figure evidently measures a different quantity or a pre-tightening version of the file; it should not be carried forward as a claim about how much the change moves.
 
-That is exactly why the gate carries an **assertion** rather than a silent `if`: a strip firing where it is not licensed would discard a real candidate and produce the same empty list as a correct run. The failure is invisible in the output, so it has to be caught at the point of decision. `set_strip_trace()` records every (p, a, r, B, bound) where the gate *declined* to strip, which is the complementary diagnostic — a trace that is empty on a run whose old version stripped unconditionally at a = 1 tells you the old code was over-stripping.
+**So why keep the change.** Three reasons, none of them about the current table. It removes a dependency on an unproved lemma — the old comment justified the a = 1 scoping by "Lemma C is proved only for prime blocks", and the unconditional form of Lemma C is *false*, so the shipped justification was wrong even where the behaviour was right. It is stated as a local licence, so it stays correct as the table extends and the foreign cap stops biting. And it makes the a = 1 case *tested* rather than assumed.
 
-**What is outstanding.**
-
-1. Rerun `fallback_cert.py` (both modes) and confirm 0 candidates — expected, per the monotonicity argument above.
-2. **Re-measure how much the strip moves**, which is the one figure this item never had at the current frontier: the counts of branches whose condition (4) verdict changes, and how many of those have c a proper prime power. That is what says the change is not vacuous on the real branch enumeration rather than on a synthetic grid.
+**The gate carries an assertion, not a silent `if`, and that is load-bearing.** A strip firing where it is not licensed would discard a real candidate and produce the same empty list as a correct run — invisible in the output. `set_strip_trace()` records every decision as (p, a, r, B, bound, licensed), which is how the counts above were obtained; the candidate list cannot show them.
 
 **What it unblocks.** With the p-characteristic half closed at every a, the fallback residue reduces to the **q = 2 and large-e** cases of Part E″'s q-pinning, where pinning is vacuous or weak and domination rather than supply is needed. That is the remaining obstacle to replacing B_safe by B_refined outright — the structural route to **B_refined = B_safe = μ by construction rather than by computation**, as against a per-n certificate that the optimum happens to be fallback-free.
 
