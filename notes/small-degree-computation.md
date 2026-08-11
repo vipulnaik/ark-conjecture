@@ -24,7 +24,7 @@ The computations serve three purposes that are easy to run together and should b
 
 Job (a) rests on the group enumeration being exhaustive, which is not proved (§8.5). But the risk is one-directional:
 
-> A group missed by the enumeration could only have a **larger** minimum orbital, which would be a counterexample to μ(n) ≤ B(n) — not a silent corruption of it.
+> A group missed by the enumeration can have any minimum orbital, but only a **larger** one would matter: the reported optimum is a maximum over what was enumerated, so a missed group with a smaller m\* changes nothing, and one with a larger m\* would be a counterexample to μ(n) ≤ B(n) — visible as a contradiction, not a silent corruption.
 
 So incomplete enumeration weakens the *evidence* without creating an error. If exhaustiveness cannot be established, the claim "the exhaustive optimum is the predicted construction" weakens to "no group in the enumerated set exceeds B(n)". That is a real loss, since this is the framework's only external check, but it is not a retraction.
 

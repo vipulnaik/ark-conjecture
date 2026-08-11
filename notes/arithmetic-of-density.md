@@ -682,7 +682,15 @@ At the nine B-alone residues the fused rung has a strictly higher cap, so the ar
 
 **Row by row.** Each residue's row is fixed by two congruences: which c-classes can supply a solution at all, and which rung each of those classes lands on. Both follow from c = (n − 1)/2 − (D/2)q with q odd.
 
-*The nine **B alone** residues — 1, 3, 5, 9, 11, 13, 17, 19, 21.* Here n ≡ 3 (mod 8), so c ≡ 3 (mod 4) is reachable: 2c ≡ 6 (mod 8) and r ≡ n − 6 ≡ 5 (mod 8), which is exactly the r − 1 = D·odd the residue's own η needs. The fused rung therefore attains the cap while the unfused one, at the same η, sits a factor cap_C/cap_B below it. Any c ≡ 3 or 7 (mod 8) solution thus beats every c ≡ 1 or 5 one, and the argmax lands there whenever such a solution exists near the balance point — which it does, since these classes are a positive proportion of primes. **Fused rung only: 100 / 0 / 0.**
+*The nine **B alone** residues — 1, 3, 5, 9, 11, 13, 17, 19, 21.* At each of them c ≡ 3 (mod 4) is reachable compatibly with the residue's own η, but **the congruence certifying it differs by η and must not be quoted as one condition** — these nine residues are 1, 3 and 5 mod 8, not all 3 mod 8, and an earlier draft asserted n ≡ 3 (mod 8) across the board, which is false for six of them. The bookkeeping, from 2c ≡ 6 (mod 8) whenever c ≡ 3 (mod 4), so that r ≡ n − 6 (mod 8):
+
+> | residues | n mod 8 | η | r ≡ n − 6 (mod 8) | what r − 1 must carry |
+> |---|---|---|---|---|
+> | 1, 9, 17 | 1 | 1 (at 1, 9), 1/3 (at 17) | 3 | r − 1 = 2·odd — full 2-adic freedom, D = 2 or 6 |
+> | 5, 13, 21 | 5 | 1 (at 13, 21), 1/3 (at 5) | 7 | r − 1 = 2·odd, likewise |
+> | 3, 11, 19 | 3 | 1/2 (at 3, 19), 1/6 (at 11) | 5 | r − 1 = 4·odd, i.e. D = 4 or 12 |
+
+The last row is the case §3.3.4 derives explicitly and is the only one where n ≡ 3 (mod 8) is the operative condition. In the first two rows the residue's η is 1 or 1/3, so D is odd-times-2 and r ≡ 3 or 7 (mod 8) is exactly what is wanted; requiring r ≡ 5 there would be requiring 4 | r − 1, which those classes do not need and which would wrongly push them off their own ceiling. In every one of the nine the fused rung therefore attains the cap while the unfused one, at the same η, sits a factor cap_C/cap_B below it. Any c ≡ 3 or 7 (mod 8) solution thus beats every c ≡ 1 or 5 one, and the argmax lands there whenever such a solution exists near the balance point — which it does, since these classes are a positive proportion of primes. **Fused rung only: 100 / 0 / 0.**
 
 *Residues 7 and 15.* These are n ≡ 7 (mod 8), where c ≡ 3 (mod 4) forces r ≡ 1 (mod 8), hence 8 | r − 1, hence 8 | D — pushing the fused rung from η = 1/2 down to η = 1/4. That would normally lose, but cap_B(1/4) = cap_C(1/2) = (3 − 2√2)/2 exactly, a coincidence holding at η = 1/2 and nowhere else. So all four c-classes reach the same ceiling and compete on supply alone. Among them, c ≡ 3 and c ≡ 7 (mod 8) give the fused rung, c ≡ 1 gives S4, and c ≡ 5 gives a tie, since there the odd part of c − 1 is (c−1)/4 and fusing returns exactly C(c,2). Those are two classes, one and one. **fused / S4 / tie = 50 / 25 / 25.**
 
@@ -937,8 +945,8 @@ This is a *lower* bound on δ(n), not δ(n) itself, since it uses only four fami
 | [3·10⁵, 4·10⁵) | 0.04625 | 368639 |
 | [4·10⁵, 5·10⁵) | 0.04518 | 421679 |
 | [5·10⁵, 6·10⁵) | 0.04704 | 562847 |
-| [6·10⁵, 7·10⁵) | 0.04729 | 602843 |
-| [7·10⁵, 8·10⁵) | 0.04732 | 714347 |
+| [6·10⁵, 7·10⁵) | 0.04732 | 684023 |
+| [7·10⁵, 8·10⁵) | 0.04780 | 792839 |
 | [8·10⁵, 9·10⁵) | 0.04738 | 848327 |
 | [9·10⁵, 10⁶] | 0.04810 | 948527 |
 

@@ -14,7 +14,16 @@ THE SYSTEM.  For the three-part family n = 2c + r of section 3.2:
 
     c prime,   r = n - 2c prime,   r == 1 (mod q)
 
-with c/n restricted to a window around the balance point x* = 1/3.  The third
+with c/n restricted to a window around the balance point x*.  BEWARE THE DEFAULT:
+--centre defaults to the EQUAL SPLIT 1/(k+1) -- 1/3 for the three-part family --
+which is the balance point only at eta = 1.  At the obstructed residues the two
+diverge sharply: at (rung C, eta = 1/6) the equal split sits 0.109 from the true
+x* = 0.22474, more than twice the standard window half-width, so a run left on
+the default counts over a region that CANNOT reach the class ceiling and says
+nothing about attainment (aod sections 3.3.6 and 3.8).  Always pass --centre
+explicitly, taking the value from the x* column of aod section 3.3.5 for the
+residue being tested; every figure in aod section 3.8's table was taken that way.
+The third
 condition is the one that carries the efficiency: a foreign block of size r
 admits a twist of order q, so eta >= (roughly) q/(r-1), and it is also the
 condition that makes this system strictly harder than binary Goldbach --
@@ -61,7 +70,12 @@ ap.add_argument("--maxn", type=int, default=400, help="cap on how many n are tes
 ap.add_argument("--window", type=float, default=0.05,
                 help="half-width of the c/n window around the balance point")
 ap.add_argument("--centre", type=float, default=None,
-                help="balance point x* = c/n; 1/3 for the three-part family, 1/2 for two-part")
+                help="balance point x* = c/n, from the x* column of aod section "
+                     "3.3.5 for the residue being tested.  If omitted it is "
+                     "DERIVED from --dq (x* = sqrt(eta)/(1 + k*sqrt(eta)) at "
+                     "eta = 2/D), which is the right value; without --dq it "
+                     "falls back to the equal split 1/(k+1), which is the right "
+                     "value only at eta = 1 -- see the module docstring.")
 ap.add_argument("--q", type=int, default=3, help="the twist prime for the r = 1 mod q condition")
 ap.add_argument("--no-q", action="store_true", help="drop the congruence: two-condition calibration")
 ap.add_argument("--parts", type=int, default=3, choices=(2, 3),
@@ -77,8 +91,39 @@ ap.add_argument("--dq", type=int, default=0, metavar="D",
 ap.add_argument("--quiet", action="store_true")
 A = ap.parse_args()
 K = A.parts - 1                      # c = (n - 1 - D*q) / K
+# The x* column of aod section 3.3.5, keyed by n mod 24.  Deliberately a TABLE
+# and not a formula: x* is the balance point of the RUNG that attains the class
+# ceiling, and at odd n that is the fused rung B (x* = sqrt(eta)/(sqrt2+2sqrt eta))
+# at nine residues and the unfused rung C (x* = sqrt(eta)/(1+2sqrt eta)) at 7, 15
+# and 23.  Deriving x* from eta alone silently picks one rung for all of them and
+# is wrong at seven residues, so the values are transcribed instead.
+XSTAR_BY_RESIDUE = {0: 0.50000, 4: 0.50000, 6: 0.50000, 10: 0.50000,
+                    12: 0.50000, 16: 0.50000, 18: 0.50000, 22: 0.50000,
+                    2: 0.36603, 8: 0.36603, 14: 0.36603, 20: 0.36603,
+                    1: 0.29289, 9: 0.29289, 13: 0.29289, 21: 0.29289,
+                    3: 0.25000, 19: 0.25000,
+                    5: 0.22474, 17: 0.22474,
+                    7: 0.29289, 15: 0.29289,
+                    11: 0.18301,
+                    23: 0.22474}
+
 if A.centre is None:
-    A.centre = 1 / (K + 1.0)         # 1/2 for two parts, 1/3 for three
+    # The equal split 1/(K+1) is the balance point ONLY at eta = 1.  Where the
+    # run is keyed to a single residue mod 24 the right centre is known, so use
+    # it; otherwise fall back to the equal split and say loudly that it is one.
+    if A.modulus == 24 and (A.residue % 24) in XSTAR_BY_RESIDUE:
+        A.centre = XSTAR_BY_RESIDUE[A.residue % 24]
+        if not A.quiet:
+            print(f"note: --centre taken from aod section 3.3.5 for "
+                  f"n = {A.residue % 24} (mod 24): x* = {A.centre:.5f}")
+    else:
+        A.centre = 1 / (K + 1.0)
+        if not A.quiet:
+            print(f"WARNING: --centre defaulted to the equal split {A.centre:.5f}, "
+                  f"which is the balance point only at eta = 1.  At an obstructed "
+                  f"residue a window centred here CANNOT reach the class ceiling "
+                  f"and the count says nothing about attainment (aod 3.3.6, 3.8). "
+                  f"Pass --centre explicitly, or run with --modulus 24.")
 
 LO, HI = A.centre - A.window, A.centre + A.window
 if LO <= 0 or HI >= 1:
@@ -152,7 +197,12 @@ def singular(n, q):
 #
 #     D  =   2      4      6     12
 #     eta=   1    1/2    1/3    1/6
-#     cap  1/9  0.08579  0.0718  0.05051     <- section 3.3's class ceilings
+#     cap  1/9  0.08579  0.0718  0.05051     <- the UNFUSED rung C at each eta
+#
+# Those are section 3.3's class ceilings only at the residues stuck on rung C
+# (7, 15 and 23 mod 24).  At the nine rung-B residues the fused rung reaches
+# higher -- 0.17157, 0.125, 0.10102, 0.06699 at eta = 1, 1/2, 1/3, 1/6 -- and
+# section 3.3.5's table, not this row, is the reference for what a class caps at.
 #
 # Testing a class at the WRONG D tests a system with nothing to do with its
 # ceiling.  n = 11 (mod 12) caps at 1/6 and so needs D = 12; at D = 2 its

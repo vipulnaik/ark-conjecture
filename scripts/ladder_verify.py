@@ -86,9 +86,18 @@ OUTFILE = _os.environ.get("LADDER_OUT", "ladder_weak.txt")
 #   B  two c-blocks FUSED + fgn   cap 2eta/(sqrt2+2sqrt e)^2 needs c = 3 mod 4
 #   C  two c-classes UNFUSED      cap  eta/(1+2sqrt e)^2     always available
 #
-# with A > B > C.  Rung B needs an odd twist on the c-blocks, which forces
-# r = 5 mod 8 and hence n = 3 mod 8 -- so half of each obstructed class reaches
-# B and half is stuck on C, and the split is mod 24 rather than mod 12.
+# with A > B > C.  Rung B needs an odd twist on the c-blocks, i.e. c = 3 mod 4,
+# and whether that is compatible with the residue's own eta is a condition mod 8
+# on n -- which is why the split is mod 24 rather than mod 12.  The certifying
+# congruence DIFFERS BY ETA and must not be quoted as one condition: with
+# c = 3 mod 4 one has 2c = 6 mod 8 and hence r = n-6 mod 8, so
+#     eta = 1/2 or 1/6  (D = 4 or 12)  needs r = 5 mod 8, hence n = 3 mod 8;
+#     eta = 1 or 1/3    (D = 2 or 6)   needs r = 3 or 7 mod 8, i.e. n = 1 or 5.
+# The nine rung-B residues are spread across all three of those cases -- they are
+# 1, 3 and 5 mod 8, NOT all 3 mod 8.  See aod section 3.9.1.4, whose table is the
+# reference; an earlier version of this comment asserted n = 3 mod 8 throughout,
+# which is false for six of the nine.  Half of each obstructed class reaches B
+# and half is stuck on C.
 # Measured 100%/0% with no boundary cases.  Nine of the twelve odd residues rise
 # by 33-54%; residues 7, 15 and 23 do not.  The global minimum is unchanged at
 # 0.050510, now attained at n = 23 (mod 24) alone.
@@ -348,6 +357,15 @@ def achieved(n, stop_at=None):
             # Fp * orb(c, dmax) with dmax the largest divisor of c-1 coprime to
             # Fp.  (No q-part exemption here: the family fixes the top prime to
             # qF's partner, and the twist we are bounding is the cyclic one.)
+            #
+            # NOTE the stripping loop below is currently DEAD: the guard above
+            # skips every c with qF | c-1 outright, so dmax == c-1 whenever we
+            # reach here.  Skipping is the more conservative of the two -- it
+            # discards a family member instead of scoring it at a cut twist --
+            # so this is safe for a lower bound, but the two are inconsistent
+            # and one of them should go.  Relaxing the guard to admit those c and
+            # letting the strip do the work would RAISE the reported floor
+            # slightly; do that rather than deleting the loop, if either.
             dmax = c - 1
             while dmax % qF == 0:
                 dmax //= qF
