@@ -1,5 +1,7 @@
 # The 3-uniform case: what transfers, what inverts, and what k = 2 was relying on
 
+*This is row 3 of the hypothesis table in `orbital-evasiveness-notes.md` §1: the arity axis, which removes the full-density block, as against the group axis of `solvable-relaxation.md`, which removes the shifted-prime condition.*
+
 *Companion to `enumeration-proof.md` and `arithmetic-of-density.md`. Works the Oliver-group machinery at k = 3 — properties of 3-uniform hypergraphs on n vertices — both for its own sake and as a fresh-eyes pass over the k = 2 programme in a setting where the answers are not already known. Nothing here is load-bearing for k = 2; where it contradicts a k = 2 document, the k = 2 document is right about k = 2 and this one is describing a different problem.*
 
 **Status, section by section, since it varies sharply.**
@@ -226,13 +228,27 @@ Full density at three blocks does not save the asymptotics, for a reason that ne
 
 So the three exceptional blocks are exactly that — exceptions at small c, where c² log c has not yet been overtaken by c³/6. **There is no infinite family, and the classification says why: there cannot be one.**
 
-**The contrast with k = 2 is the point.** There, δ = 1 holds at *every* prime power, because AGL(1, c) is 2-transitive — an infinite family, and the reason S1 is trivial at k = 2. The order bound is no obstacle because |Γ| ≈ c² and C(c,2) ≈ c²/2 are the same order. At k = 3 the denominator gains a factor of c and the numerator does not.
+**The contrast with k = 2 is the point.** There, δ = 1 holds at *every* prime power, because AGL(1, c) is 2-homogeneous — an infinite family, and the reason S1 is trivial at k = 2. The order bound is no obstacle because |Γ| ≈ c² and C(c,2) ≈ c²/2 are the same order. At k = 3 the denominator gains a factor of c and the numerator does not — **but the order bound bites only asymptotically, and it is tight at exactly two degrees.**
+
+> **δ₃ = 1 occurs at exactly five degrees, and every one of them is Oliver.** Reading the classification of §3.1 for *solvable* groups gives **n ∈ {3, 4, 5, 8, 32}**, all prime powers:
+>
+> | n | group | C(n,3) | Oliver chain | note |
+> |---|---|---|---|---|
+> | 3 | C₃ | 1 | Γ₂ = Γ₁ = 1, Γ/Γ₁ = C₃ | degenerate: one triple |
+> | 4 | A₄ = C₂² ⋊ C₃ | 4 | Γ₂ = C₂², trivial layer, Γ/Γ₁ = C₃ | S₄ is also 3-transitive here |
+> | 5 | AGL(1,5) = C₅ ⋊ C₄ | 10 | Γ₁ = C₅ cyclic, Γ/Γ₁ = C₄ | 3-homogeneous, not 3-transitive |
+> | 8 | AGL(1,8) = C₂³ ⋊ C₇ | 56 | Γ₂ = C₂³, trivial layer, Γ/Γ₁ = C₇ | **regular** on triples |
+> | 32 | AΓL(1,32) | 4960 | Γ₂ = C₂⁵, Γ₁/Γ₂ = C₃₁, Γ/Γ₁ = C₅ | **regular** on triples |
+>
+> Degrees 6 and 7 fail — C₆ splits the triples 2/6/6/6 and AGL(1,7) splits them 14/21 — and Kantor closes everything above 5 except 8 and 32, the PSL(2,q) branch being insoluble. So S1's analogue is non-empty at k = 3, merely finite.
+>
+> **Two independent reasons the list stops, and the order bound is the sharper one.** |AΓL(1,c)| = c(c−1)log₂c against C(c,3) ≈ c³/6 permits equality only up to c = 32 and fails from c = 64 on; and at the single intermediate degree it does permit — c = 16, where 960 ≥ 560 — the group is nonetheless *not* 3-homogeneous (orbits 80 and 480). At 8 and 32 the order is met with **equality**, so those two are regular on triples rather than merely transitive: the family stops because it runs out of room, and its last two members fit exactly.
 
 > **And at k ≥ 5 the phenomenon vanishes completely.** Livingstone–Wagner show that for 2 ≤ k ≤ n/2 a k-homogeneous group is (k−1)-transitive, and **for k ≥ 5 it is k-transitive**. Solvable k-transitive groups have degree ≤ 4, so there are no solvable k-homogeneous groups with 5 ≤ k ≤ n/2. **Full density is attainable at infinitely many blocks when k = 2, at exactly three when k = 3, and never when k ≥ 5.**
 
 ### 3.3 What this says about `arithmetic-of-density.md` §3
 
-The mod-24 ceilings, the cap_F(η) optimisation and the balance points are a **k = 2 phenomenon resting on a group-theoretic accident** — that solvable 2-transitive groups exist at every prime power, so that a block can be handed full density and there is then something to optimise. They are not a general feature of the method, and the k = 3 replacement is not a weaker version of the same analysis but a different one (§4): only intra terms bind, so there is no *term-type* comparison to make — though the allocation between parts survives, with the same balance points (§5.7).
+The mod-24 ceilings, the cap_F(η) optimisation and the balance points are a **k = 2 phenomenon resting on a group-theoretic accident** — that solvable 2-homogeneous groups exist at every prime power, so that a block can be handed full density and there is then something to optimise (at k = 3 the analogous groups exist only at degrees 3, 4, 5, 8 and 32, so the accident is finite rather than absent). They are not a general feature of the method, and the k = 3 replacement is not a weaker version of the same analysis but a different one (§4): only intra terms bind, so there is no *term-type* comparison to make — though the allocation between parts survives, with the same balance points (§5.7).
 
 *One degree of freedom that is not hidden in the k = 2 ceilings*: whether a block's twist is read in GL(1, c) or ΓL(1, c). At k = 2 that provably changes no orbital minimum (`enumeration-proof.md` J0a); at k = 3 it does, and at c = 32 it is the difference between δ₃ = 1/5 and δ₃ = 1.
 
@@ -268,7 +284,7 @@ So the optimisation is no longer a balance between competing term types. It is: 
 
 | # | Shape | Status at k = 3 | Binding term | δ₃ behaviour | change from k = 2 |
 |---|---|---|---|---|---|
-| **S1** | one matching block, n = c = p^a | exists at every prime power | orb₃(c, c−1, m), **m ∈ {1, a}** | **≈ 6/(κ₃n) → 0**, except at c ∈ {5, 8, 32} where δ₃ = 1 (§3.1); measured 0.2000 at n = 32 without the Galois part, 1.0000 with it | **Large.** At k = 2 this shape is δ = 1, the trivial full-density case. At k = 3 it is the *best* shape but no longer full: c(c−1)/κ against C(c,3) |
+| **S1** | one matching block, n = c = p^a | exists at every prime power | orb₃(c, c−1, m), **m ∈ {1, a}** | **≈ 6/(κ₃n) → 0**, except at c ∈ {3, 4, 5, 8, 32} where δ₃ = 1 (§3.1); measured 0.2000 at n = 32 without the Galois part, 1.0000 with it | **Large.** At k = 2 this shape is δ = 1, the trivial full-density case. At k = 3 it is the *best* shape but no longer full: c(c−1)/κ against C(c,3) |
 | **S2** | fused matching, n = F·c, c = p^a | exists, same condition | F·orb₃(c, d, m), **m ∈ {1, a}** | ≈ **6/(κ F n)**, so small F wins; measured 0.0333 at n = 46 (F = 2), 0.0171 at n = 39 (F = 3) | Same shape, same supply condition. F = 2 is now clearly optimal within the shape, where at k = 2 the 1/F ranking is the same but the constants differ |
 | **S3** | matching + outside, n = c + r\* | exists, same condition | usually the **foreign** block: orb₃(r, t, 1) with t a q-power | measured **0.0080** at n = 36 (q = 3, t = 9) and **0.0027** at the same n with q = 2, t = 2 | **Loses to S2**, and the margin is set by the foreign twist, not by the split |
 | **S4** | two matching + outside, n = 2c + r\* | exists | the **foreign** block, orb₃(r, t, 1) | measured **0.0020** at n = 35 (q = 3, t = 3) | Same as k = 2 in that the foreign block is the weak point; the margin is wider |
@@ -277,7 +293,7 @@ So the optimisation is no longer a balance between competing term types. It is: 
 | **S7** | middle-layer-fused matching + outside | exists | orb₃(r, t, 1) when the foreign twist is small | measured 0.0013 at n = 33 | Same shape; a small foreign twist is punished harder, orb₃ being linear in d with no C(c,2) cap to rescue it |
 | **S8** | bottom-layer-fused matching | **killed, D1** — argument survives | — | — | D1's inequality strengthens: F·C(c,3) < C(Fc,3) needs only F < F³, a wider margin than k = 2's F < F² |
 | **S9** | fused outside block | **exists; dominated at k = 2** (Lemma D2 caps it at n^{3/2}/2) — the k = 3 status is unchecked | — | — | D2's k = 2 domination rests on a pairs-specific same-position class; the k = 3 analogue should dominate more easily by §4.1's degree count, but it has not been derived |
-| **S10** | outside block with r = q | **killed** — argument survives | — | — | The normality argument never mentions pairs; unaffected |
+| **S10** | outside block with r = q | **killed** — argument survives | — | — | The twist-collapse of D2q is about layers, not pairs, so it carries to k = 3 verbatim |
 
 ### 4.3 Where the Galois part enters the census, and what it costs
 
@@ -294,7 +310,7 @@ The third argument of orb₃ is not decoration in the census: it changes one row
 | 2,048 (a = 11) | 4,192,256 | **46,114,816** | 1,429,559,296 | 0.0323 |
 | 8,192 (a = 13) | 67,100,672 | **872,308,736** | 91,592,417,280 | 0.0095 |
 
-**n = 32 attains δ₃ = 1** — the whole of C(32,3) in a single orbit. That is the k = 3 analogue of S1's δ = 1 at k = 2, and unlike k = 2 it happens at exactly one n, because the gain factor q = a grows only logarithmically while C(c,3)/c² grows linearly. §2.2.3's nontriviality condition a ≤ (c−2)/6 is the same statement seen from the other side.
+**n = 32 attains δ₃ = 1** — the whole of C(32,3) in a single orbit. That is the k = 3 analogue of S1's δ = 1 at k = 2, and unlike k = 2 — where it holds at every prime power — it holds at only five n, of which 32 is the largest and 8 the only other non-degenerate one, because the gain factor q = a grows only logarithmically while C(c,3)/c² grows linearly. §2.2.3's nontriviality condition a ≤ (c−2)/6 is the same statement seen from the other side.
 
 > **The cost: the Galois part fixes the top prime, and every foreign block in the configuration then pays for it.** Using C_a on top forces Γ/Γ₁ to be a q-group with q | a, so **q is the configuration's top prime**. Lemma B′ then requires every foreign block's twist to be a power of *that* q, i.e. **q | r − 1** for every foreign r in the configuration.
 >
@@ -592,7 +608,7 @@ The near-balanced split 43 + 43 + 47 is second and loses by more than half. Wort
 
 By §3.1 the blocks c ∈ {5, 8, 32} are 3-homogeneous, so a single such block has orb₃ = C(c,3) and efficiency far above anything else available: at c = 32 with the Galois part, e ≈ 4.84 against a typical matching block's 1/2. **n = 32 attains β₃ = 4.84 outright**, against a class ceiling of 0.125.
 
-This is the k = 3 analogue of S1's δ = 1 at k = 2 — with the difference that at k = 2 it holds at *every* prime power and is therefore not an escape at all but the main term, while at k = 3 Kantor's classification makes it a list of three. **A phenomenon that is generic at k = 2 becomes an escape at k = 3**, which is the sharpest single illustration of what changes between the two.
+This is the k = 3 analogue of S1's δ = 1 at k = 2 — with the difference that at k = 2 it holds at *every* prime power and is therefore not an escape at all but the main term, while at k = 3 Kantor's classification makes it a list of five degrees, only two of them non-degenerate. **A phenomenon that is generic at k = 2 becomes an escape at k = 3**, which is the sharpest single illustration of what changes between the two.
 
 **Count: three values of n, plus whatever they contribute as blocks inside larger configurations.** As a whole-n shape it is finite; as a *block* it feeds §6.1, since c = 32 is both 3-homogeneous and the smallest Galois block.
 
@@ -618,7 +634,7 @@ That rules out every sparse property — the same service BBKN's Ω(n log n) per
 >
 > | n admits | best shape | m\*₃(n) ≈ | β₃ | conditional on |
 > |---|---|---|---|---|
-> | a prime power | S1 | **n²/κ₃**, and **C(n,3) at n = 5, 8, 32** (§3.1) | 1/κ₃ | nothing |
+> | a prime power | S1 | **n²/κ₃**, and **C(n,3) at n ∈ {3, 4, 5, 8, 32}** (§3.1) | 1/κ₃ | nothing |
 > | n = 2c, c a prime power | S2 at F = 2 | **n²/(2κ₃)** | 1/(2κ₃) | nothing |
 > | n = c + r\*, r prime | S3 | **r·t/κ₃**, i.e. n^{1+θ} at best | per §5.7 | **the shifted-prime condition** (§4.4) |
 >
@@ -648,7 +664,7 @@ That rules out every sparse property — the same service BBKN's Ω(n log n) per
 
 The exercise was partly a fresh-eyes pass, and four things about the k = 2 programme look different from here.
 
-1. **The *constants* are contingent; the *optimisation* is not.** δ = 1/4 and the values in the mod-24 table exist because solvable 2-transitive groups happen to exist at every prime power — a fact about that classification, not about evasiveness, and it fails at k = 3 (§3.1). But the allocation those constants come out of survives verbatim, balance points included (§5.7). `aod` §3 currently reads as though the optimisation is the heart of the method; it is more accurate to say the optimisation is what you get to do *once* 2-transitivity has handed you a full-density block — and that it is the block, not the optimisation, that k = 3 takes away.
+1. **The *constants* are contingent; the *optimisation* is not.** δ = 1/4 and the values in the mod-24 table exist because solvable 2-homogeneous groups happen to exist at every prime power — a fact about that classification, not about evasiveness, and at k = 3 the corresponding family is finite, just degrees 3, 4, 5, 8 and 32 (§3.1). But the allocation those constants come out of survives verbatim, balance points included (§5.7). `aod` §3 currently reads as though the optimisation is the heart of the method; it is more accurate to say the optimisation is what you get to do *once* 2-homogeneity has handed you a full-density block — and that it is the block, not the optimisation, that k = 3 takes away.
 2. **Blocks of size 3^a are a k = 2 luxury.** They are penalised at k = 3 by a mechanism the k = 2 documents already contain in another guise — the additive subgroup structure that Lemma C's a > 1 case worries about, reappearing as §2.2.1's affine lines. That the same structure shows up as an *obstruction* one dimension up is a hint that it is load-bearing, and worth watching at k = 2 too.
 3. **The Galois part is invisible at k = 2, and not for a deep reason.** J0a — whether the twist may act semilinearly — is an unresolved assumption in the k = 2 documents bearing on attainment. It is unresolved partly because it never *matters* there: §2.2.2 shows the minimum on 2-sets is unchanged by the Galois part at every block, because the fixed field 𝔽_p always contains a 2-subset. At k = 3 that fails exactly in characteristic 2, and the question acquires teeth. So J0a's dormancy at k = 2 is an accident of p ≥ k = 2, not evidence that the assumption is harmless in general — and if the k = 2 shape space were ever indexed by ΓL rather than GL twists, nothing would change, which is itself worth knowing.
 

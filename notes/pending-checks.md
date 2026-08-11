@@ -4,7 +4,7 @@
 
 **Small-degree work lives elsewhere.** Everything pursued at a single fixed degree — the GAP battery, the CSP and its backbone probes, the χ machinery, the template enumerator — is in `small-degree-verification.md`, including its own run list. It touches this programme at exactly one point: **exhaustiveness of the GAP stages**, which licenses Part I's two non-circular comparisons at n = 10 and n = 12. Nothing else there gates anything here.
 
-**Companion files.** The three documents hold the results and their figures. The review record is in `session-log-5.md` (current), `session-log-4.md`, `session-log-3.md`, `session-log-2.md` and `session-log.md`. Literature findings, which bear on framing rather than correctness and are deliberately not folded into the primary documents, are in `literature-findings.md`. Single-small-degree work — the GAP battery, the SAT/CSP machinery, the backbone probes, the template enumerator — is in `small-degree-verification.md`, which touches §§1–6 only through the n = 10 and n = 12 exhaustive comparisons cited in Part I.
+**Companion files.** The three documents hold the results and their figures. `solvable-relaxation.md` computes the same extremal problem with Oliver's condition relaxed to bare solvability, isolating what the chain costs; it is a calibration exercise and nothing in the main line depends on it. The review record is in `session-log-5.md` (current), `session-log-4.md`, `session-log-3.md`, `session-log-2.md` and `session-log.md`. Literature findings, which bear on framing rather than correctness and are deliberately not folded into the primary documents, are in `literature-findings.md`. Single-small-degree work — the GAP battery, the SAT/CSP machinery, the backbone probes, the template enumerator — is in `small-degree-verification.md`, which touches §§1–6 only through the n = 10 and n = 12 exhaustive comparisons cited in Part I.
 
 **Status labels.** *Verified* — an independent computation agreed. *Sound* — an argument was read and found correct, with no independent computation. *Unverified* — neither.
 
@@ -14,12 +14,11 @@
 
 Ranked, so the sections below have a stated basis. This is not the order the items appear in.
 
-1. **The r = q sub-case of Lemma D2.** Fused outside blocks with r ≠ q are bounded and dominated, so they cannot be extremal; at r = q with F < q neither branch of the argument applies, and if such a class is unbounded the enumeration is missing shapes and μ ≤ B_safe is what breaks. S10's normality argument at F = 1 is what needs extending. → **A18**
-2. **The table rebuild.** v4 reaches n = 2000; everything measured across the three documents is keyed to it and moves as it extends. → **R0**, and **R1** after every batch.
-3. **Exhaustiveness of the GAP stages.** The subdirect-product hole is undischarged. It degrades *evidence* rather than creating an error — a missed group could only have larger m\*, i.e. it would be a counterexample rather than a silent corruption — but it is the only non-circular check in the framework. **This is the one small-degree item the arithmetic programme depends on**, since Part I's two exhaustive comparisons rest on it. → `small-degree-verification.md` item 5
-4. **Part E's realisability construction.** Attainment's other leg, argued in general and spot-checked at eight configurations from n = 12 to 315. Unlike the certificate, it has no per-n verification. → **T2**
-5. **The k = 3 Galois admissibility predicate**, corrected but not yet built on. It carries no risk to the k = 2 programme at all — it is listed here because its error direction is the unusual one (under-counting admissible blocks, which at k = 3 breaks the upper bound rather than loosening it) and because the fix is free only until code exists. → **A19**
-6. **The eight necessary conditions of `fb_common.py`.** Both certificates rest on these and nothing else. What matters is their being *necessary* — that is what makes an empty candidate list a proof — and that is a different reading from checking each is true. The file now carries a per-condition necessity argument, so what is exposed is the quality of those eight arguments, and in particular condition (4)'s cyclic-layer stripping, which is the load-bearing one. The defect class to watch is an enumeration narrower than the shape space it must cover: it removes a real candidate silently and leaves the output looking clean. → **T3**
+1. **The table rebuild.** v4 reaches n = 2000; everything measured across the three documents is keyed to it and moves as it extends. → **R0**, and **R1** after every batch.
+2. **Exhaustiveness of the GAP stages.** The subdirect-product hole is undischarged. It degrades *evidence* rather than creating an error — a missed group with larger m\* would be a counterexample rather than a silent corruption, and one with smaller m\* changes nothing — but it is the only non-circular check in the framework. **This is the one small-degree item the arithmetic programme depends on**, since Part I's two exhaustive comparisons rest on it. → `small-degree-verification.md` item 5
+3. **Part E's realisability construction.** Attainment's other leg, argued in general and spot-checked at eight configurations from n = 12 to 315. Unlike the certificate, it has no per-n verification. → **T2**
+4. **The k = 3 Galois admissibility predicate.** It carries no risk to the k = 2 programme at all — it is listed here because its error direction is the unusual one (a predicate admitting too few blocks breaks the k = 3 upper bound rather than loosening it) and because implementing it correctly is free only until code exists. → **A19**
+5. **The eight necessary conditions of `fb_common.py`.** Both certificates rest on these and nothing else. What matters is their being *necessary* — that is what makes an empty candidate list a proof — and that is a different reading from checking each is true. The file now carries a per-condition necessity argument, so what is exposed is the quality of those eight arguments, and in particular condition (4)'s cyclic-layer stripping, which is the load-bearing one. The defect class to watch is an enumeration narrower than the shape space it must cover: it removes a real candidate silently and leaves the output looking clean. → **T3**
 
 ---
 
@@ -32,7 +31,7 @@ Ranked, so the sections below have a stated basis. This is not the order the ite
 `mu_table_safe_v4.csv` reaches n = 2000 and extends at roughly n^2.9 per value. What is left:
 
 1. **Finish the rebuild.**
-2. **Rerun all of R1** against it — that list is the whole downstream, and its second item is where the floor, the largest permitted s and the theorem residue get recounted.
+1. **Rerun all of R1** against it — that list is the whole downstream, and its second item is where the floor, the largest permitted s and the theorem residue get recounted.
 3. **Rebuild the branch-and-bound worklist**, since its pruning is keyed to the density floor.
 
 ```bash
@@ -72,6 +71,8 @@ python3 check_doc_figures.py mu_table_safe_v4.csv *.md
 - **`validate_table.py`** — a FAIL in **group A** means the run itself is broken and nothing downstream is meaningful; a FAIL in **group B** is a real contradiction between table and documents; **group C** is INFO, each line printing the expected asymptotic beside the measurement. `--explain N` gives one row's full term breakdown, `--quiet` shows failures only, `--baseline` adds shape-migration reporting, which is how winners changing census row become visible.
 - **`fallback_cert.py`** — the headline is *0 candidates*. Then read three numbers, because **the low-density recount lives here**: the **density floor**, the **largest permitted s**, and the **theorem residue**. They move together, since s ≤ 1/√δ − 1 means a falling floor admits a larger s, and **s = 4 is the first branch with no theorem covering it**. At the current floor of 0.045742 (n = 1817) the bound is 3.68, so s ≤ 3 and E.1 / E.3(iii) / E.4 close everything but one class of 247 E.3(ii) branches. **The margin to δ = 1/25, where s = 4 reopens, is 0.0457 against 0.0400 — one extension could close it.** If `largest permitted s` ever prints 4, `enumeration-proof.md`'s Corollary after E.3 and Part I's tail figures both want re-deriving rather than recounting. The `--no-theorems` run should agree exactly, and the agreement is not vacuous here: 1,673 of 1,920 branches are dispatched in the normal run, so disabling them genuinely moves work into the search.
 - **`wide_cert.py`** — read the `settled by theorem:` line. At NMAX ≤ 10⁴ it prints NONE, because B_lo is small enough that the foreign-cap filter removes the s = 1 and s = 3 branches before the dispatch sees them, so a `--no-theorems` comparison there agrees *trivially* and is no evidence about E.1 / E.3 / E.4. `--menu` cross-checks pass 1 against the family menu; `--refresh` rebuilds the cached B_lo, which is rarely needed since the cache is keyed on everything that determines it.
+- **`khomog_verify.py`** — the k-homogeneity claims underlying the hypothesis table of `orbital-evasiveness-notes.md` §1: the c ≡ 3 (mod 4) half-twist case at k = 2, and the two full-density degrees 8 and 32 at k = 3 with the sharpness of the order bound that makes the list finite. Static; one run per environment.
+- **`a18_rq_verify.py`** — nine static checks on the r = q half of Lemma D2: the exhaustive (2,5) subgroup scan, the (3,7) rank-2 eigenvector group, and the tightness and twist-collapse controls. Nothing in it depends on the table, so it needs no rerun on extension; one run per environment.
 - **`a18_verify.py`** — three passes: the n = 85 witness's orbitals, its Oliver chain, and the fused-outside domination bound against every row. Only the third can move with the table, and it is the one that matters: it is a **range-scoped** claim, so a table extension can invalidate it silently. Exits nonzero on any failure.
 - **`check_doc_figures.py`** — `--quiet` for findings only, `--pass {figures,scope,prose,hygiene,census,refs,tables}` for one pass; exits nonzero when anything is flagged. **Pass every `.md` that might be cited**, or `refs` reports live cross-document citations as dangling. And append the old maximum to `CHECKPOINTS` and a pattern to `SCOPE` in the same sitting, or figures written against the superseded range report as unexplained rather than as historical.
 
@@ -220,25 +221,6 @@ The claim is that the odd-n win shares tend to **1 : 1 : 2**. It rests not on th
 ## §2b. Claude can pick these off
 
 *Self-contained analysis against the existing files. No new materials needed.*
-
-### A18. The r = q sub-case of Lemma D2, and S10 at F ≥ 2
-
-**Priority: this is the highest-exposure open item in the arithmetic programme**, above T5, because it bears on the shape space rather than on the collapse — if fused outside blocks with r = q can be unbounded, the enumeration is missing shapes and **μ ≤ B_safe** is what fails.
-
-**What is settled, and where.** `enumeration-proof.md` Part D2 bounds any configuration containing a fused outside class of prime size **r ≠ q** by n·min(F, r)/2 ≤ n^{3/2}/2, via the within-block class F·C(r,2) and, when F < r, the same-position class C(F,2)·r. That is enough to exclude the shape from ever being extremal: a theorem for n ≥ 1582 given δ ≥ 0.02516, and checked directly below that. `a18_verify.py` reproduces the bound against the table.
-
-**What is open is exactly r = q with F < q.** Both branches lose their footing there:
-
-- The translations may lie in Γ/Γ₁ rather than the cyclic layer, so **Sylow-q is not forced cyclic**, T\* may have rank ≥ 2, and the translations need not be diagonal — which is the step every version of this argument has relied on.
-- Branch (a) still covers **F ≥ q** (the within-block class needs only the block system), so the gap is F < q copies of a q-block. At F = 2 an unbounded such class could reach ~n²/4, so this is not a small-margin question.
-
-**S10 is thereby load-bearing.** Its F = 1 argument is the one to extend: Γ₁ ◁ Γ would require the translations to normalise the twist, and in AGL(1, r) translations do not normalise a point stabiliser, so the twist is trivial and the block is worth orb(r, 1) = r. Nothing yet covers F ≥ 2.
-
-**One fact to start from, and it closes the cheapest route.** At F < q the block-permuter's image in Sym(F) has trivial q-part, hence is p-by-cyclic — which still admits 2-transitivity (AGL(1,5) is 5-by-cyclic). So the sub-case **cannot** be closed by ruling the permuter out, and needs either a normality argument in S10's style or its own class bound.
-
-**Do not quote the table as evidence.** No fused-outside configuration appears in it, but the table is computed from an enumeration that omits them.
-
-**Standing check.** The r ≠ q exclusion has a **range-scoped half** — direct scoring below n = 1582 — which expires silently as the table grows. Rerun `a18_verify.py` on every table extension; it belongs in R1.
 
 ### A19. Implement the k = 3 Galois admissibility predicate as a layer split
 

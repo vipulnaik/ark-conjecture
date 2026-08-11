@@ -14,6 +14,14 @@ a18_verify.py -- three verifications for Lemma D2 of enumeration-proof.md
           quotient has order 64 (a 2-group), and the action is transitive.
           Nothing here is taken from the construction on faith.
 
+  PASS 2b THE SHARPER WITNESS.  The same failure via a permuter that is
+          2-HOMOGENEOUS but not 2-transitive -- C_7 : C_3 on 7 blocks, which
+          fits a chain (q = 3) where the full AGL(1,7) does not.  Seven fused
+          13-blocks give an Oliver group at n = 91 with m* = 3|O|.  What the
+          same-position class costs is set by the permuter's minimum orbital on
+          UNORDERED pairs, so 2-homogeneity is the property to ask for; a
+          2-transitivity-based argument misses this family entirely.
+
   PASS 3  THE RANGE.  For every row of mu_table_safe_v4.csv, checks that the
           domination bound of Lemma D2 --
               some class <= F*C(r,2) always, and <= C(F,2)*r when F < r --
@@ -140,6 +148,116 @@ while fr:
                 nf.append(g[v])
     fr = nf
 check("transitive on 85 points", len(orb) == n85)
+
+# ---- pass 2b: the sharper witness, via a 2-HOMOGENEOUS (not 2-transitive) permuter
+# F = 7 blocks of r = 13; permuter C_7 : C_3, which is 2-homogeneous on 7 points
+# but not 2-transitive, and unlike AGL(1,7) = C_7 : C_6 it fits a chain (q = 3).
+F2, r2 = 7, 13
+pts2 = [(i, x) for i in range(F2) for x in range(r2)]
+idx2 = {p: k for k, p in enumerate(pts2)}
+n91 = F2 * r2
+ident2 = tuple(range(n91))
+
+
+def perm2(f):
+    return tuple(idx2[f(p)] for p in pts2)
+
+
+def mul2(a, b):
+    return tuple(a[v] for v in b)
+
+
+def inv2(a):
+    o = [0] * n91
+    for i, v in enumerate(a):
+        o[v] = i
+    return tuple(o)
+
+
+def closure2(gens):
+    G = {ident2}
+    fr = [ident2]
+    while fr:
+        nf = []
+        for x in fr:
+            for g in gens:
+                y = mul2(g, x)
+                if y not in G:
+                    G.add(y)
+                    nf.append(y)
+        fr = nf
+    return frozenset(G)
+
+
+tau2 = perm2(lambda p: (p[0], (p[1] + 1) % r2))
+mu2 = perm2(lambda p: (p[0], (3 * p[1]) % r2))          # ord(3 mod 13) = 3
+c72 = perm2(lambda p: ((p[0] + 1) % F2, p[1]))
+io2 = perm2(lambda p: ((2 * p[0]) % F2, p[1]))          # ord(2 mod 7) = 3
+gens2 = [tau2, mu2, c72, io2]
+G91 = closure2(gens2)
+G91_1 = closure2([tau2, c72])
+
+
+def order2(g):
+    cur, o = g, 1
+    while cur != ident2:
+        cur = mul2(g, cur)
+        o += 1
+    return o
+
+
+sizes91 = []
+pairs2 = [(a, b) for a in range(n91) for b in range(a + 1, n91)]
+pidx2 = {p: k for k, p in enumerate(pairs2)}
+seen2 = [False] * len(pairs2)
+for k in range(len(pairs2)):
+    if seen2[k]:
+        continue
+    seen2[k] = True
+    comp = 1
+    st = [pairs2[k]]
+    while st:
+        pr = st.pop()
+        for g in gens2:
+            a, b = g[pr[0]], g[pr[1]]
+            qq = (a, b) if a < b else (b, a)
+            j = pidx2[qq]
+            if not seen2[j]:
+                seen2[j] = True
+                comp += 1
+                st.append(qq)
+    sizes91.append(comp)
+sizes91.sort()
+check("n=91 witness: chain (|G|=819, Gamma_1 = C_91 normal, quotient 9)",
+      len(G91) == 819 and len(G91_1) == 91
+      and any(order2(g) == 91 for g in G91_1)
+      and all(mul2(mul2(g, h), inv2(g)) in G91_1 for g in gens2 for h in [tau2, c72])
+      and len(G91) // len(G91_1) == 9)
+check("n=91 witness: m* = C(7,2)*13 = 273 = 3|O|, sharper than the n=85 case",
+      sizes91[0] == comb(7, 2) * 13 == 273 and sizes91[0] == 3 * n91)
+# the permuter C_7 : C_3 is 2-homogeneous but NOT 2-transitive
+blk = [(i, j) for i in range(F2) for j in range(F2) if i != j]
+sig = [lambda i: (i + 1) % F2, lambda i: (2 * i) % F2]
+unord, ordp = set(), set()
+for (i, j) in blk:
+    cu, co = {frozenset((i, j))}, {(i, j)}
+    ch = True
+    while ch:
+        ch = False
+        for s in sig:
+            for (a, b) in list(co):
+                if (s(a), s(b)) not in co:
+                    co.add((s(a), s(b)))
+                    ch = True
+            for e in list(cu):
+                a, b = tuple(e)
+                if frozenset((s(a), s(b))) not in cu:
+                    cu.add(frozenset((s(a), s(b))))
+                    ch = True
+    unord.add(len(cu))
+    ordp.add(len(co))
+check("permuter C_7:C_3 is 2-homogeneous (one unordered class of 21) but not 2-transitive",
+      unord == {21} and ordp == {21})
 
 # ------------------------------------------------------------------- pass 3
 rows = {}
