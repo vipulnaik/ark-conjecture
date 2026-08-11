@@ -573,7 +573,7 @@ material):
 
   The reason this needs to be fought is that without
   dehistoricization, the documents get really unwieldy, and this
-  affects both human reader and LLMs, particularly the LLMs doing
+  affects both human readers and LLMs, particularly the LLMs doing
   fresh-eyes review. In addition to historical references being
   directly confusing for readers who are not cued in to the history, a
   non-dehistoricized document often tends to just be way longer.
