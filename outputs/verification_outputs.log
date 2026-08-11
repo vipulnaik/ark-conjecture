@@ -91,3 +91,292 @@ PASS  no fused-outside bound reaches B(n) over 2186 rows
       worst UB/B ratio 0.8276 at n = 56
       theorem threshold at delta >= 0.02516: n >= 1582 (table reaches 2600)
 PASS  theorem threshold overlaps table range
+[...]
+vipulnaik@Vipuls-M1-MacBook-Air 26-08-11 14:10:33 /Users/vipulnaik/git/personal-public/ark-conjecture~ [m1] # python3 scripts/t5_verify.py outputs/mu_table_safe_v4.csv 
+PASS  n=28 witness: |G|=150, Gamma_2=C_5^2, layer C_3, top C_2
+PASS  n=28 witness: both subgroups normal, conjugation closes as z -> z^-1
+PASS  n=28 witness: cyclic-layer twist of order 3 on the 5^2-block shares the foreign prime 3 -- Lemma C's gcd(d,r)=1 is FALSE at a=2
+PASS  n=21 coupling: share realised with foreign twist 4 = ord_5(2) (|G|=320, layer C_5, top C_4)
+PASS  n=21 mismatched pairing (Frob^2 with mult of order 4) fails to close: closure of order 1600 contains BOTH pure 5-elements, so Sylow-5 = C_5 x C_5, chainless
+PASS  n=10 boundary: the share exists at a PRIME block with untwisted foreign part (|G|=21, Gamma_2=C_7, layer C_3) -- Lemma C over-claimed at a=1 too
+PASS  no sharing configuration reaches B(n) at any of 2186 rows (worst ratio 0.7000 at n=15)
+PASS  theorem threshold n >= 763 at delta >= 0.02516 overlaps the table
+vipulnaik@Vipuls-M1-MacBook-Air 26-08-11 14:12:14 /Users/vipulnaik/git/personal-public/ark-conjecture~ [m1] # python3 scripts/check_doc_figures.py outputs/mu_table_safe_v4.csv notes/*.md
+outputs/mu_table_safe_v4.csv: 2186 rows, n up to 2600
+checkpoints: 1306, 1428, 1540, 1572, 2000, 2007, 2212, 2298, 2376, 2600
+
+   row count                2186
+   n max                    2600
+   density floor            0.045742
+   density floor at n       1817
+   density max              0.499807
+   median density           0.1994
+   median density even      0.2264
+   median density odd       0.142
+   one-part winners         777
+   two-part winners         1393
+   three-part winners       16
+   certified_K              {2: 394, 3: 1443, 4: 331, 5: 18}
+   count delta >= 1/4       394
+   pct delta >= 1/4         18.0
+   count delta > 1/9        1837
+   pct delta > 1/9          84.0
+   count delta <= 1/16      18
+   pct delta <= 1/16        0.8
+   count delta < 1/12       112
+   omega(n) = 2             1210
+   pct omega(n) = 2         55.4
+   omega(n) >= 3            976
+   max density omega>=3     0.2494
+   pct fused winners        35.5
+   fallback rows            0
+
+========================================================================
+PASS 1  FIGURES
+========================================================================
+
+notes/arithmetic-of-density.md: 4 figure(s) matching an OLD checkpoint only
+   L40    0.400000   correct for: pct delta <= 1/16 @ n<=2000, pct delta <= 1/16 @ n<=2007
+   L1030  1,666      correct for: row count @ n<=2000
+   L1038  0.051813   correct for: density floor @ n<=1306, density floor @ n<=1428, density floor @ n<=1540, density floor @ n<=1572
+   L1068  1,666      correct for: row count @ n<=2000
+
+notes/enumeration-proof.md: 7 figure(s) matching an OLD checkpoint only
+   L204   1,921      correct for: row count @ n<=2298
+   L204   1,174      correct for: row count @ n<=1428
+   L227   0.400000   correct for: pct delta <= 1/16 @ n<=2000, pct delta <= 1/16 @ n<=2007
+   L439   0.7000     correct for: pct delta <= 1/16 @ n<=2212, pct delta <= 1/16 @ n<=2298
+   L831   1,921      correct for: row count @ n<=2298
+   L835   1,921      correct for: row count @ n<=2298
+   L837   1,921      correct for: row count @ n<=2298
+
+notes/orbital-evasiveness-notes.md: 1 figure(s) matching an OLD checkpoint only
+   L455   20.4       correct for: pct delta >= 1/4 @ n<=1572
+
+notes/pending-checks.md: 2 figure(s) matching an OLD checkpoint only
+   L102   1,666      correct for: row count @ n<=2000
+   L112   2,000      correct for: n max @ n<=2000
+
+notes/session-log-5.md: 1 figure(s) matching an OLD checkpoint only
+   L83    0.7000     correct for: pct delta <= 1/16 @ n<=2212, pct delta <= 1/16 @ n<=2298
+
+notes/small-degree-computation.md: 6 figure(s) matching an OLD checkpoint only
+   L100   1,028      correct for: two-part winners @ n<=2007
+   L151   2,212      correct for: n max @ n<=2212
+   L316   20.6       correct for: pct delta >= 1/4 @ n<=1540
+   L317   2,212      correct for: n max @ n<=2212
+   L317   20.8       correct for: pct delta >= 1/4 @ n<=1428
+   L319   20.6       correct for: pct delta >= 1/4 @ n<=1540
+
+notes/small-degree-verification.md: 3 figure(s) matching an OLD checkpoint only
+   L94    20.8       correct for: pct delta >= 1/4 @ n<=1428
+   L100   2,212      correct for: n max @ n<=2212
+   L100   20.6       correct for: pct delta >= 1/4 @ n<=1540
+
+(A match against an old checkpoint may be a deliberate historical citation.
+ The point is that it is a claim about a past range and should say so.)
+
+========================================================================
+PASS 2  SCOPE
+========================================================================
+current floor 0.045742 at n = 1817
+
+notes/arithmetic-of-density.md L1042  [ok] threshold 0.045742 <= floor 0.045742
+notes/arithmetic-of-density.md L1066  [theorem] scope 1/16: 18 computed value(s) below it [527, 1159, 1175, 1739, 1763, 1817, 1943, 2015]
+      -> check the surrounding sentence names exactly these.
+notes/arithmetic-of-density.md L1072  [theorem] scope 1/16: 18 computed value(s) below it [527, 1159, 1175, 1739, 1763, 1817, 1943, 2015]
+      -> check the surrounding sentence names exactly these.
+notes/arithmetic-of-density.md L1175  [theorem] scope 1/16: 18 computed value(s) below it [527, 1159, 1175, 1739, 1763, 1817, 1943, 2015]
+      -> check the surrounding sentence names exactly these.
+notes/arithmetic-of-density.md L1177  [theorem] scope 1/16: 18 computed value(s) below it [527, 1159, 1175, 1739, 1763, 1817, 1943, 2015]
+      -> check the surrounding sentence names exactly these.
+notes/enumeration-proof.md L631  [theorem] scope 1/16: 18 computed value(s) below it [527, 1159, 1175, 1739, 1763, 1817, 1943, 2015]
+      -> check the surrounding sentence names exactly these.
+notes/enumeration-proof.md L631  [theorem] scope 1/36: 0 computed value(s) below it
+      -> check the surrounding sentence names exactly these.
+notes/enumeration-proof.md L849  [theorem] scope 1/16: 18 computed value(s) below it [527, 1159, 1175, 1739, 1763, 1817, 1943, 2015]
+      -> check the surrounding sentence names exactly these.
+notes/enumeration-proof.md L849  [theorem] scope 1/16: 18 computed value(s) below it [527, 1159, 1175, 1739, 1763, 1817, 1943, 2015]
+      -> check the surrounding sentence names exactly these.
+notes/orbital-evasiveness-notes.md L529  [theorem] scope 1/16: 18 computed value(s) below it [527, 1159, 1175, 1739, 1763, 1817, 1943, 2015]
+      -> check the surrounding sentence names exactly these.
+notes/orbital-evasiveness-notes.md L529  [theorem] scope 1/16: 18 computed value(s) below it [527, 1159, 1175, 1739, 1763, 1817, 1943, 2015]
+      -> check the surrounding sentence names exactly these.
+
+NOTE: these patterns are a WHITELIST. Silence means 'nothing recognised',
+not 'nothing to find'. Add a pattern whenever a new range assertion is written.
+
+========================================================================
+PASS 7  TABLES
+========================================================================
+82 tables checked, 0 malformed.
+
+========================================================================
+PASS 6  REFS
+========================================================================
+anchors: notes/a18-resolution.md (5 sections, 2 results), notes/arithmetic-of-density.md (56 sections, 0 results), notes/enumeration-proof.md (11 sections, 19 results), notes/literature-findings.md (22 sections, 0 results), notes/mu-theta-n2-note-latex.md (5 sections, 1 results), notes/mu-theta-n2-note.md (5 sections, 1 results), notes/note-to-framework-bridge.md (6 sections, 0 results), notes/orbital-evasiveness-notes.md (29 sections, 13 results), notes/pending-checks.md (0 sections, 0 results), notes/session-log-5.md (6 sections, 1 results), notes/small-degree-computation.md (48 sections, 0 results), notes/small-degree-verification.md (14 sections, 0 results), notes/solvable-relaxation.md (6 sections, 3 results), notes/t5-resolution.md (4 sections, 0 results), notes/three-uniform-note.md (40 sections, 2 results)
+
+notes/a18-resolution.md L46  [elsewhere] Lemma B is stated in notes/enumeration-proof.md, notes/orbital-evasiveness-notes.md, not notes/a18-resolution.md
+notes/a18-resolution.md L82  [elsewhere] §2.4 is in notes/orbital-evasiveness-notes.md, notes/small-degree-computation.md, not notes/a18-resolution.md
+notes/arithmetic-of-density.md L23  [elsewhere] Theorem E.1 is stated in notes/enumeration-proof.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L23  [elsewhere] Corollary F.3 is stated in notes/enumeration-proof.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L64  [elsewhere] Lemma D1 is stated in notes/enumeration-proof.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L65  [elsewhere] Lemma D2 is stated in notes/a18-resolution.md, notes/enumeration-proof.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L94  [elsewhere] Proposition F.1 is stated in notes/enumeration-proof.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L100  [elsewhere] Proposition F.1 is stated in notes/enumeration-proof.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L102  [elsewhere] Proposition F.2 is stated in notes/enumeration-proof.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L106  [elsewhere] Theorem E.1 is stated in notes/enumeration-proof.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L106  [elsewhere] Corollary F.3 is stated in notes/enumeration-proof.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L110  [elsewhere] Proposition F.2 is stated in notes/enumeration-proof.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L127  [elsewhere] Lemma B' is stated in notes/enumeration-proof.md, notes/orbital-evasiveness-notes.md, notes/three-uniform-note.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L141  [elsewhere] Lemma B' is stated in notes/enumeration-proof.md, notes/orbital-evasiveness-notes.md, notes/three-uniform-note.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L173  [elsewhere] Theorem 2.1 is stated in notes/orbital-evasiveness-notes.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L232  [elsewhere] Lemma B' is stated in notes/enumeration-proof.md, notes/orbital-evasiveness-notes.md, notes/three-uniform-note.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L430  [elsewhere] Lemma C is stated in notes/enumeration-proof.md, notes/orbital-evasiveness-notes.md, notes/three-uniform-note.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L430  [elsewhere] Proposition 5.2' is stated in notes/orbital-evasiveness-notes.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L510  [elsewhere] Lemma B' is stated in notes/enumeration-proof.md, notes/orbital-evasiveness-notes.md, notes/three-uniform-note.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L882  [elsewhere] Lemma D2 is stated in notes/a18-resolution.md, notes/enumeration-proof.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L996  [elsewhere] Proposition F.1 is stated in notes/enumeration-proof.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L1011  [elsewhere] Corollary 3.2 is stated in notes/orbital-evasiveness-notes.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L1030  [elsewhere] Proposition F.1 is stated in notes/enumeration-proof.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L1056  [elsewhere] Theorem 2.1 is stated in notes/orbital-evasiveness-notes.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L1106  [elsewhere] Lemma D1 is stated in notes/enumeration-proof.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L1106  [elsewhere] Lemma D2 is stated in notes/a18-resolution.md, notes/enumeration-proof.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L1106  [elsewhere] Lemma B' is stated in notes/enumeration-proof.md, notes/orbital-evasiveness-notes.md, notes/three-uniform-note.md, not notes/arithmetic-of-density.md
+notes/arithmetic-of-density.md L1173  [elsewhere] Theorem E.1 is stated in notes/enumeration-proof.md, not notes/arithmetic-of-density.md
+notes/enumeration-proof.md L12  [elsewhere] §5 is in notes/a18-resolution.md, notes/arithmetic-of-density.md, notes/literature-findings.md, notes/mu-theta-n2-note-latex.md, notes/mu-theta-n2-note.md, notes/note-to-framework-bridge.md, notes/orbital-evasiveness-notes.md, notes/session-log-5.md, notes/small-degree-computation.md, notes/small-degree-verification.md, notes/solvable-relaxation.md, notes/three-uniform-note.md, not notes/enumeration-proof.md
+notes/enumeration-proof.md L240  [elsewhere] §4 is in notes/a18-resolution.md, notes/arithmetic-of-density.md, notes/literature-findings.md, notes/mu-theta-n2-note-latex.md, notes/mu-theta-n2-note.md, notes/note-to-framework-bridge.md, notes/orbital-evasiveness-notes.md, notes/session-log-5.md, notes/small-degree-computation.md, notes/small-degree-verification.md, notes/solvable-relaxation.md, notes/t5-resolution.md, notes/three-uniform-note.md, not notes/enumeration-proof.md
+notes/enumeration-proof.md L251  [elsewhere] §3.3.8 is in notes/arithmetic-of-density.md, not notes/enumeration-proof.md
+notes/enumeration-proof.md L326  [elsewhere] §3.5.6 is in notes/arithmetic-of-density.md, not notes/enumeration-proof.md
+notes/enumeration-proof.md L568  [elsewhere] §9.7 is in notes/orbital-evasiveness-notes.md, not notes/enumeration-proof.md
+notes/enumeration-proof.md L610  [elsewhere] Theorem 2.1 is stated in notes/orbital-evasiveness-notes.md, not notes/enumeration-proof.md
+notes/enumeration-proof.md L612  [elsewhere] §4 is in notes/a18-resolution.md, notes/arithmetic-of-density.md, notes/literature-findings.md, notes/mu-theta-n2-note-latex.md, notes/mu-theta-n2-note.md, notes/note-to-framework-bridge.md, notes/orbital-evasiveness-notes.md, notes/session-log-5.md, notes/small-degree-computation.md, notes/small-degree-verification.md, notes/solvable-relaxation.md, notes/t5-resolution.md, notes/three-uniform-note.md, not notes/enumeration-proof.md
+notes/enumeration-proof.md L659  [elsewhere] Theorem 2.1 is stated in notes/orbital-evasiveness-notes.md, not notes/enumeration-proof.md
+notes/enumeration-proof.md L689  [elsewhere] §3.3.2 is in notes/arithmetic-of-density.md, not notes/enumeration-proof.md
+notes/enumeration-proof.md L748  [elsewhere] §4 is in notes/a18-resolution.md, notes/arithmetic-of-density.md, notes/literature-findings.md, notes/mu-theta-n2-note-latex.md, notes/mu-theta-n2-note.md, notes/note-to-framework-bridge.md, notes/orbital-evasiveness-notes.md, notes/session-log-5.md, notes/small-degree-computation.md, notes/small-degree-verification.md, notes/solvable-relaxation.md, notes/t5-resolution.md, notes/three-uniform-note.md, not notes/enumeration-proof.md
+notes/enumeration-proof.md L758  [elsewhere] §8 is in notes/arithmetic-of-density.md, notes/literature-findings.md, notes/orbital-evasiveness-notes.md, notes/small-degree-computation.md, notes/small-degree-verification.md, notes/three-uniform-note.md, not notes/enumeration-proof.md
+notes/enumeration-proof.md L825  [elsewhere] §4 is in notes/a18-resolution.md, notes/arithmetic-of-density.md, notes/literature-findings.md, notes/mu-theta-n2-note-latex.md, notes/mu-theta-n2-note.md, notes/note-to-framework-bridge.md, notes/orbital-evasiveness-notes.md, notes/session-log-5.md, notes/small-degree-computation.md, notes/small-degree-verification.md, notes/solvable-relaxation.md, notes/t5-resolution.md, notes/three-uniform-note.md, not notes/enumeration-proof.md
+notes/enumeration-proof.md L840  [elsewhere] Theorem 2.1 is stated in notes/orbital-evasiveness-notes.md, not notes/enumeration-proof.md
+notes/enumeration-proof.md L882  [elsewhere] §2.1 is in notes/arithmetic-of-density.md, notes/orbital-evasiveness-notes.md, notes/small-degree-computation.md, notes/three-uniform-note.md, not notes/enumeration-proof.md
+notes/enumeration-proof.md L912  [elsewhere] §6.2 is in notes/arithmetic-of-density.md, notes/small-degree-computation.md, notes/three-uniform-note.md, not notes/enumeration-proof.md
+notes/literature-findings.md: checking PREFIXED references only (`aod`/`notes`/`ep`); bare sections belong to cited papers
+notes/mu-theta-n2-note-latex.md L20  *** DANGLING *** Theorem 1.4 is stated nowhere
+   BBKN's Theorem 1.4 is exactly this route with $\mu(n) \ge n^{3/2-\varepsilon}$ for all sufficiently large $n$, obtained under Chowla's conje
+
+notes/mu-theta-n2-note.md L25  *** DANGLING *** Theorem 1.4 is stated nowhere
+   BBKN's Theorem 1.4 is exactly this route with μ(n) ≥ n^(3/2−ε) for all sufficiently large n, obtained under Chowla's conjecture on the least
+
+notes/note-to-framework-bridge.md L11  [elsewhere] Theorem 3.1 is stated in notes/a18-resolution.md, notes/enumeration-proof.md, notes/orbital-evasiveness-notes.md, not notes/note-to-framework-bridge.md
+notes/note-to-framework-bridge.md L15  [elsewhere] Proposition 1 is stated in notes/mu-theta-n2-note-latex.md, notes/mu-theta-n2-note.md, notes/solvable-relaxation.md, not notes/note-to-framework-bridge.md
+notes/note-to-framework-bridge.md L23  [elsewhere] Theorem 3.1 is stated in notes/a18-resolution.md, notes/enumeration-proof.md, notes/orbital-evasiveness-notes.md, not notes/note-to-framework-bridge.md
+notes/note-to-framework-bridge.md L27  [elsewhere] §2.1 is in notes/arithmetic-of-density.md, notes/orbital-evasiveness-notes.md, notes/small-degree-computation.md, notes/three-uniform-note.md, not notes/note-to-framework-bridge.md
+notes/note-to-framework-bridge.md L48  [elsewhere] Lemma B' is stated in notes/enumeration-proof.md, notes/orbital-evasiveness-notes.md, notes/three-uniform-note.md, not notes/note-to-framework-bridge.md
+notes/note-to-framework-bridge.md L94  [elsewhere] Theorem 2.1 is stated in notes/orbital-evasiveness-notes.md, not notes/note-to-framework-bridge.md
+notes/orbital-evasiveness-notes.md L60  [elsewhere] §4.1 is in notes/arithmetic-of-density.md, notes/small-degree-computation.md, notes/three-uniform-note.md, not notes/orbital-evasiveness-notes.md
+notes/orbital-evasiveness-notes.md L156  [elsewhere] Lemma D2 is stated in notes/a18-resolution.md, notes/enumeration-proof.md, not notes/orbital-evasiveness-notes.md
+notes/orbital-evasiveness-notes.md L175  [elsewhere] Proposition F.1 is stated in notes/enumeration-proof.md, not notes/orbital-evasiveness-notes.md
+notes/orbital-evasiveness-notes.md L199  [elsewhere] Theorem E.1 is stated in notes/enumeration-proof.md, not notes/orbital-evasiveness-notes.md
+notes/orbital-evasiveness-notes.md L199  [elsewhere] Corollary F.3 is stated in notes/enumeration-proof.md, not notes/orbital-evasiveness-notes.md
+notes/orbital-evasiveness-notes.md L207  [elsewhere] §3.3 is in notes/arithmetic-of-density.md, notes/small-degree-computation.md, notes/three-uniform-note.md, not notes/orbital-evasiveness-notes.md
+notes/orbital-evasiveness-notes.md L451  [elsewhere] §3.2 is in notes/arithmetic-of-density.md, notes/small-degree-computation.md, notes/three-uniform-note.md, not notes/orbital-evasiveness-notes.md
+notes/orbital-evasiveness-notes.md L529  [elsewhere] §4.3 is in notes/arithmetic-of-density.md, notes/small-degree-computation.md, notes/three-uniform-note.md, not notes/orbital-evasiveness-notes.md
+notes/orbital-evasiveness-notes.md L531  [elsewhere] §3.6 is in notes/arithmetic-of-density.md, notes/small-degree-computation.md, not notes/orbital-evasiveness-notes.md
+notes/orbital-evasiveness-notes.md L531  [elsewhere] §3.5 is in notes/arithmetic-of-density.md, notes/small-degree-computation.md, not notes/orbital-evasiveness-notes.md
+notes/orbital-evasiveness-notes.md L544  [elsewhere] Proposition F.1 is stated in notes/enumeration-proof.md, not notes/orbital-evasiveness-notes.md
+notes/orbital-evasiveness-notes.md L546  [elsewhere] Theorem E.1 is stated in notes/enumeration-proof.md, not notes/orbital-evasiveness-notes.md
+notes/pending-checks.md: skipped -- logs cite items by name, not by section
+notes/session-log-5.md: skipped -- logs cite items by name, not by section
+notes/small-degree-computation.md L193  [elsewhere] Theorem 2.1 is stated in notes/orbital-evasiveness-notes.md, not notes/small-degree-computation.md
+notes/small-degree-computation.md L202  [elsewhere] Lemma B' is stated in notes/enumeration-proof.md, notes/orbital-evasiveness-notes.md, notes/three-uniform-note.md, not notes/small-degree-computation.md
+notes/small-degree-verification.md L9  [elsewhere] Lemma B is stated in notes/enumeration-proof.md, notes/orbital-evasiveness-notes.md, not notes/small-degree-verification.md
+notes/small-degree-verification.md L197  [elsewhere] §2.4 is in notes/orbital-evasiveness-notes.md, notes/small-degree-computation.md, not notes/small-degree-verification.md
+notes/small-degree-verification.md L197  *** DANGLING *** Theorem 2.4 is stated nowhere
+   §2.4's implementation note describes the defect as a spurious gcd(d, k) = 1 filter plus a prime-only k, and both symptoms are visible in `ca
+   nearest: Theorem 2.1, 2.2, 2.3
+
+notes/small-degree-verification.md L203  [elsewhere] §8.4 is in notes/small-degree-computation.md, not notes/small-degree-verification.md
+notes/small-degree-verification.md L215  [elsewhere] §9.7 is in notes/orbital-evasiveness-notes.md, not notes/small-degree-verification.md
+notes/small-degree-verification.md L221  [elsewhere] §9.7 is in notes/orbital-evasiveness-notes.md, not notes/small-degree-verification.md
+notes/solvable-relaxation.md L42  [elsewhere] Lemma C is stated in notes/enumeration-proof.md, notes/orbital-evasiveness-notes.md, notes/three-uniform-note.md, not notes/solvable-relaxation.md
+notes/solvable-relaxation.md L138  [elsewhere] Lemma C is stated in notes/enumeration-proof.md, notes/orbital-evasiveness-notes.md, notes/three-uniform-note.md, not notes/solvable-relaxation.md
+notes/solvable-relaxation.md L140  [elsewhere] Lemma D2 is stated in notes/a18-resolution.md, notes/enumeration-proof.md, not notes/solvable-relaxation.md
+notes/t5-resolution.md L3  [elsewhere] Lemma D2 is stated in notes/a18-resolution.md, notes/enumeration-proof.md, not notes/t5-resolution.md
+notes/t5-resolution.md L5  [elsewhere] Lemma C is stated in notes/enumeration-proof.md, notes/orbital-evasiveness-notes.md, notes/three-uniform-note.md, not notes/t5-resolution.md
+notes/t5-resolution.md L7  [elsewhere] Lemma C is stated in notes/enumeration-proof.md, notes/orbital-evasiveness-notes.md, notes/three-uniform-note.md, not notes/t5-resolution.md
+notes/t5-resolution.md L38  [elsewhere] Lemma D2q is stated in notes/enumeration-proof.md, not notes/t5-resolution.md
+notes/t5-resolution.md L47  [elsewhere] Lemma C is stated in notes/enumeration-proof.md, notes/orbital-evasiveness-notes.md, notes/three-uniform-note.md, not notes/t5-resolution.md
+notes/three-uniform-note.md L299  [elsewhere] Lemma D2 is stated in notes/a18-resolution.md, notes/enumeration-proof.md, not notes/three-uniform-note.md
+3 dangling reference(s).
+A reference resolving to the wrong document is NOT reported as dangling
+when the target exists somewhere; that case prints as [elsewhere] and is
+shown only without --quiet, since cross-document citation is normal here.
+
+========================================================================
+PASS 3  PROSE
+========================================================================
+
+notes/arithmetic-of-density.md:
+   L980   [finished] > M = (5 − 2√6)/2 → 0.041812 (n = 575) → 0.041107 (n = 2183) → 0.037524 (n = 2291) → 0.029282 (n = 3059) → **0
+   L88    [no-exc] > *Verified.* Over all 754 one-part winners in the table, the predicted density 1/F agrees with the computed v
+   L349   [no-exc] > **What bounds an individual row is cap_F(η), not its class ceiling.** Against the current data, **194 of the
+   L355   [no-exc] *Lower: the distribution is uniform across classes.* An unmodelled obstruction acting on some residue would sh
+
+notes/enumeration-proof.md:
+   L847   [all-but] **The three-part winners have one shape.** Of the 258 winners using three parts, all but one are **"one foreig
+   L395   [no-exc] Verified against the recursion for every s < 4000, with no exceptions. This is worth recording because it make
+   L794   [no-exc] At the weakest density below 10⁴ (0.0147) this reads c ≥ 0.0147n, F ≤ 68, k ≤ 8; at the median density, c ≥ 0.
+   L859   [no-exc] Against every two-block witness in `mu_table_full.csv`: of 5,025 such rows, the 3,316 whose foreign block atta
+   L861   [no-exc] That check is partly circular, since the witnesses come from our own constructions. The GAP battery at n = 10 
+
+('all but N' and 'no exceptions' are counts written as words, which no
+ numeric sweep will ever catch. Recheck them against the table by hand.)
+
+========================================================================
+PASS 5  CENSUS
+========================================================================
+   S1: shape descriptions differ ->
+        notes/arithmetic-of-density.md: one matching block, no copies
+        notes/enumeration-proof.md: one matching block, no copies
+        notes/three-uniform-note.md: one matching block, n = c = p^a
+   S2: shape descriptions differ ->
+        notes/arithmetic-of-density.md: fused matching class, **top**-layer copies, n = F·c
+        notes/enumeration-proof.md: fused matching class, **top**-layer copies, n = F·c
+        notes/three-uniform-note.md: fused matching, n = F·c, c = p^a
+   S5: shape descriptions differ ->
+        notes/arithmetic-of-density.md: **top-layer**-fused matching + outside; forces q = 2, hence η = 1/u
+        notes/enumeration-proof.md: **top-layer**-fused matching + outside; forces q = 2, hence η = 1/u
+        notes/three-uniform-note.md: top-layer-fused matching + outside
+   S7: shape descriptions differ ->
+        notes/arithmetic-of-density.md: **middle**-layer-fused matching + outside; **F = 2 is the odd-n fused 
+        notes/enumeration-proof.md: **middle**-layer-fused matching + outside (**includes F = 2**, the odd
+        notes/three-uniform-note.md: middle-layer-fused matching + outside
+   S9: shape descriptions differ ->
+        notes/arithmetic-of-density.md: fused outside block, any layer
+        notes/enumeration-proof.md: fused outside block, any layer
+        notes/three-uniform-note.md: fused outside block
+   S10: shape descriptions differ ->
+        notes/arithmetic-of-density.md: outside block with r = q, any F
+        notes/enumeration-proof.md: outside block with r = q, any F
+        notes/three-uniform-note.md: outside block with r = q
+
+checked 10 S-numbers across 3 censuses.
+
+tagged duplicate statements: 3
+   B_definition: in step across 2 files
+   density_floor_conjecture: in step across 2 files
+   theorem_3_1: in step across 2 files
+
+The census is duplicated ON PURPOSE. Keep both copies in step: a new
+shape needs a row in each, and S-numbers are append-only -- never renumber,
+since they are the key the two documents are joined by.
+
+========================================================================
+PASS 4  HYGIENE
+========================================================================
+none found.
+
+========================================================================
+33 finding(s) needing a decision.
+Not all are errors. Historical citations are legitimate and a figure matching
+an old checkpoint may be deliberate. The point is that each is a decision
+rather than an oversight.
