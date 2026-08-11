@@ -276,7 +276,7 @@ So the optimisation is no longer a balance between competing term types. It is: 
 | **S6** | two outside blocks | exists | the weaker of orb₃(r_i, t_i, 1) | measured **0.0027** at n = 36 | **Changed from k = 2**, where it is capped by 1/(√m₁+√m₂)² and wins nowhere. At k = 3 it is just "two foreign blocks", scoring like S3 with both twists constrained |
 | **S7** | middle-layer-fused matching + outside | exists | orb₃(r, t, 1) when the foreign twist is small | measured 0.0013 at n = 33 | Same shape; a small foreign twist is punished harder, orb₃ being linear in d with no C(c,2) cap to rescue it |
 | **S8** | bottom-layer-fused matching | **killed, D1** — argument survives | — | — | D1's inequality strengthens: F·C(c,3) < C(Fc,3) needs only F < F³, a wider margin than k = 2's F < F² |
-| **S9** | fused outside block | **killed, D2** — *subject to A18* | — | — | Unchanged, and inherits the k = 2 gap: D2's last step assumes a prime-power-degree block-permuting group (`pending-checks.md` A18) |
+| **S9** | fused outside block | **exists but dominated at k = 2** (A18 resolved: D2 false at F ≥ 3, shapes never win) — the k = 3 status needs its own pass | — | — | The k = 2 resolution (`a18-resolution.md`) rests on a pairs-specific same-position argument; whether its k = 3 analogue dominates has not been checked, and §4.1's cross-terms-are-cubic heuristic suggests it should, more easily |
 | **S10** | outside block with r = q | **killed** — argument survives | — | — | The normality argument never mentions pairs; unaffected |
 
 ### 4.3 Where the Galois part enters the census, and what it costs
@@ -634,7 +634,7 @@ That rules out every sparse property — the same service BBKN's Ω(n log n) per
 | **Part A** (orbits and crosses) | **restructured**: a 3-set meets the chunks in a partition of 3, so there are *three* term types (3+0+0, 2+1+0, 1+1+1) rather than two — but by §4.1 only the first ever binds, so the min is over the 3+0+0 terms alone |
 | **Part B, B′** (per-orbit classification) | **unchanged** — statements about blocks |
 | **Part C** (valency recursion) | **needs redoing**: the counting bound B₀ is pair-specific; the analogue would bound μ₃ by a partition-only quantity, and the two-part reduction would need re-verifying |
-| **Part D, D2** | **unchanged as stated**; D1's margin widens (F < F³ rather than F < F²) and D2 inherits the k = 2 gap of `pending-checks.md` A18 |
+| **Part D, D2** | D1's margin widens (F < F³ rather than F < F²). **D2 is now known false at F ≥ 3 even at k = 2** (`pending-checks.md` A18, resolved by domination); the k = 3 version should be stated as a domination claim from the start, and its bound re-derived from the k = 3 class structure |
 | **Part E** (value formula) | **replace orb by orb₃(c, d, m)** and add the 1+1+1 cross term Fᵢcᵢ·Fⱼcⱼ·F_lc_l. The within-class cross term splits into sub-cases by how the 3-set distributes across the F blocks; these have not been worked out, and by §4.1 none of them binds |
 | **Part E′, E″** (collapse) | **structure survives, but the fallback question gains a second axis** — Lemma C's strip, *and* the global-q coupling between per-block Galois gains (§5.8). The k = 2 SAFE cap does not transfer |
 | **Part F** (search is bounded) | **easier**: orb₃ ≤ c(c−1)/κ₃ caps each part harder than C(c,2) does, so the feasibility criterion tightens; the constant has not been re-derived |
