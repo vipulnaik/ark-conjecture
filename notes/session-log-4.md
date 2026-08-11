@@ -714,6 +714,475 @@ Because AGL(1, c) is 2-transitive and hands a block full density. The k = 3 anal
 
 `literature-findings.md` item 22 corrects the natural assumption that weak evasiveness stops at k = 3 — **Black covers all k**, same paper as item 4. What is not covered anywhere found so far is a *dimension threshold* at k ≥ 3, which is what this machinery produces and Black's does not.
 
+## Twenty-third batch: scoping the k = 3 orbit law
+
+**The law needed a hypothesis it did not have.** As first written, orb₃(c, d) = min(c·d/κ, C(c,3)) was stated for "a block of prime size c" with no lower bound on c and no statement of what goes wrong elsewhere. Two corrections, both from checking rather than reasoning:
+
+**c > 3 is needed for the derivation.** At c = 3 the only 3-subset is the whole block, fixed by every group element; the formula returns 1, but via the C(c,3) cap rather than because the argument applies — the free-translation step fails outright. At c = 2 there are no 3-subsets. Also recorded: the cap can bind only for **c ≤ 7**, since c·d ≤ c(c−1) ≤ C(c,3) once c ≥ 8.
+
+**"Prime power" was the wrong exclusion, and measuring it gave a sharper statement.** The law does fail at c = 9 — by exactly a factor of 3 at every twist (3, 3, 6, 12 against 9, 9, 18, 36) — but it **holds at c = 4 and c = 8**, verified. So the obstruction is not prime-power-ness; it is the existence of a **3-element additive subgroup** for a 3-set to be a coset of, i.e. 3 | c with c > 3. §4's "prime-power blocks are poison" is corrected to "blocks of size 3^a with a ≥ 2", with the general-k form noted: the poison at k-sets is p ≤ k with a ≥ 2, so the excluded set grows with k.
+
+*Worth noting for the k = 2 side:* the same distinction has no bite at k = 2, because a 2-set being a coset of a 2-element additive subgroup is only possible in characteristic 2, where it is harmless. The exclusion appearing at all is a k ≥ 3 phenomenon, and it is a second respect in which the shape space narrows as k grows.
+
+## Twenty-fourth batch: semilinearity at k = 3
+
+**The prompt.** The reference construction builds AGL(1, c) — translations plus a multiplicative twist — and omits the Frobenius map. The full point stabiliser of a primitive affine block is ΓL(1, c), so at c = 8 the available group is AΓL(1,8) of order 8·7·3 = 168 against AGL(1,8)'s 56. A bigger group fuses orbits, so the minimum on 3-sets could rise and the orbit law could be understating.
+
+**Measured across c ∈ {8, 9, 16, 25} and every twist order: AGL and AΓL give identical minima in all 18 cases.** The law is unaffected.
+
+**Two distinct reasons, which is why the result is more robust than a single coincidence.** At **c = 8 the minimum is already maximal** — |AGL(1,8)| = 56 = C(8,3), and the action on 3-sets is *sharply transitive*, so there is exactly one orbit and nothing left to fuse. At **c = 9, 16, 25** the minimising 3-sets form a **Frobenius-stable family**: Frobenius sends a cube root of unity to another cube root, so it preserves the shape {x, ζ′x, ζ′²x}, and it maps affine lines to affine lines. The small orbits are already closed under it.
+
+**Why this is worth more than a checked edge case.** The GL(1)-versus-ΓL(1) distinction is precisely the open **J0a** of `enumeration-proof.md` and the false ΓL(1) step of Part B — at k = 2 an unresolved assumption bearing on attainment. On this evidence **orb₃ is insensitive to it**, so a k = 3 programme would inherit the shape space without inheriting that worry. Recorded as 18 cases of evidence, not a proof.
+
+Also confirmed in passing: Frobenius does not rescue the 3 | c blocks either, since any semilinear map permutes affine lines among themselves.
+
+## Twenty-fifth batch: the Frobenius claim was wrong, and c = 32 is why
+
+**Retraction.** The previous batch concluded that orb₃ is insensitive to the GL(1)-versus-ΓL(1) distinction, on 18 measured cases. **That conclusion is false**, and it failed for two independent reasons at once — a buggy Frobenius routine (dead code left in the exponentiation), and a sample that happened to contain no case where the question has teeth.
+
+**The counterexample, suggested rather than found by me:** c = 32 = 2⁵. Then c − 1 = 31 is prime, so the twist has no cube roots and no antipodal element, and a = 5. Measured with a corrected implementation:
+
+| c = 32, a = 5 | d = 1 | d = 31 |
+|---|---|---|
+| AGL(1,32) | 32 | 992 |
+| **AΓL(1,32)** | **160** | **4960** |
+
+A factor of exactly a = 5. At d = 31 the semilinear action is *sharply transitive* on 3-sets: 4960 = C(32,3) = |AΓL(1,32)|.
+
+**Replaced by a proof rather than more examples.**
+
+> **Lemma (semilinear fusion).** AGL ⊴ AΓL with quotient C_a, so every ΓL-orbit is a union of AGL-orbits permuted by C_a with sizes preserved; an AGL-orbit A with C_a-stabiliser of order t has ΓL-orbit |A|·a/t. Hence min₃^ΓL = min_A |A|·a/t(A), and **min₃^ΓL = min₃^AGL iff some minimum-size AGL-orbit is Galois-stable.**
+
+Three sufficient conditions for such an orbit, each by exhibiting a fixed set: **2 | d** ({0, 1, −1}, fixed pointwise by Frobenius, stabiliser of order 2); **3 | d** ({1, ζ′, ζ′²}, fixed setwise since ζ′^p again has order 3); **a = 3 or 3 | c** (Frobenius orbits of size 3 are themselves 3-sets; and Frobenius is 𝔽_p-linear so permutes the 𝔽_p-lines). A rise therefore requires **gcd(d, 6) = 1, a ≠ 3, and 3 ∤ c** — and c = 32 is the smallest case meeting all three, which is exactly why the earlier sample missed it: c = 8, 9, 16, 25, 27, 49 each satisfy one of the conditions.
+
+**The consequence reverses the earlier reading.** A k = 3 programme **does** inherit J0a, and in a sharp form: the semilinear twist is worth a factor of a precisely on blocks with gcd(d, 6) = 1, a ≠ 3, 3 ∤ c. Since larger orbits are better for us this is an opportunity rather than a hazard — but the shape space must be indexed by **ΓL** twists, not GL twists.
+
+**§2 restructured** into 2.1 (prime blocks, the law) and 2.2 (prime powers), the latter split into 2.2.1 (the affine-line failure, triggered by 3 | c rather than by prime-power-ness) and 2.2.2 (semilinearity). Frobenius belongs under prime powers because it is trivial when a = 1.
+
+*Process note.* Two things would have caught this earlier: implementing Frobenius by a named field operation rather than a hand-rolled power loop, and choosing test cases by the *criterion* the claim depends on rather than by convenience. The cases I picked were the ones already lying around from §4's shape comparison, and every one of them satisfied a condition that makes the question vacuous.
+
+## Twenty-sixth batch: the Mersenne family, and a tie to the Jones–Zvonkin programme
+
+**The suggestion, and it upgrades §2.2.2 from a criterion to a theorem.** Take c = 2^p with 2^p − 1 a Mersenne prime, p ≥ 5 prime. Then all three conditions of §2.2.2 hold at once and for structural reasons: M = 2^p − 1 is odd and, p being odd, 3 ∤ M, so gcd(d, 6) = 1; a = p ≠ 3; 3 ∤ c. **What the Mersenne condition buys** is that the *maximal* twist d = c − 1 is itself coprime to 6, so the gain applies at the strongest configuration rather than only at a weak one.
+
+> **Proposition (proved).** For such c, **AΓL(1, c) acts freely on 3-subsets**, so orb₃^ΓL = c·M·p = p·orb₃^AGL.
+
+The proof is a cycle-type argument over the three prime divisors: involutions are translations (the point stabiliser C_M ⋊ C_p has odd order), so 2^{p−1} transpositions and no odd stable set; order-M elements fix one point and M-cycle the rest with M > 3; order-p elements are Frobenius conjugates with fixed field 𝔽₂, giving two fixed points and p-cycles, so a stable 3-set would need 1+1+1 or a single p-cycle, and p ≠ 3.
+
+**Verified at both computable members.** c = 32: 992 → 4960, factor 5. c = 128: the orbit of {0,1,3} is **113,792 = 128·127·7** under AΓL against 16,256 under AGL — free, factor 7, with C(128,3) splitting into exactly 3 orbits.
+
+**A nontriviality condition falls out, and it bites at the first member.** The gain is capped by C(c,3), so it is genuine only when a ≤ (c−2)/6. At c = 32 that is 5 ≤ 5 — *equality* — so AΓL(1,32) is sharply transitive on 3-sets and the minimum is already maximal. At c = 128 it is 7 ≤ 21. So c = 32 is the extremal member, not a typical one, which is worth knowing before generalising from it.
+
+**And the family connects to `literature-findings.md` item 20.** Jones–Zvonkin's projective primes are (q^n − 1)/(q − 1) prime; **at q = 2 those are the Mersenne primes**. Same arithmetic input, two different questions. Two consequences recorded in both documents: the supply is **outside Bateman–Horn** — 2^p − 1 is exponential in p, exactly the exclusion they state for their own Mersenne-like families — so the governing heuristic is Lenstra–Pomerance–Wagstaff, conjecturally infinite but very thin; and this is therefore the **k = 3 instance of the exponential regime** already isolated at k = 2 in `aod` §3.5.6. The polynomial/exponential boundary reappears as the boundary between blocks where semilinearity is worth a factor and blocks where it is worth nothing.
+
+## Twenty-seventh batch: the semilinear criterion is necessary and sufficient
+
+**The question was whether §2.2.2's three sufficient conditions are also necessary — because if so, deciding the semilinear gain becomes pure arithmetic with no orbit computation. They are, once corrected.**
+
+The three conditions as stated were *not* the whole story: "a = 3" should be "gcd(a, 6) > 1", and there is a fourth escape at p ≥ 3 that they only covered accidentally. The corrected statement is complete:
+
+> **Theorem.** For c = p^a, a ≥ 2, d | c − 1: **min₃^ΓL > min₃^AGL ⟺ p = 2 and gcd(a, 6) = 1 and gcd(d, 6) = 1**, and the gain is then exactly the **smallest prime divisor of a**.
+
+**Sufficiency** exhibits a Galois-stable minimal orbit in each escaping case: {0, 1, −1} or {1, ζ′, ζ′²} when gcd(d, 6) > 1; any 3-subset of the pointwise-fixed 𝔽_p when p ≥ 3; and, at p = 2, the set {0, ω, ω²} ⊆ 𝔽₄ when 2 | a or the Frobenius orbit {ω, ω², ω⁴} ⊆ 𝔽₈ when 3 | a.
+
+**Necessity** is the part that makes it a criterion. Under the three hypotheses AGL acts *freely* on 3-sets, so a stabilising h must have order exactly a; h permutes S so h|_S has order dividing both a and 6, which gcd(a, 6) = 1 forces to be 1; so h fixes S pointwise. But h ↦ Frob^i with gcd(i, a) = 1, and gcd(2^i − 1, 2^a − 1) = 1, so **|Fix(h)| = 2 < 3**. Contradiction.
+
+**The gain factor** follows by running the same argument for a subgroup C_t: |Fix| = 2^{a/t} ≥ 3 iff a/t ≥ 2, so the largest achievable stabiliser is t = a/q with q the least prime divisor of a.
+
+**Verified at 16 further (c, p, a, d) combinations** across c = 8, 16, 32, 64, 81, 125, 128 — every prediction correct, including the two cases the old sufficient conditions could not have settled: a = 6 at c = 64 (no rise, via 2 | a) and p = 3, 5 with a ≥ 3.
+
+**Consequences.** Deciding whether semilinearity helps at a block needs no orbit computation — it is a function of (p, a, d) alone, and the gain exists **only in characteristic 2**. §2.2.3's Mersenne family is now a corollary rather than a parallel result; its direct cycle-type proof is kept because it exhibits the freeness explicitly.
+
+**One clause is proved but not testable here:** that the factor is the *smallest prime divisor* of a rather than a itself. Both computable cases have a prime (5 and 7), where the two agree; the first distinguishing case is a = 25, i.e. c = 2²⁵.
+
+## Twenty-eighth batch: imposing Oliver's condition on the semilinear criterion
+
+**The gap.** The §2.2.2 theorem was about AΓL(1, c) as an abstract permutation group. The framework admits only Oliver chain groups, and AΓL need not be one — a point the theorem never touched.
+
+**Working it out.** For a single block Γ₂ = 𝔽_c is forced, so the question is how C_d ⋊ C_a splits into a cyclic middle and a q-group top.
+
+- **d = 1:** C_d ⋊ C_a = C_a is cyclic, fits entirely in the middle layer with a *trivial top* — admissible for any a, and the harshest χ condition. But the block is worth only c·a, so this is weak.
+- **d > 1, p = 2:** Frobenius acts on C_d by x ↦ x², trivial only if d | p − 1 = 1. So C_d ⋊ C_a is non-abelian, C_a cannot join the middle layer, and **Γ/Γ₁ ≅ C_a must be a q-group — a must be a prime power q^e.**
+- **Proper Galois subgroups do not rescue it.** With C_m, m < a, the necessity argument gives h ↦ Frob^i with gcd(i, a) = a/m, so |Fix(h)| = 2^{a/m} ≥ 4 — a stable 3-set exists and there is **no rise at all**. The gain requires the *full* Galois group.
+
+> **Corollary.** For d > 1 the semilinear reading raises the minimum **iff p = 2, gcd(d, 6) = 1, and a = q^e with q ≥ 5**; the gain is exactly **q**.
+
+**So the answer is "almost the same, with one genuine tightening":** gcd(a, 6) = 1 is replaced by the strictly stronger *a is a prime power with q ≥ 5*. The abstract criterion admits a = 35; Oliver's does not, since C₃₅ is not a q-group. §2.2.3's Mersenne family is exactly the case e = 1, which is why it satisfies both criteria at once — and it now comes with its chain written out: Γ₂ = 𝔽_c, Γ₁/Γ₂ = C_M, Γ/Γ₁ = C_{p′}, top prime p′.
+
+**Two clauses are proved but not computationally testable**, both out of reach: the factor being the smallest prime divisor of a rather than a itself (first distinguishing case a = 25, c = 2²⁵), and proper Galois subgroups giving no rise (first case a = 10, c = 2¹⁰, with C(c,3) ≈ 1.8 × 10⁸). Both are recorded as such rather than as verified.
+
+*Pattern worth noting:* this is the third time in this note that a result stated for a natural algebraic object needed narrowing once the chain condition was imposed — after the orbit law (prime blocks only) and the shape ranking (fusion penalised). The chain condition is doing more work in this framework than its statement suggests, and results proved about AGL, AΓL or transitive groups in general should be checked against it before use.
+
+## Twenty-ninth batch: notation, and what it exposed
+
+**The notation was conflating a subgroup with the whole group.** §2.2 wrote "AGL" and "AΓL" throughout, but the object a block actually carries is
+
+> **Γ(d, m) = 𝔽_c ⋊ (C_d ⋊ C_m)**, d | c − 1, m | a,
+
+with C_d ≤ 𝔽_c^× and C_m ≤ Gal(𝔽_c/𝔽_p). Γ(c−1, 1) is the full AGL and Γ(c−1, a) the full AΓL, but those are the **extreme** members of a two-parameter lattice. §2.1's law is the case m = 1. Rewritten throughout.
+
+**The point worth keeping:** both C_d and C_m are subgroups of *cyclic* groups, so each is determined by its order alone and C_m automatically normalises C_d — the subgroup of a given order being unique. It is a tightly constrained lattice: one divisor of c − 1, one divisor of a.
+
+**And the notation was hiding a clause of the theorem.** The old statement said "proper Galois subgroups do not rescue this", as a remark. In the Γ(d, m) notation it is simply one of the escape clauses, with the cleanest proof of the four: a generator of the C_m quotient is Frob^i with gcd(i, a) = a/m, so **Fix = 𝔽_{p^{a/m}}, of size ≥ p² ≥ 4** whenever m < a, and any 3-subset of that subfield is fixed pointwise. So the theorem now reads
+
+> **min₃(Γ(d, m)) > min₃(Γ(d, 1)) ⟺ p = 2, m = a, gcd(a, 6) = 1, gcd(d, 6) = 1**,
+
+with m = a appearing as a *condition* rather than as an aside. The Oliver-constrained corollary is unchanged: for d > 1, gain iff p = 2, gcd(d, 6) = 1 and a = q^e with q ≥ 5.
+
+**The Mersenne family is now labelled as the corner of the lattice it is.** Both d = c − 1 and m = a are maximal there, so it cannot exhibit the intermediate behaviour — and §2.2.2 says the intermediate cases behave *differently*, since m < a never gains at all. Noted in place, because generalising from that family would give exactly the wrong picture of the m-dependence.
+
+*Which is the third correction in this note traceable to the same habit:* naming a familiar object (AGL, "transitive group", "prime power") where the argument needed a narrower one. The corrections have each time been in the direction of a smaller admissible class.
+
+## Thirtieth batch: §4's fusion argument was wrong, and the conclusion reverses
+
+**Two defects in one paragraph, the second fatal.** §4 claimed fusion is poison at k = 3 because F fused blocks admit same-position triples held together by "the diagonal translation", giving a class of size ≤ C(F,3)·c.
+
+1. It needs **F ≥ 3** to have three distinct blocks, so it says nothing about F = 2 — the case that matters most.
+2. **The translations of a matching class are independent, not diagonal.** Diagonal translations are what Lemma D2 forces on *foreign* blocks, precisely because Γ₁/Γ₂ cannot hold C_r^F, whereas Γ₂ *can* hold F independent copies of a p-group. The picture was imported from the wrong side of D2's own asymmetry — the asymmetry this note had already quoted correctly two sections earlier.
+
+**What is actually true, and it reverses the ranking.** A matching class of F blocks has intra term **F·orb₃(c, d)** — all F blocks' 3-sets in one orbit, exactly analogous to k = 2. Since orb₃ ≈ c·d/κ, that is **≈ n·c/κ**, so fusing two blocks beats leaving them separate by a factor of about F.
+
+Measured, and the margin is large:
+
+| n | shape | min₃ | /n² |
+|---|---|---|---|
+| 26 | **2 × 13 fused** | **104** | 0.154 |
+| 26 | 9 + 17\* | 12 | 0.018 |
+| 34 | **2 × 17 fused** | **272** | 0.235 |
+| 46 | **2 × 23 fused** | **506** | 0.239 |
+| 52 | 23 + 29\* | 253 | 0.094 |
+| 24 | **3 × 8 fused** | **168** | 0.292 |
+| 24 | 11 + 13\* | 52 | 0.090 |
+
+So **fusion is good at k = 3, as at k = 2** — the earlier table was measuring a weaker family and calling it optimal.
+
+**What survives:** blocks of size 3^a with a ≥ 2 are still poison (§2.2.1's affine lines), which is why `9 + 17*` scores 12. That claim never depended on the fusion argument.
+
+**What falls with it.** §5's constant — the ~n²/8 figure came from the superseded ranking, and 2 × 23 already reaches 0.24 n². And §5's arithmetic claim: "the supply question relaxes to binary Goldbach" followed from "two prime blocks is optimal" and does not stand, since fusion puts prime powers back in. §7's third observation, that the k = 3 number theory is easy, is downgraded from an observation to an open question.
+
+**Both sections are now marked unreliable in the document**, with an explicit instruction not to build on them: no systematic shape search has been done at k = 3, and the cross-term structure of a fused class at k = 3 has not been worked out at all.
+
+*The pattern, for the fourth time in this note:* a claim was carried over from k = 2 by analogy without checking which side of a structural asymmetry it belonged to. Here the asymmetry — Γ₂ holds independent copies, Γ₁/Γ₂ does not — was already stated correctly in this same document, in the section the argument cited.
+
+## Thirty-first batch: dehistoricizing the 3-uniform note
+
+Nine sites rewritten. The note had accumulated the usual residue of a document revised several times in one sitting — "this section previously claimed", "the earlier value here was too small", "does not stand", "now unreliable" — which describes the document's history rather than the mathematics.
+
+**Where the history carried a real warning it became a pitfall.** §4's retraction box is now a *Pitfall* stating the tempting fusion argument and both of its failures before giving the correct account, on the reasoning that anyone reasoning by analogy from k = 2 will reach for the same argument. §2.2.2's box likewise now warns that a sample chosen for convenience will reliably mislead on the semilinear question, since every naturally-occurring small example satisfies one of the escape clauses — which is a fact about the criterion, not about how this note was written.
+
+**Where it was just bookkeeping it went.** §5's constant is now stated as unsettled with the measured values, rather than as a correction to a superseded figure; §6's supply row is marked open rather than "simplifies"; §7's third observation is a question rather than a retraction.
+
+**And the status header became a per-section table**, because the standing genuinely varies from "proved, necessity included" in §2.2.2 to "measured only, no systematic search" in §4, and a single paragraph was flattening that. It also now says what "measured" means here: n ≤ 52 and small blocks, which at k = 3 is a very short range.
+
+## Thirty-second batch: the Galois part is a k ≥ 3 phenomenon
+
+**Question: does the Frobenius map ever help at k = 2, or is this new?** It never helps at k = 2, and the reason is one line.
+
+Run §2.2.2's necessity argument at k = 2. The escape is always a k-subset of the fixed field, and **Fix(h) ⊇ 𝔽_p has p ≥ 2 elements, so a 2-subset always exists** — {0, 1} when the twist is odd, {1, −1} when 2 | d and p is odd — and it always lands in a minimal orbit. So a Galois-stable minimal orbit always exists and the minimum never moves.
+
+> **General statement: the Galois part can help only when p < k**, since 𝔽_p supplies a k-subset exactly when p ≥ k. Never at k = 2; exactly p = 2 at k = 3; p ∈ {2, 3} at k = 4; growing with k.
+
+**Verified at k = 2** across c = 8, 9, 16, 25, 32, 64, 128 and every twist — the minimum is identical under Γ(d, 1) and Γ(d, a) in all 28 cases, **including the c = 32 and c = 128 blocks where the k = 3 minimum rises by factors of 5 and 7.** The same block, the same groups, opposite answers at the two values of k.
+
+**And it recasts J0a.** The GL-versus-ΓL question is an unresolved assumption in the k = 2 documents bearing on attainment. Part of why it has stayed unresolved is that it never *matters* there — and now we know that is not luck about the particular constructions but a consequence of p ≥ k = 2. So **J0a's dormancy at k = 2 is an accident of the value of k**, not evidence that the assumption is harmless; and indexing the k = 2 shape space by ΓL rather than GL twists would change nothing, which is itself worth recording. Added as a fourth item to §7.
+
+## Thirty-third batch: feeding the k = 3 insights back into the k = 2 documents
+
+Three updates, one of which closes half an open item.
+
+### J0a is now half settled, and provably rather than empirically
+
+`enumeration-proof.md` J0a asked whether a matching block's twist may lie outside the field's multiplicative group. **The semilinear sub-case is now closed:** enlarging the twist from C_d to C_d ⋊ C_m cannot change any score. Enlarging a group only fuses orbitals, so no term can fall; and the intra term cannot rise either, because **{0, 1} ⊆ 𝔽_p is fixed pointwise by every Galois element** and lies in a minimum-size orbital — its stabiliser has order 2, realised by x ↦ 1 − x when 2 | d or by the translation x ↦ x + 1 in characteristic 2. Every other term of the value formula is a size product or an already-pooled cross class. So **B_safe, B_refined and every measured figure are untouched by whether the twist is read in GL(1, c) or ΓL(1, c).**
+
+What remains is the genuinely larger case — an irreducible subgroup of GL(a, p) that is not semilinear — which the argument does not reach. J0a and `pending-checks.md` T2 both now say which half is which.
+
+**And why it stayed dormant is now understood rather than lucky:** the escape is a k-subset of the fixed field 𝔽_p, which exists exactly when p ≥ k. Automatic at k = 2; fails in characteristic 2 at k = 3, where the semilinear reading raises the minimum by a factor of a. So the dormancy is a consequence of the value of k.
+
+### The two coefficient rules in Part E turn out to be one rule
+
+`orb(c, d)`'s condition `t % 2 == 0 or char2` has always read as two unrelated special cases. It is one: **the minimum orbital is c·d divided by the largest order of a setwise stabiliser of a 2-set in the affine group**, and that stabiliser (of order dividing 2) is realisable either inside the twist when 2 | d, or inside the translations when p = 2. Recorded in Part E next to the cross-coefficient pitfall.
+
+*The same rule at general k* is a useful check on any generalisation: a stabiliser of order m | k, realised in the twist when m | d or in the translations when p | k. At k = 3 that gives the 3 | d and 2 | d factors from the twist and — from the translation side — a factor 3 exactly when p = 3, which **is** the affine-line degeneracy. So the k = 2 char-2 halving and the k = 3 affine-line failure are the same phenomenon at different k, which neither document previously connected.
+
+### `aod` §3's contingency box gains one line
+
+The box already says the ceilings are the dividend of 2-transitivity. It now also records a degree of freedom that is *not* hidden in them: GL versus ΓL provably changes no orbital minimum at k = 2, so the ceilings are insensitive to that choice — while at k = 3 it does change the minimum, a further respect in which the constants are contingent.
+
+Regression after all three edits: `validate_table` and `fallback_cert` exit 0, `check_doc_figures` reports 0 dangling references.
+
+## Thirty-fourth batch: the k = 3 configuration census
+
+**Built as the k = 2 shape list re-analysed at k = 3, keyed by the same S-numbers, with no claim of comprehensiveness** — that is explicitly deferred, and §8 now says what a completeness argument would need.
+
+### The finding that shapes the whole table
+
+Measured across every shape, **the minimum 3-set orbit always lies inside a single block** — witnesses (0,1,2), (17,18,25), (22,23,26), (26,27,29), never a set spread across blocks. The reason is a degree count: an **intra** term is F·orb₃(c,d) ≈ s·c/κ, **quadratic** in n, while every **cross** term is a product of two or three part sizes, **cubic**. So
+
+> **min₃(configuration) = min over classes of F_i·orb₃(c_i, d_i).**
+
+**This is the largest structural difference from k = 2**, where cross terms routinely bind and most of `aod` §3 is the comparison between term types. At k = 3 that comparison collapses: the problem is to partition n and maximise the smallest part's (part size) × (block size) / κ. No balance point, no cap_F(η), no ceiling table.
+
+### The census
+
+| shape | k = 3 status | measured δ₃ |
+|---|---|---|
+| S1 single block | best available; **δ₃ ≈ 6/(κn), not 1** | 0.2000 (n = 32), 0.1429 (n = 16) |
+| S2 fused, F = 2 | second; ≈ 6/(κFn) | 0.0333 (n = 46) |
+| S3 matching + outside | ≈ half of S2 | 0.0160 (n = 36) |
+| S6 two outside | **equal to S3**, no longer dead | 0.0160 (n = 36) |
+| S4 / S7 | foreign block binds | 0.0079 (n = 35), 0.0013 (n = 33) |
+| S8 / S9 / S10 | still killed; D1's margin widens (F < F³) | — |
+
+**Three changes worth naming.** Prime powers stop being trivial — S1 gives 6/(κn), not δ = 1, so their full evasiveness is now an *external* fact from Rivest–Vuillemin rather than something the framework recovers. The matching/foreign distinction thins to "which twists are available", so **S6 stops being a dead shape** and ties S3. And the k = 2 tension between fusing to raise the cross term and not fusing to raise the intra term disappears, because there is no cross term to raise — fewer, larger blocks simply win.
+
+### Consequences for §5
+
+The constant now reads off the census rather than resting on the superseded ranking: **n²/κ** for prime-power n (S1), **n²/(2κ)** for n = 2c (S2 at F = 2), **n²/(4κ)** for n = c + r (S3), with κ ∈ {1, 2, 3}. The earlier ~n²/8 is the S3 row at κ = 2 — the weakest of the three.
+
+And the supply question is **corrected in the other direction**: it is not "easier at k = 3". Odd non-prime-power n fall to S3 and inherit exactly the prime-power-representation problem of `aod` §3.5. It is the same question asked of a shape whose payoff is linear in block size rather than quadratic.
+
+*Caveat recorded at the site:* §4.1's degree count is asserted and measured over n ≤ 46; a cross term could bind at small n before the cubic overtakes the quadratic, and the crossover has not been located. That is now the concrete first step toward completeness.
+
+## Thirty-fifth batch: three-argument orb₃, and the law collapses to one formula
+
+**The notation should carry what the group carries.** The block group is Γ(d, m), so the orbit function gets both parameters: **orb₃(c, d, m)**, with §2.1's law the case m = 1 and the Mersenne block reading **orb₃(32, 31, 5) = 4960** against orb₃(32, 31, 1) = 992.
+
+**Writing it that way collapses §§2.1–2.2 into a single formula**, which is the real payoff rather than tidiness:
+
+> **orb₃(c, d, m) = min( c·d·m / κ₃ , C(c,3) )**, κ₃ = τ·θ·γ with
+> **τ = p if p = 3 else 1** (translations — the affine-line degeneracy),
+> **θ = max{j ≤ 3 : j | d}** (the twist — §2.1's κ),
+> **γ = m**, except in the rise case where **γ = a/q**.
+
+The three factors are the three places a setwise stabiliser can come from: translations, twist, Galois. What had been three separate results — the orbit law, the 3 | c failure, the semilinear criterion — are three factors of one denominator.
+
+**Verified over 104 (c, d, m) triples**, c ∈ {5, 7, 8, 9, 11, 13, 16, 17, 19, 23, 25, 27, 32, 49}, every d | c − 1 and every m | a: **0 mismatches**.
+
+**And it explains the k = 2 formula.** At k = 2 the same reading gives τ = 2 in characteristic 2 — the translation x ↦ x + 1 swapping a pair, which is exactly `orb`'s `char2` flag — θ = 2 when 2 | d, and γ ≡ m always by J0a. So **the k = 2 orb is this formula with the Galois factor forced trivial**, and the general-k statement is: τ contributes p when p | k, θ contributes max{j ≤ k : j | d}, and γ is inert exactly when p ≥ k. That is a cleaner account of `orb`'s two-clause definition than the k = 2 documents currently give, and it arrived from the k = 3 side.
+
+## Thirty-sixth batch: the shifted-prime condition survives at k = 3, and the census measurements were invalid
+
+**The challenge:** the balance-point optimisation genuinely disappears at k = 3, but the shifted-prime condition should not, since the group still has to be an Oliver group. Correct — and checking it found that the census measurements for every shape with a foreign block were **invalid**.
+
+**The error.** `build()` takes the foreign block's twist as given, and the census passed the *full* d = r − 1 — at n = 36 that is 18 = 2·3², **not a prime power**. Lemma B′ forces a foreign block's twist into the top q-group, so it must be a **q-power** divisor of r − 1. The groups measured for S3, S4, S6 and S7 were therefore not admissible configurations at all.
+
+**Redone with valid twists, and the effect is large:**
+
+| n = 36, `17 + 19*` | q = 3, t = 9 | q = 2, t = 2 | (invalid) t = 18 |
+|---|---|---|---|
+| min₃ | **57** | **19** | 114 |
+| δ₃ | 0.0080 | 0.0027 | 0.0160 |
+
+A factor of three between the two *valid* readings, entirely from the arithmetic of 18 = 2·3² — which is the shifted-prime condition doing exactly what it does at k = 2. S4 falls from 0.0079 to 0.0020, S6 from 0.0160 to 0.0027. S1 and S2 are unaffected, having no foreign block.
+
+**So "k = 3 reduces to binary Goldbach" was wrong, and instructively so.** What k = 3 removes is the *balance-point* optimisation: with only intra terms binding, one takes roughly equal parts and there is nothing to optimise. What it does **not** remove is the shifted-prime requirement, because that comes from **Lemma B′ and the layer structure, not from the pairing** — and Lemma B′ is k-independent.
+
+**Which n escape it:** only pure-matching configurations — S1 (n a prime power), S2 (n = F·c), and more generally any configuration all of whose parts are p-characteristic for one p. Density zero. **Every other n needs a foreign block**, so `aod` §§3.5–3.6 transfer essentially intact.
+
+**And §5's constants were smuggling the condition in.** The S3 row's n²/(4κ) tacitly assumed t of order r — a safe-prime-like foreign block. Without it the row is r·t/κ = n^{1+θ} at best, and as small as Θ(n) when the only q-power divisor of r − 1 is 2. The table now carries a "conditional on" column: **only the S1 and S2 rows are unconditional**, and both need n of a special multiplicative form.
+
+*The methodological point:* the invalid measurements passed unnoticed because `build()` does not enforce Lemma B′ — it constructs whatever group it is asked for. A reference implementation that accepts inadmissible configurations will silently produce numbers for objects the framework excludes, and those numbers looked entirely reasonable. The `verify_witness.g` script checks the chain explicitly for exactly this reason; the Python reference does not, and should.
+
+## Thirty-seventh batch: orb₃ notation in the census, and the Galois part's place in it
+
+**Notation.** Every orb₃ in §4 now carries three arguments, and §4.1's degree count is restated as F·orb₃(c, d, m) ≈ s·c·m/κ₃ so the Galois factor is visible in the term that decides the minimum.
+
+**The substantive gap was that the census never mentioned the Galois part at all.** Filling it produced a new subsection (§4.3) with two findings.
+
+**Where it pays: S1, and enormously.** At n = c = 2^a with a a prime power ≥ 5 the criterion of §2.2.2 is met *automatically* — d = 2^a − 1 is odd, and 3 ∤ 2^a − 1 because a is odd, so gcd(d, 6) = 1 with no extra hypothesis.
+
+| n = 2^a | orb₃(c, c−1, 1) | orb₃(c, c−1, a) | δ₃ |
+|---|---|---|---|
+| 32 | 992 | **4,960** | **1.0000** |
+| 128 | 16,256 | 113,792 | 0.3333 |
+| 2,048 | 4,192,256 | 46,114,816 | 0.0323 |
+
+**n = 32 attains δ₃ = 1** — all of C(32,3) in one orbit, the k = 3 analogue of S1's δ = 1 at k = 2. It happens at exactly one n, because the gain factor q = a grows logarithmically while C(c,3)/c² grows linearly; §2.2.3's nontriviality condition a ≤ (c−2)/6 is the same fact from the other side.
+
+**Where it costs: everywhere else, and this is the finding.** Using C_a on top forces Γ/Γ₁ to be a q-group with **q | a**, so q becomes the configuration's top prime — and Lemma B′ then requires **q | r − 1 for every foreign block**. Worked at a = 5: foreign blocks 11, 31, 41 are all admissible but all stuck at twist t = 5, contributing only 5r/κ₃, **linear in n**. So a configuration that spends its top prime on the Galois gain buys a superb matching block and a foreign block that immediately binds.
+
+> **This is the first place in the census where improving one part actively damages another**, and it has **no k = 2 counterpart** — at k = 2 the Galois part buys nothing (J0a), so it is never worth spending a top prime on. It is also why S1's δ₃ = 1 at n = 32 does not propagate to any composite n.
+
+**Consequence for the ranking:** the Galois part is worth using only in a **pure-matching** configuration — S1, or S2 with F a power of the same q. The moment a foreign block is present, q must be small enough to divide a and is therefore far too small to give that block a twist of order r.
+
+## Thirty-eighth batch: full density at k = 3 is a classified finite list
+
+**The question was whether c = 8 and c = 32 are the only blocks transitive on 3-subsets. They are, and it is a classical theorem — so this closes rather than opens.**
+
+The relevant property is not 3-transitivity but the weaker **3-homogeneity**, transitivity on 3-*subsets*. The two genuinely differ here: |AGL(1,8)| = 56 = C(8,3) is far below 8·7·6 = 336, so it cannot be 3-transitive, yet it is transitive on 3-sets.
+
+> **Kantor (1972), building on Livingstone–Wagner (1965).** For n ≥ 6 a 3-homogeneous but not 3-transitive group is **AGL(1,8), AΓL(1,8), AΓL(1,32)**, or contains PSL(2,q) with q ≡ 3 (mod 4). For n ≤ 5: A₄ and AGL(1,5).
+
+PSL(2,q) is not solvable and Oliver groups are, so **the solvable 3-homogeneous groups of degree ≥ 5 are exactly AGL(1,5), AGL(1,8), AΓL(1,8), AΓL(1,32)** — degrees **5, 8, 32**.
+
+**The computation agrees exactly.** Searching every prime power c ≤ 4096 and every admissible (d, m) for orb₃(c, d, m) = C(c,3) returns precisely c ∈ {5, 8, 32} — Γ(4,1), Γ(7,1) and Γ(31,5), the last being the Mersenne block. Two are sharply transitive on 3-sets.
+
+**Three things this settles.**
+
+1. **The contrast with k = 2 is sharp and now quantified.** δ = 1 holds at every prime power when k = 2 (an infinite family, and the reason S1 is trivial there); at k = 3 it holds at exactly three blocks; and **at k ≥ 5 never** — Livingstone–Wagner give k-homogeneous ⟹ k-transitive for k ≥ 5 with k ≤ n/2, and solvable k-transitive groups have degree ≤ 4. So the homogeneity/transitivity gap that c = 8 and c = 32 exploit exists only at k ≤ 4.
+2. **It explains §2.2.3's nontriviality condition.** The Mersenne family gains a factor q at every member, but only at c = 32 does the gain land exactly on the cap — a ≤ (c−2)/6 holds with equality at a = 5 and strictly after. So c = 32 is the *last* block reaching full density at k = 3, and c = 128 already sits at 1/3.
+3. **The S1 census row is corrected**: δ₃ ≈ 6/(κ₃n) → 0 *except* at c ∈ {5, 8, 32}.
+
+Written up as §2.4, with the status table marking it **classified** rather than measured — the only row in the note whose completeness rests on a published classification rather than on our own search.
+
+## Thirty-ninth batch: §3 rewritten around the classification, and m pinned down in the census
+
+**§3 had gone stale the moment §2.4 was written.** It argued that the k = 2 constants exist because AGL(1, c) is 2-transitive, that "the k = 3 analogue would need 3-transitivity", and that since no solvable 3-transitive groups of degree > 4 exist the mechanism is "excluded at k ≥ 3, not merely unfound". **The middle step is wrong** — what full density needs is 3-*homogeneity*, which is strictly weaker, and three solvable groups have it. Reaching for 3-transitivity was reaching for more than the argument needs, and it made the conclusion look stronger than it is.
+
+**Rewritten as three subsections**, absorbing §2.4:
+
+- **3.1** — what full density actually requires (k-homogeneity), Kantor's classification, the solvable list c ∈ {5, 8, 32}, and the computational agreement. Also relocated here: why c = 32 is the *last* such block, which is §2.2.3's nontriviality condition seen from the other side.
+- **3.2** — why the density still goes to zero, by an order bound needing no classification: |Γ| ≤ c² log₂ c against C(c,3), so δ₃ = O(log c / c). The three exceptional blocks are exceptions at small c, where c² log c has not yet been overtaken by c³/6. The k = 2 contrast is now stated exactly: there |Γ| ≈ c² and C(c,2) ≈ c²/2 are the *same order*, so the bound is no obstacle; at k = 3 the denominator gains a factor of c and the numerator does not. Plus the k ≥ 5 statement, where Livingstone–Wagner closes the gap entirely.
+- **3.3** — the consequence for `aod` §3, unchanged in substance, with the GL/ΓL remark sharpened: at c = 32 that choice is the difference between δ₃ = 1/5 and δ₃ = 1.
+
+**And m was undefined at its point of use in the census.** Two facts pin it down, now stated before the table: a **foreign block has prime size**, so a = 1 and m = 1 is forced — every foreign entry is orb₃(r, t, 1) and the only choice is the q-power twist. And on a **matching block, intermediate m is useless** by §2.2.2, since a proper Galois subgroup leaves a fixed field of at least p² ≥ 4 elements to supply a stable 3-set. So **the only live values are m = 1 and m = a**, and m appears as a genuine choice only in the S1 and S2 rows, where §4.3 decides it.
+
+## Fortieth batch: consistency sweep of §§5–7
+
+Not a rewrite — six surgical fixes for things the later sections had invalidated.
+
+**§5.** The constant table said κ ∈ {1, 2, 3}; §2.3's κ₃ = τ·θ·γ can be **6** (τ = 3 when 3 | c, θ = 2 when 2 | d), so the range was wrong. Renamed to κ₃ throughout and corrected. The S1 row now records the three blocks where it reaches C(n,3) outright rather than n²/κ₃ (§3.1), and m ∈ {1, a} is noted as a choice §4.3 makes. Dropped a residual "the earlier ~n²/8 figure was…" aside.
+
+**§6.** Two rows carried the retracted fusion argument. The **D2** row claimed D2 "acquires a k = 3 analogue for matching blocks, which at k = 2 has no counterpart" — that was the same-position-triples claim; replaced with what is actually true (D1's margin widens to F < F³, D2 inherits the A18 gap). The **Part E** row cited "same-position triples" as a sub-case to work out; replaced with an honest statement that the within-class sub-cases are unworked and, by §4.1, none of them binds. The **Part F** row said orb₃ ≤ c²/3, which holds only when 3 | d; corrected to c(c−1)/κ₃ with the constant flagged as not re-derived.
+
+**§7.** Item 2 said "fusion and prime-power blocks are k = 2 luxuries", half of which is the retracted claim; cut to the 3^a blocks alone, which is the part that survives and which still makes the intended point — a structure that is benign at k = 2 becomes an obstruction one dimension up. Item 4 was phrased as a retraction of the Goldbach reading; restated forward as the finding itself, that the arithmetic difficulty is *not* the price of chasing constant density, since the shifted-prime condition comes from Lemma B′ rather than from the pairing.
+
+*Nothing was expanded*, and where cleaning up would have meant new work — the within-class cross sub-cases at k = 3, Part F's constant — the entry now says so rather than guessing.
+
+## Forty-first batch: the n = 133 worked example
+
+Added as §4.5, because it exhibits §4.3 and §4.4 interacting and shows the design move that resolves them.
+
+**The configuration.** n = 133 = 32 + 101, chain Γ₂ = 𝔽₃₂, Γ₁/Γ₂ = C₃₁ × C₁₀₁ (cyclic, gcd(31,101) = 1), Γ/Γ₁ = C₅ × C₂₅ (a 5-group). So p = 2, **q = 5**. Scores: orb₃(32,31,5) = 4960 = C(32,3), orb₃(101,25,1) = **2525** — verified by direct orbit computation, not just the formula. **min₃ = 2525**, δ₃ ≈ 0.0066. Without the Galois part the same split gives 992, so the Galois is worth a factor of 2.5.
+
+**The design principle is the reason to keep the example.** Fixing the 32-block forces q = 5, so Lemma B′ requires 5 | r − 1 and the foreign twist is the 5-part of r − 1. Asking only for 5 | r − 1 gives generically **t = 5**, an intra term of 5r — linear with a tiny constant, so the foreign block is either too small to contribute or too large to afford, since C(n,3) grows as n³. **Asking instead for r ≡ 1 (mod 25) lifts the twist to 25 for no extra size**, a factor of five. The table shows mod-5 rows decaying steadily while r = 101 jumps fourfold over its neighbours purely on the arithmetic of 100 = 4·25.
+
+And it shows the other end: r ≡ 1 (mod 125) **overshoots** — at r = 251 the foreign block scores 31,375 but the 32-block's cap of 4960 now binds and the extra 150 points of n buy nothing. So the target is to match the foreign intra term to the matching block's cap, r ≈ 199 would be ideal, and 101 is the best prime below the crossover.
+
+**Also recorded:** 133 has *no* balanced two-part split into prime powers. The options are {2,131}, {5,128}, {8,125}, {32,101}; {8,125} is inadmissible because two matching blocks must share one p and 8 is a 2-power against 125's 5-power; {2,131} dies on the size-2 block; {5,128} forces 5 to be foreign, worth 10. So 32 + 101 is nearly the only viable split, and the near-balanced 43 + 43 + 47 is second at 1081, less than half.
+
+**The caveat is stated prominently and is a real difference from k = 2.** There, claims of this kind rest on `mu_enumerate_v2.py` enumerating the whole shape space with `brute.py` as an independent check. **Here there is no enumerator.** The comparison is a search over a hand-specified family — ≤2 matching parts, ≤2 foreign parts, one top prime — and it leans on §4.1's measured-not-proved claim that cross terms never bind. "Optimal" means best in the family searched. The status table marks the section accordingly, and building a k = 3 enumerator is §8's first item.
+
+## Forty-second batch: §4.3's coupling is a presumption, not a prohibition
+
+§4.3 concluded that the Galois part is worth using "only in a pure-matching configuration", on the ground that fixing q to a prime dividing a leaves every foreign block with a twist too small to matter — the worked table showing r = 11, 31, 41 all stuck at t = 5.
+
+**That overstates it, and §4.5 is the counterexample sitting two sections later.** The twist is stuck at t = 5 only because 25 ∤ r − 1 for those particular r. Choosing the foreign block from the primes with **r ≡ 1 (mod q²)** lifts the twist to q² at no cost in size, and the trade can then come out positive: at n = 133 = 32 + 101, since 101 − 1 = 4·25 the foreign block scores 2525 instead of 505, and the Galois part is worth a factor of 2.5 overall.
+
+So §4.3 now says the coupling is **a strong presumption against combining the two, not a prohibition** — it costs a specific congruence condition on r, and that condition is satisfiable — with a forward pointer to §4.5. The "consequence for the ranking" paragraph is softened in the same way: pure-matching *usually*, and "S1's δ₃ = 1 does not propagate to *most* composite n — but at the n where the congruence can be met, it partially does".
+
+*Worth noting as a pattern:* the section was written before the worked example existed, and its generalisation was drawn from the three smallest foreign blocks to hand — which is the same sampling failure as the semilinear claim in the twenty-fifth batch, where every convenient example satisfied an escape clause. Small samples of arithmetic objects reliably miss the congruence-selected cases, because those are exactly the sparse ones.
+
+## Forty-third batch: what the sandwich would look like at k = 3
+
+Recorded as §4.6, prompted by asking whether the n = 133 construction is a refined-mode or safe-mode object. **It is neither — it is fallback-free** — but working out why produced three findings a k = 3 implementation would otherwise hit blind.
+
+**n = 133 is fallback-free in both senses.** The matching twist is 31 and the foreign prime 101, so gcd(31, 101) = 1 and **Lemma C never bites**; refined and safe agree. It is also consistent in the §4.3 sense — the Galois part needs q = 5 and the foreign twist needs q = 5, the *same* q.
+
+**1. k = 3 adds a second fallback axis with no k = 2 counterpart.** The Galois gain is per-block (it depends on that block's a) while **the top prime is global**. Matching blocks 32 (a = 5) and 128 (a = 7) would each be credited their Galois gain by a per-block scoring, but q cannot be both 5 and 7. Those are fallback configurations in a new sense, independent of Lemma C's, and a certificate would need conditions for both.
+
+**2. The k = 2 SAFE cap does not transfer, and this is the serious one.** SAFE works at k = 2 because **orb(c, c−1) = C(c,2) exactly** — the crude bound is *attained* at full twist, so F·C(c,2) is tight except where Lemma C bites. At k = 3, C(c,3) ≈ c³/6 against an achievable ≈ c², so a C(c,3)-style cap over-credits by a factor of order c/(6a) and the sandwich would be a factor of n wide.
+
+> **And the sharper form is §3.1 in a third role:** C(c,3) is attained exactly at c ∈ {5, 8, 32}, so the three solvable 3-homogeneous blocks are precisely where the naive SAFE cap is tight. The classification that limits full density also limits how crude a safe scoring can afford to be.
+
+So **SAFE and REFINED largely collapse at k = 3** — a usable safe scoring is F·min(c·d·m/κ₃, C(c,3)), essentially the true formula — and the residual gap is the global-q coupling rather than twist-stripping.
+
+**3. A soundness trap, named before anyone writes code.** A k = 3 SAFE that *ignores* the Galois part, by analogy with k = 2 where it is provably inert (J0a), would credit orb₃(c, d, 1) — **smaller** than the achievable orb₃(c, d, a) by a factor of q on the §2.2.2 blocks. Not a loose upper bound; not an upper bound at all. Any k = 3 scoring must carry m, which is the practical reason §2.3's notation takes three arguments.
+
+§6's Part E′/E″ row is updated to point at this.
+
+## Forty-fourth batch: §5, the additive engine at k = 3
+
+Written fresh as the counterpart of `arithmetic-of-density.md` §3, with §§6–9 renumbered to make room. §§4.5–4.6 belong here and can be folded in later.
+
+**The central move is a per-part efficiency.** Define **e = F·orb₃(c, d, m)/s²** with s = F·c the part size — the k = 3 analogue of η, stripping out size so what remains is the part's arithmetic. Then vᵢ = eᵢsᵢ², and maximising min vᵢ subject to Σsᵢ = n is one line: set the values equal, sᵢ ∝ 1/√eᵢ, giving
+
+> **m\*₃ ≈ n² / (Σᵢ 1/√eᵢ)²**, at sᵢ = n(1/√eᵢ)/Σⱼ(1/√eⱼ).
+
+Three things drop out. **Fewer parts is always better** — each part adds a positive term to the sum, so §4's measured ranking now has a reason. **Balance is by efficiency, not size** — a low-efficiency part wants to be made *larger*, which is the opposite of the naive reading. And the formula has the same shape as `aod` §4.2's two-foreign-block cap 1/(√m₁+√m₂)², which turns out not to be a coincidence: that cap is the k = 2 instance of this same allocation argument, surfacing there only in the one shape with no cross term to compensate.
+
+**The efficiency table locates the whole difficulty in one row.** A matching block always has e = d/(cκ₃) ≤ 1/κ₃, bounded and decided by congruences. A foreign block has e = η₃/κ₃ with **η₃ = t/(r−1)**, which is exactly `aod` §3.6's shifted-prime quantity. So everything conditional enters through the foreign row and nowhere else.
+
+**And the Galois row is what has no k = 2 counterpart:** at k = 2 every part has e ≤ 1, since C(c,2) is attained at full twist, so the allocation is a competition among bounded quantities. At k = 3 a Galois block reaches **e ≈ 4.84** (c = 32, d = 31, m = 5), so it wants to be made *smaller* than an equal share — and since it also fixes the top prime (§4.3), allocation and arithmetic are coupled in a way they are not at k = 2.
+
+**The two-part ceiling** is m\*₃ ≤ n²/(√κ_c + √(κ_r/η₃))², which at κ = 1 and η₃ = 1 is **n²/4** — the same functional form as `aod` §3.3's cap_F(η) at F = 1, with δ replaced by m\*₃/n². Measured against it, the best two-part configurations run at roughly a quarter of ceiling (n = 90: 602 against 2025; n = 250: 5050 against 15,625), the shortfall being arithmetic rather than structural.
+
+**§5.5 states what the engine consumes**: a matching block of prescribed size (Bateman–Horn, unchanged) and a foreign prime with η₃ bounded below (the shifted-prime ladder, unchanged, same θ = 1 endpoint). What it does *not* consume is the balance-point analysis — no ceilings by residue class, no cap_F, no mod-24. So the k = 3 engine is **the k = 2 engine with the optimisation removed and the supply questions intact**, which is the precise form of §4.4's claim that k = 3 is not arithmetically easier.
+
+§6's constant table now defers to the allocation formula rather than restating a per-shape list.
+
+## Forty-fifth batch: §§4.5–4.6 moved into §5, and a note on `check_doc_figures` coverage
+
+**Moved.** The n = 133 worked example and the sandwich discussion are now **§5.6 and §5.7**, at the end of the additive-engine section where they belong — the first is §5.2's allocation problem worked at a single n, the second is what the allocation implies for a scoring function. Seven references updated across the note, including the status-table rows, §4.3's forward pointer, §5.4's cross-reference and §7's Part E′ row. Zero references to the old numbers remain.
+
+**Yes, `check_doc_figures.py` covers `three-uniform-note.md`** — it is picked up by the `*.md` glob and is *not* in `NOT_OURS` or `PREFIXED_ONLY`, so it gets the full five passes with its own sections registered as anchors. Worth knowing since the note was written after that machinery.
+
+**And it earned its keep on this pass.** The refs pass flagged `three-uniform-note.md` L257 citing **§2.4**, which stopped existing when §2.4 was folded into §3.1 two batches earlier. It surfaced as `[elsewhere]` rather than `DANGLING` — §2.4 exists in other documents — which is the intended behaviour but means it only shows without `--quiet`. Repointed to §3.1.
+
+*Worth noting about that class of error:* renumbering a section breaks inbound references silently, and the `[elsewhere]` classification hides exactly the case where the number is still valid **somewhere** — which is the common case in a project where five documents all have a §3. A stricter mode that treats an unprefixed same-document reference as dangling regardless of other documents would have flagged it at full volume. Not worth building now, but it is the residual gap in the refs pass.
+
+## Forty-sixth batch: the mod-12 / mod-24 structure at k = 3
+
+Added as §5.6, with the worked example and sandwich pushed to §§5.7–5.8. The Bateman–Horn systems are identical to k = 2's, so nothing there was re-derived; what changed is the congruence law on a matching block's twist, and the S4/S5/S7 competition that follows from it.
+
+**Two effects, and the first has no k = 2 counterpart.**
+
+*The block's own class.* At k = 2 an odd block at full twist always reaches its cap — orb(c, c−1) = C(c,2) exactly, the halving compensating precisely. At k = 3 there is no such identity, because κ₃ takes three values:
+
+> **orb₃(c, c−1, 1) = c(c−1)/3 if c ≡ 1 (mod 3), else c(c−1)/2.**
+
+So a block with 3 | c − 1 is **penalised by 3/2 before any fusion**, purely for having a twist divisible by 3. At k = 2 a larger twist is never worse; here it can be.
+
+*The fusion cut.* A cyclic-layer fusion forces the twist to the odd part of c − 1. With 2^v ‖ c − 1 the cost is **2^{v−1}** at k = 2 always, and at k = 3 **2^{v−1} if 3 ∤ c − 1, but 2^v if 3 | c − 1** — one factor of two worse exactly on the blocks already penalised. Verified at every odd prime power c ≤ 83.
+
+**Combined, the good class narrows.** At k = 2 it is c ≡ 3 (mod 4), and c ≡ 3, 7, 11 (mod 12) are equally good since only v matters. At k = 3 the mod-3 penalty separates them and **c ≡ 11 (mod 12) is strictly best** — full value c(c−1)/2 *and* free fusion — while c ≡ 7 pays twice over. So the governing modulus rises from 4 to 12, with mod 24 entering to pin v exactly as at k = 2 (c ≡ 5 mod 24 has v = 2 against c ≡ 17's v = 4, a fourfold difference in fusion cost).
+
+**And that is what changes S5 versus S7.** The shapes still differ by where the swap lives — cyclic layer means a cut twist but a free q, top layer means a full twist but q = 2 forced. The *shape* of the trade is unchanged; the *magnitude* is not. The matching-side ratio S5 : S7 is 2^{v−1} at k = 2, so at c ≡ 3 (mod 4) it is 1 and S7 wins outright on the free q. At k = 3 it is 2^{v−1} or **2^v**, so S7's free win survives only at c ≡ 11 (mod 12) — a quarter of the odd blocks rather than a third — and on the rest S5's advantage is one factor of two larger than the k = 2 analysis would predict.
+
+**Deliberately not done**, and said so at the site: density and existence counts for these classes. The systems are k = 2's, so `aod` §§3.4–3.5 apply verbatim; only the *ceiling* comparison would need redoing, and at k = 3 that is §5.2's allocation formula rather than cap_F(η).
+
+## Forty-seventh batch: the mod-24 ceiling table at k = 3
+
+Added as §5.7, the counterpart of `aod` §3.3.5. The additive systems and their local obstructions are identical to k = 2's, so **the η column is imported unchanged** and only the ceiling it implies is recomputed.
+
+**A name for the reported quantity.** δ₃ = m\*₃/C(n,3) tends to 0 and is useless as a class invariant. The asymptotically constant quantity is **β₃ := m\*₃(n)/n²**, and that is what the table reports. Noted alongside: at k = 2, δ = m\*/C(n,2) ≈ 2m\*/n², so β₂ = δ/2 in the same units — which matters for reading the two tables against each other.
+
+**The identity that fell out.** With κ_c = 2 and κ_r = 1 — matching twist not divisible by 3, foreign twist coprime to 6 — every row satisfies
+
+> **β₃ = cap_F(η)/2 exactly**, since 1/(√(2F) + √(2/η))² = ½·η/(1 + √(Fη))².
+
+So in the generic case **the k = 3 ceiling is exactly half the k = 2 ceiling as a fraction of n²** — equivalently, since β₂ = δ/2, the two are *equal in absolute terms*: **m\*₃ ≈ m\*₂ at the ceiling**. Not a coincidence, but §4.1 restated: at both k the binding term is a block's intra term, of order c², and only κ differs.
+
+**A second column with no k = 2 counterpart.** κ_c = 3 whenever 3 | c − 1 (§5.6.1), costing 12–19% depending on the row. There is no analogous column at k = 2 because κ₂ takes only one value on an even twist.
+
+**Three rows are flagged provisional, and the flag is the honest part.** Rows 7, 15 and 23 are decided at k = 2 by a tie between the fused and unfused rungs — cap_B(1/4) = cap_C(1/2) identically, a coincidence at η = 1/2 and nowhere else. **§5.6.4 changes exactly that comparison**, since the S5 : S7 matching ratio becomes 2^v rather than 2^{v−1} when 3 | c − 1, so the k = 2 tie need not survive. The entries take the S7 reading at the k = 2 η and are therefore a lower bound on those rows. Redoing them needs §5.6.3's c mod 24 analysis run against each rung, which is not done.
+
+Also: §5.4's unconstrained two-part ceiling now points forward to §5.7 as its by-class version, and §6's constant table gains a β₃ column.
+
+## Forty-eighth batch: the balance point is not the middle, and the table's share column was mislabelled
+
+**A label error, found while auditing for equal-balance claims.** §5.7's share column was headed **x\* = c/n**, copying `aod` §3.3.5. But what the allocation formula produces is the *part's* share s\*/n, and for a fused rung that is F·c/n — twice the block fraction `aod` reports. The column is now headed **s\*/n**, with the conversion stated.
+
+**Correcting it reverses the conclusion.** In the same units, the κ_c = 2 balance points are **identical to k = 2's, row for row** — 0.50000, 0.36603, 0.58579, 0.50000, 0.44949, 0.36603. That is forced rather than coincidental: the allocation sᵢ ∝ 1/√eᵢ depends only on the *ratio* of efficiencies, and the factor of two relating β₃ to cap_F cancels out of it. So **k = 3 does not flatten the balance towards equal parts.**
+
+**What does move it is the mod-3 penalty, and it moves it the other way.** A κ_c = 3 matching block is less efficient, so by §5.2 it needs a **larger** share — 0.55051 against 0.50000, 0.63397 against 0.58579. Only in row 5, 17 does it land on exactly 1/2.
+
+**Four statements corrected.** §4.4, §6 and §3.3 each said some version of "only intra terms bind, so one takes roughly equal parts and there is nothing to optimise", and §5.1 opened "there is no balance point in the k = 2 sense". All four conflated two different things: the **term-type comparison** (intra versus cross), which genuinely disappears, and the **allocation between parts**, which does not. They now distinguish the two and point at §5.7.
+
+*The document was internally inconsistent on this for several batches* — §5.7's own share column ranged 0.366 to 0.586 while three other sections asserted equal parts — and nothing caught it, because no check compares a claim in prose against a number in a table. That is the same class of gap as the k = 2 `--pass scope`, which catches stale *figures* but not stale *statements*.
+
+## Forty-ninth batch: a broken table, and a pass to catch the next one
+
+**The break.** §5.7's table gained two columns in the previous batch and the separator row did not — 8 columns in the header and body, 7 in the separator. Markdown then renders the whole table as a paragraph of pipes. Fixed.
+
+**Nothing would have caught it.** Every figure in the table still parses, every reference still resolves, so `--pass figures` and `--pass refs` are both clean on a table that has ceased to be a table. This is the same shape of gap as the missing-section case: the *content* is intact and only the structure is broken.
+
+**Added `--pass tables`.** It checks header, separator and body rows for a consistent column count across every markdown table in every document. Two details were needed to make it usable rather than noisy: **escaped pipes** (`\|`) are literal cell content, so they must be masked before counting or every table containing |Γ| reports a false mismatch; and **box-drawing rules** (`+---+`) in the ASCII diagrams of `orbital-evasiveness-notes.md` match the separator pattern, so lines containing `+--` and single-column "tables" are skipped.
+
+**Audit result: 15 tables across the documents, all well-formed** after the §5.7 fix. Negative control passes — removing one `---` from a separator produces exactly one TABLE finding naming the right line.
+
+*Worth noting the sequence:* the previous batch's edit was a correctness fix that introduced a formatting break, and the formatting break was invisible to every check that existed. Both halves of that are typical — edits that add columns are exactly the edits that forget separators, and structural damage is what a content-oriented checker misses.
+
 ---
 
 ## Items inherited as closed from earlier passes

@@ -901,6 +901,8 @@ Since the multiplicative engine vanishes in density, the asymptotic behaviour of
 ## 5. A single global lower bound
 
 > **The constants of this section are contingent on a group-theoretic accident, and it is worth knowing which one.** Every ceiling here traces to a block being **2-transitive** — AGL(1, c) has a single orbital of size C(c,2), so a block can carry full density, and the optimisation below is what one does *once that is given*. Solvable 2-transitive groups exist at every prime power, which is why the method has anything to optimise. **They do not exist 3-transitively above degree 4**, so at k = 3 the whole ceiling apparatus vanishes and the best available threshold is Θ(n²) against C(n,3) — see `three-uniform-note.md`. The optimisation is not the heart of the method; it is the dividend of 2-transitivity.
+>
+> *One degree of freedom that is **not** hidden in these ceilings:* whether a block's twist is read in GL(1, c) or in the semilinear ΓL(1, c). At k = 2 that choice provably changes no orbital minimum (`enumeration-proof.md` J0a), so the ceilings here are insensitive to it. At k = 3 it does change the minimum, which is a further respect in which the k = 2 constants are contingent.
 
 The residue analysis gives eight different δ₀ across the 24 residue classes (§3.3). It is worth collapsing them into a single number that should hold everywhere, even at the cost of being loose.
 

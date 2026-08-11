@@ -38,6 +38,10 @@ which nothing else notices.  So this script runs five passes.
           compared across files, and any S-number present in one census but not
           the other, or carrying a different shape description, is reported.
 
+  PASS 7  TABLES.  Every markdown table's header, separator and body rows are
+          checked for a consistent column count.  A mismatched separator makes
+          the table render as a paragraph of pipes, which no other pass sees.
+
   PASS 6  REFS.  Every section reference and every named-result citation is
           resolved against the headings and bolded statements actually present
           in the documents.  Dangling ones are reported with the nearest
@@ -62,7 +66,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("table")
 ap.add_argument("docs", nargs="+")
 ap.add_argument("--pass", dest="only", default="all",
-                choices=["all", "figures", "scope", "prose", "hygiene", "census", "refs"])
+                choices=["all", "figures", "scope", "prose", "hygiene", "census", "refs", "tables"])
 ap.add_argument("--quiet", action="store_true", help="findings only")
 A = ap.parse_args()
 DOCS = [d for d in A.docs if d.endswith(".md")]
@@ -297,6 +301,59 @@ if A.only in ("all", "scope"):
         print("no threshold assertion recognised.")
     print("\nNOTE: these patterns are a WHITELIST. Silence means 'nothing recognised',")
     print("not 'nothing to find'. Add a pattern whenever a new range assertion is written.")
+
+# --------------------------------------------------------------- PASS 7 tables
+#
+# A markdown table whose separator row has a different number of columns from
+# its header silently renders as plain text -- the whole table collapses into a
+# paragraph of pipes.  Nothing else here notices, because the content is still
+# present and every figure in it still parses.  This costs one regex and catches
+# an edit that adds or removes a column and misses the separator.
+#
+# Escaped pipes (\|) are literal cell content, not separators, so they must be
+# masked before counting or every table containing |Gamma| reports a false
+# mismatch.  ASCII-art diagrams drawn with pipes are skipped by requiring the
+# header line to start with a pipe.
+
+SEPROW = re.compile(r"^\s*\|[\s:\-\|]+\|\s*$")
+
+def _ncols(line):
+    return len(line.replace("\\|", "\x00").strip().strip("|").split("|"))
+
+if A.only in ("all", "tables"):
+    print("\n" + "=" * 72); print("PASS 7  TABLES"); print("=" * 72)
+    nbad = ntab = 0
+    for d in DOCS:
+        try: lines = open(d).read().split("\n")
+        except OSError: continue
+        for i, line in enumerate(lines):
+            if not SEPROW.match(line) or i == 0:
+                continue
+            head = lines[i - 1]
+            if not head.strip().startswith("|"):
+                continue                       # ASCII art, not a table
+            if "+--" in head or "+--" in line:
+                continue                       # box-drawing rule, not a separator
+            if _ncols(head) < 2:
+                continue                       # a one-column "table" is prose
+            ntab += 1
+            h, sc = _ncols(head), _ncols(line)
+            bad_rows, j = [], i + 1
+            while j < len(lines) and lines[j].strip().startswith("|"):
+                if _ncols(lines[j]) != h:
+                    bad_rows.append((j + 1, _ncols(lines[j])))
+                j += 1
+            if sc == h and not bad_rows:
+                continue
+            nbad += 1
+            print(f"{d} L{i}  *** TABLE *** header has {h} columns")
+            if sc != h:
+                print(f"   separator row has {sc}")
+            for ln, c in bad_rows[:3]:
+                print(f"   L{ln} has {c}")
+            print(f"   {head.strip()[:110]}\n")
+    findings += nbad
+    print(f"{ntab} tables checked, {nbad} malformed.")
 
 # ------------------------------------------------------------------ PASS 6 refs
 #
