@@ -602,7 +602,7 @@ material):
   inconsistencies or missed cases" and it was the latter that the LLMs
   were missing.
 
-* Cringe writing style: The writing style has this weird mix of being
+* Writing style: The LLM writing style has this weird mix of being
   both formal and casual, with an extraordinary poetic density;
   "sophomoric" is the term.
 
