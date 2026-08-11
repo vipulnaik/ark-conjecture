@@ -36,6 +36,19 @@ from math import comb, isqrt, gcd
 # run passes, the error is localised to E.1 / E.3 / E.4 or their tables at once.
 USE_THEOREMS = True
 
+# Diagnostic hook.  A strip that fires where it is not licensed produces exactly
+# the same (empty) candidate list as a correct run, so the failure is invisible
+# in the output.  Set this to a list to record every (p, a, r, B, bound) where
+# the gate DECLINED to strip; an empty trace on a run that used to strip
+# unconditionally at a = 1 is the signal that the old code was over-stripping.
+_STRIP_TRACE = None
+
+
+def set_strip_trace(lst):
+    global _STRIP_TRACE
+    _STRIP_TRACE = lst
+
+
 def set_use_theorems(flag):
     """Callers should go through this rather than assigning the global, so that
     `from fb_common import USE_THEOREMS` in a caller cannot silently bind a stale
@@ -116,6 +129,37 @@ def orb(c, t):
     """Minimum intra-orbital of a c-block with cyclic twist of order t, capped
     at C(c,2).  The cap matters: it is what makes a 2-block worth 1, not 2."""
     return min(c * t // 2 if t % 2 == 0 else c * t, comb(c, 2))
+
+def ord_mod(p, r):
+    """Multiplicative order of p mod r, for r prime not dividing p."""
+    o, v = 1, p % r
+    while v != 1:
+        v = v * p % r
+        o += 1
+    return o
+
+
+def sharing_bound(p, a, r):
+    """Corollary C' (enumeration-proof.md Part D): if the cyclic-layer twist of a
+    p-characteristic part with blocks of size c = p^a shares the prime r with an
+    outside part of prime size r, then every multiplier induced on that outside
+    part lies in <p mod r>, so its twist order t divides ord_r(p), which divides
+    a.  The outside part therefore carries an intra class of at most
+
+        orb(r, t)  <=  min(r * ord_r(p), C(r, 2)).
+
+    A configuration containing a share thus has some class no larger than this,
+    so it cannot attain B whenever the bound is BELOW B -- which is what makes
+    stripping r from the twist a NECESSARY condition rather than merely a true
+    one.  The bound is local to (p, a, r): no n, no density floor, no threshold
+    on the table.  It is finite and small in practice because ord_r(p) <= a and
+    a <= log_p(n).
+
+    Note the strip only ever acts when r | p^a - 1, i.e. when ord_r(p) | a; on
+    every other (p, a, r) there is nothing in the twist to strip and the gate is
+    vacuous either way."""
+    return min(r * ord_mod(p, r), comb(r, 2))
+
 
 def foreign_cap(A, r):
     """Max over top primes q of orb(r, q-part of r-1), including the q | r-1
@@ -217,6 +261,9 @@ def theorem_report(A, n, B, caps_m, caps_r):
 #   (3) orb(r, qpart(r-1,q)) >= B         necessary: the twist divides the q-part
 #                                         and orb is monotone in it.
 #   (4) F * orb(c, dmax) >= B             necessary by the leftover twist cap: the
+#       dmax strip of the foreign prime r is licensed by Corollary C' whenever
+#       sharing_bound(p, a, r) < B, at EVERY a and not only at a = 1 -- see
+#       sharing_bound() for the argument and for why the gate is local.
 #                                         twist's non-q part lies in the cyclic
 #                                         layer, which already carries C_r and
 #                                         C_Fmid, and one cyclic group forces
@@ -298,9 +345,25 @@ def single_part_ok(A, L, B, p, q, r):
             else:
                 dq2 = qpart(c2 - 1, q)
                 rest = (c2 - 1) // dq2
-                if pp[1] == 1:          # Lemma C: proved only at prime blocks
-                    while rest % r == 0:
-                        rest //= r
+                # Strip r from the cyclic part of the twist exactly when
+                # Corollary C' licenses it: a configuration that does NOT strip
+                # contains a share, and a share caps some class at
+                # sharing_bound(p, a, r), so if that is below B the configuration
+                # cannot attain B and discarding it is sound.  This is a
+                # NECESSARY-condition test, so getting it wrong in the permissive
+                # direction is safe and getting it wrong in the strict direction
+                # silently discards a real candidate -- hence the assertion.
+                if rest % r == 0:
+                    bound = sharing_bound(p, pp[1], r)
+                    if bound < B:
+                        while rest % r == 0:
+                            rest //= r
+                        assert sharing_bound(p, pp[1], r) < B, (
+                            "condition (4): stripped the foreign prime %d from a "
+                            "p=%d^%d block's twist without Corollary C' licensing "
+                            "it (bound %d >= B %d)" % (r, p, pp[1], bound, B))
+                    elif _STRIP_TRACE is not None:
+                        _STRIP_TRACE.append((p, pp[1], r, B, bound))
                 cap_i = F * orb(c2, dq2 * rest)
             if cap_i >= B:
                 return True

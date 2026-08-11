@@ -166,30 +166,39 @@ These are the whole trusted base for μ(n) = B(n): both certificates pass with e
 
 **Deferred: the framing decision.** Jones–Zvonkin's programme (arXiv:2106.00346 and four companions) is the model for how this genre states its standing — conditional on Bateman–Horn, labelled as such in the abstract, with the conjecture validated numerically at the range used. Three consequences are recorded in `literature-findings.md` items 14–16 and are *not* being acted on yet: a standing table at the front of `aod` §3 dividing unconditional from conditional from conjectural; the polynomial-versus-exponential line in `aod` §3.5, since shapes needing prime powers of unbounded exponent are Mersenne-like and outside Bateman–Horn; and the Catalan/Pillai caution where both parts are proper prime powers, which is our S1 and S2 and which `aod` §6 currently treats as amply supplied.
 
-### T5. Lift condition (4)'s scoping — but gate it on the threshold, which fails at 34 small n
+### T5. Rerun the certificate against condition (4)'s lifted strip
 
-*The mathematics is settled: `enumeration-proof.md` Part D proves the twist–foreign coupling at every a and Corollary C′ supplies the domination. What is outstanding is a code change, and it is smaller and more conditional than it first looks.*
+*The mathematics is settled (`enumeration-proof.md` Part D, Corollary C′) and **the code change is made**: `fb_common.py` now gates the foreign-prime strip on the licence itself rather than on the block exponent. What is outstanding is one rerun that cannot change the verdict and one measurement that has not been taken.*
 
-**What licenses the strip.** Condition (4) of `fb_common.py` caps a leftover p-characteristic part by stripping the foreign primes from its twist. That strip is **not** a necessary condition on admissible configurations — shares are admissible, with explicit Oliver groups at n = 28, 21 and 10. It is necessary only among configurations **scoring above the sharing bound**, and the bound has two forms because the coupling is sharper at a = 1:
+**How the gate works, and why it needs no threshold on n.** Condition (4) caps a leftover p-characteristic part by stripping the foreign prime r from its twist. Corollary C′ licenses that strip exactly when a configuration retaining the share cannot reach B — and the sharing bound is **local to (p, a, r)**:
 
-| form | sharing bound | precondition | where it holds in the table |
-|---|---|---|---|
-| a = 1 | foreign part untwisted, worth orb(r,1) = r < n | B(n) > n | everywhere except **n = 6**, where B(6) = 6 |
-| any a | foreign class ≤ r·ord_r(p) ≤ r·a ≤ n·log₂n | B(n) > n·log₂n | **fails at 34 values, all n ≤ 117**; holds at every n ≥ 118 |
+> **sharing_bound(p, a, r) = min(r·ord_r(p), C(r,2))**, and the strip is sound iff this is **< B**.
 
-**So the lift is gated, not unconditional, and this is the correction to make before touching the code.** Below n = 118 the general-a strip is *not* licensed by Corollary C′ — B(n) is smaller than the bound, so a sharing configuration could in principle reach it — and applying the strip there would discard a real candidate silently, which is exactly the defect class T3 names. The rule to implement is therefore: **strip at every a when B(n) > n·log₂n; strip only at a = 1 below that; and at n = 6 do not strip at all.** Asymptotically the gate is automatic — δ·C(n,2) exceeds n·log₂n from n ≥ 763 at the ladder floor 0.02516, and from n ≥ 998 under the conjectured 1/50 — so this is a small-n carve-out, not a standing complication. `t5_verify.py` pass 5 checks all three conditions and is the regression guard for them.
+No n, no density floor, no threshold on the table. The earlier global form of this gate — requiring B(n) > n·log₂n, which fails at 34 tabulated values — was the same statement bounded crudely; the local version is sharper everywhere and has no small-n carve-out. The strip only ever acts when r | p^a − 1, i.e. when ord_r(p) | a, so on every other (p, a, r) the gate is vacuous either way.
 
-*Note that the current a = 1 scoping is itself justified by the coupling and not by the old lemma.* The a = 1 strip needs B(n) > n, which fails at n = 6. This is a real if tiny gap in what is already shipped, and it is the same shape as the one being fixed.
+At **a = 1** the coupling forces ord_r(p) = 1, so the bound is r and the licence reads r < B. That is the condition the previous unconditional a = 1 strip was assuming without stating; it holds at every tabulated n, but it is a condition and the code now tests it.
 
-**What the R1 runs already settle, and what they cannot.** `fallback_cert.py` reports **0 candidates at all 2,186 values**, both with theorems and with `--no-theorems`. That was run against the *current* code, whose a = 1 scoping makes condition (4) **weaker** than the lifted version. A necessary condition that is strengthened can only discard more branches, so:
+**Measured against the shipped version**, on 1,043,424 `single_part_ok` calls spanning the table's (n, B) pairs and a grid of (L, p, q, r):
 
-> **The rerun's verdict is determined in advance: the candidate list is already empty under the weaker condition, so it stays empty under the stronger one.** The rerun is a regression check on the implementation, not a step in the proof, and it cannot change the collapse result. What it can catch is a coding error in the gate — in particular the strip firing below its threshold, which would be invisible in the output precisely because the list is empty either way.
+| | count |
+|---|---|
+| verdicts differing | 121 |
+| **new True where old False** (would be unsound) | **0** |
+| new False where old True (strictly stronger filter) | 121 |
+| licensing assertion firing | 0 |
 
-That last point is the reason to write the gate as an assertion rather than an `if`: **have the code fail loudly when it strips at an n where the precondition does not hold**, since a silent over-strip produces exactly the same clean output as a correct run.
+and on a (p, a, r, B) grid restricted to r | p^a − 1, the new gate strips at **245 of 324** points where the old one did not, with **0** regressions. So the change is substantive rather than cosmetic, and it moves in the sound direction only.
 
-**What remains genuinely unmeasured.** The claim that the strip changes condition (4)'s verdict on 630,477 branches, 53,807 of them with c a proper prime power, is from the n ≤ 2000 run and wants re-measuring at the current frontier; it is what tells you the change is not vacuous. Nothing else in this item needs new mathematics.
+**Why the rerun cannot change the collapse result.** Condition (4) is a *necessary* condition used to discard branches. Strengthening it discards more, so the candidate list can only shrink — and `fallback_cert.py` already reports **0 candidates at all 2,186 values**, with theorems and with `--no-theorems`. The rerun is therefore a regression check on the implementation, not a step in the proof.
 
-**What it unblocks.** With the a > 1 row closed, the fallback residue reduces to the **q = 2 and large-e** cases of Part E″'s q-pinning, where pinning is vacuous or weak and domination rather than supply is needed. That is the remaining obstacle to replacing B_safe by B_refined outright — the structural route to **B_refined = B_safe = μ by construction rather than by computation**, as against a per-n certificate that the optimum happens to be fallback-free.
+That is exactly why the gate carries an **assertion** rather than a silent `if`: a strip firing where it is not licensed would discard a real candidate and produce the same empty list as a correct run. The failure is invisible in the output, so it has to be caught at the point of decision. `set_strip_trace()` records every (p, a, r, B, bound) where the gate *declined* to strip, which is the complementary diagnostic — a trace that is empty on a run whose old version stripped unconditionally at a = 1 tells you the old code was over-stripping.
+
+**What is outstanding.**
+
+1. Rerun `fallback_cert.py` (both modes) and confirm 0 candidates — expected, per the monotonicity argument above.
+2. **Re-measure how much the strip moves**, which is the one figure this item never had at the current frontier: the counts of branches whose condition (4) verdict changes, and how many of those have c a proper prime power. That is what says the change is not vacuous on the real branch enumeration rather than on a synthetic grid.
+
+**What it unblocks.** With the p-characteristic half closed at every a, the fallback residue reduces to the **q = 2 and large-e** cases of Part E″'s q-pinning, where pinning is vacuous or weak and domination rather than supply is needed. That is the remaining obstacle to replacing B_safe by B_refined outright — the structural route to **B_refined = B_safe = μ by construction rather than by computation**, as against a per-n certificate that the optimum happens to be fallback-free.
 
 **The rest of the residue, so the remaining work can be costed.**
 
@@ -199,7 +208,7 @@ That last point is the reason to write the gate as an assertion rather than an `
 | e = 1, δ ≤ 1/9 | **reduced to a bounded search**: ≤ 2/δ pinned positions per n. Empty over v4 — 4 admissible of 24,322 positions, all killed by the p-characteristic part not fitting. Not a theorem |
 | e ≥ 2 | supply of admissible foreign blocks is density zero in n; enumerable at the sparse n where it exists |
 | q = 2 | pinning vacuous, family exponential; needs domination rather than supply |
-| p-characteristic half of the leftover | **closed above the threshold** — Lemma C's coupling and Corollary C′, at every a from n = 118 |
+| p-characteristic half of the leftover | **closed at every a** — Lemma C's coupling and Corollary C′, gated locally |
 
 *Counting alone does not close e = 1 below 1/9, and adding the pinning does not help:* the pinned bound n ≥ 3.54√B gives δ ≤ 0.16, weaker than F.1's 1/9. What closes the computed range is the specific arithmetic of the pinned positions, not a size argument. Note also that Part E″'s pinning is **conditional on a floor δ ≥ δ₀** — step 1 is the only place δ enters — so the unconditional version of this route dies with the asymptotic floor, exactly as the density ceilings do.
 
