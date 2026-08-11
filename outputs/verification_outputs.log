@@ -1,0 +1,93 @@
+vipulnaik@Vipuls-M1-MacBook-Air 26-08-11 10:57:47 /Users/vipulnaik/git/personal-public/ark-conjecture~ [m1] # python3 scripts/fallback_cert.py outputs/mu_table_safe_v4.csv --verbose
+outputs/mu_table_safe_v4.csv: 2186 values of n checked, n up to 2600
+values where SOME fallback configuration could reach B(n): 0
+
+settled by theorem alone, all branches: 1837 of 2186 (84.0%)
+s-branches dispatched by theorem: 2204 of 2553 (86.3%) -- the rest go to the search
+      349  E.3(ii) is pairwise only; global promotion open
+
+foreign parts passing the gate, by regime (aod section 3.5.6):
+     46369  e = 1      linear in q; q-pinning total here
+      4321  e >= 2     supply of admissible r is density zero in n
+       709  q = 2      exponential; q-pinning vacuous (Fermat branch)
+    e = 1 share 90.2% -- if this ever falls, the per-shape route narrows and the residue is mostly the hard branches
+
+largest permitted s over the range: 3
+
+CERTIFIED.  At every n in this table, no admissible configuration that
+invokes the unconditional fallback can attain B(n).  So the SAFE optimum
+is fallback-free independently of tie-breaking, the Part E construction
+realises it, and mu(n) = B(n) is proved at each of these n.
+
+Rerun with --no-theorems to shrink the trusted base to the eight
+necessary conditions alone.  Cheap, and worth redoing on every table
+extension rather than citing a previous session for it.
+vipulnaik@Vipuls-M1-MacBook-Air 26-08-11 10:58:08 /Users/vipulnaik/git/personal-public/ark-conjecture~ [m1] # python3 scripts/fallback_cert.py outputs/mu_table_safe_v4.csv --no-theorems
+--no-theorems: every s-branch goes to the search; E.1, E.3(ii), E.3(iii), E.4,
+               Lemma E.2's bound and the MERSENNE / REPUNIT3 tables are all unused.
+
+outputs/mu_table_safe_v4.csv: 2186 values of n checked, n up to 2600
+values where SOME fallback configuration could reach B(n): 0
+
+settled by theorem alone, all branches: 0 of 2186 (0.0%)
+s-branches dispatched by theorem: 0 of 2553 (0.0%) -- the rest go to the search
+     2553  theorems disabled (--no-theorems)
+
+foreign parts passing the gate, by regime (aod section 3.5.6):
+     46369  e = 1      linear in q; q-pinning total here
+      4321  e >= 2     supply of admissible r is density zero in n
+       709  q = 2      exponential; q-pinning vacuous (Fermat branch)
+    e = 1 share 90.2% -- if this ever falls, the per-shape route narrows and the residue is mostly the hard branches
+
+largest permitted s over the range: 3
+
+CERTIFIED.  At every n in this table, no admissible configuration that
+invokes the unconditional fallback can attain B(n).  So the SAFE optimum
+is fallback-free independently of tie-breaking, the Part E construction
+realises it, and mu(n) = B(n) is proved at each of these n.
+
+AND IT RESTS ONLY ON THE EIGHT NECESSARY CONDITIONS.  No Part E-prime
+theorem was consulted: every s-branch was searched and e3ii_resolves
+resolved nothing.  The theorems explain why the search is cheap and are
+what any statement about ALL n must go through, but they carry no weight
+in the per-n proof above.
+vipulnaik@Vipuls-M1-MacBook-Air 26-08-11 10:58:25 /Users/vipulnaik/git/personal-public/ark-conjecture~ [m1] # MU_ENUMERATE=$PWD/scripts/mu_enumerate_v2.py python3 scripts/wide_cert.py 100000
+        cheap families + 5018 menu top-ups + 2942 full escalations (94s); cached to /Users/vipulnaik/git/personal-public/ark-conjecture/scripts/blo_100000_849124eea3.txt
+pass 1: B_lo for 90299 values in [6, 100000]  (94s); weakest density 0.020004, permitted s <= 6
+pass 2: permitted s <= 6; candidate values per s: s=1: 81460, s=2: 45971, s=3: 22045, s=4: 7401, s=5: 2152, s=6: 180
+        1228 (c,r,s) pairs, 1007 with a nonempty window, 299873 (pair, n) checks after theorem dispatch  (1s)
+        live (pair, n) by s: s=2: 299853, s=4: 7, s=6: 13  |  settled by theorem: NONE
+        NOTE: the dispatch settled nothing at this NMAX, so a
+        --no-theorems run here would agree TRIVIALLY and is no evidence
+        about E.1 / E.3 / E.4.  The s-branches those theorems cover
+        (s = 1 and s = 3) are removed earlier by the foreign-cap filter.
+
+UNRESOLVED at B_lo: 0 of 90299
+
+COLLAPSE CERTIFIED at 90299 of 90299 values (100.00%) in [6, 100000]
+from proven lower bounds alone.  Unresolved values need the true B(n) and
+are NOT counterexamples.  Over the range where both certificates run, the
+true-table certificate (fallback_cert.py, 2008 values to n = 3239) agrees.
+
+The theorem dispatch in pass 2 is an optimisation, not part of the proof.
+Rerun with --no-theorems to establish that: it stubs the dispatch and
+drops the E.3(ii) resolution, so the run rests only on the eight
+necessary conditions of fb_common.py being necessary.  Doing this on each
+extension is cheap and localises any error in E.1 / E.3 / E.4 at once.
+[...]
+vipulnaik@Vipuls-M1-MacBook-Air 26-08-11 11:02:49 /Users/vipulnaik/git/personal-public/ark-conjecture~ [m1]?? scripts/blo_100000_849124eea3.txt # python3 scripts/a18_verify.py outputs/mu_table_safe_v4.csv
+PASS  witness orbitals are [170, 680, 2720]
+PASS  witness m* = 170 > |O|/2 = 42.5 (D2 falsified)
+PASS  offset-zero class = C(5,2)*17 (bound tight)
+PASS  |Gamma| = 5440
+PASS  Gamma_1 cyclic of order 85
+PASS  Gamma_1 normal in Gamma
+PASS  quotient order 64, a 2-group
+PASS  transitive on 85 points
+PASS  n=91 witness: chain (|G|=819, Gamma_1 = C_91 normal, quotient 9)
+PASS  n=91 witness: m* = C(7,2)*13 = 273 = 3|O|, sharper than the n=85 case
+PASS  permuter C_7:C_3 is 2-homogeneous (one unordered class of 21) but not 2-transitive
+PASS  no fused-outside bound reaches B(n) over 2186 rows
+      worst UB/B ratio 0.8276 at n = 56
+      theorem threshold at delta >= 0.02516: n >= 1582 (table reaches 2600)
+PASS  theorem threshold overlaps table range

@@ -1,0 +1,142 @@
+vipulnaik@Vipuls-M1-MacBook-Air 26-08-11 10:54:03 /Users/vipulnaik/git/personal-public/ark-conjecture~ [m1] # python3 scripts/validate_table.py outputs/mu_table_safe_v4.csv --baseline outputs/mu_table_safe_v2.csv
+outputs/mu_table_safe_v4.csv: 2186 rows, n = 6 .. 2600   baseline outputs/mu_table_safe_v2.csv
+
+A. TABLE INTEGRITY
+--------------------------------------------------------------------------
+  [PASS] parts sum to n, and every part is well formed
+        0 malformed of 2186    (ep Part G.3)
+  [PASS] foreign primes are pairwise distinct within a configuration
+        0 with a repeated foreign prime    (ep Part E)
+  [PASS] no configuration contains a fixed point (part of size 1)
+        0 with a fixed point    (ep Part A)
+  [PASS] mu_bound is re-derivable from the witness by the G.3 formulas
+        0 mismatches of 2186    (ep Part G.3)
+  [FAIL] density column agrees with mu_bound / C(n,2)
+        1 mismatches    (table)
+          2561
+  [PASS] every row is certified, and no optimum invokes the fallback
+        0 uncertified, 0 fallback optima    (ep Part E-prime)
+  [PASS] the rebuild never lowers a value against the baseline
+        2045 common values: 386 higher, 0 lower    (pending-checks R0)
+  [INFO] shape migrations against the baseline
+        429 of 2045 winners changed shape    (pending-checks A0, A7)
+        expected: the shape-space repair moves winners between census rows -- most often a 3-part c+c+r*
+                  becoming the 2-part fused 2xc+r*. Any per-shape count written against the baseline is
+                  stale for every n listed here
+          S4 -> S7f2: 227
+          S3 -> S7: 48
+          S2 -> S7f2: 45
+          S4 -> S7: 41
+          S3 -> S7f2: 21
+          S5 -> S7: 14
+          S2 -> S7: 14
+          S5 -> S7f2: 10
+  [PASS] the Part E construction's ingredients exist for this witness
+        2186 rows: 0 block-count (tripwire), 0 foreign-twist (live at 1409 rows), 0 diagonal-carrier (live at 1665 rows) violations    (ep Part E, realisability; pending-checks T2)
+
+B. EXACT CLAIMS, HOLDING AT EVERY N
+--------------------------------------------------------------------------
+  [PASS] Proposition F.1: the part count obeys k < 1/sqrt(delta)
+        0 violations of 2186    (ep Prop F.1)
+  [PASS] no winner exceeds cap_F(eta) for its own F and eta
+        0 of 1393 one-foreign rows exceed    (aod section 3.3.8)
+  [PASS] the within-class cross coefficient is keyed on F's parity, not on q
+        1270 fused classes, 668 where the two rules differ; the term binds at 0 (so the table-rescoring tripwire is dormant, as expected)    (ep Part E, box 'The parity is F's, not q's')
+  [PASS] S2 winners sit at density (c-1)/(Fc-1), i.e. 1/F up to O(1/n)
+        777 S2 winners, 0 off 1/F    (aod section 2.1)
+  [PASS] the fusion layer is readable off the top prime: S5 has q = 2, S7-at-F=2 has q odd
+        0 misfiled by top prime    (aod section 3.2.2)
+  [PASS] CONGRUENCE: S4 winners have c = 1 (mod 8)
+        16 S4 winners, 0 off-pattern    (aod section 3.2.3)
+  [PASS] CONGRUENCE: S7 at F = 2 has c = 3 (mod 4), bar the c = 5 (mod 8) tie and p = 2
+        338 winners, c mod 8 = {0: 7, 3: 160, 5: 28, 7: 143}    (aod section 3.2.3)
+  [PASS] CONGRUENCE: S5 obeys none on c, and its foreign prime has u = oddpart(r-1) <= 9
+        30 winners; c mod 8 = {1: 3, 3: 8, 5: 9, 7: 10}, u = {1: 18, 3: 11, 9: 1}    (aod section 3.3.4, rung B-prime)
+  [PASS] no winner has two matching classes of different sizes AT ODD p
+        16 winners have >1 matching class; 0 unequal at odd p, 0 at p = 2 (permitted -- the n = 551 escape)    (aod section 6.2, A9)
+  [PASS] the cyclic layer is admissible: every Fmid and every foreign prime pairwise coprime
+        0 of 463 winners with >=2 cyclic-layer orders violate pairwise coprimality    (ep Part 0, corrected shape space)
+  [PASS] the feasibility criterion sum(sqrt(F_i)) <= 1/sqrt(delta)
+        0 of 2186 violate; tightest n = 2594 (`p=1297 q=2: 2x1297`), slack 0.0003    (aod section 6.1)
+  [PASS] Part G.4's per-axis bounds: c_i >= delta*n and F_i <= 1/delta
+        0 block-size and 0 fusion-count violations; tightest c/(delta*n) = 1.000 at n = 2594, tightest (1/delta)/F = 1.000 at n = 2594    (ep Part G.4)
+  [PASS] S6 (two foreign blocks) wins nowhere
+        0 S6 winners    (aod section 4.2)
+  [PASS] Lemma C exposure: no winner part has a > 1 and a foreign prime dividing c - 1
+        0 of 2202 p-characteristic winner parts exposed    (pending-checks R4)
+
+C. DENSITY AND DISTRIBUTION, AGAINST THE ASYMPTOTIC MODEL
+--------------------------------------------------------------------------
+  [INFO] regime split of winners' foreign blocks by the twist exponent
+        e=1 1187 (84.2%), e>=2 177, q=2 45; largest cofactor u = 12 (predicted <= 2/delta = 44)    (aod section 3.5.6)
+  [INFO] density floor, and the s- and k-bounds it implies
+        delta >= 0.045742 at n = 1817 (p=389 q=173: 1x1039* + 2x389   (* foreign)); s <= 3.676 so s <= 3; k < 4.676 so k <= 4
+        -> s <= 3 in range: E.1/E.3(iii)/E.4 close every fallback branch but E.3(ii)-with-leftover    (ep Part E-prime, Prop F.1)
+        expected: asymptotically delta >= 0.050510 = (5-2sqrt6)/2, attained at n = 23 (mod 24); the
+                  finite-range floor should RISE with n as the omega(n)=2 population thins
+  [INFO] low-density tail, which scopes Open Problem 8(a)
+        <= 1/9: 349; <= 1/16: 18; <= 1/25: 0; <= 1/36: 0    (notes OP 8(a))
+        expected: 1/16 is the four-class cap, so delta <= 1/16 is where k <= 3 stops being free; delta
+                  <= 1/25 and 1/36 are where the s = 4 and s = 5 fallback branches open up
+  [INFO] part-count distribution among winners
+        {1: 777, 2: 1393, 3: 16} over 2186 rows  (v2-era shape of this distribution was roughly {1: 43%, 2: 47%, 3: 10%})    (ep Part I)
+        expected: no winner should use more than 3 parts anywhere; the fused rung absorbs what were
+                  3-part configurations into 2-part ones, so the 3-count should be small and falling
+                  relative to v2
+  [INFO] census winner counts by shape
+        S2 777 (35.5%), S3 900 (41.2%), S4 16 (0.7%), S5 30 (1.4%), S7 125 (5.7%), S7f2 338 (15.5%)    (aod section 2.0, ep census)
+        expected: asymptotic WINNING shares over all n: S3 12/24 (50%), S7-at-F=2 10/24 (41.7%) plus
+                  1/24 tied, S4 1/24 (4.2%) plus the tie; S1, S2, S5, S6, S7-at-F>=3 all -> 0. At
+                  computed sizes S1 and S2 are still large because omega(n)=2 has not thinned
+  [INFO] odd-n shares among the three readings of n = 2c + r
+        of 384 odd n won by one of the three: S7f2 338 (88.0%), S4 16 (4.2%), S5 30 (7.8%)    (aod section 3.9.1)
+        expected: over odd n the limit is S7-at-F=2 83.3%, S4 8.3%, tie 8.3%; S5 -> 0. Note the table
+                  records ONE witness per n, so ties are invisible here and are counted under whichever
+                  reading was recorded -- see rung_split.py for the tie-aware measurement. Convergence
+                  is O(1/log n) and the model's own error is the same order, so a gap at computed sizes
+                  is expected, not evidence against the model
+  [INFO] winners exceeding their own residue class ceiling
+        868 of 2186 exceed; highest rates n=23 (59/60, cap 0.05051), n=11 (49/58, cap 0.06699), n=15 (91/108, cap 0.08579), n=7 (44/60, cap 0.08579), n=2 (78/108, cap 0.13398)    (aod section 3.3.5)
+        expected: the class ceilings are what the BALANCED family guarantees, not bounds on delta(n), so
+                  exceedance is expected and should be common; the escapes of section 4.3 lift O(n/log
+                  n) values. A rate near 100% means the tabulated delta_0 describes little of the
+                  computed range at that residue
+  [INFO] median density by residue class mod 24
+        median/cap by n mod 24 — 0:0.2264/0.2500  1:0.1442/0.1716  2:0.4966/0.1340  3:0.1324/0.1250  4:0.2481/0.2500  5:0.0993/0.1010  6:0.2173/0.2500  7:0.1333/0.0858  8:0.1296/0.1340  9:0.1601/0.1716  10:0.4912/0.2500  11:0.1001/0.0670  12:0.2245/0.2500  13:0.1571/0.1716  14:0.4615/0.1340  15:0.1553/0.0858  16:0.2155/0.2500  17:0.0986/0.1010  18:0.2227/0.2500  19:0.1184/0.1250  20:0.2464/0.1340  21:0.1649/0.1716  22:0.2452/0.2500  23:0.0904/0.0505    (aod section 3.3.5)
+        expected: the caps bound only the ADDITIVE families, so a median far above one is normal
+                  wherever the multiplicative engine reaches -- n = 2 (mod 24) sits near 1/2 because n/2
+                  is often a prime power, which is S2 and not bounded by any of this. Read the
+                  comparison only at the residues where S1 and S2 are scarce. The caps are 1/4 at
+                  0,4,6,10,12,16,18,22 - 0.13397 at 2,8,14,20 - 0.17157 at 1,9,13,21 - 0.125 at 3,19 -
+                  0.10102 at 5,17 - 0.08579 at 7,15 - 0.06699 at 11 - 0.05051 at 23
+  [INFO] how the aggregates have moved against the baseline
+        on the common range — floor 0.037524 (n=2291) -> 0.045742 (n=1817); delta<=1/9: 514 -> 326; delta<=1/16: 54 -> 16; delta<=1/25: 2 -> 0; shapes: S2 792->737, S3 910->837, S4 284->16, S5 54->30, S6 1->0, S7 4->118, S7f2 0->307    (pending-checks A0)
+        expected: the corrected shape space should RAISE the floor and SHRINK the low-density tail,
+                  because cyclic-layer fusion supplies configurations the old space missed at exactly
+                  the arithmetically weak n
+  [INFO] foreign-block efficiency: share of blocks running at eta = 1
+        1096 of 1409 foreign blocks at eta = 1 (77.8%)    (notes glossary)
+        expected: about 77% over the v2 range to n = 2212; eta = 1 needs r - 1 = q^e or 2q^e, i.e. a
+                  Fermat prime, a safe prime, or the r = 2q^e+1 generalisation
+  [INFO] share of values with omega(n) = 2, which is the multiplicative engine's reach
+        777 of 2186 winners are S1 or S2 (35.5%)    (aod section 1, consequence 5)
+        expected: thins like log log n / log n: measured about 52% below 2000 and 29% near 10^6. The
+                  observed density floor should drift down as this population recedes
+
+  PASS: 21  FAIL: 1  INFO: 12  SKIP: 0
+
+  A FAIL in group A means the run or the parser is broken; nothing else here
+  is meaningful until it is fixed. A FAIL in group B is a real contradiction
+  between the table and the documents -- check whether the belief was scoped
+  to an older table before editing either.
+vipulnaik@Vipuls-M1-MacBook-Air 26-08-11 10:54:11 /Users/vipulnaik/git/personal-public/ark-conjecture~ [m1] # grep "^2561" outputs/mu_table_safe_v4.csv 
+2561,3278080,250978,0.076563,1,4,3,1,0,"p=197 q=2: 13x197"
+vipulnaik@Vipuls-M1-MacBook-Air 26-08-11 10:54:51 /Users/vipulnaik/git/personal-public/ark-conjecture~ [m1] # bc
+>>> (2561 * 2560) / 2
+3278080
+>>> 250978000000 / 327808
+765625
+>>> ^D
+vipulnaik@Vipuls-M1-MacBook-Air 26-08-11 10:55:48 /Users/vipulnaik/git/personal-public/ark-conjecture~ [m1] # bc
+>>> 25097800000000000 / 327808
+76562500000
