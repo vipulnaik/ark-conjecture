@@ -14,11 +14,14 @@ The research was developed, with several documents of working notes, scripts, an
 
 * As the rate of mistakes caught in each new session decreased enough that the results felt more robust, Vipul spent more effort mastering the individual details if the construction and proofs.
 
+* Vipul also used ChatGPT to answer a few quick questions to build intuition in additive number theory, along with consuming YouTube videos, Wikipedia pages and other content. This counts more like reference material than direct LLM research though it did flag one improvement (density estimation)
+
+* Raghav also used several Claude sessions and a few ChatGPT sessions to verify issues with the proofs at the time (all fixed).
 Worth including
 
 * Initial few turns of Fable session
 
 * Template of opening message per chat
 
-* Vipul also used ChatGPT to answer a few quick questions to build intuition in additive number theory, along with consuming YouTube videos, Wikipedia pages and other content. This counts more like reference material than direct LLM research though it did flag one improvement (density estimation)
+
 
