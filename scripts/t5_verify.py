@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-t5_verify.py -- verifications for the resolution of T5 (the Lemma C gap),
-per t5-resolution.md.
+t5_verify.py -- verifications for Lemma C (the twist-foreign coupling) and
+Corollary C' of enumeration-proof.md Part D.
 
-The finding: Lemma C is FALSE as stated -- cyclic-layer twists CAN share a prime
+The old form of Lemma C -- gcd(d, r) = 1 -- is FALSE -- cyclic-layer twists CAN share a prime
 with a foreign block, at a > 1 and even at a = 1 -- and what is true instead is
 a COUPLING: if r | d_i (the cyclic-layer twist of a p-characteristic part with
 block c = p^a) for a foreign part of prime size r, then every multiplier induced

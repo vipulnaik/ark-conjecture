@@ -17,7 +17,7 @@ Ranked, so the sections below have a stated basis. This is not the order the ite
 1. **The table rebuild.** v4 reaches n = 2000; everything measured across the three documents is keyed to it and moves as it extends. → **R0**, and **R1** after every batch.
 2. **Exhaustiveness of the GAP stages.** The subdirect-product hole is undischarged. It degrades *evidence* rather than creating an error — a missed group with larger m\* would be a counterexample rather than a silent corruption, and one with smaller m\* changes nothing — but it is the only non-circular check in the framework. **This is the one small-degree item the arithmetic programme depends on**, since Part I's two exhaustive comparisons rest on it. → `small-degree-verification.md` item 5
 3. **Part E's realisability construction.** Attainment's other leg, argued in general and spot-checked at eight configurations from n = 12 to 315. Unlike the certificate, it has no per-n verification. → **T2**
-4. **The eight necessary conditions of `fb_common.py`.** Both certificates rest on these and nothing else. What matters is their being *necessary* — that is what makes an empty candidate list a proof — and that is a different reading from checking each is true. The file carries a per-condition necessity argument, so what is exposed is the quality of those eight arguments, and in particular condition (4)'s cyclic-layer stripping, which is the load-bearing one. The defect class to watch is an enumeration narrower than the shape space it must cover: it removes a real candidate silently and leaves the output looking clean. → **T3**
+4. **The eight necessary conditions of `fb_common.py`.** Both certificates rest on these and nothing else. What matters is their being *necessary* — that is what makes an empty candidate list a proof — and that is a different reading from checking each is true. The file carries a per-condition necessity argument, so what is exposed is the quality of those eight arguments, and in particular condition (4)'s cyclic-layer stripping, which is the load-bearing one and whose necessity is threshold-scoped. The defect class to watch is an enumeration narrower than the shape space it must cover: it removes a real candidate silently and leaves the output looking clean. → **T3**
 
 ---
 
@@ -58,8 +58,9 @@ python3 fallback_cert.py mu_table_safe_v4.csv --no-theorems
 #    mu_enumerate.py, which no longer exists, and the import fails on load.
 MU_ENUMERATE=$PWD/mu_enumerate_v2.py python3 wide_cert.py 100000
 
-# 4. the range-scoped half of Lemma D2's domination
+# 4. the range-scoped halves of Lemma D2's and Corollary C′'s domination
 python3 a18_verify.py mu_table_safe_v4.csv
+python3 t5_verify.py mu_table_safe_v4.csv
 
 # 5. the documents against the table (five passes, incl. refs)
 python3 check_doc_figures.py mu_table_safe_v4.csv *.md
@@ -73,6 +74,7 @@ python3 check_doc_figures.py mu_table_safe_v4.csv *.md
 - **`k3_galois.py`** — the k = 3 Galois admissibility predicate, with a self-test covering the a = 35 witness, the superset relation against the naive reading, and the gain-versus-top-prime distinction. Import it; do not re-derive it.
 - **`khomog_verify.py`** — the k-homogeneity claims underlying the hypothesis table of `orbital-evasiveness-notes.md` §1: the c ≡ 3 (mod 4) half-twist case at k = 2, and the five full-density degrees {3, 4, 5, 8, 32} at k = 3, with the sharpness of the order bound that makes the list finite. Static; one run per environment.
 - **`a18_rq_verify.py`** — nine static checks on Lemma D2q, the r = q half: the exhaustive (2,5) subgroup scan, the (3,7) rank-2 eigenvector group, and the tightness and twist-collapse controls. Nothing in it depends on the table, so it needs no rerun on extension; one run per environment.
+- **`t5_verify.py`** — Lemma C's coupling and Corollary C′: the n = 28, 21 and 10 witnesses with their chains, the coupling's tightness at (16,5) and the chainlessness of the mismatched pairing, and the sharing bound against every row. The last pass is **range-scoped** and expires silently on extension, so it belongs in this list beside `a18_verify.py`.
 - **`a18_verify.py`** — Lemma D2's witnesses and its range-scoped half: the n = 85 and n = 91 orbitals and chains, the 2-homogeneity of the n = 91 permuter, and the fused-outside domination bound against every row. Only the third can move with the table, and it is the one that matters: it is a **range-scoped** claim, so a table extension can invalidate it silently. Exits nonzero on any failure.
 - **`check_doc_figures.py`** — `--quiet` for findings only, `--pass {figures,scope,prose,hygiene,census,refs,tables}` for one pass; exits nonzero when anything is flagged. **Pass every `.md` that might be cited**, or `refs` reports live cross-document citations as dangling. And append the old maximum to `CHECKPOINTS` and a pattern to `SCOPE` in the same sitting, or figures written against the superseded range report as unexplained rather than as historical.
 
@@ -124,7 +126,9 @@ Run them in that order; each is a superset of the next in cost and the cheap one
 
 ### T1. Independent reading of the structural arguments
 
-**A step compressed to a clause tends not to survive being written out**, and this framework's record bears that out: of its compact structural steps, one is false (the ΓL(1) step), one was false and has been repaired (the q-power block count), one needed two gaps filled (B′), one holds only at prime c (Lemma C), one was an exclusion that is only a domination (Lemma D2, whose conclusion fails outright at F ≥ 3), and one was an upper-bound claim that is only an attained value (the within-class cross coefficient, scoped to the construction). The recurring shape is a case analysis run over the wrong partition of cases, and in four of the six the false clause quoted a small or regular group's behaviour as if it bounded every admissible one.
+**A step compressed to a clause tends not to survive being written out**, and this framework's record bears that out. Of its compact structural steps: one is false (the ΓL(1) step); one was false and has been repaired (the q-power block count); one needed two gaps filled (B′); two were exclusions that are only dominations (Lemma D2, whose conclusion fails outright at F ≥ 3, and Lemma C, whose gcd = 1 is false at every a and is replaced by a coupling); and one was an upper-bound claim that is only an attained value (the within-class cross coefficient, scoped to the construction).
+
+Two distinct failure sites, worth separating because they call for different checks. **Reasoning over the wrong partition of cases** accounts for most of them, and in four the false clause quoted a small or regular group's behaviour as if it bounded every admissible one — so the check is to ask which groups a bound was verified on. **Transcription from proof to statement** accounts for Lemma C, whose a = 1 proof established "share ⟹ outside twist trivial" while the sentence recording it claimed "no share": the proof was correct and the statement stronger, and the discrepancy survived because the statement was only ever tested against the case its proof did cover. The check there is to read each lemma's statement against its own proof's conclusion, independently of whether the proof is believed.
 
 Parts A, E and F have had one close reading each; what is outstanding is a reading by **someone who has not read them before**. A second pass by the same reader on the same evidence is worth much less than a first pass by another, which is the whole reason this is a human item rather than a script.
 
@@ -163,15 +167,29 @@ These are the whole trusted base for μ(n) = B(n): both certificates pass with e
 
 **Deferred: the framing decision.** Jones–Zvonkin's programme (arXiv:2106.00346 and four companions) is the model for how this genre states its standing — conditional on Bateman–Horn, labelled as such in the abstract, with the conjecture validated numerically at the range used. Three consequences are recorded in `literature-findings.md` items 14–16 and are *not* being acted on yet: a standing table at the front of `aod` §3 dividing unconditional from conditional from conjectural; the polynomial-versus-exponential line in `aod` §3.5, since shapes needing prime powers of unbounded exponent are Mersenne-like and outside Bateman–Horn; and the Catalan/Pillai caution where both parts are proper prime powers, which is our S1 and S2 and which `aod` §6 currently treats as amply supplied.
 
-### T5. RESOLVED pending review: Lemma C is false; a coupling theorem closes the gap at every a
+### T5. Lift condition (4)'s scoping to every a, and rerun the certificate
 
-*Full resolution, proofs, witnesses and edit list: **`t5-resolution.md`**, with `t5_verify.py` (eight checks, all passing). Vipul to review before integration, as with Lemma D2.*
+*The mathematics is settled: `enumeration-proof.md` Part D proves the twist–foreign coupling at every a and Corollary C′ supplies the domination. What is outstanding is the code change it licenses and the rerun that confirms it.*
 
-**The finding, in three steps.** (1) **Lemma C is false** — an Oliver group at n = 28 (order 150, chain machine-verified) carries a cyclic-layer twist of order 3 on a 5²-block beside a foreign 3-block, and even at a = 1 the share exists when the foreign part is untwisted (n = 10); the old proof established "share ⟹ foreign twist trivial", and its statement over-claimed. (2) **What is true is a coupling**: r | d forces every foreign multiplier into ⟨p mod r⟩, so the foreign twist t | ord_r(p) | a — tight (realised at (16,5) with t = 4 = ord₅(2)) and rigid (mispairing Frobenius with the multiplier fails to close, Sylow-r going non-cyclic). (3) **The coupling dominates**: a sharing configuration carries a class ≤ min(r·ord_r(p), C(r,2)) ≤ n·log₂n, below B(n) at every v4 row (worst ratio 0.70 at n = 15) and a theorem from n ≥ 763 at the ladder floor.
+**What changed underneath.** Condition (4) of `fb_common.py` caps a leftover p-characteristic part by stripping the foreign primes from its twist. That strip is **not** a necessary condition on admissible configurations — shares are admissible, with explicit Oliver groups at n = 28, 21 and 10 — but it **is** necessary among configurations scoring above **n·log₂n**, which is the only regime the certificates evaluate, their thresholds being of order δ·C(n,2). The strip is therefore justified at every a, on coupling-plus-threshold rather than on an unconditional lemma.
 
-**What T5's prize becomes.** Condition (4)'s strip is not a necessary condition on admissible configurations — the witnesses are admissible — but it **is necessary among configurations scoring above n·log₂n, at every a**. That is the only necessity the certificates ever used, since they evaluate against thresholds of order δ·C(n,2). So the a = 1 scoping can be lifted, the justification re-attributed from Lemma C to coupling-plus-threshold, and the a > 1 row of the fallback residue closes — which was the prerequisite for B_refined = B_safe. Follow-through: lift the scoping in `fb_common.py`, rerun the certificate over the 53,807 affected branches, confirm candidate lists stay empty; add `t5_verify.py`'s range pass to R1 beside `a18_verify.py`.
+**The work.** Lift the a = 1 scoping; re-attribute the justification in the header's per-condition necessity argument, **stating the n·log₂n threshold explicitly** — a future diagnostic hunting below that line could not use the condition, and a necessity argument that omits the qualification would be wrong in the same way the old one was. Then rerun `fallback_cert.py`: the strip changes condition (4)'s verdict on 630,477 branches at n ≤ 2000, of which **53,807 have c a proper prime power**, so this is not a vacuous change even though no candidate list is expected to change emptiness. Confirm it does not.
 
-**For T1's ledger.** A seventh falsified compact step, with a new twist: the statement was false **at the case it was believed proved in** — the a = 1 over-claim sat inside a correct proof whose conclusion was narrower than the sentence recording it. Proof-to-statement transcription is a failure site distinct from the six cases of reasoning over the wrong partition.
+**What it unblocks.** With the a > 1 row closed, the fallback residue reduces to the **q = 2 and large-e** cases of Part E″'s q-pinning, where pinning is vacuous or weak and domination rather than supply is needed. That is the remaining obstacle to replacing B_safe by B_refined outright — the structural route to **B_refined = B_safe = μ by construction rather than by computation**, as against a per-n certificate that the optimum happens to be fallback-free.
+
+**The rest of the residue, so the remaining work can be costed.**
+
+| piece | status |
+|---|---|
+| e = 1, δ > 1/9 | **closed unconditionally** — Proposition F.1 at k = 3; three parts each of size ≥ n√δ do not fit |
+| e = 1, δ ≤ 1/9 | **reduced to a bounded search**: ≤ 2/δ pinned positions per n. Empty over v4 — 4 admissible of 24,322 positions, all killed by the p-characteristic part not fitting. Not a theorem |
+| e ≥ 2 | supply of admissible foreign blocks is density zero in n; enumerable at the sparse n where it exists |
+| q = 2 | pinning vacuous, family exponential; needs domination rather than supply |
+| p-characteristic half of the leftover | **closed** — Lemma C's coupling and Corollary C′, at every a |
+
+*Counting alone does not close e = 1 below 1/9, and adding the pinning does not help:* the pinned bound n ≥ 3.54√B gives δ ≤ 0.16, weaker than F.1's 1/9. What closes the computed range is the specific arithmetic of the pinned positions, not a size argument. Note also that Part E″'s pinning is **conditional on a floor δ ≥ δ₀** — step 1 is the only place δ enters — so the unconditional version of this route dies with the asymptotic floor, exactly as the density ceilings do.
+
+**Tripwire, worth keeping.** `validate_table.py` asserts per row that no winner has a proper prime power c with a foreign prime dividing c − 1 — 0 of 1,677 parts, rechecked on every extension. It now confirms a proved domination rather than guarding an open lemma, and flags the first n where Corollary C′ would have to be checked directly.
 
 ### T5a. Re-derive §3.9.1.2's competing-rates argument on every revision
 
