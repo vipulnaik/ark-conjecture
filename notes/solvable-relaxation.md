@@ -1,6 +1,6 @@
 # The solvable relaxation: what Oliver's condition costs
 
-*Companion note to `arithmetic-of-density.md` and `enumeration-proof.md`; this is row 2 of the hypothesis table in `orbital-evasiveness-notes.md` §1. Relaxes Oliver's chain condition to bare solvability, works out the resulting extremal problem, and reads off the price of the chain. Verification: `solvable_relaxation.py` (nineteen checks, all passing; it needs `mu_table_safe_v4.csv` only for the comparison pass). Status: the shape space and the ceiling are **proved** below; the two generic constants of §3 are **conditional on the same Goldbach-type input the main framework uses**; the weaker floors of §3½ are **unconditional** for large n, modulo one citation flagged there; everything is **verified** over n ≤ 2484.*
+*Companion note to `arithmetic-of-density.md` and `enumeration-proof.md`; this is row 2 of the hypothesis table in `orbital-evasiveness-notes.md` §1. Relaxes Oliver's chain condition to bare solvability, works out the resulting extremal problem, and reads off the price of the chain. Verification: `solvable_relaxation.py` (nineteen checks, all passing; it needs `mu_table_safe_v4.csv` only for the comparison pass). Status: the shape space and the ceiling are **proved** below; the two generic constants of §3 are **conditional on the same Goldbach-type input the main framework uses**; the weaker floors of §3½ are **unconditional** for large n, modulo one citation flagged there; everything is **verified** over n ≤ 2600.*
 
 ---
 
@@ -24,7 +24,7 @@ Define **μ_solv(n)** identically, but maximising over *all solvable transitive 
 
 The second half is worth stating because it shows the framework's restriction to non-prime-powers is not bookkeeping: **at prime powers the solvable relaxation is vacuous**, δ_solv = 1, and any bound proved there says nothing. That the same n are exactly the ones ARK settles by other means is a coincidence of the two problems having the same easy case, not a shared mechanism.
 
-The ceiling is approached: at **n = 2q with q a prime power** a single orbit of two fused q-blocks gives classes q(q − 1) and q², so δ_solv = (q − 1)/(2q − 1) → 1/2. Verified: the maximum over all non-prime-power n ≤ 2484 is 0.49980, at n = 2474 = 2·1237.
+The ceiling is approached: at **n = 2q with q a prime power** a single orbit of two fused q-blocks gives classes q(q − 1) and q², so δ_solv = (q − 1)/(2q − 1) → 1/2. Verified: the maximum over all non-prime-power n ≤ 2600 is 0.49981, at n = 2594 = 2·1297.
 
 ## 2. The shape space collapses to one formula
 
@@ -55,7 +55,7 @@ This is a striking simplification against the Oliver world, where the shape spac
 
 Verified: over non-exceptional odd n ≥ 1200 the median δ_solv is 0.16734 and the median small-part share is 0.4167, against the predicted 0.17157 and 0.41421. **The balance point is the framework's own**: `aod` §3.3.5 lists x\* = (2 − √2)/2 = 0.29289 as the block share for the fused odd rung at η = 1, and 1 − 2(0.29289) = 0.41421 is the same split read from the other side. The shape is n = 2c + r\* exactly as predicted — a fused pair on one side, an unfused prime on the other, with the asymmetry between them (θ = 1/2 against θ = 1) doing all the work in setting the balance.
 
-**The exceptional family.** A single orbit gives δ = (P(n) − 1)/(n − 1) ≈ P(n)/n, which beats the generic constant when n has a prime-power divisor above n/4 (even) or above n/5.83 (odd) — that is, n = mc with c a prime power and m ≤ 5. Such n are a **density-zero** set, their share decaying like log 5/log n; measured, the share of single-orbit winners falls 0.370 → 0.285 → 0.240 across [100,500], [500,1200], [1200,2484], against log 5/log n of 0.282 → 0.233 → 0.212. The observed multipliers are m ∈ {2, 3, 4, 5} plus three small values at m = 7 (n = 119, 721, 1211) where the two-part split fails on supply rather than on balance. **This family has no analogue in the Oliver world**, where a single fused orbit needs its block count and twist to fit the chain and cannot simply take AGL(1, c).
+**The exceptional family.** A single orbit gives δ = (P(n) − 1)/(n − 1) ≈ P(n)/n, which beats the generic constant when n has a prime-power divisor above n/4 (even) or above n/5.83 (odd) — that is, n = mc with c a prime power and m ≤ 5. Such n are a **density-zero** set, their share decaying like log 5/log n; measured, the share of single-orbit winners falls 0.370 → 0.285 → 0.238 across [100,500], [500,1200], [1200,2600], against log 5/log n of 0.282 → 0.239 → 0.213. The observed multipliers are m ∈ {2, 3, 4, 5} plus three small values at m = 7 (n = 119, 721, 1211) where the two-part split fails on supply rather than on balance. **This family has no analogue in the Oliver world**, where a single fused orbit needs its block count and twist to fit the chain and cannot simply take AGL(1, c).
 
 **Both constants are conditional**, each on a binary-Goldbach-type input: two prime powers near n/2 at even n, c prime with n − 2c prime at odd n. One partial strengthening is free — almost all even n admit a near-equal Goldbach split, so **δ_solv = 1/4 − o(1) for almost all even n unconditionally** — but for *every* n the unconditional statement is weaker and is the subject of §3½. Note that Chen's P₂ does not help here: a product of two primes has a small largest prime-power divisor, hence poor θ.
 
@@ -90,7 +90,7 @@ Everything in §3 is conditional. Both generic constants need a **binary**-Goldb
 | 10000 | 2477 + 2477 + 2503 + 2543 | 0.06134 | 0.00116 |
 | 20000 | 4999 + 4999 + 4999 + 5003 | 0.06247 | 0.00003 |
 
-**And the floors are not binding in the computed range**, so nothing needs the asymptotics below n₀: the minimum of δ_solv over all non-prime-power n ≤ 2484 is **0.12296, at n = 551**, above 1/9 and well above 1/16, with no value anywhere in range falling below either constant.
+**And the floors are not binding in the computed range**, so nothing needs the asymptotics below n₀: the minimum of δ_solv over all non-prime-power n ≤ 2600 is **0.12296, at n = 551**, above 1/9 and well above 1/16, with no value anywhere in range falling below either constant.
 
 > **The comparison that makes this worth a section.** The solvable relaxation's *unconditional* floors, 1/9 and 1/16, both **exceed Oliver's conditional worst-class ceiling** of 0.050510 at n ≡ 23 (mod 24) — and 1/16 = 0.0625 exceeds the ladder's computed unconditional floor of 0.02516 by a factor of 2.5. So the chain is not merely costing a constant: it costs enough that the relaxed problem's *unconditional* guarantee beats the constrained problem's *conjectural* one. That is the sharpest single statement of the price available here, and it is one no amount of sieve improvement changes, since it compares a proved bound against a ceiling.
 
@@ -115,7 +115,7 @@ The two problems produce ceilings from the same formula. Under the relaxation η
 
 The **global constant** is where the two charges compound. Oliver's is 0.050510, attained at n ≡ 23 (mod 24) alone — the only residue carrying both local obstructions and unable to fuse. The relaxation's is 0.171573, the odd-n constant. **The chain costs a factor of 3.397 in the worst class and nothing at all in twelve of the twenty-four.**
 
-**Empirically, against the computed table.** B_solv ≥ B_safe at all 2081 tabulated non-prime-power n, as it must be since Oliver groups are solvable. The median ratio is 1.083 (1.041 at even n, 1.186 at odd n), with 41% exact equality and a maximum of 4.275 at n = 2147. The empirical ratios sit *below* the ceiling ratios above because both sides frequently exceed their family ceilings by other shapes — the table's values are attainments, not caps.
+**Empirically, against the computed table.** B_solv ≥ B_safe at all 2,186 tabulated non-prime-power n, as it must be since Oliver groups are solvable. The median ratio is 1.082 (1.040 at even n, 1.194 at odd n), with 41% exact equality and a maximum of 4.275 at n = 2147. The empirical ratios sit *below* the ceiling ratios above because both sides frequently exceed their family ceilings by other shapes — the table's values are attainments, not caps.
 
 ## 5. What this says about the framework
 

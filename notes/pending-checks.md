@@ -25,19 +25,18 @@ Ranked, so the sections below have a stated basis. This is not the order the ite
 
 *Can be launched in the background. Flags are checked against the scripts as they stand; where a run needs code that does not exist, that is said rather than papered over with a plausible-looking flag.*
 
-## R0. Rebuild the table, then rerun everything downstream
+## R0. Extend the table, then rerun everything downstream
 
-`mu_table_safe_v4.csv` reaches n = 2000 and extends at roughly n^2.9 per value. What is left:
+`mu_table_safe_v4.csv` holds **2,186 rows, contiguous over every non-prime-power n ≤ 2600**, and extends at roughly n^2.9 per value. R1 has been rerun against it in full and the documents recounted. What is left on this axis:
 
-1. **Finish the rebuild.**
-1. **Rerun all of R1** against it — that list is the whole downstream, and its second item is where the floor, the largest permitted s and the theorem residue get recounted.
-3. **Rebuild the branch-and-bound worklist**, since its pruning is keyed to the density floor.
+1. **Rebuild the branch-and-bound worklist**, since its pruning is keyed to the density floor and the floor has moved (item R7).
+2. **Extend further** when wanted, rerunning R1 each time.
 
 ```bash
-python3 mu_enumerate_v2.py --nmax 2600 --fill-gaps --out mu_table_safe_v4.csv
+python3 mu_enumerate_v2.py --nmax <N> --fill-gaps --out mu_table_safe_v4.csv
 ```
 
-**Quote figures from v4 only.** v3 is over-credited on fused shapes and v2 predates the corrected shape space, so both understate or misattribute; v4 is at or above v2 at every common value, which is the signature to check on each batch.
+**Quote figures from v4 only.** v3 is over-credited on fused shapes and v2 predates the corrected shape space, so both understate or misattribute; v4 is at or above v2 at every common value — verified on the current rebuild, 386 higher and **0 lower** across the 2,045 common values, which is the signature to check on each batch.
 
 ## R1. Routine, after any new batch of table values
 
@@ -99,7 +98,7 @@ python3 mu_enumerate_v2.py --nlist ladder_weak_v4.txt \
 - **Prunes on the supplied lower bound.** `ladder_weak_v4.txt`'s second column is read as LB(n); any n with LB(n) ≥ the current floor is skipped without computation, since LB(n) ≥ floor already proves δ(n) ≥ floor. At `--floor 0.0400` that disposes of 19,562 of the 19,583 entries for free.
 - **Rejects most survivors without computing B(n).** For an unpruned n it seeds the search at floor·C(n,2), so it only has to show *some* configuration clears the floor. Measured on the first 40 entries: n = 1175 is rejected at K = 2 — δ(1175) > 0.04 established without ever computing B(1175).
 - **Appends the exact row when it does compute one**, to `--out`, with the full schema and the witness — so the expensive values land in **the same CSV** rather than a side file that then needs merging. It only appends, never rewrites or reorders, and skips n already present.
-- **Reads the table back as prior knowledge.** An n already in `--out` is not skipped; its density is fed to the floor. So v4's existing 1,666 rows tighten the search rather than being ignored.
+- **Reads the table back as prior knowledge.** An n already in `--out` is not skipped; its density is fed to the floor. So v4's existing 2,186 rows tighten the search rather than being ignored.
 
 **Set the floor to the question you are asking.** The floor is an interrogation threshold, not the known answer — and setting it to the current global floor would prune everything, 8927 included, since pruning triggers at LB ≥ floor.
 
@@ -213,7 +212,16 @@ The claim is that the odd-n win shares tend to **1 : 1 : 2**. It rests not on th
 
 ## §2b. Self-contained items
 
-*Analysis against the existing files, needing no new materials. **This section is currently empty of open items** — the discretionary ones have been closed, and what remains below is the reference for `validate_table.py`, which is a standing runbook entry rather than a task. The next self-contained work is in §2a, where T2 is the ranked exposure.*
+*Analysis against the existing files, needing no new materials.*
+
+### A20. `validate_table.py`'s density check needs a rounding tolerance
+
+Group A's *density column agrees with mu_bound / C(n,2)* test compares the stored six-decimal string against a freshly computed one, and the two can disagree on an **exact tie at the sixth decimal** without anything being wrong. The single instance in the current table is **n = 2561**, where μ/C(n,2) = 250978/3278080 = 49/640 = **0.0765625 exactly**. The stored `0.076563` is what `"%.6f"` produces; a checker that rounds the exact rational half-to-even produces `0.076562`. Both are defensible and neither indicates a bad row — re-deriving μ from the witness passes at this n, as group A's own G.3 test reports.
+
+The fix is a tolerance rather than a rounding convention, since matching conventions across two programs is the fragile version: accept when **|stored − μ/C(n,2)| ≤ 5·10⁻⁷**, i.e. within half a unit in the last stored place. Exact ties are the only values this admits that string equality rejects, and there is exactly one in 2,186 rows — the check is not being loosened in any way that could hide a real mismatch.
+
+*Worth a line in the failure message too:* group A's banner says a FAIL there means the run or the parser is broken and nothing downstream is meaningful. That is right for the other four group A tests and wrong for this one, which is a presentation check. Either move it to group B or say in the message that a lone density mismatch at an exact tie is cosmetic.
+
 
 ### A0b. `validate_table.py` — run this on every table extension
 

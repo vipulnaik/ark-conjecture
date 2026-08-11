@@ -56,8 +56,11 @@ import sys
 from math import comb, isqrt, log, sqrt
 from statistics import median
 
-N = 2484
 TABLE = sys.argv[1] if len(sys.argv) > 1 else "mu_table_safe_v4.csv"
+# The frontier is read from the table rather than hardcoded, so this script does
+# not silently compare a stale range against a freshly extended one.
+with open(TABLE) as _f:
+    N = max(int(_r.split(",")[0]) for _r in _f.read().splitlines()[1:] if _r.strip())
 ok = True
 
 

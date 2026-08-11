@@ -296,8 +296,8 @@ So the optimisation is no longer a balance between competing term types. It is: 
 | **S6** | two outside blocks | exists | the weaker of orb₃(r_i, t_i, 1) | measured **0.0027** at n = 36 | **Changed from k = 2**, where it is capped by 1/(√m₁+√m₂)² and wins nowhere. At k = 3 it is just "two foreign blocks", scoring like S3 with both twists constrained |
 | **S7** | middle-layer-fused matching + outside | exists | orb₃(r, t, 1) when the foreign twist is small | measured 0.0013 at n = 33 | Same shape; a small foreign twist is punished harder, orb₃ being linear in d with no C(c,2) cap to rescue it |
 | **S8** | bottom-layer-fused matching | **killed, D1** — argument survives | — | — | D1's inequality strengthens: F·C(c,3) < C(Fc,3) needs only F < F³, a wider margin than k = 2's F < F² |
-| **S9** | fused outside block | **exists; dominated at k = 2** (Lemma D2 caps it at n^{3/2}/2) — the k = 3 status is unchecked | — | — | D2's k = 2 domination rests on a pairs-specific same-position class; the k = 3 analogue should dominate more easily by §4.1's degree count, but it has not been derived |
-| **S10** | outside block with r = q | **killed** — argument survives | — | — | The twist-collapse of D2q is about layers, not pairs, so it carries to k = 3 verbatim |
+| **S9** | fused outside block, any layer | **exists; dominated at k = 2** (Lemma D2 caps it at n^{3/2}/2) — the k = 3 status is unchecked | — | — | D2's k = 2 domination rests on a pairs-specific same-position class; the k = 3 analogue should dominate more easily by §4.1's degree count, but it has not been derived |
+| **S10** | outside block with r = q, any F | **killed** — argument survives | — | — | The twist-collapse of D2q is about layers, not pairs, so it carries to k = 3 verbatim |
 
 ### 4.3 Where the Galois part enters the census, and what it costs
 
