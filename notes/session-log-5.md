@@ -55,6 +55,16 @@ Three computations pin it down, in `a18_rq_verify.py`. Exhaustively at (F,q) = (
 
 ---
 
+## 2½. A19 implemented, and two things the implementation settled
+
+The corrected predicate of §2 was implemented as `k3_galois.py` rather than left as prose, on the principle that a shape-space predicate is cheapest to fix before code depends on it. Implementing it surfaced two distinctions the prose had left implicit and one bound that changes how urgent the item was.
+
+**Gain and top prime are not the same quantity.** The theorem's gain is **lpf(a)**; the split's top prime is **q = lpf(a/a′)**. They agree exactly when a is a prime power — which is why the superseded reading could conflate them without visible damage, and why conflating them again would have been the natural next error inside an enumerator.
+
+**The twist selects the top prime at fixed block size.** At a = 35, the twist d = 31 splits with a′ = 7 and gives q = 5; d = 127 splits with a′ = 5 and gives q = 7. Same block, same gain 5, different top prime. Since §4.3 of `three-uniform-note.md` couples q to every foreign block in the configuration — each needing q | r − 1 — that is usable freedom, and it simply does not exist under the naive predicate, where a = q^e determines q.
+
+**The first affected n is 2³⁵, which downgrades the urgency while confirming the substance.** The block sizes the correction adds are the a coprime to 6 that are not prime powers — {35, 55, 65, …}, all with lpf(a) = 5, hence all low-gain. But the shape is n = c = 2^a, so the block size *determines* n and the error is not diluted across many values: at n = 2³⁵ ≈ 3.4 × 10¹⁰ the naive predicate credits gain 1 against a true gain of 5, making the bound a factor of 5 too small and hence not an upper bound. So the error was real, was of the dangerous kind (§5.8: under-crediting at k = 3 breaks the bound rather than loosening it), and was never within reach of any computation. Worth recording as a calibration point: **"dangerous direction" and "reachable" are independent axes**, and this item was the first while not being the second.
+
 ## 3. Corrections inside `arithmetic-of-density.md`
 
 **§3.9.1.4's congruence for the nine rung-B residues.** The row-by-row justification opened "Here n ≡ 3 (mod 8)" for residues 1, 3, 5, 9, 11, 13, 17, 19, 21 — false for six of them, which are 1 and 5 mod 8. The n ≡ 3 (mod 8) / r ≡ 5 (mod 8) derivation is the η ∈ {1/2, 1/6} case specifically. The conclusion (fused rung reachable at all nine) was right in each case but through different congruences; replaced by a table splitting the nine by η. Flagged as worth care because T5a records that every pass over this section has produced a different and partly wrong picture.
