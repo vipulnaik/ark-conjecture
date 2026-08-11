@@ -1,0 +1,101 @@
+# Session log 5
+
+*Record of the review-and-repair session of 2026-08. The primary documents carry only the current state; this file carries what changed, what it superseded, and why — so that a figure or a claim that looks unfamiliar can be traced without re-deriving it. Entries are in dependency order, not chronological.*
+
+**Shape of the session.** A cold critical read of the three primary documents plus `small-degree-computation.md` and `three-uniform-note.md`, cross-checked against the attached scripts and tables; then the repairs below. Two structural findings came out of it — Lemma D2 is false as stated, and the k = 3 Galois admissibility predicate was too narrow — and both are the same failure mode the T1 ledger tracks. The rest is bookkeeping: stale cross-references, one figure disagreement inside a single document, and three script comments that had drifted from their code.
+
+---
+
+## 1. Lemma D2 falsified, then replaced by a domination theorem (was A18)
+
+**What D2 used to say.** *Outside blocks are never fused, by any layer.* An orbit of F ≥ 2 fused outside blocks of prime size r was said to carry a same-position class of at most (F/2)·r pairs for even F and F·r for odd F, hence **m\* ≤ |O|/2 ≤ n/2**, hence such configurations could be excluded from the shape space outright. Its status line read "proved, and more strongly than first conjectured — the bound is m\* ≤ n/2 outright, so no threshold is needed".
+
+**Why it was false.** The last step took the block-permuting group's minimum pair-orbital to be F/2 or F, which is the divisibility argument for a transitive group of **prime-power degree**. Under the corrected shape space the block count is F = F_mid·F_top and need not be a prime power, and the permuter need only be compatible with the chain — so it may be 2-transitive, with pair-orbital C(F,2).
+
+**The witness, verified.** The gap is realised by an actual Oliver group, not merely by an admissible permuter:
+
+> **n = 85.** Five blocks of size 17; diagonal translation τ; diagonal twist of order 16 (r − 1 = 16 = 2⁴, so the whole multiplicative group is available inside a 2-group); **AGL(1,5) = C₅ ⋊ C₄** permuting the block indices, C₅ as a 5-cycle and C₄ as i ↦ 2i (mod 5).
+>
+> Machine-checked: |Γ| = 5440, Γ₁ = ⟨τ, c₅⟩ ≅ **C₈₅ cyclic and normal**, Γ/Γ₁ of order **64** (a 2-group), transitive on all 85 points. Orbitals computed exhaustively: **170 / 680 / 2720** (summing to C(85,2) = 3570), so **m\* = 170 = 2|O|** — four times the claimed bound of |O|/2 = 42.5. The binding class is exactly C(5,2)·17, so the corrected same-position bound is tight.
+
+Vipul independently reviewed and verified the example and the theorem's proof.
+
+**What replaced it.** The **fused-outside domination theorem**, now Lemma D2 in `enumeration-proof.md` Part D2: for r ≠ q, **m\* ≤ n·min(F, r)/2 ≤ n^{3/2}/2**, via a within-block class ≤ F·C(r,2) always and a same-position class ≤ C(F,2)·r when F < r. Two features of the proof are worth recording because nothing else in the framework had used them:
+
+- **Sylow-r cyclicity.** With r ∉ {p, q} every r-element lands in the cyclic layer, so the Sylow r-subgroup is cyclic; with F < r this forces the r-elements to be exactly the pure translations and the translation group to be diagonal — a cleaner derivation of the diagonal step than the old "Γ₁/Γ₂ cannot contain C_r^F" argument, and one that survives an arbitrary permuter.
+- **A coprime-cohomology normalisation.** Since r ∤ |Q| for Q = Γ|_O/T\*, H¹(Q, V) = 0 and complements are conjugate by a translation vector — i.e. by a change of per-block origins. This is what makes "same position" coordinate-independent; without it an element acting as (ax, ax + u) across two blocks merges the offset-zero class into offset u. The old proof never addressed this, and `mu_enumerate_v2.py`'s code comment had been assuming it silently.
+
+**The exclusion is now a domination, with a range-scoped half.** A fused-outside configuration cannot be extremal wherever √n < δ(n)·(n − 1). With the ladder's δ ≥ 0.02516 on n ≤ 10⁶ that is a theorem for **n ≥ 1582**; below it, direct scoring of the bound against every tabulated value clears with worst ratio **0.8276 at n = 56** (F = 8, r = 7), no other value above 0.77. The two overlap, so the whole range to 10⁶ is covered; beyond it the exclusion needs only δ(n) ≫ n^{−1/2}, weaker than anything else the framework assumes.
+
+**Consequences that landed in the documents.** No computed value of B(n) changes. S9 moved from "never exists (Lemma D2)" to "exists; dominated" — the first census row ever to make that move, and the reason the census's status column now distinguishes *excluded by theorem* from *occurs and loses*. Theorem 3.1's "foreign … and never fused" clause became "unfused, fusing being possible but dominated" in both DUP copies. Corollary D2′ was restated as what fusion of outside blocks costs rather than as an impossibility. `parts_for`'s comment in `mu_enumerate_v2.py` was corrected: it had justified the skip by a class of size ~F·c/2, which quotes a small permuter's pair-orbital and understates the class — the right figure is C(F,2)·c, and the skip is sound for a different reason than the comment gave.
+
+**What remains open, and is the new A18.** The theorem excludes **r = q**, where both branches lose their footing: translations may sit in Γ/Γ₁, Sylow-q is not forced cyclic, and the diagonal step fails outright. Branch (a) still covers F ≥ q, so the gap is **F < q copies of a q-block**, which at F = 2 could reach ~n²/4 if unbounded. S10's F = 1 normality argument is what must be extended, which **promotes S10 from an excluded curiosity to load-bearing for completeness**. One route is already closed: at F < q the permuter's image has trivial q-part, hence is p-by-cyclic, which still admits 2-transitivity — so the sub-case cannot be settled by ruling the permuter out.
+
+**Verification artefact.** `a18_verify.py`, three passes (witness orbitals, chain, range check), exits nonzero on failure. Added to R1, because the range half expires silently on any table extension.
+
+---
+
+## 2. The k = 3 Galois admissibility predicate was too narrow (now A19)
+
+**What it used to say.** `three-uniform-note.md` §2.2.2's Oliver-constrained corollary held that the Galois gain requires **a = q^e with q ≥ 5**, on the reasoning that Frobenius acts nontrivially on C_d for d > 1, so C_a cannot join the cyclic layer and must be the top q-group entire. It offered a = 35 as a case the unconstrained criterion admits and Oliver's condition does not.
+
+**Why it was wrong.** "The generator cannot join the middle layer" does not give "all of C_a sits on top". A subgroup C_{a′} ≤ C_a acting trivially on C_d may join it, leaving only C_{a/a′} to be a q-group. Its own stated test case is the counterexample: **a = 35, d = 31, c = 2³⁵** — since 31 | 2⁵ − 1 divides 2^{35/7} − 1, take a′ = 7 in the cyclic layer, where C₃₁ × C₇ ≅ C₂₁₇ is cyclic, leaving Γ/Γ₁ ≅ C₅. A genuine chain with top prime 5 and gain factor 5.
+
+**What replaced it.** The layer split: **∃ a′ | a with d | 2^{a/a′} − 1, gcd(d, a′) = 1, and a/a′ a prime power.** The old condition is the a′ = 1 branch alone.
+
+**Why it mattered enough to be an item.** The error under-counts admissible Galois blocks, and §5.8 of that document establishes that a k = 3 scoring which under-credits the Galois part is *not an upper bound at all* — the reverse of the k = 2 situation. Nothing was running on the predicate, which is why the fix was free; the item exists so it stays fixed when a k = 3 enumerator is built. Unaffected either way: characteristic 2, gcd(a, 6) = 1, gcd(d, 6) = 1, the q | a top-prime coupling of §4.3, and the O(n/log n) escape count.
+
+---
+
+## 3. Corrections inside `arithmetic-of-density.md`
+
+**§3.9.1.4's congruence for the nine rung-B residues.** The row-by-row justification opened "Here n ≡ 3 (mod 8)" for residues 1, 3, 5, 9, 11, 13, 17, 19, 21 — false for six of them, which are 1 and 5 mod 8. The n ≡ 3 (mod 8) / r ≡ 5 (mod 8) derivation is the η ∈ {1/2, 1/6} case specifically. The conclusion (fused rung reachable at all nine) was right in each case but through different congruences; replaced by a table splitting the nine by η. Flagged as worth care because T5a records that every pass over this section has produced a different and partly wrong picture.
+
+**Two block-floor rows.** §5's seven-block table carried [6·10⁵, 7·10⁵) = 0.04729 at n = 602843 and [7·10⁵, 8·10⁵) = 0.04732 at n = 714347, from an earlier ladder run; §3.7's list and the v4 log both give **0.04732 at 684023** and **0.04780 at 792839**. Corrected to match. Worth noting as a class of defect: a disagreement between two prose tables *inside one document*, which no cross-document check would catch — and a reason to confirm the block-floor values are registered quantities in `check_doc_figures.py` PASS 1.
+
+**Deferred by decision, not oversight.** Three findings were raised and deliberately left for the post-R0/R1/R7 consistency sweep, on the grounds that they are artefacts of the table rebuild being mid-flight and that everything reads consistently as of when it was written:
+
+- §2.1 attributes the global minimum to n = 2291 with witness `2x761 + 1x769*`, whose point (that the minimum is a mixed fused winner) is unsupported: 0.026117 belongs to n = 3239, whose v2 witness has three classes and no fusion. Under v4 the 2291 row rises to 0.0668 and the example dissolves entirely.
+- §1.4's "below 10⁶ the branch-and-bound establishes δ ≥ 0.026117" now turns on B(8927); the defensible unconditional figure from the v4 ladder alone is **0.02516**. In the other direction, the v4 log already proves the 1/50 conjecture below 10⁶ unconditionally, which is a cleaner claim than the current text makes.
+- Range bookkeeping disagrees across three documents: the census says v4 is contiguous to 1428 (1,174 rows), R0 says it reaches 2000, and the shipped CSV is contiguous over composite non-prime-powers to **2484** with 2,081 rows. 205 of the 907 rows above 1428 differ from v2 and 666 agree; the sweep should confirm the tail is a v4 recompute rather than a partial merge.
+
+---
+
+## 4. Stale cross-references and script drift
+
+- **`enumeration-proof.md` on `ladder_verify.py`.** The census box said the script "reaches neither" F = 2 rung and pointed at a pending item to widen it. The script implements both — rung B via `EFF_ODD`, rung B′ via `EFF2` — and `aod` §3.3.8 already reports the eight rung-B residues rising 0.03–0.15 when they were added. Rewritten to describe the implementation, including why F = 2 is deliberately absent from the S7 loop (its guard `(c−1) % qF` would kill every odd c at qF = 2, and the F = 2 case belongs with the family it competes against).
+- **The n = 551 witness.** Quoted in open item 1 as evidence that distinct powers of one prime "can win"; that is the v2 winner (8,128), and v4 wins the same n with the equal-block `3x128 + 1x167*` at 13,861. The structural point needed only admissibility, so the claim was scoped to that.
+- **The `brute.py` cross-check.** Claimed agreement "at every n ≤ 110"; `brute.jsonl` in fact agrees at all **142** values, contiguous to 110 and then spot-checking 198, 200, 247, 285 and **308**. The 308 agreement is materially stronger evidence than the rest, being the smallest value whose winner has a cyclic-layer block count.
+- **`ladder_verify.py`'s header.** Asserted the rung-B congruence as one condition ("forces r = 5 mod 8 and hence n = 3 mod 8"), the same error as §3.9.1.4. Replaced with the η-dependent version.
+- **`ladder_verify.py`'s S7 loop.** Its `(c−1) % qF == 0 → continue` guard makes the subsequent twist-stripping loop unreachable. Skipping is the more conservative of the two, so the lower bound is safe, but the code and its comment disagree; annotated, with the note that relaxing the guard and letting the strip work would slightly raise the reported floor.
+- **`count_check.py`'s window centre.** `--centre` defaulted to the equal split 1/(k+1) and the docstring advertised x\* = 1/3, which is exactly what `aod` §3.3.6 and §3.8 warn against — at (rung C, η = 1/6) the equal split sits 0.109 from the true balance point, more than twice the window half-width, so a run left on the default counts over a region that cannot reach the class ceiling. The reported §3.8 figures were *not* affected (every row's x\* matches its class, and the printed command passes `--centre`), so this was a foot-gun rather than a defect. Now: §3.3.5's x\* column is transcribed as a table keyed mod 24 and used automatically under `--modulus 24`, with a loud warning otherwise. Deriving x\* from η was tried and rejected — it silently picks one rung and is wrong at the seven residues where the other rung attains the ceiling.
+- **`count_check.py`'s caption** labelled the rung-C caps (1/9, 0.08579, 0.0718, 0.05051) as "section 3.3's class ceilings"; true only at residues 7, 15, 23. Scoped.
+- **`small-degree-computation.md` §1.2** said a missed group "could only have a larger minimum orbital". A missed group can have any m\*; only a larger one would matter. Corrected.
+
+---
+
+## 5. Checked and clean
+
+Recorded because a check that found nothing is evidence, and re-running it later costs the same as the first time.
+
+**Arithmetic and closed forms.** All eight mod-24 ceilings and their surd forms; the balance points in both §3.3.5 and §3.4; cap_F(η) = cap₁(Fη)/F; the B′ table cap₂(1/u) for u ≤ 11 and the u ≤ 9 threshold against 0.050510; the §3.3.4 mod-8 derivation; §4.3's escape counting including the head/tail geometric split and the constant 4; §3.6's prime-divisor-to-prime-power domination.
+
+**Worked instances.** n = 308 (4134/8427/23691/5513), n = 3239 (228480/458752/2593024/348727, δ = 0.043570), n = 10, Theorem 2.1 at m = 3, 5, 9, S4 at n = 247. The v4 first-instance table for every live shape against the CSV; the six v4 S4 winners all at c ≡ 1 (mod 8).
+
+**Scripts.** `ladder_verify.py` end to end — the three efficiency arrays including the `d**(e−1)` exponent, the EFF_EX and EFF_ODD restrictions that keep it a lower bound, the Lemma C guard `(c−1) % r`, and the stop_at truncation rule. `count_check.py` end to end — `roots_mod`'s degenerate branches, the twist-prime obstruction, the (q/(q−1))² restoration, the Simpson integral. `mu_enumerate_v2.py`'s scoring core and search skeleton. `brute.jsonl` against the v4 CSV at all 142 values, recomputed independently.
+
+**Data hygiene.** Both CSVs have exactly one row per n — an apparent duplicate at n = 10 reported during the review was an artefact of the reviewer's own shell command, not of the data.
+
+**`small-degree-computation.md`.** χ(Δ_P) = 1 − S; the S ≠ 0 ⟹ evasive route; the primal/dual involution; the n = 12 wreath figures and their consistency with Theorem 2.2 (12 = 2·6 has m = 6 not a prime power, so the equality clause does not apply); −1215 = −5·3⁵; the §1.2/§8.4 truncation asymmetry.
+
+**`three-uniform-note.md`.** The κ₃ = τ·θ·γ formula against every recomputable figure — orb₃(32,31,1) = 992, orb₃(32,31,5) = 4960 = C(32,3), orb₃(101,25,1) = 2525, 128·127·7 = 113,792; the §5.4 two-part table; §6.2's n = 133 table including the r = 251 cap; the identity β₃ = cap_F(η)/2 for all eight rows in both κ_c columns, and the balance-point translation s\*/n = 2·(aod's c/n), which is algebraically forced.
+
+**Not audited, and known not to be.** The bodies of `check_doc_figures.py` beyond its structure; `three-uniform-note.md` §5.6.3's c ≤ 83 verification sweep; the mod-8 prime counts (570/565/569/556) and the 20-winner `2×c + 257*` list; `aod` §4.5's fate-table intro.
+
+---
+
+## 6. Method notes
+
+**Dehistoricization.** The primary documents were left carrying only the current state — no "this used to say", no superseded figures kept for contrast, no status lines describing a claim's history. Everything of that kind is in this file. The one deliberate exception is the census's v2/v3/v4 provenance banner, which is *about* the tables rather than about the documents' own past and is load-bearing for reading the winner counts until the rebuild finishes.
+
+**On the T1 ledger.** This session added a sixth entry to the list of compact structural steps that did not survive being written out, and it is the first falsified **by explicit construction inside the framework** rather than by a counterexample from outside it. Four of the six now share one shape: a small or regular group's behaviour quoted as if it bounded every admissible one — the ΓL(1) step, the q-power block count, the within-class cross coefficient, and now D2. That is specific enough to be a search pattern rather than a mood, and the place to point it next is Part E's realisability construction, which is the least-defended thing the framework relies on (T2) and which quantifies over admissible groups in exactly the same way.

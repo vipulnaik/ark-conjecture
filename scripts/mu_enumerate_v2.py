@@ -265,14 +265,20 @@ def parts_for(n, p, q, spf, floor):
             if not (foreign and pp[1] > 1):          # Lemma B': foreign => prime
                 for Fmid, Ftop in _fusions(n // c, q):
                     F = Fmid * Ftop
-                    # A foreign part is never fused.  Independent translations
-                    # are impossible (F copies of C_c generate C_c^F, cyclic only
-                    # for F = 1), and DIAGONAL translations, though admissible,
-                    # are always dominated: they preserve the difference y-x, so
-                    # the pairs with y = x form a cross class of size only
-                    # c*|block-pair orbit| ~ F*c/2 which the twist can never
-                    # merge (it fixes 0).  That class binds, leaving the fused
-                    # foreign class worth ~F*c/2 instead of F*orb(c,t).
+                    # A foreign part is taken UNFUSED, by domination rather
+                    # than by impossibility -- fused foreign parts do exist
+                    # (there is an explicit Oliver group at n = 85 with five
+                    # fused 17-blocks and m* = 2|O|).  Lemma D2 of
+                    # enumeration-proof.md caps any configuration containing one
+                    # at n*min(F,c)/2 <= n^1.5/2, via the within-block class
+                    # F*C(c,2) and, when F < c, the same-position class
+                    # C(F,2)*c.  NOTE the second is C(F,2)*c and not ~F*c/2:
+                    # the block-permuting group may be 2-transitive, so quoting
+                    # a small permuter's pair-orbital here understates the class
+                    # and would make the skip look better justified than it is.
+                    # The skip is sound because the CAP is below B(n) throughout
+                    # the computed range and a theorem above n = 1582; that is a
+                    # range-scoped half, so rerun a18_verify.py on extension.
                     if foreign and F > 1:
                         continue
                     pt = Part(Fmid, Ftop, c, foreign, q, p, spf)

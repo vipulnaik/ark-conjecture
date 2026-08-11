@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-a18_verify.py -- three verifications for a18-resolution.md, in one file.
+a18_verify.py -- three verifications for Lemma D2 of enumeration-proof.md
+(Part D2, the fused-outside domination theorem), in one file.
 
   PASS 1  THE WITNESS.  Builds the n = 85 group -- five fused outside 17-blocks
           with a diagonal translation, a diagonal order-16 twist, and AGL(1,5)
@@ -14,7 +15,7 @@ a18_verify.py -- three verifications for a18-resolution.md, in one file.
           Nothing here is taken from the construction on faith.
 
   PASS 3  THE RANGE.  For every row of mu_table_safe_v4.csv, checks that the
-          domination bound of the resolution note --
+          domination bound of Lemma D2 --
               some class <= F*C(r,2) always, and <= C(F,2)*r when F < r --
           maximised over all (F >= 2, r prime, F*r <= n), stays strictly below
           B(n).  The bound is deliberately generous (it grants the largest
