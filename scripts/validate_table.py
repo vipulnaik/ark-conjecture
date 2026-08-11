@@ -46,6 +46,7 @@ check is findable from the other end.  Checks are registered with @check.
 """
 import argparse, csv, math, re, sys, textwrap
 from collections import Counter, defaultdict
+from fractions import Fraction
 from math import comb
 
 ap = argparse.ArgumentParser()
@@ -66,12 +67,13 @@ PART = re.compile(r"(\d+)x(\d+)(\*?)")
 
 
 class Row:
-    __slots__ = ("n", "C", "B", "delta", "parts", "certK", "certified",
+    __slots__ = ("n", "C", "B", "delta", "delta_str", "parts", "certK", "certified",
                  "fallback", "witness", "p", "q", "cls", "shape")
 
     def __init__(self, d):
         self.n = int(d["n"]); self.C = int(d["C(n2)"]); self.B = int(d["mu_bound"])
-        self.delta = float(d["density"]); self.parts = int(d["parts"])
+        self.delta_str = d["density"].strip()
+        self.delta = float(self.delta_str); self.parts = int(d["parts"])
         self.certK = int(d["certified_K"]); self.certified = d["certified"] == "1"
         self.fallback = d["fallback"] != "0"; self.witness = d["witness"]
         m = WIT.match(self.witness)
@@ -292,9 +294,30 @@ def c_rederive(R, base):
     return ("FAIL" if bad else "PASS", f"{len(bad)} mismatches of {len(R)}", bad[:5])
 
 
+def density_ok(r):
+    """Is the stored density string a correct rounding of mu_bound / C(n,2)?
+
+    Done in EXACT rational arithmetic, against the half-ulp of the stored
+    string's own precision.  Both refinements matter, and the second is the one
+    that bit: a float tolerance of 5e-7 is the right VALUE, but a tie rounds to
+    a difference of exactly 5e-7, and evaluating that subtraction in floating
+    point lands a few ulps above the bound, so a strict `>` rejects a correctly
+    rounded row.  n = 2561 is the instance -- 250978/3278080 = 49/640 =
+    0.0765625 exactly, the only 6-decimal tie in the table -- where the exact
+    difference IS the half-ulp and float arithmetic gives 5.000000000005e-07.
+
+    Reading the precision off the string rather than assuming six places also
+    means the check does not silently loosen if the writer's format changes.
+    """
+    s = r.delta_str
+    places = len(s.split(".")[1]) if "." in s else 0
+    stored = Fraction(s)
+    return abs(stored - Fraction(r.B, r.C)) * 2 * 10 ** places <= 1
+
+
 @check("A", "density column agrees with mu_bound / C(n,2)", "table")
 def c_density(R, base):
-    bad = [r.n for r in R if abs(r.delta - r.B / r.C) > 5e-7]
+    bad = [r.n for r in R if not density_ok(r)]
     return ("FAIL" if bad else "PASS", f"{len(bad)} mismatches", bad[:5])
 
 
@@ -497,7 +520,9 @@ def c_equal_sizes(R, base):
             (twos if r.p == 2 else bad).append((r.n, r.witness))
     return ("FAIL" if bad else "PASS",
             f"{multi} winners have >1 matching class; {len(bad)} unequal at odd p, "
-            f"{len(twos)} at p = 2 (permitted -- the n = 551 escape)",
+            f"{len(twos)} at p = 2 (permitted, and currently empty -- the "
+            f"n = 551 escape was a v2 winner and the corrected shape space "
+            f"replaced it with the fused 3x128 + 1x167*)",
             (bad or twos)[:5])
 
 

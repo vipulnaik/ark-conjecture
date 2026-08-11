@@ -162,9 +162,31 @@ The table now holds **2,186 rows, contiguous over every non-prime-power n ≤ 26
 
 **The certificate is stronger than before in one respect worth recording**: it was rerun with `--no-theorems`, which stubs every dispatch, and still reports 0 candidates at all 2,186 values. So the per-n proof of μ(n) = B(n) rests on the eight necessary conditions alone, with the Part E′ theorems explaining only why the search is cheap.
 
-**A checker artefact, not a defect.** `validate_table.py` reports one group A failure, at n = 2561, where μ/C(n,2) = 49/640 = 0.0765625 is an **exact tie at the sixth decimal**; the stored value is what `"%.6f"` gives and a half-to-even rounding of the exact rational gives the other. Re-derivation from the witness passes at that n. Recorded as A20, with the fix being a half-ulp tolerance rather than a matched rounding convention. It is the only tie in 2,186 rows.
+**A checker artefact, not a defect — and one whose obvious diagnosis was wrong.** `validate_table.py` reported one group A failure, at n = 2561, where μ/C(n,2) = 49/640 = 0.0765625 is an **exact tie at the sixth decimal**, the only one in 2,186 rows; re-derivation from the witness passes at that n.
+
+The natural reading is "the check needs a rounding tolerance". It had one, and the correct one: `abs(delta - B/C) > 5e-7`, a half-ulp at six decimals. The real cause is that **the comparison is evaluated in floating point at its own boundary**: a correctly rounded tie sits exactly *on* 5e-7, and `0.076563 − 0.0765625` in doubles is `5.000000000005e-07`, a few ulps above. Any tolerance set to an exact half-ulp fails this way at precisely the inputs it exists to admit, since ties are the only values that reach the boundary and floating point settles them by accident of representation. Widening the tolerance would have hidden that while weakening the check.
+
+Fixed by comparing in exact rational arithmetic against the stored string's own precision — |stored − B/C| ≤ ½·10⁻ᵏ with k read off the string, which also stops the check loosening silently if the writer's format changes. Verified at 0 mismatches over the table plus eleven behavioural cases (tie accepted either way, one-in-the-last-place errors rejected both directions, truncation rejected, 4- and 8-decimal strings handled at their own precision). Recorded as A20.
+
+*The generalisable point*, and the reason this earned a paragraph rather than a line: **a tolerance equal to the exact boundary of the property it tests is a tolerance that fails on the boundary cases**. The fix is to move the comparison into arithmetic that has no boundary error, not to move the boundary.
 
 *On the checkpoint matcher's false positives.* `check_doc_figures.py` PASS 1 flagged 24 figures as matching an old checkpoint; **most are coincidences** — `2,212` in `small-degree-computation.md` is the n = 12 battery's class count, not a table frontier; `20.6` and `20.8` there are VF2 inference rates; `20.4` in the notes is a twist-order share; `0.400000` is the density at n = 6. The tool says as much in its own banner, but the ratio of coincidence to signal is high enough at this table size that the pass is worth reading with the surrounding sentence every time, never from the figure alone.
+
+---
+
+## 5⅞. T5's coding residue, and a threshold that is not vacuous
+
+Revisiting T5 after the R1 runs turned up two things the item's own write-up had wrong, both in the direction of overstating how routine the remaining work is.
+
+**The threshold gate fails at 34 small n.** T5 said the strip is justified at every a because "the certificates evaluate against thresholds of order δ·C(n,2) ≫ n·log₂n". Asymptotically true; false in the table. **B(n) > n·log₂n fails at 34 values, all n ≤ 117**, and holds at every n ≥ 118. Below the gate a sharing configuration could in principle reach B(n), so the general-a strip is not licensed there and applying it would discard a real candidate silently — the defect class T3 names. The implementable rule is: strip at every a when B(n) > n·log₂n, at a = 1 only below that, and at n = 6 not at all.
+
+That last clause is the second finding: **the a = 1 strip already shipped is itself gated, and its gate fails at one n.** At a = 1 the coupling gives t | ord_r(p) | 1, so the foreign part is untwisted and worth orb(r,1) = r < n — a bound needing B(n) > n, which holds everywhere except **n = 6, where B(6) = 6 exactly**. So the existing code has the same shape of gap as the one being fixed, one value wide.
+
+**The rerun cannot change the verdict, and knowing that changes what it is for.** `fallback_cert.py` reports 0 candidates at all 2,186 values, with and without theorems, against the *current* code — whose a = 1 scoping makes condition (4) strictly **weaker** than the lifted version. Strengthening a necessary condition can only discard more branches, so an already-empty candidate list stays empty. The rerun is a regression check on the implementation, not a step in the proof.
+
+Which has a practical consequence worth recording: **a silent over-strip produces exactly the same clean output as a correct run**, because the list is empty either way. So the gate should be written as an assertion that fails loudly when the strip fires below its precondition, not as a condition that quietly declines to fire. Verification that only observes the output cannot distinguish the two.
+
+*Generalising, since this is the second time in the session:* the R1 runs answer whether the pipeline is self-consistent, and are nearly silent about whether a strengthening is *licensed*. Both the A20 boundary bug and this gate live in the space of things that pass every check while being wrong, and both were found by asking what the check would look like if the code were wrong rather than by reading the check's output.
 
 ---
 

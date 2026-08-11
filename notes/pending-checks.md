@@ -14,7 +14,7 @@
 
 Ranked, so the sections below have a stated basis. This is not the order the items appear in.
 
-1. **The table rebuild.** v4 reaches n = 2000; everything measured across the three documents is keyed to it and moves as it extends. → **R0**, and **R1** after every batch.
+1. **The table's reach.** v4 is contiguous over every non-prime-power n ≤ 2600; everything measured across the three documents is keyed to it and moves as it extends, so extension is the single largest source of churn in the recorded figures. → **R0**, and **R1** after every batch.
 2. **Exhaustiveness of the GAP stages.** The subdirect-product hole is undischarged. It degrades *evidence* rather than creating an error — a missed group with larger m\* would be a counterexample rather than a silent corruption, and one with smaller m\* changes nothing — but it is the only non-circular check in the framework. **This is the one small-degree item the arithmetic programme depends on**, since Part I's two exhaustive comparisons rest on it. → `small-degree-verification.md` item 5
 3. **Part E's realisability construction.** Attainment's other leg, argued in general and spot-checked at eight configurations from n = 12 to 315. Unlike the certificate, it has no per-n verification. → **T2**
 4. **The eight necessary conditions of `fb_common.py`.** Both certificates rest on these and nothing else. What matters is their being *necessary* — that is what makes an empty candidate list a proof — and that is a different reading from checking each is true. The file carries a per-condition necessity argument, so what is exposed is the quality of those eight arguments, and in particular condition (4)'s cyclic-layer stripping, which is the load-bearing one and whose necessity is threshold-scoped. The defect class to watch is an enumeration narrower than the shape space it must cover: it removes a real candidate silently and leaves the output looking clean. → **T3**
@@ -27,7 +27,7 @@ Ranked, so the sections below have a stated basis. This is not the order the ite
 
 ## R0. Extend the table, then rerun everything downstream
 
-`mu_table_safe_v4.csv` holds **2,186 rows, contiguous over every non-prime-power n ≤ 2600**, and extends at roughly n^2.9 per value. R1 has been rerun against it in full and the documents recounted. What is left on this axis:
+`mu_table_safe_v4.csv` holds **2,186 rows, contiguous over every non-prime-power n ≤ 2600**, and extends at roughly n^2.9 per value. R1 runs clean against it and the documents are recounted to it. What is left on this axis:
 
 1. **Rebuild the branch-and-bound worklist**, since its pruning is keyed to the density floor and the floor has moved (item R7).
 2. **Extend further** when wanted, rerunning R1 each time.
@@ -73,7 +73,7 @@ python3 check_doc_figures.py mu_table_safe_v4.csv *.md
 - **`k3_galois.py`** — the k = 3 Galois admissibility predicate, with a self-test covering the a = 35 witness, the superset relation against the naive reading, and the gain-versus-top-prime distinction. Import it; do not re-derive it.
 - **`khomog_verify.py`** — the k-homogeneity claims underlying the hypothesis table of `orbital-evasiveness-notes.md` §1: the c ≡ 3 (mod 4) half-twist case at k = 2, and the five full-density degrees {3, 4, 5, 8, 32} at k = 3, with the sharpness of the order bound that makes the list finite. Static; one run per environment.
 - **`a18_rq_verify.py`** — nine static checks on Lemma D2q, the r = q half: the exhaustive (2,5) subgroup scan, the (3,7) rank-2 eigenvector group, and the tightness and twist-collapse controls. Nothing in it depends on the table, so it needs no rerun on extension; one run per environment.
-- **`t5_verify.py`** — Lemma C's coupling and Corollary C′: the n = 28, 21 and 10 witnesses with their chains, the coupling's tightness at (16,5) and the chainlessness of the mismatched pairing, and the sharing bound against every row. The last pass is **range-scoped** and expires silently on extension, so it belongs in this list beside `a18_verify.py`.
+- **`t5_verify.py`** — Lemma C's coupling and Corollary C′: the n = 28, 21 and 10 witnesses with their chains, the coupling's tightness at (16,5) and the chainlessness of the mismatched pairing, the sharing bound against every row, and the two threshold preconditions that gate condition (4)'s strip (T5). The last pass is **range-scoped** and expires silently on extension, so it belongs in this list beside `a18_verify.py`.
 - **`a18_verify.py`** — Lemma D2's witnesses and its range-scoped half: the n = 85 and n = 91 orbitals and chains, the 2-homogeneity of the n = 91 permuter, and the fused-outside domination bound against every row. Only the third can move with the table, and it is the one that matters: it is a **range-scoped** claim, so a table extension can invalidate it silently. Exits nonzero on any failure.
 - **`check_doc_figures.py`** — `--quiet` for findings only, `--pass {figures,scope,prose,hygiene,census,refs,tables}` for one pass; exits nonzero when anything is flagged. **Pass every `.md` that might be cited**, or `refs` reports live cross-document citations as dangling. And append the old maximum to `CHECKPOINTS` and a pattern to `SCOPE` in the same sitting, or figures written against the superseded range report as unexplained rather than as historical.
 
@@ -125,7 +125,7 @@ Run them in that order; each is a superset of the next in cost and the cheap one
 
 ### T1. Independent reading of the structural arguments
 
-**A step compressed to a clause tends not to survive being written out**, and this framework's record bears that out. Of its compact structural steps: one is false (the ΓL(1) step); one was false and has been repaired (the q-power block count); one needed two gaps filled (B′); two were exclusions that are only dominations (Lemma D2, whose conclusion fails outright at F ≥ 3, and Lemma C, whose gcd = 1 is false at every a and is replaced by a coupling); and one was an upper-bound claim that is only an attained value (the within-class cross coefficient, scoped to the construction).
+**A step compressed to a clause tends not to survive being written out**, and this framework's record bears that out. Of its compact structural steps: one is false (the ΓL(1) step); one is false as stated and correct once repaired (the q-power block count); one needed two gaps filled (B′); two are exclusions that are only dominations (Lemma D2, whose conclusion fails outright at F ≥ 3, and Lemma C, whose gcd = 1 fails at every a and gives way to a coupling); and one is an upper-bound claim that is only an attained value (the within-class cross coefficient, scoped to the construction).
 
 Two distinct failure sites, worth separating because they call for different checks. **Reasoning over the wrong partition of cases** accounts for most of them, and in four the false clause quoted a small or regular group's behaviour as if it bounded every admissible one — so the check is to ask which groups a bound was verified on. **Transcription from proof to statement** accounts for Lemma C, whose a = 1 proof established "share ⟹ outside twist trivial" while the sentence recording it claimed "no share": the proof was correct and the statement stronger, and the discrepancy survived because the statement was only ever tested against the case its proof did cover. The check there is to read each lemma's statement against its own proof's conclusion, independently of whether the proof is believed.
 
@@ -166,13 +166,28 @@ These are the whole trusted base for μ(n) = B(n): both certificates pass with e
 
 **Deferred: the framing decision.** Jones–Zvonkin's programme (arXiv:2106.00346 and four companions) is the model for how this genre states its standing — conditional on Bateman–Horn, labelled as such in the abstract, with the conjecture validated numerically at the range used. Three consequences are recorded in `literature-findings.md` items 14–16 and are *not* being acted on yet: a standing table at the front of `aod` §3 dividing unconditional from conditional from conjectural; the polynomial-versus-exponential line in `aod` §3.5, since shapes needing prime powers of unbounded exponent are Mersenne-like and outside Bateman–Horn; and the Catalan/Pillai caution where both parts are proper prime powers, which is our S1 and S2 and which `aod` §6 currently treats as amply supplied.
 
-### T5. Lift condition (4)'s scoping to every a, and rerun the certificate
+### T5. Lift condition (4)'s scoping — but gate it on the threshold, which fails at 34 small n
 
-*The mathematics is settled: `enumeration-proof.md` Part D proves the twist–foreign coupling at every a and Corollary C′ supplies the domination. What is outstanding is the code change it licenses and the rerun that confirms it.*
+*The mathematics is settled: `enumeration-proof.md` Part D proves the twist–foreign coupling at every a and Corollary C′ supplies the domination. What is outstanding is a code change, and it is smaller and more conditional than it first looks.*
 
-**What changed underneath.** Condition (4) of `fb_common.py` caps a leftover p-characteristic part by stripping the foreign primes from its twist. That strip is **not** a necessary condition on admissible configurations — shares are admissible, with explicit Oliver groups at n = 28, 21 and 10 — but it **is** necessary among configurations scoring above **n·log₂n**, which is the only regime the certificates evaluate, their thresholds being of order δ·C(n,2). The strip is therefore justified at every a, on coupling-plus-threshold rather than on an unconditional lemma.
+**What licenses the strip.** Condition (4) of `fb_common.py` caps a leftover p-characteristic part by stripping the foreign primes from its twist. That strip is **not** a necessary condition on admissible configurations — shares are admissible, with explicit Oliver groups at n = 28, 21 and 10. It is necessary only among configurations **scoring above the sharing bound**, and the bound has two forms because the coupling is sharper at a = 1:
 
-**The work.** Lift the a = 1 scoping; re-attribute the justification in the header's per-condition necessity argument, **stating the n·log₂n threshold explicitly** — a future diagnostic hunting below that line could not use the condition, and a necessity argument that omits the qualification would be wrong in the same way the old one was. Then rerun `fallback_cert.py`: the strip changes condition (4)'s verdict on 630,477 branches at n ≤ 2000, of which **53,807 have c a proper prime power**, so this is not a vacuous change even though no candidate list is expected to change emptiness. Confirm it does not.
+| form | sharing bound | precondition | where it holds in the table |
+|---|---|---|---|
+| a = 1 | foreign part untwisted, worth orb(r,1) = r < n | B(n) > n | everywhere except **n = 6**, where B(6) = 6 |
+| any a | foreign class ≤ r·ord_r(p) ≤ r·a ≤ n·log₂n | B(n) > n·log₂n | **fails at 34 values, all n ≤ 117**; holds at every n ≥ 118 |
+
+**So the lift is gated, not unconditional, and this is the correction to make before touching the code.** Below n = 118 the general-a strip is *not* licensed by Corollary C′ — B(n) is smaller than the bound, so a sharing configuration could in principle reach it — and applying the strip there would discard a real candidate silently, which is exactly the defect class T3 names. The rule to implement is therefore: **strip at every a when B(n) > n·log₂n; strip only at a = 1 below that; and at n = 6 do not strip at all.** Asymptotically the gate is automatic — δ·C(n,2) exceeds n·log₂n from n ≥ 763 at the ladder floor 0.02516, and from n ≥ 998 under the conjectured 1/50 — so this is a small-n carve-out, not a standing complication. `t5_verify.py` pass 5 checks all three conditions and is the regression guard for them.
+
+*Note that the current a = 1 scoping is itself justified by the coupling and not by the old lemma.* The a = 1 strip needs B(n) > n, which fails at n = 6. This is a real if tiny gap in what is already shipped, and it is the same shape as the one being fixed.
+
+**What the R1 runs already settle, and what they cannot.** `fallback_cert.py` reports **0 candidates at all 2,186 values**, both with theorems and with `--no-theorems`. That was run against the *current* code, whose a = 1 scoping makes condition (4) **weaker** than the lifted version. A necessary condition that is strengthened can only discard more branches, so:
+
+> **The rerun's verdict is determined in advance: the candidate list is already empty under the weaker condition, so it stays empty under the stronger one.** The rerun is a regression check on the implementation, not a step in the proof, and it cannot change the collapse result. What it can catch is a coding error in the gate — in particular the strip firing below its threshold, which would be invisible in the output precisely because the list is empty either way.
+
+That last point is the reason to write the gate as an assertion rather than an `if`: **have the code fail loudly when it strips at an n where the precondition does not hold**, since a silent over-strip produces exactly the same clean output as a correct run.
+
+**What remains genuinely unmeasured.** The claim that the strip changes condition (4)'s verdict on 630,477 branches, 53,807 of them with c a proper prime power, is from the n ≤ 2000 run and wants re-measuring at the current frontier; it is what tells you the change is not vacuous. Nothing else in this item needs new mathematics.
 
 **What it unblocks.** With the a > 1 row closed, the fallback residue reduces to the **q = 2 and large-e** cases of Part E″'s q-pinning, where pinning is vacuous or weak and domination rather than supply is needed. That is the remaining obstacle to replacing B_safe by B_refined outright — the structural route to **B_refined = B_safe = μ by construction rather than by computation**, as against a per-n certificate that the optimum happens to be fallback-free.
 
@@ -184,17 +199,17 @@ These are the whole trusted base for μ(n) = B(n): both certificates pass with e
 | e = 1, δ ≤ 1/9 | **reduced to a bounded search**: ≤ 2/δ pinned positions per n. Empty over v4 — 4 admissible of 24,322 positions, all killed by the p-characteristic part not fitting. Not a theorem |
 | e ≥ 2 | supply of admissible foreign blocks is density zero in n; enumerable at the sparse n where it exists |
 | q = 2 | pinning vacuous, family exponential; needs domination rather than supply |
-| p-characteristic half of the leftover | **closed** — Lemma C's coupling and Corollary C′, at every a |
+| p-characteristic half of the leftover | **closed above the threshold** — Lemma C's coupling and Corollary C′, at every a from n = 118 |
 
 *Counting alone does not close e = 1 below 1/9, and adding the pinning does not help:* the pinned bound n ≥ 3.54√B gives δ ≤ 0.16, weaker than F.1's 1/9. What closes the computed range is the specific arithmetic of the pinned positions, not a size argument. Note also that Part E″'s pinning is **conditional on a floor δ ≥ δ₀** — step 1 is the only place δ enters — so the unconditional version of this route dies with the asymptotic floor, exactly as the density ceilings do.
 
-**Tripwire, worth keeping.** `validate_table.py` asserts per row that no winner has a proper prime power c with a foreign prime dividing c − 1 — 0 of 1,677 parts, rechecked on every extension. It now confirms a proved domination rather than guarding an open lemma, and flags the first n where Corollary C′ would have to be checked directly.
+**Tripwire, worth keeping.** `validate_table.py` asserts per row that no winner has a proper prime power c with a foreign prime dividing c − 1 — 0 of 2,202 p-characteristic winner parts, rechecked on every extension. It confirms a proved domination rather than guarding an open lemma, and flags the first n where Corollary C′ would have to be checked directly.
 
 ### T5a. Re-derive §3.9.1.2's competing-rates argument on every revision
 
-*Flagged because each pass over this argument has produced a different picture, and every version so far has been plausible and at least partly wrong.*
+*Flagged because this argument is unusually good at producing plausible pictures that are partly wrong; treat any version of it, including the one below, as provisional.*
 
-The claim is that the odd-n win shares tend to **1 : 1 : 2**. It rests not on the singular-series computation but on a second step — that the *argmax* over c-classes lands in a class with probability equal to that class's share of the pool — and that step is an extreme-value claim, not a counting one. What decides it is which of several competing effects is largest, and the accounting has been revised twice:
+The claim is that the odd-n win shares tend to **1 : 1 : 2**. It rests not on the singular-series computation but on a second step — that the *argmax* over c-classes lands in a class with probability equal to that class's share of the pool — and that step is an extreme-value claim, not a counting one. What decides it is which of several competing effects is largest, and the accounting is delicate enough to be worth re-deriving rather than read:
 
 | effect | size | status |
 |---|---|---|
@@ -208,20 +223,34 @@ The claim is that the odd-n win shares tend to **1 : 1 : 2**. It rests not on th
 1. **Do not appeal to Maier / Friedlander–Granville irregularity.** Those theorems need moduli growing like x/(log x)^A, or short intervals of length (log x)^A. Our moduli are fixed and small, where Siegel–Walfisz gives error smaller than any power of 1/log n. This is the **high**-uniformity regime, and high uniformity lets the 1/log n bias steer the argmax rather than drowning it — the opposite of what the irregularity literature would suggest if applied out of range.
 2. **Recheck the D-independence when the family widens.** 𝔖_D/𝔖_{2D} = 1 is a fact about D = 4 versus D = 8, verified numerically over 8,333 values in each of two bands. It **fails** at ℓ = 3 between D = 6 and D = 12, where the degenerate branch ℓ | D/2 fires. Any comparison involving those D values reopens the whole argument, and the generalised family of `mu-theta-n2-note.md` is exactly where that happens.
 
-**The general hazard worth naming**, having bitten twice in this section: *both* too much and too little uniformity relative to the pseudorandom model produce surprises, and which regime one is in depends on the modulus range. An argument that quotes an irregularity result without checking that its moduli reach ours will reliably reach the wrong conclusion, and will look right while doing so.
+**The general hazard worth naming**, and the reason this section is fenced: *both* too much and too little uniformity relative to the pseudorandom model produce surprises, and which regime one is in depends on the modulus range. An argument that quotes an irregularity result without checking that its moduli reach ours will reliably reach the wrong conclusion, and will look right while doing so.
 
 ## §2b. Self-contained items
 
 *Analysis against the existing files, needing no new materials.*
 
-### A20. `validate_table.py`'s density check needs a rounding tolerance
+### A20. The density check must compare in exact arithmetic, not at a floating-point boundary
 
-Group A's *density column agrees with mu_bound / C(n,2)* test compares the stored six-decimal string against a freshly computed one, and the two can disagree on an **exact tie at the sixth decimal** without anything being wrong. The single instance in the current table is **n = 2561**, where μ/C(n,2) = 250978/3278080 = 49/640 = **0.0765625 exactly**. The stored `0.076563` is what `"%.6f"` produces; a checker that rounds the exact rational half-to-even produces `0.076562`. Both are defensible and neither indicates a bad row — re-deriving μ from the witness passes at this n, as group A's own G.3 test reports.
+*A standing constraint on `validate_table.py`'s group A density test, recorded because the natural implementation is wrong in a way that only ever shows at the values the test exists to admit.*
 
-The fix is a tolerance rather than a rounding convention, since matching conventions across two programs is the fragile version: accept when **|stored − μ/C(n,2)| ≤ 5·10⁻⁷**, i.e. within half a unit in the last stored place. Exact ties are the only values this admits that string equality rejects, and there is exactly one in 2,186 rows — the check is not being loosened in any way that could hide a real mismatch.
+**The constraint.** A stored decimal density with k places is a correct rounding of μ/C(n,2) iff |stored − B/C| ≤ ½·10⁻ᵏ. That must be evaluated in **exact rational arithmetic**, and k must be **read off the string** rather than assumed:
 
-*Worth a line in the failure message too:* group A's banner says a FAIL there means the run or the parser is broken and nothing downstream is meaningful. That is right for the other four group A tests and wrong for this one, which is a presentation check. Either move it to group B or say in the message that a lone density mismatch at an exact tie is cosmetic.
+```python
+def density_ok(r):
+    s = r.delta_str
+    places = len(s.split(".")[1]) if "." in s else 0
+    return abs(Fraction(s) - Fraction(r.B, r.C)) * 2 * 10 ** places <= 1
+```
 
+This needs `Fraction` imported and the raw string kept on the `Row` as `delta_str`, since `float(d["density"])` discards exactly what the check needs.
+
+**Why not a float tolerance, which is the obvious version.** `abs(r.delta - r.B / r.C) > 5e-7` looks equivalent at six decimals and is not. An exact tie rounds to a difference of exactly 5e-7 — the tolerance is the boundary — and evaluating that subtraction in doubles lands a few ulps above it, so the comparison rejects a correctly rounded row. **n = 2561 is the instance in the current table**: μ/C(n,2) = 250978/3278080 = 49/640 = 0.0765625 exactly, the only six-decimal tie in 2,186 rows, where the float difference is 5.000000000005e-07. Widening the tolerance would hide this while weakening the check.
+
+*The general form, which is worth carrying to any other threshold test here.* **A tolerance equal to the exact boundary of the property it tests fails on the boundary cases** — those are the only inputs that reach it, and floating point settles them by accident of representation. Move the comparison into arithmetic with no boundary error rather than moving the boundary.
+
+**What the test must still reject**, and what a change to it should be re-checked against: one-in-the-last-place errors in *either* direction, truncation rather than rounding, and wholly wrong values; while accepting a tie rounded either way and strings at 4, 6 or 8 decimals at their own precision. Eleven such cases plus the full table are the standing behavioural check.
+
+**A framing point left open for a decision.** Group A's banner says a FAIL there means the run or the parser is broken and nothing downstream is meaningful. That holds for its other four tests and not for this one, which checks a presentation column no other check reads: a density mismatch with the G.3 re-derivation passing is cosmetic. Either move this test to group B or say so in the message.
 
 ### A0b. `validate_table.py` — run this on every table extension
 
