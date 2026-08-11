@@ -322,6 +322,62 @@ committed to the repo (and uploaded to Claude where needed).
 
 ## Learnings about research that might transfer to other research contexts
 
+### The altered research flow with LLMs
+
+What LLMs allow is a somewhat altered research flow where the early
+exploration can be done with heavy LLM use, with human involvement
+being limited to strategic portions of the process, and deep human
+involvement with everything can be deferred to after several of the
+basic details have been worked out. This has several advantages for
+research:
+
+* It allows individuals with the right general training, but with
+  limited time availability, to contribute to research; they can
+  leverage their training to set the right direction and provide the
+  right strategic guidance, without having to work out the details
+  themselves. I (Vipul) am an example: not in academia, and the time
+  needed to work every detail out myself from scratch would be
+  prohibitive given my other priorities.
+
+* It allows research work to be done with shorter human bursts of
+  attention. This is ideal for multiplexing research with chores
+  around the house, exercise, or other kinds of tasks. Again, the
+  *skill* is still needed, but continuous work is not.
+
+* It allows for very thorough, rigorous testing of the idea using
+  multiple independent LLM chat sessions, even for a single researcher
+  working alone. This can allow people to make more research progress
+  even without access to collaborators. The fresh review template used
+  for the ARK conjecture work is described further down in this
+  section.
+
+* Since the LLM's writing, while cringe in many ways, is good enough
+  to manage state during the initial exploratory phase, a lot of the
+  writing workload is reduced, and writing can be deferred to the end
+  once the idea is clear enough. This allows for a nice, clean
+  separation between the exploratory phase of research and the writing
+  process, and reduces the chance of the writing flow hitting
+  unexpected snags due to holes discovered during writing. This is
+  covered more further down in this section.
+
+* A lot of research can be done to more specificity that humans may
+  otherwise have been too time-limited to achieve. A few concrete
+  examples from this work:
+
+  * Claude was able to do several rounds of literature search,
+    allowing for better connection with past literature.
+
+  * Claude was able to write several scripts to get empirical
+    verification, something that a human researcher may have skipped.
+
+  * Claude was able to work out a lot of details around exact
+    constants based on residue classes, and the exact details of
+    various groups. A human researcher with limited time may have been
+    satisfied at just establishing that a constant existed rather than
+    calculating it rigorously across every residue class. But the
+    availability of the LLM helped reduce the effort needed to do that
+    extra work, making it worth doing.
+
 ### The importance of fresh sessions, plus the template used to kickstart sessions
 
 Starting new sessions periodically, with the documents re-uploaded and
