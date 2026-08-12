@@ -23,7 +23,7 @@ Everything else in this document elaborates that split. Five consequences set th
 1. **The density ladder's thresholds are the engine caps, not artefacts.** 1/2 and 1/3 are fused-class values at F = 2 and F = 3; **1/4 is the two-part cap; 1/9 is the three-part cap; 1/16 is the four-part cap.** The thresholds that appear throughout the other two documents — δ₀^even = 1/4, Theorem E.1's 1/9, Corollary F.3's 1/16 — are all the same quantity read at different k.
 2. **The parity asymmetry is multiplicative in origin, not additive.** Even n has 2 | n, so F = 2 is available whenever n/2 is a prime power, giving density 1/2. Odd n has F ≥ 3, capping the multiplicative engine at 1/3; and its two-part route needs the *even* part to be a power of 2, which is scarce. So odd n loses on both engines at once — and the loss is a matter of caps, not of representation counts: both parametric systems supply ~n/log³n representations where they are soluble at all (§§3.1–3.3).
 3. **The ceiling splits by residue class mod 24, for both parities.** Two ingredients combine. The local obstructions at ℓ = 2 and ℓ = 3 split it mod 12 — and those are the only two moduli that can obstruct, because each system is three linear polynomials so ω(ℓ) ≤ 3 < ℓ for ℓ ≥ 5. On top of that, whether the odd family can reach its **fused rung** is a further condition mod 8 on n, which refines the odd classes to mod 24. Seven distinct constants result, from 1/4 down to 7 − 4√3 = 0.07180 (§3.3). The mod-8 half of the split applies only where the fusion count is 2; at the residues whose optimum takes F = 4 it drops out, and those classes are governed by the mod-12 obstructions alone.
-4. **One global floor covers everything.** Conjecturally **δ(n) ≥ 0.02 for every composite non-prime-power n** — and below 10⁶ the branch-and-bound establishes **δ(n) ≥ 0.026117** unconditionally, since every step used the table only as a lower bound (§5). What it does *not* establish is where the minimum sits: n = 3239 reaches δ = 0.043570 under the corrected shape space, so the argmin lies elsewhere and the bound is not tight. The extremal residue is **n ≡ 23 (mod 24)** (§3.3), and almost every stage of the search has landed in n ≡ 11 (mod 12), which contains it.
+4. **One global floor covers everything.** Conjecturally **δ(n) ≥ 1/25 for every composite non-prime-power n** — and below 10⁶ this is **verified unconditionally**: the four-family ladder gives δ(n) ≥ 0.04453 at every composite non-prime-power n ≤ 10⁶, attained at n = 11183 (§5). The bound is a lower bound at every step, so it needs nothing from the table. The extremal residues are **n ≡ 11 and n ≡ 23 (mod 24)** (§3.3) — that is, all of n ≡ 11 (mod 12), which is where the search has landed at every stage.
 5. **The multiplicative engine covers a density-zero set, so asymptotically the additive engine is everything.** The fraction of n with ω(n) = 2 thins like log log n / log n — measured at 52% below 2000 but 29% near 10⁶. So the asymptotic behaviour of μ is governed entirely by the Hardy–Littlewood side, and the observed density floor should be expected to drift downward as the fused family's reach recedes.
 
 ---
@@ -525,7 +525,7 @@ The conjectured square-root refinement π_f(x) = (1/D)·𝔖(f)·Li_k(x) + O_ε(
 
 **The quantity §5 needs is computable directly and cheaply.** At each n it is not an asymptotic count of representations but the best density the families actually achieve — a sieve computation costing O(n/log n) against the n^2.9 of computing B(n). The asymmetry is what lets the floor be verified far past the range where μ(n) is known.
 
-> *Verified* (`ladder_verify.py`). Over every composite non-prime-power n ≤ 10⁶ — all twenty-four residues, no eligibility filter — the best density the four families achieve is at least **0.02516**, attained at n = 8927, and **no value falls below 0.02**. That is a direct verification of §5's conjecture over a range roughly 450× wider than where μ(n) itself is known.
+> *Verified* (`ladder_verify.py`). Over every composite non-prime-power n ≤ 10⁶ — all twenty-four residues, no eligibility filter — the best density the four families achieve is at least **0.04453**, attained at **n = 11183**, and **no value falls below 1/25**. That is a direct verification of §5's conjecture over a range roughly 380× wider than where μ(n) itself is known, and with a factor of 1.11 to spare. The floor is set at n = 11183 and does not move again: over the remaining 989,000 values nothing undercuts it.
 
 So the picture is not "computed below, conjectural above" with an unreachable band between. What is known, and how:
 
@@ -533,25 +533,27 @@ So the picture is not "computed below, conjectural above" with an unreachable ba
 |---|---|---|
 | μ(n) known exactly | the computed table | computed |
 | collapse B_refined = B_safe certified | n ≤ 100,000 | computed from lower bounds (Part E″), at **every** composite non-prime-power value, 90,299 of 90,299 |
-| global floor δ ≥ 0.02516 | n ≤ 10⁶ | computed (§5); the branch-and-bound gives the stronger δ ≥ 0.026117 over the same range |
-| global floor δ ≥ 0.02 | n > 10⁶ | conjectural, ineffectively |
+| global floor δ ≥ 0.04453, hence δ ≥ 1/25 | n ≤ 10⁶ | computed (§5), from the four-family ladder alone |
+| global floor δ ≥ 1/25 | n > 10⁶ | conjectural, ineffectively |
 
-**Where the verification is hardest is a middle range, and it is bounded.** The lower envelope of achievable density does not fall away as n grows — it dips and then recovers. Minimum bound over the **19,583-entry** worklist, by decade:
+**Where the verification is hardest is a middle range, and it is bounded.** The lower envelope of achievable density does not fall away as n grows — it dips and then recovers. Minimum bound over the **46,722-entry** worklist, by decade:
 
 | n | entries | minimum bound | attained at |
 |---|---|---|---|
-| [10², 10³) | 2 | 0.04181 | 575 |
-| [10³, 10⁴) | 82 | **0.02516** | 8927 |
-| [10⁴, 10⁵) | 1,334 | 0.03045 | 11819 |
-| [10⁵, 10⁶) | 18,165 | 0.04125 | 134423 |
+| [10², 10³) | 7 | 0.04898 | 935 |
+| [10³, 10⁴) | 251 | 0.04574 | 1817 |
+| **[10⁴, 10⁵)** | 3,435 | **0.04453** | **11183** |
+| [10⁵, 10⁶] | 43,029 | 0.05603 | 173627 |
 
-and the per-block floors continue to rise thereafter — 0.04540, 0.04625, 0.04518, 0.04704, 0.04732, 0.04780, 0.04738, **0.04810** across the last eight blocks of 10⁵.
+The global minimum is the third row, and it is **fixed by n = 20,000**: over the remaining 980,000 values of the scan nothing undercuts n = 11183. The per-block floors climb steadily thereafter — 0.05603, 0.05928, 0.06209, 0.06150, 0.06363, 0.06415, 0.06499, 0.06590, 0.06478 across the blocks of 10⁵ — which is the recovery, not noise.
 
-> **The worklist is almost entirely one residue class, which is the mod-24 prediction landing hard.** Of the 19,583 entries, **19,568 — 99.92% — have n ≡ 23 (mod 24)**, with 14 at n ≡ 11 and exactly one at n ≡ 17. That is close to forced *for a worklist thresholded at 0.050510*, which was class 23's ceiling under the F = 2 rungs, so any other class appeared only by falling well short of its own cap. With the ceiling at that residue now 7 − 4√3 and the ladder scoring even F, both the threshold and the composition change: regenerated to 10⁵ the list holds 3,693 entries rather than 16, spread across the odd classes, because the gap between what the families reach at computed sizes and the asymptotic ceiling is generic rather than exceptional. The list is consequently much less useful as a "compute B(n) here" ranking than it was, and the 1/50 question is better read off the separate `--floor` count, which is 0 throughout. So the 15 non-23 entries are the informative ones — n ≡ 11 has cap 0.06699 and n ≡ 17 has cap 0.10102, so those are values where the families underperform their class by 30% or more, and they are the cheapest place to look for a family the ladder is missing.
+> **The worklist is an even split between the two extremal classes, which is the mod-24 prediction landing hard.** Of the 46,722 entries, **23,475 (50.2%) are n ≡ 11 (mod 24) and 23,201 (49.7%) are n ≡ 23**, with 43 spread across the other residues. Those two classes share a ceiling (§3.3.5), and the split is as even as one could ask for. It is worth remembering what a worklist thresholded at a class ceiling can and cannot show: the earlier list, cut at 0.050510, was 99.92% class 23 — not because class 23 is worse but because that number *was* class 23's ceiling under the F = 2 rungs, so it appeared on merely falling short while class 11 had to fall 25% below a higher one. **A residue's prominence in a worklist is a fact about the threshold, not about the residue.**
 
-> **The per-residue diagnostic saturates early, so extending N does not test it further.** Every one of the 24 per-class minima is attained below n ≈ 12,000 — the largest are n ≡ 11 at 11819 and n ≡ 23 at 8927 — so the min-ratio spread (0.327 at n ≡ 16 to 0.653 at n ≡ 20) is the same at N = 20,000 as at N = 10⁶. Read the spread as a statement about small n, and do not expect a wider scan to move it.
+> **The families are not underperforming at the extremal classes.** The per-residue min-ratio column of the scan puts n ≡ 23 at 0.620 of its cap and n ≡ 11 at 0.671, against a spread from 0.327 (n ≡ 16) to 0.671 across all twenty-four. The two lowest-cap classes are mid-range in *relative* shortfall, and the even classes fall proportionally further from their caps. So the low absolute floor at n ≡ 23 comes from its cap being lowest, not from a family the ladder is missing there — which is the check worth running whenever a class dominates the low tail.
 
-**The dip has a structural explanation, and it is the two engines handing over.** Below ~500 the multiplicative shapes are still plentiful — S1 at every prime power, S2 wherever ω(n) = 2 with both factors prime powers, which is 57.5% of winners below n = 400 — and they carry densities far above any additive ceiling. Above ~10⁴ the additive families have enough supply near their balance points to sit close to those ceilings. **In between, S1 and S2 have thinned but S3, S4 and the fused rungs — at F = 2 and F = 4 alike — have not yet saturated**, and the escapes of §4.3 are themselves at their least helpful. Every value that has ever set a running floor lies in this band: 575, 935, 2183, 2291, 2303, 3059, 3239, 3479, 8927.
+> **The per-residue diagnostic saturates early, so extending N does not test it further.** Every one of the 24 per-class minima is attained below n ≈ 12,000 — the largest are n ≡ 23 at 11183 and n ≡ 11 at 6275 — so the min-ratio spread is the same at N = 20,000 as at N = 10⁶. Read it as a statement about small n, and do not expect a wider scan to move it.
+
+**The dip has a structural explanation, and it is the two engines handing over.** Below ~500 the multiplicative shapes are still plentiful — S1 at every prime power, S2 wherever ω(n) = 2 with both factors prime powers, which is 57.5% of winners below n = 400 — and they carry densities far above any additive ceiling. Above ~10⁴ the additive families have enough supply near their balance points to sit close to those ceilings. **In between, S1 and S2 have thinned but S3, S4 and the fused rungs — at F = 2 and F = 4 alike — have not yet saturated**, and the escapes of §4.3 are themselves at their least helpful. Every value that has ever set a running floor lies in this band — 575, 935, 1817, 2183, 2303, 3479, 9911, 11183 — and the current global minimum, n = 11183, sits at its upper end.
 
 So the uncovered region is not open-ended. It is a *finite* interval, roughly [500, 10⁴], where verification is most needed and has been done exhaustively — and above it the empirical trend runs toward the ceilings rather than away.
 
@@ -796,7 +798,7 @@ Two effects, not one. The ω(n) = 2 population thins, as predicted; and **among 
 
 Two consequences, and both should temper how the computed range is read.
 
-**The observed density floor should drift downward.** Fully 55.4% of the current table has ω(n) = 2, so more than half the computed values are served by an engine whose reach halves over the next few decades of n. The median of 0.1994 is propped up by a population that thins. The evidence is two-sided and worth keeping apart: *within* the exactly-computed range the pre-repair floor fell 0.0418 → 0.041107 → 0.037524 with each extension, which is the prediction, while the shape-space repair lifted the current table's floor to 0.045742 at n = 1817, which is a correction to the scoring and not a counter-observation. Beyond the table the branch-and-bound of §5 reaches 0.026117 below 10⁶, and that figure is a **pre-repair** search output: it remains a valid lower bound, since the repair never lowers a value, but it is not the corrected argmin and wants recomputing (item R7).
+**The observed density floor should drift downward.** Fully 55.4% of the current table has ω(n) = 2, so more than half the computed values are served by an engine whose reach halves over the next few decades of n. The median of 0.1994 is propped up by a population that thins. The evidence is two-sided and worth keeping apart: *within* the exactly-computed range the pre-repair floor fell 0.0418 → 0.041107 → 0.037524 with each extension, which is the prediction, while the shape-space repair lifted the current table's floor to 0.045742 at n = 1817, which is a correction to the scoring and not a counter-observation. Beyond the table the ladder of §5 reaches 0.04453 below 10⁶, attained at n = 11183 — above the exactly-computed floor's own value in the table's range, which is the recovery showing through rather than a contradiction.
 
 ### 4.2 S6: available at almost every even n, and dominated at all of them
 
@@ -929,7 +931,7 @@ Since the multiplicative engine vanishes in density, the asymptotic behaviour of
 
 The residue analysis gives eight different δ₀ across the 24 residue classes (§3.3). It is worth collapsing them into a single number that should hold everywhere, even at the cost of being loose.
 
-> **Read δ against the right literature, because the obvious comparison is a category error.** The known unconditional lower bounds on the number of *queries* forced by a nontrivial monotone property run Rivest–Vuillemin n²/16 → Kleitman–Kwiatkowski n²/9 → Kahn–Saks–Sturtevant n²/4 → Korneffel–Triesch → **Scheidweiler–Triesch n²/3 − o(n²)**, the current best. Our floor of 0.026117 is about 0.013n², a factor of 25 below that — and the two numbers are **incomparable, not competing**.
+> **Read δ against the right literature, because the obvious comparison is a category error.** The known unconditional lower bounds on the number of *queries* forced by a nontrivial monotone property run Rivest–Vuillemin n²/16 → Kleitman–Kwiatkowski n²/9 → Kahn–Saks–Sturtevant n²/4 → Korneffel–Triesch → **Scheidweiler–Triesch n²/3 − o(n²)**, the current best. Our floor of 0.04453 is about 0.022n², a factor of 15 below that — and the two numbers are **incomparable, not competing**.
 >
 > **δ measures *which properties* the method reaches; c(n) measures *how many queries* are forced for all of them.** Scheidweiler–Triesch bound D(P) from below for every nontrivial monotone property. What δ does is different in kind: m\* ≥ δ·C(n,2) gives **full evasiveness** — exactly C(n,2) queries, the maximum possible — for every property of dimension below m\*. A weak bound on all properties and an exact result on a restricted class do not sit on the same scale, and a small δ next to a larger n²/3 says nothing about the strength of either.
 
@@ -943,78 +945,87 @@ an **additive** three-part configuration at **n ≡ 17 (mod 24)**, foreign-bound
 
 `ladder_verify.py` computes, for each n, the best density achievable by four explicit families, scanning the block size over a window wide enough to contain every balance point, x ∈ [0.10, 0.55]. Over all composite non-prime-power **n ≤ 10⁶** (78 minutes) the smallest value is
 
-> **δ ≥ 0.02516, at n = 8927.**
+> **δ ≥ 0.04453, at n = 11183.**
 
 This is a *lower* bound on δ(n), not δ(n) itself, since it uses only four families. No class is anomalously weak relative to its own cap: the per-class minima of δ/cap run from **0.327 to 0.653** at N = 20,000, the spread expected from representation availability alone. The one residue that did not rise when the fused rungs were added is **n ≡ 11 (mod 24)**, and the reason is instructive rather than anomalous.
 
 > **The fused rungs double the intra term and nothing else, so they are invisible wherever the foreign block binds.** At every one of the nine rung-B residues, the configuration realising the *class minimum* binds on its foreign term, not its intra term — checked directly at all nine. Fusing cannot move a value whose bottleneck is the foreign block, so what the fix changed at eight of them was the value at some *other* n in the class, which then displaced the old minimum. At n ≡ 11 (mod 24) nothing displaced it.
 >
-> Worked at the class minimum n = 11819 = 53·223: the best three-part split is c = 2069, r = 7681, and r − 1 = 7680 = 2⁹·3·5 has **odd part 15**, so η = 1/15 at q = 2 and 0.00026 at any odd q. The intra term is C(2069,2) = 2,139,346 and the foreign term is 1,966,336 — the foreign one binds, and doubling the intra to 4,278,692 changes nothing. Both fused readings return exactly the unfused value. (Also c ≡ 1 (mod 4), so the cyclic rung would lose the twist anyway; but even at c ≡ 3 it would not have helped.)
+> Worked at n = 11819 = 53·223, a class-11 value where the three-part family does poorly (it reaches 0.06814; the class minimum is n = 6275 at 0.04815): the best three-part split is c = 2069, r = 7681, and r − 1 = 7680 = 2⁹·3·5 has **odd part 15**, so η = 1/15 at q = 2 and 0.00026 at any odd q. The intra term is C(2069,2) = 2,139,346 and the foreign term is 1,966,336 — the foreign one binds, and doubling the intra to 4,278,692 changes nothing. Both fused readings return exactly the unfused value. (Also c ≡ 1 (mod 4), so the cyclic rung would lose the twist anyway; but even at c ≡ 3 it would not have helped.)
 >
 > **And residue 11 is the one most exposed to this**, by construction: it is the doubly-obstructed class, needing η = 1/6, the hardest efficiency in the table. A class whose ceiling already assumes a scarce foreign efficiency is the class whose weak values will be foreign-bound, and foreign-bound values are exactly the ones fusion cannot lift. So the residue that failed to move is the one the model predicts should fail to move.
 
-**The floor rises with n**, as the singular-series picture requires — once representations near the balance point become plentiful, the achievable density approaches the class cap. Block minima over the last seven blocks of 10⁵:
+**The floor rises with n**, as the singular-series picture requires — once representations near the balance point become plentiful, the achievable density approaches the class cap. Block minima over the blocks of 10⁵, with the untruncated series sampled inside the two lowest-cap classes alongside:
 
-| block | floor | at n |
-|---|---|---|
-| [3·10⁵, 4·10⁵) | 0.04625 | 368639 |
-| [4·10⁵, 5·10⁵) | 0.04518 | 421679 |
-| [5·10⁵, 6·10⁵) | 0.04704 | 562847 |
-| [6·10⁵, 7·10⁵) | 0.04732 | 684023 |
-| [7·10⁵, 8·10⁵) | 0.04780 | 792839 |
-| [8·10⁵, 9·10⁵) | 0.04738 | 848327 |
-| [9·10⁵, 10⁶] | 0.04810 | 948527 |
+| block | block floor | at n | untruncated, classes 11 and 23 | at n |
+|---|---|---|---|---|
+| [0, 10⁵) | **0.04453** | **11183** | 0.04582 | 9911 |
+| [10⁵, 2·10⁵) | 0.05603 | 173627 | 0.06027 | 120791 |
+| [2·10⁵, 3·10⁵) | 0.05928 | 275267 | 0.06202 | 235127 |
+| [3·10⁵, 4·10⁵) | 0.06209 | 349823 | 0.06257 | 326423 |
+| [4·10⁵, 5·10⁵) | 0.06150 | 407279 | 0.06375 | 415127 |
+| [5·10⁵, 6·10⁵) | 0.06363 | 501167 | 0.06542 | 585623 |
+| [6·10⁵, 7·10⁵) | 0.06415 | 608807 | 0.06525 | 614903 |
+| [7·10⁵, 8·10⁵) | 0.06499 | 758327 | 0.06499 | 758327 |
+| [8·10⁵, 9·10⁵) | 0.06590 | 873287 | 0.06767 | 801239 |
+| [9·10⁵, 10⁶] | 0.06478 | 928583 | 0.06647 | 935723 |
 
-> **These are real minima, and the early-exit trap is worth naming.** `ladder_verify.py` stops scanning once a value clears its `stop_at`, and returns *some* value above it rather than the family maximum — so any per-block figure sitting at the threshold is a truncation artefact rather than a minimum. Blocks reporting exactly 0.9 × cap, or exactly the asymptotic constant, are the signature, and it sits precisely where the signal is. The script now labels a clamped block floor as such, and reports an untruncated minimum sampled inside the two lowest-cap residue classes alongside it; that sampled series is what shows the envelope climbing as the ω(n) = 2 population thins, which is §4's prediction. Sampling uniformly for that purpose does not work — the values attaining a minimum are rare and structured, and a uniform sample overstates by a factor of two or more.
+The first block contains the global minimum; every block after it sits above 0.056 and the trend is upward, with the last four all above 0.064 against the asymptotic ceiling of 0.071797.
 
-So the low-density dips are a small-n phenomenon and the asymptotic floor is the ceiling at **n ≡ 23 (mod 24)**.
+**Every one of the ten block minima falls in class 11 or 23** — eight at 23, two at 11 — which is the ceiling table landing where it should, those two classes sharing the lowest cap. That is read off the first column alone and owes nothing to the sampling. *The two columns coinciding in [7·10⁵, 8·10⁵) is not additional evidence*: the sampled series takes one in four of those classes, so it agrees with the block floor exactly when the block's minimising n happens to be sampled and cannot agree otherwise. One coincidence in ten blocks is if anything slightly under the rate that alone would predict.
+
+> **These are real minima, and the early-exit trap is worth naming.** `ladder_verify.py` stops scanning once a value clears its `stop_at`, and returns *some* value above it rather than the family maximum — so any per-block figure sitting at the threshold is a truncation artefact rather than a minimum. Blocks reporting exactly 0.9 × cap, or exactly the asymptotic constant, are the signature, and it sits precisely where the signal is. The script labels a clamped block floor as such — no block in the table above is clamped, all sitting below the asymptotic bound — and reports the untruncated sampled minimum in the second pair of columns; that series is what shows the envelope climbing as the ω(n) = 2 population thins, which is §4's prediction. Note what the agreement between the two columns does *not* show: both run the same four families, so it tests the clamping and says nothing about whether a family is missing. The check for that is the per-residue min-ratio spread above. Sampling uniformly for that purpose does not work — the values attaining a minimum are rare and structured, and a uniform sample overstates by a factor of two or more.
+
+So the low-density dips are a small-n phenomenon and the asymptotic floor is the ceiling at **n ≡ 11 (mod 12)**, i.e. 11 and 23 mod 24 together.
 
 > **Why the extremal residue is mod 12 and not mod 24.** The local obstructions at ℓ = 2 and ℓ = 3 see only n mod 12. A further condition mod 8 — whether the F = 2 fused rung is reachable — refines the odd classes to mod 24, and it is what the ceiling table needs at the nine residues whose optimum takes F = 2. At the residues whose optimum takes **F = 4** that condition drops out, since 4c ≡ 4 (mod 8) for every odd c, and the class is governed by the mod-12 obstructions alone. The minimum over all residues is **7 − 4√3 = 0.071797**, attained at **n ≡ 11 and n ≡ 23 (mod 24)** — that is, on all of n ≡ 11 (mod 12).
 
 <!-- DUP:density_floor_conjecture -->
-> **Conjecture (global density floor).** For every composite non-prime-power n, **μ(n) ≥ C(n,2)/50**, i.e. δ(n) ≥ 0.02; and asymptotically **δ(n) ≥ 7 − 4√3 − o(1) = 0.071797…**, the extremal residues being **n ≡ 11 and n ≡ 23 (mod 24)**, the two carrying the ℓ = 3 obstruction at odd n.
+> **Conjecture (global density floor).** For every composite non-prime-power n, **μ(n) ≥ C(n,2)/25**, i.e. δ(n) ≥ 0.04; and asymptotically **δ(n) ≥ 7 − 4√3 − o(1) = 0.071797…**, the extremal residues being **n ≡ 11 and n ≡ 23 (mod 24)**, the two carrying the ℓ = 3 obstruction at odd n.
+
+> **The finite constant was 1/50 and the gap between the two forms is the interesting part.** 1/50 was set when the observed floor was near 0.026 and falling with every extension of the range, so it was a modest safety margin under a moving target. The target then stopped moving down and moved up, and every fall turned out to be a scoring deficiency rather than a property of μ: the pre-repair shape space read n = 2291 at 0.037524 where the true value is 0.066767, and the pre-repair ladder read n = 8927 at 0.02516 where the corrected families put it above the asymptotic ceiling entirely, dropping it from the worklist. **The drift is one-directional for a structural reason.** B(n) is a *maximum* over admissible configurations, so a missing shape can only depress it — and a missing shape has no witness, hence nothing in the pipeline can detect one, whereas an over-credit is caught by re-deriving μ from the recorded witness. The errors that survive to be found later are therefore biased toward those that lower the floor, which is why the ratchet has run upward and why 1/25 should also be read as likely loose.
 <!-- /DUP -->
 
 *Reading the conjecture.* The asymptotic constant is cap_F(η) = η/(1 + √(Fη))² at η = 1/3, F = 4 — the joint optimum at the odd residues carrying the ℓ = 3 obstruction. Both halves of n ≡ 11 (mod 12) reach it, since the F = 4 shape is indifferent to the mod-8 split that separates 11 from 23 (§3.3). The asymptotic half says the *worst* n eventually reach what the balanced family guarantees; it is a floor, and individual n exceed it freely.
 
-**The asymptotic half is exactly what (H) buys.** Granting Hypothesis (H) of §3.5, every sufficiently large n admits a representation at its own class ceiling, so δ(n) ≥ δ₀(n) − o(1) ≥ 7 − 4√3 − o(1) with the minimum at n ≡ 11 and n ≡ 23 (mod 24). The finite half — δ ≥ 0.02 at *every* composite non-prime-power n — is not implied by (H), which is an eventual statement; it is supported by the computation to 10⁶ and by the margin below.
+**The asymptotic half is exactly what (H) buys.** Granting Hypothesis (H) of §3.5, every sufficiently large n admits a representation at its own class ceiling, so δ(n) ≥ δ₀(n) − o(1) ≥ 7 − 4√3 − o(1) with the minimum at n ≡ 11 and n ≡ 23 (mod 24). The finite half — δ ≥ 1/25 at *every* composite non-prime-power n — is not implied by (H), which is an eventual statement; it is verified to 10⁶ by the ladder and supported by the margin below.
 
-The constant 1/50 is deliberately loose. Two things are absorbed into the margin: the finite exceptional set of §3.5, whose members fall back on whatever configuration they can find, and the windowing loss of §3.4, which costs a factor Θ(√ε) when the balance point is not exactly available.
+The constant 1/25 is deliberately loose, though less so than 1/50 was. Two things are absorbed into the margin: the finite exceptional set of §3.5, whose members fall back on whatever configuration they can find, and the windowing loss of §3.4, which costs a factor Θ(√ε) when the balance point is not exactly available. The measured margin over the computed range is only 11% — the ladder's floor is 0.04453 against 1/25 = 0.04 — so 1/25 is close to what the current families actually deliver, and a sharper constant would want either B(11183) computed or a fifth family.
 
 ### 5.1 The branch-and-bound, and what it currently establishes
 
 The worklist admits a search that converges fast, because `ladder_verify` returns a *lower* bound: if LB(n) ≥ M for the standing minimum M, then δ(n) ≥ M and n cannot lower it, so n is discarded without computation. Take the smallest known δ as M, discard every candidate with LB ≥ M, compute δ at a survivor, lower M if it beats it, repeat.
 
-**As run against the v2 table**, over 48,729 candidates:
+**The ladder alone now settles the range**, without the branch-and-bound needing to compute a single B(n): every one of the 46,722 worklist entries scores at least 0.04453, so M never falls below that and no survivor exists to examine. What the search is for is *sharpening* — computing B at the lowest entries to raise the verified floor — rather than establishing it. An illustrative run against an earlier, weaker ladder shows the shape of the descent:
 
-> M = (5 − 2√6)/2 → 0.041812 (n = 575) → 0.041107 (n = 2183) → 0.037524 (n = 2291) → 0.029282 (n = 3059) → **0.026117** (n = 3239), and the search then terminates: n = 8927, the last candidate, rejects at K = 3 without B(8927) ever being computed —
->
-> ```
-> [193/48729] n=8927    B/C(n,2) > 0.02612  rejected at K=3   (9398.0s cumulative)
-> ```
+> M → 0.041812 (n = 575) → 0.041107 (n = 2183) → 0.037524 (n = 2291) → 0.029282 (n = 3059) → 0.026117 (n = 3239), each step an n whose family score fell below the standing minimum. Under the corrected families none of those five is a candidate at all: 2291 reaches 0.066767 and 3239 reaches 0.043570, and the descent terminates immediately.
 >
 > The order of examination changes which values get *recorded* — one can set the running floor and then be superseded by a smaller n examined later — but not the result, since the floor only falls and pruning is sound at every stage.
 
 **What survives the enumeration defect, and what does not.** Every step used the table from below: `ladder_verify.py` scores explicit constructions, and B(n) ≤ μ(n) wherever the collapse certificate applies, which covers both survivors. So
 
-> **min { μ(n)/C(n,2) : n ≤ 10⁶ composite, not a prime power } ≥ 0.0261166…**
+> **min { μ(n)/C(n,2) : n ≤ 10⁶ composite, not a prime power } ≥ 0.04453**
 
-is proved. What it does not license is reading that number as a *value* of μ: it is **not attained at n = 3239**, which reaches 0.043570 (seven copies of a 256-block plus an outside 1447-block, twist 241) and n = 3059 reaches 0.083906. The argmin has moved and the bound is no longer tight.
+is proved, the ladder alone supplying it: every one of the 10⁶ values scores at least that, with the minimum at **n = 11183 = 53·211**. In particular **δ(n) ≥ 1/25 throughout**, with 11% to spare. What the bound does not license is reading it as a *value* of μ — it is a lower bound at n = 11183 like everywhere else, and B(11183) has not been computed.
 
-**The rerun will be cheap, and should raise the floor.** The worklist under the corrected shape space has **19,583** entries, 60% fewer than the 48,729 the previous branch-and-bound consumed, and the tail below the current floor is thin: exactly **one** entry sits below 0.026117 — n = 8927 itself, at 0.02516 — with **one** below 0.030, **11** below 0.037524, and **21** below 1/25. So the branch-and-bound has almost nothing left to eliminate, and the operative question is no longer "does some other n undercut 8927" but "**does B(8927) exceed 0.02516**". If it does, the true minimum below 10⁶ lands at or above 0.03045 (n = 11819) and the conjecture's margin against 1/50 rises above 1.5.
+**What the branch-and-bound has left to do.** The worklist holds **46,722** entries — every n whose family score falls below the asymptotic ceiling 7 − 4√3 — but **none below 1/25**, so it has nothing left to eliminate against the conjecture as stated. Its remaining use is sharpening: the operative question is **"does B(11183) exceed 0.04453"**, and more generally whether any of the ten lowest entries (11183, 1817, 9911, 2759, 5063, 3503, 7031, 2183, 6275, 1739 — all in the 10³–10⁴ band where the two engines cross) is tight. Computing B at those ten would either raise the verified floor above 1/25 with real margin or, if the ladder is tight at 11183, fix the minimum below 10⁶ exactly.
+
+> **Probe before committing to any of them.** Finding one configuration that clears a threshold is sub-second; proving optimality is what costs hours. A targeted scan over the two-part census shapes, scored with `mu_enumerate_v2.py`'s own `value()`, reproduced B(n) exactly at all eleven worklist values where B was independently known.
 
 `mu_enumerate_v2.py --floor M --adaptive` runs the loop as one job: it seeds at M·C(n,2) so any configuration above the floor rejects n immediately, prunes candidates whose lower bound has risen above the current floor, computes B(n) exactly only for survivors, and adopts a lower value as the new floor — which in turn tightens Proposition F.1's part-count cap ⌊1/√M⌋ for everything after it.
 
 ### 5.2 The hard range is bounded on both sides, and it is small
 
-The worry motivating §3.5 — that between the computable range and the asymptotic one lies a middle where neither argument reaches — is answerable empirically, and the answer is favourable. Minimum lower bound over each decade of the 19,583-entry worklist:
+The worry motivating §3.5 — that between the computable range and the asymptotic one lies a middle where neither argument reaches — is answerable empirically, and the answer is favourable. Minimum lower bound over each decade of the 46,722-entry worklist:
 
 | n | values in worklist | minimum bound | attained at |
 |---|---|---|---|
-| [10², 10³) | 2 | 0.04181 | 575 |
-| [10³, 10⁴) | 82 | 0.02516 | 8927 |
-| [10⁴, 10⁵) | 1,334 | 0.03045 | 11819 |
-| [10⁵, 10⁶) | 18,165 | 0.04125 | 134423 |
+| [10², 10³) | 7 | 0.04898 | 935 |
+| [10³, 10⁴) | 251 | 0.04574 | 1817 |
+| **[10⁴, 10⁵)** | 3,435 | **0.04453** | **11183** |
+| [10⁵, 10⁶] | 43,029 | 0.05603 | 173627 |
+
+The middle decade holds the global minimum and the one after it recovers by a quarter, so the region where neither argument reaches is a single decade wide and its worst value clears 1/25.
 
 ## 6. Running the implication backwards, correctly
 
@@ -1046,10 +1057,10 @@ Writing **L = 1/√δ₀** and **N(δ₀)** for the number of shapes the criteri
 | 1/9 | 3.000 | 3 | 9 | **24** |
 | 1/16 | 4.000 | 4 | 16 | **65** |
 | 0.051813 (`19x61`, n = 1159) | 4.393 | 4 | 19 | **83** |
-| 0.026117 | 6.188 | 6 | 38 | **453** |
-| 0.02 (conjectured) | 7.071 | 7 | 50 | **982** |
+| 0.04453 (ladder floor to 10⁶, n = 11183) | 4.739 | 4 | 22 | — |
+| 0.04 = 1/25 (conjectured) | 5.000 | 5 | 25 | — |
 
-> *The floor row wants recomputing as the table extends.* At the current floor of **0.045742** (n = 1817, witness `1x1039* + 2x389`) one has L = 4.676, k ≤ 4 and F ≤ 21 — the k and F columns unchanged from the 1/16 row, and N(δ₀) at that L a little above 83, not recomputed here. Recompute the row rather than the whole table.
+> *The last two rows carry no N(δ₀) count, and the floor row wants recomputing as the table extends.* At the conjectured floor of 1/25, L = 5.000 and the part cap is **k ≤ 5** — a substantial narrowing of the search this table sizes, since the count grows steeply in L. The exactly-computed floor 0.045742 (n = 1817, witness `1x1039* + 2x389`) gives L = 4.676, k ≤ 4, F ≤ 21, with N(δ₀) a little above 83. Recompute the affected rows rather than the whole table.
 
 **This column is the raw count and nothing has been removed from it yet.** §6.2 asks whether a shape names one system at all, §6.3 gives the reductions, and §6.4 counts what survives them — which is a far smaller and much more slowly growing set than the table suggests.
 
@@ -1091,8 +1102,7 @@ So an unequal-size shape is *infeasible* above density 1/9 whatever p is, and ab
 >   |---|---|---|---|---|---|---|---|
 >   | 1/9 | 3 | 6 | 7 | 7 | 24 | 32 | **26** |
 >   | 1/16 | 4 | 10 | 14 | 14 | 65 | 109 | **80** |
->   | 0.026117 | 6 | 21 | 45 | 41 | 453 | 1,406 | **774** |
->   | 0.02 | 7 | 28 | **75** | **63** | 982 | 4,063 | **1,956** |
+>   | 0.04 = 1/25 | 5 | 15 | 25 | 24 | — | — | — |
 >   | 1/400 | 20 | 210 | 8,266 | — | — | — | — |
 >
 >   The two "sizes free" columns differ by whether a per-class penalty is charged. The **penalised** column is the one to quote, but the penalty's justification is the density ceiling above rather than a twist-parity argument: a class of size c′ ≤ c/p contributes at most (c′/n)², so an unequal shape needs x ≥ √(δ₀F)·(1 + 1/p) across its two sizes rather than √(δ₀F) for each, and that pushes some newly admitted shapes back out of feasibility. At δ₀ = 1/9 the effect is total — no unequal shape is feasible — which is why the one-size and penalised counts should agree at the top row and the table's 24 versus 26 there is worth re-deriving. At the conjectured floor the purely additive disjunction would be **63-way rather than 28-way**, and the raw count 1,956 rather than 982: a factor of about two in both, not an explosion.
@@ -1111,7 +1121,7 @@ Granting §6.2's presupposition, three reductions apply to the raw table, and th
 
 **(b) Parity halves the set pointwise.** With p odd, c is odd, and every foreign r is odd, so n ≡ ΣF_a + i (mod 2), where i is the number of foreign parts. **A shape is available only at n of one parity**, so the disjunction at any given n runs over about half of N(δ₀). This one *does* cut the table: 24 splits 14 / 10, and 982 splits 498 / 484. (The c = 2^a escape sits outside it, as the remark above notes.)
 
-**(c) Local obstructions prune further, per residue class.** §3.3 does this for the three-part family: at n ≡ 2 (mod 3) the full-efficiency system has ω(3) = 3 and vanishes identically, and the ℓ = 2 conditions cut the odd classes similarly. Every shape has such an analysis, and each removes that shape from the covering set at particular residues. **This is the one reduction not computed here.** Doing it for all 453 shapes at δ₀ = 0.026117 is mechanical — each system is a few linear forms in one variable, and only ℓ = 2 and ℓ = 3 can obstruct (§3.3.1) — and it is the obvious next step, being the reduction most likely to be large: the three-part family alone loses a third of residues mod 12.
+**(c) Local obstructions prune further, per residue class.** §3.3 does this for the three-part family: at n ≡ 2 (mod 3) the full-efficiency system has ω(3) = 3 and vanishes identically, and the ℓ = 2 conditions cut the odd classes similarly. Every shape has such an analysis, and each removes that shape from the covering set at particular residues. **This is the one reduction not computed here.** Doing it for all shapes at the operative δ₀ is mechanical — each system is a few linear forms in one variable, and only ℓ = 2 and ℓ = 3 can obstruct (§3.3.1) — and it is the obvious next step, being the reduction most likely to be large: the three-part family alone loses a third of residues mod 12.
 
 **What is *not* available is a domination argument.** One might hope some shapes are unconditionally beaten by others and could be dropped. The unconditional facts of that kind are already applied in generating the list: Lemma D1 removes F a power of p (bottom-layer fusion is absorbed into a larger block), Lemma D2 removes fused foreign blocks by domination rather than by exclusion, Lemma B′ removes foreign prime powers, and Part A removes fixed points. Beyond those, domination fails at exactly the interesting places — S4 and S7-at-F=2 realise the same shape and neither dominates, which is the content of the c mod 8 law. So the list cannot be shortened by comparing shapes to each other.
 
@@ -1139,10 +1149,10 @@ And parity is now exact rather than approximate: since every F_i = 1, n ≡ k (m
 |---|---|---|---|---|
 | 1/9 | 24 | **6** | 4 | 2 |
 | 1/16 | 65 | **10** | 4 | 6 |
-| 0.026117 | 453 | **21** | 9 | 12 |
-| 0.02 (conjectured) | 982 | **28** | **16** | **12** |
+| 0.04453 (verified to 10⁶) | — | **15** | 9 | 6 |
+| 0.04 = 1/25 (conjectured) | — | **15** | **9** | **6** |
 
-That is the number that belongs in the covering statement: **at the conjectured floor, 16 systems at odd n and 12 at even n**, before local obstruction cuts further — not 982. The exponential growth of the raw count is an artefact of counting fusion shapes that cover a vanishing set of n.
+That is the number that belongs in the covering statement: **at the conjectured floor, 9 systems at odd n and 6 at even n**, before local obstruction cuts further. The exponential growth of the raw count is an artefact of counting fusion shapes that cover a vanishing set of n — and the raised floor cuts the additive count too, since K = ⌊1/√δ₀⌋ drops from 7 at 1/50 to 5 at 1/25, which is why the last two rows agree.
 
 #### 6.5 The dichotomy, and where the conditionality enters
 
@@ -1174,7 +1184,7 @@ At the conjectured floor that is **16 systems at odd n and 12 at even n**. It is
 - **The gap between consecutive ceilings bounds ε**, and it is not uniform: 0.0085 at n ≡ 23 (mod 24), but the classes where two rungs tie — 7 and 15, where cap_B(1/4) = cap_C(1/2) exactly — admit **no** such ε, and there the disjunction genuinely cannot be collapsed.
 - **It is conditional in the direction that matters.** The hypothesis is a lower bound on μ that we do not have; the argument shows that *if* the floor conjecture holds just under a class ceiling, the arithmetic consequence is sharp. That is a statement about the strength of the conclusion, not evidence for it.
 
-So: **the route yields robustness at floors well below the ceilings, and sharp single-system statements at floors just beneath them.** The closer δ₀ sits to a class ceiling the stronger the arithmetic and the harder the hypothesis — worth stating because it identifies which floor conjecture would be worth proving. A floor of 1/50 gives a 16-way disjunction at odd n; a floor of 0.0505 at one residue class gives a single Bateman–Horn system.
+So: **the route yields robustness at floors well below the ceilings, and sharp single-system statements at floors just beneath them.** The closer δ₀ sits to a class ceiling the stronger the arithmetic and the harder the hypothesis — worth stating because it identifies which floor conjecture would be worth proving. A floor of 1/25 gives a 9-way disjunction at odd n; a floor just under 7 − 4√3 at n ≡ 11 (mod 12) gives a single Bateman–Horn system.
 
 ---
 
@@ -1186,7 +1196,7 @@ So: **the route yields robustness at floors well below the ceilings, and sharp s
 
 **Open Problem 8(a) (k ≤ 3)** is the statement that the four-class cap 1/16 is never the best available, which needs ω(n) ≥ 3 together with no good two- or three-class representation. It has never occurred: no winner in the computed table uses four classes, and the δ ≤ 1/16 tail is 18 of 2,186 values (0.8%) — n = 527, 1159, 1175, 1739, 1763, 1817, 1943, 2015, 2057, 2075, 2117, 2147, 2183, 2279, 2303, 2387, 2507, 2599. The branch-and-bound of §5 adds a little: it examined every n ≤ 10⁶ whose lower bound fell below the running floor, and none of them wanted a fourth class either.
 
-**Open Problem 8(b)** lives where the three-class family is the best available. With the above-1/9 route refuted, the only path is the direct one. It also **gets harder as the density floor falls**: s ≤ 1/√δ − 1, so at 0.026117 the branches s = 4 and s = 5 are both reachable, and neither has a theorem — unlike s = 3, which E.4 collapses to a single dead pair. *The corrected shape space pushes back the other way*, lifting both v2 record-holders well above 1/25, so the count of values admitting s ≥ 4 wants recomputing against v4.
+**Open Problem 8(b)** lives where the three-class family is the best available. With the above-1/9 route refuted, the only path is the direct one. It also **gets harder as the density floor falls**, since s ≤ 1/√δ − 1 — but the floor has risen rather than fallen: at the verified 0.04453 the cap is s ≤ 3.74, so **s = 4 and s = 5 are both out of reach throughout 10⁶** and E.4's collapse of s = 3 to a single dead pair is the whole remaining content. The branches with no theorem are unreachable at the current floor, which is the strongest form this reduction has taken.
 
 **The §4 barrier at exponent 3/2** is untouched: both engines give density Θ(1) where they apply, and the barrier concerns lower bounds on the least prime in an arithmetic progression. The two obstructions are independent.
 
@@ -1194,7 +1204,7 @@ So: **the route yields robustness at floors well below the ceilings, and sharp s
 
 ## 8. Open questions specific to this document
 
-1. **Extend the branch-and-bound past 10⁶.** The search as run is complete below 10⁶ (§5) and gives δ ≥ 0.026117, but its argmin lies elsewhere under the corrected shape space and it wants rerunning first — the worklist there has 19,583 entries against 48,729, and only one below 0.026117. Pushing further needs `ladder_verify.py` run at a larger N, which is O(N²/log N) — 78 minutes to 10⁶, so 10⁷ is multi-day. The lower envelope has risen monotonically since [10³, 10⁴), so the expected return is confirmation rather than a new minimum; the value of doing it is in how far the pattern can be pushed, not in what it is likely to find. The reduction is essentially free: all but a handful of worklist entries are eliminated by comparing their lower bound against the running floor. Extending the range would replace the deliberately loose 1/50 in the conjecture with something close to the observed value.
+1. **Extend the ladder past 10⁶.** The scan is complete below 10⁶ (§5) and gives δ ≥ 0.04453 at n = 11183, with nothing below 1/25 anywhere in range. Pushing further is O(N²/log N) — 3.5 hours to 10⁶, so 10⁷ is multi-day. The lower envelope has risen monotonically since [10⁴, 10⁵) and the global minimum has been fixed since n = 20,000, so the expected return is confirmation rather than a new minimum; the value is in how far the pattern can be pushed, not in what it is likely to find. **The cheaper win is at the other end**: computing B(n) at the ten lowest worklist entries, all in [10³, 10⁴], would either lift the verified floor above 1/25 with real margin or pin the minimum below 10⁶ exactly.
 
 2. **Bound the s = 4 and s = 5 branches.** The only item here that is a gap in a *proof* rather than in evidence. *Recount after the rebuild:* at n = 3239 and 3059 the density rises sharply under the corrected shape space, so both leave the sub-1/25 set and the branch may narrow without any new theorem. E.1 caps s = 1 by the Mersenne constants and E.3(iii) caps the s = 2 repunit branch; s = 4 has neither, and is not thin enough for an E.4-style collapse. An absolute cap would have to come from the foreign block's twist, as in those two. The search clears it at every computed n, so nothing is unproved — but the gap widens as the floor falls.
 

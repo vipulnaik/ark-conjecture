@@ -218,6 +218,22 @@ Working out why `ladder_verify.py`'s missing even F mattered led to a substantiv
 
 ---
 
+## 5⅞. The 10⁶ ladder run, and the conjecture sharpened to 1/25
+
+The full scan completed in 12,458s. Results and what they licensed:
+
+**The verified floor over 10⁶ is 0.04453, attained at n = 11183 = 53·211**, and it is fixed by n = 20,000 — over the remaining 980,000 values nothing undercuts it. Since the ladder is a lower bound at every n, this proves **δ(n) ≥ 1/25 for every composite non-prime-power n ≤ 10⁶**, with 11% of margin. The conjecture in `aod` §5 moves from **1/50 to 1/25**, a 2× strengthening, with 1/50 retained in the surrounding commentary because the gap between the two is itself the interesting fact.
+
+**Why the old constant looks so loose now, and why the new one probably is too.** 1/50 was set when the observed floor was near 0.026 and falling with every extension, so it was a modest margin under a moving target. The target then reversed, and every historical fall turned out to be a scoring deficiency rather than a property of μ — the pre-repair shape space read n = 2291 at 0.037524 against a true 0.066767, and the pre-repair ladder read n = 8927 at 0.02516 where the corrected families lift it off the worklist entirely. **The drift is one-directional for a structural reason**: B(n) is a maximum over admissible configurations, so a missing shape can only depress it, and a missing shape leaves no witness — nothing in the pipeline can detect one — whereas an over-credit is caught by re-deriving μ from the recorded witness. Errors that survive to be found later are therefore biased toward those that lower the floor. That is now recorded in §5 as a reason to read 1/25 as likely loose in its turn.
+
+**Two downstream consequences worth noting.** The part-count cap of Proposition F.1 tightens from k ≤ 7 to **k ≤ 5** at the conjectured floor, which materially narrows the search §6 sizes. And Open Problem 8(b)'s hard branches become unreachable: at δ ≥ 0.04453 the cap is s ≤ 3.74, so **s = 4 and s = 5 — the branches with no theorem — cannot arise anywhere below 10⁶**, leaving E.4's collapse of s = 3 as the whole remaining content.
+
+**Confirmations of the F = 4 work.** The worklist splits **23,475 : 23,201** between n ≡ 11 and n ≡ 23 (mod 24), a 50.2/49.7 dead heat across 46,722 entries — about as clean a confirmation of the merged §3.3.5 row as available. And the per-residue min-ratio column puts 23 at 0.620 of its cap and 11 at 0.671, against a spread from 0.327 (class 16) to 0.671 across all twenty-four: the two lowest-cap classes are mid-range in *relative* shortfall, so the low absolute floor at 23 comes from its cap being lowest, not from a family the ladder misses there.
+
+*Two methodological notes on the untruncated series.* It tracks the clamped block floor closely, which confirms the clamp is not hiding a lower region — what it was added for. It is **not** evidence that no family is missing, since both series run the same four families; the evidence for that is the per-residue ratio column above, which compares like with like. And the exact coincidence at the 800k block is **not** evidence of anything: the series samples one in four of classes 11 and 23, so it agrees with the block floor precisely when the block's minimising n happens to be sampled, and one such coincidence in ten blocks is slightly below what that rate alone predicts. The informative fact in that column is that all ten block minima lie in class 11 or 23 — eight at 23, two at 11 — which is read off the block floors alone.
+
+---
+
 ## 6. Method notes
 
 **Dehistoricization.** The primary documents were left carrying only the current state — no "this used to say", no superseded figures kept for contrast, no status lines describing a claim's history. Everything of that kind is in this file. The one deliberate exception is the census's v2/v3/v4 provenance banner, which is *about* the tables rather than about the documents' own past and is load-bearing for reading the winner counts until the rebuild finishes.

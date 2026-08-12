@@ -58,14 +58,15 @@ out and only the ell = 3 obstruction remains.
 
 Usage:
     python3 ladder_verify.py 100000
-    python3 ladder_verify.py 100000 --floor 0.02
+    python3 ladder_verify.py 100000 --floor 0.04
 """
 import sys, time, bisect, math
 from math import comb
 
 _A = sys.argv
 N = int(_A[1]) if len(_A) > 1 and not _A[1].startswith("-") else 100000
-FLOOR = 0.02
+FLOOR = 0.04   # = 1/25, the section 5 conjecture; verified to 10^6 with the
+               # floor at 0.04453 (n = 11183), i.e. 11% of margin
 for i, x in enumerate(_A):
     if x == "--floor":
         FLOOR = float(_A[i + 1])
