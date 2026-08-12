@@ -490,7 +490,7 @@ def c_s5(R, base):
         rr = [x for _, x, f in r.cls if f][0]
         u = oddpart(rr - 1)
         cm[c % 8] += 1; us[u] += 1
-        if u > 9:                      # cap_2(1/u) drops below 0.050510 past u = 9
+        if u > 9:                      # cap_2(1/u) drops below (5-2sqrt6)/2 past u = 9
             big.append((r.n, rr, u))
     return ("FAIL" if big else "PASS",
             f"{len(rows)} winners; c mod 8 = {dict(sorted(cm.items()))}, "
@@ -779,7 +779,7 @@ def c_regime(R, base):
 
 
 @check("C", "density floor, and the s- and k-bounds it implies", "ep Part E-prime, Prop F.1",
-       expect="asymptotically delta >= 0.050510 = (5-2sqrt6)/2, attained at n = 23 (mod 24); "
+       expect="asymptotically delta >= 0.071797 = 7-4sqrt3, attained at n = 11 and 23 (mod 24); "
               "the finite-range floor should RISE with n as the omega(n)=2 population thins")
 def c_floor(R, base):
     r = min(R, key=lambda x: x.delta)
@@ -864,9 +864,10 @@ def c_class(R, base):
        expect="the caps bound only the ADDITIVE families, so a median far above one is normal "
               "wherever the multiplicative engine reaches -- n = 2 (mod 24) sits near 1/2 "
               "because n/2 is often a prime power, which is S2 and not bounded by any of this. "
-              "Read the comparison only at the residues where S1 and S2 are scarce. The caps are 1/4 at 0,4,6,10,12,16,18,22 - 0.13397 at "
-              "2,8,14,20 - 0.17157 at 1,9,13,21 - 0.125 at 3,19 - 0.10102 at 5,17 - 0.08579 at "
-              "7,15 - 0.06699 at 11 - 0.05051 at 23")
+              "Read the comparison only at the residues where S1 and S2 are scarce. The caps are the joint optimum over (F, eta): 1/4 at "
+              "0,4,6,10,12,16,18,22 - 0.13397 at 2,8,14,20 - 0.17157 at 1,9,13,21 - 0.125 at 3,19 - "
+              "0.10102 at 5,17 - 0.11111 at 7,15 - 0.07180 at 11 and 23. The last three take F = 4; "
+              "the rest take F = 2.")
 def c_medbyclass(R, base):
     by = defaultdict(list)
     for r in R:

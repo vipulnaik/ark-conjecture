@@ -514,9 +514,11 @@ the k = 3 analogue of δ. (At k = 2, δ = m\*/C(n,2) ≈ 2m\*/n², so β₂ = δ
 | 1, 9, 13, 21 | S7 at F = 2 | 1 | 0.58579 | 0.63397 | **0.08579** | 0.06699 | 0.17157 |
 | 3, 19 | S7 at F = 2 | 1/2 | 0.50000 | 0.55051 | **0.06250** | 0.05051 | 0.12500 |
 | 5, 17 | S7 at F = 2 | 1/3 | 0.44949 | 0.50000 | **0.05051** | 0.04167 | 0.10102 |
-| 7, 15 | S4 or S7 at F = 2 | 1/2 | 0.50000 | 0.55051 | **0.06250** † | 0.05051 | 0.08579 |
-| 11 | S7 at F = 2 | 1/6 | 0.36603 | 0.41421 | **0.03349** | 0.02860 | 0.06699 |
-| 23 | S4 or S7 at F = 2 | 1/6 | 0.36603 | 0.41421 | **0.03349** † | 0.02860 | 0.05051 |
+| 7, 15 | S7 at F = 4 | 1 | 0.66667 | ‡ | **1/18 = 0.05556** | ‡ | 0.11111 |
+| 11 | S7 at F = 4 | 1/3 | 0.53590 | ‡ | **0.03590** | ‡ | 0.07180 |
+| 23 | S7 at F = 4 | 1/3 | 0.53590 | ‡ | **0.03590** | ‡ | 0.07180 |
+
+> **‡ The κ_c = 3 column is not recomputed for the F = 4 rows.** Those four residues take their k = 2 ceiling from the two-part F = 4 shape (`aod` §3.3.5), not from the three-part family, and while the κ_c = 2 entries follow from the verified formulas below — s\*/n = √(2F)/(√(2F) + √(2/η)) and β₃ = 1/(√(2F) + √(2/η))² — the κ_c = 3 column needs the k = 3 twist analysis redone at F = 4 rather than transcribed. The κ_c = 2 figures are the ones the identity below is stated for, so nothing that depends on it is blocked.
 
 > **The identity in the κ_c = 2 column.** Every row satisfies **β₃ = cap_F(η)/2** exactly, and the algebra is one line: 1/(√(2F) + √(2/η))² = ½·η/(1 + √(Fη))². So in the generic case — matching twist not divisible by 3, foreign twist coprime to 6 — **the k = 3 ceiling is exactly half the k = 2 ceiling as a fraction of n²**; equivalently, since β₂ = δ/2, the two are *equal in absolute terms*: **m\*₃ ≈ m\*₂ at the ceiling.** That is not a coincidence but a restatement of §4.1: at both k the binding term is a block's intra term, of order c², and only κ differs.
 >
@@ -526,7 +528,7 @@ the k = 3 analogue of δ. (At k = 2, δ = m\*/C(n,2) ≈ 2m\*/n², so β₂ = δ
 >
 > **The κ_c = 3 column is the mod-3 penalty of §5.6.1**, applying whenever the matching block has 3 | c − 1. It costs between 12% and 19% depending on the row, and it has no k = 2 counterpart — there is no third column at k = 2 because κ₂ has only one value on an even twist.
 
-† **Rows 7, 15 and 23 need the rung comparison redone and the entries above are provisional.** At k = 2 those rows are decided by a tie between the fused and unfused rungs — cap_B(1/4) = cap_C(1/2) identically, a coincidence at η = 1/2 and nowhere else — and by which c mod 8 the argmax sits at. **§5.6.4 changes exactly that comparison**: the S5 : S7 matching ratio is 2^v rather than 2^{v−1} when 3 | c − 1, so the k = 2 tie need not survive. The entries here take the S7 reading at the k = 2 η and are therefore a lower bound on those three rows, not the ceiling. Redoing them needs the c mod 24 analysis of §5.6.3 run against each rung, which is not done.
+‡ **The F = 4 rows also supersede an older caveat.** Rows 7, 15 and 23 were previously flagged as provisional because at k = 2 they turned on a tie between the fused and unfused three-part rungs — cap_B(1/4) = cap_C(1/2) identically, a coincidence at η = 1/2 and nowhere else — and on which c mod 8 the argmax sat at, with §5.6.4's S5 : S7 matching ratio able to disturb it. That comparison no longer decides those rows: the k = 2 ceiling there is set by the two-part F = 4 shape, which is outside the tie entirely. What the rows now need is the k = 3 twist analysis at F = 4, which is the ‡ above, and which §5.6.3's c mod 24 machinery is still the right tool for.
 
 > **Read these as ceilings of the family, exactly as at k = 2.** They say what the balanced shape guarantees in the class, not what n can achieve: a single Galois block reaches β₃ ≈ 4.84 (§5.3) and n = 32 reaches β₃ = 4.84 outright, far above every row. The rows are floors for m\*₃, not bounds on it.
 

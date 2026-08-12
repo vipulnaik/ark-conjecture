@@ -234,26 +234,29 @@ tab = {int(r["n"]): int(r["mu_bound"]) for r in csv.DictReader(open(TABLE))}
 shared = [n for n in sorted(tab) if n in D and n not in pps]
 check("B_solv >= B_safe at all %d shared n (Oliver groups are solvable)" % len(shared),
       all(D[n][0] >= tab[n] for n in shared))
+# aod section 3.3.5, as the JOINT optimum over (F, eta).  The last two lines are
+# the residues whose optimum takes F = 4 rather than F = 2.
 OLIVER = {**{r: 0.25 for r in (0, 4, 6, 10, 12, 16, 18, 22)},
           **{r: (2 - sqrt(3)) / 2 for r in (2, 8, 14, 20)},
           **{r: 3 - 2 * sqrt(2) for r in (1, 9, 13, 21)},
           **{r: 0.125 for r in (3, 19)},
           **{r: 5 - 2 * sqrt(6) for r in (5, 17)},
-          **{r: (3 - 2 * sqrt(2)) / 2 for r in (7, 15)},
-          **{11: (2 - sqrt(3)) / 4, 23: (5 - 2 * sqrt(6)) / 2}}
+          **{r: 1 / 9 for r in (7, 15)},
+          **{r: 7 - 4 * sqrt(3) for r in (11, 23)}}
 solv_cap = {r: (CAP1 if r % 2 == 0 else CAP2) for r in range(24)}
 ratios = {r: solv_cap[r] / OLIVER[r] for r in range(24)}
-check("Oliver's eight ceilings collapse to two under the relaxation",
-      len(set(round(v, 9) for v in OLIVER.values())) == 8
+check("Oliver's seven ceilings collapse to two under the relaxation",
+      len(set(round(v, 9) for v in OLIVER.values())) == 7
       and len(set(round(v, 9) for v in solv_cap.values())) == 2)
-check("ceiling ratio at n = 23 (mod 24) is (3-2sqrt2)/((5-2sqrt6)/2) = %.4f"
-      % ratios[23], abs(ratios[23] - 3.3968) < 1e-3)
-check("ratio is exactly 2 at residues 7 and 15 (cap_F(eta) = cap_1(F eta)/F)",
-      abs(ratios[7] - 2.0) < 1e-9 and abs(ratios[15] - 2.0) < 1e-9)
+check("worst ceiling ratio is (3-2sqrt2)/(7-4sqrt3) = %.4f at 11 and 23"
+      % ratios[23], abs(ratios[23] - 2.3897) < 1e-3
+      and abs(ratios[11] - ratios[23]) < 1e-9)
+check("at 7 and 15 the whole cost is the fusion count, eta being 1 on both sides",
+      abs(ratios[7] - (3 - 2 * sqrt(2)) * 9) < 1e-9 and abs(ratios[7] - ratios[15]) < 1e-9)
 check("ratio is exactly 1 where Oliver already reaches eta = 1",
       all(abs(ratios[r] - 1.0) < 1e-9
           for r in (0, 4, 6, 10, 12, 16, 18, 22, 1, 9, 13, 21)))
-print("\n      global constant: Oliver %.5f (n = 23 mod 24) vs solvable %.5f"
+print("\n      global constant: Oliver %.5f (n = 11 mod 12) vs solvable %.5f"
       % (min(OLIVER.values()), min(solv_cap.values())))
 print("      per-residue ceiling ratios:",
       " ".join("%d:%.3f" % (r, ratios[r]) for r in sorted(ratios)))

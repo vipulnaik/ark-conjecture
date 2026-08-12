@@ -197,12 +197,17 @@ def singular(n, q):
 #
 #     D  =   2      4      6     12
 #     eta=   1    1/2    1/3    1/6
-#     cap  1/9  0.08579  0.0718  0.05051     <- the UNFUSED rung C at each eta
+#     cap  1/9  0.08579  0.0718  0.05051     <- cap_F(eta) at F = 4, which is
+#                                                also the UNFUSED-pair formula,
+#                                                the two coinciding identically
 #
-# Those are section 3.3's class ceilings only at the residues stuck on rung C
-# (7, 15 and 23 mod 24).  At the nine rung-B residues the fused rung reaches
-# higher -- 0.17157, 0.125, 0.10102, 0.06699 at eta = 1, 1/2, 1/3, 1/6 -- and
-# section 3.3.5's table, not this row, is the reference for what a class caps at.
+# Those values are NOT the class ceilings.  Section 3.3.5's table is the
+# reference, and it is the joint optimum over (F, eta): F = 2 at the nine
+# residues 1,3,5,9,13,17,19,21 mod 24 -- 0.17157, 0.125, 0.10102 -- and F = 4 at
+# 7, 11, 15, 23, giving 1/9 at 7 and 15 (eta = 1) and 7-4sqrt3 = 0.07180 at 11
+# and 23 (eta = 1/3).  Note the row above coincides numerically with the F = 4
+# caps because cap_4(eta) = eta/(1+2 sqrt eta)^2 is identically the unfused-pair
+# formula; a matching value therefore says nothing about which shape produced it.
 #
 # Testing a class at the WRONG D tests a system with nothing to do with its
 # ceiling.  n = 11 (mod 12) caps at 1/6 and so needs D = 12; at D = 2 its

@@ -43,12 +43,18 @@ optimum sits at x = 0.1973, and reports a spurious shortfall there.
 CLASS CAPS (section 3.3), used to report each n as a fraction of what its class
 permits:
     even n                          cap 0.25000 or 0.13397  (unchanged)
-    n mod 24 in {1,9,13,21}         cap 0.17157   rung B
-    n mod 24 in {3,19}              cap 0.12500   rung B
-    n mod 24 in {5,17}              cap 0.10102   rung B
-    n mod 24 in {7,15}              cap 0.08579   rung C -- no fused rung
-    n mod 24 == 11                  cap 0.06699   rung B
-    n mod 24 == 23                  cap 0.05051   rung C -- the extremal residue
+    n mod 24 in {1,9,13,21}         cap 0.17157   F = 2, eta = 1
+    n mod 24 in {3,19}              cap 0.12500   F = 2, eta = 1/2
+    n mod 24 in {5,17}              cap 0.10102   F = 2, eta = 1/3
+    n mod 24 in {7,15}              cap 0.11111   F = 4, eta = 1    (= 1/9)
+    n mod 24 == 11                  cap 0.07180   F = 4, eta = 1/3
+    n mod 24 == 23                  cap 0.07180   F = 4, eta = 1/3  (= 7-4sqrt3)
+The ceiling is the JOINT optimum over (F, eta), not eta at a fixed rung: at odd
+n the fusion count must be even, and F = 4 wins at 7, 11, 15, 23 because
+4c = 4 rather than 6 (mod 8), which sends r to 3 (mod 8) and removes the 2-adic
+cut on the foreign efficiency.  The extremal residues are 11 and 23 together --
+that is, all of n = 11 (mod 12) -- since with F = 4 the mod-8 condition drops
+out and only the ell = 3 obstruction remains.
 
 Usage:
     python3 ladder_verify.py 100000
@@ -64,13 +70,15 @@ for i, x in enumerate(_A):
     if x == "--floor":
         FLOOR = float(_A[i + 1])
 
-# The asymptotic global lower bound of arithmetic-of-density.md section 5: the
-# class-11 cap 5/2 - sqrt(6), smallest of the six class caps.  Values falling
+# The asymptotic global lower bound of arithmetic-of-density.md section 5:
+# 7 - 4*sqrt(3), the cap at n = 11 and 23 (mod 24) and the smallest of the seven
+# class caps.  Values falling
 # below it here are NOT counterexamples -- this script scans three families over
 # a window and so computes a LOWER BOUND on delta(n).  They are the values where
 # that bound is too weak to reach the asymptotic constant, i.e. the worklist for
 # a future mu_enumerate.py run.
-ASYMPTOTIC = 2.5 - 6 ** 0.5
+ASYMPTOTIC = 7 - 4 * 3 ** 0.5      # 7 - 4*sqrt(3) = 0.0717968, the global
+                                   # class ceiling, shared by 11 and 23 mod 24
 
 # The worklist is EVIDENCE for figures quoted in arithmetic-of-density.md sections
 # 3.7 and 5.2, and comparing two runs is the point of rerunning -- so do not write
@@ -99,14 +107,21 @@ OUTFILE = _os.environ.get("LADDER_OUT", "ladder_weak.txt")
 # which is false for six of the nine.  Half of each obstructed class reaches B
 # and half is stuck on C.
 # Measured 100%/0% with no boundary cases.  Nine of the twelve odd residues rise
-# by 33-54%; residues 7, 15 and 23 do not.  The global minimum is unchanged at
-# 0.050510, now attained at n = 23 (mod 24) alone.
+# by 33-54% from the F = 2 rungs alone; 7, 15, 11 and 23 are then lifted further
+# by F = 4, which is what sets their ceilings.
+# Class ceilings from aod section 3.3.5, as the JOINT optimum over (F, eta):
+# cap_F(eta) = eta / (1 + sqrt(F*eta))^2, maximised over the (F, eta) pairs the
+# residue admits.  At odd n the fusion count must be EVEN (c odd and r an odd
+# prime force F*c even), and F = 4 attains the ceiling at 7, 11, 15 and 23 --
+# 1/9 at 7 and 15 where eta reaches 1, and 7 - 4*sqrt(3) at 11 and 23 where the
+# ell = 3 obstruction caps eta at 1/3.  Those four were previously keyed to the
+# F = 2 rungs, at 0.085786, 0.066987, 0.085786 and 0.050510.
 CAP = {0: 0.250000, 1: 0.171573, 2: 0.133975, 3: 0.125000,
-       4: 0.250000, 5: 0.101021, 6: 0.250000, 7: 0.085786,
-       8: 0.133975, 9: 0.171573, 10: 0.250000, 11: 0.066987,
-       12: 0.250000, 13: 0.171573, 14: 0.133975, 15: 0.085786,
+       4: 0.250000, 5: 0.101021, 6: 0.250000, 7: 0.111111,
+       8: 0.133975, 9: 0.171573, 10: 0.250000, 11: 0.071797,
+       12: 0.250000, 13: 0.171573, 14: 0.133975, 15: 0.111111,
        16: 0.250000, 17: 0.101021, 18: 0.250000, 19: 0.125000,
-       20: 0.133975, 21: 0.171573, 22: 0.250000, 23: 0.050510}
+       20: 0.133975, 21: 0.171573, 22: 0.250000, 23: 0.071797}
 MOD = 24
 
 t = time.time()
@@ -273,7 +288,7 @@ def achieved(n, stop_at=None):
     -- it is merely some value above stop_at.  Callers pass 0.9*CAP[class], so
     any reported figure at or just below 0.9*CAP is a truncation artefact rather
     than a real minimum.  This is why the per-block 'floor' lines in a long run
-    keep reporting 0.04546 = 0.9 * 0.05051.  Everything the script asserts is a
+    keep reporting 0.9 * cap verbatim.  Everything the script asserts is a
     lower bound, so the truncation is safe; it just must not be read as a max."""
     C = n * (n - 1) / 2
     best = 0.0
@@ -530,7 +545,7 @@ print(f"values with delta < {FLOOR}: {len(below)}"
       + (f" -> {below[:10]}" if below
          else "  -- the section 5 conjecture holds throughout this range"))
 print()
-print(f"values below the asymptotic bound {ASYMPTOTIC:.6f} = 5/2 - sqrt(6): {len(weak)}")
+print(f"values below the asymptotic bound {ASYMPTOTIC:.6f} = 7 - 4*sqrt(3): {len(weak)}")
 if weak:
     print("  NOT counterexamples.  This script searches four families over a window,")
     print("  so it computes a LOWER BOUND on delta(n).  It is a worklist: computing")
