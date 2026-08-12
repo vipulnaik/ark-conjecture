@@ -40,13 +40,7 @@ python3 mu_enumerate_v2.py --nmax <N> --fill-gaps --out mu_table_safe_v4.csv
 
 ## R1. Routine, after any new batch of table values
 
-> **Complete for the current table: n ≤ 2600, 2,186 rows.** Every step below has been run against it, with a few details worth stating rather than rounding off:
->
-> - `validate_table.py` — **22 PASS / 0 FAIL**, which requires the A20 fix to the density check; before it the run reports one FAIL at n = 2561, and that is the rounding artefact described in A20, not a bad row.
-> - `fallback_cert.py` — **0 candidates in both modes**, confirmed both against the shipped file and against the version carrying condition (4)'s gated strip (T5). The two agree exactly, as the monotonicity argument in T5 requires.
-> - `wide_cert.py 100000` certifies 90,299 of 90,299; `a18_verify.py` and `t5_verify.py` are green; `check_doc_figures.py`'s findings are triaged and the documents recounted, most of its PASS 1 flags being coincidental numeric matches rather than stale figures.
->
-> Nothing below is owed until the table moves again.
+> **Clean at n ≤ 2600, 2,186 rows; nothing below is owed until the table moves.** Expected output, so that a deviation is recognisable: `validate_table.py` **23 PASS / 0 FAIL**; `fallback_cert.py` **0 candidates in both modes**; `wide_cert.py 100000` certifying 90,299 of 90,299; `a18_verify.py` and `t5_verify.py` green. `check_doc_figures.py` does not go to zero — most of its PASS 1 flags are coincidental numeric matches, so it is read finding by finding rather than as a pass/fail.
 
 Every one of these is a per-n statement that does not extend itself, and none of them extends with the table. Point them all at **v4**. **Run in this order** — the first gates the rest. Extending the table is R0's step, not one of these; this list is what the extension obliges.
 
@@ -59,7 +53,7 @@ python3 fallback_cert.py mu_table_safe_v4.csv --verbose
 python3 fallback_cert.py mu_table_safe_v4.csv --no-theorems
 
 # 3. the wide certificate.  MU_ENUMERATE IS REQUIRED: the default is
-#    mu_enumerate.py, which no longer exists, and the import fails on load.
+#    mu_enumerate.py, absent from the working set, so the import fails on load.
 MU_ENUMERATE=$PWD/mu_enumerate_v2.py python3 wide_cert.py 100000
 
 # 4. the range-scoped halves of Lemma D2's and Corollary C′'s domination
@@ -76,7 +70,7 @@ python3 check_doc_figures.py mu_table_safe_v4.csv *.md
 - **`fallback_cert.py`** — the headline is *0 candidates*. Then read three numbers, because **the low-density recount lives here**: the **density floor**, the **largest permitted s**, and the **theorem residue**. They move together, since s ≤ 1/√δ − 1 means a falling floor admits a larger s, and **s = 4 is the first branch with no theorem covering it**. At the current floor of 0.045742 (n = 1817) the bound is 3.68, so s ≤ 3 and E.1 / E.3(iii) / E.4 close everything but one class of 349 E.3(ii) branches. **The margin to δ = 1/25, where s = 4 reopens, is 0.0457 against 0.0400 — one extension could close it.** If `largest permitted s` ever prints 4, `enumeration-proof.md`'s Corollary after E.3 and Part I's tail figures both want re-deriving rather than recounting. The `--no-theorems` run should agree exactly, and the agreement is not vacuous here: 2,204 of 2,553 branches are dispatched in the normal run, so disabling them genuinely moves work into the search.
 - **`wide_cert.py`** — read the `settled by theorem:` line. At NMAX ≤ 10⁴ it prints NONE, because B_lo is small enough that the foreign-cap filter removes the s = 1 and s = 3 branches before the dispatch sees them, so a `--no-theorems` comparison there agrees *trivially* and is no evidence about E.1 / E.3 / E.4. `--menu` cross-checks pass 1 against the family menu; `--refresh` rebuilds the cached B_lo, which is rarely needed since the cache is keyed on everything that determines it.
 - **`k3_galois.py`** — the k = 3 Galois admissibility predicate, with a self-test covering the a = 35 witness, the superset relation against the naive reading, and the gain-versus-top-prime distinction. Import it; do not re-derive it.
-- **`validate_table.py`'s group-B trend check** — for each census row claiming `wins → 0`, the shape's winner share must not *rise* across the range. The verdicts are asymptotic limits, so the count alone tests nothing (S1 and S2 win at half the values in range and still tend to zero); what a density-zero supply argument implies is a declining share. Verified as a regression test: restoring `S7` to `ZERO_SHARE` makes it fail with `S7 4.1%→7.6%` against `S2 45.2%→29.3%`.
+- **`validate_table.py`'s group-B trend check** — for each census row claiming `wins → 0`, the shape's winner share must not *rise* across the range. The verdicts are asymptotic limits, so the count alone tests nothing (S1 and S2 win at half the values in range and still tend to zero); what a density-zero supply argument implies is a declining share. To exercise it, add `S7` to `ZERO_SHARE`: it should fail with `S7 4.1%→7.6%` against `S2 45.2%→29.3%`, which is what a failure looks like.
 - **`khomog_verify.py`** — the k-homogeneity claims underlying the hypothesis table of `orbital-evasiveness-notes.md` §1: the c ≡ 3 (mod 4) half-twist case at k = 2, and the five full-density degrees {3, 4, 5, 8, 32} at k = 3, with the sharpness of the order bound that makes the list finite. Static; one run per environment.
 - **`a18_rq_verify.py`** — nine static checks on Lemma D2q, the r = q half: the exhaustive (2,5) subgroup scan, the (3,7) rank-2 eigenvector group, and the tightness and twist-collapse controls. Nothing in it depends on the table, so it needs no rerun on extension; one run per environment.
 - **`t5_verify.py`** — Lemma C's coupling and Corollary C′: the n = 28, 21 and 10 witnesses with their chains, the coupling's tightness at (16,5) and the chainlessness of the mismatched pairing, the sharing bound against every row, and the three facts underlying the local licence that gates condition (4)'s strip (T5). The last pass is **range-scoped** and expires silently on extension, so it belongs in this list beside `a18_verify.py`.
@@ -86,35 +80,40 @@ python3 check_doc_figures.py mu_table_safe_v4.csv *.md
 **Two things deliberately absent from this list.**
 
 - **`ladder_verify.py`** is not a per-batch check — it never reads the table, it scores explicit families. It belongs to **R7** and runs on its own schedule.
-- **`s7_scan.py` and `mu_fast.py` do not exist** in the working set. `validate_table.py` group B already covers the S4 / S5 / S7-at-F=2 congruence patterns `s7_scan.py` would test, so nothing is owed unless a new check is wanted.
+- **`s7_scan.py` and `mu_fast.py` are absent** from the working set. `validate_table.py` group B covers the S4 / S5 / S7-at-F=2 congruence patterns `s7_scan.py` would test, so nothing is owed unless a new check is wanted.
 
 **Do not extend the table without rerunning this list in full.** An extension leaves a different subset of the documents behind each time, and the failure is silent: a stale figure reads as a claim about the current range. The two passes that catch it mechanically are `check_doc_figures.py --pass refs` and `validate_table.py`'s coefficient assertion.
 
 ## R7. Consume the ladder worklist with the adaptive branch-and-bound
 
-*The 10⁶ ladder run is done (`ladder_weak_v4.txt`, 19,583 entries; findings in `session-log-4.md`). What is left is turning those lower bounds into decisions about B(n) — and it is **one job, not three**, writing into the existing table.*
+*Turning the ladder's lower bounds into decisions about B(n) — **one job, not three**, writing into the existing table.*
+
+> **Regenerate the worklist before consuming it.** The ladder's families and its CAP table both determine the list, so a worklist produced by an older `ladder_verify.py` ranks against the wrong ceiling and omits the shapes that ceiling now depends on. Two properties of the current list are worth knowing before planning a run: it is thresholded at the **asymptotic constant**, which is 7 − 4√3, so it is much longer than a list cut at a lower constant would be — 3,693 entries to 10⁵ — and correspondingly weaker as a "compute B(n) here" ranking, since falling short of that ceiling is generic at computed sizes rather than exceptional. The **1/50 question is not read off this list at all** but off the separate `--floor` count, which reports the values failing a stated floor and is 0 throughout the range scanned.
 
 ```bash
-python3 mu_enumerate_v2.py --nlist ladder_weak_v4.txt \
+python3 ladder_verify.py 1000000                      # regenerates ladder_weak.txt
+python3 mu_enumerate_v2.py --nlist ladder_weak.txt \
         --floor 0.0400 --adaptive --out mu_table_safe_v4.csv
 ```
 
 **Why this and not a `--nlist` run per tier.** `--floor … --adaptive` is the branch-and-bound of `arithmetic-of-density.md` §5.1 run inside the job, and it does four things a plain run does not:
 
-- **Prunes on the supplied lower bound.** `ladder_weak_v4.txt`'s second column is read as LB(n); any n with LB(n) ≥ the current floor is skipped without computation, since LB(n) ≥ floor already proves δ(n) ≥ floor. At `--floor 0.0400` that disposes of 19,562 of the 19,583 entries for free.
+- **Prunes on the supplied lower bound.** The worklist's second column is read as LB(n); any n with LB(n) ≥ the current floor is skipped without computation, since LB(n) ≥ floor already proves δ(n) ≥ floor. At a floor near 0.04 this disposes of all but a handful of a worklist's entries for free.
 - **Rejects most survivors without computing B(n).** For an unpruned n it seeds the search at floor·C(n,2), so it only has to show *some* configuration clears the floor. Measured on the first 40 entries: n = 1175 is rejected at K = 2 — δ(1175) > 0.04 established without ever computing B(1175).
 - **Appends the exact row when it does compute one**, to `--out`, with the full schema and the witness — so the expensive values land in **the same CSV** rather than a side file that then needs merging. It only appends, never rewrites or reorders, and skips n already present.
-- **Reads the table back as prior knowledge.** An n already in `--out` is not skipped; its density is fed to the floor. So v4's existing 2,186 rows tighten the search rather than being ignored.
+- **Reads the table back as prior knowledge.** An n already in `--out` is not skipped; its density is fed to the floor. So the table's existing rows tighten the search rather than being ignored.
 
-**Set the floor to the question you are asking.** The floor is an interrogation threshold, not the known answer — and setting it to the current global floor would prune everything, 8927 included, since pruning triggers at LB ≥ floor.
+**Set the floor to the question you are asking.** The floor is an interrogation threshold, not the known answer — setting it to the current global floor would prune everything, since pruning triggers at LB ≥ floor.
 
-| `--floor` | what it settles | entries left after pruning |
-|---|---|---|
-| **0.0400** = 1/25 | whether any n in 10⁶ leaves room for **s = 4**, the first fallback branch with no theorem | 21 |
-| 0.045742 | whether anything undercuts the current table floor | 189 |
-| 0.02516 + ε | whether **B(8927) exceeds 0.02516**, which is what §5.1 turns on | 1 |
+| `--floor` | what it settles |
+|---|---|
+| **0.0400** = 1/25 | whether any n leaves room for **s = 4**, the first fallback branch with no theorem |
+| the current table floor | whether anything undercuts it |
+| the ladder's global floor + ε | whether the argmin's B(n) exceeds the ladder bound there, which is what §5.1 turns on |
 
-Run them in that order; each is a superset of the next in cost and the cheap one may answer the expensive one's question. `--nmax` acts as an upper cut-off on a `--nlist`, which is how to defer the four five-figure entries — at n^2.9 per value, the lone n = 46,127 costs roughly 10⁴ times an n = 2,000 row, so it is worth seeing the rest first.
+Run them in that order; each is a superset of the next in cost and the cheap one may answer the expensive one's question. `--nmax` acts as an upper cut-off on a `--nlist`, which is how to defer the five-figure entries — at n^2.9 per value an n near 50,000 costs roughly 10⁴ times an n = 2,000 row, so it is worth seeing the rest first.
+
+> **Before committing an expensive n, probe it.** Finding one configuration that clears a floor is sub-second; proving optimality is what costs hours. A targeted scan over the two-part census shapes, scored with `mu_enumerate_v2.py`'s own `value()`, settles the floor question outright whenever the answer is "clears" and costs nothing when it is not. It reproduced B(n) exactly at all eleven worklist values where B was independently known.
 
 **Preconditions and cautions.**
 
@@ -141,7 +140,7 @@ Parts A, E and F have had one close reading each; what is outstanding is a readi
 
 ### T2. Part E's realisability: preconditions are checked, construction is not
 
-The preconditions check is **built and passing** — see `session-log-4.md`. `validate_table.py` group A asserts per winner row that the Part E build's ingredients exist: F_top a q-power, every foreign block scored above r actually having q | r − 1 (live at 1,034 rows), and the **diagonal carrier's order coprime to every foreign prime and every F_mid in the configuration** (live at 1,239 rows). That last is deliberately stricter than SAFE's `dmax`, which strips only a class's own F_mid — looseness is safe for an upper bound but not for a construction, and attainment needs the construction.
+The preconditions check is **built and passing**: `validate_table.py` group A asserts per winner row that the Part E build's ingredients exist: F_top a q-power, every foreign block scored above r actually having q | r − 1 (live at 1,034 rows), and the **diagonal carrier's order coprime to every foreign prime and every F_mid in the configuration** (live at 1,239 rows). That last is deliberately stricter than SAFE's `dmax`, which strips only a class's own F_mid — looseness is safe for an upper bound but not for a construction, and attainment needs the construction.
 
 **What is left for a human, and it is the part a check cannot reach.**
 
@@ -172,36 +171,25 @@ These are the whole trusted base for μ(n) = B(n): both certificates pass with e
 
 **Deferred: the framing decision.** Jones–Zvonkin's programme (arXiv:2106.00346 and four companions) is the model for how this genre states its standing — conditional on Bateman–Horn, labelled as such in the abstract, with the conjecture validated numerically at the range used. Three consequences are recorded in `literature-findings.md` items 14–16 and are *not* being acted on yet: a standing table at the front of `aod` §3 dividing unconditional from conditional from conjectural; the polynomial-versus-exponential line in `aod` §3.5, since shapes needing prime powers of unbounded exponent are Mersenne-like and outside Bateman–Horn; and the Catalan/Pillai caution where both parts are proper prime powers, which is our S1 and S2 and which `aod` §6 currently treats as amply supplied.
 
-### T5. Condition (4)'s strip is licensed at every a — and currently changes nothing
+### T5. Condition (4)'s strip, and the residue that blocks B_refined = B_safe
 
-*The mathematics is settled (`enumeration-proof.md` Part D, Corollary C′), the code change is made in `fb_common.py`, and the certificate has been rerun in both modes: **0 candidates at all 2,186 values**, unchanged. What this item now records is why the change is worth having anyway, and one figure that should be retired.*
+*The mathematics is in `enumeration-proof.md` Part D (Lemma C's coupling and Corollary C′); the gate is implemented in `fb_common.py` at both strip sites. `fallback_cert.py` reports 0 candidates at all 2,186 values in both modes.*
 
-**The gate.** Condition (4) caps a leftover p-characteristic part by stripping the foreign prime r from its twist. Corollary C′ licenses that strip exactly when a configuration retaining the share cannot reach B, and the sharing bound is **local to (p, a, r)**:
+**The licence.** Condition (4) caps a leftover p-characteristic part by stripping the foreign prime r from its twist. Corollary C′ licenses that strip exactly when a configuration retaining the share cannot reach B, and the sharing bound is **local to (p, a, r)**:
 
 > **sharing_bound(p, a, r) = min(r·ord_r(p), C(r,2))**, and the strip is sound iff this is **< B**.
 
-No n, no density floor, no threshold on the table. At **a = 1** the coupling forces ord_r(p) = 1, so the bound is r and the licence reads r < B — the condition the previous unconditional a = 1 strip was assuming without stating. The strip only ever acts when r | p^a − 1, i.e. ord_r(p) | a; elsewhere the gate is vacuous either way. Both strip sites are gated: the primary block in `pair_candidates` and the leftover in `single_part_ok`.
+No n, no density floor, no threshold on the table. At **a = 1** the coupling forces ord_r(p) = 1, so the bound is r and the licence reads r < B. The strip only ever acts when r | p^a − 1, i.e. ord_r(p) | a; elsewhere the gate is vacuous either way. Both sites are gated: the primary block in `pair_candidates` and the leftover in `single_part_ok`.
 
-**Measured on the real enumeration, and the result is that nothing moves.** Instrumenting every strip decision the certificate actually reaches, over the whole table:
+**The gate carries an assertion rather than a silent `if`, and that is load-bearing.** A strip firing where it is not licensed discards a real candidate and produces the same empty candidate list as a correct run, so the failure is invisible in the output and must be caught at the point of decision. `set_strip_trace()` records every decision as (p, a, r, B, bound, licensed), which is the only way to observe the gate at all.
 
-| | count |
-|---|---|
-| strip decisions reached | **74** |
-| at a = 1, where the new gate declines | 0 |
-| at a > 1, where the new gate strips | **0** |
-| verdict changes against the shipped version | **0** |
+**At the current frontier the gate is inert, and knowing that is worth more than the counts.** Instrumenting every strip decision the certificate reaches over the whole table gives **74**, all at a = 1, none at a > 1, and no verdict differing from an ungated run. The a > 1 branches never reach condition (4): 129,878 enter `pair_candidates`, 120,389 survive the divisibility and dispatch filters, and every one dies at the foreign cap `orb(r, t) < B` first. So the foreign block's own cap already excludes every proper-prime-power branch, and the licence earns its place by staying correct as the table extends and that cap stops biting — not by changing anything now.
 
-**The a > 1 branches never reach the strip at all**: 129,878 of them enter `pair_candidates`, 120,389 survive the divisibility and theorem-dispatch filters, and **every one dies at the foreign cap** `orb(r, t) < B` before condition (4) is evaluated. So at the current frontier the foreign block's own cap already excludes every proper-prime-power branch, and the lift is **provably vacuous** — correct, but inert.
+> **Do not reintroduce a branch-count figure here without measuring it.** Condition (4) is evaluated 30 times at n ≤ 2000 and 74 times over the whole table, with zero proper-prime-power evaluations at either. Any larger figure describes a different quantity or a different version of `fb_common.py`.
 
-**Retire the 630,477-branch figure.** This item used to record that the strip changes condition (4)'s verdict on 630,477 branches at n ≤ 2000, of which 53,807 have c a proper prime power. That is **not reproducible against the current code**: condition (4) is evaluated **30 times** at n ≤ 2000 and 74 times over the whole table, with **0** proper-prime-power evaluations at either. The figure evidently measures a different quantity or a pre-tightening version of the file; it should not be carried forward as a claim about how much the change moves.
+**What remains open.** The fallback residue is the **q = 2 and large-e** cases of Part E″'s q-pinning, where pinning is vacuous or weak and domination rather than supply is needed. That is the obstacle to replacing B_safe by B_refined outright — the structural route to **B_refined = B_safe = μ by construction rather than by computation**, as against a per-n certificate that the optimum happens to be fallback-free.
 
-**So why keep the change.** Three reasons, none of them about the current table. It removes a dependency on an unproved lemma — the old comment justified the a = 1 scoping by "Lemma C is proved only for prime blocks", and the unconditional form of Lemma C is *false*, so the shipped justification was wrong even where the behaviour was right. It is stated as a local licence, so it stays correct as the table extends and the foreign cap stops biting. And it makes the a = 1 case *tested* rather than assumed.
-
-**The gate carries an assertion, not a silent `if`, and that is load-bearing.** A strip firing where it is not licensed would discard a real candidate and produce the same empty list as a correct run — invisible in the output. `set_strip_trace()` records every decision as (p, a, r, B, bound, licensed), which is how the counts above were obtained; the candidate list cannot show them.
-
-**What it unblocks.** With the p-characteristic half closed at every a, the fallback residue reduces to the **q = 2 and large-e** cases of Part E″'s q-pinning, where pinning is vacuous or weak and domination rather than supply is needed. That is the remaining obstacle to replacing B_safe by B_refined outright — the structural route to **B_refined = B_safe = μ by construction rather than by computation**, as against a per-n certificate that the optimum happens to be fallback-free.
-
-**The rest of the residue, so the remaining work can be costed.**
+**The residue in full, so the remaining work can be costed.**
 
 | piece | status |
 |---|---|
