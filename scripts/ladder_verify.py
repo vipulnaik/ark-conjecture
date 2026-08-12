@@ -22,14 +22,14 @@ THE FAMILIES (all scored in SAFE mode, so each is a genuine lower bound)
   fused        n = F*c,      F a q-power, c a prime power        -> ~1/F
   two parts    n = c + r,    c a prime power, r prime            -> <= 1/4
   three parts  n = 2c + r,   two equal c-blocks plus a foreign   -> <= 1/9
-  S7 (2026-08) n = F*c + r,  F=3 or 5 blocks fused in the CYCLIC layer
+  S7 (2026-08) n = F*c + r,  F >= 3 blocks fused in the CYCLIC layer
                              plus a foreign prime                -> <= 0.13397
 
 THE S7 FAMILY, AND WHY IT WAS MISSING.  Until 2026-08 the enumeration required
 the block-permuting group to sit in the top q-group, so F had to be a q-power.
 It may instead sit in the cyclic layer, where the only requirement is that
-Gamma_1/Gamma_2 stay cyclic -- so F may be any prime power coprime to the
-twists and the foreign primes.  See enumeration-proof.md Part 0.  Adding it here
+Gamma_1/Gamma_2 stay cyclic -- so F may be any integer coprime to the
+twists and the foreign primes -- prime power or not, odd or even.  See enumeration-proof.md Part 0.  Adding it here
 can only RAISE the reported floor, since this script takes a max over families
 and every family is a genuine construction.
 
@@ -154,19 +154,28 @@ for r in range(3, N + 1, 2):
 # fusion prime, since the two cannot coincide.  Using the unrestricted EFF would
 # overstate whenever the best q is the fusion prime, which would break the
 # lower-bound guarantee -- so these are computed separately.
-EFF_EX = {}
-for q0 in (3, 5, 7):
+# Keyed by the frozenset of primes the fusion count occupies in the cyclic
+# layer.  A fused class of F blocks puts EVERY prime divisor of F into that
+# layer, so the foreign twist's top prime must avoid all of them -- not just one.
+# Computed on demand and memoised, since only a handful of exclusion sets occur.
+_EFF_EX_CACHE = {}
+
+
+def eff_excluding(excl):
+    """Best foreign efficiency over top primes q NOT in `excl`, per r."""
+    key = frozenset(excl)
+    if key in _EFF_EX_CACHE:
+        return _EFF_EX_CACHE[key]
     arr = [0.0] * (N + 1)
     for r in range(3, N + 1, 2):
         if not sieve[r]:
             continue
         m = r - 1
         best_e = 0.0
-        mm = m
-        a_, x_ = 0, mm
+        a_, x_ = 0, m
         while x_ % 2 == 0:
             x_ //= 2; a_ += 1
-        if q0 != 2:
+        if 2 not in key:
             best_e = max(best_e, (2 ** a_) / m)          # q = 2 branch
         y, d = x_, 3
         while d * d <= y:
@@ -174,13 +183,40 @@ for q0 in (3, 5, 7):
                 e2 = 1
                 while y % d == 0:
                     y //= d; e2 += 1
-                if d != q0:
+                if d not in key:
                     best_e = max(best_e, 2 * (d ** (e2 - 1)) / m)
             d += 2
-        if y > 1 and y != q0:
+        if y > 1 and y not in key:
             best_e = max(best_e, 2 * y / m)
         arr[r] = best_e
-    EFF_EX[q0] = arr
+    _EFF_EX_CACHE[key] = arr
+    return arr
+
+
+EFF_EX = {q0: eff_excluding({q0}) for q0 in (3, 5, 7)}
+
+
+def prime_divisors_of(m):
+    """The set of primes dividing m -- exactly the primes a fused class of m
+    blocks occupies in the cyclic layer."""
+    out, d, x = set(), 2, m
+    while d * d <= x:
+        if x % d == 0:
+            out.add(d)
+            while x % d == 0:
+                x //= d
+        d += 1 if d == 2 else 2
+    if x > 1:
+        out.add(x)
+    return out
+
+
+# Fusion counts scanned by the S7 family.  F = 1 is the unfused case and F = 2 is
+# the odd-n rung, both handled elsewhere; everything from 3 up is in scope here.
+# The ceiling is set by Part G.4's F <= 1/delta: at the floors this ladder is
+# used to establish (delta around 1/25) F cannot exceed 25, and in practice the
+# intra term Fp*orb(c, dmax) falls off fast enough that large F never wins.
+FSET = tuple(range(3, 13)) + (16, 25)
 
 # Best foreign efficiency over ODD top primes only -- what rung B may use, since
 # its cyclic-layer C_2 rules out q = 2 sharing the layer with an even twist.
@@ -329,13 +365,28 @@ def achieved(n, stop_at=None):
     # S7 is kept last anyway: it is the most expensive family and the one most
     # often irrelevant.
     # F = 2 is deliberately absent from this loop and handled in the three-part
-    # branch above instead.  The loop's guard `(c-1) % qF == 0 -> continue` is
-    # right for odd qF (the fusion prime must not divide the twist) but kills
-    # every odd c at qF = 2, since c-1 is then always even; and the F = 2 case
-    # is not an escape but the odd-n fused RUNG (rungs B and B'), which belongs
-    # with the family it competes against.  See aod section 3.2.
-    for Fp, qF in ((3, 3), (9, 3), (5, 5), (25, 5), (7, 7)):
-        EFFx = EFF_EX[qF]
+    # branch above instead: at F = 2 the shape is not an escape but the odd-n
+    # fused RUNG (rungs B and B'), which belongs with the family it competes
+    # against.  See aod section 3.2.
+    #
+    # EVERY OTHER F IS IN SCOPE, including even ones.  A fused class of F blocks
+    # puts every prime divisor of F into the cyclic layer, so what the family
+    # requires is only that the twist and the foreign top prime avoid those
+    # primes -- and the twist is CUT to the largest divisor of c-1 coprime to F,
+    # not abandoned.  Skipping such c instead (as the guard `(c-1) % qF == 0`
+    # used to do) keeps the bound valid but discards the family outright at every
+    # even F, since c - 1 is even for every odd c.  That is not a small loss:
+    # F = 4 and F = 6 are the winning shapes at the arithmetically weakest n,
+    # where no multiplicative escape exists, and omitting them understates those
+    # values by more than a factor of two.
+    for Fp in FSET:
+        exclF = prime_divisors_of(Fp)
+        EFFx = eff_excluding(exclF)
+        # The within-class cross term takes the coefficient F for odd F and F/2
+        # for even F -- the minimum pair-orbital of a transitive group of degree
+        # F.  Using F for even F would OVERSTATE the family and break the
+        # lower-bound guarantee, so the parity is load-bearing here.
+        cross_coeff = Fp if Fp % 2 else Fp // 2
         for c in PPs:
             m = Fp * c
             if m >= n:
@@ -343,34 +394,24 @@ def achieved(n, stop_at=None):
             r = n - m
             if r < 3 or r > N or not sieve[r]:
                 continue
-            if base[c] == r or (c - 1) % qF == 0 or r % qF == 0:
+            if base[c] == r or r in exclF:
                 continue
             e = EFFx[r]
             if e <= 0:
                 continue
             # The fused class sits in the cyclic layer alongside the twist, and
             # a cyclic group has a unique subgroup of each order, so the twist
-            # must be coprime to Fp.  Scoring the intra term at Fp*C(c,2)
-            # regardless -- as an earlier version did -- credits a twist the
-            # configuration cannot have, which would make this an UPPER bound on
-            # that family rather than a lower one.  The correct cap is
-            # Fp * orb(c, dmax) with dmax the largest divisor of c-1 coprime to
-            # Fp.  (No q-part exemption here: the family fixes the top prime to
-            # qF's partner, and the twist we are bounding is the cyclic one.)
-            #
-            # NOTE the stripping loop below is currently DEAD: the guard above
-            # skips every c with qF | c-1 outright, so dmax == c-1 whenever we
-            # reach here.  Skipping is the more conservative of the two -- it
-            # discards a family member instead of scoring it at a cut twist --
-            # so this is safe for a lower bound, but the two are inconsistent
-            # and one of them should go.  Relaxing the guard to admit those c and
-            # letting the strip do the work would RAISE the reported floor
-            # slightly; do that rather than deleting the loop, if either.
+            # must be coprime to F.  Scoring the intra term at Fp*C(c,2)
+            # regardless would credit a twist the configuration cannot have and
+            # make this an UPPER bound on the family rather than a lower one.
+            # The correct cap is Fp * orb(c, dmax) with dmax the largest divisor
+            # of c-1 coprime to F.
             dmax = c - 1
-            while dmax % qF == 0:
-                dmax //= qF
+            for qq in exclF:
+                while dmax % qq == 0:
+                    dmax //= qq
             intra = Fp * orb_ld(c, dmax, base[c] == 2)
-            v = min(intra, Fp * c * c, m * r, e * comb(r, 2))
+            v = min(intra, cross_coeff * c * c, m * r, e * comb(r, 2))
             if v > best * C:
                 best = v / C
                 if stop_at and best > stop_at:
