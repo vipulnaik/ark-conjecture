@@ -99,9 +99,32 @@ The mechanism is one line of mod-8 arithmetic. At n ≡ 7 (mod 8), c odd:
 
 Doubling the block count moves 2c ≡ 6 to 4c ≡ 4, hence r from 1 to 3 (mod 8), dropping v₂(r − 1) from ≥ 3 to 1. **The D = 24 obstruction that pins class 23 belongs to F = 2, not to the residue class.**
 
+### 3.5 The efficiencies, derived rather than sampled
+
+The η column of §4 was originally measured. It is derivable, and the derivation splits into two independent parts that multiply.
+
+**The 2-adic part.** With c ≡ 3 (mod 4) — hence c ≡ 3 or 7 (mod 8) — the product F·c is determined mod 8: **6, 4, 2** for F = 2, 4, 6. So r = n − F·c (mod 8) is fixed by the residue class. Even F puts the prime 2 into the cyclic layer, so the foreign twist t must be odd, and the best case r − 1 = 2^v·q^e gives
+
+> **η₂ = 2^(1−v)**,  v = v₂(r − 1), read off r mod 8: v = 1 at r ≡ 3, 7; v = 2 at r ≡ 5; v ≥ 3 at r ≡ 1.
+
+**The 3-adic part.** If 3 | r − 1 is *forced*, the odd part of r − 1 carries a 3; for that odd part to be a single prime power it would have to be a power of 3, i.e. r = 2^v·3^e + 1, a density-zero family. Generically the odd part is 3·(prime power), so η is **cut by 3**. Whether 3 | r − 1 is forced depends on F mod 3:
+
+> - **F ≢ 0 (mod 3).** c mod 3 is free (c prime, c ≠ 3), so r can be steered to 2 (mod 3) — solving F·c ≡ n − 2 — *unless* that forces c ≡ 0 (mod 3), which happens exactly at **n ≡ 2 (mod 3)**.
+> - **F ≡ 0 (mod 3).** r ≡ n (mod 3) is forced. The cut applies at n ≡ 1 (mod 3); and at n ≡ 0 (mod 3) we get 3 | r, so the shape is **unavailable** for prime r > 3.
+
+Multiplying, **η = η₂ / (3 if cut else 1)**. This reproduces every measured cell, including the three where the shape is unavailable.
+
+> **One place the mod-8 analysis is not enough, and it is worth knowing where.** At r ≡ 1 (mod 8) the rule gives only v ≥ 3. The exact value needs mod 16, where 4c ≡ 12 (mod 16) is again forced, so r ≡ n − 12 (mod 16) — and **n mod 16 is not determined by n mod 24**. The class splits: at n ≡ 5 (mod 16) one gets v = 3 and η₂ = 1/4, at n ≡ 13 (mod 16) v = 4 and η₂ = 1/8. This is real and it bites at three cells — classes 5, 13 and 21 at F = 4, where the guarantee is 1/8 rather than the 1/4 a mod-8 reading would give.
+>
+> **The table nonetheless stands keyed mod 24, and not by luck.** All three affected cells are ones where F = 4 is *not* the class optimum. The four classes where F = 4 does set the ceiling — 7, 11, 15, 23 — all have r ≡ 3 or 7 (mod 8), hence **v = 1 exactly**, the minimum possible, with no deeper dependence available to disturb it. The binding cells are precisely those where the 2-adic valuation is pinned at the bottom, which is why the keying survives.
+
+*What the derivation does and does not remove.* It removes the sampling: the η values are now consequences of the congruences, checkable by hand. It does **not** remove the arithmetic hypothesis — that primes of the required form r = 2^v·q^e + 1 exist in the needed density near the balance point is Bateman–Horn, exactly as everywhere else in §3. What was measured before was "does such an r turn up in practice at every sampled n"; what is derived now is "is there a congruence obstruction to one existing". The second is the part that was in doubt.
+
+**Verification.** `eta_derive.py` computes both sides — the derivation by exact enumeration mod 2⁷, the measurement by scanning real decompositions — and asserts agreement at all thirty-six (class, F) cells, plus that no ceiling-setting cell is among the three that split. It exits nonzero on any disagreement, so it is a regression test on both the derivation and the table.
+
 ## 4. The revised table
 
-Guaranteed η per class and F — the minimum over sampled n of the best η available, with c ≡ 3 (mod 4) so the matching term is intact.
+Guaranteed η per class and F — **derived from congruences** (§3.5) and independently **measured** over sampled n, the two agreeing at all thirty-six cells. Throughout, c ≡ 3 (mod 4) so the matching term stays F·x².
 
 | n mod 24 | η at F=2 | η at F=4 | η at F=6 | best cap | rationalised | decimal | §3.3.5 | ratio |
 |---|---|---|---|---|---|---|---|---|
@@ -149,13 +172,18 @@ Two load-bearing consequences rest on that clause:
 
 **The F-search is complete, so a further F is not a live risk.** §2.1 excludes F ≥ 8 from η ≤ 1 alone, with no arithmetic input, and the parity constraint leaves only F ∈ {2, 4, 6} at odd n. All three are measured. At classes 7 and 15 the answer attains the absolute ceiling cap₄(1) = 1/9, so those two rows cannot be improved by any F at any η — they are final. What remains open to measurement error is therefore only the η values at F = 2, 4, 6 for classes 11 and 23.
 
-**Weakest.** The guaranteed-η figures are measured over roughly 30–60 sampled n per class in [6·10⁴, 9·10⁴], not proved. An earlier version of that measurement was wrong instructively: it checked η availability without checking that the matching side still attained its share, and so contradicted §3.3.5, which was right. The current figures restrict to c ≡ 3 (mod 4) and reproduce §3.3.5's η = 1/12 at F = 2 for class 23 — the check that the correction took. Only F ≤ 6 was scanned. Mixed three-part shapes such as 4c + 2c′ + r are outside both families. And the class-11 comparison rests on 676 > 675, so any slip in the η there flips it.
+**The η values are no longer the weak point.** §3.5 derives them from congruences, and `eta_derive.py` checks that derivation against an independent measurement at all thirty-six cells. What survives:
 
-**The asymptotic claim needs a supply heuristic** of the kind §3 already assumes: each n needs n = 4c + r near x\* with c ≡ 3 (mod 4) prime and r − 1 = 6q^e, whose expected count grows like εn/log³n. Observed values remain well below the cap at 2·10⁵, so the approach is slow.
+- **Only F ≤ 6 has been derived.** §2.1 excludes F ≥ 8 from η ≤ 1 alone, so the conclusion has no gap, but §3.5's bookkeeping covers F ∈ {2, 4, 6} only.
+- **Mixed three-part shapes** such as 4c + 2c′ + r lie outside both the two-part family and the three-part ladder, and nothing here bounds them.
+- **The class-11 comparison rests on 676 > 675**, the narrowest possible integer margin. Deriving the η removes the way that was most likely to go wrong, but the margin is what it is.
+- **The measurement had a subtle failure mode worth keeping in view**, since a future re-measurement could repeat it: an earlier version asked whether η was *available* without checking that the matching side still attained its share, and produced a table contradicting §3.3.5 where §3.3.5 was right. The current one restricts to c ≡ 3 (mod 4) and reproduces §3.3.5's η = 1/12 at F = 2 for class 23, which is the check that it took.
+
+**The asymptotic claim needs a supply heuristic** of the kind §3 already assumes: each n needs n = 4c + r near x\* with c ≡ 3 (mod 4) prime and r − 1 = 6q^e, whose expected count grows like εn/log³n. Observed values remain below the cap at 10⁶ — the sampled class-11-and-23 minimum reaches 0.0665 against 7 − 4√3 = 0.0718 in the last block — so the approach is slow but visible.
 
 **Edit sites.**
 
-1. **§3.3.5's table** — four rows and the rung column; the derivation needs the parity constraint and the mod-8 table of §3.
+1. **§3.3.5's table** — four rows and the rung column. The derivation needs the parity constraint and the mod-8 mechanism of §3, and §3.5 supplies the η column as a congruence consequence rather than a measurement; the merged 11/23 row follows from both taking the same (F, η).
 2. **The census S7 row** — the false clause and the "wins → 0" verdict resting on it.
 3. **§4.3 fate (iii)** — S7 at F ≥ 3 is not an O(n/log n) escape at even F; it is the ceiling-setting shape at four residues.
 4. **The global constant** — §1 consequence 3, §1's summary of §3.3, §3.3.5's closing paragraph ("attained at n ≡ 23 (mod 24) alone"), and §5, where the floor is stated against it.
