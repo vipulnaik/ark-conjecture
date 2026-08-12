@@ -816,9 +816,57 @@ def c_partdist(R, base):
     return ("INFO", note, [])
 
 
+# Census verdicts of the form "wins -> 0" are ASYMPTOTIC limits, not claims that
+# the shape never wins: S1 and S2 win at half the values in range and still
+# tend to 0, because omega(n) = 2 thins.  So the count alone tests nothing.  The
+# TREND does: a shape whose winning share tends to zero because its supply is
+# O(n/log n) must have a winner share that DECLINES across the range.  A share
+# that holds steady or rises contradicts the supply claim behind the verdict.
+#
+# This is the check that would have caught the S7-at-F>=3 error.  That row read
+# "wins -> 0", justified by a supply claim ("F*c even forces c = 2^a") true only
+# for odd F; at even F the supply is a full Hardy-Littlewood system.  The census
+# and the table sat in the same report contradicting each other -- 125 S7 winners
+# printed a few lines below a row asserting the shape wins nowhere -- for as long
+# as both existed.  Verified as a regression test: putting "S7" back into
+# ZERO_SHARE makes this check FAIL with "S7 4.1%->7.6%" against "S2 45.2%->29.3%",
+# which is the signature to recognise.
+#
+# Two design points, both learned from getting them wrong first.  The count alone
+# is useless as a test, because the verdicts are limits and S1/S2 win half the
+# values in range while legitimately tending to zero.  And only GROWTH fails: a
+# flat share is consistent with a slow log-factor decline, so tolerating it costs
+# a little sensitivity and avoids firing on every shape whose supply thins more
+# slowly than the range grows.
+ZERO_SHARE = {"S1", "S2", "S5", "S6"}   # census rows claiming wins -> 0
+
+
+@check("B", "shapes claimed to win with vanishing share have a declining share",
+       "aod section 2.0 census, section 4.3")
+def c_zero_share_trend(R, base):
+    rows = sorted(R, key=lambda r: r.n)
+    third = len(rows) // 3
+    early, late = rows[:third], rows[-third:]
+    bad, seen = [], []
+    for sh in sorted(ZERO_SHARE):
+        e = sum(1 for r in early if r.shape == sh)
+        l = sum(1 for r in late if r.shape == sh)
+        if e + l < 20:                  # too few to read a trend from
+            continue
+        fe, fl = e / len(early), l / len(late)
+        seen.append(f"{sh} {fe:.1%}->{fl:.1%}")
+        # Rising, and by more than sampling noise on these counts, contradicts a
+        # density-zero supply argument.  Flat is tolerated; only growth fails.
+        if fl > fe * 1.25 and fl > 0.02:
+            bad.append((sh, round(fe, 4), round(fl, 4)))
+    return ("FAIL" if bad else "PASS",
+            f"{len(bad)} of {len(seen)} rising: " + "; ".join(seen), bad)
+
+
 @check("C", "census winner counts by shape", "aod section 2.0, ep census",
        expect="asymptotic WINNING shares over all n: S3 12/24 (50%), S7-at-F=2 10/24 (41.7%) "
-              "plus 1/24 tied, S4 1/24 (4.2%) plus the tie; S1, S2, S5, S6, S7-at-F>=3 all -> 0. "
+              "plus 1/24 tied, S4 1/24 (4.2%) plus the tie, S7-at-F>=3 8/24 at the residues "
+              "7, 11, 15, 23 where F = 4 sets the ceiling; S1, S2, S5, S6 all -> 0. "
               "At computed sizes S1 and S2 are still large because omega(n)=2 has not thinned")
 def c_census(R, base):
     d = Counter(r.shape for r in R)
