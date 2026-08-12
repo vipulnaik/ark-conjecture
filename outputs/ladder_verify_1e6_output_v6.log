@@ -1,0 +1,154 @@
+
+sieve and efficiencies to 1,000,000 in 4.2s
+21:58:30  scanning to 1,000,000; checkpoint every 10,000, summary every 100,000
+21:58:35  n =    10,000  (     5s,    2155 n/s)  floor so far 0.04574 at n = 1817   eta ~515.5m
+21:58:39  n =    20,000  (     9s,    2437 n/s)  floor so far 0.04453 at n = 11183   eta ~261.0m
+21:58:44  n =    30,000  (    14s,    1985 n/s)  floor so far 0.04453 at n = 11183   eta ~190.2m
+21:58:50  n =    40,000  (    20s,    1601 n/s)  floor so far 0.04453 at n = 11183   eta ~159.7m
+21:58:57  n =    50,000  (    27s,    1370 n/s)  floor so far 0.04453 at n = 11183   eta ~142.2m
+21:59:06  n =    60,000  (    35s,    1241 n/s)  floor so far 0.04453 at n = 11183   eta ~129.9m
+21:59:15  n =    70,000  (    45s,    1047 n/s)  floor so far 0.04453 at n = 11183   eta ~122.7m
+21:59:26  n =    80,000  (    56s,     910 n/s)  floor so far 0.04453 at n = 11183   eta ~118.1m
+21:59:38  n =    90,000  (    68s,     826 n/s)  floor so far 0.04453 at n = 11183   eta ~114.5m
+21:59:51  n =   100,000  (    81s,     768 n/s)  floor so far 0.04453 at n = 11183   eta ~111.2m
+21:59:51  --- through 100,000: block floor 0.04453 at n = 11183  [at or below the asymptotic bound: a real minimum]; global floor 0.04453 at n = 11183 (mod 24 = 23); 0 below 0.02; untruncated floor over classes (23, 11) 0.04582 at n = 9911 (1 in 4 of them, 1493 scanned) ---
+22:00:05  n =   110,000  (    95s,     711 n/s)  floor so far 0.04453 at n = 11183   eta ~108.5m
+22:00:21  n =   120,000  (   111s,     649 n/s)  floor so far 0.04453 at n = 11183   eta ~106.4m
+22:00:37  n =   130,000  (   127s,     594 n/s)  floor so far 0.04453 at n = 11183   eta ~104.9m
+22:00:55  n =   140,000  (   145s,     560 n/s)  floor so far 0.04453 at n = 11183   eta ~103.5m
+22:01:14  n =   150,000  (   164s,     526 n/s)  floor so far 0.04453 at n = 11183   eta ~102.2m
+22:01:35  n =   160,000  (   185s,     490 n/s)  floor so far 0.04453 at n = 11183   eta ~101.2m
+22:01:56  n =   170,000  (   206s,     468 n/s)  floor so far 0.04453 at n = 11183   eta ~100.1m
+22:02:20  n =   180,000  (   230s,     414 n/s)  floor so far 0.04453 at n = 11183   eta ~99.8m
+22:02:44  n =   190,000  (   254s,     415 n/s)  floor so far 0.04453 at n = 11183   eta ~99.0m
+22:03:09  n =   200,000  (   279s,     402 n/s)  floor so far 0.04453 at n = 11183   eta ~98.1m
+22:03:09  --- through 200,000: block floor 0.05051 at n = 149879  [at or below the asymptotic bound: a real minimum]; global floor 0.04453 at n = 11183 (mod 24 = 23); 0 below 0.02; untruncated floor over classes (23, 11) 0.06027 at n = 120791 (1 in 4 of them, 1560 scanned) ---
+22:03:41  n =   210,000  (   311s,     314 n/s)  floor so far 0.04453 at n = 11183   eta ~99.1m
+22:04:09  n =   220,000  (   339s,     361 n/s)  floor so far 0.04453 at n = 11183   eta ~98.2m
+22:04:37  n =   230,000  (   367s,     349 n/s)  floor so far 0.04453 at n = 11183   eta ~97.3m
+22:05:07  n =   240,000  (   397s,     333 n/s)  floor so far 0.04453 at n = 11183   eta ~96.5m
+22:05:45  n =   250,000  (   435s,     265 n/s)  floor so far 0.04453 at n = 11183   eta ~97.1m
+22:06:18  n =   260,000  (   468s,     303 n/s)  floor so far 0.04453 at n = 11183   eta ~96.3m
+22:06:55  n =   270,000  (   505s,     273 n/s)  floor so far 0.04453 at n = 11183   eta ~96.0m
+22:07:30  n =   280,000  (   539s,     287 n/s)  floor so far 0.04453 at n = 11183   eta ~95.1m
+22:08:10  n =   290,000  (   580s,     249 n/s)  floor so far 0.04453 at n = 11183   eta ~94.9m
+22:08:48  n =   300,000  (   618s,     264 n/s)  floor so far 0.04453 at n = 11183   eta ~94.1m
+22:08:48  --- through 300,000: block floor 0.05051 at n = 287423  [at or below the asymptotic bound: a real minimum]; global floor 0.04453 at n = 11183 (mod 24 = 23); 0 below 0.02; untruncated floor over classes (23, 11) 0.06202 at n = 235127 (1 in 4 of them, 1596 scanned) ---
+22:09:29  n =   310,000  (   659s,     242 n/s)  floor so far 0.04453 at n = 11183   eta ~93.6m
+22:10:11  n =   320,000  (   701s,     237 n/s)  floor so far 0.04453 at n = 11183   eta ~93.0m
+22:10:54  n =   330,000  (   744s,     231 n/s)  floor so far 0.04453 at n = 11183   eta ~92.4m
+22:11:38  n =   340,000  (   788s,     228 n/s)  floor so far 0.04453 at n = 11183   eta ~91.6m
+22:12:22  n =   350,000  (   831s,     231 n/s)  floor so far 0.04453 at n = 11183   eta ~90.7m
+22:13:09  n =   360,000  (   879s,     209 n/s)  floor so far 0.04453 at n = 11183   eta ~90.1m
+22:13:55  n =   370,000  (   925s,     218 n/s)  floor so far 0.04453 at n = 11183   eta ~89.1m
+22:14:45  n =   380,000  (   975s,     200 n/s)  floor so far 0.04453 at n = 11183   eta ~88.4m
+22:15:35  n =   390,000  (  1025s,     199 n/s)  floor so far 0.04453 at n = 11183   eta ~87.6m
+22:16:26  n =   400,000  (  1076s,     199 n/s)  floor so far 0.04453 at n = 11183   eta ~86.7m
+22:16:26  --- through 400,000: block floor 0.05051 at n = 389615  [at or below the asymptotic bound: a real minimum]; global floor 0.04453 at n = 11183 (mod 24 = 23); 0 below 0.02; untruncated floor over classes (23, 11) 0.06257 at n = 326423 (1 in 4 of them, 1598 scanned) ---
+22:17:15  n =   410,000  (  1125s,     202 n/s)  floor so far 0.04453 at n = 11183   eta ~85.6m
+22:18:05  n =   420,000  (  1175s,     199 n/s)  floor so far 0.04453 at n = 11183   eta ~84.5m
+22:18:57  n =   430,000  (  1227s,     195 n/s)  floor so far 0.04453 at n = 11183   eta ~83.4m
+22:19:54  n =   440,000  (  1284s,     174 n/s)  floor so far 0.04453 at n = 11183   eta ~82.6m
+22:20:51  n =   450,000  (  1341s,     176 n/s)  floor so far 0.04453 at n = 11183   eta ~81.6m
+22:21:46  n =   460,000  (  1396s,     182 n/s)  floor so far 0.04453 at n = 11183   eta ~80.5m
+22:22:43  n =   470,000  (  1452s,     176 n/s)  floor so far 0.04453 at n = 11183   eta ~79.4m
+22:23:40  n =   480,000  (  1510s,     175 n/s)  floor so far 0.04453 at n = 11183   eta ~78.2m
+22:24:41  n =   490,000  (  1571s,     162 n/s)  floor so far 0.04453 at n = 11183   eta ~77.3m
+22:25:42  n =   500,000  (  1632s,     164 n/s)  floor so far 0.04453 at n = 11183   eta ~76.1m
+22:25:42  --- through 500,000: block floor 0.05051 at n = 439703  [at or below the asymptotic bound: a real minimum]; global floor 0.04453 at n = 11183 (mod 24 = 23); 0 below 0.02; untruncated floor over classes (23, 11) 0.06375 at n = 415127 (1 in 4 of them, 1600 scanned) ---
+22:26:43  n =   510,000  (  1693s,     165 n/s)  floor so far 0.04453 at n = 11183   eta ~75.0m
+22:27:44  n =   520,000  (  1754s,     163 n/s)  floor so far 0.04453 at n = 11183   eta ~73.8m
+22:28:46  n =   530,000  (  1816s,     161 n/s)  floor so far 0.04453 at n = 11183   eta ~72.5m
+22:29:50  n =   540,000  (  1879s,     158 n/s)  floor so far 0.04453 at n = 11183   eta ~71.3m
+22:30:56  n =   550,000  (  1946s,     150 n/s)  floor so far 0.04453 at n = 11183   eta ~70.1m
+22:32:02  n =   560,000  (  2012s,     153 n/s)  floor so far 0.04453 at n = 11183   eta ~68.9m
+22:33:08  n =   570,000  (  2078s,     150 n/s)  floor so far 0.04453 at n = 11183   eta ~67.6m
+22:34:17  n =   580,000  (  2147s,     145 n/s)  floor so far 0.04453 at n = 11183   eta ~66.4m
+22:35:26  n =   590,000  (  2216s,     145 n/s)  floor so far 0.04453 at n = 11183   eta ~65.1m
+22:36:37  n =   600,000  (  2286s,     142 n/s)  floor so far 0.04453 at n = 11183   eta ~63.8m
+22:36:37  --- through 600,000: block floor 0.05051 at n = 574679  [at or below the asymptotic bound: a real minimum]; global floor 0.04453 at n = 11183 (mod 24 = 23); 0 below 0.02; untruncated floor over classes (23, 11) 0.06542 at n = 585623 (1 in 4 of them, 1603 scanned) ---
+22:37:47  n =   610,000  (  2357s,     142 n/s)  floor so far 0.04453 at n = 11183   eta ~62.5m
+22:38:59  n =   620,000  (  2429s,     138 n/s)  floor so far 0.04453 at n = 11183   eta ~61.2m
+22:40:14  n =   630,000  (  2504s,     134 n/s)  floor so far 0.04453 at n = 11183   eta ~59.9m
+22:41:28  n =   640,000  (  2578s,     136 n/s)  floor so far 0.04453 at n = 11183   eta ~58.5m
+22:42:43  n =   650,000  (  2653s,     133 n/s)  floor so far 0.04453 at n = 11183   eta ~57.2m
+22:43:58  n =   660,000  (  2728s,     133 n/s)  floor so far 0.04453 at n = 11183   eta ~55.8m
+22:45:16  n =   670,000  (  2806s,     129 n/s)  floor so far 0.04453 at n = 11183   eta ~54.4m
+22:46:37  n =   680,000  (  2886s,     124 n/s)  floor so far 0.04453 at n = 11183   eta ~53.0m
+22:47:56  n =   690,000  (  2966s,     125 n/s)  floor so far 0.04453 at n = 11183   eta ~51.6m
+22:49:16  n =   700,000  (  3046s,     125 n/s)  floor so far 0.04453 at n = 11183   eta ~50.2m
+22:49:16  --- through 700,000: block floor 0.05051 at n = 692495  [at or below the asymptotic bound: a real minimum]; global floor 0.04453 at n = 11183 (mod 24 = 23); 0 below 0.02; untruncated floor over classes (23, 11) 0.06525 at n = 614903 (1 in 4 of them, 1611 scanned) ---
+22:50:36  n =   710,000  (  3126s,     125 n/s)  floor so far 0.04453 at n = 11183   eta ~48.7m
+22:51:57  n =   720,000  (  3207s,     123 n/s)  floor so far 0.04453 at n = 11183   eta ~47.2m
+22:53:19  n =   730,000  (  3289s,     122 n/s)  floor so far 0.04453 at n = 11183   eta ~45.7m
+22:54:44  n =   740,000  (  3374s,     118 n/s)  floor so far 0.04453 at n = 11183   eta ~44.2m
+22:56:09  n =   750,000  (  3459s,     118 n/s)  floor so far 0.04453 at n = 11183   eta ~42.7m
+22:57:34  n =   760,000  (  3544s,     117 n/s)  floor so far 0.04453 at n = 11183   eta ~41.2m
+22:59:01  n =   770,000  (  3630s,     116 n/s)  floor so far 0.04453 at n = 11183   eta ~39.6m
+23:00:29  n =   780,000  (  3719s,     113 n/s)  floor so far 0.04453 at n = 11183   eta ~38.1m
+23:02:01  n =   790,000  (  3811s,     108 n/s)  floor so far 0.04453 at n = 11183   eta ~36.5m
+23:03:30  n =   800,000  (  3900s,     113 n/s)  floor so far 0.04453 at n = 11183   eta ~34.9m
+23:03:30  --- through 800,000: block floor 0.05051 at n = 767855  [at or below the asymptotic bound: a real minimum]; global floor 0.04453 at n = 11183 (mod 24 = 23); 0 below 0.02; untruncated floor over classes (23, 11) 0.06499 at n = 758327 (1 in 4 of them, 1614 scanned) ---
+23:05:00  n =   810,000  (  3990s,     110 n/s)  floor so far 0.04453 at n = 11183   eta ~33.3m
+23:06:33  n =   820,000  (  4083s,     108 n/s)  floor so far 0.04453 at n = 11183   eta ~31.7m
+23:08:05  n =   830,000  (  4174s,     109 n/s)  floor so far 0.04453 at n = 11183   eta ~30.1m
+23:09:39  n =   840,000  (  4268s,     106 n/s)  floor so far 0.04453 at n = 11183   eta ~28.4m
+23:11:14  n =   850,000  (  4364s,     104 n/s)  floor so far 0.04453 at n = 11183   eta ~26.8m
+23:12:51  n =   860,000  (  4461s,     104 n/s)  floor so far 0.04453 at n = 11183   eta ~25.1m
+23:14:27  n =   870,000  (  4557s,     103 n/s)  floor so far 0.04453 at n = 11183   eta ~23.4m
+23:16:05  n =   880,000  (  4655s,     102 n/s)  floor so far 0.04453 at n = 11183   eta ~21.7m
+23:17:43  n =   890,000  (  4753s,     102 n/s)  floor so far 0.04453 at n = 11183   eta ~19.9m
+23:19:26  n =   900,000  (  4856s,      98 n/s)  floor so far 0.04453 at n = 11183   eta ~18.2m
+23:19:26  --- through 900,000: block floor 0.05051 at n = 845375  [at or below the asymptotic bound: a real minimum]; global floor 0.04453 at n = 11183 (mod 24 = 23); 0 below 0.02; untruncated floor over classes (23, 11) 0.06767 at n = 801239 (1 in 4 of them, 1627 scanned) ---
+23:21:06  n =   910,000  (  4956s,      99 n/s)  floor so far 0.04453 at n = 11183   eta ~16.5m
+23:22:48  n =   920,000  (  5058s,      98 n/s)  floor so far 0.04453 at n = 11183   eta ~14.7m
+23:24:33  n =   930,000  (  5163s,      96 n/s)  floor so far 0.04453 at n = 11183   eta ~12.9m
+23:26:17  n =   940,000  (  5267s,      96 n/s)  floor so far 0.04453 at n = 11183   eta ~11.1m
+23:28:03  n =   950,000  (  5373s,      94 n/s)  floor so far 0.04453 at n = 11183   eta ~9.3m
+23:29:48  n =   960,000  (  5478s,      95 n/s)  floor so far 0.04453 at n = 11183   eta ~7.5m
+23:31:35  n =   970,000  (  5585s,      93 n/s)  floor so far 0.04453 at n = 11183   eta ~5.6m
+23:33:25  n =   980,000  (  5695s,      91 n/s)  floor so far 0.04453 at n = 11183   eta ~3.8m
+23:35:15  n =   990,000  (  5805s,      91 n/s)  floor so far 0.04453 at n = 11183   eta ~1.9m
+23:37:04  n = 1,000,000  (  5914s,      91 n/s)  floor so far 0.04453 at n = 11183   eta ~0.0m
+23:37:04  --- through 1,000,000: block floor 0.05051 at n = 925031  [at or below the asymptotic bound: a real minimum]; global floor 0.04453 at n = 11183 (mod 24 = 23); 0 below 0.02; untruncated floor over classes (23, 11) 0.06647 at n = 935723 (1 in 4 of them, 1615 scanned) ---
+23:37:04  scan complete in 5914s
+
+ n mod 24       cap  min delta/cap     at n   # below 0.02
+        0   0.25000          0.471       72              0
+        1   0.17157          0.570     1921              0
+        2   0.13398          0.588     2114              0
+        3   0.12500          0.522     2139              0
+        4   0.25000          0.598     1300              0
+        5   0.10102          0.568     2117              0
+        6   0.25000          0.483     1038              0
+        7   0.08579          0.604     1159              0
+        8   0.13398          0.515      368              0
+        9   0.17157          0.450     1809              0
+       10   0.25000          0.442      754              0
+       11   0.06699          0.719     6275              0
+       12   0.25000          0.448     1068              0
+       13   0.17157          0.509      253              0
+       14   0.13398          0.632     1742              0
+       15   0.08579          0.731     2223              0
+       16   0.25000          0.327      688              0
+       17   0.10102          0.453     1817              0
+       18   0.25000          0.435      138              0
+       19   0.12500          0.544     4267              0
+       20   0.13398          0.653      308              0
+       21   0.17157          0.520      357              0
+       22   0.25000          0.499       70              0
+       23   0.05051          0.882    11183              0
+
+GLOBAL FLOOR over composite non-prime-power n <= 1,000,000: delta >= 0.04453, attained at n = 11183 (n mod 24 = 23)
+values with delta < 0.02: 0  -- the section 5 conjecture holds throughout this range
+
+values below the asymptotic bound 0.050510 = 5/2 - sqrt(6): 16
+  NOT counterexamples.  This script searches four families over a window,
+  so it computes a LOWER BOUND on delta(n).  It is a worklist: computing
+  B(n) at these n would tighten the global floor of section 5 of
+  arithmetic-of-density.md.  Written to ladder_weak.txt.
+  These are LOWER bounds, so an entry below a threshold does NOT mean
+  delta(n) is below it -- B(n) may be larger.  Read the list as the set
+  of n worth computing B(n) at, ranked by how little the four families
+  find there.
+  first 15: 935(0.04898), 1739(0.04883), 1817(0.04574), 2183(0.04804), 2639(0.05043), 2759(0.04621), 3071(0.04977), 3503(0.04715), 5063(0.04659), 6275(0.04815), 7031(0.04766), 8903(0.05029), 9911(0.04582), 10595(0.04907), 11183(0.04453)
