@@ -432,6 +432,20 @@ blk_min = (1e9, None)              # minimum within the current SUMMARY block
 last = t0
 print(f"{stamp()}  scanning to {N:,}; checkpoint every {TICK:,}, "
       f"summary every {SUMMARY:,}")
+# Untruncated trend measurement.  Sampling UNIFORMLY is worthless here: the
+# quantity wanted is a MINIMUM, and the n attaining it are rare and structured
+# (the doubly-obstructed residues with no multiplicative escape), so a uniform
+# sample reports a value two to three times too high.  Sample inside the two
+# lowest-cap residue classes instead -- 23 and 11 mod 24 -- which is where every
+# observed minimum has sat.  One in TREND_EVERY members of those classes is
+# rescanned without stop_at, so the added cost is about 2/(24*TREND_EVERY) of a
+# full untruncated run.  Set TREND_EVERY = 0 to disable.
+TREND_EVERY = 4
+TREND_CLASSES = (23, 11)
+blk_true = (9.9, None)
+gtrue = (9.9, None)
+trend_seen = 0
+
 for n in range(6, N + 1):
     if not ispp[n]:
         a = n % MOD
@@ -441,6 +455,21 @@ for n in range(6, N + 1):
         # class 11 is affected -- every other class has 0.9*cap > ASYMPTOTIC
         # already -- so the extra work is negligible.
         d = achieved(n, stop_at=max(0.9 * CAP[a], ASYMPTOTIC))
+        # The reported d is CLAMPED: once it clears stop_at the scan returns
+        # early, so every n above the asymptotic bound reports "just above" it
+        # rather than its family maximum.  That is safe for every claim here
+        # (all are lower bounds) but it makes the per-block floor line unable to
+        # show any trend once the true floor rises past ASYMPTOTIC -- the line
+        # simply pins at that value.  To keep the trend visible at negligible
+        # cost, recompute UNTRUNCATED on a sparse sample and report that
+        # separately.  TREND_EVERY = 0 disables it.
+        if TREND_EVERY and a in TREND_CLASSES and (n // MOD) % TREND_EVERY == 0:
+            du = achieved(n)
+            if du < blk_true[0]:
+                blk_true = (du, n)
+            if du < gtrue[0]:
+                gtrue = (du, n)
+            trend_seen += 1
         ratio = d / CAP[a]
         if ratio < per[a][0]:
             per[a][0], per[a][1] = ratio, n
@@ -468,9 +497,21 @@ for n in range(6, N + 1):
         last = now
     if n % SUMMARY == 0:
         b = f"{blk_min[0]:.5f} at n = {blk_min[1]}" if blk_min[1] else "n/a"
+        # Flag the clamp explicitly.  A block floor sitting at ASYMPTOTIC is
+        # almost always the stop_at truncation rather than a real minimum, and
+        # reading it as a trend is the mistake this label exists to prevent.
+        if blk_min[1] and blk_min[0] < ASYMPTOTIC * 1.0001:
+            b += "  [at or below the asymptotic bound: a real minimum]"
+        else:
+            b = f">= {ASYMPTOTIC:.5f}  [CLAMPED by stop_at, not a minimum]"
+        tr = (f"; untruncated floor over classes {TREND_CLASSES} "
+              f"{blk_true[0]:.5f} at n = {blk_true[1]}"
+              f" (1 in {TREND_EVERY} of them, {trend_seen} scanned)") if blk_true[1] else ""
         print(f"{stamp()}  --- through {n:,}: block floor {b}; "
               f"global floor {gmin[0]:.5f} at n = {gmin[1]} "
-              f"(mod 24 = {gmin[1] % MOD}); {len(below)} below {FLOOR} ---")
+              f"(mod 24 = {gmin[1] % MOD}); {len(below)} below {FLOOR}{tr} ---")
+        blk_true = (9.9, None)
+        trend_seen = 0
         blk_min = (1e9, None)
 print(f"{stamp()}  scan complete in {time.time()-t0:.0f}s")
 print()
