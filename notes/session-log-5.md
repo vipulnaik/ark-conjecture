@@ -55,7 +55,7 @@ Three computations pin it down, in `a18_rq_verify.py`. Exhaustively at (F,q) = (
 
 ---
 
-## 2½. A19 implemented, and two things the implementation settled
+## 2.1 A19 implemented, and two things the implementation settled
 
 The corrected predicate of §2 was implemented as `k3_galois.py` rather than left as prose, on the principle that a shape-space predicate is cheapest to fix before code depends on it. Implementing it surfaced two distinctions the prose had left implicit and one bound that changes how urgent the item was.
 
@@ -65,7 +65,7 @@ The corrected predicate of §2 was implemented as `k3_galois.py` rather than lef
 
 **The first affected n is 2³⁵, which downgrades the urgency while confirming the substance.** The block sizes the correction adds are the a coprime to 6 that are not prime powers — {35, 55, 65, …}, all with lpf(a) = 5, hence all low-gain. But the shape is n = c = 2^a, so the block size *determines* n and the error is not diluted across many values: at n = 2³⁵ ≈ 3.4 × 10¹⁰ the naive predicate credits gain 1 against a true gain of 5, making the bound a factor of 5 too small and hence not an upper bound. So the error was real, was of the dangerous kind (§5.8: under-crediting at k = 3 breaks the bound rather than loosening it), and was never within reach of any computation. Worth recording as a calibration point: **"dangerous direction" and "reachable" are independent axes**, and this item was the first while not being the second.
 
-## 2¾. T5: Lemma C falsified, replaced by a coupling theorem
+## 2.2 T5: Lemma C falsified, replaced by a coupling theorem
 
 **What Lemma C used to say.** *A twist of order d in the cyclic layer of a p-characteristic part shares no prime with any outside block of prime size r: gcd(d, r) = 1.* Its status line read "proved when the block has prime size, open at a > 1", the open case being that a top element may act through the Galois part of ΓL(1, p^a), whose induced power map has q-power order just as the foreign multiplier does — so the conjugation argument does not close.
 
@@ -90,7 +90,7 @@ The consequence for the certificates is the point of the item. Condition (4)'s f
 
 **Two block-floor rows.** §5's seven-block table carried [6·10⁵, 7·10⁵) = 0.04729 at n = 602843 and [7·10⁵, 8·10⁵) = 0.04732 at n = 714347, from an earlier ladder run; §3.7's list and the v4 log both give **0.04732 at 684023** and **0.04780 at 792839**. Corrected to match. Worth noting as a class of defect: a disagreement between two prose tables *inside one document*, which no cross-document check would catch — and a reason to confirm the block-floor values are registered quantities in `check_doc_figures.py` PASS 1.
 
-**Deferred by decision, not oversight, and since resolved.** Three findings were raised and deliberately left for the post-R0/R1 consistency sweep, on the grounds that they were artefacts of the table rebuild being mid-flight. All three are answered in §5¾ above; they are recorded here as they stood:
+**Deferred by decision, not oversight, and since resolved.** Three findings were raised and deliberately left for the post-R0/R1 consistency sweep, on the grounds that they were artefacts of the table rebuild being mid-flight. All three are answered in §5.2 below; they are recorded here as they stood:
 
 - §2.1 attributes the global minimum to n = 2291 with witness `2x761 + 1x769*`, whose point (that the minimum is a mixed fused winner) is unsupported: 0.026117 belongs to n = 3239, whose v2 witness has three classes and no fusion. Under v4 the 2291 row rises to 0.0668 and the example dissolves entirely.
 - §1.4's "below 10⁶ the branch-and-bound establishes δ ≥ 0.026117" now turns on B(8927); the defensible unconditional figure from the v4 ladder alone is **0.02516**. In the other direction, the v4 log already proves the 1/50 conjecture below 10⁶ unconditionally, which is a cleaner claim than the current text makes.
@@ -131,7 +131,7 @@ Recorded because a check that found nothing is evidence, and re-running it later
 
 ---
 
-## 5½. The hypothesis taxonomy, and a k = 3 correction it turned up
+## 5.1 The hypothesis taxonomy, and a k = 3 correction it turned up
 
 `orbital-evasiveness-notes.md` §1 now carries a **"Which hypothesis is doing which work"** table: rows vary the group class (Oliver → solvable) and the arity (k = 2 → k = 3) one at a time, columns report what happens to the shifted-prime condition, the shape space, fusion, balance and the supply of full-density blocks. The primary documents each declare which row they are (`enumeration-proof.md` and `aod` are row 1, `solvable-relaxation.md` row 2, `three-uniform-note.md` row 3; row 4 is unworked and says so).
 
@@ -143,7 +143,7 @@ The finiteness is sharp rather than generous, which is the part worth keeping: |
 
 **Two corrections, not one, and the second is the more embarrassing.** The first was introduced *by* a correct fix — renaming 2-transitivity to 2-homogeneity at k = 2 — applied one level up without rechecking the classification there. The second is that the replacement box first written asserted the list was {8, 32}, when `three-uniform-note.md` §3.1 **already quoted Kantor's theorem correctly**, including A₄ at n = 4 and AGL(1,5) at n = 5, and its own S1 row already said {5, 8, 32}. A new claim was written into a document that already contained the right one, and the two sat three sections apart contradicting each other. Three lessons now, the last two cheap. A correction propagated by analogy inherits the confidence of the case it was verified on — the k = 2 rename was verified, the k = 3 rename was not, and it was wrong — so a renaming sweep is a new claim per site, not one claim applied many times. And **before writing a classification into a document, grep that document for the classification**: the correct statement was already there, and the contradiction would have surfaced in one command. Search-before-assert costs nothing and would have caught this at the point of introduction rather than two turns later. Third, from Lemma C: **read each lemma's statement against its own proof's conclusion**, independently of whether the proof is believed. Lemma C's a = 1 proof was sound and its statement was stronger than what the proof delivered, and no amount of scrutiny directed at the proof would have found that — only a comparison of the two.
 
-## 5¾. The R0 rebuild landing, and what it settled
+## 5.2 The R0 rebuild landing, and what it settled
 
 The table now holds **2,186 rows, contiguous over every non-prime-power n ≤ 2600**. R1 was rerun in full against it and the documents recounted. Three of the session's deferred findings are answered by the rebuild itself, and several document claims moved substantively rather than numerically.
 
@@ -174,7 +174,7 @@ Fixed by comparing in exact rational arithmetic against the stored string's own 
 
 ---
 
-## 5⅞. T5's coding residue, and a threshold that is not vacuous
+## 5.3 T5's coding residue, and a threshold that is not vacuous
 
 Revisiting T5 after the R1 runs turned up two things the item's own write-up had wrong, both in the direction of overstating how routine the remaining work is.
 
@@ -196,7 +196,7 @@ Which has a practical consequence worth recording: **a silent over-strip produce
 
 ---
 
-## 5⅚. The mod-24 ceilings were not the joint optimum
+## 5.4 The mod-24 ceilings were not the joint optimum
 
 Working out why `ladder_verify.py`'s missing even F mattered led to a substantive correction in `arithmetic-of-density.md` §3.3.5. **The derivation, measurements and diagnosis are in `fusion-count-ceilings.md`, kept as a separate note**; this entry records only what happened and why the documents changed.
 
@@ -218,7 +218,7 @@ Working out why `ladder_verify.py`'s missing even F mattered led to a substantiv
 
 ---
 
-## 5⅞. The 10⁶ ladder run, and the conjecture sharpened to 1/25
+## 5.5 The 10⁶ ladder run, and the conjecture sharpened to 1/25
 
 The full scan completed in 12,458s. Results and what they licensed:
 
@@ -231,6 +231,20 @@ The full scan completed in 12,458s. Results and what they licensed:
 **Confirmations of the F = 4 work.** The worklist splits **23,475 : 23,201** between n ≡ 11 and n ≡ 23 (mod 24), a 50.2/49.7 dead heat across 46,722 entries — about as clean a confirmation of the merged §3.3.5 row as available. And the per-residue min-ratio column puts 23 at 0.620 of its cap and 11 at 0.671, against a spread from 0.327 (class 16) to 0.671 across all twenty-four: the two lowest-cap classes are mid-range in *relative* shortfall, so the low absolute floor at 23 comes from its cap being lowest, not from a family the ladder misses there.
 
 *Two methodological notes on the untruncated series.* It tracks the clamped block floor closely, which confirms the clamp is not hiding a lower region — what it was added for. It is **not** evidence that no family is missing, since both series run the same four families; the evidence for that is the per-residue ratio column above, which compares like with like. And the exact coincidence at the 800k block is **not** evidence of anything: the series samples one in four of classes 11 and 23, so it agrees with the block floor precisely when the block's minimising n happens to be sampled, and one such coincidence in ten blocks is slightly below what that rate alone predicts. The informative fact in that column is that all ten block minima lie in class 11 or 23 — eight at 23, two at 11 — which is read off the block floors alone.
+
+---
+
+## 5.6 The η column derived rather than sampled
+
+The ceiling table's efficiencies were measured over a sample of n; they are now derived from congruences, and the two agree at all thirty-six (class, F) cells. `aod` §3.3.4a carries the derivation, `eta_derive.py` checks both sides, and T6 narrows to the supply hypothesis plus three scope limits.
+
+**The derivation.** With c ≡ 3 (mod 4), F·c is determined mod 8 — 6, 4, 2 at F = 2, 4, 6 — so r is too, and the odd twist gives η₂ = 2^(1−v) with v = v₂(r − 1) read off r mod 8. Independently, a forced 3 | r − 1 cuts η by 3, and whether it is forced depends on F mod 3: for F ≢ 0 the choice of c mod 3 steers r off 1 (mod 3) unless n ≡ 2 (mod 3), while F = 6 has r ≡ n (mod 3) forced, cutting at n ≡ 1 and making the shape non-existent at n ≡ 0.
+
+**The first attempt failed at three cells, and the failure was informative.** At r ≡ 1 (mod 8) the mod-8 rule gives only v ≥ 3; the exact value needs mod 16, where 4c ≡ 12 is again forced, so r ≡ n − 12 (mod 16) — and **n mod 16 is not determined by n mod 24**. Classes 5, 13 and 21 split at F = 4. That looked at first like a threat to the mod-24 keying of the whole table, and is not: all three are cells where F = 4 is not the optimum, and the four classes where it is — 7, 11, 15, 23 — have r ≡ 3 or 7 (mod 8), hence v = 1 exactly, pinned at the smallest value with no deeper modulus able to move it. **The keying holds because the binding cells are precisely the ones where the 2-adic valuation bottoms out**, which is a better reason than the table previously had.
+
+**What the derivation buys, stated narrowly.** It removes the sampling: the η values are congruence consequences, checkable by hand, and no longer rest on 30–60 sampled n per class. It does *not* touch the supply hypothesis — that primes r = 2^v·q^e + 1 occur near the balance point in the needed density is Bateman–Horn, as everywhere in §3. The measurement asked whether such an r turns up in practice; the derivation asks whether one is congruence-obstructed. The second was the part in doubt, and it is now closed.
+
+*Method note.* The measurement and the derivation are independent computations of the same thirty-six numbers, so their agreement is the T1 item-3 check applied deliberately rather than stumbled into — and it caught my transcription error in the measured table on the way, three cells having been mistyped from an earlier run.
 
 ---
 
