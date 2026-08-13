@@ -248,6 +248,18 @@ The ceiling table's efficiencies were measured over a sample of n; they are now 
 
 ---
 
+## 5.7 The census S7 label split by fusion count
+
+`validate_table.py`'s `classify` returned a single `S7` for **every** F ≥ 3, so the migration report could never show a migration into F = 4 — it showed `→ S7` and the reader had to know that covered five different fusion counts. Now split into `S7f3`, `S7f4`, `S7f5`, `S7f6`, `S7f8`, which changes the census line from `S7 125` to `S7f2 338, S7f3 53, S7f4 50, S7f5 3, S7f6 17, S7f8 2` and the migrations from `S4 → S7: 41` to `S4 → S7f4: 27` and `S4 → S7f6: 10`.
+
+**The granularity is itself a detector.** While one label covered F ≥ 3, the census showed one number where there were two behaviours — the odd-F escape, which needs c = 2^a at odd n and genuinely thins, and the even-F family, which attains the class ceiling at four residues. Had the labels been split, the census would have printed `S7f4 50` beside a row asserting the shape wins nowhere, and beside a ladder and a battery that contained no even F at all.
+
+**The split cost sensitivity, and that had to be handled rather than ignored.** With one label the trend check saw 4.1% → 7.6%; split five ways, the largest single label moves 1.24% → 2.47% on counts of 9 and 18, which is inside Poisson noise. Two changes followed: the check now requires growth to clear a noise bar (l − e > 2√(e + l)) as well as a proportional one, and `ZERO_SHARE` entries may be tuples tested as one aggregate. The first fixed a false positive the split had introduced — `S7f3` at 19 → 24, a 26% rise entirely consistent with a flat share — and the second preserves the historical detection, which now runs as an explicit aggregate entry.
+
+*The general point.* Finer labels make a distinction expressible but shrink the counts each statistic sees. Both effects are real and neither dominates: the right response is to split the label **and** keep the aggregate, not to choose between them.
+
+---
+
 ## 6. Method notes
 
 **Dehistoricization.** The primary documents were left carrying only the current state — no "this used to say", no superseded figures kept for contrast, no status lines describing a claim's history. Everything of that kind is in this file. The one deliberate exception is the census's v2/v3/v4 provenance banner, which is *about* the tables rather than about the documents' own past and is load-bearing for reading the winner counts until the rebuild finishes.

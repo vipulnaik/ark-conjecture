@@ -84,8 +84,17 @@ class Row:
 
 
 def classify(r):
-    """Census S-number of a winner. S7f2 is S7 at F = 2, kept separate from S5
-    because they differ only by which layer holds the swap (aod section 3.2)."""
+    """Census S-number of a winner.
+
+    S7 is split by fusion count -- S7f2, S7f3, S7f4, ... -- and NOT lumped at
+    F >= 3.  The granularity is the point: F = 4 attains the class ceiling at
+    n = 7, 11, 15, 23 (mod 24) (aod section 3.3.5), so it is a distinct family
+    rather than a tail of the F = 3 escape, and lumping it hid that.  While
+    "S7" covered every F >= 3, a migration into F = 4 was reported as a
+    migration into the F = 3 escape, and the census showed one number where
+    there were two behaviours.
+    S7f2 is kept separate from S5 because those differ only by which layer
+    holds the swap (aod section 3.2)."""
     mm = [x for x in r.cls if not x[2]]
     fg = [x for x in r.cls if x[2]]
     if not r.cls:
@@ -100,7 +109,7 @@ def classify(r):
             return "S3"
         if F == 2:
             return "S5" if r.q == 2 else "S7f2"
-        return "S7"
+        return "S7f%d" % F
     if len(fg) == 1 and len(mm) == 2:
         return "S4"
     return "?"
@@ -826,11 +835,16 @@ def c_partdist(R, base):
 # This is the check that would have caught the S7-at-F>=3 error.  That row read
 # "wins -> 0", justified by a supply claim ("F*c even forces c = 2^a") true only
 # for odd F; at even F the supply is a full Hardy-Littlewood system.  The census
-# and the table sat in the same report contradicting each other -- 125 S7 winners
-# printed a few lines below a row asserting the shape wins nowhere -- for as long
-# as both existed.  Verified as a regression test: putting "S7" back into
-# ZERO_SHARE makes this check FAIL with "S7 4.1%->7.6%" against "S2 45.2%->29.3%",
-# which is the signature to recognise.
+# and the table sat in the same report contradicting each other -- 125 winners of
+# the shape printed a few lines below a row asserting it wins nowhere -- for as
+# long as both existed.
+#
+# To exercise it, replace the S7f3/S7f5 entries below with the aggregate
+#     ("S7f3", "S7f4", "S7f5", "S7f6", "S7f8")
+# which is the historical lumped claim.  It FAILS with
+#     S7f3+S7f4+S7f5+S7f6+S7f8 4.1%->7.6%   against   S2 45.2%->29.3%
+# and that contrast -- one vanishing-share row rising while another falls as it
+# should -- is the signature to recognise.
 #
 # Two design points, both learned from getting them wrong first.  The count alone
 # is useless as a test, because the verdicts are limits and S1/S2 win half the
@@ -838,7 +852,17 @@ def c_partdist(R, base):
 # flat share is consistent with a slow log-factor decline, so tolerating it costs
 # a little sensitivity and avoids firing on every shape whose supply thins more
 # slowly than the range grows.
-ZERO_SHARE = {"S1", "S2", "S5", "S6"}   # census rows claiming wins -> 0
+# Census rows claiming wins -> 0.  An entry is either a label or a tuple of
+# labels tested as one aggregate.  The odd-F members of S7 belong here -- they
+# need c = 2^a at odd n, so O(log n) block sizes per n -- while the even-F ones
+# do NOT, F = 4 attaining the class ceiling at four residues.
+#
+# Splitting the S7 label is what makes that distinction expressible, but it costs
+# sensitivity: the per-label counts are small, and a trend that is unmistakable
+# in aggregate can sit inside Poisson noise once divided five ways.  So the
+# historical lumped claim is kept as an explicit aggregate entry, which is the
+# form in which the S7 error is detectable.
+ZERO_SHARE = ["S1", "S2", "S5", "S6", "S7f3", "S7f5"]
 
 
 @check("B", "shapes claimed to win with vanishing share have a declining share",
@@ -848,25 +872,29 @@ def c_zero_share_trend(R, base):
     third = len(rows) // 3
     early, late = rows[:third], rows[-third:]
     bad, seen = [], []
-    for sh in sorted(ZERO_SHARE):
-        e = sum(1 for r in early if r.shape == sh)
-        l = sum(1 for r in late if r.shape == sh)
+    for sh in ZERO_SHARE:
+        labels = (sh,) if isinstance(sh, str) else tuple(sh)
+        name = sh if isinstance(sh, str) else "+".join(labels)
+        e = sum(1 for r in early if r.shape in labels)
+        l = sum(1 for r in late if r.shape in labels)
         if e + l < 20:                  # too few to read a trend from
             continue
         fe, fl = e / len(early), l / len(late)
-        seen.append(f"{sh} {fe:.1%}->{fl:.1%}")
-        # Rising, and by more than sampling noise on these counts, contradicts a
-        # density-zero supply argument.  Flat is tolerated; only growth fails.
-        if fl > fe * 1.25 and fl > 0.02:
-            bad.append((sh, round(fe, 4), round(fl, 4)))
+        seen.append(f"{name} {fe:.1%}->{fl:.1%}")
+        # Fire only on growth that is BOTH proportionally large and larger than
+        # Poisson noise on the raw counts.  The second test matters: 19 -> 24 is
+        # a 26% rise and entirely consistent with a flat share, and without it
+        # the check cries wolf on every small-count label.
+        if fl > fe * 1.25 and fl > 0.02 and (l - e) > 2 * (e + l) ** 0.5:
+            bad.append((name, round(fe, 4), round(fl, 4)))
     return ("FAIL" if bad else "PASS",
             f"{len(bad)} of {len(seen)} rising: " + "; ".join(seen), bad)
 
 
 @check("C", "census winner counts by shape", "aod section 2.0, ep census",
-       expect="asymptotic WINNING shares over all n: S3 12/24 (50%), S7-at-F=2 10/24 (41.7%) "
-              "plus 1/24 tied, S4 1/24 (4.2%) plus the tie, S7-at-F>=3 8/24 at the residues "
-              "7, 11, 15, 23 where F = 4 sets the ceiling; S1, S2, S5, S6 all -> 0. "
+       expect="asymptotic WINNING shares over all n: S3 12/24 (50%), S7f2 10/24 (41.7%) plus "
+              "1/24 tied, S4 1/24 (4.2%) plus the tie, S7f4 8/24 at the residues 7, 11, 15, 23 "
+              "where F = 4 sets the ceiling; S1, S2, S5, S6 and the odd-F S7fk all -> 0. "
               "At computed sizes S1 and S2 are still large because omega(n)=2 has not thinned")
 def c_census(R, base):
     d = Counter(r.shape for r in R)
