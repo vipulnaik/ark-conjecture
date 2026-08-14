@@ -2,6 +2,8 @@
 
 *This is row 3 of the hypothesis table in `orbital-evasiveness-notes.md` §1: the arity axis, which removes the full-density block, as against the group axis of `solvable-relaxation.md`, which removes the shifted-prime condition.*
 
+> **One k = 2 result this note has not absorbed.** At k = 2 the class ceiling at four of the twelve odd residues is attained by **S7 at F = 4**, a two-part shape (`aod` §3.3.5) — so the three-part S4 / S5 / S7-at-F=2 competition that §5.6 transfers is, at k = 2, a competition for a runner-up at those residues. The k = 3 analogue of the F = 4 shape has not been derived: §5.7's ‡ records which table entries are affected, and the S7 census row records that the F-split is unexamined. Nothing below is wrong on that account, but §5.6's conclusions are about the internal order of the three-part shapes and should not be read as identifying the k = 3 winner.
+
 *Companion to `enumeration-proof.md` and `arithmetic-of-density.md`. Works the Oliver-group machinery at k = 3 — properties of 3-uniform hypergraphs on n vertices — both for its own sake and as a fresh-eyes pass over the k = 2 programme in a setting where the answers are not already known. Nothing here is load-bearing for k = 2; where it contradicts a k = 2 document, the k = 2 document is right about k = 2 and this one is describing a different problem.*
 
 **Status, section by section, since it varies sharply.**
@@ -294,7 +296,7 @@ So the optimisation is no longer a balance between competing term types. It is: 
 | **S4** | two matching + outside, n = 2c + r\* | exists | the **foreign** block, orb₃(r, t, 1) | measured **0.0020** at n = 35 (q = 3, t = 3) | Same as k = 2 in that the foreign block is the weak point; the margin is wider |
 | **S5** | top-layer-fused matching + outside | exists | as S4 | — | The S5/S7 distinction survives unchanged: which layer holds the swap, hence which twist is available |
 | **S6** | two outside blocks | exists | the weaker of orb₃(r_i, t_i, 1) | measured **0.0027** at n = 36 | **Changed from k = 2**, where it is capped by 1/(√m₁+√m₂)² and wins nowhere. At k = 3 it is just "two foreign blocks", scoring like S3 with both twists constrained |
-| **S7** | middle-layer-fused matching + outside | exists | orb₃(r, t, 1) when the foreign twist is small | measured 0.0013 at n = 33 | Same shape; a small foreign twist is punished harder, orb₃ being linear in d with no C(c,2) cap to rescue it |
+| **S7** | middle-layer-fused matching + outside, **any F** | exists | orb₃(r, t, 1) when the foreign twist is small | measured 0.0013 at n = 33 | Same shape; a small foreign twist is punished harder, orb₃ being linear in d with no C(c,2) cap to rescue it. **The F-split is unexamined here.** At k = 2 it is decisive — F = 2 carries 8/24 and F = 4 carries 4/24, the latter setting the class ceiling at 7, 11, 15, 23 mod 24 — and whether the same split survives at k = 3 has not been derived; see §5.7's ‡ |
 | **S8** | bottom-layer-fused matching | **killed, D1** — argument survives | — | — | D1's inequality strengthens: F·C(c,3) < C(Fc,3) needs only F < F³, a wider margin than k = 2's F < F² |
 | **S9** | fused outside block, any layer | **exists; dominated at k = 2** (Lemma D2 caps it at n^{3/2}/2) — the k = 3 status is unchecked | — | — | D2's k = 2 domination rests on a pairs-specific same-position class; the k = 3 analogue should dominate more easily by §4.1's degree count, but it has not been derived |
 | **S10** | outside block with r = q, any F | **killed** — argument survives | — | — | The twist-collapse of D2q is about layers, not pairs, so it carries to k = 3 verbatim |
@@ -438,6 +440,8 @@ Reading §5.3 off, the engine consumes exactly two arithmetic inputs:
 
 *The Bateman–Horn systems are unchanged — same polynomials, same singular series, so `aod` §§3.4–3.5 transfer with nothing to re-derive. What changes is the congruence law governing a matching block's twist, and with it the competition between the three-part shapes. This subsection covers only that.*
 
+> **What that competition is worth at k = 3 is not settled here, and at k = 2 it is worth less than it looks.** At k = 2 the S4 / S5 / S7 comparison determines which shape realises the *three-part family*, and the family attains the class ceiling at only eight of the twelve odd residues; at the other four the ceiling belongs to the two-part **S7 at F = 4**, so the comparison there decides a runner-up (`three-part-family-split.md`). Whether the same holds at k = 3 depends on the F = 4 analogue, which §5.7's ‡ records as not done. So read §5.6.4 as settling the internal order of the three-part shapes, not as identifying the k = 3 winner.
+
 #### 5.6.1 The block's own class: c mod 3 now leads
 
 At k = 2 an odd block at full twist always reaches its cap: orb(c, c−1) = C(c,2) exactly, because c − 1 is even and the halving is exactly compensated. **At k = 3 there is no such identity**, because κ₃ takes three values rather than two:
@@ -473,6 +477,8 @@ Putting the two together for c coprime to 6:
 > **The contrast with k = 2 is a narrowing.** There the good class is **c ≡ 3 (mod 4)** — every one of c ≡ 3, 7, 11 (mod 12) is equally good, since only v matters. At k = 3 the class **c ≡ 11 (mod 12)** is strictly better than c ≡ 7, because the mod-3 penalty separates them. So the governing modulus rises from 4 to 12, and mod 24 enters for the same reason it does at k = 2 — to pin v.
 
 #### 5.6.4 What this does to S4 versus S5 versus S7
+
+*Internal order only — see the note at the head of §5.6 for what that does and does not settle.*
 
 The three-part shapes differ, as at k = 2, in **where the block swap lives** — and therefore in which of two costs they pay.
 

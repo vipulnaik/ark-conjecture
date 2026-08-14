@@ -312,6 +312,20 @@ The version that failed had the length check but ran it *after* the write had al
 
 ---
 
+## 5.10 The two companion notes checked against the F = 4 result
+
+**`solvable-relaxation.md` had one false claim and three stale constants.** The claim: *"three-part shapes are the generic odd-n winner"* in the Oliver world, offered as the sharpest structural contrast with the relaxation. They are not — S4's asymptotic share is zero and the odd-n winner is two-part throughout. The contrast survives in weakened and more interesting form, now stated: three or more parts lose *here* on the balance, the value falling like 1/k² with nothing to buy back, while *there* a third part is a way to keep η up when the congruences cut it, and is beaten by a two-part shape with a larger fusion count that keeps η up more cheaply. The relaxation removes the reason a third part was ever attractive rather than removing a winning family.
+
+The constants: the chain's cost is **2.39**, not 3.4; the conjectured floor is **1/25**, not 1/50; and the closing comparison now reads 3 − 2√2 ≈ 0.1716 for the relaxation, 7 − 4√3 ≈ 0.0718 for Oliver, 1/25 = 0.04 conjectured — a factor of 2.39 then a further 1.80, which are the same order and make the original point better than the old numbers did.
+
+**`three-uniform-note.md` needed scoping rather than correction.** Its §5.6 transfers the three-part S4 / S5 / S7-at-F=2 competition to k = 3, and nothing in that transfer is wrong. What it had not absorbed is that at k = 2 the same competition decides a *runner-up* at four of the twelve odd residues, the ceiling there belonging to the two-part F = 4 shape. Three places now say so: a note at the head of the document, a note at the head of §5.6, and the S7 census row, which records that the F-split is unexamined at k = 3. §5.6.4 is marked "internal order only".
+
+**One item was lost and restored in the process.** Rewriting T5a for its new location during the §3.9 cut, I replaced a span running from T5a's heading to the start of §2b — which silently swallowed **T6** entirely. It was noticed only by grepping for the item after the section reorder, and restored from the working copy. Same class as the two truncation incidents: a replacement whose *extent* was wrong rather than its content, and one that leaves no trace in the output because a missing section looks exactly like a section that was never there. The guard is the same one — bound a replacement by both endpoints and assert the length change is what you expect — and a length assertion would have caught this, the file having shrunk by 3.9 KB where a rewrite of one item should have shrunk it by a few hundred bytes.
+
+**And a new open item, T7.** The k = 3 analogue of the F = 4 shape has not been derived. The natural first step is the k = 3 cap at general F: the k = 2 formula came from balancing two intra terms, and the k = 3 analogue β₃ = 1/(√(2F) + √(2/η))² is already verified at F ∈ {1, 2}, so extending it to F = 4 and asking whether the parity constraint and the mod-8 mechanism survive is a page of work of the same kind as `aod` §3.3.4a. It would either transfer the result or show why the arity breaks it.
+
+---
+
 ## 6. Method notes
 
 **Dehistoricization.** The primary documents were left carrying only the current state — no "this used to say", no superseded figures kept for contrast, no status lines describing a claim's history. Everything of that kind is in this file. The one deliberate exception is the census's v2/v3/v4 provenance banner, which is *about* the tables rather than about the documents' own past and is load-bearing for reading the winner counts until the rebuild finishes.

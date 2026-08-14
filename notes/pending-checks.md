@@ -20,7 +20,8 @@ Ranked, so the sections below have a stated basis. This is not the order the ite
 2. **Exhaustiveness of the GAP stages.** The subdirect-product hole is undischarged. It degrades *evidence* rather than creating an error — a missed group with larger m\* would be a counterexample rather than a silent corruption, and one with smaller m\* changes nothing — but it is the only non-circular check in the framework. **This is the one small-degree item the arithmetic programme depends on**, since Part I's two exhaustive comparisons rest on it. → `small-degree-verification.md` item 5
 3. **Part E's realisability construction.** Attainment's other leg, argued in general and checked at seven configurations from n = 10 to 308 — none of them at the fusion counts that now set four of the class ceilings. Unlike the certificate, which is verified at every row, it has no per-n verification. → **T2** for the argument, **R8** for the run that would close most of it.
 4. **§3.3.5's ceilings.** Both coordinates of the joint optimum are settled without a search — the F side by cap_F(1) = 1/(1 + √F)², the η side by the congruences of §3.3.4a — so what remains is the supply hypothesis shared with the rest of §3, plus a class-11 entry resting on 676 > 675. Nothing computed depends on any of it, these being family guarantees and hence floors for μ; the exposure is to the asymptotic story alone. → **T6**
-5. **The eight necessary conditions of `fb_common.py`.** Both certificates rest on these and nothing else. What matters is their being *necessary* — that is what makes an empty candidate list a proof — and that is a different reading from checking each is true. The file carries a per-condition necessity argument, so what is exposed is the quality of those eight arguments, and in particular condition (4)'s cyclic-layer stripping, which is the load-bearing one and whose necessity is threshold-scoped. The defect class to watch is an enumeration narrower than the shape space it must cover: it removes a real candidate silently and leaves the output looking clean. → **T3**
+5. **The k = 3 analogue of the F = 4 shape.** Not a risk to k = 2 at all — it is an unexplored case in a companion note, listed because the k = 2 result it would transfer is recent and the gap is easy to forget. → **T7**
+6. **The eight necessary conditions of `fb_common.py`.** Both certificates rest on these and nothing else. What matters is their being *necessary* — that is what makes an empty candidate list a proof — and that is a different reading from checking each is true. The file carries a per-condition necessity argument, so what is exposed is the quality of those eight arguments, and in particular condition (4)'s cyclic-layer stripping, which is the load-bearing one and whose necessity is threshold-scoped. The defect class to watch is an enumeration narrower than the shape space it must cover: it removes a real candidate silently and leaves the output looking clean. → **T3**
 
 ---
 
@@ -241,6 +242,19 @@ No n, no density floor, no threshold on the table. At **a = 1** the coupling for
 
 **Tripwire, worth keeping.** `validate_table.py` asserts per row that no winner has a proper prime power c with a foreign prime dividing c − 1 — 0 of 2,202 p-characteristic winner parts, rechecked on every extension. It confirms a proved domination rather than guarding an open lemma, and flags the first n where Corollary C′ would have to be checked directly.
 
+### T6. The residual conditionality in §3.3.5's ceilings
+
+Both coordinates of the joint optimum are settled without a search. The **F side** closes on cap_F(1) = 1/(1 + √F)² together with η ≤ 1, which bounds each F-slice with no arithmetic input and excludes F ≥ 8; the parity constraint at odd n leaves F ∈ {2, 4, 6}, and at residues 7 and 15 the tabulated value *is* cap₄(1), so those rows admit no improvement at all. The **η side** is derived from congruences in §3.3.4a — a 2-adic factor 2^(1−v) with v fixed by r mod 8, and a 3-adic cut by 3 when 3 | r − 1 is forced — and `eta_derive.py` checks that derivation against an independent measurement at all thirty-six (class, F) cells.
+
+**What is left is one hypothesis and three scope limits.**
+
+- **Supply, which is the same hypothesis as everywhere in §3.** The congruences say a suitable r is unobstructed; that primes of the form r = 2^v·q^e + 1 actually occur near the balance point in the density §3.4 needs is Bateman–Horn. Nothing in §3.3.4a improves on that, and it is why the ceilings are family guarantees rather than theorems about δ.
+- **Only F ≤ 6 is derived.** §2.1's bound makes that sufficient for the conclusion, but the congruence bookkeeping itself has been done for F ∈ {2, 4, 6} only.
+- **Mixed three-part shapes** — 4c + 2c′ + r and the like — lie outside both the two-part family and the three-part ladder, and no ceiling here bounds them.
+- **Class 11's entry rests on 676 > 675.** The comparison 7 − 4√3 > (2 − √3)/4 reduces to 26 > 15√3, the narrowest possible integer margin. The derivation removes the way the η there was most likely to be wrong, but the margin is what it is, and anything upstream that moves it flips the class.
+
+*Working, measurements and the diagnosis of what the table said before are in `fusion-count-ceilings.md`.*
+
 ### T5a. Re-derive `three-part-family-split.md` §1.2's competing-rates argument on every revision
 
 *Flagged because this argument is unusually good at producing plausible pictures that are partly wrong; treat any version of it, including the one on file, as provisional.*
@@ -253,6 +267,16 @@ The claim is that the odd-n win shares within the three-part family tend to **1 
 - **Check the tables, not just the prose.** Scoping the note by adding a caveat at its head is not enough: a reader reaches a table before any head-note applies to anything concrete, and two sub-sections needed a second pass for exactly that reason.
 
 **And the reason the whole note now sits outside `arithmetic-of-density.md`:** its conclusions are about runners-up. S4 wins at no residue asymptotically, and where the family does win the answer is congruence-forced with no supply argument needed — so the 1 : 1 : 2 split governs which shape is *second*, at 7 and 15, and third at 23. That is worth having for `aod` §7's disjunction-collapse, which needs the gap to the next shape down, and it is not worth carrying in the main line.
+
+### T7. The k = 3 analogue of the F = 4 shape has not been derived
+
+At k = 2 the class ceiling at four of the twelve odd residues — 7, 11, 15, 23 mod 24 — is attained by **S7 at F = 4**, a two-part shape, and the F-split within S7 is decisive there: F = 2 carries 8/24, F = 4 carries 4/24. `three-uniform-note.md` transfers the *three-part* S4 / S5 / S7-at-F=2 competition to k = 3 and does not transfer this, so three things there are open rather than wrong:
+
+- **The κ_c = 3 column of §5.7's table** at the four affected rows, flagged there with ‡. Its κ_c = 2 entries were recomputed from the verified formulas s\*/n = √(2F)/(√(2F) + √(2/η)) and β₃ = 1/(√(2F) + √(2/η))²; the κ_c = 3 entries need the k = 3 twist analysis redone at F = 4 rather than transcribed.
+- **The S7 census row's F-split**, which the row now records as unexamined.
+- **§5.6.4's conclusions**, which settle the internal order of the three-part shapes and are not an identification of the k = 3 winner.
+
+The natural first step is the k = 3 cap formula at general F — the k = 2 one, cap_F(η) = η/(1 + √(Fη))², came out of balancing two intra terms, and the k = 3 analogue β₃ = 1/(√(2F) + √(2/η))² is already verified at F ∈ {1, 2}. Extending it to F = 4 and checking whether the parity constraint and the mod-8 mechanism survive at k = 3 is a page of work of the same kind as `aod` §3.3.4a, and would either transfer the result or show why the arity breaks it.
 
 ## §2b. Self-contained items
 
