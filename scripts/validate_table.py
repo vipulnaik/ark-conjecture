@@ -903,7 +903,7 @@ def c_census(R, base):
     return ("INFO", ", ".join(f"{k} {v} ({v/tot:.1%})" for k, v in sorted(d.items())), [])
 
 
-@check("C", "odd-n shares among the three readings of n = 2c + r", "aod section 3.9.1",
+@check("C", "odd-n shares among the three readings of n = 2c + r", "three-part-family-split.md",
        expect="over odd n the limit is S7-at-F=2 83.3%, S4 8.3%, tie 8.3%; S5 -> 0. Note the "
               "table records ONE witness per n, so ties are invisible here and are counted "
               "under whichever reading was recorded -- see rung_split.py for the tie-aware "

@@ -279,7 +279,36 @@ T5a's standing instruction is to re-derive §3.9 after any change to the mental 
 
 **What did not need changing, and why that is the useful half.** Every congruence in §3.9.1.4 survives untouched: they are statements about which c mod 8 the three-part argmax sits at, and F = 4 is a two-part shape obeying a different law — 4c ≡ 4 rather than 2c ≡ 6 (mod 8). The two analyses are independent and both stand. Only their *combination* was wrong. §3.9 now carries a scope note at its head and both tables at its foot, and the residue paragraphs at 7, 15 and 11 are marked the way 23's already was.
 
-*The generalisable form, now in T5a.* In this section the **row-by-row analysis is robust to changes in the ceiling table and the share summaries are not**, because the summaries multiply a within-family proportion by an assumption about which family attains the ceiling. Re-read the summaries after any ceiling change, and check them against the census's `wins →` column — the two are the same accounting and drifted apart once already.
+**Cut from `arithmetic-of-density.md` and kept as `three-part-family-split.md`.** Three passes of reframing established that the section's conclusions are about runners-up, at which point carrying it in the main line was paying for weight it no longer earned: `aod` needs from it only two facts, both now one-liners in the census rows — S4 wins nowhere, S7 at F = 2 takes 8/24. The note keeps the singular-series arithmetic, the 1 : 1 : 2 analysis and T5a's methodological caution, with a header stating up front what it does and does not determine. `aod` loses 26.6 KB; five references were repointed, and `validate_table.py`'s odd-n-shares check and `ladder_verify.py`'s congruence comment now cite the note and `aod` §3.3.4a respectively.
+
+**The three passes that led there are worth recording, since each looked sufficient at the time.**
+
+**A third pass reframed the section itself.** The first two passes corrected the shares and scoped the sub-sections, but left §3.9 titled *"Which of S4 and the fused rung wins"* — a competition whose answer is that S4 wins nowhere. Following that through gives a sharper and more deflationary account than the scoping notes conveyed:
+
+> - **S4 never wins at n, at any residue.** At the eight odd residues where the family attains the class ceiling the split is congruence-forced 100 / 0 / 0 to the fused rung; at the other four, F = 4 beats the whole family. No residue is left.
+> - **The supply analysis governs runners-up, not winners.** Where the family wins, the fused rung wins by congruence and no supply argument is needed. The singular-series computation is required exactly at 7, 15 and 23 — where the family *loses* — so it determines which reading realises 0.085786 at 7 and 15 (the runner-up to F = 4's 1/9) and 0.050510 at 23 (third place, behind F = 4 and F = 6).
+
+So the interesting half of §3.9 applies precisely at the residues contributing nothing to the share table. It remains worth keeping: §7's disjunction-collapse needs the gap to the next shape down, which at 7 and 15 is this family; the exact agreement of the two singular series is structural and independent of who wins; and §3.9.1.2's account of what the heuristic can support is a caution about method. But the section is retitled, the two facts lead rather than trail, and §3.9.2's intro now says `rung_split.py` measures the family and not the class.
+
+**A second pass was needed on §§3.9.1.1–3.9.1.3.** The first pass fixed the summaries and added a scope note at the head of §3.9, but left the sub-sections themselves reading as though the three-outcome competition were *the* prediction — a patch on one row of 3.9.1.1's ceiling column, and a 3.9.1.3 table still listing residue 11 inside a nine-residue "B alone" block whose other eight now differ from it on the thing that matters. Both are reframed: 3.9.1.1's table now carries the family ceilings and the class ceiling side by side, so the gap the family cannot close is visible in the table rather than in a footnote; 3.9.1.3 splits residue 11 out and adds a column recording whether the family attains the class ceiling at all; and 3.9.1.2 says explicitly that its 1 : 1 : 2 concerns which system supplies the family's best configuration and is untouched by a shape obeying a different congruence.
+
+*The generalisable form, now in T5a.* In this section the **row-by-row analysis is robust to changes in the ceiling table and the share summaries are not**, because the summaries multiply a within-family proportion by an assumption about which family attains the ceiling. Re-read the summaries after any ceiling change, and check them against the census's `wins →` column — the two are the same accounting and drifted apart once already. The second pass adds a corollary: **scoping a section by adding a note at its head is not enough if its tables still read as unqualified**, since a reader reaches the table before the note applies to anything concrete.
+
+---
+
+## 5.9 A file truncated by an unguarded write
+
+While editing this log, a script did `open(p,'w').write(t.replace(a,b))` where `b` had a stray trailing comma and was therefore a tuple. `open(p,'w')` truncates the file *before* `.write()` is reached, and `t.replace` then raised `TypeError` — so the log was left at **zero bytes** with nothing written. It was restored from the last presented copy, intact.
+
+This is the second truncation-class incident in the session, after the 3.4-million-line duplication of `enumeration-proof.md`, and the same guard catches both: **compute the new text first, assert it is sane, and only then open the file for writing.**
+
+```python
+out = t.replace(a, b)
+assert len(out) > L0          # or whatever the edit should do to the length
+open(p, 'w').write(out)
+```
+
+The version that failed had the length check but ran it *after* the write had already truncated. Ordering is the whole of the fix: `open(..., 'w')` is a destructive operation and must not be evaluated until the thing being written is known to be good.
 
 ---
 

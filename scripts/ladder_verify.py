@@ -103,10 +103,10 @@ OUTFILE = _os.environ.get("LADDER_OUT", "ladder_weak.txt")
 #     eta = 1/2 or 1/6  (D = 4 or 12)  needs r = 5 mod 8, hence n = 3 mod 8;
 #     eta = 1 or 1/3    (D = 2 or 6)   needs r = 3 or 7 mod 8, i.e. n = 1 or 5.
 # The nine rung-B residues are spread across all three of those cases -- they are
-# 1, 3 and 5 mod 8, NOT all 3 mod 8.  See aod section 3.9.1.4, whose table is the
-# reference; an earlier version of this comment asserted n = 3 mod 8 throughout,
-# which is false for six of the nine.  Half of each obstructed class reaches B
-# and half is stuck on C.
+# 1, 3 and 5 mod 8, NOT all 3 mod 8 -- see aod section 3.3.4a, which derives the
+# efficiency available at each (class, F) from exactly these congruences, and
+# three-part-family-split.md section 1.4 for the row-by-row version.  Half of
+# each obstructed class reaches B and half is stuck on C.
 # Measured 100%/0% with no boundary cases.  Nine of the twelve odd residues rise
 # by 33-54% from the F = 2 rungs alone; 7, 15, 11 and 23 are then lifted further
 # by F = 4, which is what sets their ceilings.

@@ -6,7 +6,7 @@
 
 **Small-degree work lives elsewhere.** Everything pursued at a single fixed degree — the GAP battery, the CSP and its backbone probes, the χ machinery, the template enumerator — is in `small-degree-verification.md`, including its own run list. It touches this programme at exactly one point: **exhaustiveness of the GAP stages**, which licenses Part I's two non-circular comparisons at n = 10 and n = 12. Nothing else there gates anything here.
 
-**Companion files.** The three documents hold the results and their figures. `fusion-count-ceilings.md` records the derivation of §3.3.5's ceilings as a joint optimum over (F, η) — kept as a separate note because it carries the working, the measurements and the diagnosis of the superseded claim, none of which belongs in a document that states only current understanding. `solvable-relaxation.md` computes the same extremal problem with Oliver's condition relaxed to bare solvability, isolating what the chain costs; it is a calibration exercise and nothing in the main line depends on it. The review record is in `session-log-5.md` (current), `session-log-4.md`, `session-log-3.md`, `session-log-2.md` and `session-log.md`. Literature findings, which bear on framing rather than correctness and are deliberately not folded into the primary documents, are in `literature-findings.md`. Single-small-degree work — the GAP battery, the SAT/CSP machinery, the backbone probes, the template enumerator — is in `small-degree-verification.md`, which touches §§1–6 only through the n = 10 and n = 12 exhaustive comparisons cited in Part I.
+**Companion files.** The three documents hold the results and their figures. `three-part-family-split.md` holds the internal split of the three-part family — which of S4, S5 and S7-at-F=2 realises it — kept separate because its conclusions concern runners-up and nothing in the main line depends on them. `fusion-count-ceilings.md` records the derivation of §3.3.5's ceilings as a joint optimum over (F, η) — kept as a separate note because it carries the working, the measurements and the diagnosis of the superseded claim, none of which belongs in a document that states only current understanding. `solvable-relaxation.md` computes the same extremal problem with Oliver's condition relaxed to bare solvability, isolating what the chain costs; it is a calibration exercise and nothing in the main line depends on it. The review record is in `session-log-5.md` (current), `session-log-4.md`, `session-log-3.md`, `session-log-2.md` and `session-log.md`. Literature findings, which bear on framing rather than correctness and are deliberately not folded into the primary documents, are in `literature-findings.md`. Single-small-degree work — the GAP battery, the SAT/CSP machinery, the backbone probes, the template enumerator — is in `small-degree-verification.md`, which touches §§1–6 only through the n = 10 and n = 12 exhaustive comparisons cited in Part I.
 
 **Status labels.** *Verified* — an independent computation agreed. *Sound* — an argument was read and found correct, with no independent computation. *Unverified* — neither.
 
@@ -241,42 +241,18 @@ No n, no density floor, no threshold on the table. At **a = 1** the coupling for
 
 **Tripwire, worth keeping.** `validate_table.py` asserts per row that no winner has a proper prime power c with a foreign prime dividing c − 1 — 0 of 2,202 p-characteristic winner parts, rechecked on every extension. It confirms a proved domination rather than guarding an open lemma, and flags the first n where Corollary C′ would have to be checked directly.
 
-### T5a. Re-derive §3.9.1.2's competing-rates argument on every revision
+### T5a. Re-derive `three-part-family-split.md` §1.2's competing-rates argument on every revision
 
-*Flagged because this argument is unusually good at producing plausible pictures that are partly wrong; treat any version of it, including the one below, as provisional.*
+*Flagged because this argument is unusually good at producing plausible pictures that are partly wrong; treat any version of it, including the one on file, as provisional.*
 
-The claim is that the odd-n win shares tend to **1 : 1 : 2** — a statement *within the three-part family* n = 2c + r, comparing S4, S5 and S7-at-F=2 against each other. It is not a statement about which shape attains the class ceiling, which at four of the twelve odd residues is the two-part F = 4 shape lying outside this family entirely (`aod` §3.3.5).
+The claim is that the odd-n win shares within the three-part family tend to **1 : 1 : 2**. It rests not on the singular-series computation but on a second step — that the *argmax* over c-classes lands in a class with probability equal to that class's share of the pool — and that step is an extreme-value claim, not a counting one. What decides it is which of several competing effects is largest, and the accounting is delicate enough to be worth re-deriving rather than read.
 
-**That distinction has already cost one round of corrections, which is the case for the standing instruction.** The within-family proportions survived the F = 4 work untouched — every congruence in §3.9.1.4 concerns which c mod 8 the three-part argmax sits at, and F = 4 obeys a different law, 4c ≡ 4 rather than 2c ≡ 6 (mod 8). What did **not** survive was the *combination*: §3.9's closing summary read its within-family shares as shares of n, which stopped being true once four odd residues had their ceiling taken by a shape outside the family. S4's absolute share fell from 1/24 to **0** — its whole 1/24 was earned at 7, 15 and 23, exactly the residues F = 4 takes — and the fused rung's from 10/24 to **8/24**. §3.9.1.4 now carries both tables and says which is which.
+**Two standing cautions, both learned the hard way.**
 
-So the rule for this section: **the row-by-row analysis is robust to changes in the ceiling table; the share summaries are not.** Re-read the latter after any such change, and check the census's `wins →` column against them, since the two are derived from the same accounting and drifted apart once already. It rests not on the singular-series computation but on a second step — that the *argmax* over c-classes lands in a class with probability equal to that class's share of the pool — and that step is an extreme-value claim, not a counting one. What decides it is which of several competing effects is largest, and the accounting is delicate enough to be worth re-deriving rather than read:
+- **The analysis is robust to changes in the ceiling table; any *share* summary built on it is not.** The congruences concern which c mod 8 the three-part argmax sits at, and are untouched by a two-part shape obeying 4c ≡ 4 rather than 2c ≡ 6 (mod 8). What breaks is the conversion to shares of n, which silently assumes the family attains the class ceiling. When that assumption failed at four odd residues, S4's absolute share went from 1/24 to **0** and the fused rung's from 10/24 to 8/24, while not one congruence changed.
+- **Check the tables, not just the prose.** Scoping the note by adding a caveat at its head is not enough: a reader reaches a table before any head-note applies to anything concrete, and two sub-sections needed a second pass for exactly that reason.
 
-| effect | size | status |
-|---|---|---|
-| log-factor bias between the D- and 2D-systems | Θ(1/log n) | real; drives the finite-n tilt in the table |
-| count noise over the window | O(log^{3/2}n/√n) | real; vanishes far faster |
-| Bateman–Horn secondary term | Θ(1/log n) | **same order as the bias**; partially cancels between systems, remainder uncontrolled |
-| singular-series ratio fluctuating with n | would be Θ(1) | **identically zero** — the root count is a condition on h = (n−1)/2 alone, D-independent for the pair compared |
-
-**Two things to re-check whenever this section is touched.**
-
-1. **Do not appeal to Maier / Friedlander–Granville irregularity.** Those theorems need moduli growing like x/(log x)^A, or short intervals of length (log x)^A. Our moduli are fixed and small, where Siegel–Walfisz gives error smaller than any power of 1/log n. This is the **high**-uniformity regime, and high uniformity lets the 1/log n bias steer the argmax rather than drowning it — the opposite of what the irregularity literature would suggest if applied out of range.
-2. **Recheck the D-independence when the family widens.** 𝔖_D/𝔖_{2D} = 1 is a fact about D = 4 versus D = 8, verified numerically over 8,333 values in each of two bands. It **fails** at ℓ = 3 between D = 6 and D = 12, where the degenerate branch ℓ | D/2 fires. Any comparison involving those D values reopens the whole argument, and the generalised family of `mu-theta-n2-note.md` is exactly where that happens.
-
-**The general hazard worth naming**, and the reason this section is fenced: *both* too much and too little uniformity relative to the pseudorandom model produce surprises, and which regime one is in depends on the modulus range. An argument that quotes an irregularity result without checking that its moduli reach ours will reliably reach the wrong conclusion, and will look right while doing so.
-
-### T6. The residual conditionality in §3.3.5's ceilings
-
-Both coordinates of the joint optimum are now settled without a search. The **F side** closes on cap_F(1) = 1/(1 + √F)² together with η ≤ 1, which bounds each F-slice with no arithmetic input and excludes F ≥ 8; the parity constraint at odd n leaves F ∈ {2, 4, 6}, and at residues 7 and 15 the tabulated value *is* cap₄(1), so those rows admit no improvement at all. The **η side** is derived from congruences in §3.3.4a — a 2-adic factor 2^(1−v) with v fixed by r mod 8, and a 3-adic cut by 3 when 3 | r − 1 is forced — and `eta_derive.py` checks that derivation against an independent measurement at all thirty-six (class, F) cells.
-
-**What is left is one hypothesis and three scope limits.**
-
-- **Supply, which is the same hypothesis as everywhere in §3.** The congruences say a suitable r is unobstructed; that primes of the form r = 2^v·q^e + 1 actually occur near the balance point in the density §3.4 needs is Bateman–Horn. Nothing in §3.3.4a improves on that, and it is why the ceilings are family guarantees rather than theorems about δ.
-- **Only F ≤ 6 is derived.** §2.1's bound makes that sufficient for the conclusion, but the congruence bookkeeping itself has been done for F ∈ {2, 4, 6} only.
-- **Mixed three-part shapes** — 4c + 2c′ + r and the like — lie outside both the two-part family and the three-part ladder, and no ceiling here bounds them.
-- **Class 11's entry rests on 676 > 675.** The comparison 7 − 4√3 > (2 − √3)/4 reduces to 26 > 15√3, the narrowest possible integer margin. The derivation removes the way the η there was most likely to be wrong, but the margin is what it is, and anything upstream that moves it flips the class.
-
-*Working, measurements and the diagnosis of what the table said before are in `fusion-count-ceilings.md`.*
+**And the reason the whole note now sits outside `arithmetic-of-density.md`:** its conclusions are about runners-up. S4 wins at no residue asymptotically, and where the family does win the answer is congruence-forced with no supply argument needed — so the 1 : 1 : 2 split governs which shape is *second*, at 7 and 15, and third at 23. That is worth having for `aod` §7's disjunction-collapse, which needs the gap to the next shape down, and it is not worth carrying in the main line.
 
 ## §2b. Self-contained items
 
