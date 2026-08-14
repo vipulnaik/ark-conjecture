@@ -42,6 +42,12 @@ Also measured, since it bears on (H) clause 4: c ≡ 3 (mod 4) holds at **50.1�
 4. **A figure that is arithmetic on a moving quantity expires without changing.** The s-bound, the record-holder's binding term, and the class-ceiling caps are all of this kind.
 5. **A split must sum to the size of the set it splits**, and a claim about a *mechanism* (which term binds, which engine holds the record) expires as silently as a number but is invisible to a numeric sweep.
 
+## The census and Part I recount
+
+`validate_table.py --baseline` run clean (**23 PASS / 0 FAIL / 12 INFO**), and its `classify` used to recount both censuses and Part I over the contiguous range. Winner counts now read S3 900 (41.2%), S2 777 (35.5%), S7 at F = 2 338 (15.5%) and at F = 4 50, S5 30, S4 16, S6 0, with 53/3/17/2 at F = 3/5/6/8; part counts {1: 777, 2: 1393, 3: 16}; certified_K {2: 394, 3: 1443, 4: 331, 5: 18}; floor 0.045742 at n = 1817, max 0.499807 at n = 2594, median 0.1994. The `enumeration-proof.md` census collapsed from three version columns to one measured column, and both censuses now carry a provenance box stating that these are contiguous-range measurements that move with every extension.
+
+**One thing the recount exposed.** Over the whole CSV the same census gives S7 at F = 4 as 71 rather than 50, and three-part winners as 20 rather than 16 — the worklist tail holding 21 of the F = 4 winners and 4 of the three-part ones out of 47 rows. That is the contiguity bias hitting exactly the shapes the ceiling analysis is about, since the worklist selects low-density n and those are where the fused rungs win.
+
 ## Outstanding
 
-De-historicization is complete except in `enumeration-proof.md` Part I and the census's v2 column, both of which need a measurement pass to convert rather than an edit: the census's winner counts and Part I's shape counts, record-holder sequence and trend figures are all pre-repair measurements, and recomputing them against the current table is the work. Part I's preamble says so; the box before its tail figures says so; nothing outside Part I depends on them. Also outstanding: the review items in `pending-checks.md` §2, unchanged by this session except where noted there.
+De-historicization is complete across all five documents; version references survive only as filenames. The review items in `pending-checks.md` §2 are unchanged by this session except where noted there, and `fb_common.py` remains the largest unread surface.

@@ -18,7 +18,7 @@
 
 Ranked, so the sections below have a stated basis. This is not the order the items appear in.
 
-1. **The table's reach.** v4 is contiguous over every non-prime-power n ≤ 2600 and the ladder has scanned to 10⁶; everything measured across the three documents is keyed to those bounds and moves if either extends, so extension is the single largest source of churn in the recorded figures — though extending is now a *choice*, the planned bounds having been reached. → **R0**, and **R1** after every batch.
+1. **The table's reach.** The table is contiguous over every non-prime-power n ≤ 2600 and the ladder has scanned to 10⁶; everything measured across the three documents is keyed to those bounds and moves if either extends, so extension is the single largest source of churn in the recorded figures — though extending is now a *choice*, the planned bounds having been reached. → **R0**, and **R1** after every batch.
 2. **Exhaustiveness of the GAP stages.** The subdirect-product hole is undischarged. It degrades *evidence* rather than creating an error — a missed group with larger m\* would be a counterexample rather than a silent corruption, and one with smaller m\* changes nothing — but it is the only non-circular check in the framework. **This is the one small-degree item the arithmetic programme depends on**, since Part I's two exhaustive comparisons rest on it. → `small-degree-verification.md` item 5
 3. **Part E's realisability construction.** Attainment's other leg, argued in general and checked at seven configurations from n = 10 to 308 — none of them at the fusion counts that now set four of the class ceilings. Unlike the certificate, which is verified at every row, it has no per-n verification. → **T2** for the argument, **R8** for the run that would close most of it.
 4. **§3.3.5's ceilings.** Both coordinates of the joint optimum are settled without a search — the F side by cap_F(1) = 1/(1 + √F)², the η side by the congruences of §3.3.4a — so what remains is the supply hypothesis shared with the rest of §3, plus a class-11 entry resting on 676 > 675. Nothing computed depends on any of it, these being family guarantees and hence floors for μ; the exposure is to the asymptotic story alone. → **T6**
@@ -42,7 +42,7 @@ Ranked, so the sections below have a stated basis. This is not the order the ite
 python3 mu_enumerate_v2.py --nmax <N> --fill-gaps --out mu_table_safe_v4.csv
 ```
 
-**Quote figures from v4 only.** v3 is over-credited on fused shapes and v2 predates the corrected shape space, so both understate or misattribute; v4 is at or above v2 at every common value — verified on the current rebuild, 386 higher and **0 lower** across the 2,045 common values, which is the signature to check on each batch.
+**A rebuild must never lower a value.** B(n) is a maximum over admissible configurations, so adding configurations can only raise it: a rebuild that comes out *lower* anywhere means a shape has been lost, not gained. `validate_table.py`'s group-A monotonicity check against `--baseline` is what tests this, and it is the signature to read on every batch.
 
 ## R1. Routine, after any new batch of table values
 
@@ -242,7 +242,7 @@ No n, no density floor, no threshold on the table. At **a = 1** the coupling for
 | piece | status |
 |---|---|
 | e = 1, δ > 1/9 | **closed unconditionally** — Proposition F.1 at k = 3; three parts each of size ≥ n√δ do not fit |
-| e = 1, δ ≤ 1/9 | **reduced to a bounded search**: ≤ 2/δ pinned positions per n. Empty over v4 — 4 admissible of 24,322 positions, all killed by the p-characteristic part not fitting. Not a theorem |
+| e = 1, δ ≤ 1/9 | **reduced to a bounded search**: ≤ 2/δ pinned positions per n. Empty over the table — 4 admissible of 24,322 positions, all killed by the p-characteristic part not fitting. Not a theorem |
 | e ≥ 2 | supply of admissible foreign blocks is density zero in n; enumerable at the sparse n where it exists |
 | q = 2 | pinning vacuous, family exponential; needs domination rather than supply |
 | p-characteristic half of the leftover | **closed at every a** — Lemma C's coupling and Corollary C′, gated locally |
