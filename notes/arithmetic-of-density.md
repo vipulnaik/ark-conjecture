@@ -338,7 +338,7 @@ Multiplying, **η = η₂ / (3 if cut else 1)**, which is the η column of §3.3
 | 7, 15 | **F = 4** | S7 at F = 4 | 1 | **1/6** | 0.16667 | **1/9** | 0.11111 |
 | **11, 23** | **F = 4** | S7 at F = 4 | 1/3 | **(2 − √3)/2** | 0.13397 | **7 − 4√3** | 0.07180 |
 
-> **The rung column answers "which (F, η) pair attains the cap here."** The cap is a *joint* optimum over the fusion count and the efficiency, not an optimisation of η at a rung fixed in advance: cap_F(η) = η/(1 + √(Fη))² is decreasing in F at fixed η, so fusing is never worth doing for its own sake, and is worth doing only when a larger F moves r into a residue class carrying a better η. §3.3.4a gives the η available at each (class, F) and §3.3.6 works the trade-off; the entries here are their output.
+> **The rung column answers "which (F, η) pair attains the cap here."** The cap is a *joint* optimum over the fusion count and the efficiency, not an optimisation of η at a rung fixed in advance: cap_F(η) = η/(1 + √(Fη))² is decreasing in F at fixed η, so fusing is never worth doing for its own sake, and is worth doing only when a larger F moves r into a residue class carrying a better η. §3.3.4a gives the η available at each (class, F) and `fusion-count-ceilings.md` works the trade-off; the entries here are their output. (The subsection numbering in this section skips from 3.3.5 to 3.3.7; there is no intervening subsection.)
 
 > **At odd n the fusion count must be even, and the search over F is finite.** With c odd and r an odd prime, n = F·c + r forces F even: odd F makes Fc odd and r = n − Fc even. The F-search then closes on an argument needing no arithmetic at all — since η ≤ 1, **cap_F(1) = 1/(1 + √F)²** bounds the entire F-slice, and that is below 7 − 4√3 for every F ≥ 8. So only F ∈ {2, 4, 6} can attain any of these caps, and §3.3.4a gives their efficiencies. At **7 and 15** the tabulated cap is cap₄(1) = 1/9, which *is* the absolute ceiling at F = 4, so those two rows cannot be improved by any fusion count at any efficiency.
 
@@ -393,16 +393,19 @@ Every cap above is attained at a specific balance point — x = c/n equal to 1/2
 
 It does not shrink. Each δ(x) is continuous with an **interior maximum**, so asking for δ ≥ δ₀ at any δ₀ strictly below the cap confines x to an interval of positive length, and that length is a fixed fraction of n rather than a vanishing one. Taking δ₀ = 0.9 × cap in each class:
 
-| class | family, efficiency | cap | attained at | x-window | width |
+| class (mod 24) | family, efficiency | cap | attained at x\* | x-window | width |
 |---|---|---|---|---|---|
-| 0, 4, 6, 10 | two parts, η = 1 | 0.25000 | 0.5000 | [0.474, 0.526] | 0.052 |
-| 2, 8 | two parts, η = 1/3 | 0.13397 | 0.3660 | [0.347, 0.399] | 0.051 |
-| 1, 9 | three parts, η = 1 | 0.11111 | 0.3333 | [0.316, 0.342] | 0.026 |
-| 3, 7 | three parts, η = 1/2 | 0.08579 | 0.2929 | [0.278, 0.304] | 0.026 |
-| 5 | three parts, η = 1/3 | 0.07180 | 0.2680 | [0.254, 0.280] | 0.026 |
-| 11 | three parts, η = 1/6 | 0.05051 | 0.2247 | [0.213, 0.239] | 0.026 |
+| 0, 4, 6, 10, 12, 16, 18, 22 | S3, k = 1, η = 1 | 0.25000 | 0.5000 | [0.474, 0.526] | 0.051 |
+| 2, 8, 14, 20 | S3, k = 1, η = 1/3 | 0.13397 | 0.3660 | [0.347, 0.399] | 0.051 |
+| 1, 9, 13, 21 | S7 at F = 2, η = 1 | 0.17157 | 0.2929 | [0.278, 0.304] | 0.026 |
+| 3, 19 | S7 at F = 2, η = 1/2 | 0.12500 | 0.2500 | [0.237, 0.263] | 0.026 |
+| 5, 17 | S7 at F = 2, η = 1/3 | 0.10102 | 0.2247 | [0.213, 0.239] | 0.026 |
+| 7, 15 | S7 at F = 4, η = 1 | 0.11111 | 0.1667 | [0.158, 0.171] | 0.013 |
+| 11, 23 | S7 at F = 4, η = 1/3 | 0.07180 | 0.1340 | [0.127, 0.140] | 0.013 |
 
-So in every class the count required is of primes in an interval of length **c·n for an absolute constant c between 0.026 and 0.052** — not primes in a short interval. That is exactly the regime where the Hardy–Littlewood and Bateman–Horn heuristics are standard: the predicted count over the window is the full-range prediction times the window's measure, up to the smooth variation of 1/log across it, and no short-interval input is needed. The asymptotic ~𝔖(n)·n/log³n of §§3.1–3.2 therefore stands as written, with 𝔖(n) unchanged and only the constant scaled.
+*Recomputed against §3.3.5's ceilings, from δ(x) = min(F x², 2F x(1 − Fx), η(1 − Fx)²) with x = c/n; the x\* column reproduces §3.3.5's independently. The previous version of this table was keyed mod 12 and used the unfused rung throughout, so its odd rows quoted the superseded caps 0.11111 / 0.08579 / 0.07180 / 0.05051.*
+
+So in every class the count required is of primes in an interval of length **c·n for an absolute constant c between 0.013 and 0.051** — not primes in a short interval. (The F = 4 rows are the narrowest, at 0.013, because the window is measured in x = c/n while the block occupies F·c of the n points; in terms of the *class's* footprint the four rows are comparable.) That is exactly the regime where the Hardy–Littlewood and Bateman–Horn heuristics are standard: the predicted count over the window is the full-range prediction times the window's measure, up to the smooth variation of 1/log across it, and no short-interval input is needed. The asymptotic ~𝔖(n)·n/log³n of §§3.1–3.2 therefore stands as written, with 𝔖(n) unchanged and only the constant scaled.
 
 Two caveats, both real and both explaining why the observed maxima of §3.3 fall just short of their caps rather than meeting them.
 
@@ -811,7 +814,7 @@ Since the multiplicative engine vanishes in density, the asymptotic behaviour of
 >
 > *One degree of freedom that is **not** hidden in these ceilings:* whether a block's twist is read in GL(1, c) or in the semilinear ΓL(1, c). At k = 2 that choice provably changes no orbital minimum (`enumeration-proof.md` J0a), so the ceilings here are insensitive to it. At k = 3 it does change the minimum, which is a further respect in which the k = 2 constants are contingent.
 
-The residue analysis gives eight different δ₀ across the 24 residue classes (§3.3). It is worth collapsing them into a single number that should hold everywhere, even at the cost of being loose.
+The residue analysis gives seven distinct δ₀ across the 24 residue classes (§3.3). It is worth collapsing them into a single number that should hold everywhere, even at the cost of being loose.
 
 > **Read δ against the right literature, because the obvious comparison is a category error.** The known unconditional lower bounds on the number of *queries* forced by a nontrivial monotone property run Rivest–Vuillemin n²/16 → Kleitman–Kwiatkowski n²/9 → Kahn–Saks–Sturtevant n²/4 → Korneffel–Triesch → **Scheidweiler–Triesch n²/3 − o(n²)**, the current best. Our floor of 0.04453 is about 0.022n², a factor of 15 below that — and the two numbers are **incomparable, not competing**.
 >
@@ -823,7 +826,7 @@ The residue analysis gives eight different δ₀ across the 24 residue classes (
 
 > **0.045742 at n = 1817 = 23·79**, witness `p=389 q=173: 1x1039* + 2x389`,
 
-an **additive** three-part configuration at **n ≡ 17 (mod 24)**, foreign-bound on the 1039-block. The runner-up mechanism is multiplicative granularity: n = 1159 = 19·61 sits at 0.051813 on the single fused class `19x61`, where F = 19 is the smallest prime-power cofactor so the engine delivers only 1/19 and nothing additive competes. Which of the two owns the record at a given frontier is not stable, and **the record-holder's mechanism is a range-scoped claim that expires silently** — `check_doc_figures.py --pass scope` catches numeric range assertions but not claims about mechanisms, which is the failure mode `pending-checks.md` A5 records. Re-read this paragraph at every extension. Asymptotically neither mechanism is the story: the class-23 additive ceiling takes over, which is the §3.7 handover seen from the floor's side.
+an **additive** three-part configuration at **n ≡ 17 (mod 24)**. It is **intra-bound**, not foreign-bound: the binding term is 2·orb(389, 97) = 75,466, the twist cut from 388 to 97 because F_mid = 2 strips the factor 4, against a foreign term of orb(1039, 173) = 179,747 and larger cross terms. (The record-holder's binding term is a range-scoped claim of exactly the kind this paragraph warns about; re-derive it from the witness rather than carrying it forward.) The runner-up mechanism is multiplicative granularity: n = 1159 = 19·61 sits at 0.051813 on the single fused class `19x61`, where F = 19 is the smallest prime-power cofactor so the engine delivers only 1/19 and nothing additive competes. Which of the two owns the record at a given frontier is not stable, and **the record-holder's mechanism is a range-scoped claim that expires silently** — `check_doc_figures.py --pass scope` catches numeric range assertions but not claims about mechanisms, which is the failure mode `pending-checks.md` A5 records. Re-read this paragraph at every extension. Asymptotically neither mechanism is the story: the class-23 additive ceiling takes over, which is the §3.7 handover seen from the floor's side.
 
 `ladder_verify.py` computes, for each n, the best density achievable by four explicit families, scanning the block size over a window wide enough to contain every balance point, x ∈ [0.10, 0.55]. Over all composite non-prime-power **n ≤ 10⁶** (78 minutes) the smallest value is
 
@@ -863,10 +866,12 @@ So the low-density dips are a small-n phenomenon and the asymptotic floor is the
 > **Why the extremal residue is mod 12 and not mod 24.** The local obstructions at ℓ = 2 and ℓ = 3 see only n mod 12. A further condition mod 8 — whether the F = 2 fused rung is reachable — refines the odd classes to mod 24, and it is what the ceiling table needs at the nine residues whose optimum takes F = 2. At the residues whose optimum takes **F = 4** that condition drops out, since 4c ≡ 4 (mod 8) for every odd c, and the class is governed by the mod-12 obstructions alone. The minimum over all residues is **7 − 4√3 = 0.071797**, attained at **n ≡ 11 and n ≡ 23 (mod 24)** — that is, on all of n ≡ 11 (mod 12).
 
 <!-- DUP:density_floor_conjecture -->
-> **Conjecture (global density floor).** For every composite non-prime-power n, **μ(n) ≥ C(n,2)/25**, i.e. δ(n) ≥ 0.04; and asymptotically **δ(n) ≥ 7 − 4√3 − o(1) = 0.071797…**, the extremal residues being **n ≡ 11 and n ≡ 23 (mod 24)**, the two carrying the ℓ = 3 obstruction at odd n.
+> **Conjecture (global density floor).** For every composite non-prime-power n, **μ(n) ≥ C(n,2)/25**, i.e. δ(n) ≥ 0.04 — verified unconditionally for every n ≤ 10⁶, where the four-family ladder gives δ ≥ 0.04453 attained at n = 11183; and asymptotically **δ(n) ≥ 7 − 4√3 − o(1) = 0.071797…**, the extremal residues being **n ≡ 11 and n ≡ 23 (mod 24)**, the two odd classes carrying the ℓ = 3 obstruction.
+<!-- /DUP -->
 
 > **The finite constant was 1/50 and the gap between the two forms is the interesting part.** 1/50 was set when the observed floor was near 0.026 and falling with every extension of the range, so it was a modest safety margin under a moving target. The target then stopped moving down and moved up, and every fall turned out to be a scoring deficiency rather than a property of μ: the pre-repair shape space read n = 2291 at 0.037524 where the true value is 0.066767, and the pre-repair ladder read n = 8927 at 0.02516 where the corrected families put it above the asymptotic ceiling entirely, dropping it from the worklist. **The drift is one-directional for a structural reason.** B(n) is a *maximum* over admissible configurations, so a missing shape can only depress it — and a missing shape has no witness, hence nothing in the pipeline can detect one, whereas an over-credit is caught by re-deriving μ from the recorded witness. The errors that survive to be found later are therefore biased toward those that lower the floor, which is why the ratchet has run upward and why 1/25 should also be read as likely loose.
-<!-- /DUP -->
+
+
 
 *Reading the conjecture.* The asymptotic constant is cap_F(η) = η/(1 + √(Fη))² at η = 1/3, F = 4 — the joint optimum at the odd residues carrying the ℓ = 3 obstruction. Both halves of n ≡ 11 (mod 12) reach it, since the F = 4 shape is indifferent to the mod-8 split that separates 11 from 23 (§3.3). The asymptotic half says the *worst* n eventually reach what the balanced family guarantees; it is a floor, and individual n exceed it freely.
 
@@ -1090,7 +1095,7 @@ So: **the route yields robustness at floors well below the ceilings, and sharp s
 
 2. **Bound the s = 4 and s = 5 branches.** The only item here that is a gap in a *proof* rather than in evidence. *Recount after the rebuild:* at n = 3239 and 3059 the density rises sharply under the corrected shape space, so both leave the sub-1/25 set and the branch may narrow without any new theorem. E.1 caps s = 1 by the Mersenne constants and E.3(iii) caps the s = 2 repunit branch; s = 4 has neither, and is not thin enough for an E.4-style collapse. An absolute cap would have to come from the foreign block's twist, as in those two. The search clears it at every computed n, so nothing is unproved — but the gap widens as the floor falls.
 
-3. **Predict the 1/12 shortfall from the singular series.** The odd/even split measured in `enumeration-proof.md` Part I is **22.2% of odd and 1.0% of even** values below 1/12. Both engines' availability is computable heuristically, so this compares the whole framework of this document against measurement rather than testing any single family.
+3. **Predict the 1/12 shortfall from the singular series.** The odd/even split is **12.2% of odd and 0.2% of even** values below 1/12, over the contiguous range n ≤ 2600. (`enumeration-proof.md` Part I's 22.2% / 1.0% is v2-era, like the rest of that Part's unmarked figures.) Both engines' availability is computable heuristically, so this compares the whole framework of this document against measurement rather than testing any single family.
 
 4. **Is the four-class family ever optimal?** Equivalently, does the triple coincidence of §6 ever occur? *Partial answer, measured.* Over odd n in [2×10⁵, 2.012×10⁵], the necessary condition — both the two- and three-class families below the four-class cap of 1/16 — holds at **95 of 600 values**, so it is far from rare. But at every one of those the three-class family still reaches 0.046–0.050, and a four-class family would have to beat that while capped at 1/16 = 0.0625 and needing **four** simultaneous prime conditions rather than three. The margin is a factor of only 1.25–1.35, against a supply penalty of one more log. So the answer is very likely no, and the reason is a squeeze rather than an obstruction — which also means it will not yield to a local-solubility argument. A proper heuristic estimate would compare the four-condition singular series against that margin directly; the machinery for it is `count_check.py` with a fourth form.
 

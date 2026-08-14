@@ -77,7 +77,7 @@ rows = list(csv.DictReader(open(A.table)))
 for r in rows:
     r["n"] = int(r["n"]); r["density"] = float(r["density"])
     r["parts"] = int(r["parts"]); r["certified_K"] = int(r["certified_K"])
-NMAX = max(r["n"] for r in rows)
+NMAX = max(r["n"] for r in rows)   # file maximum; see CONTIG below for the computed frontier
 
 spf = list(range(NMAX + 2)); i = 2
 while i * i <= NMAX + 1:
@@ -94,6 +94,38 @@ def omega(x):
 for r in rows:
     r["omega"] = omega(r["n"])
 
+# ---------------------------------------------------- contiguous vs subsampled
+#
+# THE TABLE IS NOT A SAMPLE OF n; IT IS A CONTIGUOUS PREFIX PLUS A BIASED TAIL.
+# Every non-prime-power up to CONTIG has been computed.  Above CONTIG the only
+# rows present are ones pulled off `ladder_weak.txt` -- i.e. n selected BECAUSE
+# the ladder scored them low -- so the tail is a low-density subsample and every
+# aggregate over it is biased downward.  Measured on the v4 file: median density
+# 0.199 below the frontier against 0.066 above it, and 0.8% vs 31.9% below 1/16.
+#
+# So all distributional quantities (medians, shares, tail counts, part-count
+# splits) are computed over the CONTIGUOUS prefix only.  Extremal quantities
+# that remain valid on any superset -- the floor, and "no value below X" --
+# are reported for both, since a worklist row is exactly where a new minimum
+# would first appear and discarding it would defeat the purpose of computing it.
+def _is_prime_power(x):
+    return len({p for p in _factors(x)}) == 1
+def _factors(x):
+    s = []
+    while x > 1:
+        p = spf[x]; s.append(p)
+        while x % p == 0: x //= p
+    return s
+_present = {r["n"] for r in rows}
+CONTIG = 0
+for _n in range(6, NMAX + 1):
+    if _is_prime_power(_n) or _n in _present:
+        CONTIG = _n
+    else:
+        break
+CONTIG_ROWS = [r for r in rows if r["n"] <= CONTIG]
+TAIL_ROWS = [r for r in rows if r["n"] > CONTIG]
+
 # Checkpoints: every n at which the table has been quoted at some point, plus the
 # current maximum.  A figure written against an older frontier then reports as
 # "correct for n <= C" rather than as unexplained.
@@ -101,7 +133,7 @@ for r in rows:
 # APPEND THE OLD MAXIMUM ON EVERY TABLE EXTENSION.  Two minutes, and skipping it
 # turns every historical figure in the documents into noise in PASS 1.
 CHECKPOINTS = sorted({c for c in [1306, 1428, 1540, 1572, 2000, 2007, 2212,
-                                  2298, 2376, NMAX] if c <= NMAX})
+                                  2298, 2376, 2600, CONTIG, NMAX] if c <= NMAX})
 
 def quantities(sub):
     if not sub:
@@ -144,11 +176,29 @@ def quantities(sub):
     }
 
 BY_RANGE = {c: quantities([r for r in rows if r["n"] <= c]) for c in CHECKPOINTS}
-CUR = BY_RANGE[NMAX]
+# CUR is the CONTIGUOUS frontier, not the file maximum: above CONTIG the table
+# holds only worklist rows, so BY_RANGE[NMAX]'s distributional entries describe
+# a low-density subsample rather than the range.  The floor is patched back in
+# from the whole file, since a worklist row is precisely where a new minimum
+# would appear and it stays valid on any superset.
+CUR = dict(BY_RANGE[CONTIG]) if CONTIG in BY_RANGE else dict(quantities(CONTIG_ROWS))
+_allq = quantities(rows)
+if _allq["density floor"] < CUR["density floor"]:
+    CUR["density floor"] = _allq["density floor"]
+    CUR["density floor at n"] = _allq["density floor at n"]
 
 if not A.quiet:
     print(f"{A.table}: {len(rows)} rows, n up to {NMAX}")
-    print(f"checkpoints: {', '.join(str(c) for c in CHECKPOINTS)}\n")
+    print(f"checkpoints: {', '.join(str(c) for c in CHECKPOINTS)}")
+    print(f"contiguous frontier: n <= {CONTIG} ({len(CONTIG_ROWS)} rows) -- "
+          f"aggregates below are over THIS range")
+    if TAIL_ROWS:
+        _td = sorted(r["density"] for r in TAIL_ROWS)
+        print(f"plus {len(TAIL_ROWS)} worklist row(s) above it (median density "
+              f"{_td[len(_td)//2]:.4f} against {CUR['median density']} contiguous) "
+              f"-- a low-density subsample, excluded from every aggregate\n")
+    else:
+        print()
     for k, v in CUR.items():
         print(f"   {k:24} {v}")
     print()
@@ -197,7 +247,11 @@ if A.only in ("all", "figures"):
             for m in FIG.finditer(line):
                 frag = m.group(1)
                 hits = INDEX.get(frag)
-                if not hits or any(c == NMAX for _, c in hits):
+                # "Current" means the CONTIGUOUS frontier, not the file maximum:
+                # a figure agreeing with the aggregate over n <= CONTIG is right,
+                # and one agreeing only with the whole-file aggregate is quoting
+                # a range contaminated by the worklist tail.
+                if not hits or any(c == CONTIG for _, c in hits):
                     continue
                 where = ", ".join(sorted({f"{k} @ n<={c}" for k, c in hits}))
                 stale.append((ln, frag, where))
@@ -231,7 +285,11 @@ SCOPE = [
     (re.compile(r"every computed value has (?:δ|delta) (?:≥|>=|>) ?([\d.]+)"), "abs"),
     (re.compile(r"(?:δ|delta) (?:≥|>=|>) ?([\d.]+)[^.]{0,70}(?:throughout|everywhere|at every computed|all computed)"), "abs"),
     (re.compile(r"(?:δ|delta) (?:>|exceeds) 1/(\d+)\b[^.]{0,40}forces"), "inv"),
-    (re.compile(r"no computed value (?:falls |is |lies )?below ([\d.]+)"), "abs"),
+    # NOTE: the "1/N" form must be matched FIRST and as "inv"; the bare-decimal
+    # pattern below captures the "1" out of "1/25" otherwise and reports every
+    # row as expired.  (Found 2026-08; it was firing on two true statements.)
+    (re.compile(r"no computed value (?:falls |is |lies )?below 1/(\d+)"), "inv"),
+    (re.compile(r"no computed value (?:falls |is |lies )?below (?!1/)([\d.]+)"), "abs"),
     (re.compile(r"the weakest density anywhere[^.]{0,40}is ([\d.]+)"), "abs"),
     # A floor stated as the minimum of the table, in any of the phrasings used.
     (re.compile(r"(?:smallest|minimum|lowest) density is \*\*?([\d.]+)"), "abs"),
@@ -242,6 +300,18 @@ SCOPE = [
     (re.compile(r"(?:δ|delta) (?:≤|<=|<) 1/(\d+)[^.]{0,60}(?:set|values|tail)"), "inv"),
     # Counts of the low-density tail, which move with the floor.
     (re.compile(r"(?:δ|delta) (?:≤|<=|<) 1/(\d+) set (?:holds|is) \*\*(\d+)"), "inv"),
+    # ---- added 2026-08 after a review found four staleness classes PASS 2 missed.
+    # (a) A floor quoted as "the current computed minimum" / "current minimum",
+    #     which is the phrasing three documents used for the superseded 0.026117.
+    (re.compile(r"(?:current|computed) minimum[^.]{0,30}?([\d.]{6,})"), "abs"),
+    (re.compile(r"([\d.]{6,})[^.]{0,40}the current computed minimum"), "abs"),
+    # (b) A floor quoted inside a B-vs-B0 comparison ("against B's X").
+    (re.compile(r"against B's \*?\*?([\d.]{6,})"), "abs"),
+    # (c) "the density floor has fallen to X" -- the Corollary-after-E.3 form.
+    (re.compile(r"density floor has fallen to ([\d.]+)"), "abs"),
+    # (d) "min mu(n)/C(n,2) >= X over ... n <= 10^6" -- the ladder floor quoted
+    #     as an orientation constant, which moves with ladder_verify not the table.
+    (re.compile(r"min μ\(n\)/C\(n,2\) (?:≥|>=) \*\*([\d.]+)"), "abs"),
 ]
 
 if A.only in ("all", "scope"):
