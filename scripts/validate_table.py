@@ -892,10 +892,11 @@ def c_zero_share_trend(R, base):
 
 
 @check("C", "census winner counts by shape", "aod section 2.0, ep census",
-       expect="asymptotic WINNING shares over all n: S3 12/24 (50%), S7f2 10/24 (41.7%) plus "
-              "1/24 tied, S4 1/24 (4.2%) plus the tie, S7f4 8/24 at the residues 7, 11, 15, 23 "
-              "where F = 4 sets the ceiling; S1, S2, S5, S6 and the odd-F S7fk all -> 0. "
-              "At computed sizes S1 and S2 are still large because omega(n)=2 has not thinned")
+       expect="asymptotic WINNING shares over all n: S3 12/24 (50%) at even n, S7f2 8/24 "
+              "(33.3%) at the odd residues 1,3,5,9,13,17,19,21, S7f4 4/24 (16.7%) at 7,11,15,23 "
+              "where F = 4 sets the class ceiling; S1, S2, S4, S5, S6, ties and the odd-F S7fk "
+              "all -> 0.  At computed sizes S1 and S2 are still large because omega(n)=2 has "
+              "not thinned, and S4 still wins a few values where supply fails the winners above")
 def c_census(R, base):
     d = Counter(r.shape for r in R)
     tot = sum(d.values())

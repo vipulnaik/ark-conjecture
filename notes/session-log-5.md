@@ -260,6 +260,29 @@ The ceiling table's efficiencies were measured over a sample of n; they are now 
 
 ---
 
+## 5.8 Section 3.9 re-read against the F = 4 rung
+
+T5a's standing instruction is to re-derive §3.9 after any change to the mental model. Doing that turned up one arithmetic error of mine and one structural correction.
+
+**The error.** Correcting the census S7 row, I wrote *"F = 4 attains the class ceiling at the eight residues 7, 11, 15, 23 mod 24"* and *"wins → 8/24"*. Those are four residues, not eight — the sentence contradicted its own list, and the share was double what it should be.
+
+**The structural correction, which the error was hiding.** §3.9's shares are computed *within* the three-part family n = 2c + r, and its closing summary read them as shares of n. That was right while the family attained the class ceiling everywhere; it stopped being right once **7, 11, 15 and 23 mod 24** had their ceilings taken by the two-part F = 4 shape. Re-deriving:
+
+| shape | residues | asymptotic share |
+|---|---|---|
+| S3 | the twelve even | 12/24 |
+| S7 at F = 2 | 1, 3, 5, 9, 13, 17, 19, 21 | 8/24, down from 10/24 |
+| S7 at F = 4 | 7, 11, 15, 23 | 4/24 |
+| S4, and ties | — | 0, down from 1/24 each |
+
+**S4's absolute share is now zero**, its entire 1/24 having been earned at 7, 15 and 23 — exactly the residues F = 4 takes. The census rows for S4 and S7 were carrying the old numbers and are corrected, as is `validate_table.py`'s census expectation.
+
+**What did not need changing, and why that is the useful half.** Every congruence in §3.9.1.4 survives untouched: they are statements about which c mod 8 the three-part argmax sits at, and F = 4 is a two-part shape obeying a different law — 4c ≡ 4 rather than 2c ≡ 6 (mod 8). The two analyses are independent and both stand. Only their *combination* was wrong. §3.9 now carries a scope note at its head and both tables at its foot, and the residue paragraphs at 7, 15 and 11 are marked the way 23's already was.
+
+*The generalisable form, now in T5a.* In this section the **row-by-row analysis is robust to changes in the ceiling table and the share summaries are not**, because the summaries multiply a within-family proportion by an assumption about which family attains the ceiling. Re-read the summaries after any ceiling change, and check them against the census's `wins →` column — the two are the same accounting and drifted apart once already.
+
+---
+
 ## 6. Method notes
 
 **Dehistoricization.** The primary documents were left carrying only the current state — no "this used to say", no superseded figures kept for contrast, no status lines describing a claim's history. Everything of that kind is in this file. The one deliberate exception is the census's v2/v3/v4 provenance banner, which is *about* the tables rather than about the documents' own past and is load-bearing for reading the winner counts until the rebuild finishes.
