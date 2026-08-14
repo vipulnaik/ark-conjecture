@@ -82,6 +82,12 @@ ap.add_argument("--parts", type=int, default=3, choices=(2, 3),
                 help="3 = the odd family n = 2c + r of section 3.2 (default); "
                      "2 = the even family n = c + r of section 3.1.  Sets the "
                      "default balance point to 1/3 or 1/2 respectively.")
+ap.add_argument("--fc", type=int, default=0, metavar="F",
+                help="FUSION COUNT F of the matching class: n = F*c + r, so "
+                     "c = (n - r)/F.  Overrides --parts.  F = 1 is the even "
+                     "two-part family, F = 2 the odd three-part/fused-rung one, "
+                     "and F = 4 is what attains the class ceiling at n = 7, 11, "
+                     "15 and 23 (mod 24) -- aod 3.3.5.  F need not divide D.")
 ap.add_argument("--dq", type=int, default=0, metavar="D",
                 help="test SECTION 3.3's own system at efficiency eta = 2/D: "
                      "q prime, r = D*q + 1 prime, c = (n - r)/2 prime.  D must be even. "
@@ -90,7 +96,7 @@ ap.add_argument("--dq", type=int, default=0, metavar="D",
                      "classes.  D = 12 is the one that matters for n = 11 (mod 12).")
 ap.add_argument("--quiet", action="store_true")
 A = ap.parse_args()
-K = A.parts - 1                      # c = (n - 1 - D*q) / K
+K = A.fc if A.fc else A.parts - 1     # c = (n - 1 - D*q) / K, K = the fusion count F
 # The x* column of aod section 3.3.5, keyed by n mod 24.  Deliberately a TABLE
 # and not a formula: x* is the balance point of the RUNG that attains the class
 # ceiling, and at odd n that is the fused rung B (x* = sqrt(eta)/(sqrt2+2sqrt eta))
@@ -213,33 +219,76 @@ def singular(n, q):
 # ceiling.  n = 11 (mod 12) caps at 1/6 and so needs D = 12; at D = 2 its
 # singular series vanishes identically, which is the obstruction, not a bug.
 
-def roots_mod(n, l, D):
-    """#{q mod l : f1 f2 f3 = 0 mod l}, or l itself if f3 vanishes identically."""
-    h = ((n - 1) // K) % l                      # c = h - (D/K) q
-    g = (D // K) % l
-    rs = {0}                                    # f1 = q
-    if D % l:                                   # f2 = Dq+1
-        rs.add((-pow(D % l, -1, l)) % l)
-    if g:                                       # f3 = h - (D/K) q
-        rs.add((h * pow(g, -1, l)) % l)
-    elif h % l == 0:
-        return l                                # f3 == 0 identically: no solutions
-    return len(rs)
+def _local_admissible(n, l, D):
+    """Local factor at the prime l, by EXACT ENUMERATION over q mod L.
+
+    Returns (admissible, coprime) = the number of residues q mod L for which
+    K | (n-1-D*q) -- i.e. c is an integer -- and, among those, the number for
+    which none of q, D*q+1, c is divisible by l.  The local density is then
+    coprime/admissible, and the singular series is the product of those over l,
+    normalised by (1-1/l)^3.
+
+    WHY ENUMERATION RATHER THAN A ROOT COUNT.  The closed form used until
+    2026-08 wrote c = h - (D/K)*q with h = (n-1)//K, which silently assumes
+    K | D.  That holds for every published row (K in {1,2} with D even) and
+    fails for the F = 4 rows, where K = 4 and D = 6.  Enumerating mod
+    L = l^(1 + v_l(D) + v_l(K)) is exact for every (K, D) and needs no case
+    analysis at l = 2 or l = 3, which is where the closed form was delicate.
+    Regression: this reproduces the closed form's singular series at every
+    published (K, D) pair -- asserted by --self-test.
+    """
+    # FAST PATH, and it is not an optimisation but the difference between
+    # seconds and hours: at a prime l coprime to both D and K the three forms
+    # are linear in q with unit leading coefficients, so the root count is the
+    # closed form and no enumeration is needed.  That is every prime but the
+    # two or three dividing D*K.  Enumerating at all 18,000 sieve primes
+    # instead costs ~l operations each and makes a single n take minutes.
+    if D % l and K % l:
+        Dinv = pow(D % l, -1, l)
+        rs = {0, (-Dinv) % l, ((n - 1) % l * Dinv) % l}
+        return l, l - len(rs)
+    v = 1
+    m = D
+    while m % l == 0: v += 1; m //= l
+    m = K
+    while m % l == 0: v += 1; m //= l
+    # The enumeration modulus must ALSO be a multiple of K/gcd(D,K), the
+    # modulus the integrality condition K | (n-1-D q) lives on.  Otherwise the
+    # residues sample that condition unevenly and the conditional density is
+    # biased: at l = 3 with D = 6, K = 4 the modulus l^v = 9 is odd while
+    # integrality depends on q mod 2, sampling 5 even against 4 odd and
+    # returning 3/4 where the truth is 2/3 -- an 8/9 error, which is exactly
+    # the 12% shortfall the F = 4 rows showed at n = 11, 23 (mod 24).
+    L = (l ** v * (K // math.gcd(D, K))) // math.gcd(l ** v, K // math.gcd(D, K))
+    adm = cop = 0
+    for q0 in range(L):
+        num = (n - 1 - D * q0) % (K * L)
+        # c integral requires K | (n-1-D q); check on the residue class mod K
+        if (n - 1 - D * q0) % K: continue
+        adm += 1
+        c0 = ((n - 1 - D * q0) // K) % l
+        if q0 % l and (D * q0 + 1) % l and c0: cop += 1
+    return adm, cop
+
 
 def singular_dq(n, D):
-    if (n - 1) % K:            # three-part family needs n odd; two-part does not
+    """Product over primes of the local density, normalised by (1-1/l)^-3."""
+    # c must be an integer for SOME q; if K never divides n-1-Dq the family is
+    # empty at this n.  (At K = 2 this is the old "(n-1) % K" test.)
+    if not any((n - 1 - D * q0) % K == 0 for q0 in range(K)):
         return 0.0
     s = 1.0
     for p in SPRIMES:
-        w = roots_mod(n, p, D)
-        if w >= p:
+        adm, cop = _local_admissible(n, p, D)
+        if adm == 0 or cop == 0:
             return 0.0
-        s *= (1 - w / p) / (1 - 1 / p) ** 3
+        s *= (cop / adm) / (1 - 1 / p) ** 3
     return s
+
 
 def _density_integral(n, D, steps=64):
     """sum over q in the window of 1/(log q * log r * log c), by Simpson."""
-    h = (n - 1) // K
+    h = (n - 1) / float(K)
     qlo = (h - int(HI * n)) / (D / float(K))
     qhi = (h - int(LO * n)) / (D / float(K))
     if qhi <= qlo or qlo < 2:
@@ -253,7 +302,15 @@ def _density_integral(n, D, steps=64):
             continue
         w = 1 if i in (0, steps) else (4 if i % 2 else 2)
         tot += w / (math.log(qv) * math.log(r) * math.log(c))
-    return tot * dq / 3.0
+    # INTEGRALITY OF c.  The integral runs over all real q in the window, but
+    # only the q with K | (n-1-D*q) give an integer c, and those form a
+    # progression of modulus K/gcd(D,K).  So the count of admissible q is the
+    # integral times gcd(D,K)/K.  This factor is 1 whenever K | D -- which is
+    # every row published before 2026-08, K being 1 or 2 with D even -- and is
+    # 1/2 at K = 4, where it is the difference between a mean of 0.51 and one
+    # of 1.02.  The singular series is unaffected: _local_admissible already
+    # conditions on integrality, so its ratio is a density among admissible q.
+    return tot * dq / 3.0 * math.gcd(D, K) / K
 
 
 def count_dq(n, D):
@@ -325,7 +382,7 @@ rows, zero, degen = [], 0, []
 for n in cands:
     if A.dq:
         D = A.dq
-        if (n - 1) % K: continue
+        if not any((n - 1 - D * q0) % K == 0 for q0 in range(K)): continue
         a = count_dq(n, D)
         # Integrate the density across the window rather than evaluating it at
         # the midpoint.  The window is a CONSTANT relative width, so q sweeps a

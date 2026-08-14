@@ -159,6 +159,64 @@ No code change was needed — `ConstructionTwists` already splits F into F_mid a
 
 **What a pass does and does not settle**, restated because it is easy to over-read and the script's own header says it: a pass establishes that the enumeration's score at that n is **attained**, i.e. μ(n) ≥ B(n). It says nothing about completeness (μ(n) ≤ B(n)), which is Part 0's business, and nothing about J0a — the construction takes each matching twist inside the field's multiplicative group and the script builds exactly that group, so it cannot detect that a larger stabiliser was available.
 
+## R9. Re-run §3.8's counting test at the four F = 4 residues
+
+*The counting test of `arithmetic-of-density.md` §3.8 validates the singular series at each residue's own balance point. Twenty of its twenty-four rows are correct. The four residues whose ceiling is now attained by **S7 at F = 4** — 7, 11, 15 and 23 mod 24 — are still keyed to the superseded F = 2 optima, so they test a system that is no longer the one setting their class ceiling.*
+
+**What was stale, and why it is not a figure error.** The rows quote (D, x\*) = (4, 0.29289) at 7 and 15, (12, 0.18301) at 11 and (12, 0.22474) at 23. Those are the F = 2 balance points; under §3.3.5 the correct pairs are **(2, 0.16667)** at 7 and 15 and **(6, 0.13397)** at 11 and 23, since η = 1 and 1/3 there and D = 2/η. The published numbers are valid measurements *of the systems they were run on* — nothing in them is wrong — but they no longer test the ceiling-setting shape. Note the trap: `count_check.py`'s `XSTAR_BY_RESIDUE` is auto-selected whenever `--modulus 24` is passed and **still holds the F = 2 centres**, so a run that looks correctly configured picks up the stale one. Pass `--centre` explicitly until that table is updated.
+
+**The script needed extending, and the extension is the load-bearing part.** `roots_mod` computed `g = D//K`, silently assuming **K | D** — true for every published row (K ∈ {1,2}, D even) and false at K = 4, D = 6, where it would have computed a different system and returned plausible numbers. It is replaced by `_local_admissible`, which enumerates exactly mod l^(1+v_l(D)+v_l(K)) at the primes dividing D·K and uses the closed form elsewhere. A second defect surfaced only at K ∤ D: `_density_integral` integrated over all real q in the window, whereas only those with K | (n−1−Dq) give an integer c, so it needed the factor **gcd(D,K)/K** — which is 1 at every published row and 1/2 at K = 4, and was the difference between a mean of 0.51 and one of 1.02.
+
+**Regression first, and it passes.** Before any new row is believed, the rewrite must reproduce the published ones to four decimals:
+
+```bash
+python3 count_check.py --nmin 200000 --nmax 215000 --maxn 99999999 \
+        --residue 1  --modulus 24 --parts 3 --dq 2 --centre 0.29289   # expect 1.0066 / 0.089
+python3 count_check.py --nmin 200000 --nmax 215000 --maxn 99999999 \
+        --residue 0  --modulus 24 --parts 2 --dq 2 --centre 0.50000   # expect 0.9867 / 0.157
+python3 count_check.py --nmin 200000 --nmax 215000 --maxn 99999999 \
+        --residue 2  --modulus 24 --parts 2 --dq 6 --centre 0.36603   # expect 1.0442 / 0.172
+python3 count_check.py --nmin 200000 --nmax 215000 --maxn 99999999 \
+        --residue 19 --modulus 24 --parts 3 --dq 4 --centre 0.25000   # expect 0.9030 / 0.134
+```
+
+All four reproduce exactly (mean and sd), across both K = 1 and K = 2 and D ∈ {2, 4, 6}, so the enumeration path and the Jacobian factor are sound where they can be checked against known answers.
+
+**The four new rows.** `--fc F` sets the fusion count directly and does not require F | D:
+
+```bash
+for r in 7 15;  do python3 count_check.py --nmin 200000 --nmax 215000 --maxn 99999999 \
+        --residue $r --modulus 24 --fc 4 --dq 2 --centre 0.16667; done
+for r in 11 23; do python3 count_check.py --nmin 200000 --nmax 215000 --maxn 99999999 \
+        --residue $r --modulus 24 --fc 4 --dq 6 --centre 0.13397; done
+```
+
+Results over [2×10⁵, 2.15×10⁵], exhaustive, 625 values each, with no n lacking a solution in its window:
+
+| n mod 24 | F | D | x\* | mean | sd |
+|---|---|---|---|---|---|
+| 7 | 4 | 2 | 0.16667 | 1.0233 | 0.095 |
+| 15 | 4 | 2 | 0.16667 | 1.0197 | 0.090 |
+| 11 | 4 | 6 | 0.13397 | **0.7979** | 0.098 |
+| 23 | 4 | 6 | 0.13397 | **0.9445** | 0.097 |
+
+**Resolved: the shortfall was a third defect in the local factor, now fixed.** The first run gave 7 and 15 at 1.02 but 11 and 23 at 0.798 and 0.944, not converging. Testing the three candidates against brute force isolated it to **candidate (ii)**, at one prime: with D = 6 and K = 4 the factor at **l = 3** returned 3/4 where the truth is 2/3 — a ratio of exactly **8/9**, which is the shortfall. The cause is that the enumeration modulus was l^v = 9, while the integrality condition 4 | (n−1−6q) lives on q mod 2; 9 being odd, the residues sample the even and odd classes 5 : 4 rather than evenly, biasing the conditional density. The modulus is now `lcm(l^v, K/gcd(D,K))`, and the formula agrees with brute force at every l at every n tested. *The other two candidates are cleared:* the c ≡ 3 (mod 4) condition is a condition on the configuration attaining the ceiling, not on the counted system, and it is satisfied by **50.1–50.4%** of solutions at all four residues — an unbiased half, so it costs a clean factor 2 in supply and nothing in the model; and no unmodelled local obstruction remains, the l = 3 factor now being correct.
+
+**The four rows, after the fix.** Exhaustive over [2×10⁵, 2.15×10⁵], 625 values each, no n lacking a solution in its window:
+
+| n mod 24 | F | D | x\* | mean | sd |
+|---|---|---|---|---|---|
+| 7 | 4 | 2 | 0.16667 | 1.0233 | 0.095 |
+| 15 | 4 | 2 | 0.16667 | 1.0197 | 0.090 |
+| 11 | 4 | 6 | 0.13397 | 0.8977 | 0.110 |
+| 23 | 4 | 6 | 0.13397 | 1.0625 | 0.109 |
+
+and converging, **two-sided**, as the finite-size reading requires — 11 runs 0.8977 → 0.9964 → 0.9853 and 23 runs 1.0625 → 0.9691 → 0.9924 across [2×10⁵], [5×10⁵] and [10⁶], with sd falling 0.110 → 0.072 → 0.060 and 0.109 → 0.077 → 0.069. These are ready to replace §3.8's four stale rows.
+
+**Three defects, and only one was visible to the regressions.** `K | D` in `roots_mod`, the missing gcd(D,K)/K in `_density_integral`, and the l = 3 sampling bias — all three are inert at K ∈ {1, 2} and so left every published row untouched, which is why the regression suite passes both before and after. A regression suite over the old parameter range cannot certify a new one; what caught these was brute-forcing the local densities directly.
+
+**Cost.** About 20 ms per value after the fast path; each row above is roughly a minute, and the [10⁶] convergence rows a few minutes each.
+
 # §2. Thinking work
 
 > **An independent read pass was run in August 2026, and this section is scoped to what it left.** A reader with no prior exposure to the documents read `orbital-evasiveness-notes.md` §§1–11, the whole of `enumeration-proof.md` (Part 0, A–J, including the B′ socle proof and Parts D, D2, E, E′, E″, F, G), `aod` §§3.3–3.4 and 5, and this file, with independent recomputation of the mod-24 ceiling constants, the v4 witness rescoring, `eta_derive.py`, the extraspecial ±E orbit sizes and E.3(ii)'s orbitals. **It found no mathematical error.** Every finding was a documentation-state defect — stale figures, duplicated blocks, and prose contradicting an artefact — and all thirteen have been applied, together with the contiguity scoping of R0 and five new `check_doc_figures.py` patterns for the phrasings that carried them. What that pass does **not** discharge is anything needing materials or judgement outside the documents, or a *second* independent reading of the parts it has now read once more. The items below are worded against that state.

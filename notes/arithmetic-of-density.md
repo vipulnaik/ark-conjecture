@@ -589,13 +589,13 @@ So the uncovered region is not open-ended. It is a *finite* interval, roughly [5
 
 with K = 1 for the even family n = c + r of §3.1 and K = 2 for the odd family n = 2c + r of §3.2. A solution is a q making all three prime, with c in a window around x\*.
 
-**Testing at the right centre is the whole point.** The count is taken over a window centred on x\*, and x\* = √η/(1 + k√η) equals the equal split 1/(k+1) **only at η = 1**. At the obstructed residues they diverge sharply — at (C, η = 1/6) the equal split sits 0.109 from x\* = 0.22474, more than twice the window half-width — so a window centred on the equal split covers a region that cannot reach the ceiling at all, and a count taken there says nothing about attainment. Each row below uses its own residue's x\*, taken from the table in §3.3.
+**Testing at the right centre is the whole point.** The count is taken over a window centred on x\*, and x\* = √η/(1 + k√η) equals the equal split 1/(k+1) **only at η = 1**. At the obstructed residues they diverge sharply — at (C, η = 1/6) the equal split sits 0.109 from x\* = 0.22474, more than twice the window half-width — so a window centred on the equal split covers a region that cannot reach the ceiling at all, and a count taken there says nothing about attainment. Each row below uses its own residue's x\*, taken from the table in §3.3 — including the **F** column, which is 4 at the residues 7, 11, 15 and 23 whose ceiling the F = 4 shape attains, and where the system is therefore c = (n − r)/4 rather than (n − r)/2. Those four rows were keyed to the superseded F = 2 optima until August 2026; re-running them required extending `count_check.py` to fusion counts not dividing D, and turned up three defects in its local-factor computation, all inert at F ≤ 2 (`pending-checks.md` R9).
 
 **How the prediction is computed.** The window has a fixed *relative* width, so the three log factors are not constant across it — at D = 12 the parameter q sweeps a factor of about 1.9 from one end to the other. The predicted count is therefore the integral of 𝔖(n)/(log q · log r · log c) across the window rather than its value at the midpoint. The two differ by well under a percent, and by more at larger D since log q ≈ log(n/(3D)) is smaller there, so nothing below turns on the choice; the integral is simply the quantity the heuristic actually predicts.
 
 **Results.** Exhaustive over n ∈ [2×10⁵, 2.15×10⁵], ratio of actual count to predicted.
 
-| n mod 24 | K | D | x\* | mean | sd |
+| n mod 24 | F | D | x\* | mean | sd |
 |---|---|---|---|---|---|
 | 0 | 1 | 2 | 0.50000 | 0.9867 | 0.157 |
 | 4 | 1 | 2 | 0.50000 | 0.9975 | 0.147 |
@@ -615,12 +615,12 @@ with K = 1 for the even family n = c + r of §3.1 and K = 2 for the odd family n
 | 21 | 2 | 2 | 0.29289 | 1.0198 | 0.097 |
 | 3 | 2 | 4 | 0.25000 | 0.9354 | 0.143 |
 | 19 | 2 | 4 | 0.25000 | 0.9030 | 0.134 |
-| 7 | 2 | 4 | 0.29289 | 1.0213 | 0.145 |
-| 15 | 2 | 4 | 0.29289 | 1.0162 | 0.142 |
+| 7 | 4 | 2 | 0.16667 | 1.0233 | 0.095 |
+| 15 | 4 | 2 | 0.16667 | 1.0197 | 0.090 |
 | 5 | 2 | 6 | 0.22474 | 1.0068 | 0.121 |
 | 17 | 2 | 6 | 0.22474 | 1.0056 | 0.123 |
-| 11 | 2 | 12 | 0.18301 | 1.1006 | 0.168 |
-| **23** | 2 | 12 | 0.22474 | 1.0341 | 0.151 |
+| 11 | 4 | 6 | 0.13397 | 0.8977 | 0.110 |
+| **23** | 4 | 6 | 0.13397 | 1.0625 | 0.109 |
 
 ```
 python3 count_check.py --nmin 200000 --nmax 215000 --maxn 99999999 \
@@ -633,8 +633,8 @@ python3 count_check.py --nmin 200000 --nmax 215000 --maxn 99999999 \
 
 | | [2×10⁵, 2.15×10⁵] | [5×10⁵, 5.03×10⁵] | [10⁶, 1.003×10⁶] |
 |---|---|---|---|
-| n ≡ 11 (mod 24), D = 12 | 1.1006 | 1.0891 | **1.0025** |
-| n ≡ 23 (mod 24), D = 12 | 1.0341 | — | **1.0033** |
+| n ≡ 11 (mod 24), F = 4, D = 6 | 0.8977 | 0.9964 | **0.9853** |
+| n ≡ 23 (mod 24), F = 4, D = 6 | 1.0625 | 0.9691 | **0.9924** |
 | n ≡ 19 (mod 24), D = 4 | 0.9030 | 1.0045 | **0.9995** |
 | n ≡ 3 (mod 24), D = 4 | 0.9354 | 0.9909 | **1.0247** |
 
