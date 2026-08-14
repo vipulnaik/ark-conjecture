@@ -20,7 +20,7 @@ Ranked, so the sections below have a stated basis. This is not the order the ite
 2. **Exhaustiveness of the GAP stages.** The subdirect-product hole is undischarged. It degrades *evidence* rather than creating an error — a missed group with larger m\* would be a counterexample rather than a silent corruption, and one with smaller m\* changes nothing — but it is the only non-circular check in the framework. **This is the one small-degree item the arithmetic programme depends on**, since Part I's two exhaustive comparisons rest on it. → `small-degree-verification.md` item 5
 3. **Part E's realisability construction.** Attainment's other leg, argued in general and checked at seven configurations from n = 10 to 308 — none of them at the fusion counts that now set four of the class ceilings. Unlike the certificate, which is verified at every row, it has no per-n verification. → **T2** for the argument, **R8** for the run that would close most of it.
 4. **§3.3.5's ceilings.** Both coordinates of the joint optimum are settled without a search — the F side by cap_F(1) = 1/(1 + √F)², the η side by the congruences of §3.3.4a — so what remains is the supply hypothesis shared with the rest of §3, plus a class-11 entry resting on 676 > 675. Nothing computed depends on any of it, these being family guarantees and hence floors for μ; the exposure is to the asymptotic story alone. → **T6**
-5. **The k = 3 analogue of the F = 4 shape.** Not a risk to k = 2 at all — it is an unexplored case in a companion note, listed because the k = 2 result it would transfer is recent and the gap is easy to forget. → **T7**
+5. **The κ parameters at k = 3.** The F = 4 result transfers to k = 3, but the tables hold κ_r = 1 and treat κ_c as free; whether κ can be steered independently of the congruences fixing F and η is unchecked. No risk to k = 2. → **T7**
 6. **The eight necessary conditions of `fb_common.py`.** Both certificates rest on these and nothing else. What matters is their being *necessary* — that is what makes an empty candidate list a proof — and that is a different reading from checking each is true. The file carries a per-condition necessity argument, so what is exposed is the quality of those eight arguments, and in particular condition (4)'s cyclic-layer stripping, which is the load-bearing one and whose necessity is threshold-scoped. The defect class to watch is an enumeration narrower than the shape space it must cover: it removes a real candidate silently and leaves the output looking clean. → **T3**
 
 ---
@@ -268,15 +268,17 @@ The claim is that the odd-n win shares within the three-part family tend to **1 
 
 **And the reason the whole note now sits outside `arithmetic-of-density.md`:** its conclusions are about runners-up. S4 wins at no residue asymptotically, and where the family does win the answer is congruence-forced with no supply argument needed — so the 1 : 1 : 2 split governs which shape is *second*, at 7 and 15, and third at 23. That is worth having for `aod` §7's disjunction-collapse, which needs the gap to the next shape down, and it is not worth carrying in the main line.
 
-### T7. The k = 3 analogue of the F = 4 shape has not been derived
+### T7. The k = 3 F = 4 rows rest on the same supply hypothesis as k = 2
 
-At k = 2 the class ceiling at four of the twelve odd residues — 7, 11, 15, 23 mod 24 — is attained by **S7 at F = 4**, a two-part shape, and the F-split within S7 is decisive there: F = 2 carries 8/24, F = 4 carries 4/24. `three-uniform-note.md` transfers the *three-part* S4 / S5 / S7-at-F=2 competition to k = 3 and does not transfer this, so three things there are open rather than wrong:
+*Resolved as a derivation; this entry records what it rests on. `three-uniform-note.md` §5.7 carries the tables.*
 
-- **The κ_c = 3 column of §5.7's table** at the four affected rows, flagged there with ‡. Its κ_c = 2 entries were recomputed from the verified formulas s\*/n = √(2F)/(√(2F) + √(2/η)) and β₃ = 1/(√(2F) + √(2/η))²; the κ_c = 3 entries need the k = 3 twist analysis redone at F = 4 rather than transcribed.
-- **The S7 census row's F-split**, which the row now records as unexamined.
-- **§5.6.4's conclusions**, which settle the internal order of the three-part shapes and are not an identification of the k = 3 winner.
+The F = 4 shape transfers to k = 3 with nothing new assumed. Three ingredients are arity-free and carry over verbatim: the **parity constraint** (at odd n with c odd and r an odd prime, F·c + r = n forces F even), the **mod-8 mechanism** (c ≡ 3 (mod 4) determines F·c mod 8, hence r, hence v₂(r − 1)), and the **η values**, since η₃ = η/2 uses the same twist and the same prime, so `aod` §3.3.4a applies unchanged. Only the cap formula differs, the arity entering as a √κ inside each term: β₃ = 1/(√(F·κ_c) + √(κ_r/η₃))².
 
-The natural first step is the k = 3 cap formula at general F — the k = 2 one, cap_F(η) = η/(1 + √(Fη))², came out of balancing two intra terms, and the k = 3 analogue β₃ = 1/(√(2F) + √(2/η))² is already verified at F ∈ {1, 2}. Extending it to F = 4 and checking whether the parity constraint and the mod-8 mechanism survive at k = 3 is a page of work of the same kind as `aod` §3.3.4a, and would either transfer the result or show why the arity breaks it.
+**At κ_c = 2 the transfer is exact:** β₃ = cap_F(η)/2, a monotone transform of the k = 2 cap, so the joint optimisation over (F, η) has the same argmax — same fusion counts, same efficiencies, same four residues — with every value halved. **At κ_c = 3 it is not a monotone transform**, and the k = 2 optimum survives at every cell but one: class 11 becomes an exact tie between F = 2 and F = 4, because the formula is symmetric in its two terms and there they swap, {√6, √12} against {√12, √6}.
+
+**What this does not settle**, and it is the same list as at k = 2: the ceilings are family guarantees, and that primes of the required form occur near the balance point in the needed density is Bateman–Horn. The arity does not improve or worsen that. Two narrower gaps also persist from k = 2 — only F ≤ 6 has been worked, and mixed three-part shapes lie outside both families.
+
+*One genuinely k = 3 item remains open:* whether κ_c and κ_r can be steered independently of the congruences fixing F and η, since the tables above hold κ_r = 1 throughout and treat κ_c as a free parameter with two values. If they are coupled to n the way η is, the κ_c = 3 column is not reachable at every residue and the tie above may be unrealisable.
 
 ## §2b. Self-contained items
 

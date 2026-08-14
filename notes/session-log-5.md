@@ -326,6 +326,22 @@ The constants: the chain's cost is **2.39**, not 3.4; the conjectured floor is *
 
 ---
 
+## 5.11 T7: the F = 4 shape transfers to k = 3
+
+The item was raised as an unexplored case and turned out to be mostly a computation, because §5.2 of `three-uniform-note.md` already carries the general cap **β₃ = 1/(√(F·κ_c) + √(κ_r/η₃))²** with η₃ = η/2. Validated against all six existing table rows in both κ columns before extending it.
+
+**Three ingredients transfer verbatim, and the reason is that none of them mentions the arity.** The **parity constraint** — at odd n with c odd and r an odd prime, F·c + r = n forces F even — is arithmetic of the decomposition. The **mod-8 mechanism** likewise: c ≡ 3 (mod 4) fixes F·c mod 8, hence r, hence v₂(r − 1). And the **η values** are unchanged, since η₃ = η/2 uses the same twist t and the same prime r, so `aod` §3.3.4a applies as written. What the arity changes is only the cap formula, where it enters as a √κ inside each term.
+
+**At κ_c = 2 the transfer is exact**: β₃ = cap_F(η)/2, a monotone transform of the k = 2 cap, so the whole joint optimisation over (F, η) has the *same* argmax — same fusion counts, same efficiencies, same four residues — with every value halved. That is a stronger statement than "the result transfers": it says the k = 3 optimisation is not a separate problem in that column.
+
+**At κ_c = 3 it is not a monotone transform, and one cell changes.** The k = 2 optimum survives at 7, 15 and 23, but **class 11 becomes an exact tie between F = 2 and F = 4** — because β₃ is symmetric in its two terms and at that residue they swap: F = 2 with η = 1/6 gives {√6, √12}, F = 4 with η = 1/3 gives {√12, √6}. Identically equal, not numerically. At κ_c = 2 the corresponding pairs are {2, √12} and {√8, √6}, which differ, and F = 4 wins strictly.
+
+New closed forms for the previously blank column: **(7 − 2√6)/50** at 7 and 15, and **(3 − 2√2)/6** at 11 and 23, with balance points (6 − √6)/5 and 2 − √2.
+
+**What remains open is narrower than the item was.** The supply hypothesis is unchanged and unimproved by the arity — these are family guarantees either way. Two gaps persist from k = 2 (only F ≤ 6 worked; mixed three-part shapes outside both families). And one item is genuinely k = 3: the tables hold κ_r = 1 and treat κ_c as a free parameter with two values, so **whether κ can be steered independently of the congruences that fix F and η is unchecked** — if it is coupled to n the way η is, the κ_c = 3 column is not reachable at every residue and the class-11 tie may be unrealisable. T7 now records that rather than the original gap.
+
+---
+
 ## 6. Method notes
 
 **Dehistoricization.** The primary documents were left carrying only the current state — no "this used to say", no superseded figures kept for contrast, no status lines describing a claim's history. Everything of that kind is in this file. The one deliberate exception is the census's v2/v3/v4 provenance banner, which is *about* the tables rather than about the documents' own past and is load-bearing for reading the winner counts until the rebuild finishes.
