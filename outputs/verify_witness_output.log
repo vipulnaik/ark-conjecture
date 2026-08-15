@@ -1,0 +1,118 @@
+Part E realisability battery
+============================
+
+witness   : p=5 q=2: 2x5
+p, q      : 5, 2
+n         : 10   C(n,2) = 45
+twists    : [ 4 ]   (diagonal-carrier stripped)
+|Gamma|   : 200
+  chain G2_is_p_group: true
+  chain G2_normal_in_G: true
+  chain G1_normal_in_G: true
+  chain middle_is_cyclic: true
+  chain top_is_q_group: true
+  chain transitive_parts: true
+orbitals  : [ 20, 25 ]  (sum 45)
+predicted : [ 20, 25 ]
+min orbital / mu_bound : 20 / 20
+VERDICT   : true
+
+witness   : p=2 q=3: 3x4
+p, q      : 2, 3
+n         : 12   C(n,2) = 66
+twists    : [ 3 ]   (diagonal-carrier stripped)
+|Gamma|   : 576
+  chain G2_is_p_group: true
+  chain G2_normal_in_G: true
+  chain G1_normal_in_G: true
+  chain middle_is_cyclic: true
+  chain top_is_q_group: true
+  chain transitive_parts: true
+orbitals  : [ 18, 48 ]  (sum 66)
+predicted : [ 18, 48 ]
+min orbital / mu_bound : 18 / 18
+VERDICT   : true
+
+witness   : p=5 q=3: 3x5
+p, q      : 5, 3
+n         : 15   C(n,2) = 105
+twists    : [ 4 ]   (diagonal-carrier stripped)
+|Gamma|   : 1500
+  chain G2_is_p_group: true
+  chain G2_normal_in_G: true
+  chain G1_normal_in_G: true
+  chain middle_is_cyclic: true
+  chain top_is_q_group: true
+  chain transitive_parts: true
+orbitals  : [ 30, 75 ]  (sum 105)
+predicted : [ 30, 75 ]
+min orbital / mu_bound : 30 / 30
+VERDICT   : true
+
+witness   : p=3 q=2: 1x9 + 1x17*
+p, q      : 3, 2
+n         : 26   C(n,2) = 325
+twists    : [ 8, 16 ]   (diagonal-carrier stripped)
+|Gamma|   : 19584
+  chain G2_is_p_group: false
+  chain G2_normal_in_G: true
+  chain G1_normal_in_G: true
+  chain middle_is_cyclic: true
+  chain top_is_q_group: true
+  chain transitive_parts: true
+orbitals  : [ 36, 136, 153 ]  (sum 325)
+predicted : [ 36, 136, 153 ]
+min orbital / mu_bound : 36 / 36
+VERDICT   : false
+
+witness   : p=7 q=5: 5x7
+p, q      : 7, 5
+n         : 35   C(n,2) = 595
+twists    : [ 6 ]   (diagonal-carrier stripped)
+|Gamma|   : 504210
+  chain G2_is_p_group: true
+  chain G2_normal_in_G: true
+  chain G1_normal_in_G: true
+  chain middle_is_cyclic: true
+  chain top_is_q_group: true
+  chain transitive_parts: true
+orbitals  : [ 105, 245, 245 ]  (sum 595)
+predicted : [ 105, 245 ]
+min orbital / mu_bound : 105 / 105
+VERDICT   : true
+
+witness   : p=73 q=5: 2x73 + 1x101*
+p, q      : 73, 5
+n         : 247   C(n,2) = 30381
+twists    : [ 9, 25 ]   (diagonal-carrier stripped)
+|Gamma|   : 242203050
+  chain G2_is_p_group: false
+  chain G2_normal_in_G: true
+  chain G1_normal_in_G: true
+  chain middle_is_cyclic: true
+  chain top_is_q_group: true
+  chain transitive_parts: true
+#I  You are calculating `Orbits' with a large set of seeds.
+#I  If you gave a domain and not seeds consider `OrbitsDomain' instead.
+orbitals  : [ 1314, 1314, 1314, 1314, 2525, 2525, 5329, 14746 ]  (sum 30381)
+predicted : [ 1314, 2525, 5329, 14746 ]
+min orbital / mu_bound : 1314 / 1314
+VERDICT   : false
+
+witness   : p=53 q=37: 3x53 + 1x149*
+p, q      : 53, 37
+n         : 308   C(n,2) = 47278
+twists    : [ 52, 37 ]   (diagonal-carrier stripped)
+|Gamma|   : 128038388556
+  chain G2_is_p_group: false
+  chain G2_normal_in_G: true
+  chain G1_normal_in_G: true
+  chain middle_is_cyclic: true
+  chain top_is_q_group: true
+  chain transitive_parts: true
+#I  You are calculating `Orbits' with a large set of seeds.
+#I  If you gave a domain and not seeds consider `OrbitsDomain' instead.
+orbitals  : [ 4134, 5513, 5513, 8427, 23691 ]  (sum 47278)
+predicted : [ 4134, 5513, 8427, 23691 ]
+min orbital / mu_bound : 4134 / 4134
+VERDICT   : false
