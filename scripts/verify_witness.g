@@ -104,14 +104,29 @@ BuildConfig := function(w, twists)
     cl := w.classes[i];  F := cl.F;  c := cl.c;  base := offs[i];
     fld := GF(c);  prim := PrimitiveRoot(fld);
     elts := AsSSortedList(fld);          # index x <-> elts[x]
-    # --- translations: bottom layer, one subgroup per block ---
+    # --- translations ---
+    # WHICH LAYER.  A p-characteristic class puts its per-block translations in
+    # the BOTTOM p-group; a FOREIGN class does not.  Part E's construction is
+    # explicit: "each foreign part contributes translations C_r lying in the
+    # cyclic layer".  It has to be there -- Gamma_2 is a p-group, and C_r with
+    # r <> p cannot sit inside one, which is also what forces the foreign
+    # translations to be diagonal (Lemma D2, step 1).  Adding them to
+    # gens.bottom instead makes G2 = C_p^a x C_r, so IsPGroup(G2) fails on
+    # every configuration with a foreign part -- not because the construction
+    # is wrong but because the chain being tested is not the construction's.
+    # The cyclic layer stays cyclic because r is coprime to every twist there,
+    # which is exactly what Lemma C enforces and what the enumeration checks.
     for b in [0..F-1] do
       for s in Filtered(elts, y -> y <> Zero(fld)) do
         images := [1..n];
         for x in [1..c] do
           images[base + b*c + x] := base + b*c + Position(elts, elts[x] + s);
         od;
-        Add(gens.bottom, PermList(images));
+        if cl.foreign then
+          Add(gens.cyclic, PermList(images));
+        else
+          Add(gens.bottom, PermList(images));
+        fi;
       od;
     od;
     # --- twist: diagonal, order twists[i], in the cyclic layer (or top if q-power)
@@ -212,7 +227,7 @@ end;
 
 # --------------------------------------------------------------------- the check
 VerifyWitness := function(str, muBound)
-  local w, twists, cfg, chain, sizes, terms, n, f, verdict;
+  local w, twists, cfg, chain, sizes, terms, n, f, verdict, why;
   w := ParseWitness(str);
   twists := ConstructionTwists(w);
   cfg := BuildConfig(w, twists);
@@ -231,16 +246,37 @@ VerifyWitness := function(str, muBound)
   Print("orbitals  : ", sizes, "  (sum ", Sum(sizes), ")\n");
   Print("predicted : ", terms, "\n");
   Print("min orbital / mu_bound : ", Minimum(sizes), " / ", muBound, "\n");
-  verdict := chain.ok.all and Minimum(sizes) = muBound
-             and Sum(sizes) = Binomial(n, 2);
+  # Collect the REASONS, not just the conjunction.  A bare "false" next to
+  # orbital data that visibly matches the prediction invites the reader to
+  # conclude the battery is broken, or to hunt in the orbitals for a
+  # discrepancy that is not there -- the failure is usually a chain condition
+  # several lines above.  Name every failing condition on the verdict line.
+  why := [];
+  for f in RecNames(chain.ok) do
+    if f <> "all" and chain.ok.(f) <> true then Add(why, f); fi;
+  od;
+  if Minimum(sizes) <> muBound then
+    Add(why, Concatenation("min orbital ", String(Minimum(sizes)),
+                           " <> mu_bound ", String(muBound)));
+  fi;
+  if Sum(sizes) <> Binomial(n, 2) then
+    Add(why, Concatenation("orbital sizes sum to ", String(Sum(sizes)),
+                           ", not C(n,2) = ", String(Binomial(n, 2))));
+  fi;
   # the multiset check: every predicted term must appear, allowing the
   # construction to split a class into several orbitals of equal size
   if not IsSubset(Set(sizes), Set(terms)) then
-    Print("*** predicted terms not all realised: missing ",
-          Difference(Set(terms), Set(sizes)), "\n");
-    verdict := false;
+    Add(why, Concatenation("predicted terms not realised: missing ",
+                           String(Difference(Set(terms), Set(sizes)))));
   fi;
-  Print("VERDICT   : ", verdict, "\n\n");
+  verdict := Length(why) = 0;
+  if verdict then
+    Print("VERDICT   : true\n\n");
+  else
+    Print("VERDICT   : false -- ", JoinStringsWithSeparator(why, "; "), "\n");
+    Print("            (everything not named above passed; in particular the\n");
+    Print("             orbital sizes are only at issue if named here)\n\n");
+  fi;
   return verdict;
 end;
 
