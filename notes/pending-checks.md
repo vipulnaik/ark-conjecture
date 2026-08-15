@@ -53,7 +53,7 @@ Every one of these is a per-n statement that does not extend itself, and none of
 ```bash
 # 1. cheapest, and gates everything: is the file a well-formed enumeration?
 python3 validate_table.py mu_table_safe_v4.csv --baseline mu_table_safe_v2.csv \
-        --ladder ladder_weak_v7.txt
+        --ladder ladder_weak_v8.txt
 
 # 2. the per-n collapse proof, then the same run with the trusted base shrunk
 python3 fallback_cert.py mu_table_safe_v4.csv --verbose
@@ -95,11 +95,11 @@ python3 check_doc_figures.py mu_table_safe_v4.csv *.md
 
 ## R7. Consume the ladder worklist with the adaptive branch-and-bound
 
-> **Nothing owed at the conjectured floor.** Against the 10⁶ ladder, `--floor 0.04` prunes all **46,722** entries on their supplied lower bounds — the worklist minimum is 0.04453 — so the branch-and-bound has no survivor to examine and δ ≥ 1/25 over 10⁶ is established without computing a single further B(n). What follows is **sharpening**, wanted only if a tighter constant is the goal, plus the mechanics for whenever the range is extended.
+> **Nothing owed at the conjectured floor.** Against the 10⁶ ladder, `--floor 0.04` prunes all **46,520** entries on their supplied lower bounds — the worklist minimum is 0.04453 — so the branch-and-bound has no survivor to examine and δ ≥ 1/25 over 10⁶ is established without computing a single further B(n). What follows is **sharpening**, wanted only if a tighter constant is the goal, plus the mechanics for whenever the range is extended.
 
 *Turning the ladder's lower bounds into decisions about B(n) — **one job, not three**, writing into the existing table.*
 
-> **Regenerate the worklist before consuming it.** The ladder's families and its CAP table both determine the list, so a worklist produced by an older `ladder_verify.py` ranks against the wrong ceiling and omits the shapes that ceiling now depends on. Two properties of the current list are worth knowing before planning a run: it is thresholded at the **asymptotic constant**, which is 7 − 4√3, so it is long — 46,722 entries to 10⁶ — and correspondingly weak as a "compute B(n) here" ranking, since falling short of that ceiling is generic at computed sizes rather than exceptional. The **floor question is not read off this list at all** but off the separate `--floor` count, which reports the values failing a stated floor and is 0 at 1/25 throughout 10⁶. What the list is good for is its *lowest* entries: the ten smallest all lie in [10³, 10⁴], and computing B there is what would sharpen the verified floor.
+> **Regenerate the worklist before consuming it.** The ladder's families and its CAP table both determine the list, so a worklist produced by an older `ladder_verify.py` ranks against the wrong ceiling and omits the shapes that ceiling now depends on. Two properties of the current list are worth knowing before planning a run: it is thresholded at the **asymptotic constant**, which is 7 − 4√3, so it is long — 46,520 entries to 10⁶ — and correspondingly weak as a "compute B(n) here" ranking, since falling short of that ceiling is generic at computed sizes rather than exceptional. The **floor question is not read off this list at all** but off the separate `--floor` count, which reports the values failing a stated floor and is 0 at 1/25 throughout 10⁶. What the list is good for is its *lowest* entries: the ten smallest all lie in [10³, 10⁴], and computing B there is what would sharpen the verified floor.
 
 ```bash
 python3 ladder_verify.py 1000000                      # regenerates ladder_weak.txt

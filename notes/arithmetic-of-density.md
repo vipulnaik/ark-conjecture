@@ -561,18 +561,18 @@ So the picture is not "computed below, conjectural above" with an unreachable ba
 | global floor δ ≥ 0.04453, hence δ ≥ 1/25 | n ≤ 10⁶ | computed (§5), from the four-family ladder alone |
 | global floor δ ≥ 1/25 | n > 10⁶ | conjectural, ineffectively |
 
-**Where the verification is hardest is a middle range, and it is bounded.** The lower envelope of achievable density does not fall away as n grows — it dips and then recovers. Minimum bound over the **46,722-entry** worklist, by decade:
+**Where the verification is hardest is a middle range, and it is bounded.** The lower envelope of achievable density does not fall away as n grows — it dips and then recovers. Minimum bound over the **46,520-entry** worklist, by decade:
 
 | n | entries | minimum bound | attained at |
 |---|---|---|---|
 | [10², 10³) | 6 | 0.05703 | 527 |
 | [10³, 10⁴) | 251 | 0.04574 | 1817 |
 | **[10⁴, 10⁵)** | 3,435 | **0.04453** | **11183** |
-| [10⁵, 10⁶] | 43,029 | 0.05603 | 173627 |
+| [10⁵, 10⁶] | 42,828 | 0.05603 | 173627 |
 
 The global minimum is the third row, and it is **fixed by n = 20,000**: over the remaining 980,000 values of the scan nothing undercuts n = 11183. The per-block floors climb steadily thereafter — 0.05603, 0.05928, 0.06209, 0.06150, 0.06363, 0.06415, 0.06499, 0.06590, 0.06478 across the blocks of 10⁵ — which is the recovery, not noise.
 
-> **The worklist is an even split between the two extremal classes, which is the mod-24 prediction landing hard.** Of the 46,722 entries, **23,475 (50.2%) are n ≡ 11 (mod 24) and 23,201 (49.7%) are n ≡ 23**, with 43 spread across the other residues. Those two classes share a ceiling (§3.3.5), and the split is as even as one could ask for. It is worth remembering what a worklist thresholded at a class ceiling can and cannot show: the earlier list, cut at 0.050510, was 99.92% class 23 — not because class 23 is worse but because that number *was* class 23's ceiling under the F = 2 rungs, so it appeared on merely falling short while class 11 had to fall 25% below a higher one. **A residue's prominence in a worklist is a fact about the threshold, not about the residue.**
+> **The worklist is an even split between the two extremal classes, which is the mod-24 prediction landing hard.** Of the 46,520 entries, **23,372 (50.2%) are n ≡ 11 (mod 24) and 23,102 (49.7%) are n ≡ 23**, with 43 spread across the other residues. Those two classes share a ceiling (§3.3.5), and the split is as even as one could ask for. It is worth remembering what a worklist thresholded at a class ceiling can and cannot show: the earlier list, cut at 0.050510, was 99.92% class 23 — not because class 23 is worse but because that number *was* class 23's ceiling under the F = 2 rungs, so it appeared on merely falling short while class 11 had to fall 25% below a higher one. **A residue's prominence in a worklist is a fact about the threshold, not about the residue.**
 
 > **The families are not underperforming at the extremal classes.** The per-residue min-ratio column of the scan puts n ≡ 23 at 0.620 of its cap and n ≡ 11 at 0.671, against a spread from 0.327 (n ≡ 16) to 0.671 across all twenty-four. The two lowest-cap classes are mid-range in *relative* shortfall, and the even classes fall proportionally further from their caps. So the low absolute floor at n ≡ 23 comes from its cap being lowest, not from a family the ladder is missing there — which is the check worth running whenever a class dominates the low tail.
 
@@ -903,9 +903,7 @@ The worklist admits a search that converges fast, because `ladder_verify` return
 >
 > **This became true only after the S7 family was given its layer split**, and the gotcha is worth keeping. A fused class of F blocks does not put every prime of F into the cyclic layer: F = F_mid·F_top with F_top a power of the top prime q (`enumeration-proof.md` G.2), so the foreign twist must avoid the primes of **F_mid**, not of F. Excluding all of F is a valid lower bound but discards every configuration whose foreign twist needs a prime dividing F — in practice **q = 2 with F even**, the Fermat-prime branch. It cost exactly one value in range: at **n = 935** the ladder read 0.04898 against B(935) = 0.07534, on `6x113 + 1x257*` with F_top = 2, F_mid = 3, binding on orb(257, 256) = 32,896. The repair lifts 935 above the asymptotic ceiling and 1007 from 0.06444 to 0.06494, changes nothing else below 5·10⁴, and leaves the global floor at 0.04453 (n = 11183).
 
-> **The 10⁶ figures below predate the layer-split repair and want regenerating.** The repair only ever raises a value, so every bound stated from the old run remains valid — the floor of 0.04453 at n = 11183 is unchanged at N = 5·10⁴ and the repair moved nothing else there — but the **worklist counts** (46,722 entries, the decade splits, the 50.2 : 49.7 class split) are counts of what fell below a threshold and can only shrink. Regenerate them with the current `ladder_verify.py`; the run is a few hours and the numbers to replace are marked at each site.
-
-**The ladder alone now settles the range**, without the branch-and-bound needing to compute a single B(n): every one of the 46,722 worklist entries scores at least 0.04453, so M never falls below that and no survivor exists to examine. What the search is for is *sharpening* — computing B at the lowest entries to raise the verified floor — rather than establishing it. An illustrative run against an earlier, weaker ladder shows the shape of the descent:
+**The ladder alone now settles the range**, without the branch-and-bound needing to compute a single B(n): every one of the 46,520 worklist entries scores at least 0.04453, so M never falls below that and no survivor exists to examine. What the search is for is *sharpening* — computing B at the lowest entries to raise the verified floor — rather than establishing it. An illustrative run against an earlier, weaker ladder shows the shape of the descent:
 
 > M → 0.041812 (n = 575) → 0.041107 (n = 2183) → 0.037524 (n = 2291) → 0.029282 (n = 3059) → 0.026117 (n = 3239), each step an n whose family score fell below the standing minimum. Under the corrected families none of those five is a candidate at all: 2291 reaches 0.066767 and 3239 reaches 0.043570, and the descent terminates immediately.
 >
@@ -917,7 +915,7 @@ The worklist admits a search that converges fast, because `ladder_verify` return
 
 is proved, the ladder alone supplying it: every one of the 10⁶ values scores at least that, with the minimum at **n = 11183 = 53·211**. In particular **δ(n) ≥ 1/25 throughout**, with 11% to spare. What the bound does not license is reading it as a *value* of μ — it is a lower bound at n = 11183 like everywhere else, and B(11183) has not been computed.
 
-**What the branch-and-bound has left to do.** The worklist holds **46,722** entries — every n whose family score falls below the asymptotic ceiling 7 − 4√3 — but **none below 1/25**, so it has nothing left to eliminate against the conjecture as stated. Its remaining use is sharpening: the operative question is **"does B(11183) exceed 0.04453"**, and more generally whether any of the ten lowest entries (11183, 1817, 9911, 2759, 5063, 3503, 7031, 2183, 6275, 1739 — all in the 10³–10⁴ band where the two engines cross) is tight. Computing B at those ten would either raise the verified floor above 1/25 with real margin or, if the ladder is tight at 11183, fix the minimum below 10⁶ exactly.
+**What the branch-and-bound has left to do.** The worklist holds **46,520** entries — every n whose family score falls below the asymptotic ceiling 7 − 4√3 — but **none below 1/25**, so it has nothing left to eliminate against the conjecture as stated. Its remaining use is sharpening: the operative question is **"does B(11183) exceed 0.04453"**, and more generally whether any of the ten lowest entries (11183, 1817, 9911, 2759, 5063, 3503, 7031, 2183, 6275, 1739 — all in the 10³–10⁴ band where the two engines cross) is tight. Computing B at those ten would either raise the verified floor above 1/25 with real margin or, if the ladder is tight at 11183, fix the minimum below 10⁶ exactly.
 
 > **Probe before committing to any of them.** Finding one configuration that clears a threshold is sub-second; proving optimality is what costs hours. A targeted scan over the two-part census shapes, scored with `mu_enumerate_v2.py`'s own `value()`, reproduced B(n) exactly at all eleven worklist values where B was independently known.
 
@@ -925,14 +923,14 @@ is proved, the ladder alone supplying it: every one of the 10⁶ values scores a
 
 ### 5.2 The hard range is bounded on both sides, and it is small
 
-The worry motivating §3.5 — that between the computable range and the asymptotic one lies a middle where neither argument reaches — is answerable empirically, and the answer is favourable. Minimum lower bound over each decade of the 46,722-entry worklist:
+The worry motivating §3.5 — that between the computable range and the asymptotic one lies a middle where neither argument reaches — is answerable empirically, and the answer is favourable. Minimum lower bound over each decade of the 46,520-entry worklist:
 
 | n | values in worklist | minimum bound | attained at |
 |---|---|---|---|
 | [10², 10³) | 6 | 0.05703 | 527 |
 | [10³, 10⁴) | 251 | 0.04574 | 1817 |
 | **[10⁴, 10⁵)** | 3,435 | **0.04453** | **11183** |
-| [10⁵, 10⁶] | 43,029 | 0.05603 | 173627 |
+| [10⁵, 10⁶] | 42,828 | 0.05603 | 173627 |
 
 The middle decade holds the global minimum and the one after it recovers by a quarter, so the region where neither argument reaches is a single decade wide and its worst value clears 1/25.
 
@@ -1113,7 +1111,7 @@ So: **the route yields robustness at floors well below the ceilings, and sharp s
 
 ## 8. Open questions specific to this document
 
-1. **Extend the ladder past 10⁶.** The scan is complete below 10⁶ (§5) and gives δ ≥ 0.04453 at n = 11183, with nothing below 1/25 anywhere in range. Pushing further is O(N²/log N) — 3.5 hours to 10⁶, so 10⁷ is multi-day. The lower envelope has risen monotonically since [10⁴, 10⁵) and the global minimum has been fixed since n = 20,000, so the expected return is confirmation rather than a new minimum; the value is in how far the pattern can be pushed, not in what it is likely to find. **The cheaper win is at the other end**: computing B(n) at the ten lowest worklist entries, all in [10³, 10⁴], would either lift the verified floor above 1/25 with real margin or pin the minimum below 10⁶ exactly.
+1. **Extend the ladder past 10⁶.** The scan is complete below 10⁶ (§5) and gives δ ≥ 0.04453 at n = 11183, with nothing below 1/25 anywhere in range. Pushing further is O(N²/log N) — about 4 hours to 10⁶, so 10⁷ is multi-day. The lower envelope has risen monotonically since [10⁴, 10⁵) and the global minimum has been fixed since n = 20,000, so the expected return is confirmation rather than a new minimum; the value is in how far the pattern can be pushed, not in what it is likely to find. **The cheaper win is at the other end**: computing B(n) at the ten lowest worklist entries, all in [10³, 10⁴], would either lift the verified floor above 1/25 with real margin or pin the minimum below 10⁶ exactly.
 
 2. **Bound the s = 4 and s = 5 branches.** The only item here that is a gap in a *proof* rather than in evidence. *Recount after the rebuild:* at n = 3239 and 3059 the density rises sharply under the corrected shape space, so both leave the sub-1/25 set and the branch may narrow without any new theorem. E.1 caps s = 1 by the Mersenne constants and E.3(iii) caps the s = 2 repunit branch; s = 4 has neither, and is not thin enough for an E.4-style collapse. An absolute cap would have to come from the foreign block's twist, as in those two. The search clears it at every computed n, so nothing is unproved — but the gap widens as the floor falls.
 

@@ -64,7 +64,7 @@ The gap was not an uncovered fusion count — F = 6 is in `ladder_verify.py`'s `
 
 **Cost.** 4.0 s → 5.4 s at N = 20,000 and 16.6 s → 21.4 s at N = 50,000, a stable ~1.3×. The extra branches would have cost ~1.45× on their own; caching the twist-strip per exclusion set rather than recomputing it per (branch, c) recovers most of that, and the result is bit-identical to the uncached version. A 10⁶ run goes from about 3.5 h to about 4.7 h.
 
-**Owed:** the 10⁶ rerun. Every bound stated from the old run stays valid, since the repair only raises values, but the worklist *counts* — 46,722 entries, the decade splits, the class split — can only shrink and want regenerating. A caveat marking this is in §5.1.
+**The 10⁶ rerun is done** (`ladder_verify_1e6_output_v8.log`, 14,142 s). It confirms the N ≤ 5·10⁴ picture at full scale: **no value decreased anywhere**, 202 values lifted out of the worklist and 26 improved within it, the worklist falling 46,722 → **46,520** (decades 6 / 251 / 3,435 / 42,828) and the class split holding at 50.2 : 49.7. The global floor is unchanged at **0.04453 (n = 11183)**, so every bound previously stated from the old run stands. Against the current table the ladder is tight at **107 of 107** joined values. Notable: the lifted values cluster heavily near 1.9·10⁵ rather than spreading evenly, which is the Fermat-prime branch becoming available where 2-power twists are dense — worth a look if the fused families are ever extended.
 
 ## Outstanding
 
