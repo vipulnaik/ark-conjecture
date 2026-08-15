@@ -565,7 +565,7 @@ So the picture is not "computed below, conjectural above" with an unreachable ba
 
 | n | entries | minimum bound | attained at |
 |---|---|---|---|
-| [10², 10³) | 7 | 0.04898 | 935 |
+| [10², 10³) | 6 | 0.05703 | 527 |
 | [10³, 10⁴) | 251 | 0.04574 | 1817 |
 | **[10⁴, 10⁵)** | 3,435 | **0.04453** | **11183** |
 | [10⁵, 10⁶] | 43,029 | 0.05603 | 173627 |
@@ -899,6 +899,12 @@ The constant 1/25 is deliberately loose, though less so than 1/50 was. Two thing
 
 The worklist admits a search that converges fast, because `ladder_verify` returns a *lower* bound: if LB(n) ≥ M for the standing minimum M, then δ(n) ≥ M and n cannot lower it, so n is discarded without computation. Take the smallest known δ as M, discard every candidate with LB ≥ M, compute δ at a survivor, lower M if it beats it, repeat.
 
+> **The ladder is tight wherever both are known, which is what licenses extrapolating it.** Joining the worklist against the computed table — `validate_table.py --ladder`, which reads both files and recomputes nothing — the ladder equals B(n) at **every one of the 100 values in both**. So on the measured range the four families do not merely bound δ(n), they attain it, and the ladder's advantage is entirely in cost: O(n/log n) per value against the enumeration's n^2.9. That is the empirical basis for reading the floor out to 10⁶ as an estimate of δ rather than only as a bound. The check also runs in the other direction: a ladder value *above* B(n) would mean a family scored too generously, a shape missing from the enumeration, or a broken collapse.
+>
+> **This became true only after the S7 family was given its layer split**, and the gotcha is worth keeping. A fused class of F blocks does not put every prime of F into the cyclic layer: F = F_mid·F_top with F_top a power of the top prime q (`enumeration-proof.md` G.2), so the foreign twist must avoid the primes of **F_mid**, not of F. Excluding all of F is a valid lower bound but discards every configuration whose foreign twist needs a prime dividing F — in practice **q = 2 with F even**, the Fermat-prime branch. It cost exactly one value in range: at **n = 935** the ladder read 0.04898 against B(935) = 0.07534, on `6x113 + 1x257*` with F_top = 2, F_mid = 3, binding on orb(257, 256) = 32,896. The repair lifts 935 above the asymptotic ceiling and 1007 from 0.06444 to 0.06494, changes nothing else below 5·10⁴, and leaves the global floor at 0.04453 (n = 11183).
+
+> **The 10⁶ figures below predate the layer-split repair and want regenerating.** The repair only ever raises a value, so every bound stated from the old run remains valid — the floor of 0.04453 at n = 11183 is unchanged at N = 5·10⁴ and the repair moved nothing else there — but the **worklist counts** (46,722 entries, the decade splits, the 50.2 : 49.7 class split) are counts of what fell below a threshold and can only shrink. Regenerate them with the current `ladder_verify.py`; the run is a few hours and the numbers to replace are marked at each site.
+
 **The ladder alone now settles the range**, without the branch-and-bound needing to compute a single B(n): every one of the 46,722 worklist entries scores at least 0.04453, so M never falls below that and no survivor exists to examine. What the search is for is *sharpening* — computing B at the lowest entries to raise the verified floor — rather than establishing it. An illustrative run against an earlier, weaker ladder shows the shape of the descent:
 
 > M → 0.041812 (n = 575) → 0.041107 (n = 2183) → 0.037524 (n = 2291) → 0.029282 (n = 3059) → 0.026117 (n = 3239), each step an n whose family score fell below the standing minimum. Under the corrected families none of those five is a candidate at all: 2291 reaches 0.066767 and 3239 reaches 0.043570, and the descent terminates immediately.
@@ -923,7 +929,7 @@ The worry motivating §3.5 — that between the computable range and the asympto
 
 | n | values in worklist | minimum bound | attained at |
 |---|---|---|---|
-| [10², 10³) | 7 | 0.04898 | 935 |
+| [10², 10³) | 6 | 0.05703 | 527 |
 | [10³, 10⁴) | 251 | 0.04574 | 1817 |
 | **[10⁴, 10⁵)** | 3,435 | **0.04453** | **11183** |
 | [10⁵, 10⁶] | 43,029 | 0.05603 | 173627 |

@@ -53,6 +53,11 @@ ap = argparse.ArgumentParser()
 ap.add_argument("table")
 ap.add_argument("--baseline", default=None,
                 help="an earlier table to compare against; enables the monotonicity check")
+ap.add_argument("--ladder", default=None, metavar="FILE",
+                help="a ladder_weak*.txt worklist (n, lower-bound-on-delta per line); "
+                     "enables the two cross-artefact checks against the ladder. The file "
+                     "is READ, never recomputed -- these checks join on n and do no "
+                     "arithmetic beyond a ratio, so they stay inside the suite's budget.")
 ap.add_argument("--quiet", action="store_true", help="print FAILs only")
 ap.add_argument("--explain", type=int, default=None, metavar="N",
                 help="print the full term breakdown for one n and exit -- the case where "
@@ -992,6 +997,96 @@ def c_eff(R, base):
     if not tot:
         return ("SKIP", "no foreign blocks", [])
     return ("INFO", f"{full} of {tot} foreign blocks at eta = 1 ({full/tot:.1%})", [])
+
+
+# ---------------------------------------------------------------- the ladder
+#
+# `ladder_verify.py` scores four explicit families and so returns a LOWER bound
+# on delta(n); the table holds B(n), which equals delta(n) wherever the collapse
+# certificate applies.  They are different computations of the same quantity by
+# different routes, and nothing else in the pipeline compares them -- which is
+# exactly the defect class this framework keeps producing: two artefacts that
+# would contradict each other, and no check that looks at both.
+#
+# Two things fall out of the join, and they are different in kind.
+#
+#   (1) A CORRECTNESS check.  The ladder's bound can never EXCEED the table's
+#       density: the ladder exhibits a construction, so ladder(n) <= delta(n),
+#       and delta(n) <= B(n) by the enumeration.  A ladder value above B(n)
+#       means one of the three is wrong -- a family scored too generously, a
+#       missing shape depressing B, or a broken collapse -- and it is the kind
+#       of error nothing else here would catch.
+#
+#   (2) A COVERAGE diagnostic.  Where the ladder is much BELOW B(n) it is not
+#       wrong, merely weak: its four families did not find what the enumeration
+#       did.  That matters because the ladder is what carries the floor out to
+#       10^6, far past the table, so a systematic gap is a reason to distrust
+#       the floor's *sharpness* out there -- and the gap at a given n names the
+#       shape the ladder is missing, since B(n)'s witness is recorded.
+#
+# TOLERANCE.  Worklist files carry ~5 significant digits, so a value rounded up
+# in the last place reads as a violation.  Compare with a tolerance of one unit
+# in the last recorded place rather than exactly, or the check reports dozens of
+# spurious failures and gets switched off.
+def _load_ladder(path):
+    out = {}
+    for line in open(path):
+        p = line.split()
+        if len(p) >= 2:
+            try:
+                out[int(p[0])] = float(p[1])
+            except ValueError:
+                continue
+    return out
+
+
+@check("A", "the ladder's lower bound never exceeds the table's density",
+       "aod section 5.1; ladder_verify.py")
+def a_ladder_sound(R, base):
+    if not A.ladder:
+        return ("SKIP", "no --ladder given", [])
+    lad = _load_ladder(A.ladder)
+    bad = []
+    for r in R:
+        lb = lad.get(r.n)
+        if lb is None:
+            continue
+        if lb > r.delta + 1.1e-5:          # one unit in the worklist's last place
+            bad.append("n=%d ladder %.6f > B/C(n,2) %.6f" % (r.n, lb, r.delta))
+    joined = sum(1 for r in R if r.n in lad)
+    if not joined:
+        return ("SKIP", "no n in both files", [])
+    if bad:
+        return ("FAIL", "%d of %d joined values have ladder > table" % (len(bad), joined), bad[:12])
+    return ("PASS", "%d values joined, none exceeding" % joined, [])
+
+
+@check("C", "where the ladder under-explores relative to the enumeration",
+       "aod section 5.1, section 5.2",
+       expect="the ladder should be TIGHT at most joined values -- it and the enumeration "
+              "then agree on delta(n) by two routes. A ratio well above 1 is a value where "
+              "the four families miss a configuration the enumeration finds, and the witness "
+              "column names the shape they are missing. Any decade minimum in aod section "
+              "5.2 that appears here is a LADDER bound and not delta at that n")
+def c_ladder_gap(R, base):
+    if not A.ladder:
+        return ("SKIP", "no --ladder given", [])
+    lad = _load_ladder(A.ladder)
+    g = []
+    for r in R:
+        lb = lad.get(r.n)
+        if lb and lb > 0:
+            g.append((r.delta / lb, r.n, lb, r.delta, r.witness))
+    if not g:
+        return ("SKIP", "no n in both files", [])
+    g.sort(reverse=True)
+    tight = sum(1 for x in g if x[0] < 1.01)
+    lines = ["n=%-6d ladder %.5f  B %.5f  x%.2f  %s" % (n, lb, d, ratio, w)
+             for ratio, n, lb, d, w in g[:6] if ratio >= 1.01]
+    return ("INFO",
+            "%d joined; ladder tight (within 1%%) at %d of them; largest gap x%.2f at n = %d"
+            % (len(g), tight, g[0][0], g[0][1]),
+            lines)
 
 
 @check("C", "share of values with omega(n) = 2, which is the multiplicative engine's reach",

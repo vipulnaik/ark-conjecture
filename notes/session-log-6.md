@@ -48,6 +48,24 @@ Also measured, since it bears on (H) clause 4: c ≡ 3 (mod 4) holds at **50.1�
 
 **One thing the recount exposed.** Over the whole CSV the same census gives S7 at F = 4 as 71 rather than 50, and three-part winners as 20 rather than 16 — the worklist tail holding 21 of the F = 4 winners and 4 of the three-part ones out of 47 rows. That is the contiguity bias hitting exactly the shapes the ceiling analysis is about, since the worklist selects low-density n and those are where the fused rungs win.
 
+## The ladder cross-check, and n = 935
+
+`validate_table.py` had **no** check joining the table against `ladder_weak*.txt`, and none that subsumes it in spirit: its `--baseline` check compares the same quantity across two tables, whereas this compares B(n) against a lower bound computed by a different route. Two checks added, both reading the worklist file rather than recomputing, so the suite stays inside its budget: a **correctness** one (the ladder's bound can never exceed the table's density, since the ladder exhibits a construction and δ ≤ B) and a **coverage** diagnostic (where it falls well below, the four families miss something the enumeration finds, and the witness names it). Tolerance matters — worklist files carry five significant digits, so an exact comparison reports ~40 spurious failures from last-place rounding.
+
+Result: the ladder is **tight at 100 of the 101 values in both files**, so at those n the two routes agree on δ(n). The exception is **n = 935**, where the ladder gives 0.04898 against B(935) = 0.07534 — a factor 1.54. The enumeration's winner is `6x113 + 1x257*`, a six-block cyclic-layer-fused class with a Fermat foreign prime, and the ladder's families do not reach F = 6. Consequence for the documents: the [10², 10³) row of §5.2 and §3.7 is a **ladder** figure, not δ(935), and it is the decade minimum. More generally the same gap should be expected wherever a fused class of F ∉ {1, 2, 4} wins, which is a reason to read the floor beyond the table's reach as a bound rather than as an estimate of δ.
+
+## Closing n = 935: the ladder's layer split
+
+The gap was not an uncovered fusion count — F = 6 is in `ladder_verify.py`'s `FSET`. It was one line: the S7 family took `exclF = prime_divisors_of(F)` and required the foreign top prime to avoid **every** prime of F. But F = F_mid·F_top with F_top a power of q (`ep` G.2), so only F_mid competes in the cyclic layer; the foreign twist may use q itself. At n = 935 the winner is `6x113 + 1x257*` with F_top = 2, F_mid = 3, binding on orb(257, 256) = 32,896 — and since 257 − 1 = 2⁸ the only usable q is 2, which the old exclusion forbade. This is the G.2 pitfall surviving in one script after being repaired in the enumerator; it never violated the ladder's contract (a lower bound stays a lower bound) but it discarded a real family.
+
+**Fix.** Each F now contributes one branch per admissible layer split: the all-cyclic reading, plus one per prime q | F with F_top the q-part, F_mid the rest, and the efficiency **pinned to that q** rather than maximised over allowed primes. Each branch is a genuine configuration, so the max over branches is still a lower bound.
+
+**Verified at N = 20,000 and N = 50,000.** Monotone — **no value decreased anywhere**, which is the property to check since the fix must only add configurations. Exactly two values moved: n = 935 lifts above the asymptotic ceiling and leaves the worklist, and n = 1007 rises 0.06444 → 0.06494. The global floor is unchanged at **0.04453 (n = 11183)**. And the point of the exercise: joined against the table, the ladder is now tight at **100 of 100** values, so on the whole measured range the four families *attain* δ(n) rather than merely bounding it — which is what licenses reading the 10⁶ floor as an estimate rather than only as a bound, at O(n/log n) per value against the enumeration's n^2.9.
+
+**Cost.** 4.0 s → 5.4 s at N = 20,000 and 16.6 s → 21.4 s at N = 50,000, a stable ~1.3×. The extra branches would have cost ~1.45× on their own; caching the twist-strip per exclusion set rather than recomputing it per (branch, c) recovers most of that, and the result is bit-identical to the uncached version. A 10⁶ run goes from about 3.5 h to about 4.7 h.
+
+**Owed:** the 10⁶ rerun. Every bound stated from the old run stays valid, since the repair only raises values, but the worklist *counts* — 46,722 entries, the decade splits, the class split — can only shrink and want regenerating. A caveat marking this is in §5.1.
+
 ## Outstanding
 
 De-historicization is complete across all five documents; version references survive only as filenames. The review items in `pending-checks.md` §2 are unchanged by this session except where noted there, and `fb_common.py` remains the largest unread surface.

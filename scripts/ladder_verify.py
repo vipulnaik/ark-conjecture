@@ -176,6 +176,36 @@ for r in range(3, N + 1, 2):
 # Computed on demand and memoised, since only a handful of exclusion sets occur.
 _EFF_EX_CACHE = {}
 
+# Efficiency at a SPECIFIC top prime q, as against the max over an allowed set.
+# Needed because a fused class splits as F = F_mid * F_top with F_top a power of
+# q (`enumeration-proof.md` G.2): the cyclic layer carries only F_mid, so the
+# foreign twist has to avoid the primes of F_mid but MAY use q itself, and when
+# it does its efficiency is pinned to that q rather than maximised over primes.
+# Built once per q, over the same sieve pass shape as EFF, so the cost is a few
+# array builds and nothing inside the family loops.
+_EFF_AT_CACHE = {}
+
+
+def eff_at(q0):
+    """Foreign efficiency when the top prime is exactly q0, per r."""
+    if q0 in _EFF_AT_CACHE:
+        return _EFF_AT_CACHE[q0]
+    arr = [0.0] * (N + 1)
+    for r in range(3, N + 1, 2):
+        if not sieve[r]:
+            continue
+        m = r - 1
+        tq, x = 1, m
+        while x % q0 == 0:
+            x //= q0
+            tq *= q0
+        if tq == 1:
+            continue                       # q0 does not divide r-1: no twist
+        pm = tq if tq % 2 == 0 else 2 * tq
+        arr[r] = min(pm, m) / m
+    _EFF_AT_CACHE[q0] = arr
+    return arr
+
 
 def eff_excluding(excl):
     """Best foreign efficiency over top primes q NOT in `excl`, per r."""
@@ -275,7 +305,66 @@ def orb_ld(c, t, char2):
     return min(raw, comb(c, 2))
 
 
+# The layer splits of each fusion count, precomputed.
+#
+# WHY THERE IS MORE THAN ONE READING PER F.  A fused class of F blocks does NOT
+# put every prime of F into the cyclic layer: F = F_mid * F_top with F_top a
+# power of the top prime q, and only F_mid competes with the twist and the
+# foreign prime there (`enumeration-proof.md` G.2, and the n = 308 witness in
+# its Part 0).  Taking exclF = primes(F) for every F is the pre-repair reading;
+# it stays a valid lower bound, but it silently discards every configuration
+# whose foreign twist needs a prime dividing F -- in practice q = 2 with F even,
+# i.e. Fermat-prime foreign blocks.  That is what made this ladder report
+# delta(935) >= 0.04898 where B(935) = 0.07534, on `6x113 + 1x257*` with
+# F_top = 2 and F_mid = 3.
+#
+# So each F contributes one branch per admissible split: the all-cyclic reading
+# (q avoiding every prime of F), plus one per prime q | F, where F_top is the
+# q-part, F_mid is the rest, and the efficiency is pinned to that q.  Each
+# branch is a genuine configuration, so taking the best over branches keeps the
+# result a lower bound.
+#
+# COST.  The branch list is built once; the scan runs the same single pass over
+# PPs per branch that it previously ran per F.  FSET's members have one or two
+# distinct prime divisors, so this is bounded by a factor of three on the S7
+# family alone and measures well below that, the extra branches being the ones
+# whose efficiency array is mostly zero and so exit at `e <= 0` immediately.
 PPs = [c for c in range(2, N + 1) if ispp[c]]
+
+S7_BRANCHES = []
+for _F in FSET:
+    _pr = prime_divisors_of(_F)
+    S7_BRANCHES.append((_F, _pr, eff_excluding(_pr)))
+    for _q in sorted(_pr):
+        _mid = _F
+        while _mid % _q == 0:
+            _mid //= _q
+        _excl = prime_divisors_of(_mid) if _mid > 1 else set()
+        S7_BRANCHES.append((_F, _excl, eff_at(_q)))
+
+# The twist a branch leaves on a c-block depends only on its exclusion set, so
+# strip once per set rather than once per (branch, c) inside the scan.  This is
+# what pays for the extra branches: it removes a division loop from the inner
+# body, and the branch list has only a handful of distinct exclusion sets.
+_STRIP_CACHE = {}
+
+
+def strip_map(excl):
+    key = frozenset(excl)
+    if key in _STRIP_CACHE:
+        return _STRIP_CACHE[key]
+    m = {}
+    for c in PPs:
+        d = c - 1
+        for qq in key:
+            while d % qq == 0:
+                d //= qq
+        m[c] = d
+    _STRIP_CACHE[key] = m
+    return m
+
+
+S7_BRANCHES = [(F_, ex_, ef_, strip_map(ex_)) for F_, ex_, ef_ in S7_BRANCHES]
 print(f"sieve and efficiencies to {N:,} in {time.time()-t:.1f}s")
 
 LO_X, HI_X = 0.10, 0.55        # contains every class's balance point
@@ -395,9 +484,7 @@ def achieved(n, stop_at=None):
     # F = 4 and F = 6 are the winning shapes at the arithmetically weakest n,
     # where no multiplicative escape exists, and omitting them understates those
     # values by more than a factor of two.
-    for Fp in FSET:
-        exclF = prime_divisors_of(Fp)
-        EFFx = eff_excluding(exclF)
+    for Fp, exclF, EFFx, STRIP in S7_BRANCHES:
         # The within-class cross term takes the coefficient F for odd F and F/2
         # for even F -- the minimum pair-orbital of a transitive group of degree
         # F.  Using F for even F would OVERSTATE the family and break the
@@ -422,11 +509,7 @@ def achieved(n, stop_at=None):
             # make this an UPPER bound on the family rather than a lower one.
             # The correct cap is Fp * orb(c, dmax) with dmax the largest divisor
             # of c-1 coprime to F.
-            dmax = c - 1
-            for qq in exclF:
-                while dmax % qq == 0:
-                    dmax //= qq
-            intra = Fp * orb_ld(c, dmax, base[c] == 2)
+            intra = Fp * orb_ld(c, STRIP[c], base[c] == 2)
             v = min(intra, cross_coeff * c * c, m * r, e * comb(r, 2))
             if v > best * C:
                 best = v / C

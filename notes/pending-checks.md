@@ -52,7 +52,8 @@ Every one of these is a per-n statement that does not extend itself, and none of
 
 ```bash
 # 1. cheapest, and gates everything: is the file a well-formed enumeration?
-python3 validate_table.py mu_table_safe_v4.csv --baseline mu_table_safe_v2.csv
+python3 validate_table.py mu_table_safe_v4.csv --baseline mu_table_safe_v2.csv \
+        --ladder ladder_weak_v7.txt
 
 # 2. the per-n collapse proof, then the same run with the trusted base shrunk
 python3 fallback_cert.py mu_table_safe_v4.csv --verbose
@@ -72,7 +73,7 @@ python3 check_doc_figures.py mu_table_safe_v4.csv *.md
 
 **What each one is for, and what to read off it.**
 
-- **`validate_table.py`** — a FAIL in **group A** means the run itself is broken and nothing downstream is meaningful; a FAIL in **group B** is a real contradiction between table and documents; **group C** is INFO, each line printing the expected asymptotic beside the measurement. `--explain N` gives one row's full term breakdown, `--quiet` shows failures only, `--baseline` adds shape-migration reporting, which is how winners changing census row become visible.
+- **`validate_table.py`** — pass `--ladder` the current worklist as well as `--baseline` the previous table: the two cross-artefact checks it enables are the cheapest instance of the defect class T1 item 3 names, and they cost a dict join rather than a recomputation. One is a correctness check (the ladder's lower bound must never exceed the table's density) and one a coverage diagnostic (where it falls well below, the four families are missing a shape the enumeration finds, and the witness column names it). A FAIL in **group A** means the run itself is broken and nothing downstream is meaningful; a FAIL in **group B** is a real contradiction between table and documents; **group C** is INFO, each line printing the expected asymptotic beside the measurement. `--explain N` gives one row's full term breakdown, `--quiet` shows failures only, `--baseline` adds shape-migration reporting, which is how winners changing census row become visible.
 - **`fallback_cert.py`** — the headline is *0 candidates*. Then read three numbers, because **the low-density recount lives here**: the **density floor**, the **largest permitted s**, and the **theorem residue**. They move together, since s ≤ 1/√δ − 1 means a falling floor admits a larger s, and **s = 4 is the first branch with no theorem covering it**. At the current floor of 0.045742 (n = 1817) the bound is 3.68, so s ≤ 3 and E.1 / E.3(iii) / E.4 close everything but one class of 349 E.3(ii) branches. **The margin to δ = 1/25, where s = 4 reopens, is 0.0457 against 0.0400 — one extension could close it.** If `largest permitted s` ever prints 4, `enumeration-proof.md`'s Corollary after E.3 and Part I's tail figures both want re-deriving rather than recounting. The `--no-theorems` run should agree exactly, and the agreement is not vacuous here: 2,204 of 2,553 branches are dispatched in the normal run, so disabling them genuinely moves work into the search.
 - **`wide_cert.py`** — read the `settled by theorem:` line. At NMAX ≤ 10⁴ it prints NONE, because B_lo is small enough that the foreign-cap filter removes the s = 1 and s = 3 branches before the dispatch sees them, so a `--no-theorems` comparison there agrees *trivially* and is no evidence about E.1 / E.3 / E.4. `--menu` cross-checks pass 1 against the family menu; `--refresh` rebuilds the cached B_lo, which is rarely needed since the cache is keyed on everything that determines it.
 - **`k3_galois.py`** — the k = 3 Galois admissibility predicate, with a self-test covering the a = 35 witness, the superset relation against the naive reading, and the gain-versus-top-prime distinction. Import it; do not re-derive it.
