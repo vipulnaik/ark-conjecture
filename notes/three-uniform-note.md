@@ -20,7 +20,7 @@
 | §4 the shape ranking | **measured only, no systematic search** — the least reliable section |
 | §5 the additive engine | the allocation formula is **derived**; the ceiling is a bound, and the table is a search |
 | §5.6 the mod-12/24 law | **derived**, and verified at every odd prime power c ≤ 83 |
-| §5.7 the ceiling table | **derived** from §5.2 with η imported from `aod`; three rows provisional |
+| §5.7 the ceiling table | **derived** from §5.2 with η imported from `aod`; the F = 4 rows follow from the same machinery (see the box after the table) |
 | §6.2 the n = 133 example | measured; the comparison is a **search over a hand-specified family**, not an enumeration |
 | §5.8 the k = 3 sandwich | a reading of what would be required; no k = 3 certificate exists |
 | §6 the escapes | the mechanisms are derived; the **counts are order-of-magnitude**, not proved |
@@ -692,6 +692,6 @@ The exercise was partly a fresh-eyes pass, and four things about the k = 2 progr
 2. **Prove the orbit law's stabiliser step** properly rather than modulo the routine argument in §2.1. (§2.2.2's criterion *is* proved necessary as well as sufficient; what remains untested there are the two clauses out of computational reach — the gain factor being the least prime divisor of a, first distinguishable at a = 25, and m < a never gaining, first distinguishable at a = 10.)
 3. **Redo Part C** — the partition-only bound and its two-part reduction are the only genuinely pair-specific piece of the structural chain.
 4. **Decide whether the threshold statement is new.** Black's framework does not produce dimension thresholds, and no other k ≥ 3 work found so far does; but the k = 2 literature is deep enough that a threshold statement may exist in some form.
-5. **Finish rows 7, 15 and 23 of the ceiling table** (§5.7). They are decided at k = 2 by a tie that §5.6.4 disturbs, and the entries there are lower bounds rather than ceilings. This is contained work: run §5.6.3's c mod 24 analysis against each rung.
+5. ~~Finish rows 7, 15 and 23 of the ceiling table (§5.7).~~ **Done** — the rows are set by the two-part F = 4 shape at both arities, outside the three-part tie entirely; see the box after §5.7's table. What remains of the item is only §5.6.4's internal ordering of the three-part shapes, which decides second place there.
 6. **Convert §6's escape counts** from representation counts to counts of n, as `aod` §4.3 does. They are currently order-of-magnitude.
 7. **k ≥ 4.** The orbit law generalises (κ_k(d) = max{m ≤ k : m | d}), so the same analysis runs; the threshold degrades to Θ(n²) against C(n,k) throughout, and the shape ranking presumably inverts further.

@@ -1,0 +1,130 @@
+# Monotone transitive Boolean functions: what the framework buys, and what it does not
+
+*Companion to `orbital-evasiveness-notes.md`. The k-uniform documents move along the arity axis; this one moves off it entirely, to nontrivial monotone Boolean functions on N coordinates invariant under a transitive group. That setting contains all the k-uniform cases (a k-graph property is the case N = C(n,k) with Γ = Sₙ acting on k-sets), so it is the natural ceiling of the programme.*
+
+**The short answer, stated first because it is negative and the reasons are the interesting part.** The μ(n) apparatus contributes **almost nothing** to the general transitive case, and the reason is structural rather than a matter of the bounds being weak: in the general setting the group acts on the coordinates directly, so transitivity is available where the graph case only ever gets vertex-transitivity, and the Oliver argument closes at its very first rung without any of the machinery. What the framework does contribute is a *localisation of the difficulty* — a computable criterion picking out exactly the groups where the argument fails, and a scan finding the first of them.
+
+**Status.**
+
+| section | standing |
+|---|---|
+| §1 the criterion | **proved**; it is one paragraph, and essentially KSS's argument stated for general Γ |
+| §2 why μ(n) does not transfer | **proved** |
+| §3 the scan | **computed**, degrees 4–14, with an insoluble residue recorded |
+| §4 T(12,162) | **computed** |
+| §5 what this says about graph properties | commentary |
+| §6 the counterexample programme | a proposal |
+
+---
+
+## 1. The criterion, and it closes at t = 1
+
+Let P be a nontrivial monotone decreasing property of subsets of an N-element coordinate set, Δ_P its simplicial complex, and Γ ≤ S_N a group preserving P.
+
+> **Proposition 1.** If Γ contains a **transitive** Oliver subgroup H, then P is evasive.
+
+*Proof.* Suppose not. Non-evasive ⟹ Δ_P collapsible ⟹ ℤ-acyclic, and H acts on it. The H-invariant subsets of the coordinates are unions of H-orbits, and H is transitive, so they are exactly ∅ and the whole set. The whole set is not in P (nontriviality) and ∅ is, so **Δ_P^H = {∅}**, the complex with no vertices, of Euler characteristic **0**. Oliver's theorem for an H that is p-by-cyclic-by-q forces χ(Δ_P^H) ≡ 1 (mod q), and 0 ≡ 1 (mod q) is false for every prime q — and false outright in the trivial-top case, where the congruence collapses to χ = 1. ∎
+
+Three corollaries, each a one-line check on Γ:
+
+- **A regular cyclic subgroup suffices.** C_N is cyclic, hence Oliver with Γ₂ = 1 and a trivial top. So any Γ containing an N-cycle is done.
+- **A transitive Sylow subgroup suffices**, a p-group being Oliver with Γ₁ = Γ₂ = itself.
+- **Prime-power N is done**, via the regular elementary abelian subgroup of AGL(1, N) — which is KSS's theorem, recovered as the special case where the Sylow route fires.
+
+> **This is the t = 1 row of `small-degree-computation.md` §2.4**, which says that with one orbital *nothing survives*. There it is a row in a table about fixed complexes; here it is the entire theory. The difference is that in the graph setting t = 1 requires a 2-homogeneous group and so is available only at prime powers, whereas here t = 1 *is* transitivity, which is the hypothesis.
+
+---
+
+## 2. Why μ(n) does not transfer, and what that says about its role
+
+The framework's central quantity is m\*(Γ) = the minimum size of a Γ-orbital, i.e. of a Γ-orbit on **pairs** of vertices — and δ = m\*/C(n,2). Its analogue here is the minimum Γ-orbit on **coordinates**, and for transitive Γ that is N: the whole thing, in one orbit.
+
+So the general-transitive analogue of the density is δ = 1, at every N and every transitive Γ — the maximum possible — and by Proposition 1 the conclusion follows immediately with no optimisation, no shape space, no ceilings and no arithmetic. **Every part of the apparatus is machinery for the case t ≥ 2, and the general setting does not have that case.**
+
+> **Which locates precisely what the graph setting costs, and it is worth stating as the framework's own explanation of itself.** For a graph property the group acts on **vertices**, while the coordinates are **pairs**. A vertex-transitive group is therefore *not* coordinate-transitive: its induced action on pairs has one orbit only when it is 2-homogeneous, which for solvable groups forces prime-power degree (`solvable-relaxation.md` §1). At every composite non-prime-power n the pair action has t ≥ 2 orbits, Δ_P^Γ acquires vertices, and the χ condition stops being a contradiction and becomes a constraint that a real property can satisfy — which is exactly `small-degree-computation.md` §7.4's finding that the two-orbital criterion "sharpens but does not close".
+>
+> **So the whole δ apparatus is the price of the induced action.** μ(n) is measuring how close a vertex action can come to being coordinate-transitive, and the mod-24 ceilings are the arithmetic of how close that is. Nothing analogous arises when the action is on the coordinates to begin with.
+
+**The one thing that does transfer is the negative result about escalation.** `small-degree-computation.md` §7.1's one-sidedness diagnosis — every χ condition and every monotone propagation pushes coordinates *into* P, and the only OUT-generator in the whole system is nontriviality — is a statement about the constraint system and not about graphs. It applies verbatim to any CSP over a general Boolean property, and it predicts that at a group where Proposition 1 fails, adding more groups to a battery will not produce UNSAT either.
+
+---
+
+## 3. Where Proposition 1 fails: a scan of the transitive groups
+
+Proposition 1 turns the whole question into a finite group-theoretic one that can simply be computed:
+
+> **For which transitive Γ ≤ S_N is there no transitive Oliver subgroup?**
+
+Those groups are the *only* possible homes for a counterexample, since every other transitive group settles its properties outright. The scan (`oliver_transitive_scan.g`): for each transitive group of each degree, test G itself; then look for an N-cycle; then for a transitive Sylow subgroup; then, for solvable G, walk the full subgroup lattice.
+
+| degree | # transitive | **proved: no transitive Oliver subgroup** | still unresolved |
+|---|---|---|---|
+| 4, 5 | 5, 5 | 0 | 0 |
+| 6 | 16 | 0 | 0 |
+| 7 | 7 | 0 | 0 |
+| 8 | 50 | 0 | 0 |
+| 9 | 34 | 0 | 0 |
+| **10** | 45 | 0 | **4** — T(10, 7), (10, 26), (10, 31), (10, 44) |
+| 11 | 8 | 0 | 0 |
+| **12** | **301** | **1 — T(12,162)** | **1** — T(12, 295) |
+| 13 | 9 | 0 | 0 |
+| **14** | 63 | 0 | **4** — T(14, 10), (14, 30), (14, 54), (14, 62) |
+
+**Among the groups the scan resolves, degree 12 is the first failure, and it is a single group out of 301.** Degrees 4–9, 11 and 13 are settled completely: every transitive group there contains a transitive Oliver subgroup, so every nontrivial monotone invariant property at those degrees is evasive.
+
+*On the unresolved column, which turned out more interesting than expected.* The solvable groups are all resolved by the lattice route. What remains is nine **almost-simple** groups where GAP's lattice route needs the SmallGroups identification (absent here), and where a randomised search over subgroups generated by up to three random elements failed after 3,000 trials each:
+
+> A₅ and A₆ and S₆ on 10 points (orders 60, 360, 720), **A₁₀** (1,814,400); **M₁₂** (95,040) on 12 points; PSL(3,2) and PSL(2,13) on 14 points (168, 1,092), one of order 322,560, and **A₁₄**.
+
+**The naive expectation — that big insoluble groups are rich enough to contain a transitive Oliver subgroup — is not obviously right, and A₁₀ shows why.** An Oliver group is solvable, so what is needed is a transitive *solvable* subgroup carrying the chain. On 10 points a natural candidate is the regular C₁₀, generated by a 10-cycle — but a 10-cycle is an **odd** permutation and so lies outside A₁₀. Whether A₁₀ has any transitive solvable subgroup at all on its natural action is a real question, not a formality. **These nine are genuinely open**, and a failed randomised search is weak evidence for "no" rather than any evidence for "yes"; resolving them properly is item 1 of §6.
+
+---
+
+## 4. T(12,162)
+
+| | |
+|---|---|
+| order | 576 |
+| solvable | yes |
+| point stabiliser | order 48 |
+| derived series | 576 ▷ 144 ▷ 16 ▷ 1 |
+| block systems | blocks of size 6 and of size 2 |
+| element orders | 1, 2, 3, 4, 6, 8 — **no element of order 12** |
+| transitive Sylow subgroup | none (neither p = 2 nor p = 3) |
+| **transitive subgroups** | **exactly one: G itself** |
+| G Oliver? | **no** |
+
+The last two rows are the sharp statement, and they are stronger than the scan's criterion required: **G is minimal transitive and is not itself an Oliver group.** So the failure is not that some transitive subgroup was missed — there are none to miss. Every route into Proposition 1 is closed at once, and closed for a single reason.
+
+> **Degree 12 is where the literature's counterexample lives.** Illies (1978) gave a nontrivial monotone transitive Boolean function that is **not evasive**, on **12 variables** — the standing counterexample showing that "transitive ⟹ evasive" is false in general, and the reason the generalised Aanderaa–Rosenberg conjecture is stated for graph properties rather than for all transitive Boolean functions.
+>
+> **The scan rediscovers that degree from pure group theory**, with no input from the counterexample: the first degree at which the Oliver argument can fail at all is 12, and it fails at exactly one group. **What is not verified here is that Illies's group is T(12,162)** — the inference is from the degree alone, and the identification should be checked against the source before anything is claimed. If it holds, it converts a known isolated example into a systematic account of why 12 is the first degree, and of why nothing smaller can work.
+
+---
+
+## 5. What this sharpens about graph properties
+
+The question this document was written to answer is what makes graph properties different, and the scan gives a sharper answer than "the group is bigger".
+
+**The general conjecture is false, and among the groups the scan resolves it fails as early as it possibly can.** Degrees 4 through 9, 11 and 13 admit no failure at all — every transitive group there contains a transitive Oliver subgroup, so every nontrivial monotone invariant property at those degrees is evasive, unconditionally and without any of this framework. Subject to the nine open almost-simple cases at degrees 10, 12 and 14, the conjecture survives to degree 11 by group theory alone and dies at 12.
+
+**The graph case is not a sub-case of the general one where the group happens to be large; it is a case where the group acts on the wrong set.** For a graph property on n vertices the coordinate set is the C(n,2) pairs and the group is Sₙ acting through the induced action, which is *never* transitive on coordinates for n ≥ 2... except that it is: **Sₙ is transitive on pairs**. So Proposition 1 applies with Γ = Sₙ, and every Sₙ-invariant monotone property — i.e. every graph property — would be evasive.
+
+> **That cannot be right, and finding the error is the content of this section.** The step that fails is the identification of the relevant group. A graph *property* is Sₙ-invariant, and Sₙ *is* transitive on the C(n,2) coordinates, so Proposition 1 appears to prove ARK outright. The resolution is that Oliver's theorem requires an Oliver **group**, and Sₙ is not one for n ≥ 5 — it is not even solvable. The criterion needs a transitive Oliver *subgroup* of Sₙ *acting on the pairs*, and a subgroup of Sₙ that is transitive on pairs is precisely a 2-homogeneous group, which for solvable groups forces prime-power degree. **So the graph case is exactly the general case, and the entire difficulty is that the 2-homogeneity requirement is far more demanding than transitivity on n points.**
+>
+> This is the cleanest statement of the difference available, and it reframes the whole programme: **μ(n) is what one falls back on when no transitive Oliver subgroup exists on the coordinate set.** At prime powers one does exist — AGL(1, p^k) is 2-homogeneous on pairs — and KSS follows from Proposition 1 directly. At every other n none exists, t ≥ 2, and the δ machinery is the substitute.
+
+**And it explains why the general case is *not* the place to look for leverage.** Ω(n²) is the ceiling of the k-uniform results at every arity (`general-k-note.md` §5), and the general Boolean setting has no ambient structure at all to trade for a better constant. The needle does not move there, as expected.
+
+---
+
+## 6. The counterexample programme, which is where the value is
+
+If the object of the exercise is to sharpen what distinguishes graph properties, the scan suggests a concrete and cheap programme.
+
+1. **Close the nine open almost-simple cases, then extend the scan.** The right tool is not the subgroup lattice but the transitive-groups library itself: a transitive Oliver subgroup of G is in particular a transitive group of that degree which is solvable and Oliver, so enumerate *those* first (a short list per degree — they are the entries the scan already classifies) and test each for embedding in G. That is a small computation and it decides the cases rather than merely failing to find. **A₁₀ is the one to do first**, both because the 10-cycle obstruction makes "no" plausible and because a "no" there would push the first failing degree down from 12 to 10 and put the Illies account in question. Then extend to degree 20; the output is a list of candidate degrees with a short list of groups at each.
+2. **Check the Illies identification** against the 1978 source. If Illies's group is T(12,162), the scan is validated non-circularly and the account of degree 12 is complete; if it is not, then either the scan has missed a group or Illies's example is invariant under a group with a transitive Oliver subgroup — and the second would be a contradiction with Proposition 1 and would mean an error somewhere, which is worth knowing quickly.
+3. **Run the CSP at T(12,162).** The whole `small-degree-computation.md` pipeline applies verbatim with the coordinate action in place of the pair action, and the object is much smaller: 12 coordinates rather than 45 or 66, and 2^12 subsets rather than 12 million isomorphism classes. **If it reproduces a non-evasive property, the pipeline is validated against a known counterexample** — which is exactly the negative control §10 item 7 of that document asks for and has never had. That is worth doing regardless of what else comes of this.
+4. **Then ask the sharpening question.** Given a counterexample at T(12,162), what does its structure use that a graph property cannot? The scan says the group has no transitive Oliver subgroup; a graph property's group always has *some* structure at the pair level even when 2-homogeneity fails. Making that comparison precise is what would sharpen the distinction, and it is the reason this document exists rather than the bounds.
+
+> **What is not worth doing** is trying to improve the general-transitive bound with the δ apparatus. §2 says why: the machinery is a substitute for a transitive Oliver subgroup, and where one exists the answer is already exact, while where none exists the machinery has nothing to act on either.

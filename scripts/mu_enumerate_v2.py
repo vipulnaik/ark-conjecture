@@ -7,8 +7,11 @@ A configuration on n points is
 
     n = sum_i  F_i * c_i        (i = 1..k orbits)
 
-  * F_i is a power of the top prime q      (fusion count; tower depth is absorbed
-                                            entirely into F_i, by Part G.2)
+  * F_i = Fmid_i * Ftop_i                  (fusion count; tower depth is absorbed
+                                            entirely into F_i, by Part G.2.
+                                            Ftop_i a power of the top prime q;
+                                            Fmid_i ANY integer, living in the
+                                            cyclic layer -- see class Part)
   * c_i is a prime power                   (finest-block size)
   * each c_i is either p-characteristic (a power of the bottom prime p, twist any
     divisor of c_i - 1) or FOREIGN (a prime != p, twist a q-power, by Lemma B')
@@ -16,7 +19,7 @@ A configuration on n points is
 
 Orbital sizes:
     intra orbit i          F_i * orb(c_i, d_i)
-    within orbit i (F_i>1) (F_i if q odd else F_i/2) * c_i^2
+    within orbit i (F_i>1) (F_i if F_i odd else F_i/2) * c_i^2   [parity of F, not q]
     between orbits i, j    at most s_i * s_j,  s_i = F_i * c_i
 
 and m*(config) is the minimum of these.  B(n) is the max over configurations.
