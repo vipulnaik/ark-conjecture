@@ -139,13 +139,13 @@ This is best possible up to the o(1), since δ(n) = 1 would force 2-homogeneity,
 
 The constant δ₀ above is deliberately crude. Optimising the block sizes and the efficiency t/(r−1) gives materially better constants, which depend on n modulo 12 through local conditions at the primes 2 and 3; we do not need that refinement here.
 
-A companion computation, which we do not reproduce here since it rests on a classification of the possible orbit structures rather than on constructions, evaluates μ(n) exactly for all composite non-prime-power n ≤ 2298 and gives
+A companion computation, which we do not reproduce here since it rests on a classification of the possible orbit structures rather than on constructions, evaluates μ(n) exactly for all composite non-prime-power n ≤ 2600, and a separate family-scan argument gives
 
-> min { δ(n) : n ≤ 10⁶, n composite, not a prime power } = 0.02611…,
+> min { δ(n) : n ≤ 10⁶, n composite, not a prime power } ≥ 0.04453,
 
-attained at n = 3239. Read as a lower bound — which is all the present argument needs — this says the true density constant is about **9 times** the δ₀ = 1/350 proved above.
+attained at n = 11183; over the exactly-computed range the minimum is 0.045742, at n = 1817. Read as a lower bound — which is all the present argument needs — this says the true density constant is at least **15 times** the δ₀ = 1/350 proved above.
 
-The comparison is worth making carefully, because the two statements have different quantifiers and the computation is the stronger of the two on that axis. The Theorem gives δ(n) ≥ 1/350 **for all sufficiently large n**, and says nothing about any particular n. The computation gives δ(n) ≥ 0.0261 for **every** composite non-prime-power n in [6, 10⁶] — a global statement over its range, with no exceptional set: the minimum is attained in the middle of the range, at n = 3239, and small n are comfortably above it (δ = 0.400 at n = 6, 0.273 at n = 12). So 1/350 is conservative not merely as an eventual constant but as a global one, and no n is currently known at which δ is small.
+The comparison is worth making carefully, because the two statements have different quantifiers and the computation is the stronger of the two on that axis. The Theorem gives δ(n) ≥ 1/350 **for all sufficiently large n**, and says nothing about any particular n. The computation gives δ(n) ≥ 0.0445 for **every** composite non-prime-power n in [6, 10⁶] — a global statement over its range, with no exceptional set: the minimum is attained in the middle of the range, at n = 11183, and small n are comfortably above it (δ = 0.400 at n = 6, 0.273 at n = 12). So 1/350 is conservative not merely as an eventual constant but as a global one, and no n is currently known at which δ is small.
 
 ## 5. Comparison with BBKN
 
