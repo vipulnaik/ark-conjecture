@@ -30,6 +30,7 @@
 | the part-count bound $k < 1/\sqrt\delta$ | Prop. F.1 | only needed to make the *search* finite |
 | prime-power block sizes $c = p^e$ | throughout | the note takes $c$ prime for self-containedness |
 | the reverse implication, $\mu \Rightarrow$ prime statements | `arithmetic-of-density.md` §6 | not needed for evasiveness |
+| the full $\theta$-ladder of shifted-prime inputs, with quantifiers and attributions | `arithmetic-of-density.md` §3.6 | the note now carries the three rungs that bear on it — Bombieri–Vinogradov, Baker–Harman, Chowla — and the framing of (H) as the $\theta = 1$ endpoint; what it omits is the Elliott–Halberstam rung, the two-column attribution split, and the primary-source caveats |
 | the parametric-vs-fixed-system distinction, and where Bateman–Horn does and does not apply | `arithmetic-of-density.md` §3.5 | the note states the conclusion — (H) is of Goldbach type, not a Bateman–Horn statement — without the full comparison |
 
 The exponent $2$ in the note's Theorem needs none of this. What the omitted material buys is a much better constant, exact values, and the reverse direction.
@@ -100,6 +101,8 @@ The middle term lying between the two is the arithmetic check that both are righ
 ## 3. Statements in the note's language
 
 **The two engines.** The note's constructions are all *additive*: disjoint blocks whose sizes sum to $n$, with density capped at $1/k^2$ for $k$ blocks. The framework has a second, *multiplicative* engine — a single class of $F$ blocks of size $c$ fused by the top group, $n = Fc$, with density $1/F$. The note uses it exactly once, in §4 at $n = 2m$, without naming it: that is $F = 2$, giving $1/2$. The engine requires $n$ to have at most two distinct prime factors and so covers a density-zero set of $n$, which is why the note is right to treat it as a special family rather than a general method.
+
+**The $\theta$-ladder is now carried by the note in outline.** §5 of the note states the parametrisation $P(r-1) > r^{\theta} \Rightarrow \mu \gtrsim n^{1+\theta}$, places BBKN at $\theta = 1/2$ and (H) at $\theta = 1$, and gives Shparlinski's two rungs — $\theta = 1/4$ unconditionally for all large $n$, and $\theta = 0.677$ (now $0.679$) for almost all $n$. Three things in §3.6 do not travel and should not be reconstructed from the note: the **attribution split** between who proved an arithmetic input and who noticed this framework consumes it (only the $0.679$ update and the $\theta$ framing are ours); the **ERH trap**, that BBKN's ERH bound is superseded by Shparlinski's unconditional $n^{5/4+o(1)}$ and should not be quoted as a baseline; and the observation that the Baker–Harman ceiling is **technological rather than conjectural**, unlike Chowla's $1/2$. The note states the ERH point but not the other two.
 
 **The mod 12 analysis is now carried by the note itself**, as the table of admissible $d$ and the change-of-variable argument behind it. What the framework adds is the same partition reached from the other side: there it appears as an *efficiency loss* — a factor 2 at $\ell = 2$, a factor 3 at $\ell = 3$, and 6 when both bite — rather than as a constraint on which $d$ is available. The note's "$d = 2$ alone would fail on six of the twelve classes" and the framework's "$\eta$ drops to $1/6$ at $n \equiv 11$" are the same statement in the two vocabularies.
 
