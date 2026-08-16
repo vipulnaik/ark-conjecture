@@ -75,6 +75,8 @@ With ℓ = 3 contributing a factor 3 independently, the pattern is exactly
 
 the leading 2 making r odd, the 2 in e fixing n mod 4, and the 3 in e fixing n mod 3. Hence max d = 2 × 6 = 12. Had we needed only even n, d ∈ {2, 6} would suffice and the list would stop at 6.
 
+The list {2, 4, 6, 12} is what *these* block patterns require, not an intrinsic feature of the problem: other constructions reach some classes with smaller d, and in particular the d = 12 demand at n ≡ 11 is specific to the two-block-plus-remainder shape used here.
+
 Every class has at least one admissible d, so (H) is locally soluble at every n. But more than *positivity* of the singular series S(n, d) is needed, and more is available: ℓ cannot divide both n and n−1, so at most one root coincidence occurs at each ℓ ≥ 5, and a coincidence *raises* the corresponding factor above 1 — the bad primes only help. Hence
 
 > **S(n, d) ≥ 4 · (9/8) · C0 = 2.858249…,   where C0 = ∏ over ℓ ≥ 5 of (1 − 3/ℓ)(1 − 1/ℓ)⁻³ = 0.635166…,**
@@ -137,13 +139,13 @@ One infinite family needs no hypothesis. For n = 2m with m an odd prime power, t
 
 This is best possible up to the o(1), since δ(n) = 1 would force 2-homogeneity, hence primitivity, hence prime-power degree.
 
-The constant δ₀ above is deliberately crude. Optimising the block sizes and the efficiency t/(r−1) gives materially better constants, which depend on n modulo 12 through local conditions at the primes 2 and 3; we do not need that refinement here.
+The constant δ₀ above is deliberately crude. Optimising the block sizes and the efficiency t/(r−1) gives materially better constants. The local conditions at the primes 2 and 3 depend on n modulo 12, but the optimised constants are keyed **modulo 24**, a further condition mod 8 deciding which construction is available; we do not need that refinement here.
 
-A companion computation, which we do not reproduce here since it rests on a classification of the possible orbit structures rather than on constructions, evaluates μ(n) exactly for all composite non-prime-power n ≤ 2600, and a separate family-scan argument gives
+A companion computation, which we do not reproduce here, exhibits an Oliver group at every composite non-prime-power n ≤ 2600 and so bounds δ(n) below at each; a separate scan over four explicit families gives
 
-> min { δ(n) : n ≤ 10⁶, n composite, not a prime power } ≥ 0.04453,
+> δ(n) ≥ 0.04453 for every composite non-prime-power n ≤ 10⁶,
 
-attained at n = 11183; over the exactly-computed range the minimum is 0.045742, at n = 1817. Read as a lower bound — which is all the present argument needs — this says the true density constant is at least **15 times** the δ₀ = 1/350 proved above.
+with equality at n = 11183, and a minimum of 0.045742 at n = 1817 over the range where groups are exhibited individually. These are lower bounds, which is all the present argument needs, and they say the true density constant is at least **15 times** the δ₀ = 1/350 proved above. *(A matching upper bound — and hence exact values of μ — follows from a classification of the possible orbit structures together with a finite search over the resulting configurations. That is a separate result, and nothing here depends on it.)*
 
 The comparison is worth making carefully, because the two statements have different quantifiers and the computation is the stronger of the two on that axis. The Theorem gives δ(n) ≥ 1/350 **for all sufficiently large n**, and says nothing about any particular n. The computation gives δ(n) ≥ 0.0445 for **every** composite non-prime-power n in [6, 10⁶] — a global statement over its range, with no exceptional set: the minimum is attained in the middle of the range, at n = 11183, and small n are comfortably above it (δ = 0.400 at n = 6, 0.273 at n = 12). So 1/350 is conservative not merely as an eventual constant but as a global one, and no n is currently known at which δ is small.
 
