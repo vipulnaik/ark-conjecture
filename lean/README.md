@@ -35,6 +35,8 @@ There is a second benefit that matters more in practice: **a definition forces t
 
 `mu-theta-n2-note.md` is self-contained, is the artefact that will be read by strangers, and — per the table above — its error record is **disproportionately of the kind Lean catches**: a units mismatch between two displays, a region whose worst case sits at a corner, an asymptotic class stated as `O` where the content is a fixed fraction. Formalising just the note is perhaps 200–400 lines and needs nothing outside Mathlib.
 
+`Note.lean` is a first pass at exactly this, drafted and likewise uncompiled. Every `decide`-able claim in it has been checked numerically first, so a failure to close one is an encoding problem rather than a false statement.
+
 **What is reachable.**
 
 - **The construction inequality**, which is the note's actual content: given `c, r, t` with `c, r ≥ n/5` and `t ≥ (r−1)/12`, the bound `min(choose c 2, c^2, r*t/2, c*r) ≥ (choose n 2)/350`. Pure arithmetic, and the place both the units slip and the corner-vs-interior error lived. **Stating it fixes the unit by type**, which is the whole point.
