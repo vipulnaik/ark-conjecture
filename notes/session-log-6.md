@@ -150,6 +150,22 @@ Script `chiral_mv.py` (regression `--verify`, closed forms `--table N`), staged 
 
 That closes the line opened by the ℝP² observation. The one genuinely near-miss object in this whole investigation — ℚ-acyclic, failing only by a single ℤ/2 — is n = 5, and it is provably alone.
 
+## Johnson presentations
+
+New document `johnson-presentations.md`, abstracting "the action is really on k-subsets of something smaller" away from S_n.
+
+**Definition.** A *k-Johnson presentation* of transitive (G, Ω) is a subgroup K ≤ G with G acting k-homogeneously on X = G/K and the point stabiliser H being a setwise k-set stabiliser there; then Ω ≅ X^{(k)}, |Ω| = C(m,k). Everything is inside G's subgroup lattice, so A_m and any k-homogeneous group are covered on the same footing as S_m — **arity becomes an intrinsic invariant of a permutation group** rather than a feature of the presentation.
+
+**Recognition is classical.** The stars S_x satisfy the partial-linear-space axioms (each coordinate in exactly 2 stars, two stars meeting in exactly 1 point — verified at m = 5, 6, 7 with degrees 2(m−2)), so the orbital graph is the triangular graph T(m) = J(m,2), and **Chang's theorem** determines it from its parameters with exactly three exceptions at m = 8.
+
+**Proposition (the reduction).** G has a transitive Oliver subgroup on Ω **iff** G contains a subgroup that is Oliver and k-homogeneous on X — collapsing the search from C(m,k) to m, the "square" at k = 2.
+
+**"Inside G" is not a formality**, and A₅ on 10 pairs is the sharp case: base size 5 is a prime power, yet there is no transitive Oliver subgroup, because AGL(1,5)'s full twist is a 4-cycle hence **odd**, so AGL(1,5) ⊄ A₅ (verified), and the largest admissible twist gives D₁₀ with orbitals [5,5] not [10]. That is the chiral mod-4 phenomenon seen through the presentation, and it is why the ℝP² candidate lives at m = 5.
+
+**Size.** Necessary: |G| ≥ δ·C(m,2) = Ω(m²), **tight to a factor 2** at prime powers (AGL(1,m) has order 2·C(m,2)). Not sufficient: C_m ⋊ C_d is transitive of order md with δ ≈ d/m, so what is needed is a **large twist**, not a large group. Open gap named: the multi-block constructions use groups polynomially above the Ω(m²) floor and nothing explains the excess — the self-contained question is the minimum order of an Oliver group on m points with δ bounded below, at composite m, which `mu_enumerate_v2.py` could answer by recording each configuration's group order.
+
+**Limits stated plainly:** most transitive actions have no Johnson presentation (T(12,162) has none), and the reduction is an iff only along this route — the degree-2p construction settles A₂ₚ with no k-homogeneity involved. The document proves nothing new; it locates where each ingredient acts, making KSS, the arity collapse, the chiral split and μ(n) itself instances of one pattern.
+
 ## Outstanding
 
 De-historicization is complete across all five documents; version references survive only as filenames. The review items in `pending-checks.md` §2 are unchanged by this session except where noted there, and `fb_common.py` remains the largest unread surface.
