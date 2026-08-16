@@ -118,6 +118,20 @@ Nine almost-simple groups at degrees 10, 12, 14 remain genuinely open — includ
 
 **A methodological trap, recorded because it nearly produced a false positive.** The non-evasiveness recursion's base case must come *first*: with no free variables D = 0, which is not less than 0, so a fully-queried subcube is evasive by convention. Testing constancy first returns True at every leaf and propagates to the root, reporting every function non-evasive — which the first run did, 336 of 336. **The tell was the implausibility of the aggregate, not a control**; the controls were added afterwards. This is §1.2's asymmetry in its sharpest form.
 
+## Chiral graph properties
+
+New document `chiral-graph-properties.md`, porting the framework from S_n-invariance to **A_n-invariance** — properties that may distinguish isomorphic labelled graphs when every isomorphism between them is odd, i.e. graphs with Aut(G) ≤ A_n. Every graph property is one, so evasiveness there is strictly stronger than ARK and a counterexample correspondingly easier to find.
+
+**Theorem 1 (halving).** μ_chi(n) ≥ μ(n)/2: the sign map has index ≤ 2, Γ⁺ = Γ ∩ A_n is still Oliver, and each orbital splits into at most two. So Θ(n²) survives with a smaller constant, and the 1/25 floor conjecture becomes at worst 1/50.
+
+**A parity calculus** for the three generator types, each verified computationally: translations even iff p odd or 4 | c; a twist of order d even iff d odd or (c−1)/d even; a diagonal F-cycle even iff F odd or c even. Blanket consequence: any odd-order group is inside A_n, so every constraint is about 2-parts.
+
+**Theorem 2 (the qualified prime-power theorem).** AGL(1, c) is **not** inside A_c for any odd prime power c — the full-order twist is odd — so the largest admissible twist is (c−1)/2, and what it buys splits on c mod 4: **δ_chi = 1 at c ≡ 3 (mod 4) and at c = 2^a, but only 1/2 at c ≡ 1 (mod 4).** Verified at every odd prime ≤ 31 (orbitals [21], [55], [171], [253], [465] against [5,5], [39,39], [68,68], [203,203]) and at c = 4, 8, 16. **So KSS survives at 3 mod 4 and fails at 1 mod 4** — and n = 5, the smallest prime power ≡ 1 (mod 4), is exactly where the ℝP² candidate was found. The residues 1 mod 4 are the chiral analogue of the non-prime-power n.
+
+**The ported cap.** cap_F(η; ε) = εη/(√ε + √(Fη))² with ε the chirality efficiency (1, or 1/2 at c ≡ 1 mod 4). Setting ε = 1/2 costs only **×0.65–0.69**, not ×0.5, because a less efficient block is compensated with a larger share of n — and the resulting values (3 − 2√2, 1/9, 0.0481) are the S_n ceilings one rung down, so the penalty is a shift along the existing ladder. The odd top primes cost nothing at all: only the **q = 2 Fermat branch** loses a factor on η, so `aod` §3.6's shifted-prime analysis is untouched at odd q.
+
+**Owed:** recomputing the mod-24 table under a modulus that is now effectively 48, and checking whether the F = 4 shape survives at odd n at all — rule (F) forbids an even fusion count on odd blocks, so those four residues may fall back to F = 2 rather than merely scaling.
+
 ## Outstanding
 
 De-historicization is complete across all five documents; version references survive only as filenames. The review items in `pending-checks.md` §2 are unchanged by this session except where noted there, and `fb_common.py` remains the largest unread surface.

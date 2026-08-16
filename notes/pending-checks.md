@@ -160,6 +160,34 @@ No code change was needed — `ConstructionTwists` already splits F into F_mid a
 
 **What a pass does and does not settle**, restated because it is easy to over-read and the script's own header says it: a pass establishes that the enumeration's score at that n is **attained**, i.e. μ(n) ≥ B(n). It says nothing about completeness (μ(n) ≤ B(n)), which is Part 0's business, and nothing about J0a — the construction takes each matching twist inside the field's multiplicative group and the script builds exactly that group, so it cannot detect that a larger stabiliser was available.
 
+## R10. Finish the chiral-half homology via Mayer–Vietoris (shelved)
+
+*Shelved mid-computation; picked up from `chiral-graph-properties.md` §6 and `session-log-6.md`. The object is the homology of one A_n-orbit half of the Hamiltonian-cycle complex, and the question it settles is whether any chiral candidate at n = 9 is **ℤ-acyclic** — the first rung above χ = 1, and the lowest rung at which a counterexample could exist.*
+
+**The setup, which is done.** Write L for the S_n-invariant complex whose faces are the subgraphs of Hamiltonian cycles of K_n — that is, all linear forests together with the cycles themselves. When n ≡ 1 (mod 4) the S_n-orbit of Hamiltonian cycles splits into two A_n-orbits (because Stab = D_{2n} ≤ A_n exactly then), giving two chiral halves P₀, P₁ with P₀ ∪ P₁ = L. Mayer–Vietoris on that union, with M = P₀ ∩ P₁ and H̃(P₀) ≅ H̃(P₁) by the outer symmetry, gives
+
+> **H̃(P₀) ⊕ H̃(P₁) = coker( H̃(L) → H̃(M) )**,
+
+so the whole answer is the **Smith normal form of one integer matrix**, and both ends are S_n-invariant even though the halves are not.
+
+**What is established.** At n = 5, H̃₂(L) = ℤ⁶, H̃₁(M) = ℤ⁶, and the connecting map ℤ⁶ → ℤ⁶ is injective with cokernel (ℤ/2)² — so each half has H̃₁ = ℤ/2 and **P₀ ≃ ℝP²**, confirmed three independent ways (directly on its 152 faces; via the nerve, which is the 6-vertex hemi-icosahedron with f-vector (6, 15, 10); and over ℚ, 𝔽₂, 𝔽₃).
+
+**A closed form for one end, regression-tested.** Homology of L is concentrated in degree n − 3 at every n checked, so its rank is the Euler characteristic. With P(x) = x + x²/(2(1−x)) the EGF for a single undirected path,
+
+> **rank H̃_{n−3}(L) = | n![xⁿ] e^{−P(x)} + (n−1)!/2 |**,
+
+the second term being the Hamiltonian-cycle layer, which is *not* a linear forest and whose omission was the first error made here. Values 6, 46, 380, 3396 at n = 5, 6, 7, 8 agree with direct 𝔽₂ computation (the n = 8 case over 120,212 faces); the formula then gives **32,732 at n = 9**, and 339,256, 3,767,724, 44,662,960 at n = 10, 11, 12.
+
+> **This killed a tempting guess, which is worth recording.** At n = 5 both rank H̃(L) and the orbit size are 6, suggesting rank = orbit size. At n = 9 the orbit has 10,080 cycles against rank 32,732, so the coincidence was a coincidence.
+
+**What is owed.**
+
+1. **A formula for rank H̃(M).** M is the sub-complex of forests extending to cycles in **both** orbits, so it is S_n-invariant and the same generating-function route should apply. The count needed is: how many linear forests have all their Hamiltonian completions inside a single A_n-orbit? **M is not the (n−3)-skeleton** — at n = 5, 30 of the (n−2)-edge faces are already chiral — which is the guess to avoid. The parity argument that gave the n ≡ 1 (mod 4) criterion (D_{2n} ≤ A_n) is the likely tool.
+2. **The Smith form of the connecting map.** P₀ is ℤ-acyclic **iff that map is unimodular**; the torsion is exactly its elementary divisors. At n = 5 they are (1,1,1,1,2,2).
+3. **Then n = 9**, where the matrix is 32,732 × rank H̃(M).
+
+**Cost and standing.** Direct homology at n = 9 is out of reach — L has millions of faces — which is the whole reason for the Mayer–Vietoris reduction. Even a ℤ-acyclic answer leaves the candidate two rungs below a counterexample, since ℤ-acyclicity is necessary and far from sufficient for non-evasiveness, and every chiral candidate computed so far is known evasive. **Do not let a positive answer here be read as a counterexample.**
+
 # §2. Thinking work
 
 > **Scope.** The structural arguments of `enumeration-proof.md` — Part 0, Parts A–J, the B′ socle proof, D, D2, E, E′, E″, F, G — and `orbital-evasiveness-notes.md` §§1–11 have each had a second independent reading, with the mod-24 constants, the witness rescoring, `eta_derive.py` and two group constructions recomputed from scratch. No mathematical error was found in them; what that reading returned was documentation drift, and the machinery for catching that now lives in `check_doc_figures.py`. **Not covered by any of it:** `fb_common.py`, the literature items, and the scripts other than `eta_derive.py` and `count_check.py`. The items below are what remains.
