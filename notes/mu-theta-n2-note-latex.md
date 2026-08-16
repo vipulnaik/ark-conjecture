@@ -103,7 +103,7 @@ with $(\mathbb{Z}/c)^2$ translating $A_1$ and $A_2$ independently and $C_{c-1}$ 
 *Oliver's condition.* As before, with $\Gamma_2 = (\mathbb{Z}/c)^2$ and $\Gamma_1/\Gamma_2 \cong C_{c-1} \times C_r$ cyclic. The diagonal action is essential: two independent copies of $C_{c-1}$ would make $\Gamma_1/\Gamma_2$ non-cyclic and destroy the chain.
 
 *Orbitals.* $\binom{c}{2}$ within each $A_i$; $c^2$ between $A_1$ and $A_2$; the $B$-orbitals as before; $cr$ from each $A_i$ to $B$. Hence
-$$m^*(\Gamma) \;=\; \min\Bigl\{\tbinom{c}{2},\; c^2,\; \tfrac{rt}{2},\; cr\Bigr\} \;\ge\; \frac{n^2}{700}$$
+$$m^*(\Gamma) \;=\; \min\Bigl\{\tbinom{c}{2},\; c^2,\; \tfrac{rt}{2},\; cr\Bigr\} \;\ge\; \tfrac{1}{350}\tbinom{n}{2}$$
 again. This proves the Theorem with $\delta_0 = 1/350$, i.e. roughly $n^2/700$ edges. Both bounds come from minimising $2\min\{x^2/2,\ y^2/24,\ xy\}$ (respectively $2\min\{x^2/2,\ x^2,\ y^2/24,\ xy\}$) over the region cut out by condition 2 — $x = c/n$ and $y = r/n$ both at least $1/5$, with $x+y=1$ (even) or $2x+y=1$ (odd) — the factor $2$ converting from $n^2$ to $\binom{n}{2}$. The worst density is $1/300$ in each case, attained at the corner where the foreign block is smallest, so $1/350$ is slack but not by much.
 
 *Verification.* Both constructions have been checked by direct computation of the permutation groups and their orbit decompositions on pairs — e.g. for $n = 12 = 5 + 7$ with $t = 3$, $|\Gamma| = 420$ and the orbitals are $\{10, 21, 35\}$; for $n = 17 = 2\cdot 5 + 7$, $|\Gamma| = 2100$ and the orbitals are $\{10, 10, 21, 25, 35, 35\}$.
@@ -112,7 +112,7 @@ again. This proves the Theorem with $\delta_0 = 1/350$, i.e. roughly $n^2/700$ e
 
 One infinite family needs no hypothesis. For $n = 2m$ with $m$ an odd prime power, take two blocks of size $m$ with the diagonal twist and a block swap; the resulting group is Oliver with $q = 2$, its orbitals are $m(m-1)$ and $m^2$, and so
 $$\mu(2m) \;\ge\; m(m-1), \qquad \text{i.e. } \delta(n) = \tfrac12 - o(1).$$
-This is best possible up to the $o(1)$, since $\delta(n) = 1$ would force $2$-homogeneity, hence primitive, hence of prime-power degree.
+This is best possible up to the $o(1)$: for non-prime-power $n$ an Oliver group has at least two u-orbitals, which partition the $\binom{n}{2}$ pairs, so $m^*(\Gamma) \le \lfloor \binom{n}{2}/2 \rfloor$ and $\delta(n) \le 1/2$. (Density $1$ would force $2$-homogeneity, hence primitive, hence of prime-power degree.)
 
 The constant $\delta_0$ above is deliberately crude. Optimising the block sizes and the efficiency $t/(r-1)$ gives materially better constants. The local conditions at the primes $2$ and $3$ depend on $n$ modulo $12$, but the optimised constants are keyed \emph{modulo $24$}, a further condition mod $8$ deciding which construction is available; we do not need that refinement here.
 
@@ -120,7 +120,7 @@ A companion computation, which we do not reproduce here, exhibits an Oliver grou
 $$\delta(n) \;\ge\; 0.04453 \qquad \text{for every composite non-prime-power } n \le 10^6,$$
 with equality at $n = 11183$, and a minimum of $0.045742$ at $n = 1817$ over the range where groups are exhibited individually. These are lower bounds, which is all the present argument needs, and they say the true density constant is at least $15$ times the $\delta_0 = 1/350$ proved above. \emph{(A matching upper bound --- and hence exact values of $\mu$ --- follows from a classification of the possible orbit structures together with a finite search over the resulting configurations. That is a separate result, and nothing here depends on it.)}
 
-The comparison is worth making carefully, because the two statements have different quantifiers and the computation is the stronger of the two on that axis. The Theorem gives $\delta(n) \ge 1/350$ \emph{for all sufficiently large $n$}, and says nothing about any particular $n$. The computation gives $\delta(n) \ge 0.0445$ for \emph{every} composite non-prime-power $n \in [6, 10^6]$ — a global statement over its range, with no exceptional set: the minimum is attained in the middle of the range, at $n = 11183$, and small $n$ are comfortably above it ($\delta = 0.400$ at $n = 6$, $0.273$ at $n = 12$). So $1/350$ is conservative not merely as an eventual constant but as a global one, and no $n$ is currently known at which $\delta$ is small.
+The comparison is worth making carefully, because the two statements have different quantifiers and the computation is the stronger of the two on that axis. The Theorem gives $\delta(n) \ge 1/350$ \emph{for all sufficiently large $n$}, and says nothing about any particular $n$. The computation gives $\delta(n) \ge 0.0445$ for \emph{every} composite non-prime-power $n \in [6, 10^6]$ — a global statement over its range, with no exceptional set: the bound is smallest in the middle of the range, at $n = 11183$, and small $n$ are comfortably above it ($\delta = 0.400$ at $n = 6$, $0.273$ at $n = 12$). So $1/350$ is conservative not merely as an eventual constant but as a global one, and no $n$ is currently known at which $\delta$ is small.
 
 ## 5. Comparison with BBKN
 
