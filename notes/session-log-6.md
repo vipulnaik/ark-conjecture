@@ -132,6 +132,14 @@ New document `chiral-graph-properties.md`, porting the framework from S_n-invari
 
 **Owed:** recomputing the mod-24 table under a modulus that is now effectively 48, and checking whether the F = 4 shape survives at odd n at all — rule (F) forbids an even fusion count on odd blocks, so those four residues may fall back to F = 2 rather than merely scaling.
 
+## Prime-power degrees: the scan's zero column is a theorem
+
+Added as Proposition 2 of `monotone-transitive-note.md`. Every transitive group of prime-power degree contains a transitive Oliver subgroup, namely a Sylow p-subgroup: with |P| = p^b and [G : G_x] = p^a one gets v_p(|G_x|) = b − a, hence |P ∩ G_x| ≤ p^{b−a}, hence |P·G_x| ≥ |G|, so P·G_x = G and P is already transitive. A p-group is Oliver outright. At prime degree it is just Cauchy — an element of order p on p points is a single p-cycle, hence regular and cyclic. Due to **Rivest and Vuillemin** (route not checked).
+
+**This retro-explains the scan.** The degrees with no failures *and* no unresolved cases were 4, 5, 7, 8, 9, 11, 13 — exactly the prime powers in range — while every failure and every open almost-simple case sits at 6, 10, 12, 14, the composite non-prime-powers. That column was a theorem rather than a measurement, and it means the scan could only ever have found something at composite non-prime-power degrees.
+
+**And it is a structural echo of the graph case.** In the S_n world μ(n) = C(n,2) exactly at prime powers because AGL(1, p^a) is 2-homogeneous, and the whole δ apparatus exists for the composite non-prime-power n. Both settings are measuring distance from being a prime power — one through orbitals on pairs, the other through orbits on coordinates.
+
 ## Outstanding
 
 De-historicization is complete across all five documents; version references survive only as filenames. The review items in `pending-checks.md` §2 are unchanged by this session except where noted there, and `fb_common.py` remains the largest unread surface.
