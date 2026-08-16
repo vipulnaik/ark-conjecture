@@ -147,11 +147,17 @@ theorem capF_scaling (F : ℕ) (η : ℝ) (hF : 0 < F) :
     capF F η = capF 1 (F * η) / F := by
   sorry
 
-/-- The mod-24 table's entries are the algebraic numbers claimed.  Three
-spot-checks; the rest are the same shape. -/
+/-- The mod-24 table's entries are the algebraic numbers claimed.  One
+spot-check per distinct ceiling; there are **seven**, and the `F = 4` rung
+supplies two of them -- it attains the ceiling at `n = 7, 11, 15, 23 (mod 24)`,
+including the extremal classes, so omitting it misses the global constant. -/
 example : capF 1 1 = 1 / 4 := by sorry
+example : capF 1 (1/3) = (2 - Real.sqrt 3) / 2 := by sorry
 example : capF 2 1 = 3 - 2 * Real.sqrt 2 := by sorry
+example : capF 2 (1/2) = 1 / 8 := by sorry
 example : capF 2 (1/3) = 5 - 2 * Real.sqrt 6 := by sorry
+example : capF 4 1 = 1 / 9 := by sorry
+example : capF 4 (1/3) = 7 - 4 * Real.sqrt 3 := by sorry   -- the global constant
 
 /-- **The two-foreign cap.**  With efficiencies `1/m₁` and `1/m₂` the ceiling is
 `1 / (sqrt m₁ + sqrt m₂)^2`.  This closed form is what makes S6's analysis
