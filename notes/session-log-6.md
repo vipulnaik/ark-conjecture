@@ -140,6 +140,16 @@ Added as Proposition 2 of `monotone-transitive-note.md`. Every transitive group 
 
 **And it is a structural echo of the graph case.** In the S_n world μ(n) = C(n,2) exactly at prime powers because AGL(1, p^a) is 2-homogeneous, and the whole δ apparatus exists for the composite non-prime-power n. Both settings are measuring distance from being a prime power — one through orbitals on pairs, the other through orbits on coordinates.
 
+## R10 closed: no chiral half is ℤ-acyclic
+
+Script `chiral_mv.py` (regression `--verify`, closed forms `--table N`), staged for future sessions.
+
+**The missing piece was a characterisation of the chiral forests**, and it comes from sign being a homomorphism: the Hamiltonian completions of a linear forest are generated from any one by transposing two components (sign change (−1)^{ab}) and reversing a component of size ℓ (sign change (−1)^{ℓ(ℓ−1)/2}), so the sign invariant is constant over completions iff **every component has size ≡ 0 or 1 (mod 4) and at most one has odd size**. At n = 5 that predicts 120 chiral forests plus 12 cycles, half of which is 66 — exactly the measured |P₀ \ M| = 30 + 30 + 6.
+
+**The answer needs no concentration assumption.** Euler characteristics are additive, so 2·χ̃(P₀) = χ̃(L) + χ̃(M), a face count. Values: χ̃(P₀) = **0** at n = 5, **−28** at n = 9, −205,507,456 at n = 13, and growing. So **n = 5 is the unique member of the family whose chiral half is even ℚ-acyclic** — and there it fails ℤ-acyclicity only by the ℤ/2 of ℝP². From n = 9 on, rank H̃(M) exceeds rank H̃(L) (32,788 against 32,732), the connecting map cannot be surjective, and the halves carry free homology of rank ≥ 28. **No member of the family is ℤ-acyclic, so none can be a counterexample.**
+
+That closes the line opened by the ℝP² observation. The one genuinely near-miss object in this whole investigation — ℚ-acyclic, failing only by a single ℤ/2 — is n = 5, and it is provably alone.
+
 ## Outstanding
 
 De-historicization is complete across all five documents; version references survive only as filenames. The review items in `pending-checks.md` §2 are unchanged by this session except where noted there, and `fb_common.py` remains the largest unread surface.
