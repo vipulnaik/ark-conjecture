@@ -87,20 +87,18 @@ python3 check_doc_figures.py $TABLE *.md
 
 ### The scoring function itself, as against the argmax
 
-**`shape_realize.py` — new, and it is a control the battery did not have.** Every other check validates the *winner*: `verify_witness.g` builds the recorded witness and confirms its minimum orbital, `validate_table_v3.py` re-derives B from that witness, the small-degree computations confirm nothing exceeds m\*. None of them looks at a shape that **loses**, so a mis-scored losing shape is invisible until it becomes a winner at some larger n.
+**`shape_realize.py` — a control the battery did not previously have.** Every other check validates the *winner*; none looks at a shape that **loses**, so a mis-scored losing shape stays invisible until it becomes a winner at some larger n. This constructs a group realising each fused matching class and compares its actual intra and cross orbitals against the scored terms.
 
 ```bash
 python3 shape_realize.py --nmax 34          # current scoring: expect 0 mismatches
 python3 shape_realize.py --nmax 22 --strip  # control: must report UNDER-SCOREs
 ```
 
-It constructs, for each (F, c = p^a, d), a group realising the fused matching class via an entangled generator, and compares its actual intra and cross pair-orbitals against the scored terms. Two directions, and they are not symmetric: **UNDER-SCORE** (scored < realised) is the dangerous one, since B(n) is an upper-bound claim and a shape scored below what a group actually achieves makes B too small — which is how μ(n) ≤ B(n) breaks. A restriction that "looks conservative" fails exactly this way. This is the enumerator-side mirror of `small-degree-computation.md` §1.2's asymmetry for the CSP side; that document had the lesson and this half of the pipeline never applied it.
+**UNDER-SCORE (scored < realised) is the dangerous direction**, since B(n) is an upper-bound claim: a shape scored below what a group achieves makes B too small and can break μ(n) ≤ B(n). A restriction that "looks conservative" fails exactly this way. *(Rationale, the n = 10 post-mortem and the enumerator-side/CSP-side asymmetry: `session-log-7.md` §3.)*
 
-> **Why this is worth having, stated as the case it would have caught.** The F_mid twist strip under-scored the cyclic-layer fused class by a factor of 2 **at n = 10**, the smallest fused shape there is. It changed no argmax there, because at c = 5 the same m\* = 20 is reachable by a top-layer reading (q = 2, and c − 1 = 4 is a 2-power, so the top layer can carry the whole twist), and it changed no argmax anywhere until **n = 78**. The `--strip` control reproduces this: scored 10 against realised 20 at n = 10, and under-scores at 8 of 47 shapes below n = 22. **The defect was detectable at the smallest case in the programme, by a check nobody was running.**
->
-> Two details worth keeping straight. The two readings at n = 10 are *not* the same group — ⟨translations, z⟩ and ⟨translations, diagonal twist, block swap⟩ both have order 200, and neither contains the other — they merely share the orbital partition [20, 25]. And the coincidence is arithmetic, not structural: it needs c − 1 to be a 2-power so that q = 2 loses nothing, which is why it holds at c = 5 and fails as soon as c − 1 has an odd part worth having.
+**Not yet covered, in value order.** (a) **Lemma C's strip** — the one place a cyclic-layer restriction *is* real, hence where an over-eager repair of the F_mid mistake could break something in the other direction. Highest value of the three. (b) The **foreign block's** η = 2t/(r−1) against a realised AGL(1,r) twist. (c) The **inter-class** term F·c·r, which needs the chain element linking two classes and so a genuine Oliver group rather than a single class.
 
-**Scope, and the natural extensions.** It currently covers the fused matching class only, which is where the scoring does its non-trivial work. Not yet covered, in rough order of value: the **foreign block's** η = 2t/(r−1) against a realised AGL(1,r) twist; the **inter-class** term F·c·r, which needs the chain element linking two classes and so a real Oliver group rather than a single class; and **Lemma C's strip**, where a twist shares a prime with a foreign block — the one place a restriction on the cyclic layer *is* real, and therefore the place where an over-eager repair of the F_mid mistake could now break something in the other direction.
+**A GAP-side companion is owed and is a different check.** `shape_realize.py` never verifies that the groups it builds satisfy Oliver's chain condition — it assumes the shape is admissible and tests only the orbital arithmetic. `ark_gap.g` already has `IsOliverTop`, so a GAP script that builds the same configuration groups and runs both the chain test and `OrbMap` would close that gap and be independent of the Python construction. See `ark_shapes.g`.
 
 **What each one is for, and what to read off it.**
 
@@ -191,40 +189,11 @@ No code change was needed — `ConstructionTwists` already splits F into F_mid a
 
 **What a pass does and does not settle**, restated because it is easy to over-read and the script's own header says it: a pass establishes that the enumeration's score at that n is **attained**, i.e. μ(n) ≥ B(n). It says nothing about completeness (μ(n) ≤ B(n)), which is Part 0's business, and nothing about J0a — the construction takes each matching twist inside the field's multiplicative group and the script builds exactly that group, so it cannot detect that a larger stabiliser was available.
 
-## R10. The chiral-half homology — **closed**; what remains is n = 5 only
+## R10. The chiral-half homology — only the n = 5 Smith form remains
 
-*Script: `chiral_mv.py` (`--verify` runs the regression, `--table N` prints the closed forms). The question was whether any chiral half of the Hamiltonian-cycle complex is **ℤ-acyclic** — the lowest rung at which a counterexample could exist. **The answer is no, at every n ≡ 1 (mod 4), and the reason differs at n = 5 from everywhere else.***
+*Script: `chiral_mv.py` (`--verify` runs the regression, `--table N` prints the closed forms). The question — whether any chiral half of the Hamiltonian-cycle complex is **ℤ-acyclic**, the lowest rung at which a counterexample could exist — is answered **no**, at every n ≡ 1 (mod 4); see `session-log-7.md` for the closed forms and the argument.*
 
-**The setup.** L is the complex on E(K_n) whose faces are the subgraphs of Hamiltonian cycles: every linear forest, plus the cycles. At n ≡ 1 (mod 4) the S_n-orbit of cycles splits into two A_n-orbits (Stab = D_{2n} ≤ A_n exactly then), giving halves P₀, P₁ with P₀ ∪ P₁ = L and M = P₀ ∩ P₁.
-
-**Both ends have closed forms, and both are regression-tested.** With P(x) = x + x²/(2(1−x)) the EGF for one undirected path,
-
-> rank H̃(L) = | n![xⁿ] e^{−P(x)} + (n−1)!/2 |,   the second term the cycle layer,
-
-and M is L minus the **chiral** forests and the cycles, where a forest is chiral exactly when the sign invariant is constant over its Hamiltonian completions. Since sign is a homomorphism it suffices that no generating move flips it, and the completions are generated by transposing two components (sign change (−1)^{ab}) and reversing one component (sign change (−1)^{ℓ(ℓ−1)/2}). Hence:
-
-> **a linear forest is chiral iff every component has size ≡ 0 or 1 (mod 4) and at most one component has odd size** — which at n ≡ 1 (mod 4) means exactly one component ≡ 1 (mod 4) and all others ≡ 0 (mod 4).
-
-*Verified at n = 5:* that characterisation predicts the chiral faces are the 60 Hamiltonian paths and the 60 (path-on-4 + isolated vertex) forests, so 120 in total, plus the 12 cycles — and half of 132 is 66, which is exactly the measured |P₀ \ M| = 30 + 30 + 6.
-
-**The answer, and it needs no assumption about where homology sits.** Euler characteristics are additive over the union, and χ̃(P₀) = χ̃(P₁), so **2·χ̃(P₀) = χ̃(L) + χ̃(M)** — a statement about face counts alone.
-
-| n | χ̃(L) | χ̃(M) | **χ̃(P₀)** | ℤ-acyclic? |
-|---|---|---|---|---|
-| 5 | 6 | −6 | **0** | not excluded here; fails by **ℤ/2 torsion** (P₀ ≃ ℝP²) |
-| 9 | 32,732 | −32,788 | **−28** | **no** — not even ℚ-acyclic |
-| 13 | 562,890,944 | −973,905,856 | **−205,507,456** | **no** |
-| 17 | 2.43×10¹³ | −7.79×10¹³ | **−2.68×10¹³** | **no** |
-| 21 | 2.06×10¹⁸ | −1.35×10¹⁹ | **−5.71×10¹⁸** | **no** |
-
-> **So n = 5 is the unique member of the family whose chiral half is even ℚ-acyclic**, and there it fails ℤ-acyclicity only by the ℤ/2 of ℝP². From n = 9 onward rank H̃(M) exceeds rank H̃(L) — by 56 at n = 9 — so the Mayer–Vietoris connecting map cannot be surjective and the halves carry free homology of rank ≥ (rank M − rank L)/2, which is 28 at n = 9. **The family contains no ℤ-acyclic member, and hence no counterexample.**
-
-**What remains.** Only the n = 5 torsion, and only if one wants the Smith form rather than the answer: the connecting map is ℤ⁶ → ℤ⁶ with cokernel (ℤ/2)², elementary divisors (1,1,1,1,2,2). Everything else is settled. The regression at n = 5, 6, 7 should be re-run after any change to `chiral_mv.py`; it checks the closed forms against direct 𝔽₂ homology and asserts non-negative Betti numbers, which is what catches the boundary-orientation bug described in the script header.
-
-# §2. Thinking work
-
-> **Scope.** The structural arguments of `enumeration-proof.md` — Part 0, Parts A–J, the B′ socle proof, D, D2, E, E′, E″, F, G — and `orbital-evasiveness-notes.md` §§1–11 have each had a second independent reading, with the mod-24 constants, the witness rescoring, `eta_derive.py` and two group constructions recomputed from scratch. No mathematical error was found in them; what that reading returned was documentation drift, and the machinery for catching that now lives in `check_doc_figures.py`. **Not covered by any of it:** `fb_common.py`, the literature items, and the scripts other than `eta_derive.py` and `count_check.py`. The items below are what remains.
-
+**What remains.** Only the n = 5 torsion, and only if one wants the Smith form rather than the answer: the connecting map is ℤ⁶ → ℤ⁶ with cokernel (ℤ/2)², elementary divisors (1,1,1,1,2,2). The regression at n = 5, 6, 7 should be re-run after any change to `chiral_mv.py`; it checks the closed forms against direct 𝔽₂ homology and asserts non-negative Betti numbers, which is what catches the boundary-orientation bug described in the script header.
 
 ## §2a. Needs human thought
 
