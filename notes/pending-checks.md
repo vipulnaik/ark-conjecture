@@ -85,6 +85,23 @@ python3 check_doc_figures.py $TABLE *.md
 
 **A free structural check worth adding to step 1.** The Oliver matching-class score F·C(c,2) = s(c−1)/2 coincides with `solvable-relaxation.md`'s solvable score at c = P(s), so **B(n) ≤ B_solv(n)** must hold at every row — Oliver groups being solvable. It costs an O(n) partition scan per row and needs no certificate. Run against the 289 corrected rows on 2026-08-16: 0 violations, 20 exact attainments against the two-part solvable optimum alone.
 
+### The scoring function itself, as against the argmax
+
+**`shape_realize.py` — new, and it is a control the battery did not have.** Every other check validates the *winner*: `verify_witness.g` builds the recorded witness and confirms its minimum orbital, `validate_table_v3.py` re-derives B from that witness, the small-degree computations confirm nothing exceeds m\*. None of them looks at a shape that **loses**, so a mis-scored losing shape is invisible until it becomes a winner at some larger n.
+
+```bash
+python3 shape_realize.py --nmax 34          # current scoring: expect 0 mismatches
+python3 shape_realize.py --nmax 22 --strip  # control: must report UNDER-SCOREs
+```
+
+It constructs, for each (F, c = p^a, d), a group realising the fused matching class via an entangled generator, and compares its actual intra and cross pair-orbitals against the scored terms. Two directions, and they are not symmetric: **UNDER-SCORE** (scored < realised) is the dangerous one, since B(n) is an upper-bound claim and a shape scored below what a group actually achieves makes B too small — which is how μ(n) ≤ B(n) breaks. A restriction that "looks conservative" fails exactly this way. This is the enumerator-side mirror of `small-degree-computation.md` §1.2's asymmetry for the CSP side; that document had the lesson and this half of the pipeline never applied it.
+
+> **Why this is worth having, stated as the case it would have caught.** The F_mid twist strip under-scored the cyclic-layer fused class by a factor of 2 **at n = 10**, the smallest fused shape there is. It changed no argmax there, because at c = 5 the same m\* = 20 is reachable by a top-layer reading (q = 2, and c − 1 = 4 is a 2-power, so the top layer can carry the whole twist), and it changed no argmax anywhere until **n = 78**. The `--strip` control reproduces this: scored 10 against realised 20 at n = 10, and under-scores at 8 of 47 shapes below n = 22. **The defect was detectable at the smallest case in the programme, by a check nobody was running.**
+>
+> Two details worth keeping straight. The two readings at n = 10 are *not* the same group — ⟨translations, z⟩ and ⟨translations, diagonal twist, block swap⟩ both have order 200, and neither contains the other — they merely share the orbital partition [20, 25]. And the coincidence is arithmetic, not structural: it needs c − 1 to be a 2-power so that q = 2 loses nothing, which is why it holds at c = 5 and fails as soon as c − 1 has an odd part worth having.
+
+**Scope, and the natural extensions.** It currently covers the fused matching class only, which is where the scoring does its non-trivial work. Not yet covered, in rough order of value: the **foreign block's** η = 2t/(r−1) against a realised AGL(1,r) twist; the **inter-class** term F·c·r, which needs the chain element linking two classes and so a real Oliver group rather than a single class; and **Lemma C's strip**, where a twist shares a prime with a foreign block — the one place a restriction on the cyclic layer *is* real, and therefore the place where an over-eager repair of the F_mid mistake could now break something in the other direction.
+
 **What each one is for, and what to read off it.**
 
 - **`validate_table_v3.py`** — pass `--ladder` the current worklist as well as `--baseline` the previous table: the two cross-artefact checks it enables are the cheapest instance of the defect class T1 item 3 names, and they cost a dict join rather than a recomputation. One is a correctness check (the ladder's lower bound must never exceed the table's density) and one a coverage diagnostic (where it falls well below, the four families are missing a shape the enumeration finds, and the witness column names it). A FAIL in **group A** means the run itself is broken and nothing downstream is meaningful; a FAIL in **group B** is a real contradiction between table and documents; **group C** is INFO, each line printing the expected asymptotic beside the measurement. `--explain N` gives one row's full term breakdown, `--quiet` shows failures only, `--baseline` adds shape-migration reporting, which is how winners changing census row become visible.
