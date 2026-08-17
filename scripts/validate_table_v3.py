@@ -231,9 +231,16 @@ def _cross_term(F, c):
 
 
 # mod-24 class ceilings, aod section 3.3.5
-# EG-patched: was stale even against v4 (7/11/15/23 carried the pre-rekey
-# F = 2 values .085786/.066987/.085786/.050510).  Current: 11/23 = 7-4sqrt3;
-# 7/15 = tentative entangled F = 2 at eta = 1/2 -> 1/8 (re-derive on rebuild).
+# EG-patched.  Was stale even against v4 (7/11/15/23 carried the pre-rekey
+# F = 2 values .085786/.066987/.085786/.050510).
+#
+# 2026-08-17: the ceiling law is now keyed mod 12, not mod 24 -- classes 7, 15
+# merged into the 1/8 row when the entangled correction freed c mod 4, and that
+# was the table's only genuine mod-24 dependence.  This dict is LEFT keyed mod
+# 24 deliberately: a mod-12 law is expressible mod 24 with each value duplicated
+# at a and a+12, and keeping 24 keys lets the validator check the duplication
+# holds rather than assuming it.  The redundancy is now redundancy, not
+# structure -- see the c_mod12_keying check below.
 CAP24 = {0: .250000, 1: .171573, 2: .133975, 3: .125000, 4: .250000, 5: .101021,
          6: .250000, 7: .125000, 8: .133975, 9: .171573, 10: .250000, 11: .071797,
          12: .250000, 13: .171573, 14: .133975, 15: .125000, 16: .250000,
@@ -517,6 +524,23 @@ def c_s7f2(R, base):
     return ("INFO", f"{len(rows)} winners, c mod 8 = {dict(sorted(dist.items()))}; "
                     f"{freed} at c = 1 (mod 4), forbidden under the retired law "
                     f"({'the freeing is exercised' if freed else 'freeing available but unused so far'})", [])
+
+
+@check("B", "the ceiling law is periodic mod 12: CAP24[a] == CAP24[a+12]",
+       "aod section 3.3.4")
+def c_mod12_keying(R, base):
+    """Since the entangled correction the ceiling table is keyed mod 12 (aod
+    3.3.4): at F = 2 the 2-adic dependence is only mod 4, and the surviving
+    mod-8 condition at F = 4 is constant on its mod-12 class.  CAP24 is kept
+    at 24 keys so this is checkable rather than assumed.  A failure means
+    either a cap has been edited on one side of a pair only, or a genuine
+    mod-24 dependence has come back -- in which case something is supplying a
+    mod-8 condition, and aod 3.3.7's check applies: only F = 4 can, and it
+    cannot distinguish a from a+12."""
+    bad = [(a, CAP24[a], CAP24[a + 12]) for a in range(12)
+           if abs(CAP24[a] - CAP24[a + 12]) > 1e-9]
+    return ("FAIL" if bad else "PASS",
+            f"{len(bad)} of 12 residue pairs disagree", bad[:5])
 
 
 @check("B", "the foreign twist is a q-power divisor of r - 1, and eta respects v_2(r - 1)",
