@@ -83,33 +83,15 @@ python3 t5_verify.py $TABLE
 python3 check_doc_figures.py $TABLE *.md
 ```
 
-**A free structural check worth adding to step 1.** The Oliver matching-class score F·C(c,2) = s(c−1)/2 coincides with `solvable-relaxation.md`'s solvable score at c = P(s), so **B(n) ≤ B_solv(n)** must hold at every row — Oliver groups being solvable. It costs an O(n) partition scan per row and needs no certificate. Run against the 289 corrected rows on 2026-08-16: 0 violations, 20 exact attainments against the two-part solvable optimum alone.
-
-### The scoring function itself, as against the argmax
-
-**`shape_realize.py` — a control the battery did not previously have.** Every other check validates the *winner*; none looks at a shape that **loses**, so a mis-scored losing shape stays invisible until it becomes a winner at some larger n. This constructs a group realising each fused matching class and compares its actual intra and cross orbitals against the scored terms.
-
-```bash
-python3 shape_realize.py --nmax 34          # current scoring: expect 0 mismatches
-python3 shape_realize.py --nmax 22 --strip  # control: must report UNDER-SCOREs
-```
-
-**UNDER-SCORE (scored < realised) is the dangerous direction**, since B(n) is an upper-bound claim: a shape scored below what a group achieves makes B too small and can break μ(n) ≤ B(n). A restriction that "looks conservative" fails exactly this way. *(Rationale, the n = 10 post-mortem and the enumerator-side/CSP-side asymmetry: `session-log-7.md` §3.)*
-
-**Not yet covered, in value order.** (a) **Lemma C's strip** — the one place a cyclic-layer restriction *is* real, hence where an over-eager repair of the F_mid mistake could break something in the other direction. Highest value of the three. (b) The **foreign block's** η = 2t/(r−1) against a realised AGL(1,r) twist. (c) The **inter-class** term F·c·r, which needs the chain element linking two classes and so a genuine Oliver group rather than a single class.
-
-**`ark_shapes.g` — the GAP companion. Two things still owed on it.**
-
-1. **Run the control.** `ARK_SHAPES_STRIP=1 gap -q -o 4g ark_shapes.g` has not been run. The clean 134-shape run is not yet evidence: the strip logic was hand-translated into GAP and a version that strips nothing would pass vacuously. Expect UNDER-SCORE wherever gcd(d, F) > 1 — about 40 of the 134 rows. **0 mismatches there means the bug is in `ScoredTerms`.**
-2. **Give the Oliver test something it can fail.** All 134 rows return `oliver=0`, correctly and unavoidably: the chain closes with trivial top by construction on a single fused class. So the admissibility half currently cannot fail and is not evidence. Extend the sweep to shapes that can: a foreign block whose top prime does not divide r − 1, or a class with a non-cyclic layer.
+**A free structural check worth adding to step 1.** The Oliver matching-class score F·C(c,2) = s(c−1)/2 coincides with `solvable-relaxation.md`'s solvable score at c = P(s), so **B(n) ≤ B_solv(n)** must hold at every row — Oliver groups being solvable. It costs an O(n) partition scan per row and needs no certificate. Against the 289 rows the current cap raises: 0 violations, 20 exact attainments on the two-part solvable optimum alone.
 
 **What each one is for, and what to read off it.**
 
 - **`validate_table_v3.py`** — pass `--ladder` the current worklist as well as `--baseline` the previous table: the two cross-artefact checks it enables are the cheapest instance of the defect class T1 item 3 names, and they cost a dict join rather than a recomputation. One is a correctness check (the ladder's lower bound must never exceed the table's density) and one a coverage diagnostic (where it falls well below, the four families are missing a shape the enumeration finds, and the witness column names it). A FAIL in **group A** means the run itself is broken and nothing downstream is meaningful; a FAIL in **group B** is a real contradiction between table and documents; **group C** is INFO, each line printing the expected asymptotic beside the measurement. `--explain N` gives one row's full term breakdown, `--quiet` shows failures only, `--baseline` adds shape-migration reporting, which is how winners changing census row become visible.
-- **`fallback_cert.py`** — the headline is *0 candidates*. Then read three numbers, because **the low-density recount lives here**: the **density floor**, the **largest permitted s**, and the **theorem residue**. They move together, since s ≤ 1/√δ − 1 means a falling floor admits a larger s, and **s = 4 is the first branch with no theorem covering it**. At the current floor of 0.045742 (n = 1817) the bound is 3.68, so s ≤ 3 and E.1 / E.3(iii) / E.4 close everything but one class of 349 E.3(ii) branches. **The margin to δ = 1/25, where s = 4 reopens, is 0.0457 against 0.0400 — one extension could close it.** If `largest permitted s` ever prints 4, `enumeration-proof.md`'s Corollary after E.3 and Part I's tail figures both want re-deriving rather than recounting. The `--no-theorems` run should agree exactly, and the agreement is not vacuous here: 2,204 of 2,553 branches are dispatched in the normal run, so disabling them genuinely moves work into the search.
+- **`fallback_cert.py`** — the headline is *0 candidates*. Then read three numbers, because **the low-density recount lives here**: the **density floor**, the **largest permitted s**, and the **theorem residue**. They move together, since s ≤ 1/√δ − 1 means a falling floor admits a larger s, and **s = 4 is the first branch with no theorem covering it**. **⟦PENDING-REBUILD⟧** At the floor of 0.045742 (n = 1817) the bound is 3.68, so s ≤ 3 and E.1 / E.3(iii) / E.4 close everything but one class of 349 E.3(ii) branches. **The margin to δ = 1/25, where s = 4 reopens, is 0.0457 against 0.0400 — one extension could close it.** If `largest permitted s` ever prints 4, `enumeration-proof.md`'s Corollary after E.3 and Part I's tail figures both want re-deriving rather than recounting. The `--no-theorems` run should agree exactly, and the agreement is not vacuous here: 2,204 of 2,553 branches are dispatched in the normal run, so disabling them genuinely moves work into the search.
 - **`wide_cert.py`** — read the `settled by theorem:` line. At NMAX ≤ 10⁴ it prints NONE, because B_lo is small enough that the foreign-cap filter removes the s = 1 and s = 3 branches before the dispatch sees them, so a `--no-theorems` comparison there agrees *trivially* and is no evidence about E.1 / E.3 / E.4. `--menu` cross-checks pass 1 against the family menu; `--refresh` rebuilds the cached B_lo, which is rarely needed since the cache is keyed on everything that determines it.
 - **`k3_galois.py`** — the k = 3 Galois admissibility predicate, with a self-test covering the a = 35 witness, the superset relation against the naive reading, and the gain-versus-top-prime distinction. Import it; do not re-derive it.
-- **`validate_table.py`'s group-B trend check** — for each census row claiming `wins → 0`, the shape's winner share must not *rise* across the range. The verdicts are asymptotic limits, so the count alone tests nothing (S1 and S2 win at half the values in range and still tend to zero); what a density-zero supply argument implies is a declining share. Growth must clear both a proportional bar and Poisson noise on the raw counts, since a rise like 19 → 24 is 26% and entirely consistent with a flat share. `ZERO_SHARE` entries may be a label or a tuple treated as one aggregate — needed because splitting S7 by fusion count costs sensitivity, a trend obvious in aggregate sitting inside noise once divided five ways. To exercise it, replace the `S7f3`/`S7f5` entries with the aggregate `("S7f3","S7f4","S7f5","S7f6","S7f8")`, the historical lumped claim: it fails with `S7f3+S7f4+S7f5+S7f6+S7f8 4.1%→7.6%` against `S2 45.2%→29.3%`.
+- **`validate_table.py`'s group-B trend check** — for each census row claiming `wins → 0`, the shape's winner share must not *rise* across the range. The verdicts are asymptotic limits, so the count alone tests nothing (S1 and S2 win at half the values in range and still tend to zero); what a density-zero supply argument implies is a declining share. Growth must clear both a proportional bar and Poisson noise on the raw counts, since a rise like 19 → 24 is 26% and entirely consistent with a flat share. `ZERO_SHARE` entries may be a label or a tuple treated as one aggregate — needed because splitting S7 by fusion count costs sensitivity, a trend obvious in aggregate sitting inside noise once divided five ways. To exercise it, replace the `S7f3`/`S7f5` entries with the aggregate `("S7f3","S7f4","S7f5","S7f6","S7f8")`: it fails with `S7f3+S7f4+S7f5+S7f6+S7f8 4.1%→7.6%` against `S2 45.2%→29.3%`.
 - **`verify_witness.g`** (GAP) — the Part E realisability check: builds the construction from a witness string, verifies the Oliver chain explicitly, and compares the orbital multiset against the value formula's terms. Driven by **R8**; `WITNESS=... MUBOUND=... gap -q -A verify_witness.g` runs a single row, no argument runs the battery.
 - **`eta_derive.py`** — the η column of §3.3.5, computed twice: derived from congruences by exact enumeration mod 2⁷, and measured by scanning real decompositions. Asserts agreement at all thirty-six (class, F) cells, and that none of the three cells whose 2-adic factor is not constant across its mod-24 class is one where F = 4 sets the ceiling. Static; one run per environment.
 - **`khomog_verify.py`** — the k-homogeneity claims underlying the hypothesis table of `orbital-evasiveness-notes.md` §1: the c ≡ 3 (mod 4) half-twist case at k = 2, and the five full-density degrees {3, 4, 5, 8, 32} at k = 3, with the sharpness of the order bound that makes the list finite. Static; one run per environment.
@@ -124,6 +106,34 @@ python3 shape_realize.py --nmax 22 --strip  # control: must report UNDER-SCOREs
 - **`s7_scan.py` and `mu_fast.py` are absent** from the working set. `validate_table.py` group B covers the S4 / S5 / S7-at-F=2 congruence patterns `s7_scan.py` would test, so nothing is owed unless a new check is wanted.
 
 **Do not extend the table without rerunning this list in full.** An extension leaves a different subset of the documents behind each time, and the failure is silent: a stale figure reads as a claim about the current range. The two passes that catch it mechanically are `check_doc_figures.py --pass refs` and `validate_table.py`'s coefficient assertion.
+
+## R6. Shape-level scoring checks
+
+*Independent of the table: these score **shapes**, not rows, so they do not rerun on extension. One run per environment, and again after any change to the SAFE cap or to `orb`.*
+
+```bash
+# Python: fused matching classes, orbital arithmetic
+python3 shape_realize.py --nmax 34            # expect 0 mismatches
+python3 shape_realize.py --nmax 22 --strip    # control: must report UNDER-SCOREs
+
+# GAP: the same shapes, plus the Oliver chain test, via an independent construction
+gap -q -o 4g ark_shapes.g                     # expect 0 mismatches, writes shapes_out.txt
+ARK_SHAPES_STRIP=1 gap -q -o 4g ark_shapes.g  # control: must report UNDER-SCOREs
+```
+
+**Read the control first.** A clean run means nothing until the `--strip` / `ARK_SHAPES_STRIP=1` pass has been seen to fail: it re-scores with a condition known to be wrong, so a control that comes back clean means the harness is inert, not that the scoring is right. Expect UNDER-SCORE wherever gcd(d, F) > 1 — in the GAP sweep about 40 of 134 rows, including 2×5 d=4, 2×13 d=12, 2×9 d=4 and d=8, 2×17 d=4/8/16, but not 2×16 d=15.
+
+**Then read the direction.** **UNDER-SCORE (scored < realised) is the failure that matters**: B(n) is an upper-bound claim, so a shape scored below what a group actually achieves makes B too small and can break μ(n) ≤ B(n). A restriction that looks conservative fails exactly this way. OVER-SCORE is unsound the other way — the cap crediting an orbital no group delivers.
+
+**What these cover that the rest of the battery does not.** Every other check validates the **winner** — `verify_witness.g` builds the recorded witness, `validate_table_v3.py` re-derives B from it, the small-degree runs confirm nothing exceeds m\*. None looks at a shape that **loses**, so a mis-scored losing shape stays invisible until it becomes a winner at some larger n. *(The n = 10 post-mortem, and the enumerator-side/CSP-side asymmetry it belongs to: `session-log-7.md` §3.)*
+
+**Owed on the GAP side.** All 134 rows return `oliver=0`, correctly and unavoidably — on a single fused class the chain closes with trivial top by construction — so the admissibility half **cannot currently fail and is not evidence**. Extend the sweep to shapes that can fail it: a foreign block whose top prime does not divide r − 1, or a class with a non-cyclic layer.
+
+**Not yet covered, in value order.**
+
+1. **Lemma C's strip** — the one place a cyclic-layer restriction *is* real, hence the place where an over-eager repair could break something in the other direction. Highest value of the three.
+2. The **foreign block's** η = 2t/(r−1), against a realised AGL(1,r) twist.
+3. The **inter-class** term F·c·r, which needs the chain element linking two classes, hence a genuine two-class Oliver group rather than a single class.
 
 ## R7. Consume the ladder worklist with the adaptive branch-and-bound
 
