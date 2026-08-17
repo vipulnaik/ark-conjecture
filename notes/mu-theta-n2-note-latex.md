@@ -114,7 +114,7 @@ One infinite family needs no hypothesis. For $n = 2m$ with $m$ an odd prime powe
 $$\mu(2m) \;\ge\; m(m-1), \qquad \text{i.e. } \delta(n) = \tfrac12 - o(1).$$
 This is best possible up to the $o(1)$: for non-prime-power $n$ an Oliver group has at least two u-orbitals, which partition the $\binom{n}{2}$ pairs, so $m^*(\Gamma) \le \lfloor \binom{n}{2}/2 \rfloor$ and $\delta(n) \le 1/2$. (Density $1$ would force $2$-homogeneity, hence primitive, hence of prime-power degree.)
 
-The constant $\delta_0$ above is deliberately crude. Optimising the block sizes and the efficiency $t/(r-1)$ gives materially better constants. The local conditions at the primes $2$ and $3$ depend on $n$ modulo $12$, but the optimised constants are keyed \emph{modulo $24$}, a further condition mod $8$ entering through the efficiency available to the foreign block; we do not need that refinement here.
+The constant $\delta_0$ above is deliberately crude. Optimising the block sizes and the efficiency $t/(r-1)$ gives materially better constants. The local conditions at the primes $2$ and $3$ depend on $n$ modulo $12$, but the optimised constants are keyed \emph{modulo $12$} as well, with the residue entering through the efficiency available to the foreign block; the optimisation is finer, the modulus the same.
 
 A companion computation, which we do not reproduce here, exhibits an Oliver group at every composite non-prime-power $n \le 2600$ and so bounds $\delta(n)$ below at each; a separate scan over four explicit families gives
 $$\delta(n) \;\ge\; 0.04453 \qquad \text{for every composite non-prime-power } n \le 10^6,$$

@@ -5,9 +5,9 @@ correction).  Three changes against validate_table.py: (1) score() drops the
 F_mid twist strip -- the SAFE cap is F*orb(c, c-1); (2) c_cyclic_layer checks
 foreign sizes only, the F_mid coprimality having been refuted (explicit groups
 at n = 33, 78, 105; entangled-generator-finding.md); (3) CAP24 updated to the
-current mod-24 ceilings -- which were STALE here even against v4 (the 7/11/15/23
-entries were the pre-rekey F = 2 values) -- with 7/15 at the tentative
-entangled 1/8.  Running THIS file against a v4 CSV will FAIL c_rederive at the
+current ceilings -- which were STALE here even against v4 (the 7/11/15/23
+entries were the pre-rekey F = 2 values) -- with 7/15 at the entangled 1/8,
+which merges them into the 3/19 row and makes the ceiling law mod 12.  Running THIS file against a v4 CSV will FAIL c_rederive at the
 rows whose winner was cut-scored; that is expected and is the point.
 
 validate_table.py -- check a mu_table_safe_v*.csv against everything the three
@@ -234,7 +234,7 @@ def _cross_term(F, c):
 # EG-patched.  Was stale even against v4 (7/11/15/23 carried the pre-rekey
 # F = 2 values .085786/.066987/.085786/.050510).
 #
-# 2026-08-17: the ceiling law is now keyed mod 12, not mod 24 -- classes 7, 15
+# 2026-08-17 (SETTLED): the ceiling law is keyed mod 12, not mod 24 -- classes 7, 15
 # merged into the 1/8 row when the entangled correction freed c mod 4, and that
 # was the table's only genuine mod-24 dependence.  This dict is LEFT keyed mod
 # 24 deliberately: a mod-12 law is expressible mod 24 with each value duplicated

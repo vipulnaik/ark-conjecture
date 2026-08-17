@@ -139,7 +139,7 @@ One infinite family needs no hypothesis. For n = 2m with m an odd prime power, t
 
 This is best possible up to the o(1): for non-prime-power n an Oliver group has at least two u-orbitals, which partition the C(n,2) pairs, so m\*(Γ) ≤ ⌊C(n,2)/2⌋ and δ(n) ≤ 1/2. (Density 1 would force 2-homogeneity, hence primitivity, hence prime-power degree.)
 
-The constant δ₀ above is deliberately crude. Optimising the block sizes and the efficiency t/(r−1) gives materially better constants. The local conditions at the primes 2 and 3 depend on n modulo 12, but the optimised constants are keyed **modulo 24**, a further condition mod 8 entering through the efficiency available to the foreign block; we do not need that refinement here.
+The constant δ₀ above is deliberately crude. Optimising the block sizes and the efficiency t/(r−1) gives materially better constants. The local conditions at the primes 2 and 3 depend on n modulo 12, but the optimised constants are keyed **modulo 12** as well, with the residue entering through the efficiency available to the foreign block; the optimisation is finer, the modulus the same.
 
 A companion computation, which we do not reproduce here, exhibits an Oliver group at every composite non-prime-power n ≤ 2600 and so bounds δ(n) below at each; a separate scan over four explicit families gives
 
