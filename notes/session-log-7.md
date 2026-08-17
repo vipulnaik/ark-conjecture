@@ -130,7 +130,9 @@ Four GAP-specific errors were caught in review before shipping, worth noting sin
 >
 > **The admissibility half is a tautology on this family and so is not evidence.** All 134 rows report `oliver=0`. That is correct — Γ₂ is the translation group of order c^F and the quotient is ⟨z⟩ cyclic of order F·d, so the chain closes with trivial top *by construction* — but it means `IsOliverTop`'s non-trivial branch never executed and the test cannot fail here. To make it bite, the sweep needs shapes that can genuinely fail Oliver: a foreign block whose top prime does not divide r − 1, or a class with a non-cyclic layer (the C_r × C_r case of the abelian relaxation).
 >
-> **The `ARK_SHAPES_STRIP=1` control has not been run, and until it is, the green run is not yet evidence.** The Python control fires correctly, but that says nothing about the hand-translated GAP strip logic, which could easily strip nothing and pass vacuously. Expected: UNDER-SCORE at every (F, c, d) with gcd(d, F) > 1 — roughly 40 of the 134 rows, including 2×5 d=4, 2×13 d=12, 2×9 d=4 and d=8, and 2×17 d=4/8/16, but *not* 2×16 d=15 where the gcd is 1. **A control returning 0 mismatches means the bug is in `ScoredTerms`, not in the framework.**
+> **The control fires: 21 of 134 rows UNDER-SCORE.** So the harness is not inert and the clean run is evidence.
+>
+> **The count is 21, not the ~40 first predicted, and the gap is structural.** The right predictor is not "gcd(d, F) > 1" (45 rows) but "stripping changes orb(c,d)" (21 rows, exact agreement). **Stripping a single factor of 2 from an even d never changes orb**: orb = c·d/2 when −1 ∈ T, and c·(d/2) when the halved d is odd — the same number. So the strip bites only where it removes a factor of 4 or an odd prime; 2×5 d=4 fires (4 → 1), 2×11 d=10 does not (10 → 5). Plausibly part of why the strip looked harmless for as long as it did: on roughly half the shapes it was genuinely a no-op.
 
 ### 5.2 Script audits
 

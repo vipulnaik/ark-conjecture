@@ -114,14 +114,22 @@ python3 check_doc_figures.py $TABLE *.md
 ```bash
 # Python: fused matching classes, orbital arithmetic
 python3 shape_realize.py --nmax 34            # expect 0 mismatches
-python3 shape_realize.py --nmax 22 --strip    # control: must report UNDER-SCOREs
+python3 shape_realize.py --nmax 22 --strip    # control: expect UNDER-SCOREs
 
 # GAP: the same shapes, plus the Oliver chain test, via an independent construction
-gap -q -o 4g ark_shapes.g                     # expect 0 mismatches, writes shapes_out.txt
-ARK_SHAPES_STRIP=1 gap -q -o 4g ark_shapes.g  # control: must report UNDER-SCOREs
+#   breadth in c, F variety retained -- the main run
+ARK_SHAPES_NMAX=100 ARK_SHAPES_MAXF=4 gap -q -o 4g ark_shapes.g
+#   deep in c at F = 2 only, and cheap -- reaches c = 64, 81, 97
+ARK_SHAPES_NMAX=200 ARK_SHAPES_MAXF=2 gap -q -o 4g ark_shapes.g
+#   the control, on whichever sweep was just run
+ARK_SHAPES_STRIP=1 ARK_SHAPES_NMAX=100 ARK_SHAPES_MAXF=4 gap -q -o 4g ark_shapes.g
 ```
 
-**Read the control first.** A clean run means nothing until the `--strip` / `ARK_SHAPES_STRIP=1` pass has been seen to fail: it re-scores with a condition known to be wrong, so a control that comes back clean means the harness is inert, not that the scoring is right. Expect UNDER-SCORE wherever gcd(d, F) > 1 — in the GAP sweep about 40 of 134 rows, including 2×5 d=4, 2×13 d=12, 2×9 d=4 and d=8, 2×17 d=4/8/16, but not 2×16 d=15.
+**Size it by capping F, not by raising NMAX alone.** The informative axis is **c** — what divisor structure c − 1 brings — while the cost axis is **F**, since |G| = c^F·F·d and `NormalSubgroups(G)` is the bottleneck. Raising NMAX with F uncapped explodes on *small* c with *large* F: 20×3 at n = 60 is |G| ≈ 1.4 × 10¹¹, against 4.2 × 10⁷ for the largest group in the completed n ≤ 40 sweep. With `MAXF=4` the same NMAX = 100 tops out at 3.8 × 10⁷ — comparable to what already ran. `ARK_SHAPES_MAXORD` (default 5 × 10⁷) is a backstop; **shapes over it are reported SKIPPED, and a skipped shape is an untested shape.**
+
+**What the two recommended runs unlock.** `NMAX=100 MAXF=4` adds c = 23, 25, 27, 29, 31, 32, 37, 41, 43, 47, 49 — including the three that bring genuinely new structure: **c = 27**, the first odd cube (a = 3); **c = 31**, the first c − 1 with three distinct prime factors (2·3·5), so the first place the strip's gcd can interact with more than two primes; and **c = 41**, the first c ≡ 1 (mod 8) beyond 17, the class where a twist cut bites hardest. `NMAX=200 MAXF=2` then reaches **c = 64** (a = 6, characteristic 2), **c = 81** (a = 4), and c = 61, 73, 97 (twelve divisors of c − 1 each) at trivial cost — 2×97 is |G| ≈ 1.8 × 10⁶.
+
+**Read the control first.** A clean run means nothing until the `--strip` / `ARK_SHAPES_STRIP=1` pass has been seen to fail: it re-scores with a condition known to be wrong, so a control that comes back clean means the harness is inert, not that the scoring is right. Expect UNDER-SCORE at exactly the shapes where stripping **changes orb(c,d)** — 21 of 134 rows in the n ≤ 40 sweep, and the predictor is exact. Note it is *not* "wherever gcd(d, F) > 1", which is 45 rows: **stripping a single factor of 2 from an even d never changes orb**, since orb = c·d/2 when −1 ∈ T and c·(d/2) when the halved d is odd — the same number. The strip bites only when it removes a factor of 4 or an odd prime, which is why 2×5 d=4 fires and 2×11 d=10 does not.
 
 **Then read the direction.** **UNDER-SCORE (scored < realised) is the failure that matters**: B(n) is an upper-bound claim, so a shape scored below what a group actually achieves makes B too small and can break μ(n) ≤ B(n). A restriction that looks conservative fails exactly this way. OVER-SCORE is unsound the other way — the cap crediting an orbital no group delivers.
 

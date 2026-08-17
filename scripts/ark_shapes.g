@@ -46,6 +46,22 @@ NMAX := 40;;
 if IsBound(GAPInfo.SystemEnvironment.ARK_SHAPES_NMAX) then
   NMAX := Int(GAPInfo.SystemEnvironment.ARK_SHAPES_NMAX);
 fi;
+# The informative axis is c -- what new divisor structure c-1 brings.  The COST
+# axis is F, since |G| = c^F * F * d and NormalSubgroups(G) is the bottleneck.
+# Raising NMAX alone therefore buys little and costs a lot: 20x3 at n = 60 is
+# |G| ~ 1.4e11.  Cap F to go wide in c cheaply.
+MAXF := 1000;;
+if IsBound(GAPInfo.SystemEnvironment.ARK_SHAPES_MAXF) then
+  MAXF := Int(GAPInfo.SystemEnvironment.ARK_SHAPES_MAXF);
+fi;
+# Belt-and-braces guard so a large sweep cannot hang on one group.  Shapes over
+# the limit are reported SKIPPED rather than silently dropped -- a skipped shape
+# is an untested shape, and this whole script exists because untested shapes are
+# where defects live.
+MAXORD := 50000000;;
+if IsBound(GAPInfo.SystemEnvironment.ARK_SHAPES_MAXORD) then
+  MAXORD := Int(GAPInfo.SystemEnvironment.ARK_SHAPES_MAXORD);
+fi;
 STRIP := IsBound(GAPInfo.SystemEnvironment.ARK_SHAPES_STRIP);;
 OUT := "shapes_out.txt";;
 
@@ -174,7 +190,7 @@ end;;
 pa := fail;; p := fail;; a := fail;; c := fail;; F := fail;; d := fail;;
 sh := fail;; sc := fail;; re := fail;; oq := fail;; status := "";;
 
-nbad := 0;; ntested := 0;; nnonoliver := 0;;
+nbad := 0;; ntested := 0;; nnonoliver := 0;; nskip := 0;;
 PrintTo(OUT, "");
 if STRIP then
   Print("ark_shapes.g -- scoring mode: RETIRED F_mid strip (control)\n\n");
@@ -184,9 +200,15 @@ fi;
 
 for pa in PrimePowersUpTo(NMAX) do
   p := pa[1]; a := pa[2]; c := p^a;
-  for F in [2..QuoInt(NMAX, c)] do
+  for F in [2..Minimum(MAXF, QuoInt(NMAX, c))] do
     if F*c < 6 then continue; fi;
     for d in DivisorsInt(c-1) do
+      if c^F * F * d > MAXORD then
+        nskip := nskip + 1;
+        AppendTo(OUT, F, "x", c, "|d=", d, "|n=", F*c, "|order=", c^F*F*d,
+                 "|SKIPPED-over-MAXORD\n");
+        continue;
+      fi;
       sh := FusedClass(p, a, F, d);
       sc := ScoredTerms(p, a, F, d);
       re := RealisedTerms(sh);
@@ -222,7 +244,11 @@ for pa in PrimePowersUpTo(NMAX) do
 od;
 
 Print("\n", ntested, " shapes tested, ", nbad, " mismatches (",
-      nnonoliver, " not Oliver).\n");
+      nnonoliver, " not Oliver), ", nskip, " skipped over MAXORD.\n");
+if nskip > 0 then
+  Print("Skipped shapes are UNTESTED; raise ARK_SHAPES_MAXORD or lower ",
+        "ARK_SHAPES_MAXF to cover them.\n");
+fi;
 if STRIP and nbad > 0 then
   Print("The strip is detected as expected -- this is the control.\n");
 fi;
