@@ -39,41 +39,55 @@ Ranked, so the sections below have a stated basis. This is not the order the ite
 2. **Extend further** when wanted, rerunning R1 each time.
 
 ```bash
-python3 mu_enumerate_v2.py --nmax <N> --fill-gaps --out mu_table_safe_v4.csv
+python3 mu_enumerate_v3.py --nmax <N> --fill-gaps --out mu_table_safe_v5_code_v3.csv
 ```
+
+**⟦EG-TENTATIVE⟧** **`v2` is superseded and must not be used to extend.** The entangled-generator correction changed the SAFE cap (`mu_enumerate_v3.py`; the F_mid coprimality strip is gone), so a v2 row is a *lower bound* on the current B(n), not a value: 289 of v4's 2,186 rows are known low. The current output file is `mu_table_safe_v5_code_v3.csv`, and **v4 is the baseline to compare against**, not v2 — the rebuild must reproduce or raise every v4 row.
 
 **A rebuild must never lower a value.** B(n) is a maximum over admissible configurations, so adding configurations can only raise it: a rebuild that comes out *lower* anywhere means a shape has been lost, not gained. `validate_table.py`'s group-A monotonicity check against `--baseline` is what tests this, and it is the signature to read on every batch.
 
 ## R1. Routine, after any new batch of table values
 
-> **Clean at n ≤ 2600, 2,186 rows; nothing below is owed until the table moves.** Expected output, so that a deviation is recognisable: `validate_table.py` **23 PASS / 0 FAIL**; `fallback_cert.py` **0 candidates in both modes**; `wide_cert.py 100000` certifying 90,299 of 90,299; `a18_verify.py` and `t5_verify.py` green. `check_doc_figures.py` does not go to zero — most of its PASS 1 flags are coincidental numeric matches, so it is read finding by finding rather than as a pass/fail.
+> **⟦EG-TENTATIVE⟧** **The v4-era expectations below are suspended while the v3 rebuild runs.** `validate_table_v3.py` is the current validator (`validate_table.py` asserts two retired c mod 8 congruences and will FAIL on any correct v3 table); the certificates are **void pending the fb_common condition-(4) repair** and their "0 candidates" is not currently a meaningful green. Expected output on the partial v3 table, so that a deviation is recognisable: `validate_table_v3.py` **21 PASS / 0 FAIL / 14 INFO / 3 SKIP** against `--baseline mu_table_safe_v4.csv`. `check_doc_figures.py` does not go to zero — most of its PASS 1 flags are coincidental numeric matches, so it is read finding by finding rather than as a pass/fail.
+>
+> *Superseded v4 expectations, kept for the comparison when the certificates come back:* `validate_table.py` 23 PASS / 0 FAIL; `fallback_cert.py` 0 candidates in both modes; `wide_cert.py 100000` certifying 90,299 of 90,299; `a18_verify.py` and `t5_verify.py` green.
 
-Every one of these is a per-n statement that does not extend itself, and none of them extends with the table. Point them all at **v4**. **Run in this order** — the first gates the rest. Extending the table is R0's step, not one of these; this list is what the extension obliges.
+Every one of these is a per-n statement that does not extend itself, and none of them extends with the table. **⟦EG-TENTATIVE⟧** Point them all at **`mu_table_safe_v5_code_v3.csv`**, with **v4 as `--baseline`**. **Run in this order** — the first gates the rest. Extending the table is R0's step, not one of these; this list is what the extension obliges.
+
+**⟦EG-TENTATIVE⟧** **Two entries are held rather than run.** Steps 2 and 3 (`fallback_cert.py`, `wide_cert.py`) rest on fb_common condition (4), which the entangled-generator finding refuted as a *necessary* condition; running them now yields a certificate that is unsound in the same direction as the old table, so they are **blocked on the condition-(4) repair** (T-item; see §2). Step 1 gates as before, and steps 4 and 5 are unaffected.
 
 ```bash
+TABLE=mu_table_safe_v5_code_v3.csv          # current v3 output
+BASE=mu_table_safe_v4.csv                   # baseline: must never be lowered
+
 # 1. cheapest, and gates everything: is the file a well-formed enumeration?
-python3 validate_table.py mu_table_safe_v4.csv --baseline mu_table_safe_v2.csv \
-        --ladder ladder_weak_v8.txt
+#    validate_table_v3.py, NOT validate_table.py -- the latter asserts the two
+#    retired c mod 8 congruences and FAILs on a correct v3 table.
+python3 validate_table_v3.py $TABLE --baseline $BASE --ladder ladder_weak_v8.txt
 
-# 2. the per-n collapse proof, then the same run with the trusted base shrunk
-python3 fallback_cert.py mu_table_safe_v4.csv --verbose
-python3 fallback_cert.py mu_table_safe_v4.csv --no-theorems
+# 2. HELD -- blocked on the fb_common condition-(4) repair, not merely stale.
+# python3 fallback_cert.py $TABLE --verbose
+# python3 fallback_cert.py $TABLE --no-theorems
 
-# 3. the wide certificate.  MU_ENUMERATE IS REQUIRED: the default is
-#    mu_enumerate.py, absent from the working set, so the import fails on load.
-MU_ENUMERATE=$PWD/mu_enumerate_v2.py python3 wide_cert.py 100000
+# 3. HELD -- same blocker.  When it returns: MU_ENUMERATE IS REQUIRED, and it
+#    must point at v3; the default mu_enumerate.py is absent and the import
+#    fails on load.
+# MU_ENUMERATE=$PWD/mu_enumerate_v3.py python3 wide_cert.py 100000
 
 # 4. the range-scoped halves of Lemma D2's and Corollary C′'s domination
-python3 a18_verify.py mu_table_safe_v4.csv
-python3 t5_verify.py mu_table_safe_v4.csv
+python3 a18_verify.py $TABLE
+python3 t5_verify.py $TABLE
 
-# 5. the documents against the table (five passes, incl. refs)
-python3 check_doc_figures.py mu_table_safe_v4.csv *.md
+# 5. the documents against the table (five passes, incl. refs).  This is the
+#    pass that replaces the ⟦EG-TENTATIVE⟧ figures once the rebuild is complete.
+python3 check_doc_figures.py $TABLE *.md
 ```
+
+**⟦EG-TENTATIVE⟧** **A free structural check worth adding to step 1.** Post-correction the Oliver matching-class score F·C(c,2) = s(c−1)/2 coincides with `solvable-relaxation.md`'s solvable score at c = P(s), so **B(n) ≤ B_solv(n)** must hold at every row — Oliver groups being solvable. It costs an O(n) partition scan per row and needs no certificate. Run against the 289 corrected rows on 2026-08-16: 0 violations, 20 exact attainments against the two-part solvable optimum alone.
 
 **What each one is for, and what to read off it.**
 
-- **`validate_table.py`** — pass `--ladder` the current worklist as well as `--baseline` the previous table: the two cross-artefact checks it enables are the cheapest instance of the defect class T1 item 3 names, and they cost a dict join rather than a recomputation. One is a correctness check (the ladder's lower bound must never exceed the table's density) and one a coverage diagnostic (where it falls well below, the four families are missing a shape the enumeration finds, and the witness column names it). A FAIL in **group A** means the run itself is broken and nothing downstream is meaningful; a FAIL in **group B** is a real contradiction between table and documents; **group C** is INFO, each line printing the expected asymptotic beside the measurement. `--explain N` gives one row's full term breakdown, `--quiet` shows failures only, `--baseline` adds shape-migration reporting, which is how winners changing census row become visible.
+- **`validate_table_v3.py`** (**⟦EG-TENTATIVE⟧** formerly `validate_table.py`; the v4 file is retained only for archaeology) — pass `--ladder` the current worklist as well as `--baseline` the previous table: the two cross-artefact checks it enables are the cheapest instance of the defect class T1 item 3 names, and they cost a dict join rather than a recomputation. One is a correctness check (the ladder's lower bound must never exceed the table's density) and one a coverage diagnostic (where it falls well below, the four families are missing a shape the enumeration finds, and the witness column names it). A FAIL in **group A** means the run itself is broken and nothing downstream is meaningful; a FAIL in **group B** is a real contradiction between table and documents; **group C** is INFO, each line printing the expected asymptotic beside the measurement. `--explain N` gives one row's full term breakdown, `--quiet` shows failures only, `--baseline` adds shape-migration reporting, which is how winners changing census row become visible.
 - **`fallback_cert.py`** — the headline is *0 candidates*. Then read three numbers, because **the low-density recount lives here**: the **density floor**, the **largest permitted s**, and the **theorem residue**. They move together, since s ≤ 1/√δ − 1 means a falling floor admits a larger s, and **s = 4 is the first branch with no theorem covering it**. At the current floor of 0.045742 (n = 1817) the bound is 3.68, so s ≤ 3 and E.1 / E.3(iii) / E.4 close everything but one class of 349 E.3(ii) branches. **The margin to δ = 1/25, where s = 4 reopens, is 0.0457 against 0.0400 — one extension could close it.** If `largest permitted s` ever prints 4, `enumeration-proof.md`'s Corollary after E.3 and Part I's tail figures both want re-deriving rather than recounting. The `--no-theorems` run should agree exactly, and the agreement is not vacuous here: 2,204 of 2,553 branches are dispatched in the normal run, so disabling them genuinely moves work into the search.
 - **`wide_cert.py`** — read the `settled by theorem:` line. At NMAX ≤ 10⁴ it prints NONE, because B_lo is small enough that the foreign-cap filter removes the s = 1 and s = 3 branches before the dispatch sees them, so a `--no-theorems` comparison there agrees *trivially* and is no evidence about E.1 / E.3 / E.4. `--menu` cross-checks pass 1 against the family menu; `--refresh` rebuilds the cached B_lo, which is rarely needed since the cache is keyed on everything that determines it.
 - **`k3_galois.py`** — the k = 3 Galois admissibility predicate, with a self-test covering the a = 35 witness, the superset relation against the naive reading, and the gain-versus-top-prime distinction. Import it; do not re-derive it.
