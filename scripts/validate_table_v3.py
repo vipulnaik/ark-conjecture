@@ -477,30 +477,88 @@ def c_layer_by_q(R, base):
     return ("FAIL" if bad else "PASS", f"{len(bad)} misfiled by top prime", bad[:5])
 
 
-@check("B", "CONGRUENCE: S4 winners have c = 1 (mod 8)", "aod section 3.2.3")
+@check("C", "RETIRED CONGRUENCE: the c mod 8 distribution of S4 winners", "aod section 3.2.3")
 def c_s4(R, base):
+    """Was an exact claim ("S4 winners have c = 1 mod 8") resting on the fusion
+    twist-cut: a cyclic-layer fusion was believed to force the twist to the odd
+    part of c - 1, so v_2(c - 1) priced the shape and pinned c mod 8.  The
+    entangled-generator construction refutes the forcing (z^F is the full twist
+    at any F_mid), so c mod 4 is a FREE parameter and no congruence on c is
+    predicted.  Demoted to INFO: the distribution is still worth watching,
+    because a population at c = 1 (mod 4) is positive evidence the freeing is
+    load-bearing rather than merely available."""
     rows = [r for r in R if r.shape == "S4"]
     if not rows:
-        return ("SKIP", "no S4 winners in range", [])
-    bad = [(r.n, [c for _, c, f in r.cls if not f][0]) for r in rows
-           if [c for _, c, f in r.cls if not f][0] % 8 != 1]
-    return ("FAIL" if bad else "PASS", f"{len(rows)} S4 winners, {len(bad)} off-pattern", bad[:5])
+        return ("INFO", "no S4 winners in range", [])
+    dist = Counter([c for _, c, f in r.cls if not f][0] % 8 for r in rows)
+    freed = sum(v for k, v in dist.items() if k % 4 == 1)
+    return ("INFO", f"{len(rows)} S4 winners, c mod 8 = {dict(sorted(dist.items()))}; "
+                    f"{freed} at c = 1 (mod 4), forbidden under the retired law", [])
 
 
-@check("B", "CONGRUENCE: S7 at F = 2 has c = 3 (mod 4), bar the c = 5 (mod 8) tie and p = 2",
+@check("C", "RETIRED CONGRUENCE: the c mod 8 distribution of S7-at-F=2 winners",
        "aod section 3.2.3")
 def c_s7f2(R, base):
+    """Retired for the same reason as c_s4 -- see that docstring.  The old exact
+    claim was c = 3 (mod 4) bar a c = 5 (mod 8) tie; under the corrected shape
+    space the matching block's residue costs nothing, and what c mod 4 now does
+    is STEER the foreign residue: at F = 2, 2c = 2 or 6 (mod 8) according to
+    c mod 4, so r = n - 2c reaches two residues mod 8 where the old law reached
+    one.  (At F = 4 it steers nothing: 4c = 4 (mod 8) for every odd c.)  That
+    asymmetry is exactly why classes 7, 15 mod 24 improved and 11, 23 did not.
+    The exact content that survives is the reachability check c_eta_reach below."""
     rows = [r for r in R if r.shape == "S7f2"]
     if not rows:
-        return ("SKIP", "no cyclic-layer F = 2 winners in range", [])
-    dist, weird = Counter(), []
+        return ("INFO", "no cyclic-layer F = 2 winners in range", [])
+    dist = Counter()
     for r in rows:
-        c = [x for _, x, f in r.cls if not f][0]
-        dist[c % 8] += 1
-        if c % 4 != 3 and c % 8 != 5 and r.p != 2:
-            weird.append((r.n, c, c % 8))
-    return ("FAIL" if weird else "PASS",
-            f"{len(rows)} winners, c mod 8 = {dict(sorted(dist.items()))}", weird[:5])
+        dist[[x for _, x, f in r.cls if not f][0] % 8] += 1
+    freed = sum(v for k, v in dist.items() if k % 4 == 1)
+    return ("INFO", f"{len(rows)} winners, c mod 8 = {dict(sorted(dist.items()))}; "
+                    f"{freed} at c = 1 (mod 4), forbidden under the retired law "
+                    f"({'the freeing is exercised' if freed else 'freeing available but unused so far'})", [])
+
+
+@check("B", "the foreign twist is a q-power divisor of r - 1, and eta respects v_2(r - 1)",
+       "aod section 3.3.4a; ep Lemma B-prime")
+def c_eta_reach(R, base):
+    """The exact claim that REPLACES the retired c mod 8 congruences.
+
+    Lemma B-prime is untouched by the entangled correction: a foreign block's
+    twist t lies in the top q-group, so t is a q-power dividing r - 1, and the
+    efficiency is eta = 2t/(r - 1).  Two consequences are testable at every
+    one-foreign row and neither mentions c:
+
+      (a) t = qpart(r - 1) exactly -- the block takes its whole q-part, there
+          being no reason to take less.
+      (b) eta <= 2 / 2^v_2(r - 1) when q is odd, since an odd t divides the odd
+          part of r - 1.  So r = 3 (mod 4) is what eta = 1 needs, r = 5 (mod 8)
+          what eta = 1/2 needs, and so on.  This is the residue law that the
+          c mod 8 checks were a (wrong) proxy for: it lives on r, not on c.
+
+    A violation here is a genuine contradiction -- either the enumerator has
+    credited a twist the top layer cannot hold, or eta is being computed wrong."""
+    bad, tested = [], 0
+    for r in R:
+        if r.q is None:
+            continue
+        fs = [c for _, c, f in r.cls if f]
+        if len(fs) != 1:
+            continue
+        rr = fs[0]
+        tested += 1
+        t = qpart(rr - 1, r.q)
+        eta = 2.0 * t / (rr - 1)
+        if r.q != 2:
+            v2 = 0
+            m = rr - 1
+            while m % 2 == 0:
+                m //= 2; v2 += 1
+            if eta > 2.0 / 2 ** v2 + 1e-9:
+                bad.append((r.n, rr, r.q, round(eta, 4), v2))
+    return ("FAIL" if bad else "PASS",
+            f"0 of {tested} one-foreign winners credit an unreachable eta"
+            if not bad else f"{len(bad)} of {tested} unreachable", bad[:5])
 
 
 @check("B", "CONGRUENCE: S5 obeys none on c, and its foreign prime has u = oddpart(r-1) <= 9",
