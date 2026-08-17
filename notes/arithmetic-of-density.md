@@ -420,28 +420,36 @@ Every entry is a unit in ℤ[√d] over a small denominator, as it must be, sinc
 
 ### 3.4 The balanced window, and why it leaves the singular series intact
 
-Every cap above is attained at a specific balance point — x = c/n equal to 1/2, 1/3, or the values in the table — so the representations that matter are not all representations of n but those in a window around that point. Whether the Bateman–Horn heuristic survives that restriction needs checking, because a window shrinking with n would turn each of these into a short-interval problem and put it out of reach.
+Every cap above is attained at a specific balance point — x = c/n equal to 1/2 at the unobstructed even classes, or the values in the table — so the representations that matter are not all representations of n but those in a window around that point. Whether the Bateman–Horn heuristic survives that restriction needs checking, because a window shrinking with n would turn each of these into a short-interval problem and put it out of reach.
 
 It does not shrink. Each δ(x) is continuous with an **interior maximum**, so asking for δ ≥ δ₀ at any δ₀ strictly below the cap confines x to an interval of positive length, and that length is a fixed fraction of n rather than a vanishing one. Taking δ₀ = 0.9 × cap in each class:
 
-| class (residues mod 24; the law is mod 12) | family, efficiency | cap | attained at x\* | x-window | width |
-|---|---|---|---|---|---|
-| 0, 4, 6, 10, 12, 16, 18, 22 | S3, k = 1, η = 1 | 0.25000 | 0.5000 | [0.474, 0.526] | 0.051 |
-| 2, 8, 14, 20 | S3, k = 1, η = 1/3 | 0.13397 | 0.3660 | [0.347, 0.399] | 0.051 |
-| 1, 9, 13, 21 | S7 at F = 2, η = 1 | 0.17157 | 0.2929 | [0.278, 0.304] | 0.026 |
-| **3, 7, 15, 19** | S7 at F = 2, η = 1/2 | 0.12500 | 0.2500 | [0.237, 0.263] | 0.026 |
-| 5, 17 | S7 at F = 2, η = 1/3 | 0.10102 | 0.2247 | [0.213, 0.239] | 0.026 |
-| 11, 23 | S7 at F = 4, η = 1/3 | 0.07180 | 0.1340 | [0.127, 0.140] | 0.013 |
+| class (mod 12) | family, efficiency | F | cap | attained at x\* | x-window | width | F·width |
+|---|---|---|---|---|---|---|---|
+| 0, 4, 6, 10 | S3, k = 1, η = 1 | 1 | 0.25000 | 0.5000 | [0.474, 0.526] | 0.051 | 0.0513 |
+| 2, 8 | S3, k = 1, η = 1/3 | 1 | 0.13397 | 0.3660 | [0.347, 0.399] | 0.051 | 0.0513 |
+| 1, 9 | S7 at F = 2, η = 1 | 2 | 0.17157 | 0.2929 | [0.278, 0.304] | 0.026 | 0.0513 |
+| **⟦EG-TENTATIVE⟧** **3, 7** | S7 at F = 2, η = 1/2 | 2 | 0.12500 | 0.2500 | [0.237, 0.263] | 0.026 | 0.0513 |
+| 5 | S7 at F = 2, η = 1/3 | 2 | 0.10102 | 0.2247 | [0.213, 0.239] | 0.026 | 0.0513 |
+| 11 | S7 at F = 4, η = 1/3 | 4 | 0.07180 | 0.1340 | [0.127, 0.140] | 0.013 | 0.0513 |
 
-*Computed from δ(x) = min(F x², 2F x(1 − Fx), η(1 − Fx)²) with x = c/n; the x\* column reproduces §3.3.5's independently, which is the cross-check worth re-running whenever either table moves. **Keying this table mod 12, or reading every odd row off the unfused rung, is the way to get it wrong** — both give caps that are real numbers attached to real shapes and simply not the class ceilings.*
+*Computed from δ(x) = min(F x², 2F x(1 − Fx), η(1 − Fx)²) with x = c/n; the x\* column reproduces §3.3.5's independently, which is the cross-check worth re-running whenever either table moves. **⟦EG-TENTATIVE⟧** **This table is now keyed mod 12, as §3.3.5 is** — it formerly carried a warning that keying it mod 12 was "the way to get it wrong", which was correct against the mod-24 ceiling table and is not correct now (§3.3.4). The other half of that warning stands unchanged and is the live hazard: **reading an odd row off the unfused rung gives a cap that is a real number attached to a real shape and simply not the class ceiling.***
 
-So in every class the count required is of primes in an interval of length **c·n for an absolute constant c between 0.013 and 0.051** — not primes in a short interval. (The F = 4 rows are the narrowest, at 0.013, because the window is measured in x = c/n while the block occupies F·c of the n points; in terms of the *class's* footprint the four rows are comparable.) That is exactly the regime where the Hardy–Littlewood and Bateman–Horn heuristics are standard: the predicted count over the window is the full-range prediction times the window's measure, up to the smooth variation of 1/log across it, and no short-interval input is needed. The asymptotic ~𝔖(n)·n/log³n of §§3.1–3.2 therefore stands as written, with 𝔖(n) unchanged and only the constant scaled.
+> **The last column is an exact identity, not a near-coincidence.** For δ ≥ λ·cap the window is bounded by the two branches that meet at x\*: the increasing one gives F x² ≥ λ·F x\*², i.e. x ≥ x\*√λ, and the decreasing one gives η(1 − Fx)² ≥ λ·η(1 − Fx\*)², i.e. Fx ≤ 1 − √λ(1 − Fx\*). Writing u = F x\*, the width is
+>
+>   (1/F)·[1 − √λ(1 − u)] − (u/F)√λ = (1/F)·[1 − √λ(1 − u) − u√λ] = **(1 − √λ)/F**,
+>
+> in which η and x\* have both cancelled. So **F·width = 1 − √λ for every row**, here 1 − √0.9 = 0.051317. *Verified numerically at λ = 0.9, 0.99, 0.999 across all six (F, η) pairs, agreeing to seven places.* The rows differ in width only through F, and in the class's own footprint — the block occupies F·c of the n points — they are not merely comparable but **identical**.
+
+So in every class the count required is of primes in an interval of length **c·n for an absolute constant c between 0.013 and 0.051** — not primes in a short interval. (The F = 4 row is the narrowest, at (1 − √0.9)/4 = 0.013, purely because the window is measured in x = c/n while the block occupies F·c of the n points; by the identity above, in the class's own footprint every row has the same width.) That is exactly the regime where the Hardy–Littlewood and Bateman–Horn heuristics are standard: the predicted count over the window is the full-range prediction times the window's measure, up to the smooth variation of 1/log across it, and no short-interval input is needed. The asymptotic ~𝔖(n)·n/log³n of §§3.1–3.2 therefore stands as written, with 𝔖(n) unchanged and only the constant scaled.
 
 Two caveats, both real and both explaining why the observed maxima of §3.3 fall just short of their caps rather than meeting them.
 
-**Approaching the cap costs.** Requiring δ ≥ (1−ε)·cap confines x to a window of relative width Θ(√ε), so the predicted count degrades like √ε·n/log³n. It stays positive for fixed ε but not uniformly in ε, so the caps are suprema rather than values guaranteed to be attained at any particular n.
+**Approaching the cap costs — but linearly, not as a square root.** Requiring δ ≥ (1−ε)·cap confines x to a window of width (1 − √(1−ε))/F = **Θ(ε)**, by the identity above with λ = 1 − ε, so the predicted count degrades like ε·n/log³n. It stays positive for fixed ε but not uniformly in ε, so the caps remain suprema rather than values guaranteed to be attained at any particular n.
 
-**Exact balance is arithmetically impossible anyway.** At the balance point the three-part family needs c = r = n/3 exactly, but r is the foreign prime and c the p-characteristic block size, and admissibility requires r ≠ p. The same obstruction applies to the two-part family at x = 1/2. So the caps are approached and never met, independently of any analytic question.
+> *This paragraph previously claimed Θ(√ε), which is what a **smooth** interior maximum would give: δ ≈ cap − k(x − x\*)² yields |x − x\*| ≤ √(ε·cap/k). But the maximum here is a **kink**, not a smooth turning point — it is where an increasing branch meets a decreasing one — so the window closes linearly and the true cost is milder than was claimed. Nothing downstream depended on the exponent; §3.4's conclusion is only strengthened.*
+
+**Exact balance is arithmetically impossible anyway, though the reason differs by row.** At the even two-part rows with x\* = 1/2 the balance point needs c = r, which admissibility forbids outright, since r is the foreign prime and c the p-characteristic block size and r ≠ p is required. At the odd rows c ≠ r at balance and the obstruction is instead integrality: x\* is irrational at 1, 9, 5 and 11 (mod 12), and at 3, 7 (mod 12), where x\* = 1/4 is rational, n is odd so c = n/4 is not an integer. Either way the caps are approached and never met, independently of any analytic question. *(The earlier form of this paragraph asserted that the three-part family needs c = r = n/3 at balance. No row has x\* = 1/3 — the three-part balance points are 0.2929, 0.25, 0.2247 and 0.1340 — so that was a legacy statement from an equal-three-part reading and has been replaced.)*
 
 ### 3.5 Which conjecture, exactly: parametric systems versus fixed ones
 
