@@ -1,18 +1,13 @@
 # The Minimum-Orbital Function μ(n): Limits and Arithmetic Content of the Group-Theoretic Approach to Sparse Evasiveness
 
-> **2026-08-17 — the entangled-generator correction is adopted; specific optima await the rebuild.**
-> The F_mid coprimality cut in the SAFE cap was not a necessary condition: an entangled cyclic-layer
-> generator realises the **full twist** at any F_mid (explicit groups at n = 33, 78, 105;
-> `entangled-generator-finding.md`). **The structural and asymptotic consequences are now stated as
-> settled** — the retirement of the c mod 8 law, the rekeying of the ceiling table from mod 24 to
-> **mod 12** with **six** constants, the merge of classes 7, 15 into the 1/8 row, and the deletion of
-> the twist clause from Hypothesis (H). The mod-12 rekey was confirmed independently of the
-> congruence argument by scanning real configurations per residue class (`ceiling_rederive.py`).
-> **What is still provisional is numerical**, and is marked ⟦PENDING-REBUILD⟧: the density floor and
-> its argmin, the census counts, per-row witnesses and any figure read off the table. Those await the
-> full `mu_enumerate_v3.py` run; `check_doc_figures.py` against the completed v3 table is the
-> review-and-replace pass. Unmarked figures from the v4 table remain correct as lower bounds but may
-> rise. The ladder floors (0.04453 to 10⁶, conjectured 1/25) are construction-side and unaffected.
+> **Pending: the numerical rebuild.** Figures marked ⟦PENDING-REBUILD⟧ are read off a table that
+> predates the current SAFE cap and are known low at 289 rows — the density floor and its argmin, the
+> census winner counts, and per-row witnesses. `mu_enumerate_v3.py` is the enumerator; running
+> `check_doc_figures.py` against its completed output is the pass that replaces them. Unmarked figures
+> from the current table remain correct as lower bounds but may rise. Structural and asymptotic claims
+> are **not** provisional: the ceiling table is keyed mod 12 with six constants, confirmed by scanning
+> real configurations per residue class (`ceiling_rederive.py`), and the ladder floors (0.04453 to
+> 10⁶, conjectured 1/25) are construction-side and independent of the cap.
 
 
 *Working notes, July 2026. Status: an asymptotic framework with proof sketches, together with exact machine computations at n = 10 and a campaign in progress at n = 12 (code, checkpoints, and logs accompany this note). Two companions accompany this note: **`enumeration-proof.md`**, which classifies the admissible group shapes and proves the enumeration correct, complete and attained; and **`arithmetic-of-density.md`**, which identifies the arithmetic conditions on n that control the answer and sets up the Hardy–Littlewood and Bateman–Horn machinery behind them. A third, **`three-uniform-note.md`**, works the same machinery at k = 3 — as a design document for the hypergraph case and as a check on what the k = 2 constants are actually resting on. Further companions vary the other hypotheses and are mapped in the Overview. Everything stated is proved here, proved in one of those, or cited; the two arithmetic residues are collected as Open Problem 8, and the conjectural number-theoretic inputs are confined to Part II. Intended as a starting point for others.*
@@ -69,7 +64,7 @@ Babai–Banerjee–Kulkarni–Naik (BBKN, arXiv:1001.4829) prove evasiveness of 
 
 | group class | arity | shifted-prime condition | shape space | fusion | balance | full-density blocks |
 |---|---|---|---|---|---|---|
-| **Oliver** | **k = 2** | **binds.** A block's twist must be a q-power, so a prime r contributes η = 2/D of r − 1; this is the whole source of the seven mod-24 ceilings | Parts B–D: matching blocks p-power, foreign blocks prime, F = F_mid·F_top, coprimality budget in the cyclic layer | available at every odd residue with full twist (entangled correction; the pre-correction rung obstruction at 7, 15, 23 was an artefact of the coprimality clause) | cap_F(η) = η/(1+√(Fη))², balance points per residue | every prime power (AGL(1,c), 2-homogeneous) — infinite |
+| **Oliver** | **k = 2** | **binds.** A block's twist must be a q-power, so a prime r contributes η = 2/D of r − 1; this is the whole source of the seven mod-24 ceilings | Parts B–D: matching blocks p-power, foreign blocks prime, F = F_mid·F_top, coprimality budget in the cyclic layer | available at every odd residue with full twist (a cyclic-layer fusion costs nothing on the matching side — `arithmetic-of-density.md` §3.2.3) | cap_F(η) = η/(1+√(Fη))², balance points per residue | every prime power (AGL(1,c), 2-homogeneous) — infinite |
 | **solvable** | k = 2 | **vanishes.** η = 1 always; the block takes all of C_{c−1} | collapses to one formula: an orbit of size s is worth s(P(s)−1)/2, P = largest prime-power divisor | **always available**, nothing competes for the cyclic layer | same formula at η = 1; ceilings 1/4 (even) and 3−2√2 (odd) | same — every prime power |
 | Oliver | **k = 3** | binds, and **inverts**: under-crediting the Galois part breaks the upper bound rather than loosening it | same block classification, but only intra terms bind; cross terms are cubic and never decide | present, but no *term-type* comparison to make | allocation survives with the same balance points; the ceiling apparatus does not | **finite: n ∈ {3, 4, 5, 8, 32}** (C₃, A₄, AGL(1,5), AGL(1,8), AΓL(1,32) — all Oliver; the last two regular on triples) |
 | solvable | k = 3 | vanishes, as in row 2 | as row 2, with the k = 3 scoring | always available | no ceiling apparatus to balance | **still only those five** — the arity kills it, not the chain, since all five groups are Oliver already |
@@ -180,7 +175,7 @@ What the framework once had to assume about extremal groups is, in its structura
 >
 > **n = Σᵢ Fᵢcᵢ**, each cᵢ a prime power and each **Fᵢ = F_mid,ᵢ · F_top,ᵢ** with F_top a power of q,
 >
-> in which each orbit is either **p-characteristic** — cᵢ a power of p, twist any divisor of cᵢ−1 — or **foreign** — cᵢ prime, twist a power of q, and unfused (fusing an outside class is possible but dominated, Lemma D2, so no extremal configuration contains one). *Correction 2026-08-16: the clause that stood here — every F_mid, cyclic-layer twist and foreign prime pairwise coprime — is **not a necessary condition**. The block-rotation image C_F_mid is a quotient of the cyclic layer, not a subgroup, and an entangled generator (block rotation whose F-th power is a full twist) realises the full twist at any F_mid; explicit counterexample groups at n = 33, 78, 105. What survives: foreign primes are pairwise distinct (unique-subgroup argument on genuine subgroups), and twist-vs-foreign shares remain governed by Lemma C's coupling. The orbital-size clause below stands with dᵢ unrestricted by F_mid.* Imprimitive tower depth contributes nothing beyond Fᵢ. The orbital sizes are then *forced*, not chosen: **Fᵢ·orb(cᵢ, dᵢ)** within a fused class, **(Fᵢ or Fᵢ/2)·cᵢ²** between the blocks of one class — Fᵢ for odd Fᵢ and Fᵢ/2 for even Fᵢ, keyed on the block count's parity rather than on q — and **sᵢsⱼ** between distinct orbits.
+> in which each orbit is either **p-characteristic** — cᵢ a power of p, twist any divisor of cᵢ−1 — or **foreign** — cᵢ prime, twist a power of q, and unfused (fusing an outside class is possible but dominated, Lemma D2, so no extremal configuration contains one). *Gotcha: there is deliberately **no** clause requiring every F_mid, cyclic-layer twist and foreign prime pairwise coprime. That is **not a necessary condition**. The block-rotation image C_F_mid is a quotient of the cyclic layer, not a subgroup, and an entangled generator (block rotation whose F-th power is a full twist) realises the full twist at any F_mid; explicit counterexample groups at n = 33, 78, 105. What survives: foreign primes are pairwise distinct (unique-subgroup argument on genuine subgroups), and twist-vs-foreign shares remain governed by Lemma C's coupling. The orbital-size clause below stands with dᵢ unrestricted by F_mid.* Imprimitive tower depth contributes nothing beyond Fᵢ. The orbital sizes are then *forced*, not chosen: **Fᵢ·orb(cᵢ, dᵢ)** within a fused class, **(Fᵢ or Fᵢ/2)·cᵢ²** between the blocks of one class — Fᵢ for odd Fᵢ and Fᵢ/2 for even Fᵢ, keyed on the block count's parity rather than on q — and **sᵢsⱼ** between distinct orbits.
 <!-- /DUP -->
 >
 > Conversely, **every configuration meeting these conditions is realised by an explicit group** with exactly that orbital data.
