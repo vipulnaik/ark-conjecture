@@ -80,7 +80,7 @@ Because 𝔽_p supplies a k-subset exactly when p ≥ k, and that is the whole c
 | escape | k = 2 | k = 3 | k ≥ 4 | new at higher k? |
 |---|---|---|---|---|
 | **shifted-prime / safe-prime** (the foreign block's twist) | yes | yes | yes | no — it is Lemma B′, which is k-independent |
-| **Fermat / S5** (top-layer fusion, q = 2 forced) | yes | yes, larger prize | yes | no |
+| **Fermat / S5** (top-layer fusion, q = 2 forced) | yes | yes, larger prize | yes | no — and at every arity it is weakly dominated by cyclic-layer fusion at odd q, which keeps the full twist (`aod` §3.2.3) |
 | **Galois** (semilinear twist) | **inert** (p ≥ k always) | new: p = 2 only | p < k, so more characteristics | **no — widened, not new** |
 | **full density** (a block that is k-homogeneous) | **infinite family**: every prime power | **finite**: degrees 3, 4, 5, 8, 32 | **empty for k ≥ 5** | no — it *dies* |
 
@@ -106,9 +106,9 @@ which is the k = 3 formula with no k in it. **The arity enters only through κ_c
 
 > **β_k = cap_F(η)/2 for every k ≥ 3**, exactly, by the one-line identity 1/(√(2F) + √(2/η))² = ½·η/(1 + √(Fη))².
 
-So the seven mod-24 ceilings, the balance points and the F = 4 residues are **the same at every arity**, and the F = 4 shape sets the ceiling at 7, 11, 15, 23 mod 24 for all k ≥ 3 by the same argument `three-uniform-note.md` §5.7 gives at k = 3 (the parity constraint, the mod-8 mechanism and the η values are all arity-free).
+So the six mod-12 ceilings, the balance points and the F = 4 residue are **the same at every arity**, and the F = 4 shape sets the ceiling at n ≡ 11 (mod 12) for all k ≥ 3 by the same argument `three-uniform-note.md` §5.7 gives at k = 3 (the parity constraint, the mod-8 supply mechanism and the η values are all arity-free).
 
-> **What does move with k is which blocks are in the generic column.** κ_c = 2 needs c − 1 coprime to lcm(3, …, k), and κ_r = 1 needs the foreign twist's prime q > k. Both are congruence conditions modulo L_k, so the good class is defined mod L_k rather than mod 4 (k = 2) or mod 12 (k = 3), and the **governing modulus grows like e^k**. The table's *values* are k-independent; the *set of n realising them* thins.
+> **What does move with k is which blocks are in the generic column.** κ_c = 2 needs c − 1 coprime to lcm(3, …, k), and κ_r = 1 needs the foreign twist's prime q > k. Both are congruence conditions modulo L_k, so the good class of **blocks** is defined mod L_k rather than mod 4 (k = 2) or mod 12 (k = 3), and the **governing modulus for membership of the generic column grows like e^k**. The table's *values* are k-independent, and so is the modulus keying the table itself — mod 12 at every arity (`aod` §3.3.4); what thins is the *set of blocks*, and hence of n, realising the generic column.
 
 ---
 
