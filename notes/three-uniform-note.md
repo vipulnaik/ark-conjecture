@@ -2,7 +2,9 @@
 
 *This is row 3 of the hypothesis table in `orbital-evasiveness-notes.md` §1: the arity axis, which removes the full-density block, as against the group axis of `solvable-relaxation.md`, which removes the shifted-prime condition.*
 
-> **The F = 4 shape transfers to k = 3, and §5.6's three-part competition is one for a runner-up.** At both arities the class ceiling at four of the twelve odd residues — 7, 11, 15, 23 mod 24 — is attained by **S7 at F = 4**, a two-part shape (`aod` §3.3.5, and §5.7 here). So the S4 / S5 / S7-at-F=2 comparison that §5.6 works out settles the internal order of the *three-part* shapes, which at those four residues is a question about second place. §5.6.4 is marked accordingly.
+> **⟦EG-TENTATIVE⟧** **2026-08-16 entangled-generator correction** (`entangled-generator-finding.md`): the k = 2 rung mechanism this note imports — a cyclic-layer fusion forcing the twist to the odd part of c − 1 — is refuted; entangled generators give full twist at any F_mid, and the mechanism is arity-agnostic (z^F = full twist is a statement about the group, not the pairing), so it carries to k = 3. Passages marked with this token inherit the correction; the residual cost of a cyclic-layer fusion at both arities is Lemma C's twist–foreign coupling, not the odd-part cut. **Unaffected**: the orb₃ law and κ₃ arithmetic (§2), the Kantor classification and everything downstream of it (§3), the Galois machinery and its global-q coupling (§§2.2, 4.3), Lemma B′ and the supply analysis (§4.4, §5.5), the allocation formula and balance-point identity (§5.2, §5.7's κ_c = 2 identity), and §5.8 — whose description of the k = 2 SAFE cap ("F·C(c,2), tight except where Lemma C bites") already matches the *corrected* k = 2 framework rather than v4.
+>
+> **⟦EG-TENTATIVE⟧** **The F = 4 shape transfers to k = 3, and §5.6's three-part competition is one for a runner-up at 11 and 23.** At both arities the class ceiling at 11, 23 mod 24 is attained by **S7 at F = 4**, a two-part shape (`aod` §3.3.5, and §5.7 here). At **7, 15** the v4 reading (S7 at F = 4, η = 1) is tentatively superseded at both arities by **S7 at F = 2 with the entangled full twist and η = 1/2** — which *is* one of §5.6.4's compared shapes, so at those two residues the three-part competition is no longer merely for second place. §5.6.4 and §5.7 are marked accordingly.
 
 *Companion to `enumeration-proof.md` and `arithmetic-of-density.md`. Works the Oliver-group machinery at k = 3 — properties of 3-uniform hypergraphs on n vertices — both for its own sake and as a fresh-eyes pass over the k = 2 programme in a setting where the answers are not already known. Nothing here is load-bearing for k = 2; where it contradicts a k = 2 document, the k = 2 document is right about k = 2 and this one is describing a different problem.*
 
@@ -37,7 +39,7 @@ Treat this as a design document. Where a claim is measured rather than proved, i
 
 **The criterion.** Nothing in Oliver's theorem or in the χ argument is 2-specific. For Γ an Oliver chain group acting on [n] and P a nontrivial monotone Γ-invariant property of 3-uniform hypergraphs, non-evasiveness still forces χ((P)_Γ) ≡ 1 (mod q), with χ = 1 exactly when the top layer is trivial. The fixed complex is indexed by unions of **Γ-orbits on 3-subsets** rather than on pairs, so the computation is still 2^t over t orbits and `chi_test.py` needs one line changed.
 
-**The group theory.** Parts A, B, B′, C, D and D2 of `enumeration-proof.md` are statements about *which groups exist* and about their block structure. None mentions pairs. They transfer unchanged, and so does the shape space: chain primes (p, q), orbits, matching and foreign blocks, fusion counts F = F_mid·F_top, the cyclic-layer coprimality budget.
+**The group theory.** Parts A, B, B′, C, D and D2 of `enumeration-proof.md` are statements about *which groups exist* and about their block structure. None mentions pairs. They transfer unchanged, and so does the shape space: chain primes (p, q), orbits, matching and foreign blocks, fusion counts F = F_mid·F_top, and the cyclic-layer budget **⟦EG-TENTATIVE⟧** in its corrected form — Lemma C's twist–foreign strip and the no-duplicate-foreign rule; the v4 reading that F_mid itself joins a pairwise-coprimality budget is refuted at k = 2 and does not transfer because it was never true.
 
 **The sandwich.** B_refined ≤ μ₃ ≤ B_safe has the same shape, with the same reasons, once the scoring function is replaced.
 
@@ -296,7 +298,7 @@ So the optimisation is no longer a balance between competing term types. It is: 
 | **S4** | two matching + outside, n = 2c + r\* | exists | the **foreign** block, orb₃(r, t, 1) | measured **0.0020** at n = 35 (q = 3, t = 3) | Same as k = 2 in that the foreign block is the weak point; the margin is wider |
 | **S5** | top-layer-fused matching + outside | exists | as S4 | — | The S5/S7 distinction survives unchanged: which layer holds the swap, hence which twist is available |
 | **S6** | two outside blocks | exists | the weaker of orb₃(r_i, t_i, 1) | measured **0.0027** at n = 36 | **Changed from k = 2**, where it is capped by 1/(√m₁+√m₂)² and wins nowhere. At k = 3 it is just "two foreign blocks", scoring like S3 with both twists constrained |
-| **S7** | middle-layer-fused matching + outside, **any F** | exists | orb₃(r, t, 1) when the foreign twist is small | measured 0.0013 at n = 33 | Same shape; a small foreign twist is punished harder, orb₃ being linear in d with no C(c,2) cap to rescue it. **The F-split survives the arity.** At k = 2, F = 2 carries 8/24 and F = 4 carries 4/24, the latter setting the class ceiling at 7, 11, 15, 23 mod 24; §5.7 shows the same four residues take F = 4 at k = 3, the one exception being a κ_c = 3 tie at class 11 |
+| **S7** | middle-layer-fused matching + outside, **any F** | exists | orb₃(r, t, 1) when the foreign twist is small | measured 0.0013 at n = 33 | Same shape; a small foreign twist is punished harder, orb₃ being linear in d with no C(c,2) cap to rescue it. **The F-split survives the arity.** At k = 2, F = 2 carries 8/24 and F = 4 carries 4/24 under v4; **⟦EG-TENTATIVE⟧** post-correction F = 4 tentatively sets the ceiling at 11, 23 only, with 7, 15 moving to F = 2 at η = 1/2 — at both arities (§5.7). The κ_c = 3 tie at class 11 stands |
 | **S8** | bottom-layer-fused matching | **killed, D1** — argument survives | — | — | D1's inequality strengthens: F·C(c,3) < C(Fc,3) needs only F < F³, a wider margin than k = 2's F < F² |
 | **S9** | fused outside block, any layer | **exists; dominated at k = 2** (Lemma D2 caps it at n^{3/2}/2) — the k = 3 status is unchecked | — | — | D2's k = 2 domination rests on a pairs-specific same-position class; the k = 3 analogue should dominate more easily by §4.1's degree count, but it has not been derived |
 | **S10** | outside block with r = q, any F | **killed** — argument survives | — | — | The twist-collapse of D2q is about layers, not pairs, so it carries to k = 3 verbatim |
@@ -440,7 +442,7 @@ Reading §5.3 off, the engine consumes exactly two arithmetic inputs:
 
 *The Bateman–Horn systems are unchanged — same polynomials, same singular series, so `aod` §§3.4–3.5 transfer with nothing to re-derive. What changes is the congruence law governing a matching block's twist, and with it the competition between the three-part shapes. This subsection covers only that.*
 
-> **What that competition is worth, at both arities.** The S4 / S5 / S7 comparison determines which shape realises the *three-part family*, and the family attains the class ceiling at only eight of the twelve odd residues; at the other four the ceiling belongs to the two-part **S7 at F = 4** — at k = 2 (`three-part-family-split.md`) and, by §5.7, at k = 3 as well. So read §5.6.4 as settling the internal order of the three-part shapes, and not as identifying the winner at those four residues.
+> **What that competition is worth, at both arities.** The S4 / S5 / S7 comparison determines which shape realises the *three-part family*. **⟦EG-TENTATIVE⟧** Under v4 the two-part S7 at F = 4 held the ceiling at 7, 11, 15, 23; post-correction it tentatively holds only 11, 23, with 7, 15 going to S7 at F = 2 at full twist — a shape inside this comparison. So read §5.6.4 as settling the internal order of the three-part shapes at 11, 23, and as tentatively identifying the class winner at 7, 15.
 
 #### 5.6.1 The block's own class: c mod 3 now leads
 
@@ -452,14 +454,14 @@ So a block with 3 | c − 1 is **penalised by a factor 3/2 before any fusion**, 
 
 #### 5.6.2 The cost of a cyclic-layer fusion
 
-The other congruence effect is the one `aod` §3.2.3 calls the c mod 8 law. A cyclic-layer fusion (F_mid = 2) forces the twist down to the **odd part** of c − 1, and the cost is the ratio of the two values. Writing 2^v ‖ c − 1:
+The other congruence effect is the one `aod` §3.2.3 called the c mod 8 law. **⟦EG-TENTATIVE⟧** Under v4 a cyclic-layer fusion (F_mid = 2) was believed to force the twist down to the **odd part** of c − 1; the entangled-generator construction refutes the forcing at k = 2, and the mechanism (z^F = full twist) is arity-agnostic, so the cut is tentatively **never forced at k = 3 either** — the cost table below records the *price of the cut where taken*, not a price of fusion, and the residual price of fusion is Lemma C's foreign coupling. Writing 2^v ‖ c − 1:
 
 > | | cost of cutting to the odd part |
 > |---|---|
 > | **k = 2** | **2^{v−1}**, always |
 > | **k = 3** | **2^{v−1}** if 3 ∤ c − 1; **2^v** if 3 \| c − 1 |
 
-so the cut is one factor of two *more* expensive exactly on the blocks already penalised by §5.6.1. **Verified at every odd prime power c ≤ 83.**
+so the cut is one factor of two *more* expensive exactly on the blocks already penalised by §5.6.1. **Verified at every odd prime power c ≤ 83** — the verification is of the orb₃ ratio arithmetic, which stands independently of whether any fusion forces the cut.
 
 #### 5.6.3 The combined law, mod 12 and mod 24
 
@@ -474,7 +476,7 @@ Putting the two together for c coprime to 6:
 
 **and mod 24 refines it**, because v is not determined by c mod 12: c ≡ 11 and 23 (mod 24) both have v = 1 and are the good class; c ≡ 5 (mod 24) has v = 2 while c ≡ 17 has v = 4, so their fusion costs differ by a factor of four.
 
-> **The contrast with k = 2 is a narrowing.** There the good class is **c ≡ 3 (mod 4)** — every one of c ≡ 3, 7, 11 (mod 12) is equally good, since only v matters. At k = 3 the class **c ≡ 11 (mod 12)** is strictly better than c ≡ 7, because the mod-3 penalty separates them. So the governing modulus rises from 4 to 12, and mod 24 enters for the same reason it does at k = 2 — to pin v.
+> **The contrast with k = 2 is a narrowing.** **⟦EG-TENTATIVE⟧** Under v4 the k = 2 good class was **c ≡ 3 (mod 4)** — every one of c ≡ 3, 7, 11 (mod 12) equally good, only v mattering; post-correction the cut is not forced at either arity, so this comparison governs only configurations that *take* the cut, and the surviving per-block congruence content at k = 3 is §5.6.1's mod-3 penalty, which is EG-independent. Within the cut-taking regime the narrowing stands as stated: the governing modulus rises from 4 to 12, and mod 24 pins v.
 
 #### 5.6.4 What this does to S4 versus S5 versus S7
 
@@ -482,11 +484,11 @@ Putting the two together for c coprime to 6:
 
 The three-part shapes differ, as at k = 2, in **where the block swap lives** — and therefore in which of two costs they pay.
 
-- **S7** (swap in the *cyclic* layer): the twist is cut to the odd part, at the cost of §5.6.2 — but **q is free**, so the foreign block may choose the top prime that maximises its own η₃.
+- **S7** (swap in the *cyclic* layer): **⟦EG-TENTATIVE⟧** under v4, the twist was cut to the odd part at the cost of §5.6.2; post-correction the entangled layer keeps the full twist (subject only to Lemma C's strip against the foreign prime) — and **q is free**, so the foreign block may choose the top prime that maximises its own η₃. Tentatively S7 pays nothing on the matching side.
 - **S5** (swap in the *top* layer): the twist is untouched, so the matching block keeps its full value — but **q = 2 is forced**, so the foreign twist is the 2-part of r − 1 and η₃ is whatever that gives.
 - **S4** (no fusion): two separate matching blocks, so neither cost, but by §5.2 an extra part is an extra term in Σ 1/√eᵢ.
 
-**The trade is the same in shape as at k = 2, and different in magnitude.** At k = 2 the matching-side ratio S5 : S7 is 2^{v−1}, so at c ≡ 3 (mod 4) it is 1 and S7 wins outright on the free q. At k = 3 the ratio is 2^{v−1} or **2^v**, so:
+**The trade is the same in shape as at k = 2, and different in magnitude — read under v4's cut.** **⟦EG-TENTATIVE⟧** Post-correction the matching-side ratio is tentatively **1 : 1 at every c and both arities** (neither shape pays a twist cut), so S7's free q decides outright wherever Lemma C does not bite, and the table below describes only the cut-taking regime. Under v4: at k = 2 the ratio S5 : S7 is 2^{v−1}, so at c ≡ 3 (mod 4) it is 1 and S7 wins on the free q; at k = 3 the ratio is 2^{v−1} or **2^v**, so:
 
 | c mod 12 | S5 : S7 on the matching side | who wins |
 |---|---|---|
@@ -495,7 +497,7 @@ The three-part shapes differ, as at k = 2, in **where the block swap lives** —
 | 5 | 2^{v−1} : 1 | S5 by 2 or more |
 | 1 | 2^v : 1 | S5 by 4 or more |
 
-> **So the c ≡ 3 (mod 4) escape narrows to c ≡ 11 (mod 12).** At k = 2, a third of the odd blocks give S7 its free-q win; at k = 3 only a quarter do, and on the rest S5's advantage is one factor of two larger than the k = 2 analysis would suggest. Whether S5 actually converts that advantage still turns on finding r with a large 2-part of r − 1 — the Fermat-like supply of `aod` §4.3, unchanged.
+> **⟦EG-TENTATIVE⟧** **Under v4 the c ≡ 3 (mod 4) escape narrowed to c ≡ 11 (mod 12)**: a third of odd blocks giving S7 its free-q win at k = 2, a quarter at k = 3, S5's advantage one factor of two larger on the rest. Post-correction that narrowing is moot — S7 tentatively wins its side everywhere — and S5's remaining case is the one where the matching twist shares a prime with the foreign block, so that Lemma C strips S7's layer while S5's top-layer swap leaves the twist alone. Whether S5 converts still turns on finding r with a large 2-part of r − 1 — the Fermat-like supply of `aod` §4.3, unchanged.
 
 **Not done here, deliberately:** the density and existence counts for these classes. The Bateman–Horn systems are identical to k = 2's, so `aod` §§3.4–3.5's supply analysis applies verbatim and there is nothing to re-derive; what would need redoing is only the *ceiling* comparison, which at k = 3 is the allocation formula of §5.2 rather than cap_F(η).
 
@@ -520,13 +522,13 @@ the k = 3 analogue of δ. (At k = 2, δ = m\*/C(n,2) ≈ 2m\*/n², so β₂ = δ
 | 1, 9, 13, 21 | S7 at F = 2 | 1 | 0.58579 | 0.63397 | **0.08579** | 0.06699 | 0.17157 |
 | 3, 19 | S7 at F = 2 | 1/2 | 0.50000 | 0.55051 | **0.06250** | 0.05051 | 0.12500 |
 | 5, 17 | S7 at F = 2 | 1/3 | 0.44949 | 0.50000 | **0.05051** | 0.04167 | 0.10102 |
-| 7, 15 | S7 at F = 4 | 1 | **2/3** = 0.66667 | (6 − √6)/5 = 0.71010 | **1/18 = 0.05556** | (7 − 2√6)/50 = 0.04202 | 0.11111 |
+| 7, 15 | **⟦EG-TENTATIVE⟧** S7 at F = 2, entangled (v4: F = 4) | 1/2 (v4: 1) | 0.50000 | 0.55051 | **⟦EG-TENTATIVE⟧** **1/16 = 0.06250** (v4: 1/18) | (5 − 2√6)/2 = 0.05051 | **⟦EG-TENTATIVE⟧** 0.12500 (v4: 0.11111) |
 | 11 | S7 at F = 4 ‡ | 1/3 | 4 − 2√3 = 0.53590 | 2 − √2 = 0.58579 | **0.03590** | (3 − 2√2)/6 = 0.02860 | 0.07180 |
 | 23 | S7 at F = 4 | 1/3 | 4 − 2√3 = 0.53590 | 2 − √2 = 0.58579 | **0.03590** | (3 − 2√2)/6 = 0.02860 | 0.07180 |
 
 > **‡ At κ_c = 3 the class-11 row is a tie between F = 2 and F = 4, and the tie is exact.** β₃ = 1/(√(F·κ_c) + √(κ_r/η₃))² is **symmetric in its two terms**, and at that residue they swap: F = 2 with η = 1/6 gives the pair {√6, √12}, and F = 4 with η = 1/3 gives {√12, √6}. Identically the same value, not a numerical coincidence. At κ_c = 2 the pairs are {2, √12} and {√8, √6}, which differ, and F = 4 wins strictly. So the k = 2 optimum survives at k = 3 everywhere except this one cell, where it becomes a tie — and only in the κ_c = 3 column.
 
-> **The F = 4 rows follow from the k = 3 machinery with nothing new assumed, which is worth stating because it was flagged as open.** Three things transfer verbatim. The **parity constraint** — at odd n with c odd and r an odd prime, F·c + r = n forces F even — is arithmetic of the decomposition and mentions no arity. The **mod-8 mechanism** likewise: F·c is determined mod 8 by c ≡ 3 (mod 4), so r is, and v₂(r − 1) follows. And the **η values** are the same, since η₃ = η/2 uses the same twist t and the same prime r, so `aod` §3.3.4a's derivation applies unchanged. What differs is only the cap formula, and there the arity enters as the extra √κ inside each term.
+> **The F = 4 rows follow from the k = 3 machinery with nothing new assumed, which is worth stating because it was flagged as open.** Three things transfer verbatim. The **parity constraint** — at odd n with c odd and r an odd prime, F·c + r = n forces F even — is arithmetic of the decomposition and mentions no arity. The **mod-8 supply mechanism** likewise: the shape determines r mod 8 from n mod 8, and v₂(r − 1) follows (**⟦EG-TENTATIVE⟧** under v4 this was routed through c ≡ 3 (mod 4); post-correction c mod 4 is freed at F = 2 and the residue arithmetic is carried by the shape alone — the 11, 23 rows come out unchanged, and 7, 15 gain the η = 1/2 reading recorded above). And the **η values** are the same, since η₃ = η/2 uses the same twist t and the same prime r, so `aod` §3.3.4a's derivation applies as corrected. What differs is only the cap formula, and there the arity enters as the extra √κ inside each term.
 
 > **At κ_c = 2 the transfer is exact rather than merely parallel:** β₃ = 1/(√(2F) + √(2/η))² = **cap_F(η)/2**, a monotone transform of the k = 2 cap. So the entire joint optimisation over (F, η) has the *same* argmax at k = 3 as at k = 2 — same fusion counts, same efficiencies, same four residues — with every value halved. The κ_c = 3 column is not a monotone transform, which is why the class-11 tie appears there and nowhere else.
 
@@ -538,7 +540,7 @@ the k = 3 analogue of δ. (At k = 2, δ = m\*/C(n,2) ≈ 2m\*/n², so β₂ = δ
 >
 > **The κ_c = 3 column is the mod-3 penalty of §5.6.1**, applying whenever the matching block has 3 | c − 1. It costs between 12% and 19% depending on the row, and it has no k = 2 counterpart — there is no third column at k = 2 because κ₂ has only one value on an even twist.
 
-**The F = 4 rows supersede an older caveat.** Rows 7, 15 and 23 were once flagged as provisional because at k = 2 they turned on a tie between the fused and unfused three-part rungs — cap_B(1/4) = cap_C(1/2) identically, a coincidence at η = 1/2 and nowhere else — and on which c mod 8 the argmax sat at, with §5.6.4's S5 : S7 matching ratio able to disturb it. That comparison decides nothing at those rows now: the ceiling is set by the two-part F = 4 shape, outside the tie entirely, at both arities.
+**The F = 4 rows supersede an older caveat — at 23.** Rows 7, 15 and 23 were once flagged as provisional because at k = 2 they turned on a tie between the fused and unfused three-part rungs — cap_B(1/4) = cap_C(1/2) identically, a coincidence at η = 1/2 and nowhere else — and on which c mod 8 the argmax sat, with §5.6.4's S5 : S7 matching ratio able to disturb it. At 23 (and 11) the ceiling is set by the two-part F = 4 shape, outside the tie, at both arities. **⟦EG-TENTATIVE⟧** At 7 and 15 the entangled correction reopens the row in the other direction: the tentative winner is S7 at F = 2 at full twist, so those two cells are provisional again — pending the same re-derivation as the k = 2 mod-24 rekey, not the old tie.
 
 > **Read these as ceilings of the family, exactly as at k = 2.** They say what the balanced shape guarantees in the class, not what n can achieve: a single Galois block reaches β₃ ≈ 4.84 (§5.3) and n = 32 reaches β₃ = 4.84 outright, far above every row. The rows are floors for m\*₃, not bounds on it.
 
@@ -692,6 +694,6 @@ The exercise was partly a fresh-eyes pass, and four things about the k = 2 progr
 2. **Prove the orbit law's stabiliser step** properly rather than modulo the routine argument in §2.1. (§2.2.2's criterion *is* proved necessary as well as sufficient; what remains untested there are the two clauses out of computational reach — the gain factor being the least prime divisor of a, first distinguishable at a = 25, and m < a never gaining, first distinguishable at a = 10.)
 3. **Redo Part C** — the partition-only bound and its two-part reduction are the only genuinely pair-specific piece of the structural chain.
 4. **Decide whether the threshold statement is new.** Black's framework does not produce dimension thresholds, and no other k ≥ 3 work found so far does; but the k = 2 literature is deep enough that a threshold statement may exist in some form.
-5. ~~Finish rows 7, 15 and 23 of the ceiling table (§5.7).~~ **Done** — the rows are set by the two-part F = 4 shape at both arities, outside the three-part tie entirely; see the box after §5.7's table. What remains of the item is only §5.6.4's internal ordering of the three-part shapes, which decides second place there.
+5. Finish rows 7, 15 and 23 of the ceiling table (§5.7). **Row 23 done** — set by the two-part F = 4 shape at both arities, outside the three-part tie entirely; see the box after §5.7's table. **⟦EG-TENTATIVE⟧** **Rows 7, 15 reopened** by the entangled-generator correction: tentatively S7 at F = 2, η = 1/2, β₃ = 1/16 in the κ_c = 2 column, to be settled by the same re-derivation that settles the k = 2 mod-24 rekey.
 6. **Convert §6's escape counts** from representation counts to counts of n, as `aod` §4.3 does. They are currently order-of-magnitude.
 7. **k ≥ 4.** The orbit law generalises (κ_k(d) = max{m ≤ k : m | d}), so the same analysis runs; the threshold degrades to Θ(n²) against C(n,k) throughout, and the shape ranking presumably inverts further.
