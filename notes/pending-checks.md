@@ -98,7 +98,10 @@ python3 shape_realize.py --nmax 22 --strip  # control: must report UNDER-SCOREs
 
 **Not yet covered, in value order.** (a) **Lemma C's strip** — the one place a cyclic-layer restriction *is* real, hence where an over-eager repair of the F_mid mistake could break something in the other direction. Highest value of the three. (b) The **foreign block's** η = 2t/(r−1) against a realised AGL(1,r) twist. (c) The **inter-class** term F·c·r, which needs the chain element linking two classes and so a genuine Oliver group rather than a single class.
 
-**A GAP-side companion is owed and is a different check.** `shape_realize.py` never verifies that the groups it builds satisfy Oliver's chain condition — it assumes the shape is admissible and tests only the orbital arithmetic. `ark_gap.g` already has `IsOliverTop`, so a GAP script that builds the same configuration groups and runs both the chain test and `OrbMap` would close that gap and be independent of the Python construction. See `ark_shapes.g`.
+**`ark_shapes.g` — the GAP companion. Two things still owed on it.**
+
+1. **Run the control.** `ARK_SHAPES_STRIP=1 gap -q -o 4g ark_shapes.g` has not been run. The clean 134-shape run is not yet evidence: the strip logic was hand-translated into GAP and a version that strips nothing would pass vacuously. Expect UNDER-SCORE wherever gcd(d, F) > 1 — about 40 of the 134 rows. **0 mismatches there means the bug is in `ScoredTerms`.**
+2. **Give the Oliver test something it can fail.** All 134 rows return `oliver=0`, correctly and unavoidably: the chain closes with trivial top by construction on a single fused class. So the admissibility half currently cannot fail and is not evidence. Extend the sweep to shapes that can: a foreign block whose top prime does not divide r − 1, or a class with a non-cyclic layer.
 
 **What each one is for, and what to read off it.**
 
