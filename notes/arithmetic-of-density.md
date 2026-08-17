@@ -87,7 +87,7 @@ To maximise, take F to be the **smallest prime-power cofactor** of n — the lea
 
 > *Verified.* Over all 777 one-part winners in the table, the predicted density 1/F agrees with the computed value to O(1/n), with no exceptions — indeed |δ − 1/F|·n < 0.95 on every row, and every row matches the exact form (c−1)/(Fc−1). By F: 227 rows at F = 2 with median density 0.4996, 167 at F = 3 with median 0.3327, 130 at F = 4 with 0.2493, 106 at F = 5 with 0.1993, 67 at F = 7 with 0.1420. Maxima 0.49981, 0.33308, 0.24971, 0.19969, 0.14252 against 1/F = 0.5, 0.3333, 0.25, 0.2, 0.1429. (The remaining 80 sit at F = 6, 8, 9, 10, 11, 13, 17, 19.)
 
-> *Verified.* All one-part winners have ω(n) = 2, and **no** value with ω(n) ≥ 3 has a one-part winner. Over the contiguous range to n = 2,600 — 2,186 rows — of the 1,118 values with ω(n) = 2, 780 are one-part winners and the other 338 do better with a split. (The 2,008-row era gave 780 and 338 on its own range, and the narrower n ≤ 2,298 slice gave 754 and 323; where a count below is quoted from one of those slices it says so.)
+> *Verified.* All one-part winners have ω(n) = 2, and **no** value with ω(n) ≥ 3 has a one-part winner. Over the current 2,008-row table: of the 1,118 values with ω(n) = 2, 780 are one-part winners and the other 338 do better with a split. (Over the n ≤ 2,298 slice the figures were 754 and 323 — the counts below in §2.1 and §2.3 are for that slice unless stated.)
 
 **Why fusion is worth a factor of F.** F *unfused* equal parts of size c give min(C(c,2), c²) = C(c,2) ≈ n²/(2F²), density 1/F². Fusing them replaces the mutual capping by a single intra term F·C(c,2), density 1/F. So fusion buys exactly F, which is why reduction (R1) of the proof document — merge equal-size classes when F₁ + F₂ is a q-power — is the single most valuable simplification in the search, and why the enumeration's winners are so often a single fused class.
 
@@ -690,11 +690,11 @@ with sd falling like n^{−1/2} throughout — 0.146 → 0.103 → 0.092 on the 
 
 | n | ω(n) = 2 share | median smallest cofactor F | min density |
 |---|---|---|---|
-| [6, 800) | 64.9% | 4 | 0.05703 |
-| [800, 1500) | 53.6% | 5 | 0.05181 |
-| [1500, 2298) | 50.0% | **7** | **0.04574** |
+| [6, 800) | 64.9% | 4 | 0.04181 |
+| [800, 1500) | 53.6% | 5 | 0.04229 |
+| [1500, 2298) | 50.0% | **7** | **0.03752** |
 
-Two effects, not one. The ω(n) = 2 population thins, as predicted; and **among the values that remain, the smallest prime-power cofactor grows**, so the 1/F the multiplicative engine delivers shrinks even where the engine applies. n = 2183 = 37·59 illustrates the mechanism: ω(n) = 2, so a fused class exists, but only at F = 37, worth 1/37 ≈ 0.027 — which loses to `6x251 + 1x677*` at 0.048039. (Under the v2 shape space the winner there was the three-class 1297\* + 443 + 443 at 0.041107; the cyclic-layer block count is what lifted it.) The current floor n = 1817 = 23·79 is the same story one step further: ω(n) = 2, so a fused class exists, but only at F = 23, worth 1/23 ≈ 0.043; the winner `1x1039* + 2x389` is a mixed shape — a fused pair plus a foreign prime — reaching 0.045742. Both are values where **both engines are weak at once**: 2183 is n ≡ 11 (mod 12), the doubly-obstructed class, while 1817 ≡ 5 (mod 12) and 17 (mod 24), so the floor is no longer confined to that class.
+Two effects, not one. The ω(n) = 2 population thins, as predicted; and **among the values that remain, the smallest prime-power cofactor grows**, so the 1/F the multiplicative engine delivers shrinks even where the engine applies. n = 2183 = 37·59 illustrates the mechanism: ω(n) = 2, so a fused class exists, but only at F = 37, worth 1/37 ≈ 0.027 — which loses to the three-class configuration 1297\* + 443 + 443 at 0.041107, itself unbalanced at x = 0.2029 against its residue's 0.2247. The current floor n = 1817 = 23·79 is the same story one step further: ω(n) = 2, so a fused class exists, but only at F = 23, worth 1/23 ≈ 0.043; the winner `1x1039* + 2x389` is a mixed shape — a fused pair plus a foreign prime — reaching 0.045742. Both are values where **both engines are weak at once**: 2183 is n ≡ 11 (mod 12), the doubly-obstructed class, while 1817 ≡ 5 (mod 12) and 17 (mod 24), so the floor is no longer confined to that class.
 
 Two consequences, and both should temper how the computed range is read.
 
@@ -836,9 +836,9 @@ The residue analysis gives seven distinct δ₀ across the 24 residue classes (�
 >
 > **δ measures *which properties* the method reaches; c(n) measures *how many queries* are forced for all of them.** Scheidweiler–Triesch bound D(P) from below for every nontrivial monotone property. What δ does is different in kind: m\* ≥ δ·C(n,2) gives **full evasiveness** — exactly C(n,2) queries, the maximum possible — for every property of dimension below m\*. A weak bound on all properties and an exact result on a restricted class do not sit on the same scale, and a small δ next to a larger n²/3 says nothing about the strength of either.
 
-**Where the floor lives.** The worst residues are **n ≡ 11 (mod 12)**, i.e. 11 and 23 mod 24, with δ₀ = 7 − 4√3 = 0.07180 — the odd classes carrying the ℓ = 3 obstruction. Almost every value that has ever set a running floor has been in n ≡ 11 (mod 12): of §4.1's eight record-setters under the corrected table, seven are ≡ 23 (mod 24), and the one exception is the current table floor **n = 1817 ≡ 17 (mod 24)**, i.e. 5 (mod 12) — the floor is no longer confined to the doubly-obstructed class, as §4.1 records. (The pre-repair descent's record-setters were all ≡ 11 (mod 12), eight at 23 and three at 11 mod 24.) Finite-n record holders are low from *supply* failure rather than from a low ceiling, so class membership of the argmin is weaker evidence than the ceiling table itself.
+**Where the floor lives.** The worst residues are **n ≡ 11 (mod 12)**, i.e. 11 and 23 mod 24, with δ₀ = 7 − 4√3 = 0.07180 — the odd classes carrying the ℓ = 3 obstruction. Almost every value that has ever set a running floor has been in n ≡ 11 (mod 12), which contains it; 8 of the 11 are ≡ 23 (mod 24) and the other three are ≡ 11, which is not a contradiction, since finite-n record holders are low from *supply* failure rather than from a low ceiling.
 
-> **The finite-range minimum is set by whichever engine happens to be weakest at the extreme value, and that alternates.** Over v4's contiguous range to n = 2600 the smallest density is
+> **The finite-range minimum is set by whichever engine happens to be weakest at the extreme value, and that alternates.** Over v4 to n = 2000 the smallest density is
 
 > **0.045742 at n = 1817 = 23·79**, witness `p=389 q=173: 1x1039* + 2x389`,
 
@@ -964,10 +964,10 @@ Writing **L = 1/√δ₀** and **N(δ₀)** for the number of shapes the criteri
 | 1/9 | 3.000 | 3 | 9 | **24** |
 | 1/16 | 4.000 | 4 | 16 | **65** |
 | 0.051813 (`19x61`, n = 1159) | 4.393 | 4 | 19 | **83** |
-| 0.04453 (ladder floor to 10⁶, n = 11183) | 4.739 | 4 | 22 | **122** |
-| 0.04 = 1/25 (conjectured) | 5.000 | 5 | 25 | **164** |
+| 0.04453 (ladder floor to 10⁶, n = 11183) | 4.739 | 4 | 22 | — |
+| 0.04 = 1/25 (conjectured) | 5.000 | 5 | 25 | — |
 
-> *The floor rows want recomputing as the table extends.* At the conjectured floor of 1/25, L = 5.000 and the part cap is **k ≤ 5** — a substantial narrowing of the search this table sizes, since the count grows steeply in L. The exactly-computed floor 0.045742 (n = 1817, witness `1x1039* + 2x389`) gives L = 4.676, k ≤ 4, F ≤ 21, N(δ₀) = 112. Recompute the affected rows rather than the whole table. (The 122 and 164 above, and the 112 here, are direct enumerations of the criterion, checked against the 24 / 65 / 83 rows by the same code.)
+> *The last two rows carry no N(δ₀) count, and the floor row wants recomputing as the table extends.* At the conjectured floor of 1/25, L = 5.000 and the part cap is **k ≤ 5** — a substantial narrowing of the search this table sizes, since the count grows steeply in L. The exactly-computed floor 0.045742 (n = 1817, witness `1x1039* + 2x389`) gives L = 4.676, k ≤ 4, F ≤ 21, with N(δ₀) a little above 83. Recompute the affected rows rather than the whole table.
 
 **This column is the raw count and nothing has been removed from it yet.** §6.2 asks whether a shape names one system at all, §6.3 gives the reductions, and §6.4 counts what survives them — which is a far smaller and much more slowly growing set than the table suggests.
 
@@ -1012,7 +1012,7 @@ So an unequal-size shape is *infeasible* above density 1/9 whatever p is, and ab
 >   | 0.04 = 1/25 | 5 | 15 | 25 | 24 | — | — | — |
 >   | 1/400 | 20 | 210 | 8,266 | — | — | — | — |
 >
->   The two "sizes free" columns differ by whether a per-class penalty is charged. The **penalised** column is the one to quote, but the penalty's justification is the density ceiling above rather than a twist-parity argument: a class of size c′ ≤ c/p contributes at most (c′/n)², so an unequal shape needs x ≥ √(δ₀F)·(1 + 1/p) across its two sizes rather than √(δ₀F) for each, and that pushes some newly admitted shapes back out of feasibility. At δ₀ = 1/9 the effect is total — no unequal shape is feasible — which is why the one-size and penalised counts should agree at the top row and the table's 24 versus 26 there is worth re-deriving. At the conjectured floor of 1/25 the purely additive disjunction would be **24-way rather than 15-way** (the table's own bottom row); at the old 1/50 floor the pairs were 63 against 28 for the additive count and 1,956 against 982 for the raw one. A factor of about two in each case, not an explosion.
+>   The two "sizes free" columns differ by whether a per-class penalty is charged. The **penalised** column is the one to quote, but the penalty's justification is the density ceiling above rather than a twist-parity argument: a class of size c′ ≤ c/p contributes at most (c′/n)², so an unequal shape needs x ≥ √(δ₀F)·(1 + 1/p) across its two sizes rather than √(δ₀F) for each, and that pushes some newly admitted shapes back out of feasibility. At δ₀ = 1/9 the effect is total — no unequal shape is feasible — which is why the one-size and penalised counts should agree at the top row and the table's 24 versus 26 there is worth re-deriving. At the conjectured floor the purely additive disjunction would be **63-way rather than 28-way**, and the raw count 1,956 rather than 982: a factor of about two in both, not an explosion.
 >
 >   The growth of the additive count becomes Σ_{k≤K}Σ_{j<k}p(j) ~ K·p(K) = exp(π√(2K/3) + O(log K)), i.e. **exp(c·δ₀^{−1/4})** — worse than quadratic but still subexponential, and still far below the raw fusion count's exp(2.53·δ₀^{−1/3}).
 > - **The ceiling table of §3.3 is not at risk.** A configuration with two unequal matching sizes has its smaller class capped at (c′/n)² ≤ 1/(p+1)², so its cap is *below* the equal-size shape of the same part count. Such shapes would enlarge the covering set without raising any class ceiling, so §3.3's caps stand as caps and §6.6's collapse argument is unaffected in kind, though the gaps ε it needs would have to be rechecked against the new shapes' caps.
@@ -1026,7 +1026,7 @@ Granting §6.2's presupposition, three reductions apply to the raw table, and th
 
 **(a) A shape is already a number-theoretic object, not a group-theoretic one — so census shapes and systems are different counts.** The Bateman–Horn system attached to a shape sees the part sizes and nothing else. It does not see *which layer* holds a fusion. So **S5 and S7 at F = 2 are one shape and one system** — both are n = 2c + r\*, realised by two different Oliver groups distinguished only by whether the block swap sits in the top or the cyclic layer (§3.2). The same holds for every fused shape. The consequence is that the census counts (S1…S10, ten shapes) and N(δ₀) are measuring different things and must never be compared: one group realisation may serve several shapes, and one shape may carry several realisations. *This reduction is already built into N(δ₀) above*, which counts systems; it is listed because the comparison is the tempting error, not because it removes anything further.
 
-**(b) Parity halves the set pointwise.** With p odd, c is odd, and every foreign r is odd, so n ≡ ΣF_a + i (mod 2), where i is the number of foreign parts. **A shape is available only at n of one parity**, so the disjunction at any given n runs over about half of N(δ₀). This one *does* cut the table: 24 splits 14 / 10 at δ₀ = 1/9, and at the old 1/50 floor the raw 982 split 498 / 484. (The c = 2^a escape sits outside it, as the remark above notes.)
+**(b) Parity halves the set pointwise.** With p odd, c is odd, and every foreign r is odd, so n ≡ ΣF_a + i (mod 2), where i is the number of foreign parts. **A shape is available only at n of one parity**, so the disjunction at any given n runs over about half of N(δ₀). This one *does* cut the table: 24 splits 14 / 10, and 982 splits 498 / 484. (The c = 2^a escape sits outside it, as the remark above notes.)
 
 **(c) Local obstructions prune further, per residue class.** §3.3 does this for the three-part family: at n ≡ 2 (mod 3) the full-efficiency system has ω(3) = 3 and vanishes identically, and the ℓ = 2 conditions cut the odd classes similarly. Every shape has such an analysis, and each removes that shape from the covering set at particular residues. **This is the one reduction not computed here.** Doing it for all shapes at the operative δ₀ is mechanical — each system is a few linear forms in one variable, and only ℓ = 2 and ℓ = 3 can obstruct (§3.3.1) — and it is the obvious next step, being the reduction most likely to be large: the three-part family alone loses a third of residues mod 12.
 
@@ -1052,14 +1052,14 @@ And parity is now exact rather than approximate: since every F_i = 1, n ≡ k (m
 
 > **Σ_{k ≤ K, k ≡ n (mod 2)} k**.
 
-| δ₀ | K | raw N(δ₀) | additive N_add | at odd n | at even n |
-|---|---|---|---|---|---|
-| 1/9 | 3 | 24 | **6** | 4 | 2 |
-| 1/16 | 4 | 65 | **10** | 4 | 6 |
-| 0.04453 (verified to 10⁶) | 4 | 122 | **10** | 4 | 6 |
-| 0.04 = 1/25 (conjectured) | **5** | 164 | **15** | **9** | **6** |
+| δ₀ | raw N(δ₀) | additive N_add | at odd n | at even n |
+|---|---|---|---|---|
+| 1/9 | 24 | **6** | 4 | 2 |
+| 1/16 | 65 | **10** | 4 | 6 |
+| 0.04453 (verified to 10⁶) | — | **15** | 9 | 6 |
+| 0.04 = 1/25 (conjectured) | — | **15** | **9** | **6** |
 
-That is the number that belongs in the covering statement: **at the conjectured floor, 9 systems at odd n and 6 at even n**, before local obstruction cuts further. The exponential growth of the raw count is an artefact of counting fusion shapes that cover a vanishing set of n. Two readings of the last two rows, and they differ by a boundary case: K = ⌊1/√δ₀⌋ is 5 exactly at 1/25 and 4 at the verified 0.04453 — Proposition F.1's inequality is strict, so k = 5 is feasible only at δ exactly on the 1/25 boundary, and the conjectured-floor row keeps it as the inclusive (safe) covering set. The raised floor is a large cut either way: K was 7 at the old 1/50 floor, with additive count 28 splitting 16 odd / 12 even.
+That is the number that belongs in the covering statement: **at the conjectured floor, 9 systems at odd n and 6 at even n**, before local obstruction cuts further. The exponential growth of the raw count is an artefact of counting fusion shapes that cover a vanishing set of n — and the raised floor cuts the additive count too, since K = ⌊1/√δ₀⌋ drops from 7 at 1/50 to 5 at 1/25, which is why the last two rows agree.
 
 #### 6.5 The dichotomy, and where the conditionality enters
 
@@ -1079,16 +1079,16 @@ Read this way η = 2/d is not an efficiency knob but **the price of using blocks
 
 > **μ(n) ≥ δ₀·C(n,2) for most n  ⟹  for most n, at least one of a finite explicit set of Bateman–Horn systems is solvable at n** — the set being the purely additive shapes with at most ⌊δ₀^{−1/2}⌋ parts, of the parity of n, not locally obstructed at n's residue class.
 
-At the conjectured floor that is **9 systems at odd n and 6 at even n** (§6.4; the pair 16 and 12 quoted previously was the count at the old 1/50 floor, where K = 7). It is a covering statement, and weaker than any single system being solvable — which is why the route ordinarily yields robustness rather than sharp prime theorems, and why the ladder survives individual systems failing: §3.3's local obstructions kill particular systems in particular residue classes without touching the conclusion, because another shape covers those n.
+At the conjectured floor that is **16 systems at odd n and 12 at even n**. It is a covering statement, and weaker than any single system being solvable — which is why the route ordinarily yields robustness rather than sharp prime theorems, and why the ladder survives individual systems failing: §3.3's local obstructions kill particular systems in particular residue classes without touching the conclusion, because another shape covers those n.
 
-**But the disjunction collapses when δ₀ is set just below a class ceiling.** The shapes' ceilings are known and separated, so **a floor just under δ_c admits only the shape that attains it**. At n ≡ 11 (mod 12) the surviving shape is the F = 4 rung at 7 − 4√3 = 0.071797. The next one down is **not** S4's (5 − 2√6)/2 but the rung at (2 − √3)/4 = 0.066987, which each class reaches by a different route — **F = 2 at η = 1/6** when n ≡ 11 (mod 24) and **F = 6 at η = 1/2** when n ≡ 23, as §3.3.5 records — so the usable margin is only **ε < 0.0048**, a quarter of what the gap to S4 would suggest. That is a real weakening of this route: the separation it needs is now of the order of the difference between two adjacent fusion counts rather than between a fused and an unfused shape. The conclusion is
+**But the disjunction collapses when δ₀ is set just below a class ceiling.** The shapes' ceilings are known and separated, so **a floor just under δ_c admits only the shape that attains it**. At n ≡ 11 (mod 12) the surviving shape is the F = 4 rung at 7 − 4√3 = 0.071797. The next one down is **not** S4's (5 − 2√6)/2 but the F = 6 rung at (2 − √3)/4 = 0.066987 — reached at η = 1/4 when n ≡ 11 (mod 24) and at η = 1/2 when n ≡ 23 — so the usable margin is only **ε < 0.0048**, a quarter of what the gap to S4 would suggest. That is a real weakening of this route: the separation it needs is now of the order of the difference between two adjacent fusion counts rather than between a fused and an unfused shape. The conclusion is
 
 > for most n ≡ 23 (mod 24), **the system n = 4c + r with c a prime power ≡ 3 (mod 4), r prime and r − 1 = 6q^e for a prime power q^e, is solvable with c/n near (2 − √3)/2**
 
 — one system, not a disjunction. Three caveats:
 
 - **The density-zero families must be excluded by hand**, being bounded by no class ceiling: n a prime power (S1), ω(n) = 2 (S2), and the escapes of §4.3 — c a power of 2, c or (r−1)/2 a power of 3, and r = 2^a·u + 1 with u small. Each is O(n/log n) or thinner, so "most n" survives, but the statement is about the complement of an explicit sparse set.
-- **The gap between consecutive ceilings bounds ε**, and it is not uniform: 0.0048 at n ≡ 11 and 23 (mod 24) — the gap from 7 − 4√3 down to (2 − √3)/4, as computed above; the older figure of 0.0085 was the gap under the superseded F = 2 optima — but the classes where two rungs tie — 7 and 15, where cap_B(1/4) = cap_C(1/2) exactly — admit **no** such ε, and there the disjunction genuinely cannot be collapsed.
+- **The gap between consecutive ceilings bounds ε**, and it is not uniform: 0.0085 at n ≡ 23 (mod 24), but the classes where two rungs tie — 7 and 15, where cap_B(1/4) = cap_C(1/2) exactly — admit **no** such ε, and there the disjunction genuinely cannot be collapsed.
 - **It is conditional in the direction that matters.** The hypothesis is a lower bound on μ that we do not have; the argument shows that *if* the floor conjecture holds just under a class ceiling, the arithmetic consequence is sharp. That is a statement about the strength of the conclusion, not evidence for it.
 
 So: **the route yields robustness at floors well below the ceilings, and sharp single-system statements at floors just beneath them.** The closer δ₀ sits to a class ceiling the stronger the arithmetic and the harder the hypothesis — worth stating because it identifies which floor conjecture would be worth proving. A floor of 1/25 gives a 9-way disjunction at odd n; a floor just under 7 − 4√3 at n ≡ 11 (mod 12) gives a single Bateman–Horn system.
@@ -1121,6 +1121,6 @@ So: **the route yields robustness at floors well below the ceilings, and sharp s
 
 5. ~~**Do the ℓ = 3 escapes behave as the sparsity heuristic says?**~~ **Resolved (§4.3), and now proved rather than assumed.** All four escape routes reach **O(n/log n)** values of n: the residue's own ceiling confines the block to a ratio range of width under 4, which admits O(1) block sizes, leaving one prime's worth of freedom. Measured, the 2-power route's effectiveness falls 3.73% → 2.20% → 1.20% across n ≈ 10⁴, 10⁵, 10⁶ and the 3-power route reaches zero by 10⁶. The asymptotic constants are untouched; the escapes are conspicuous at computed sizes only because a log vanishes slowly.
 
-6. **The fused family at ω(n) = 2 but bad splitting.** **338 of the 1,118** values with ω(n) = 2 do better with a split than with fusion, which happens when the smallest prime-power cofactor F is large. The distribution of F over ω(n) = 2 integers is classical, so predicting the 780/338 division is a clean test. (Both figures must come from the same slice — the 754/323 pair quoted elsewhere is the older n ≤ 2,298 range.)
+6. **The fused family at ω(n) = 2 but bad splitting.** **338 of the 1,118** values with ω(n) = 2 do better with a split than with fusion, which happens when the smallest prime-power cofactor F is large. The distribution of F over ω(n) = 2 integers is classical, so predicting the 754/323 division is a clean test.
 
 7. **Efficiency below 1.** The distribution of the largest prime-power divisor of r − 1 over primes r is a shifted-prime question of Erdős type; the known results should be imported rather than re-derived, since η is what fixes every constant in §3.3.
