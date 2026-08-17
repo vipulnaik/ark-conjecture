@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+#
+# 2026-08-16: Lemma C guard added to the S7 (F >= 3) loop -- the two- and
+# three-part branches guard with (c-1) % r, the S7 loop did not, so at n with
+# r | c-1 it could credit a twist sharing the foreign prime.  Audited to 10^6
+# (audit_s7.py): 495,176 candidates with r | c-1, 25,937 with a strictly larger
+# invalid score, 0 of which exceeded the guarded maximum -- so no reported
+# figure to 10^6 was affected; the guard prevents it biting on any extension.
 """
 ladder_verify.py -- verify the density ladder directly, per n, over ALL residue
 classes, and compute the global floor of arithmetic-of-density.md section 5.
@@ -502,6 +509,14 @@ def achieved(n, stop_at=None):
             e = EFFx[r]
             if e <= 0:
                 continue
+            # Lemma C guard (same as the two- and three-part branches): the
+            # c-blocks' cyclic-layer twist must be coprime to the foreign prime
+            # r.  STRIP removes the branch's F_mid primes but not r, so when
+            # r | c-1 the r-part must be stripped as well or the intra term
+            # credits a twist the cyclic layer cannot hold.
+            d_tw = STRIP[c]
+            while d_tw % r == 0:
+                d_tw //= r
             # The fused class sits in the cyclic layer alongside the twist, and
             # a cyclic group has a unique subgroup of each order, so the twist
             # must be coprime to F.  Scoring the intra term at Fp*C(c,2)
@@ -509,7 +524,7 @@ def achieved(n, stop_at=None):
             # make this an UPPER bound on the family rather than a lower one.
             # The correct cap is Fp * orb(c, dmax) with dmax the largest divisor
             # of c-1 coprime to F.
-            intra = Fp * orb_ld(c, STRIP[c], base[c] == 2)
+            intra = Fp * orb_ld(c, d_tw, base[c] == 2)
             v = min(intra, cross_coeff * c * c, m * r, e * comb(r, 2))
             if v > best * C:
                 best = v / C

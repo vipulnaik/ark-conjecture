@@ -281,15 +281,24 @@ VerifyWitness := function(str, muBound)
 end;
 
 # ------------------------------------------------------------------- the battery
-# Values with a known mu_bound, chosen to cover the shapes with the least
-# construction evidence: S4 (two matching + foreign) and cyclic-layer fusion.
+# Values with a known score, chosen to cover the shapes with the least
+# construction evidence: cyclic-layer fusion and the fused rung.  NOTE: the
+# second column is the configuration's own predicted min orbital, which equals
+# B(n) only where that configuration is the winner -- it is not at n = 247.
+# S4 (two matching + foreign) and every even F >= 4 remain uncovered (R8).
 BATTERY := [
   [ "p=5 q=2: 2x5",                20 ],   # n = 10, fused rung, mu(10)
   [ "p=2 q=3: 3x4",                18 ],   # n = 12, mu(12); trivial-top attainer
   [ "p=5 q=3: 3x5",                30 ],   # n = 15
   [ "p=3 q=2: 1x9 + 1x17*",        36 ],   # n = 26, Lemma C worked example
   [ "p=7 q=5: 5x7",               105 ],   # n = 35, Theorem 2.2
-  [ "p=73 q=5: 2x73 + 1x101*",   1314 ],   # n = 247, first S4 winner
+  [ "p=73 q=5: 2x73 + 1x101*",   1314 ],   # n = 247, S7 at F = 2 (NOT S4, and not
+                                          # B(247): the S4 winner at this n is
+                                          # 1x101* + 1x73 + 1x73 with B = 2525.
+                                          # 1314 is this configuration's own score,
+                                          # so the row checks realisability of a
+                                          # non-optimal configuration.  S4 still has
+                                          # no battery entry -- see R8.
   [ "p=53 q=37: 3x53 + 1x149*",  4134 ],   # n = 308, cyclic-layer fusion
 ];
 
