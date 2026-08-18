@@ -72,6 +72,15 @@ STRIP := IsBound(GAPInfo.SystemEnvironment.ARK_SHAPES_STRIP);;
 # what exhausted 4G at 3x32 (rank 15 over GF(2)).  Off by default.
 FULLOLIVER := IsBound(GAPInfo.SystemEnvironment.ARK_SHAPES_FULLOLIVER);;
 OUT := "shapes_out.txt";;
+# AppendTo(<filename>, ...) formats its output for a terminal and BREAKS LONG
+# LINES, which silently corrupts any row whose orbital list is long -- at
+# 2x97, d = 1 there are 48 intra orbitals and the row is split across three
+# lines, so a consumer parsing line-by-line drops it.  Writing through a stream
+# with formatting disabled is the fix.  Note the failure mode: the data is not
+# wrong, it is unparseable, so a downstream check sees fewer rows rather than
+# bad ones -- exactly the kind of loss that reads as success.
+OUTSTREAM := OutputTextFile(OUT, false);;
+SetPrintFormattingStatus(OUTSTREAM, false);;
 
 # ---------------------------------------------------------------- Oliver test
 # Verbatim from ark_gap.g, so the two files agree by construction.  Returns
@@ -174,7 +183,10 @@ end;;
 RealisedTerms := function(sh)
   local orbs, o, intra, cross, blk, pr, sameblk;
   blk := function(x) return QuoInt(x-1, sh.c); end;
-  orbs := Orbits(sh.G, Combinations([1..sh.n], 2), OnSets);
+  # `Orbits` with a large seed list warns and is slower; the 2-subsets of
+  # [1..n] are a genuine DOMAIN closed under OnSets, so `OrbitsDomain` is the
+  # correct entry point and removes both the warning and the cost.
+  orbs := OrbitsDomain(sh.G, Combinations([1..sh.n], 2), OnSets);
   intra := []; cross := [];
   for o in orbs do
     sameblk := ForAll(o, pr -> blk(pr[1]) = blk(pr[2]));
@@ -226,7 +238,7 @@ pa := fail;; p := fail;; a := fail;; c := fail;; F := fail;; d := fail;;
 sh := fail;; sc := fail;; re := fail;; oq := fail;; status := "";;
 
 nbad := 0;; ntested := 0;; nnonoliver := 0;; nskip := 0;;
-PrintTo(OUT, "");
+
 if STRIP then
   Print("ark_shapes.g -- scoring mode: RETIRED F_mid strip (control)\n\n");
 else
@@ -243,7 +255,7 @@ for pa in PrimePowersUpTo(NMAX) do
       # through.  Guard on both.
       if (FULLOLIVER and a * F > MAXRANK) or c^F * F * d > MAXORD then
         nskip := nskip + 1;
-        AppendTo(OUT, F, "x", c, "|d=", d, "|n=", F*c, "|order=", c^F*F*d,
+        AppendTo(OUTSTREAM, F, "x", c, "|d=", d, "|n=", F*c, "|order=", c^F*F*d,
                  "|SKIPPED-over-MAXORD\n");
         continue;
       fi;
@@ -270,10 +282,10 @@ for pa in PrimePowersUpTo(NMAX) do
         fi;
       fi;
       if status <> "ok" then nbad := nbad + 1; fi;
-      AppendTo(OUT, F, "x", c, "|d=", d, "|n=", sh.n, "|order=", Size(sh.G),
+      AppendTo(OUTSTREAM, F, "x", c, "|d=", d, "|n=", sh.n, "|order=", Size(sh.G),
                "|oliver=", String(oq),
-               "|intra ", sc.intra, "/", String(re.intra),
-               "|cross ", sc.cross, "/", String(re.cross),
+               "|intra ", sc.intra, "/", Minimum(re.intra), "x", Length(re.intra),
+               "|cross ", sc.cross, "/", Minimum(re.cross), "x", Length(re.cross),
                "|", status, "\n");
       if status <> "ok" then
         Print("  ", F, "x", c, " (n=", sh.n, ") d=", d,
