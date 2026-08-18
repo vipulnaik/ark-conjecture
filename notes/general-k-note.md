@@ -7,7 +7,7 @@
 | section | standing |
 |---|---|
 | §1 the completeness theorem | **proved**, and it is the section that answers the question |
-| §2 the three factors at general k | τ and θ **derived**; γ's criterion is the k = 3 argument re-run, **proved** for the escape clauses, with one clause conjectural |
+| §2 the three factors at general k | τ **derived and now verified at k = 4**; θ **corrected** (the naive form fails from k = 5, verified both ways) and derived; γ's criterion **proved at k = 3, 4** — confirmed computationally at k = 4's first distinguishing case — with the exact k ≥ 5 escape conditions open |
 | §3 the escape ledger | **derived** from §§1–2 plus Livingstone–Wagner |
 | §4 the ceiling table is k-independent | **proved** for k ≥ 3, in the generic column |
 | §5 what degrades with k | derived |
@@ -45,19 +45,23 @@ A k-set is fixed by a nontrivial translation exactly when it is a union of coset
 
 **This unifies two things the k = 2 and k = 3 documents state separately.** At k = 2 with p = 2 it gives τ = 2, which is exactly `orb`'s `char2` flag — the translation x ↦ x + 1 swapping a pair. At k = 3 with p = 3 it gives τ = 3, which is §2.2.1's affine-line failure, where the law "overstates by exactly the factor the additive lines cost". They are the same phenomenon with the same formula, and neither document could see that because each has only one instance of it.
 
-Two consequences at higher k. The factor is no longer bounded by p: at **k = 4, p = 2** it is 4, so characteristic-2 blocks lose a factor of four, twice the k = 2 penalty. And the *set of afflicted characteristics grows*: at arity k the primes that can bite are the p ≤ k, so the poison spreads as k grows, exactly as `three-uniform-note.md` §2.2.1 predicts in its aside.
+Two consequences at higher k. The factor is no longer bounded by p: at **k = 4, p = 2** it is 4, so characteristic-2 blocks lose a factor of four, twice the k = 2 penalty — *verified: at c = 16, k = 4 the computed minimum under translations alone is exactly 4 = c/τ₄ (the orbit of an affine 2-flat), and at full twist it is 20 = 16·15/(4·3), both factors live at once*. And the *set of afflicted characteristics grows*: at arity k the primes that can bite are the p ≤ k, so the poison spreads as k grows, exactly as `three-uniform-note.md` §2.2.1 predicts in its aside.
 
-### 2.2 θ: the twist factor
+### 2.2 θ: the twist factor — and the divisibility condition is on k *or* k − 1, not on k alone
 
-The stabiliser of S inside C_d acts on S with all orbits of equal size, so its order divides k and divides d:
+A twist subgroup ⟨ζ′⟩ of order j acts **freely** on 𝔽_c^× and fixes 0. So a stabilised k-set S decomposes as full j-orbits plus possibly the fixed point: **j | k if 0 ∉ S, and j | k − 1 if 0 ∈ S**. Hence
 
-> **θ_k = max{ j ≤ k : j | d }**.
+> **θ_k = max{ j : j | d, and j | k or j | k − 1 }**.
 
-For a **foreign** block the twist t is a q-power (Lemma B′, which is k-independent), so the divisors available are the powers of q, and
+*The j | k − 1 branch is not a technicality — it is already load-bearing at k = 3*, where the θ = 2 case is realised by {x, −x, 0}: an antipodal pair **plus the origin**, with 2 | k − 1 doing the work. The k = 3 documents caught that set in a parenthetical without isolating the mechanism.
 
-> **θ_k(foreign) = the largest power of q that is ≤ k**.
+**For k ≤ 4 this agrees with the naive "largest j ≤ k dividing d"**, because the divisors of k and k − 1 jointly cover {1, …, k} there. **From k = 5 they part company**, first at j = 3: a 5-set cannot be a union of 3-orbits (3 ∤ 5) nor 3-orbits plus 0 (3 ∤ 4), so an order-3 twist stabilises no 5-set at all. *Verified: at c = 13, k = 5 the computed minimum is 39 at both d = 3 and d = 6 — i.e. cd/1 and cd/2 — where the naive formula predicts 13 and 26. The corrected formula reproduces both.*
 
-That is a small, explicitly computable table. At k = 2: 2 if q = 2, else 1. At k = 3: 3 if q = 3, 2 if q = 2, else 1 — matching `three-uniform-note.md`'s κ exactly. At k = 4: 4 if q = 2, 3 if q = 3, else 1. So the twist factor is bounded by k and is **1 for all q > k** — meaning that for the large top primes the framework's best configurations actually use, θ is trivial at every arity.
+For a **foreign** block the twist t is a q-power (Lemma B′, which is k-independent), so:
+
+> **θ_k(foreign) = the largest power of q dividing k or k − 1**.
+
+At k = 2: 2 if q = 2, else 1. At k = 3: 3 if q = 3, 2 if q = 2, else 1 — matching `three-uniform-note.md`'s κ exactly. At k = 4: 4 if q = 2, 3 if q = 3, else 1. At k = 5 the corrected rule first shows: **4** if q = 2 (4 | k − 1), **5** if q = 5, and **1 if q = 3** — where the naive rule would say 3. The factor is bounded by k and is **1 for all q > k**, so for the large top primes the framework's best configurations actually use, θ is trivial at every arity.
 
 ### 2.3 γ: the Galois factor, and why its range widens without changing in kind
 
@@ -65,13 +69,20 @@ The k = 3 argument runs verbatim. A minimal Γ(d, 1)-orbit is stable under all o
 
 > **γ_k = m always, except when no k-subset of 𝔽_c is Galois-stable — which requires p < k.**
 
-Because 𝔽_p supplies a k-subset exactly when p ≥ k, and that is the whole content of `three-uniform-note.md`'s "the Galois part can help only when p < k". The escape clauses generalise the same way: a proper Galois subgroup C_m with m < a has fixed field 𝔽_{p^{a/m}}, which supplies a k-set as soon as p^{a/m} ≥ k, so **the gain still requires m = a**; and a twist divisible by some j ≤ k still supplies a stable set, so the gain still requires **gcd(d, L_k) = 1** where L_k = lcm(1, …, k). Likewise the subfield clauses require **gcd(a, L_k) = 1**.
+Because 𝔽_p supplies a k-subset exactly when p ≥ k, and that is the whole content of `three-uniform-note.md`'s "the Galois part can help only when p < k". The escape clauses generalise with their size conditions attached: a proper Galois subgroup C_m with m < a has fixed field 𝔽_{p^{a/m}}, which supplies a k-set as soon as p^{a/m} ≥ k, so **the gain still requires m = a**; a twist prime j supplies a stable set exactly when j | k or j | k − 1 (§2.2), so the gain requires **gcd(d, k(k−1)) = 1**; and the subfield escapes through primes j | a apply where the subfield's orbit structure can assemble a k-set — the box below states what is closed and what is open.
 
-> **Criterion (general k).** The Galois part raises the minimum only if **p < k**, **m = a**, **gcd(d, L_k) = 1** and **gcd(a, L_k) = 1**; the gain is then the least prime divisor of a. At k = 3, L_3 = 6 and p < 3 means p = 2, which recovers `three-uniform-note.md` §2.2.2 exactly.
+> **Criterion (k = 3 and 4, where every clause is verified or verifiable).** The Galois part raises the minimum only if **p < k**, **m = a**, **gcd(d, L_k) = 1** and **gcd(a, L_k) = 1** with L_k = lcm(1..k); the gain is then the least prime divisor of a. At k = 3, L_3 = 6 and p < 3 means p = 2, recovering `three-uniform-note.md` §2.2.2 exactly. At k = 4 the criterion is confirmed computationally at its first distinguishing case (§6).
+>
+> **At k ≥ 5 the L_k conditions overreach, for the same reason θ_k needed correcting.** Each escape clause asserts a stable k-set *exists*, and existence is a size-and-divisibility fact, not a gcd with lcm(1..k):
+>
+> - **The twist clause.** A twist prime j supplies a stable k-set iff j | k or j | k − 1 (§2.2), so the correct necessary condition on the twist is **gcd(d, k(k−1)) = 1**, a strictly weaker demand than gcd(d, L_k) = 1 from k = 5 on (j = 3 divides L_5 but stabilises no 5-set).
+> - **The subfield clauses.** A prime j | a supplies a stable set through the subfield 𝔽_{p^j} only if that subfield's Frobenius-orbit structure can assemble a k-set — which needs, at minimum, k ≡ α (mod j) for some 0 ≤ α ≤ p with enough room in the subfield. At k = 3, p = 2 both j = 2 and j = 3 clear this (the {0, ω, ω²} and 𝔽₈-orbit escapes); at larger k some j fail it, so **gcd(a, L_k) = 1 is sufficient-side only**, and the exact necessity condition at k ≥ 5 is open — the same delicacy §6 item 1 records for the freeness argument, now visible in the statement rather than only in the proof.
+>
+> So the honest general statement is: **gain requires p < k, m = a, gcd(d, k(k−1)) = 1, and the absence of every subfield escape** — with the last condition in closed form at k = 3, 4 and open beyond.
 
-**So the escape widens but does not change.** At k = 3 only characteristic 2 can gain; at k = 4 and 5, characteristics 2 and 3; at general k, every p < k. But it is the same escape, with the same coupling (§3), the same cost (the top prime is pinned to a divisor of a, and every foreign block then needs q | r − 1), and the same Oliver-constrained layer split. **A programme at k = 4 inherits `k3_galois.py` with L_3 replaced by L_4 and nothing else.**
+**So the escape widens but does not change in kind.** At k = 3 only characteristic 2 can gain; at k = 4 and 5, characteristics 2 and 3; at general k, every p < k. It is the same escape, with the same coupling (§3), the same cost (the top prime is pinned to a divisor of a, and every foreign block then needs q | r − 1), and the same Oliver-constrained layer split. **A programme at k = 4 inherits `k3_galois.py` with L_3 replaced by L_4 and nothing else; a programme at k ≥ 5 must first replace the L_k tests with the size-aware ones above.**
 
-> **One thing genuinely does get worse, and it is a supply effect rather than a new mechanism.** The conditions gcd(d, L_k) = gcd(a, L_k) = 1 are congruence conditions modulo L_k = lcm(1..k), which grows like e^{k(1+o(1))}. So the *density* of blocks on which the Galois escape is available falls superexponentially in k, by Mertens. The escape survives at every k and reaches ever fewer blocks.
+> **The supply effect, restated at the corrected conditions.** The twist condition is a coprimality with k(k−1), so the density of admissible twists falls by ∏_{p | k(k−1)} (1 − 1/p) — a **mild, polynomially-driven thinning through the primes of k(k−1)**, not the superexponential collapse the L_k reading suggested. The escape survives at every k and reaches fewer blocks as k grows, but the thinning is gentler than lcm(1..k) arithmetic would give.
 
 ---
 
@@ -108,7 +119,7 @@ which is the k = 3 formula with no k in it. **The arity enters only through κ_c
 
 So the six mod-12 ceilings, the balance points and the F = 4 residue are **the same at every arity**, and the F = 4 shape sets the ceiling at n ≡ 11 (mod 12) for all k ≥ 3 by the same argument `three-uniform-note.md` §5.7 gives at k = 3 (the parity constraint, the mod-8 supply mechanism and the η values are all arity-free).
 
-> **What does move with k is which blocks are in the generic column.** κ_c = 2 needs c − 1 coprime to lcm(3, …, k), and κ_r = 1 needs the foreign twist's prime q > k. Both are congruence conditions modulo L_k, so the good class of **blocks** is defined mod L_k rather than mod 4 (k = 2) or mod 12 (k = 3), and the **governing modulus for membership of the generic column grows like e^k**. The table's *values* are k-independent, and so is the modulus keying the table itself — mod 12 at every arity (`aod` §3.3.4); what thins is the *set of blocks*, and hence of n, realising the generic column.
+> **What does move with k is which blocks are in the generic column.** With §2.2's corrected θ: κ_c = 2 needs no j > 2 with j | c − 1 and j | k(k−1), and κ_r = 1 needs no q-power > 1 dividing k or k − 1 — for which **q > k is sufficient** and, from k = 5, not necessary (q = 3 already has κ_r = 1 at k = 5). Both are congruence conditions through the primes of k(k−1), so the good class of **blocks** is keyed on a modulus that grows with k — polynomially, not like lcm(1..k). The table's *values* are k-independent, and so is the modulus keying the table itself — mod 12 at every arity (`aod` §3.3.4); what thins is the *set of blocks*, and hence of n, realising the generic column.
 
 ---
 
@@ -132,7 +143,7 @@ holds at every k with the **same** order, while C(n,k) grows like n^k. As a frac
 
 ## 6. Open
 
-1. **The γ criterion at k ≥ 4 has not been verified computationally.** The k = 3 version was checked at 104 (c, d, m) triples; the general statement above is the same argument with L_3 → L_k and is proved for the escape clauses, but the necessity direction at k ≥ 4 needs the analogue of §2.2.2's freeness argument, where the counting "h|_S has order dividing both a and k!" is more delicate than at k = 3 because more orbit-size patterns are available inside a k-set. **First distinguishing case to compute: k = 4, c = 32, d = 31, m = 5**, which is within reach (C(32,4) = 35,960).
-2. **Confirm τ_k on a case with v_p(k) ≥ 2.** The formula predicts a factor of 4 at k = 4, p = 2, which no computation in either document exercises. c = 16 or 32 at k = 4 settles it cheaply.
+1. ~~The γ criterion at k = 4 has not been verified computationally.~~ **Done, at exactly the case this item named: k = 4, c = 32, d = 31, m = 5.** Computed minimum **1240** with the Galois part against **248** without — ratio exactly 5 = lpf(a), both matching c·d·m/κ₄ with κ₄ = τ·θ·γ = 4·1·1 on the nose, and the full orbit partitions consistent (5 × 248 + 35 × 992 and 1240 + 7 × 4960, each summing to C(32,4) = 35,960). So the criterion stands at k = 4, τ and γ acting *simultaneously*. **What remains open is k ≥ 5's necessity direction**, where the analogue of §2.2.2's freeness argument meets the corrected θ: the counting "h|_S has order dividing a and the available orbit patterns" now runs over patterns constrained by k and k − 1 jointly, and no computation exercises it.
+2. ~~Confirm τ_k on a case with v_p(k) ≥ 2.~~ **Done at c = 16, k = 4** (§2.1): the factor is 4, both alone and jointly with θ = 3 at full twist.
 3. **The k = 4 full-density question.** §3 asserts the escape is degenerate at k = 4 from the classification; the solvable 4-homogeneous groups of degree ≥ 6 should be read off Kantor directly rather than inferred, since Livingstone–Wagner's clean statement starts at k = 5.
-4. **Whether any of this is worth writing up separately.** On the evidence here the honest answer is probably not: the content is "the k = 3 note, with three formulas generalised and one escape deleted", and it may belong as a closing section of `three-uniform-note.md` rather than as a document. The one result that stands on its own is **Proposition 1**, which is what makes the whole question answerable in closed form.
+4. **Whether any of this is worth writing up separately.** On the evidence here the honest answer is probably not: the content is "the k = 3 note, with three formulas generalised and one escape deleted", and it may belong as a closing section of `three-uniform-note.md` rather than as a document. The one result that stands on its own is **Proposition 1**, which is what makes the whole question answerable in closed form. *(A cautionary credit to the review process: the first draft's θ_k and L_k conditions were the natural guesses and both fail from k = 5 — caught because the k = 5 claims were computable at c = 13 for a few minutes' cost. Anything here still unverified at k ≥ 5 should be treated the same way before it is relied on.)*
