@@ -1,12 +1,37 @@
 #!/usr/bin/env python3
-"""Does any configuration with two fused classes whose block counts share a
-prime -- rejected by mu_enumerate_v2's _coprime_ok, but apparently realisable
-by a diagonal cyclic-layer rotation -- score above B(n) anywhere in the table?
+"""Does any configuration with two fused classes whose BLOCK COUNTS share a
+prime score above B(n) anywhere in the table?
 
-Screening pass with OPTIMISTIC scoring (every matching part at F*C(c,2), the
-foreign part at its best efficiency over all q): if even the optimistic score
-never exceeds B(n), no exact reading can either, and the exclusion is
-empirically harmless over the computed range.
+WHY THE QUESTION EXISTS.  The enumerator does not require the block counts of
+two fused classes to be coprime, because no argument makes that a necessary
+condition: a block-permutation image is a QUOTIENT of the cyclic layer rather
+than a subgroup of it, so two classes' rotations need not compete for orders
+there, and a diagonal cyclic-layer rotation realises the shared reading.  This
+script is the empirical half of that: it checks that admitting such
+configurations changes no value in range.
+
+WHAT IT DOES AND DOES NOT COVER.  It screens F-vs-F shares between two (or
+three) FUSED classes, and nothing else.  The other two ways a block count could
+have mattered are covered by argument rather than by this script, and should not
+be cited to it:
+  * F_mid versus another class's twist -- Part E carries every p-characteristic
+    twist diagonally on one cyclic generator, so distinct classes need no
+    coprimality between twists, nor between a twist and a rotation;
+  * F_mid versus a foreign prime r -- covered by counting: a foreign block
+    matters only if orb(r, .) >= B, forcing r >= sqrt(2B), and r | F_mid then
+    makes the class size F*c >= r*c overrun n.
+
+SCORING IS DELIBERATELY OPTIMISTIC (every matching part at F*C(c,2), the foreign
+part at its best efficiency over all q): if even the optimistic score never
+exceeds B(n), no exact reading can either.  Being optimistic on the candidate
+side and comparing against a recorded B(n) that is itself a valid score means
+both directions of the comparison are safe.
+
+SCOPE CUTS, stated rather than buried.  Only rows with delta <= 0.13 are
+screened (two fused classes need sum sqrt(F) >= 2*sqrt(2), so delta <= 1/8, plus
+slack for the optimistic scoring), and F is capped at FMAX below.  Both are
+bounds on where such a configuration could possibly win, not on where one could
+exist.
 """
 import csv
 from math import comb, gcd, isqrt
@@ -58,7 +83,7 @@ for r in csv.DictReader(open('/mnt/user-data/uploads/mu_table_safe_v4.csv')):
 def coeff(F):
     return F if F % 2 else F // 2
 
-FMAX = 25
+FMAX = 25          # scope cut: see the module docstring
 hits = []
 checked = 0
 for n, B in rows:
@@ -101,8 +126,11 @@ for n, B in rows:
                     hits.append((n, B, v0, (F1, c1), (F2, c2), None))
             elif rem >= 3 and sieve[rem]:    # k = 3, foreign prime
                 r = rem
-                if r == c1 or r == c2:       # foreign prime = a block char: fine
-                    pass
+                # NOTE: r is NOT tested against the home prime here.  A foreign
+                # part must have a prime different from p = base[c1] = base[c2],
+                # so r == base[c1] would be inadmissible -- but admitting it is
+                # PERMISSIVE for a hit-screen (it can only add candidates, never
+                # remove one), which is the safe direction for this script.
                 v = min(v0, s1 * r, s2 * r, EFF[r] * comb(r, 2))
                 if v > B:
                     hits.append((n, B, v, (F1, c1), (F2, c2), r))

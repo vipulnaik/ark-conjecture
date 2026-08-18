@@ -750,6 +750,39 @@ if A.only in ("all", "census"):
                 for d in files:
                     print(f"        {d}: {cens[d][sid][:70]}")
         print(f"\nchecked {len(allS)} S-numbers across {len(files)} censuses.")
+
+        # MODULUS GUARD on the whole census row, not just the description.
+        #
+        # Comparing the two censuses against each other cannot catch a claim
+        # that is stale in BOTH copies -- and since the censuses are kept in
+        # step by copying, that is the likely way for one to go wrong.  The
+        # class ceilings are keyed mod 12: every mod-8 condition in the
+        # derivation is either absorbed (F = 2, where the two reachable foreign
+        # residues agree mod 4) or constant on the mod-12 class (F = 4).  So a
+        # census verdict naming a residue mod 24 is asserting a distinction the
+        # ceiling table does not make.  Residues 11 and 23 are exempt: they are
+        # the two halves of the extremal class and are legitimately named
+        # together when the point is that they agree.
+        MOD24_OK = {"11", "23"}
+        m24 = re.compile(r"\b(\d+)\s*(?:,\s*\d+\s*)*\(mod\s*24\)|\bmod-24\b")
+        for d in files:
+            try:
+                txt = open(d).read()
+            except OSError:
+                continue
+            for line in txt.split("\n"):
+                mm = CENSUS_ROW.match(line.strip())
+                if not mm:
+                    continue
+                hits = [x for x in re.findall(r"\b(\d+)(?=[^()]{0,12}\(mod 24\))", line)
+                        if x not in MOD24_OK]
+                if hits or "mod-24" in line:
+                    findings += 1
+                    print(f"   {mm.group(1)} in {d}: census row names "
+                          f"{'residues ' + ', '.join(sorted(set(hits))) if hits else 'a mod-24 keying'} "
+                          f"(mod 24); the ceiling table is keyed mod 12")
+                    print(f"        a mod-24 residue other than 11/23 in a census "
+                          f"verdict is a distinction the ceilings do not make")
     # tagged duplicate statements
     dups = {}
     for d in DOCS:

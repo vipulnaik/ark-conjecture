@@ -28,7 +28,9 @@ Everything below was recomputed from scratch in this session (fresh implementati
 
 ---
 
-## 2. The repair-completeness inventory: sites still carrying the refuted claim
+## 2. The repair-completeness inventory — ALL IMPLEMENTED
+
+*Every item in this section has been carried out; §8 records the implementation, including the places where doing it turned up something the review had not. The inventory is kept as written so the diff has a reference.*
 
 *The actionable core. The correction is stated correctly in `aod` §2.0's gotcha, §3.2.3, §3.3.4/§3.3.4a, Theorem 3.1's gotcha clause (both copies), `mu_enumerate_v3.py`, `shape_realize.py`, `ark_shapes.g`, and the banner. The following sites still carry the pre-correction claim, a pre-correction figure, or an internal contradiction.*
 
@@ -81,6 +83,8 @@ Everything below was recomputed from scratch in this session (fresh implementati
 
 ## 3. The fb_common necessity audit (risk item 6 — previously the largest unread surface)
 
+*Findings 1–4 are implemented (§8.2); finding 5 is moot, see §8.5.*
+
 All 581 lines read. Conditions (1), (2), (3), (5), (7), (8): necessity arguments sound (details verified: q-enumeration completeness — divisors of r−1 plus the '\*' branch gated on r ≥ B, with q = r and q ∤ r−1 both correctly reduced to that gate; `leftover_ok`'s floor max(⌈B/min(Fc, r)⌉, intra_floor(B)); `multi_part_ok`'s subset-sum/unbounded-sum split; rj = 2 exclusion harmless). Condition (6) correctly demoted to a tripwire, with a valid reason (coeff·c² ≥ F·C(c,2) means (4) binds first). `cap_mersenne` implements E.1's Cap(a) exactly; the max(2, L) over-statement of orb(r, 2) is the safe direction. `e3ii_resolves`'s gcd step is right (two independent proofs; the F-loop break loses nothing since Fmax = 1 at the bare pair).
 
 **Findings:**
@@ -113,7 +117,9 @@ All 581 lines read. Conditions (1), (2), (3), (5), (7), (8): necessity arguments
 
 ---
 
-## 6. Proposed pending-checks additions (for the Opus pass to file)
+## 6. Proposed pending-checks additions — FILED
+
+*All filed; see §8.4 for what went where and §8.6 for what was removed from `pending-checks.md` rather than added.*
 
 - **New T-item: the stale-site sweep of §2 above** — one editing pass over `ep` (B_safe block, B2/Part C, E″ lemma + status boxes, census cell + instance table, L637 box, n = 308/1425 figures), `notes` (§1 box, overview counts, §5 line 223, "odd" in 2·(prime power)), `aod` (§3.3.5 box, census cell, §6.2 rescope, §7 tail list), `pending-checks` (T5 count, T6 rekey, A0b), plus the script items of §2.5.
 - **Amend T5:** three strip sites; gate/trace `multi_part_ok`'s; fix its comment; add the fb_common HELD flag.
@@ -129,3 +135,96 @@ All 581 lines read. Conditions (1), (2), (3), (5), (7), (8): necessity arguments
 ## 7. Checks skipped this session (flagged per the standing instruction)
 
 `notes` §§7–11 beyond the instructed skim (§7.1–7.3 read since §§1–6 lean on them); `ep` Parts F, G (G.2's pitfall box known only via citations), H, I, and Part E's construction details beyond the coefficient boxes; `aod` §§3.3.6–3.4 body, §4, §5's branch-and-bound internals, §6.3–6.6 (§6.2 and §7 read); `validate_table_v3.py` check-by-check; `ladder_verify`'s S7 F ≥ 3 loop and EFF_EX internals; `check_doc_figures` passes 1–2 implementations (run, and pass 5 read); the chiral sign formula of session-log-7 §2.6 (plausible at a glance, unverified); D2q steps 5–6 beyond plausibility; the 289-list's beyond-frontier rows against a rebuilt B (needs the rebuild); any GAP execution (no GAP here — `ark_shapes.g` and `verify_witness.g` read, not run); `wide_cert` pass 1's B_lo values against exact boundaries (needs a run); `literature-findings` items 3–22 beyond headers.
+
+
+---
+
+# Implementation pass
+
+*Same session, after the review above. Everything in §§2 and 6 is now carried out; this part records what was done, what the doing turned up, and what is left. Edits to the documents are **dehistoricized**: no document refers to its own earlier state, and each error of interest is stated as a general gotcha at the site where it could recur. Figures awaiting a script run carry ⟦PENDING-REBUILD⟧.*
+
+## 8. What was changed
+
+### 8.1 Documents
+
+**`enumeration-proof.md`.** The Notation box's B_safe definition is rewritten around the **flat F·C(c,2)** cap, with the projection-versus-subgroup failure stated as a gotcha and the entangled generator named as what defeats the cut; the "stripping all F_mid values would be a free tightening" remark is gone, replaced by the observation that the flat cap's looseness is not shape-neutral and that this is the safe direction. Part B (B2) no longer asserts a q-power block count. Part C's recursion now ranges over **all divisors**, with a box explaining that the q-restricted form is not merely sharper-but-unsound: it leaves orbits like s = 3·53 with no branch at all. The E″ leftover twist lemma is restated with the foreign strip only and its Corollary C′ gate, and the two hardest instances (n = 50,817 and 89,697) are re-derived on that strip alone — verified in review that they close without any block-count strip. Certificate coverage figures, the theorem-settled shares, the s-bound box and the odd-n-below-1/9 share are ⟦PENDING-REBUILD⟧. The census S7 verdict cell's mod-24 sentence is removed. The n = 308 worked cases keep the group but drop the claim that its score is B(308).
+
+**The n = 1425 worked contrast is replaced by n = 1460**, because the old one is not merely stale but inverted: a block count of 2 in the cyclic layer realises exactly the reading the passage argued no Oliver group could, and B(1425) now equals B₀(1425). The replacement was checked end to end: B₀(1460) = 263,901 from 727 + 733, unreachable because Lemma B′ caps the foreign twist at a q-power — 726 = 2·3·11² gives at best orb(727, 121) = 87,967, and the p-characteristic reading gives at best orb(733, 61) = 44,713 — against B(1460) = 108,811 via `3x331 + 1x467*`.
+
+**`orbital-evasiveness-notes.md`.** §1's box is six constants mod 12, with the invariant that *a table separating a from a + 12 must be getting it from a mod-8 condition, and every such condition here is constant on the class, so the separation is a defect*. The overview's seven/eight counts and §5's "1/9 at 7 and 15" and "nine residues" are corrected. Theorem 2.1 is scoped to **odd** prime powers at all six sites where it was stated without.
+
+**`arithmetic-of-density.md`.** §3.3.5's stale sentence is replaced by the gotcha that **cap₄(1) = 1/9 bounds the F = 4 slice and is never a class ceiling**. §6.2 is rescoped: the density ceiling is derived for the unfused reading, and the fused unequal p = 2 family is written up with the n = 640 instance (δ = 0.1192 > 1/9) and filed with the §6.5 escapes, with the general gotcha that *a ceiling derived for one reading of a shape does not transfer to its fused reading, and fusion is precisely the axis that multiplies an intra term*. The standing check now names both p = 3 unfused and p = 2 fused. §7's tail membership and odd-n shares are ⟦PENDING-REBUILD⟧.
+
+Across all three: the enumerator is named `mu_enumerate_v3.py` everywhere, and no document cites a table by filename.
+
+### 8.2 `fb_common.py`
+
+The F_mid strip in `pair_candidates` is **removed**, with the reasoning inline at the site. Condition (4)'s header no longer carries the dangling pre-correction fragment. `multi_part_ok`'s third strip site — ungated, untraced, and with a comment contradicting Lemma C's actual scope — is now **gated on the same local licence, asserted, and traced**, so `set_strip_trace()` sees every decision in the file. `orb()` carries a do-not-"fix" note explaining that the omitted characteristic-2 halving is the permissive direction inside a necessary condition. `s_max` is rewritten in **exact integer arithmetic** ((s+1)²·B ≤ C(n,2)), verified equivalent to the exact truth on every (n, B) in a wide grid and correct at exact 1/(s+1)² boundaries.
+
+### 8.3 Other scripts
+
+- **`ladder_verify.py`** — `CAP` rekeyed **mod 12** (six constants; {3,7} at 0.125, 11 at 7−4√3), header rewritten, the "nine residues" and "100%/0%" claims removed, and the mod-24-is-a-defect gotcha added. **Rung B now scores at the full twist** (2·C(c,2)) rather than the odd part of c−1. Rerun at N = 20,000: floor **0.04621 at n = 2759**, 0 values below 0.04, per-class δ/cap minima 0.327–0.644, all six mod-12 caps live.
+- **`verify_witness.g`** — rebuilt around the **entangled generator**: twist and block count split by layer, with one cyclic-layer element z : (b,x) → (b+F_top, a_b·x) whose F_mid-th power is the full twist, covering the pure-twist, pure-rotation and entangled cases uniformly. The diagonal-carrier strip is gone. The generator placement was simulated independently and reproduces all three witness multisets exactly: n = 78 → {468, 507, 1014, 1014}, n = 33 → {21, 156, 169, 182}, n = 105 → {812, 841, 1081, 2726}. Those three are added to `BATTERY` as permanent regressions, each annotated with what a reintroduced twist cut would do to it.
+- **`ceiling_rederive.py`** — the `--no-filter` candidate list tested the *odd part* for prime-power-ness and so admitted 6, 12, 20, 24, … as block sizes; fixed. Reran both modes: filtered reproduces all six constants from below and every mod-12 pair agrees at n ≤ 12,000; unfiltered now shows escapes at genuine prime powers (512, 729).
+- **`wide_cert.py`** — the `per_s` filter moved to exact integers, with the note that an error there is anti-permissive; `fused_lo` widened from prime-power F to **all divisors**, since composite block counts are real groups and excluding them needlessly weakens B_lo exactly where the fused family is the only cheap one; default enumerator path fixed.
+- **`mu_enumerate_v3.py`** — dead `_coprime_part`/`_coprime_ok` deleted (the second still documented the retired cap as current behaviour); the F_mid comment rewritten as a gotcha; the **three-argument justification** for dropping F_mid from the coprimality list recorded at the site, including §4.1's counting argument for r | F_mid. B(273) and B(308) unchanged after the edit.
+- **`check_doc_figures.py`** — a **modulus guard** on census rows, since comparing the two censuses cannot catch a claim stale in both copies. It flags any census verdict naming a mod-24 residue other than 11/23. Tested with a negative control: silent on the current text, fires on the reintroduced defect.
+- **`ark_shapes.g`** — an **output integrity check**: it re-reads its own file and FAILs on any row that carries no verdict, and on a row count that disagrees with the shapes reached. Truncated rows are untested but look like data, so a clean summary line otherwise counts them as passes.
+- **`audit_fmid.py`** — docstring rewritten to state what it does and does not cover (F-vs-F shares only; the other two cases are covered by argument, named), the dead `if r == c1 or r == c2: pass` replaced by a note on why admitting such r is the permissive direction for a hit-screen, and the FMAX / δ ≤ 0.13 scope cuts declared.
+
+### 8.4 `pending-checks.md`
+
+T5 now says **three** gated strip sites and adds that the site count is itself worth rechecking on any edit. T6 is rewritten against the six-row mod-12 table, with the F-slice-versus-class-ceiling gotcha. A0b's group-B description matches what `validate_table_v3.py` actually asserts (foreign-side residue patterns; the retired c-congruences are group-C INFO, where a population at the once-forbidden residues is positive evidence). R7 states the ladder rewrite as a prerequisite of the rerun. R8 describes the entangled build and the three regressions. R6 gains the truncation note. New hardening items are folded into the sites they protect rather than listed separately.
+
+**Certificates are unblocked.** With condition (4) stripping only the licensed foreign prime, `fallback_cert.py` and `wide_cert.py` are sound to run, so R1's steps 2 and 3 move from HELD to ordinary reruns and the commented-out commands are restored.
+
+### 8.5 One §6 item deliberately not implemented
+
+The suggested `CONDITION4_UNREPAIRED` flag in `fb_common.py` is **moot** — the repair is what this pass did, so a flag announcing the unrepaired state would be false the moment it was added. What replaced it is the requirement that every certificate figure in the documents carry ⟦PENDING-REBUILD⟧ until requoted from a run, which is the same protection without a stale constant.
+
+### 8.6 Removed from `pending-checks.md`
+
+Per the standing rule that the file carries only outstanding work: the v4-era expected-output table, the superseded certificate coverage counts, the "289 rows known low" framing, the specific worklist size and floor argmin, the strip-decision counts, the shape-check firing counts, the eta_derive cell counts, and every table-by-filename reference. What survives of each is the *instruction* — run it, read these three numbers off it — with the numbers themselves marked as run outputs. Cross-references to `session-log-7.md` are replaced by references to the session logs generally, so the file does not depend on any one of them.
+
+## 8.7 The table does not need recomputing, and this was checked rather than assumed
+
+The question came up directly, and it is worth recording how it was settled since the enumerator was among the files touched. An AST-level diff of the edited `mu_enumerate_v3.py` against the version that produced the current rows shows **exactly two differences: the removal of `_coprime_part` and `_coprime_ok`**. No function body differs, nothing was added, and the module-level statements are identical. Walking the original file's AST for call sites finds **zero calls to either helper** — they were orphaned when the coprimality check moved inline into `value()`, and were dangerous only as documentation, since one still described the retired cap as live behaviour. Everything else in the file is comment.
+
+Confirmed behaviourally as well: ten randomly chosen rows from the partial table (n = 48, 66, 82, 119, 231, 260, 279, 368, 438, 543) recompute to their recorded `mu_bound` exactly under the edited file, on top of the five spot-checks from the review pass. **So rows already written are current values and a run in flight can continue.**
+
+*The general form, worth keeping:* when a script that produced expensive output is edited, the question "must this be regenerated" is answered by diffing the **behaviour** — AST or output — not by looking at the size of the patch. A comment rewrite and a semantic change look the same in a diff stat.
+
+## 9. Still open after this pass
+
+1. **Eleven runs are owed, and `pending-checks.md` now carries them as an index in its banner** rather than only inside the items that describe them. They fall into three kinds: scripts whose own scoring changed (`ladder_verify.py`, `verify_witness.g`), scripts whose earlier output is known defective (`ark_shapes.g`'s truncated sweep, `ceiling_rederive.py --no-filter`), and per-n checks that never extend themselves (both certificates, the two domination verifiers, `audit_fmid.py`, `validate_table_v3.py`, `check_doc_figures.py`). **The table is not among them** — see §8.7.
+2. **`validate_table_v3.py` was read structurally, not check-by-check.** Its retired-congruence demotions are right and its header matches the mod-12 keying, but the group-B checks have not been audited individually. It is also the one script this pass did not modify, so any assumption it shares with `mu_enumerate_v3.py` remains untested by cross-comparison — the site-4 failure mode.
+3. **The three-argument justification for dropping F_mid** is now recorded, but only one leg (F-vs-F) has an artefact behind it, and that artefact is a screen against a table computed under the old scoring. Worth re-running `audit_fmid.py` against the rebuilt table.
+4. **The residue list of §7 above** stands unchanged: aod §§4–5, ep Parts F–I, and the chiral sign formula are unread at depth.
+5. **`verify_witness.g` has not been executed** — no GAP in this environment. Its new generator scheme was validated by independent simulation of the same placement, which is strong but not the same as running it. That is R8's first step and should be the next thing done.
+
+
+## 10. Review-and-edit pass on the standalone note and its bridge (Fable, same session)
+
+*Three new files: `mu-theta-n2-note.md`, `mu-theta-n2-note-latex.md` (kept identical in content), `note-to-framework-bridge.md`. Brief: the note must be correct as a standalone upload, with any imported framework figures current; the bridge maps the note's simplifications to the framework's tighter treatment.*
+
+### 10.1 Verified clean in the note (both versions)
+
+The admissible-d table re-derived by hand at all twelve classes from the root counts at ℓ = 2, 3, including the degeneration mechanism and the change-of-variable (d mod 4 ↔ n mod 4 via the halving in L3) — every cell agrees. The singular-series constants recomputed: 4·(9/8)·C₀ = 2.858249 with C₀ = 0.635166, factors matching ω(2) = 1 and ω(3) ≤ 2. The corner minimisation re-derived: worst density 1/300 in both parities, at the corner r = n/5, not at the balance point — so δ₀ = 1/350 is safe with the stated slack. Both Oliver chains checked (gcd(c−1, r) = 1 doing exactly condition 4's work; the diagonal action necessary in the odd case); both verification groups' orders and orbital multisets match the framework's independently rebuilt record ({10, 21, 35} at n = 12; {10, 10, 21, 25, 35, 35} at n = 17). Condition 4's ≤ 5-excluded-q count checked. The δ ≤ 1/2 ceiling argument and the n = 2m family (orbitals m(m−1), m²) check against Theorem 2.1. §5's quantifier discipline is right as written, and the Runbo Li citation was verified against arXiv directly: 2508.18285 is the stated paper, improves Baker–Harman, proves P⁺(p−1) > p^0.679 for infinitely many primes — exactly as the note qualifies it.
+
+### 10.2 Edits made to the note (both versions, in sync)
+
+1. **The imported computational figures were requoted from a run performed this session.** The previous figures (per-n range to 2600 with floor at n = 1817; four-family scan to 10⁶ at 0.04453, argmin 11183) predate the corrected scoring, and the old scan is not quotable: the S7 F ≥ 3 guard repair lowers some of its scores, so its floor could overstate. `ladder_verify.py` was run fresh at N = 10⁵ (59 s): **δ(n) ≥ 0.0462 for every composite non-prime-power n ≤ 10⁵, minimum at n = 2759, nothing below 0.04**. The note now quotes exactly that, the "15 times" becomes 16, and the per-n-table sentence is folded into the scan claim (the scan itself exhibits a group at every covered n). A 10⁶ rerun was started and left running (≈2.5 h; R7 unchanged) — the note deliberately quotes the completed run.
+2. **A precision fix in §2**: "no higher power of 2 or 3 obstructs, since the local condition is decided mod ℓ" contradicted the note's own change-of-variable story (the ℓ = 2 condition is decided mod 4). Restated: mod 3 and mod 4 suffice, the d mod 4 freedom covers the latter, nothing imposes mod 8 or mod 9.
+3. **A notation fix in §3**: Γ₁ was written as a direct product including C_{c−1}, which does not commute with Γ₂; now Γ₁ = AGL(1, c) × ℤ/r. The quotient statement was already right.
+
+### 10.3 Edits made to the bridge
+
+Repair-status passages updated (statements corrected, runs in flight — no more "clause being restated / certificates void"); §0's incident narratives recast as gotchas per the dehistoricization rule, content preserved; the §2 caveat block rekeyed mod 12 with the sharpened fact that **the note's odd shape is census S4, which wins nowhere in the computed range** — plus the point that this is not a defect, since a lower bound does not need the optimal shape; the same-statement example in §3 fixed (the old one quoted η = 1/6 at n ≡ 11 as the framework's, which is the note's-family value; the framework's optimum there is F = 4 at η = 1/3); the multiplicative engine's "at most two distinct prime factors" corrected (composite F is a real block count; density-zero now follows from F ≤ 1/δ instead); a new dictionary entry added — **the note's condition 4 avoids the twist-foreign share that the framework's Lemma C prices** — which is the cleanest simplification-vs-tightening contrast in the pair; the 1/350 < 0.0462 < 0.07180 bracket and its quantifier paragraph requoted; Bateman–Horn terminology aligned with the note's own parametric-vs-fixed distinction; §4b and §5 updated (chiral: fused constructions even outright at odd n, so the mod-12 ceilings carry over unscaled; F = 4 attains the ceiling at the one extremal class).
+
+### 10.4 Consequential fixes outside the three files
+
+The stale 10⁶ ladder figures (0.04453 / n = 11183 / block-floor narrative / record-setter list) were still quoted as current at eight sites across `arithmetic-of-density.md`, `orbital-evasiveness-notes.md` and `enumeration-proof.md` — missed by the earlier repair pass because they are ladder outputs rather than table outputs. All now carry ⟦PENDING-REBUILD⟧ with the interim corrected-scoring figure (0.0462 over 10⁵ at n = 2759) where a number is needed; likewise ep's 1/16-tail membership list. `pending-checks.md`'s companion-files paragraph now registers the note pair and names the bridge as the note's standing consistency check, with the two imports to watch.
+
+### 10.5 Skipped
+
+The bridge's §4 items 1–2 and 4a–4b were re-derived rather than re-run (no GAP; the group rebuilds are §1's from the review pass). `chiral-graph-properties.md` and `general-k-note.md`, which two bridge lines cite, remain unread — the chiral clause added in §4b is sourced from the framework's session record, not from the document itself. The 10⁶ ladder run's completion; if it finishes, the note's figure can be upgraded to the wider range with a one-line edit in each version plus the bridge's §2.

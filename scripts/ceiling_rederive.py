@@ -114,9 +114,22 @@ def main():
     N = args.nmax
     sieve = sieve_upto(N)
     primes = [i for i in range(2, N + 1) if sieve[i]]
+    # c must be a PRIME POWER in either mode.  Testing the odd part for
+    # prime-power-ness instead admits 6, 12, 20, 24, 40, ... -- block sizes no
+    # Oliver group has -- so an unfiltered run would report phantom
+    # configurations among the escapes it is meant to display.
+    def prime_power(x):
+        m, e2 = x, 0
+        while m % 2 == 0:
+            m //= 2; e2 += 1
+        f = factor_odd_part(x)
+        if e2 and f:
+            return False                     # two distinct primes
+        if e2:
+            return True                      # a power of 2
+        return len(f) == 1
     cand = [p for p in primes if p >= 5] if generic else \
-           [q for q in range(3, N + 1) if sieve[q] or
-            (lambda x: len(factor_odd_part(x)) <= 1)(q)]
+           [q for q in range(3, N + 1) if prime_power(q)]
 
     best24 = {}
     for n in range(N // 2 | 1, N + 1, 2):

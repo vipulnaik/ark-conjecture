@@ -15,8 +15,8 @@ SAFE mode, hence each a genuine lower bound on B_safe(n):
   * the family menu of `mu_enumerate.seed_value`;
   * the dominant three-part shape (1,c) + (1,c) + (1,r*), maximised over
     prime-power c with r* = n - 2c prime.
-The second is essential: without it the certificate resolves 86.6% of n <= 10^4,
-with it 99.91%, and the multi-part leftover check closes the remaining 0.09%.
+The second is essential: without it the certificate leaves a large fraction of
+odd n unresolved, and the multi-part leftover check closes most of what is left.
 
 Any n where candidates survive is reported as UNRESOLVED AT B_lo -- it needs the
 true B(n) to settle and is NOT a counterexample.
@@ -36,7 +36,7 @@ import fb_common as fb
 
 _A = list(sys.argv); sys.argv = ['x']
 _HERE = os.path.dirname(os.path.abspath(__file__))
-_ME = os.environ.get("MU_ENUMERATE", os.path.join(_HERE, "mu_enumerate.py"))
+_ME = os.environ.get("MU_ENUMERATE", os.path.join(_HERE, "mu_enumerate_v3.py"))
 spec = importlib.util.spec_from_file_location("me", _ME)
 me = importlib.util.module_from_spec(spec); me.__name__ = "me"
 spec.loader.exec_module(me)
@@ -120,20 +120,31 @@ def two_part_lo(n, cap=None):
     return best
 
 def fused_lo(n):
-    """A single fused class (F, c), n = F*c, F a q-power, c a prime power.
-    Includes Theorem 2.1's n = 2*(prime power) at F = 2, q = 2."""
+    """A single fused class (F, c), n = F*c, c a prime power.
+
+    F ranges over EVERY divisor, not over prime powers: F = F_mid*F_top with
+    only F_top a q-power, so a composite block count such as 6 = 2*3 is a real
+    group (an entangled cyclic-layer generator supplies the rotation and the
+    full twist together).  Restricting F to prime powers is conservative --
+    B_lo would still be a lower bound -- but it needlessly weakens the bound at
+    exactly the n where the fused family is the only cheap one, and a weaker
+    B_lo means a larger permitted s and more work in pass 2.
+
+    The within-class cross coefficient is keyed on the parity of the BLOCK
+    COUNT, not on the top prime: F for odd F, F/2 for even F.  Reading it off q
+    is correct only where every F is forced to be a q-power.
+
+    Includes Theorem 2.1's n = 2*(odd prime power) at F = 2."""
     best = 0
-    F = 2
-    while F * F <= n:
-        if n % F == 0:
-            for FF in (F, n // F):
-                pf = A.prime_power(FF)
-                c = n // FF
-                pc = A.prime_power(c)
-                if pf and pc:
-                    best = max(best, min(FF * orb_full(c, c - 1, pc[0] == 2),
-                                         (FF if pf[0] % 2 else FF // 2) * c * c))
-        F += 1
+    for F in range(2, n + 1):
+        if n % F:
+            continue
+        c = n // F
+        pc = A.prime_power(c)
+        if not pc:
+            continue
+        best = max(best, min(F * orb_full(c, c - 1, pc[0] == 2),
+                             (F if F % 2 else F // 2) * c * c))
     return best
 
 # The cheap families leave a few dozen values with a weak bound; for those only,
@@ -205,8 +216,14 @@ t0 = time.time()
 S_TOP = max(fb.s_max(n, Blo[n]) for n in ns)
 per_s = {}
 for sv in range(1, S_TOP + 1):
-    thr = 1.0 / (sv + 1) ** 2
-    lst = [n for n in ns if 2 * Blo[n] / (n * (n - 1)) <= thr]
+    # delta_lo(n) <= 1/(sv+1)^2, in exact integer arithmetic:
+    #     2*Blo/(n(n-1)) <= 1/(sv+1)^2  <=>  (sv+1)^2 * 2*Blo <= n(n-1).
+    # The float form is a tolerance sitting exactly on the boundary of the
+    # property it tests, and the values that reach the comparison are precisely
+    # the boundary ones -- the same trap as the old s_max().  Getting it wrong
+    # here DROPS an n from the candidate list, which is the anti-permissive
+    # direction and would turn an unresolved value into a silent pass.
+    lst = [n for n in ns if (sv + 1) ** 2 * 2 * Blo[n] <= n * (n - 1)]
     lst.sort(key=lambda n: Blo[n])
     per_s[sv] = (lst, [Blo[n] for n in lst])
 print(f"pass 2: permitted s <= {S_TOP}; candidate values per s: "
@@ -282,7 +299,7 @@ ok = tot - len(res)
 print(f"COLLAPSE CERTIFIED at {ok} of {tot} values ({100*ok/tot:.2f}%) in [6, {NMAX}]")
 print("from proven lower bounds alone.  Unresolved values need the true B(n) and")
 print("are NOT counterexamples.  Over the range where both certificates run, the")
-print("true-table certificate (fallback_cert.py, 2008 values to n = 3239) agrees.")
+print("true-table certificate (fallback_cert.py) agrees.")
 print()
 print("The theorem dispatch in pass 2 is an optimisation, not part of the proof.")
 if NO_THM:

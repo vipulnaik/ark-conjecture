@@ -47,21 +47,18 @@ class 11) up to x = 0.5 (two parts at e = 1).  The window [0.10, 0.55] holds all
 of them with room to spare; [0.20, 0.55] does NOT -- it clips n = 9179, whose
 optimum sits at x = 0.1973, and reports a spurious shortfall there.
 
-CLASS CAPS (section 3.3), used to report each n as a fraction of what its class
-permits:
-    even n                          cap 0.25000 or 0.13397  (unchanged)
-    n mod 24 in {1,9,13,21}         cap 0.17157   F = 2, eta = 1
-    n mod 24 in {3,19}              cap 0.12500   F = 2, eta = 1/2
-    n mod 24 in {5,17}              cap 0.10102   F = 2, eta = 1/3
-    n mod 24 in {7,15}              cap 0.11111   F = 4, eta = 1    (= 1/9)
-    n mod 24 == 11                  cap 0.07180   F = 4, eta = 1/3
-    n mod 24 == 23                  cap 0.07180   F = 4, eta = 1/3  (= 7-4sqrt3)
+CLASS CAPS (section 3.3), keyed MOD 12, used to report each n as a fraction of
+what its class permits:
+    n mod 12 in {0, 4, 6, 10}       cap 0.25000   k = 1, eta = 1
+    n mod 12 in {2, 8}              cap 0.13397   k = 1, eta = 1/3
+    n mod 12 in {1, 9}              cap 0.17157   F = 2, eta = 1
+    n mod 12 in {3, 7}              cap 0.12500   F = 2, eta = 1/2
+    n mod 12 == 5                   cap 0.10102   F = 2, eta = 1/3
+    n mod 12 == 11                  cap 0.07180   F = 4, eta = 1/3  (= 7-4sqrt3)
 The ceiling is the JOINT optimum over (F, eta), not eta at a fixed rung: at odd
-n the fusion count must be even, and F = 4 wins at 7, 11, 15, 23 because
-4c = 4 rather than 6 (mod 8), which sends r to 3 (mod 8) and removes the 2-adic
-cut on the foreign efficiency.  The extremal residues are 11 and 23 together --
-that is, all of n = 11 (mod 12) -- since with F = 4 the mod-8 condition drops
-out and only the ell = 3 obstruction remains.
+n the fusion count must be even, and F = 4 wins at 11 because 4c = 4 rather than
+6 (mod 8) pins r and removes the 2-adic cut on the foreign efficiency.  Six
+constants; nothing finer than mod 12 survives into the table.
 
 Usage:
     python3 ladder_verify.py 100000
@@ -79,14 +76,14 @@ for i, x in enumerate(_A):
         FLOOR = float(_A[i + 1])
 
 # The asymptotic global lower bound of arithmetic-of-density.md section 5:
-# 7 - 4*sqrt(3), the cap at n = 11 and 23 (mod 24) and the smallest of the seven
+# 7 - 4*sqrt(3), the cap at n = 11 (mod 12) and the smallest of the six
 # class caps.  Values falling
 # below it here are NOT counterexamples -- this script scans three families over
 # a window and so computes a LOWER BOUND on delta(n).  They are the values where
 # that bound is too weak to reach the asymptotic constant, i.e. the worklist for
 # a future mu_enumerate.py run.
 ASYMPTOTIC = 7 - 4 * 3 ** 0.5      # 7 - 4*sqrt(3) = 0.0717968, the global
-                                   # class ceiling, shared by 11 and 23 mod 24
+                                   # class ceiling, at n = 11 (mod 12)
 
 # The worklist is EVIDENCE for figures quoted in arithmetic-of-density.md sections
 # 3.7 and 5.2, and comparing two runs is the point of rerunning -- so do not write
@@ -95,42 +92,42 @@ ASYMPTOTIC = 7 - 4 * 3 ** 0.5      # 7 - 4*sqrt(3) = 0.0717968, the global
 import os as _os
 OUTFILE = _os.environ.get("LADDER_OUT", "ladder_weak.txt")
 
-# CEILINGS, REKEYED MOD 24 (2026-08).  The old table was keyed mod 12 and used
-# the UNFUSED rung throughout.  For odd n the shapes form a ladder
+# CLASS CEILINGS, KEYED MOD 12.  For odd n the shapes form a ladder
 #
-#   A  one c-block + foreign      cap  eta/(1+sqrt e)^2      needs c = 2^a
-#   B  two c-blocks FUSED + fgn   cap 2eta/(sqrt2+2sqrt e)^2 needs c = 3 mod 4
-#   C  two c-classes UNFUSED      cap  eta/(1+2sqrt e)^2     always available
+#   A  one c-block + foreign        cap  eta/(1+sqrt eta)^2       needs c = 2^a
+#   B  two c-blocks FUSED + fgn     cap 2eta/(sqrt2+2sqrt eta)^2  no condition on c
+#   C  two c-classes UNFUSED        cap  eta/(1+2sqrt eta)^2      always available
 #
-# with A > B > C.  Rung B needs an odd twist on the c-blocks, i.e. c = 3 mod 4,
-# and whether that is compatible with the residue's own eta is a condition mod 8
-# on n -- which is why the split is mod 24 rather than mod 12.  The certifying
-# congruence DIFFERS BY ETA and must not be quoted as one condition: with
-# c = 3 mod 4 one has 2c = 6 mod 8 and hence r = n-6 mod 8, so
-#     eta = 1/2 or 1/6  (D = 4 or 12)  needs r = 5 mod 8, hence n = 3 mod 8;
-#     eta = 1 or 1/3    (D = 2 or 6)   needs r = 3 or 7 mod 8, i.e. n = 1 or 5.
-# The nine rung-B residues are spread across all three of those cases -- they are
-# 1, 3 and 5 mod 8, NOT all 3 mod 8 -- see aod section 3.3.4a, which derives the
-# efficiency available at each (class, F) from exactly these congruences, and
-# three-part-family-split.md section 1.4 for the row-by-row version.  Half of
-# each obstructed class reaches B and half is stuck on C.
-# Measured 100%/0% with no boundary cases.  Nine of the twelve odd residues rise
-# by 33-54% from the F = 2 rungs alone; 7, 15, 11 and 23 are then lifted further
-# by F = 4, which is what sets their ceilings.
-# Class ceilings from aod section 3.3.5, as the JOINT optimum over (F, eta):
-# cap_F(eta) = eta / (1 + sqrt(F*eta))^2, maximised over the (F, eta) pairs the
-# residue admits.  At odd n the fusion count must be EVEN (c odd and r an odd
-# prime force F*c even), and F = 4 attains the ceiling at 7, 11, 15 and 23 --
-# 1/9 at 7 and 15 where eta reaches 1, and 7 - 4*sqrt(3) at 11 and 23 where the
-# ell = 3 obstruction caps eta at 1/3.  Those four were previously keyed to the
-# F = 2 rungs, at 0.085786, 0.066987, 0.085786 and 0.050510.
+# with A > B > C.  A cyclic-layer fusion costs NOTHING on the matching side --
+# an entangled generator supplies the block rotation and the full twist from one
+# cyclic subgroup -- so rung B imposes no congruence on c and is available at
+# every odd n.  What c mod 4 does instead is STEER the foreign residue: at F = 2,
+# 2c = 2 or 6 (mod 8), so r = n - 2c reaches two residues mod 8.  They differ by
+# 4 and hence agree mod 4, so the choice can buy r = 5 (mod 8) (eta = 1/2) but
+# can never produce r = 3 (mod 4).  At F = 4, 4c = 4 (mod 8) for every odd c, so
+# r is pinned and c is inert.
+#
+# GOTCHA, and the reason this table is mod 12 rather than mod 24: every mod-8
+# condition in the derivation is either absorbed (F = 2, where the two options
+# agree mod 4) or constant on the mod-12 class (F = 4).  A CAP table that
+# separates any residue a from a + 12 is therefore getting it from a condition
+# that does not survive -- a defect, not a refinement.  In particular a grouping
+# that puts 7, 15 in one row and 3, 19 in another cuts ACROSS mod-12 classes,
+# since 15 = 3 and 7 = 19 (mod 12); all four share a row at cap 1/8.
+#
+# The ceilings are the JOINT optimum over (F, eta), cap_F(eta) =
+# eta/(1 + sqrt(F*eta))^2, maximised over the (F, eta) pairs the residue admits.
+# At odd n the fusion count must be EVEN (c odd and r an odd prime force F*c
+# even), and cap_F(1) = 1/(1+sqrt F)^2 excludes F >= 8 outright.  F = 4 attains
+# the ceiling only at n = 11 (mod 12), where the ell = 3 obstruction caps eta at
+# 1/3 and 7 - 4*sqrt(3) results; elsewhere F = 2 wins.  Note 1/9 = cap_4(1) is
+# the absolute ceiling of the F = 4 SLICE and is not any class's ceiling: a
+# class that could take F = 4 at full efficiency reaches 1/8 through F = 2 at
+# eta = 1/2 instead.
 CAP = {0: 0.250000, 1: 0.171573, 2: 0.133975, 3: 0.125000,
-       4: 0.250000, 5: 0.101021, 6: 0.250000, 7: 0.111111,
-       8: 0.133975, 9: 0.171573, 10: 0.250000, 11: 0.071797,
-       12: 0.250000, 13: 0.171573, 14: 0.133975, 15: 0.111111,
-       16: 0.250000, 17: 0.101021, 18: 0.250000, 19: 0.125000,
-       20: 0.133975, 21: 0.171573, 22: 0.250000, 23: 0.071797}
-MOD = 24
+       4: 0.250000, 5: 0.101021, 6: 0.250000, 7: 0.125000,
+       8: 0.133975, 9: 0.171573, 10: 0.250000, 11: 0.071797}
+MOD = 12
 
 t = time.time()
 sieve = bytearray([1]) * (N + 1)
@@ -428,13 +425,16 @@ def achieved(n, stop_at=None):
                 if stop_at and best > stop_at:
                     return best
             # rung B: the two c-blocks fused in the CYCLIC layer (census S7 at
-            # F = 2).  Fmid = 2 shares the cyclic layer with the twist, so the
-            # twist is cut to the ODD PART of c-1; the top prime is free, but
-            # must differ from 2, hence EFF_EX[3]-style exclusion is wrong here
-            # -- what is excluded is q = 2, so use the best odd-q efficiency.
-            dodd = c - 1
-            while dodd % 2 == 0:
-                dodd //= 2
+            # F = 2).  The twist is FULL -- an entangled generator (a block
+            # rotation whose step-multipliers have product a generator of F_c^*)
+            # supplies the rotation and the whole of C_{c-1} from one cyclic
+            # subgroup, so a cyclic-layer fusion costs nothing on the matching
+            # side and imposes no congruence on c.  Cutting the twist to the odd
+            # part of c-1 here would UNDERSTATE the rung at every c; since this
+            # script takes a max over families, that shows up as a floor that is
+            # too low rather than as an error, which is why it is worth stating.
+            # The top prime is free but must differ from 2 (q = 2 is rung B'),
+            # so the foreign efficiency is the best over ODD q.
             eB = EFF_ODD[r]
             if eB > 0:
                 # Within-class cross carries F/2 = 1 because F = 2 is EVEN --
@@ -445,7 +445,7 @@ def achieved(n, stop_at=None):
                 # over-credit is the dangerous direction, so it must be right for
                 # a reason rather than by accident.  Rung B' below is the same
                 # rule at F = 2.
-                v = min(2 * orb_ld(c, dodd, bp == 2), eB * comb(r, 2),
+                v = min(2 * comb(c, 2), eB * comb(r, 2),
                         c * c, 2 * c * r)
                 if v > best * C:
                     best = v / C
@@ -550,7 +550,7 @@ print(f"{stamp()}  scanning to {N:,}; checkpoint every {TICK:,}, "
 # quantity wanted is a MINIMUM, and the n attaining it are rare and structured
 # (the doubly-obstructed residues with no multiplicative escape), so a uniform
 # sample reports a value two to three times too high.  Sample inside the two
-# lowest-cap residue classes instead -- 23 and 11 mod 24 -- which is where every
+# lowest-cap residue class instead -- 11 mod 12 -- which is where every
 # observed minimum has sat.  One in TREND_EVERY members of those classes is
 # rescanned without stop_at, so the added cost is about 2/(24*TREND_EVERY) of a
 # full untruncated run.  Set TREND_EVERY = 0 to disable.
@@ -623,13 +623,13 @@ for n in range(6, N + 1):
               f" (1 in {TREND_EVERY} of them, {trend_seen} scanned)") if blk_true[1] else ""
         print(f"{stamp()}  --- through {n:,}: block floor {b}; "
               f"global floor {gmin[0]:.5f} at n = {gmin[1]} "
-              f"(mod 24 = {gmin[1] % MOD}); {len(below)} below {FLOOR}{tr} ---")
+              f"(mod 12 = {gmin[1] % MOD}); {len(below)} below {FLOOR}{tr} ---")
         blk_true = (9.9, None)
         trend_seen = 0
         blk_min = (1e9, None)
 print(f"{stamp()}  scan complete in {time.time()-t0:.0f}s")
 print()
-print(f"{'n mod 24':>9} {'cap':>9} {'min delta/cap':>14} {'at n':>8} "
+print(f"{'n mod 12':>9} {'cap':>9} {'min delta/cap':>14} {'at n':>8} "
       f"{'# below ' + str(FLOOR):>14}")
 for a in range(MOD):
     r, n, cnt = per[a]
@@ -639,7 +639,7 @@ for a in range(MOD):
 print()
 print(f"GLOBAL FLOOR over composite non-prime-power n <= {N:,}: "
       f"delta >= {gmin[0]:.5f}, attained at n = {gmin[1]} "
-      f"(n mod 24 = {gmin[1] % MOD})")
+      f"(n mod 12 = {gmin[1] % MOD})")
 print(f"values with delta < {FLOOR}: {len(below)}"
       + (f" -> {below[:10]}" if below
          else "  -- the section 5 conjecture holds throughout this range"))

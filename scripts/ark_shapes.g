@@ -303,6 +303,48 @@ if nskip > 0 then
   Print("Skipped shapes are UNTESTED; raise ARK_SHAPES_MAXORD or lower ",
         "ARK_SHAPES_MAXF to cover them.\n");
 fi;
+
+# ------------------------------------------------------- output integrity check
+# A wide sweep can be cut short by memory pressure part way through a line, and
+# the result is a file whose later rows carry no verdict at all.  Those rows are
+# UNTESTED, exactly like the MAXORD skips -- but unlike them they look at a
+# glance like data, so a reader counting "0 mismatches" over the file counts
+# them as passes.  Re-read the file and require every line to end in a verdict.
+CheckOutputComplete := function(fname, expected)
+  local str, lines, l, bad, t;
+  str := StringFile(fname);
+  if str = fail then
+    Print("*** FAIL: cannot re-read ", fname, " to check it is complete ***\n");
+    return false;
+  fi;
+  lines := Filtered(SplitString(str, "\n"), x -> x <> "");
+  bad := 0;
+  for l in lines do
+    t := SplitString(l, "|");
+    if Length(t) = 0 or not (t[Length(t)] in
+         ["ok", "UNDER-SCORE", "OVER-SCORE", "SKIPPED-over-MAXORD"]) then
+      bad := bad + 1;
+    fi;
+  od;
+  if bad > 0 then
+    Print("*** FAIL: ", bad, " of ", Length(lines), " rows in ", fname,
+          " are TRUNCATED and carry no verdict.  Those shapes are untested; ",
+          "a clean summary above does not cover them.  Rerun with more ",
+          "memory (gap -o) or a lower ARK_SHAPES_MAXF. ***\n");
+    return false;
+  fi;
+  if Length(lines) <> expected then
+    Print("*** FAIL: ", fname, " holds ", Length(lines), " rows against ",
+          expected, " shapes reached.  Rows were lost in writing. ***\n");
+    return false;
+  fi;
+  Print("output check: ", Length(lines), " rows, every one carries a verdict.\n");
+  return true;
+end;
+CloseStream(OUTSTREAM);
+if not CheckOutputComplete(OUT, ntested + nskip) then
+  nbad := nbad + 1;
+fi;
 if STRIP and nbad > 0 then
   Print("The strip is detected as expected -- this is the control.\n");
 fi;

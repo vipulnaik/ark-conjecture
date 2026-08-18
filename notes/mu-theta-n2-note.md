@@ -51,7 +51,7 @@ required to be simultaneously prime. Write L1, L2, L3 for the three and ω(ℓ) 
 >
 > **ℓ | d.** Now L2 = dq + 1 ≡ 1 never vanishes, but L3 **degenerates to a constant**, which vanishes identically when ℓ | (n−1) — resp. ℓ | (n−1)/2 — giving ω(ℓ) = ℓ outright. The bound from the first mechanism does not apply here.
 
-Since every permitted d has only 2 and 3 as prime factors, **both mechanisms are confined to ℓ ≤ 3**. That is also the real reason the list is {2, 4, 6, 12}: these are exactly the even d whose prime factors lie in {2, 3}, which keeps the local analysis finite and the table indexed mod 12 — a d with a larger prime factor, 10 say, would open a degeneration channel at 5. No higher power of 2 or 3 obstructs either, since the local condition is non-divisibility by ℓ and that is decided mod ℓ.
+Since every permitted d has only 2 and 3 as prime factors, **both mechanisms are confined to ℓ ≤ 3**. That is also the real reason the list is {2, 4, 6, 12}: these are exactly the even d whose prime factors lie in {2, 3}, which keeps the local analysis finite and the table indexed mod 12 — a d with a larger prime factor, 10 say, would open a degeneration channel at 5. Nor does any higher power of 2 or 3 force a longer list: the ℓ = 3 condition is decided mod 3, and the ℓ = 2 condition — because of the halving in L3, explained below — is decided mod 4, which the freedom in d mod 4 already covers. Nothing imposes a condition mod 8 or mod 9.
 
 The degeneration is not a corner case: it is precisely what excludes d ∈ {6, 12} at n ≡ 1 (mod 3). With d = 6 and n = 100, the form L3 = 99 − 6q is identically 0 mod 3, since 3 divides both 99 and 6. The two conditions on n are therefore a condition mod 4 and a condition mod 3 — that is, mod 12. (Mod 4 rather than mod 2 because of a change of variable, explained just below.) This is exactly what the four permitted values of d are for:
 
@@ -101,7 +101,7 @@ Partition [n] into blocks A of size c and B of size r, identified with ℤ/c and
 
 where the first factor acts on A by all affine maps x ↦ λx + β, and the second on B by y ↦ ηy + γ with η ranging over the subgroup of order t in (ℤ/r)\*.
 
-**Oliver's condition.** Take Γ₂ = ℤ/c (translations of A), a c-group; Γ₁ = Γ₂ × (ℤ/r) × C_(c−1); and Γ/Γ₁ = C_t, a q-group. Then
+**Oliver's condition.** Take Γ₂ = ℤ/c (translations of A), a c-group; Γ₁ = AGL(1, c) × (ℤ/r); and Γ/Γ₁ = C_t, a q-group. Then
 
 > Γ₁/Γ₂ ≅ C_(c−1) × C_r,
 
@@ -141,13 +141,13 @@ This is best possible up to the o(1): for non-prime-power n an Oliver group has 
 
 The constant δ₀ above is deliberately crude. Optimising the block sizes and the efficiency t/(r−1) gives materially better constants. The local conditions at the primes 2 and 3 depend on n modulo 12, but the optimised constants are keyed **modulo 12** as well, with the residue entering through the efficiency available to the foreign block; the optimisation is finer, the modulus the same.
 
-A companion computation, which we do not reproduce here, exhibits an Oliver group at every composite non-prime-power n ≤ 2600 and so bounds δ(n) below at each; a separate scan over four explicit families gives
+A companion computation, which we do not reproduce here, scans four explicit families of such constructions — each written down directly as a permutation group, with its minimum orbital in closed form — and exhibits one at every composite non-prime-power n it covers, giving
 
-> δ(n) ≥ 0.04453 for every composite non-prime-power n ≤ 10⁶,
+> δ(n) ≥ 0.0462 for every composite non-prime-power n ≤ 10⁵,
 
-the scan's minimum over the range being attained at n = 11183, and a minimum of 0.045742 at n = 1817 over the range where groups are exhibited individually. These are lower bounds, which is all the present argument needs; over that range the density therefore never falls below **15 times** the δ₀ = 1/350 proved above. *(A matching upper bound — and hence exact values of μ — is the object of a companion classification of the possible orbit structures together with a finite search over the resulting configurations. That is separate work, and nothing here depends on it.)*
+the scan's minimum over the range being attained at n = 2759. These are lower bounds, which is all the present argument needs; over that range the density therefore never falls below **16 times** the δ₀ = 1/350 proved above. *(A matching upper bound — and hence exact values of μ — is the object of a companion classification of the possible orbit structures together with a finite search over the resulting configurations. That is separate work, and nothing here depends on it.)*
 
-The comparison is worth making carefully, because the two statements have different quantifiers and the computation is the stronger of the two on that axis. The Theorem gives δ(n) ≥ 1/350 **for all sufficiently large n**, and says nothing about any particular n. The computation gives δ(n) ≥ 0.0445 for **every** composite non-prime-power n in [6, 10⁶] — a global statement over its range, with no exceptional set: the minimum is attained in the middle of the range, at n = 11183, and small n are comfortably above it (δ = 0.400 at n = 6, 0.273 at n = 12). So 1/350 is conservative not merely as an eventual constant but as a global one, and no n is currently known at which δ is small.
+The comparison is worth making carefully, because the two statements have different quantifiers and the computation is the stronger of the two on that axis. The Theorem gives δ(n) ≥ 1/350 **for all sufficiently large n**, and says nothing about any particular n. The computation gives δ(n) ≥ 0.0462 for **every** composite non-prime-power n in [6, 10⁵] — a global statement over its range, with no exceptional set: the minimum is attained at n = 2759, well inside the range, and small n sit comfortably above it (δ = 0.400 at n = 6, 0.273 at n = 12). So 1/350 is conservative not merely as an eventual constant but as a global one, and no n is currently known at which δ is small.
 
 ## 5. Comparison with BBKN and Shparlinski
 

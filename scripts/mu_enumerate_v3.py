@@ -212,49 +212,6 @@ def _fusions(fmax, q):
     return out
 
 
-def _coprime_part(m, F):
-    """Largest divisor of m coprime to F.  Used to cap the cyclic-layer part of
-    a twist when the class is fused there."""
-    if F <= 1:
-        return m
-    x, d = F, 2
-    while d * d <= x:
-        if x % d == 0:
-            while m % d == 0:
-                m //= d
-            while x % d == 0:
-                x //= d
-        d += 1 if d == 2 else 2
-    if x > 1:
-        while m % x == 0:
-            m //= x
-    return m
-
-
-def _coprime_ok(vals):
-    """Every listed order must be pairwise coprime: they all sit inside the one
-    cyclic group Gamma_1/Gamma_2, and a cyclic group has a unique subgroup of
-    each order, so two constituents sharing a prime cannot both embed."""
-    seen = set()
-    for v in vals:
-        if v <= 1:
-            continue
-        x, d = v, 2
-        while d * d <= x:
-            if x % d == 0:
-                if d in seen:
-                    return False
-                seen.add(d)
-                while x % d == 0:
-                    x //= d
-            d += 1 if d == 2 else 2
-        if x > 1:
-            if x in seen:
-                return False
-            seen.add(x)
-    return True
-
-
 def parts_for(n, p, q, spf, floor):
     """all (F, c) parts with F a q-power, c a prime power, F*c <= n, and whose
     optimistic capacity exceeds `floor` (pruning bound of Part G.4)"""
@@ -319,11 +276,27 @@ def value(sel, p, spf, q=None):
     # that was already excluded.
     if len(foreigns) != len(set(foreigns)):
         return None
-    # 2026-08-16: F_mid values no longer join the coprimality list -- their
-    # exclusion was never a necessity (entangled/diagonal generators realise the
-    # shared readings), and shared-F_mid configurations are dominated in range
-    # (audit_fmid.py).  Foreign primes are distinct hence pairwise coprime, so
-    # the remaining check is the duplicate test above.
+    # F_mid values do NOT join the coprimality list, and three separate
+    # arguments cover the three ways they could have mattered:
+    #
+    #   F_mid vs F_mid (two fused classes whose block counts share a prime):
+    #     realisable -- a diagonal cyclic-layer rotation supplies both -- and in
+    #     any case screened empirically by audit_fmid.py, whose optimistic
+    #     scoring never beats B(n) in range.  A measured fact, not a theorem.
+    #   F_mid vs another class's twist:
+    #     Part E's construction carries every p-characteristic twist DIAGONALLY
+    #     on one cyclic generator, so distinct classes need no coprimality
+    #     between their twists and none with a rotation either.
+    #   F_mid vs a foreign prime r:
+    #     covered by counting, so no check is needed.  A foreign block matters
+    #     only if orb(r, .) >= B, which forces r >= sqrt(2B); if r | F_mid then
+    #     the class alone has size F*c >= r*c, and the within-class cross term
+    #     forces c to grow like sqrt(2B/F) as well, so the class overruns n.
+    #     Hence no configuration with r | F_mid can be the argmax, and admitting
+    #     them costs nothing on either side of the sandwich.
+    #
+    # Foreign primes are distinct hence pairwise coprime, so the remaining check
+    # is the duplicate test above.
     terms = []
     for t in sel:
         if t.foreign:
@@ -338,14 +311,19 @@ def value(sel, p, spf, q=None):
             # may use it: the unconditional cap on the part becomes
             # F*orb(c, dmax) rather than F*C(c,2), which is strictly tighter
             # whenever Fmid > 1 and still bounds any admissible stabiliser.
-            # 2026-08-16: the F_mid coprimality cut is NOT a necessary
-            # condition -- an entangled cyclic-layer generator (block rotation
-            # with step-multipliers whose product generates F_c^*) realises the
-            # FULL twist at any F_mid; see entangled-generator-finding.md and
-            # the explicit groups at n = 33, 78, 105.  The SAFE cap is therefore
-            # F * C(c,2) with no F_mid strip.  Lemma C's foreign strip survives
-            # (conjugation on the r-primary layer component), but SAFE
-            # deliberately does not use it, as before.
+            # The F_mid coprimality cut is NOT a necessary condition, and
+            # imposing it is unsound in the dangerous direction.  The tempting
+            # argument -- C_{F_mid} and the twist's cyclic part sit in one
+            # cyclic layer, which has a unique subgroup of each order, so their
+            # orders are coprime -- treats a QUOTIENT of the layer (the
+            # block-permutation image) as a subgroup of it.  An entangled
+            # generator, a rotation whose step-multipliers have product a
+            # generator of F_c^*, realises the full twist at any F_mid.  So the
+            # SAFE cap is F * C(c,2) with no F_mid strip; cutting it would
+            # under-score fused classes and break mu(n) <= B(n).  Lemma C's
+            # foreign strip is a different matter and does hold (conjugation on
+            # the r-primary component of the layer, a genuine subgroup), but
+            # SAFE deliberately does not use it.
             d = strip(t.c - 1, foreigns)             # Lemma C (refined only)
             if SAFE:
                 terms.append(t.cap)

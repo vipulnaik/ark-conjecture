@@ -49,10 +49,17 @@ ParseWitness := function(s)
 end;
 
 # ------------------------------------------------- the twist the construction uses
-# Matching class: d = largest divisor of c-1 coprime to every foreign prime and to
-# every F_mid in the configuration.  That is the DIAGONAL CARRIER constraint --
-# stricter than SAFE's dmax, which strips only the class's own F_mid, and it is
-# the construction's actual requirement (see validate_table.py's group-A check).
+# Matching class: d = largest divisor of c-1 coprime to every foreign prime.
+#
+# The block counts do NOT enter.  A cyclic-layer fusion is realised by an
+# ENTANGLED GENERATOR -- one element z acting as a block rotation whose
+# step-multipliers have product a generator of F_c^*, so that z^F is the full
+# twist -- and <z> is a single cyclic subgroup supplying both.  The block
+# permutation is a QUOTIENT of the cyclic layer, not a subgroup of it, so it
+# competes with nothing there.  Requiring d coprime to the F_mid values is the
+# subgroup-versus-quotient error and would make this script build a
+# lower-scoring group than the configuration it is checking, reporting a
+# spurious shortfall against every fused witness at full twist.
 StripCoprime := function(m, bad)
   local b, g;
   for b in bad do
@@ -63,14 +70,10 @@ StripCoprime := function(m, bad)
 end;
 
 ConstructionTwists := function(w)
-  local foreigns, fmids, cl, ft, i, out, d, qp;
-  foreigns := [];  fmids := [];
+  local foreigns, cl, i, out, d, qp;
+  foreigns := [];
   for cl in w.classes do
-    if cl.foreign then Add(foreigns, cl.c);
-    else
-      ft := 1;  while cl.F mod (ft * w.q) = 0 do ft := ft * w.q; od;
-      Add(fmids, cl.F / ft);
-    fi;
+    if cl.foreign then Add(foreigns, cl.c); fi;
   od;
   out := [];
   for i in [1..Length(w.classes)] do
@@ -81,8 +84,7 @@ ConstructionTwists := function(w)
     else
       qp := 1;  while (cl.c - 1) mod (qp * w.q) = 0 do qp := qp * w.q; od;
       # the q-part may sit in the top layer; the rest must clear the cyclic layer
-      d := qp * StripCoprime((cl.c - 1) / qp,
-                             Concatenation(foreigns, Filtered(fmids, x -> x > 1)));
+      d := qp * StripCoprime((cl.c - 1) / qp, foreigns);
       Add(out, d);
     fi;
   od;
@@ -96,7 +98,7 @@ end;
 # one cyclic-layer generator); the block rotation has order F.
 BuildConfig := function(w, twists)
   local n, offs, cl, gens, i, b, base, c, F, fld, elts, gen, u, addmap, mulmap,
-        perm, images, x, s, gsub, gtop, gcyc, gbot, e, prim;
+        perm, images, x, s, gsub, gtop, gcyc, gbot, e, prim, ftop, fmid, dq, dcyc;
   offs := [];  n := 0;
   for cl in w.classes do Add(offs, n);  n := n + cl.F * cl.c;  od;
   gens := rec(bottom := [], cyclic := [], top := []);
@@ -129,38 +131,69 @@ BuildConfig := function(w, twists)
         fi;
       od;
     od;
-    # --- twist: diagonal, order twists[i], in the cyclic layer (or top if q-power)
-    if twists[i] > 1 then
-      u := prim ^ ((c - 1) / twists[i]);
+    # --- split the twist and the block count by layer -----------------------
+    #
+    #   d      = twists[i] = dq * dcyc,  dq a q-power that may live on top
+    #   F      = Fmid * Ftop,            Ftop a q-power, Fmid from the cyclic layer
+    #
+    # THE ENTANGLED GENERATOR IS THE POINT.  The cyclic-layer part of the block
+    # rotation and the cyclic-layer part of the twist are supplied by ONE
+    # element z, not by two:
+    #
+    #   z : (b, x) -> (b + Ftop mod F,  a_b * x),   prod a_b = generator of dcyc
+    #
+    # so z^Fmid is the pure twist of order dcyc and <z> is cyclic of order
+    # Fmid*dcyc.  Building them instead as two separate generators -- a bare
+    # rotation and a diagonal twist -- gives a DIFFERENT group, and one whose
+    # cyclic layer really does have to accommodate both orders, which is what
+    # makes a coprimality condition between them look necessary.  It is not:
+    # the block-permutation image is a quotient of the layer, not a subgroup.
+    # At small c the two groups can share an orbital partition (at n = 10 both
+    # have order 200 and neither contains the other), which is exactly how a
+    # spurious twist-cut can pass every orbital check for a long time.
+    ftop := 1;  while F mod (ftop * w.q) = 0 do ftop := ftop * w.q; od;
+    fmid := F / ftop;
+    dq := 1;  while twists[i] mod (dq * w.q) = 0 do dq := dq * w.q; od;
+    dcyc := twists[i] / dq;
+    # --- top layer: pure q-power twist, diagonal across the class's blocks ---
+    if dq > 1 then
+      u := prim ^ ((c - 1) / dq);
       images := [1..n];
       for b in [0..F-1] do
         for x in [1..c] do
           images[base + b*c + x] := base + b*c + Position(elts, elts[x] * u);
         od;
       od;
-      # a q-power twist is allowed to live on top; everything else must be cyclic
-      if twists[i] = w.q ^ LogInt(twists[i], w.q) then
-        Add(gens.top, PermList(images));
-      else
-        Add(gens.cyclic, PermList(images));
-      fi;
+      Add(gens.top, PermList(images));
     fi;
-    # --- block rotation of order F: F_top on top, F_mid in the cyclic layer ---
-    if F > 1 then
+    # --- top layer: the F_top part of the block rotation ---------------------
+    if ftop > 1 then
       images := [1..n];
       for b in [0..F-1] do
         for x in [1..c] do
-          images[base + b*c + x] := base + ((b+1) mod F)*c + x;
+          images[base + b*c + x] := base + ((b + fmid) mod F)*c + x;
         od;
       od;
-      perm := PermList(images);
-      e := 1;  while F mod (e * w.q) = 0 do e := e * w.q; od;   # F_top
-      if e = F then Add(gens.top, perm);
-      elif e = 1 then Add(gens.cyclic, perm);
-      else                                  # split: F = F_mid * F_top
-        Add(gens.cyclic, perm ^ e);         # order F_mid, cyclic layer
-        Add(gens.top,    perm ^ (F / e));   # order F_top, top layer
-      fi;
+      Add(gens.top, PermList(images));
+    fi;
+    # --- cyclic layer: the entangled generator -------------------------------
+    # Covers all four cases uniformly: fmid = dcyc = 1 contributes nothing;
+    # fmid = 1 gives the pure diagonal twist; dcyc = 1 gives the pure
+    # cyclic-layer rotation; and both > 1 gives the entangled element.
+    if fmid > 1 or dcyc > 1 then
+      if dcyc > 1 then u := prim ^ ((c - 1) / dcyc); else u := One(fld); fi;
+      images := [1..n];
+      for b in [0..F-1] do
+        for x in [1..c] do
+          if b + ftop >= F then           # the wrap step carries the multiplier
+            images[base + b*c + x] :=
+              base + ((b + ftop) mod F)*c + Position(elts, elts[x] * u);
+          else
+            images[base + b*c + x] := base + ((b + ftop) mod F)*c + x;
+          fi;
+        od;
+      od;
+      Add(gens.cyclic, PermList(images));
     fi;
   od;
   return rec(n := n, gens := gens);
@@ -235,7 +268,7 @@ VerifyWitness := function(str, muBound)
   Print("witness   : ", str, "\n");
   Print("p, q      : ", w.p, ", ", w.q, "\n");
   Print("n         : ", n, "   C(n,2) = ", Binomial(n, 2), "\n");
-  Print("twists    : ", twists, "   (diagonal-carrier stripped)\n");
+  Print("twists    : ", twists, "   (foreign primes stripped; no F_mid cut)\n");
   chain := CheckOliverChain(cfg, w.p, w.q);
   Print("|Gamma|   : ", Size(chain.G), "\n");
   for f in RecNames(chain.ok) do
@@ -300,6 +333,26 @@ BATTERY := [
                                           # non-optimal configuration.  S4 still has
                                           # no battery entry -- see R8.
   [ "p=53 q=37: 3x53 + 1x149*",  4134 ],   # n = 308, cyclic-layer fusion
+  # --- entangled-generator regressions.  These are the configurations a twist
+  # cut by the block count scores BELOW what the group achieves, so they are the
+  # rows that fail if such a cut is ever reintroduced anywhere in the pipeline.
+  # Each has been verified by explicit permutation-group construction outside
+  # GAP as well; the expected orbital multisets are in the comments.
+  [ "p=13 q=2: 6x13",              468 ],   # n = 78, F = 6 = 2*3 composite block
+                                          # count, trivial top; orbitals
+                                          # {468, 507, 1014, 1014}.  A cut twist
+                                          # scores this class at 2*orb(13,3)-style
+                                          # values and misses the winner outright.
+  [ "p=13 q=3: 2x13 + 1x7*",        21 ],   # n = 33, the prototype: intra is
+                                          # 2*C(13,2) = 156 at FULL twist where a
+                                          # cut caps it at 78; orbitals
+                                          # {21, 156, 169, 182}, min set by the
+                                          # foreign 7-block, which is why the
+                                          # ROW's number is 21 and the diagnostic
+                                          # value is the 156 in the multiset.
+  [ "p=29 q=23: 2x29 + 1x47*",     812 ],   # n = 105, full twist beside a foreign
+                                          # block at full efficiency; orbitals
+                                          # {812, 841, 1081, 2726}.
 ];
 
 if IsBound(GAPInfo.SystemEnvironment.WITNESS) then

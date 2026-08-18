@@ -128,7 +128,17 @@ def qpart(x, q):
 
 def orb(c, t):
     """Minimum intra-orbital of a c-block with cyclic twist of order t, capped
-    at C(c,2).  The cap matters: it is what makes a 2-block worth 1, not 2."""
+    at C(c,2).  The cap matters: it is what makes a 2-block worth 1, not 2.
+
+    NOTE, and do NOT "fix" it: this deliberately omits the characteristic-2
+    halving that `mu_enumerate`'s orb() applies (at p = 2 one has -1 = 1, so
+    +/-T = T and the orbital is c*t/2 even at odd t).  Omitting it OVER-states
+    the intra term by at most a factor 2 at even c.  Every use of orb() in this
+    file is an upper-bound cap inside a NECESSARY condition, where over-stating
+    keeps a candidate alive -- the permissive, sound direction.  Adding the
+    halving here would make those conditions anti-permissive and could discard a
+    real candidate silently, which is the one error class this file cannot
+    detect from its own output."""
     return min(c * t // 2 if t % 2 == 0 else c * t, comb(c, 2))
 
 def ord_mod(p, r):
@@ -207,9 +217,24 @@ E4_CAP = 10              # its absolute SAFE ceiling, orb(5, 4)
 
 def s_max(n, B):
     """Largest s = (c-1)/r a fallback configuration can have at this n, from
-    r^2 > delta*n(n-1) and c <= n - r (Part E-prime).  Returns floor."""
-    d = B / comb(n, 2)
-    return max(1, int(1 / d ** 0.5 - 1 + 1e-12))
+    r^2 > delta*n(n-1) and c <= n - r (Part E-prime): s <= 1/sqrt(delta) - 1.
+
+    Computed in EXACT INTEGER ARITHMETIC.  The float form
+    `int(1/d**0.5 - 1 + eps)` needs a fudge term precisely because the inputs
+    that reach the comparison are the ones sitting on the boundary
+    delta = 1/(s+1)^2, and floating point settles those by accident of
+    representation.  The rule is general and worth carrying to every threshold
+    test here: a tolerance equal to the exact boundary of the property it tests
+    fails on exactly the cases it exists to decide.  Move the comparison into
+    arithmetic with no boundary error instead of tuning the boundary.
+
+    s <= 1/sqrt(delta) - 1  <=>  (s+1)^2 * delta <= 1  <=>  (s+1)^2 * B <= C(n,2).
+    """
+    C = comb(n, 2)
+    s = 1
+    while (s + 2) ** 2 * B <= C:
+        s += 1
+    return s
 
 def branch_settled(A, n, B, s, caps_m, caps_r):
     """Is the s-branch at this n settled by theorem alone?  Returns
@@ -264,11 +289,12 @@ def theorem_report(A, n, B, caps_m, caps_r):
 #   (4) F * orb(c, dmax) >= B             necessary by the leftover twist cap: the
 #       dmax strip of the foreign prime r is licensed by Corollary C' whenever
 #       sharing_bound(p, a, r) < B, at EVERY a and not only at a = 1 -- see
-#       sharing_bound() for the argument and for why the gate is local.
-#                                         twist's non-q part lies in the cyclic
-#                                         layer, which already carries C_r and
-#                                         C_Fmid, and one cyclic group forces
-#                                         pairwise-coprime orders.
+#       sharing_bound() for the argument and for why the gate is local.  ONLY
+#       the foreign prime is stripped.  Stripping the block count as well is
+#       unsound (the rotation's image is a quotient of the cyclic layer, not a
+#       subgroup) and anti-permissive, so it would discard real candidates;
+#       every strip site in this file is gated, asserted and traced for that
+#       reason.
 #   (5) F * c * r >= B                    necessary by counting: the cross class
 #                                         holds F*c*r pairs in total.
 #   (6) coeff(F) * c^2 >= B               NOT independently necessary -- see below.
@@ -405,9 +431,27 @@ def multi_part_ok(A, L, B, p, q, r, limit=60):
         else:
             dqj = qpart(cj - 1, q)
             restj = (cj - 1) // dqj
-            if cj == p:                 # Lemma C: proved only at prime blocks
-                while restj % r == 0:
-                    restj //= r
+            # Same licensed foreign strip as the other two sites, and gated the
+            # same way.  Lemma C's coupling holds at every a, and Corollary C'
+            # licenses the strip exactly when a configuration KEEPING the share
+            # cannot reach B -- so the gate is sharing_bound(p, a, r) < B, local
+            # to (p, a, r).  Declining to strip is permissive and safe; stripping
+            # unlicensed discards a real candidate invisibly, hence the assert
+            # and the trace rather than a bare `if`.
+            if restj % r == 0:
+                _aj = A.prime_power(cj)[1]
+                _bdj = sharing_bound(p, _aj, r)
+                _licj = _bdj < B
+                if _STRIP_TRACE is not None:
+                    _STRIP_TRACE.append((p, _aj, r, B, _bdj, _licj))
+                if _licj:
+                    while restj % r == 0:
+                        restj //= r
+                    assert sharing_bound(p, _aj, r) < B, (
+                        "condition (8): stripped the foreign prime %d from a "
+                        "p=%d^%d leftover block's twist without Corollary C' "
+                        "licensing it (bound %d >= B %d)"
+                        % (r, p, _aj, _bdj, B))
             capc = orb(cj, dqj * restj)
         for F in range(1, L // cj + 1):
             if F * capc >= B:
@@ -512,16 +556,13 @@ def pair_candidates(A, n, B, c, r, p, skip_settled=None):
             # anti-permissive if this expression were ever reused with the
             # inequality the other way round.
             # The intra cap is F * orb(c, dmax), NOT F * C(c, 2).  dmax is the
-            # SAFE cap specialised to this branch: the twist's q-part may sit in
-            # the top layer, and everything else sits in the cyclic layer, which
-            # already carries the foreign translations C_r and the block
-            # rotation C_Fmid -- one cyclic group, so pairwise-coprime orders.
-            # Both strips are proven necessary conditions, so the cap is a true
-            # upper bound on any admissible twist in this branch and the
-            # tightening is sound.  It is also what resolves the F = 2 reading
-            # of n = 5r + 2 at c = 2r + 1: there c - 1 = 2r, r is stripped by
-            # the foreign coprimality and 2 by F_mid = 2, so dmax = qpart and
-            # the intra collapses to O(c) at odd q.
+            # twist's q-part (which may sit in the top layer) times the rest of
+            # c - 1 with the FOREIGN PRIME stripped where Corollary C' licenses
+            # it -- and nothing else stripped; see the note at the strip below
+            # for why the block count must not join it.  The foreign strip alone
+            # is what resolves the F = 2 reading of n = 5r + 2 at c = 2r + 1:
+            # there c - 1 = 2r, r goes, and what is left is d | 2, so the intra
+            # collapses to O(c) at odd q.
             if q == '*':
                 intra_cap = F * comb(c, 2)
             else:
@@ -557,11 +598,18 @@ def pair_candidates(A, n, B, c, r, p, skip_settled=None):
                             "condition (4): stripped foreign prime %d from a "
                             "p=%d^%d block's twist unlicensed (bound %d >= B %d)"
                             % (r, p, _a, _bd, B))
-                fmid = F // qpart(F, q)
-                g = gcd(restc, fmid)
-                while g > 1:
-                    restc //= g
-                    g = gcd(restc, fmid)
+                # NO F_mid STRIP.  It is tempting to also strip the block count
+                # from the twist, on the grounds that the block rotation
+                # C_{F_mid} and the twist's cyclic part sit in the one cyclic
+                # layer, which has a unique subgroup of each order.  That
+                # argument is invalid: the block-permutation image is a QUOTIENT
+                # of the cyclic layer, not a subgroup, and an entangled
+                # generator (a rotation whose step-multipliers have product a
+                # generator of F_c^*) realises the full twist at any F_mid.
+                # Stripping here is therefore ANTI-permissive -- it lowers
+                # intra_cap, fails the >= B test for a configuration that can in
+                # fact reach B, and discards a real candidate silently.  This is
+                # the one error class this file cannot detect from its output.
                 intra_cap = F * orb(c, dqc * restc)
             ok = (intra_cap >= B and F * c * r >= B and
                   (F == 1 or (F if F % 2 else F // 2) * c * c >= B))
