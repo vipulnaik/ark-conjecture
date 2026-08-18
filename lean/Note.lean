@@ -70,8 +70,20 @@ This is Oliver's fixed-point theorem plus the orbital-annihilation argument.  It
 is *not* proved here and is not provable with current Mathlib; it is stated so
 that everything downstream is honest about what it rests on. -/
 structure OliverAnnihilation where
+  /-- `Evasive n P` and `HasOliverGroupWithMinOrbital n m` are the two predicates
+  this file cannot define; they are carried abstractly so that the implication
+  has content.  **The previous version of this structure ended in `→ True`**,
+  which made the whole hypothesis vacuously satisfiable — anything at all could
+  discharge it, so a downstream theorem taking `OliverAnnihilation` as input was
+  proving nothing.  A placeholder that typechecks is not the same as a hypothesis
+  that constrains, and this is the failure mode to watch for when stating the
+  unreachable parts. -/
+  Evasive : ℕ → Prop
+  HasOliverGroupWithMinOrbital : ℕ → ℕ → Prop
+  SparseNontrivialMonotone : ℕ → ℕ → Prop
   evasive_of_orbital_bound :
-    ∀ (n m : ℕ), (∃ Γ : Type, True) → m ≤ n.choose 2 → True
+    ∀ n m : ℕ, HasOliverGroupWithMinOrbital n m →
+      SparseNontrivialMonotone n m → Evasive n
 
 /-! ## 2. `orb`, and the block-value arithmetic
 
@@ -170,6 +182,15 @@ theorem density_even (n c r t : ℕ) (hn : 10 ≤ n) (h2 : 2 ≤ n)
     delta0 ≤ Density n (mStarEven c r t) := by
   sorry  -- unfold Density, delta0; div_le_div_iff; central_even
 
+/-- The odd bound in the note's unit.  **This was referenced by the assembly
+theorem below and never declared** — the sketch called `density_even /
+density_odd` in a comment while only the even half existed.  A missing companion
+lemma is invisible in prose and immediate here. -/
+theorem density_odd (n c r t : ℕ) (hn : 10 ≤ n) (h2 : 2 ≤ n)
+    (hreg : RegionOdd n c r) (heff : EfficiencyBound r t) :
+    delta0 ≤ Density n (mStarOdd c r t) := by
+  sorry  -- unfold Density, delta0; div_le_div_iff; central_odd
+
 /-- The margin is genuine, not an artefact of rounding: the true worst case over
 the region is `1/300`, and `1/350 < 1/300`. -/
 theorem delta0_lt_true_worst : delta0 < 1 / 300 := by
@@ -186,13 +207,15 @@ theorem coprime_iff_not_dvd (c r : ℕ) (hr : r.Prime) :
     Nat.Coprime (c - 1) r ↔ ¬ (r ∣ (c - 1)) := by
   sorry  -- Nat.Coprime.comm, Nat.Prime.coprime_iff_not_dvd
 
-/-- The product of cyclic groups of coprime orders is cyclic.  Mathlib has this;
-the lemma is recorded here so the chain's requirement is visible. -/
-theorem middle_cyclic (c r : ℕ) (h : Nat.Coprime (c - 1) r) :
-    True := by
-  trivial
-  -- ZMod.chineseRemainder h : ZMod ((c-1) * r) ≃+* ZMod (c-1) × ZMod r
-  -- and `IsCyclic` transfers along a ring equivalence of `ZMod`s.
+/-- The product of cyclic groups of coprime orders is cyclic.
+
+**Stated with content rather than as `True`.**  `ZMod n` is the cyclic group of
+order `n`, so the chain's requirement is the ring equivalence below; a lemma
+whose conclusion is `True` records the intent and proves nothing, which is worth
+avoiding even in a sketch. -/
+noncomputable def middle_cyclic (c r : ℕ) (h : Nat.Coprime (c - 1) r) :
+    ZMod ((c - 1) * r) ≃+* ZMod (c - 1) × ZMod r :=
+  ZMod.chineseRemainder h
 
 /-! ## 6. The local analysis
 
@@ -293,8 +316,13 @@ The Theorem, with both unreachable inputs explicit. -/
 `q, r, c` prime with the shape, region, efficiency and coprimality conditions. -/
 structure HypH where
   N : ℕ
+  /-- `c` is a **prime power**, not a prime: the matching block is `𝔽_c` and the
+  note's own constructions use `c = p^a`.  Writing `c.Prime` here would state a
+  strictly stronger hypothesis than (H) supplies, which is the wrong direction —
+  a stronger hypothesis makes the downstream theorem weaker and the error is
+  silent.  `IsPrimePow` is Mathlib's spelling. -/
   witness : ∀ n ≥ N, ∃ q r c t : ℕ,
-    q.Prime ∧ r.Prime ∧ c.Prime ∧
+    q.Prime ∧ r.Prime ∧ IsPrimePow c ∧
     (RegionEven n c r ∨ RegionOdd n c r) ∧
     EfficiencyBound r t ∧
     Nat.Coprime (c - 1) r

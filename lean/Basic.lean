@@ -48,7 +48,13 @@ twist of order `t`, capped at `c.choose 2`.  The cap is what makes a 2-block
 worth 1 rather than 2, and the parity split is the `±T` collapse of section 6. -/
 
 /-- Minimum intra-orbital of a `c`-block under a cyclic twist of order `t`.
-`char2` records that the block's characteristic is 2, where `-1 = 1`. -/
+`char2` records that the block's characteristic is 2, where `-1 = 1`.
+
+The halving condition is `-1 ∈ T`, i.e. `char2 ∨ 2 ∣ t`: the orbital is indexed
+by a difference up to `T` *and up to sign*.  This definition agrees with realised
+orbitals across every divisor `t` of `c - 1` for every prime power `c ≤ 19`,
+checked against constructed permutation groups in two independent
+implementations (`shape_realize.py`, `ark_shapes.g`). -/
 noncomputable def orb (c t : ℕ) (char2 : Bool) : ℕ :=
   min (if char2 ∨ t % 2 = 0 then c * t / 2 else c * t) (c.choose 2)
 
@@ -84,16 +90,21 @@ theorem lemma_D1 (F c : ℕ) (hF : 2 ≤ F) (hc : 2 ≤ c) :
 If every part has capacity at least `m`, each part is large; since the parts
 partition `n`, there cannot be many of them.  The discrete core first. -/
 
-/-- A part with capacity at least `m` has size exceeding `sqrt (2m)`. -/
-theorem size_of_capacity (s m : ℕ) (h : m ≤ s.choose 2) :
+/-- A part with capacity at least `m` has size exceeding `sqrt (2m)`.
+
+`0 < m` is needed and was missing: at `s = 0, m = 0` the hypothesis holds
+(`Nat.choose 0 2 = 0`) and the conclusion `0 < 0` is false.  The degenerate case
+is exactly the one the informal statement forgets, which is the sort of thing
+this file exists to surface. -/
+theorem size_of_capacity (s m : ℕ) (hm : 0 < m) (h : m ≤ s.choose 2) :
     2 * m < s * s := by
   sorry
-  -- 2 * choose s 2 = s * (s-1) < s * s
+  -- 2 * choose s 2 = s * (s-1) < s * s, and 0 < m forces 1 ≤ s
 
 /-- **Proposition F.1.**  If `k` parts of sizes `sz i` sum to `n` and each has
 capacity at least `m`, then `k * sqrt (2 * m) < n`.  Dividing by `sqrt (n(n-1))`
 gives the form used in the documents, `k < 1 / sqrt delta`. -/
-theorem prop_F1 (k n m : ℕ) (sz : Fin k → ℕ)
+theorem prop_F1 (k n m : ℕ) (hm : 0 < m) (sz : Fin k → ℕ)
     (hsum : ∑ i, sz i = n) (hcap : ∀ i, m ≤ (sz i).choose 2) :
     (k : ℝ) * Real.sqrt (2 * m) < n := by
   sorry
@@ -147,17 +158,29 @@ theorem capF_scaling (F : ℕ) (η : ℝ) (hF : 0 < F) :
     capF F η = capF 1 (F * η) / F := by
   sorry
 
-/-- The mod-24 table's entries are the algebraic numbers claimed.  One
-spot-check per distinct ceiling; there are **seven**, and the `F = 4` rung
-supplies two of them -- it attains the ceiling at `n = 7, 11, 15, 23 (mod 24)`,
-including the extremal classes, so omitting it misses the global constant. -/
-example : capF 1 1 = 1 / 4 := by sorry
-example : capF 1 (1/3) = (2 - Real.sqrt 3) / 2 := by sorry
-example : capF 2 1 = 3 - 2 * Real.sqrt 2 := by sorry
-example : capF 2 (1/2) = 1 / 8 := by sorry
-example : capF 2 (1/3) = 5 - 2 * Real.sqrt 6 := by sorry
+/-- The ceiling table's entries as algebraic numbers.  One spot-check per
+distinct ceiling; there are **six**, keyed `mod 12`, and the `F = 4` rung
+supplies exactly one of them -- it attains the ceiling only at `n = 11 (mod 12)`,
+which is the extremal class, so omitting it misses the global constant.
+
+Formalising these is worth more than it looks: the list *is* the table, so a
+table that gains or loses a constant fails to match a list of this length, and
+the six values are pairwise distinct as reals. -/
+example : capF 1 1 = 1 / 4 := by sorry                     -- n = 0, 4, 6, 10
+example : capF 1 (1/3) = (2 - Real.sqrt 3) / 2 := by sorry  -- n = 2, 8
+example : capF 2 1 = 3 - 2 * Real.sqrt 2 := by sorry        -- n = 1, 9
+example : capF 2 (1/2) = 1 / 8 := by sorry                  -- n = 3, 7
+example : capF 2 (1/3) = 5 - 2 * Real.sqrt 6 := by sorry     -- n = 5
+example : capF 4 (1/3) = 7 - 4 * Real.sqrt 3 := by sorry     -- n = 11; global constant
+
+/-- `capF 4 1 = 1/9` is **not** a table entry, and the reason is worth recording
+because the arithmetic alone does not show it.  At `n = 3, 7 (mod 12)` the
+`F = 4` rung reaches `η = 1` and would give `1/9`; the `F = 2` rung reaches
+`η = 1/2` and gives `1/8`, which is larger.  Which rung is *available* is group
+theory (a fused class keeps its full twist at any `c`), so Lean can check the
+comparison but not the availability -- exactly the split this file is about. -/
 example : capF 4 1 = 1 / 9 := by sorry
-example : capF 4 (1/3) = 7 - 4 * Real.sqrt 3 := by sorry   -- the global constant
+example : capF 4 1 < capF 2 (1/2) := by sorry
 
 /-- **The two-foreign cap.**  With efficiencies `1/m₁` and `1/m₂` the ceiling is
 `1 / (sqrt m₁ + sqrt m₂)^2`.  This closed form is what makes S6's analysis
@@ -167,12 +190,22 @@ theorem cap_two_foreign (m₁ m₂ : ℕ) (h₁ : 0 < m₁) (h₂ : 0 < m₂) :
       = 1 / (Real.sqrt m₁ + Real.sqrt m₂) ^ 2 := by
   sorry
 
-/-! ## 6. Why `c ≡ 3 (mod 4)` is the good case
+/-! ## 6. The orbital halving, and what `c ≡ 3 (mod 4)` does and does not buy
 
 Pairs are unordered, so a block's intra-orbitals are the classes `±δ·T`.  At
 `c ≡ 3 (mod 4)` the element `-1` is a non-residue, so the index-2 subgroup `T`
-already has `±T = (ZMod c)ˣ` and gives 2-homogeneity on its own — which is why
-the factor 2 in `c - 1` is free for the cyclic layer to spend on fusion.
+already has `±T = (ZMod c)ˣ` and gives 2-homogeneity on its own.
+
+**What this does not buy is a cheaper fusion**, and an earlier version of this
+comment said it did — that the freed factor 2 in `c - 1` is what the cyclic layer
+spends on fusing blocks, making the fused rung available only at `c ≡ 3 (mod 4)`.
+That is false: a block swap realised as a single entangled generator keeps the
+full twist at *every* `c`, because the block-permutation image is a **quotient**
+of the cyclic layer rather than a subgroup.  The claim was group theory wearing
+arithmetic's clothes, which is why nothing in this file could have caught it —
+see the README's failure-mode table.
+
+What survives, and is formalised below, is the halving itself.
 
 Mathlib has the key input: `ZMod.exists_sq_eq_neg_one_iff`. -/
 
@@ -185,9 +218,11 @@ theorem neg_one_not_sq (hp : p % 4 = 3) : ¬ IsSquare (-1 : ZMod p) := by
 
 /-- **The collapse.**  At `p ≡ 3 (mod 4)` every nonzero element is a square or
 minus a square, so the quadratic residues together with their negatives exhaust
-`(ZMod p)ˣ` — one orbital, all `choose p 2` pairs.  (At `p ≡ 1 (mod 4)`, `-1` is
+`(ZMod p)ˣ` — one orbital, all `choose p 2` pairs.  At `p ≡ 1 (mod 4)`, `-1` is
 a square, `±T = T`, and the same subgroup gives two orbitals of half the size.
-That is the whole content of the `c mod 8` law.) -/
+
+This is a statement about a **single** block with a half twist.  It does not
+generalise to a fused class, where the full twist is available at every `c`. -/
 theorem sq_or_neg_sq (hp : p % 4 = 3) (a : ZMod p) (ha : a ≠ 0) :
     IsSquare a ∨ IsSquare (-a) := by
   sorry
