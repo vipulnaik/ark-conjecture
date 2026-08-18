@@ -274,3 +274,30 @@ The bridge's §4 items 1–2 and 4a–4b were re-derived rather than re-run (no 
 ### 11.5 Skipped, by budget or by missing artefacts
 
 The documents' own scripts (`solvable_relaxation.py`, `k3_galois.py`, the §5.6 c ≤ 83 sweep, the §3.1 c ≤ 4096 search) were not uploaded and were not run; everything above is independent recomputation, which is stronger where it agrees but means the scripts' self-tests are unexercised. Not verified: `three-uniform-note` §4.1's witness 3-sets and the n ≤ 46 cross-term measurements (configuration-level orbit computations across multiple blocks); §6.1's O(n/log n) escape count (self-flagged as order-of-magnitude); the two clauses §2.2.2 itself flags as out of computational reach (first distinguishable at c = 2¹⁰ and c = 2²⁵ — the a = 10 counterexample in finding 1 is a *logical* consequence of the proved theorem, not a computation); `solvable-relaxation`'s probe claims over n ≤ 70 (items 1–2 of its open list); and the Kantor / Livingstone–Wagner / Huppert citations themselves, taken on the framework's authority as before. The 10⁶ ladder rerun stalled twice when its parent shell was reaped and was restarted; it remains R7's item and nothing in this section depends on it.
+
+
+## 12. Implementation of the §11 findings (Opus, same session)
+
+*Both documents edited; §11's numbered findings are the work list and all are now closed. Every β₃ cell of the rekeyed ceiling table was recomputed after the edit and still reproduces exactly.*
+
+### 12.1 `solvable-relaxation.md`
+
+- **"seven ceiling constants" → six** (§0), removing the contradiction with the same paragraph's neighbour.
+- **The headline's historical clause deleted**: the six constants are now stated as the current fact, with no "since the entangled correction lifted…".
+- **§4's table rekeyed mod 12**, which merges the old mod-24 row names into six rows and — the actual defect — **puts residues 7 and 15 back in scope**, as the class {3, 7}. Two downstream sentences followed: "only at 11 and 23" and "twelve of the twenty-four" (now six of the twelve, which is the same set of unchanged classes counted in the right modulus).
+- **Prop 2 gained a box supplying the upper-bound half.** The printed proof only constructed the score; that no solvable transitive group beats it is Part C's valency recursion read with the chain deleted and Huppert in its place, at V(s) = P(s) − 1. This is what licenses "proved" in the status line.
+- **The class-11 exceedance count pending-marked**, with the current partial figure (58 of 65) as the interim, since it is a table output that the rebuild moves.
+- **The §3 medians disambiguated in place**: the quoted 0.16734 / 0.4167 are over the realised construction family, and the note now says so and records the partition-maximum values (0.16882 / 0.4182) alongside, which is what an independent recomputation lands on. The single-orbit share's first window corrected to 0.368 with half-open interval notation.
+- **The status line no longer names `mu_table_safe_v4.csv`** — "the current μ table", so it cannot read as an instruction to use a superseded input after the rebuild.
+
+### 12.2 `three-uniform-note.md`
+
+- **The Oliver-constrained corollary now carries gcd(a, 6) = 1**, with a box giving the falsifying case: at a = 10, d = 31 the layer split exists and the chain is genuine, but the 𝔽₄ escape kills the gain. The box also notes which direction the error runs — over-crediting, which §5.8's trap makes the *safe* direction, so this was a latent statement bug rather than an unsound bound — and records that `k3_galois.py` tests all four conditions.
+- **§1's transfer list corrected to Parts B, B′, D, D2 and Part 0**, with a parenthetical pointing at §8 as the authority and naming why A and C are excluded (A's term types are a partition of k; C's bound is pair-specific). This closes the contradiction with §8's own table.
+- **§5.7's ceiling table rekeyed mod 12**: header no longer says "residues mod 24", the 3, 19 and 7, 15 rows merge into class {3, 7}, and 11 / 23 merge into class 11. **All four v4 parentheticals in the old 7, 15 row are gone**; the row states η = 1/2 and β₃ = 1/16 as current. Five pieces of dependent prose followed — §5.6's head-note, the F = 4 supersede paragraph, §5.6.4's tie discussion, the balance-point box's "5, 17", and §10 item 5, which no longer reads as an open to-do since the rows it lists are settled.
+- **Mod-24 prose corrected where it keyed the ceilings** (§3.3's "mod-24 ceilings", §5.5's and §8's "mod-24 classification", §9 item 1's "mod-24 table"). **§5.6.3's mod-24 content was deliberately left**: it refines the *cut cost* by pinning v inside the cut-taking regime, is about c rather than n, and its own gotcha already says a mod-24 refinement in the ceiling table is a symptom. §5.5 and §8 now name it explicitly as that refinement rather than as a classification.
+- **Both `mu_enumerate_v2.py` references → v3**, and the dangling "Tracked as A19 of `pending-checks.md`" repointed at `k3_galois.py`'s companion-files entry, which is where the substance actually lives.
+
+### 12.3 Not done
+
+The two documents' own scripts remain unuploaded, so `solvable_relaxation.py`'s nineteen checks and `k3_galois.py`'s self-test were not updated to match — in particular **the gcd(a, 6) = 1 clause of finding 1 should be confirmed present in `k3_galois.py`'s predicate**, which the corollary's new box now asserts. Nothing else in §11 is outstanding.
