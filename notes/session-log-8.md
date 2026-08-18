@@ -431,4 +431,16 @@ The prototypes are exploratory and are **not** recorded as passes — they cover
 
 **Still open after this**, and it belongs with item 4 rather than here: the specifically *configuration*-shaped negative the item first envisaged — a foreign block whose top prime does not divide r − 1 — needs the two-class builder. D1 and D2 cover the two ways such a configuration actually degenerates, which is what can be tested without that builder.
 
-*One GAP-side risk I could not retire without an interpreter:* the script is syntax-checked only by inspection and a bracket-balance pass. If it dies on a parse error, the likeliest sites are part B's `LoadPackage` guard and the `Expect` helper's global assignment to `nfail`.
+### 17.1 Run: A, B and C clean; one parse error at D, fixed
+
+**The syntax error was where I did not predict.** I flagged the `LoadPackage` guard and the `Expect` helper's global assignment as the likely failure sites; both were fine. The actual fault was **implicit string concatenation** — `"first part "` on one line and `"second part"` on the next, which C joins and **GAP does not**: adjacent literals are a parse error. One `Expect` label was wrapped that way. Fixed by shortening the label to a single literal, and the whole file re-scanned for the pattern (that was the only instance, and the one same-line hit is a false positive — a comma-separated `Print` argument list).
+
+*Worth keeping as a rule:* when writing GAP without an interpreter, wrapped string arguments are the failure mode to look for first, ahead of anything semantic. A bracket-balance pass will not see it, because the brackets balance.
+
+**Results of the parts that ran.**
+
+- **A**: all seven asserted negatives return `fail`; all four positives pass. The predicate is not always-fail and not always-pass.
+- **B — the substantive result.** Over degrees 6..11: **108 Oliver, 52 not.** The column is now evidence. And **eleven of the negatives are solvable** — T(8,42), T(8,45), T(8,46), T(8,47) and T(9,23), T(9,25), T(9,26), T(9,28), T(9,29), T(9,30), T(9,31), orders 216 to 1296 — which is more than the item asked for. Part A's insoluble negatives fail for a reason so cheap it tests almost nothing; these do not. **They also answer a question the framework had not put directly: solvability does not imply Oliver, and the shortfall is large** — roughly a third of transitive groups at degrees 8 and 9 are solvable-or-not and still fail the chain. That is the same quantity `solvable-relaxation.md` prices as "the chain's cost", now visible as a group count rather than as a density ratio, and the two are worth comparing: the relaxation measures what the chain costs *in orbital density on the shapes that have one*, while this measures how many groups have no chain at all. Neither bounds the other, and the note should not be read as if it did.
+- **C**: 71 shapes compared under both predicates, zero disagreements in the direction that would be a bug (witness passing where the search fails).
+
+D's verdicts arrive on the rerun; its four constructions were pre-verified in Python, so a failure there is attributable to the predicate rather than the setup.

@@ -268,8 +268,8 @@ d1g2 := Group( (1,2)(3,4), (1,3)(2,4), (5,6,7) );;
 d1G  := Group( (1,2)(3,4), (1,3)(2,4), (5,6,7), (2,3,4) );;
 Expect("D1 |Gamma_2| = 12 = C_2^2 x C_3, as constructed", Size(d1g2), 12);
 Expect("D1 |G| = 36 and the quotient has order 3", Size(d1G), 36);
-Expect("D1 Gamma_2 is normal and the quotient cyclic, so ONLY the p-group "
-       "clause can fire", IsNormal(d1G, d1g2) and IsCyclic(FactorGroup(d1G, d1g2)),
+Expect("D1 Gamma_2 normal and quotient cyclic, so ONLY the p-group clause fires",
+       IsNormal(d1G, d1g2) and IsCyclic(FactorGroup(d1G, d1g2)),
        true);
 Expect("D1 Gamma_2 is not a p-group -> witness rejects",
        CheckChainWitness(d1G, d1g2), fail);
