@@ -33,9 +33,9 @@ total_err=0; total_warn=0; total_sorry=0
 for f in "${FILES[@]}"; do
   out=$(lake env lean "$f" 2>&1)
   status=$?
-  sorries=$(printf '%s\n' "$out" | grep -c "declaration uses 'sorry'")
+  sorries=$(printf '%s\n' "$out" | grep -cE "declaration uses .sorry.")
   if [ -z "${SHOW_SORRY:-}" ]; then
-    shown=$(printf '%s\n' "$out" | grep -v "declaration uses 'sorry'")
+    shown=$(printf '%s\n' "$out" | grep -vE "declaration uses .sorry.")
   else
     shown="$out"
   fi

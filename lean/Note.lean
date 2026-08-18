@@ -233,8 +233,30 @@ theorem dList_eq : dList = (([1, 2, 3, 6] : List ℕ).map (2 * ·)) := by
   decide
 
 /-- Every permitted `d` has all its prime factors in `{2, 3}`, which is what
-confines the local analysis to `ℓ ≤ 3` and makes the table mod 12. -/
-theorem dList_smooth : ∀ d ∈ dList, ∀ p : ℕ, p.Prime → p ∣ d → p = 2 ∨ p = 3 := by
+confines the local analysis to `ℓ ≤ 3` and makes the table mod 12.
+
+**The obvious encoding does not typecheck**, and the reason is worth recording
+because it is the first thing a `decide` proof gets wrong.  Writing
+
+  `∀ d ∈ dList, ∀ p : ℕ, p.Prime → p ∣ d → p = 2 ∨ p = 3`
+
+quantifies over *all* naturals, so there is no `Decidable` instance and `decide`
+reports `failed to synthesize`.  The claim is true; the statement is simply not
+a finite check as written.  Bounding `p` by `d` costs nothing — a prime divisor
+of a positive `d` is at most `d` — and makes the quantifier a bounded one, for
+which Mathlib supplies `Nat.decidableBallLE`. -/
+theorem dList_smooth : ∀ d ∈ dList, ∀ p ≤ d, p.Prime → p ∣ d → p = 2 ∨ p = 3 := by
+  decide
+
+/-- The same content in the form least likely to strain `decide`: divisibility
+is decidable with no primality instance involved at all.  `d ∣ 12` says exactly
+that `d` is `{2,3}`-smooth with the multiplicities the table uses.
+
+Keep this one even if the version above compiles: if a future Mathlib changes
+the default `Nat.Prime` decidability instance — which has happened before, and
+is the usual reason a working `decide` on primality stops working — this
+survives, and `dList_smooth` can be re-derived from it. -/
+theorem dList_dvd_twelve : ∀ d ∈ dList, d ∣ 12 := by
   decide
 
 /-- The admissible `d` at each residue class mod 12, as the note tabulates it. -/
