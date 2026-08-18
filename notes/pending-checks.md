@@ -116,34 +116,28 @@ python3 check_doc_figures.py $TABLE *.md
 
 ## R6. Shape-level scoring checks
 
-*Independent of the table: these score **shapes**, not rows, so they do not rerun on extension. One run per environment, and again after any change to the SAFE cap or to `orb`.*
+*Independent of the table: these score **shapes**, not rows, so they do not rerun on extension. **The initial set is complete** — see `session-log-7.md` §5.1 for what it established. Rerun after any change to the SAFE cap, to `orb`, or to the scoring in `mu_enumerate_v3.py`.*
 
 ```bash
-# Python: fused matching classes, orbital arithmetic
 python3 shape_realize.py --nmax 34            # expect 0 mismatches
 python3 shape_realize.py --nmax 22 --strip    # control: expect UNDER-SCOREs
-
-# GAP: deep in c at F = 2 only, and cheap -- reaches c = 64, 81, 97
+ARK_SHAPES_NMAX=100 ARK_SHAPES_MAXF=4 gap -q -o 4g ark_shapes.g
 ARK_SHAPES_NMAX=200 ARK_SHAPES_MAXF=2 gap -q -o 4g ark_shapes.g
-# the control, on whichever sweep was just run
-ARK_SHAPES_STRIP=1 ARK_SHAPES_NMAX=200 ARK_SHAPES_MAXF=2 gap -q -o 4g ark_shapes.g
+ARK_SHAPES_STRIP=1 ARK_SHAPES_NMAX=100 ARK_SHAPES_MAXF=4 gap -q -o 4g ark_shapes.g
 ```
 
-**The binding cost is the bottom layer's rank, not |G|.** `NormalSubgroups(G)` was the bottleneck, and it is exponential in a·F, the rank of Γ₂ over GF(p): the n ≤ 100 run died at **3×32**, where Γ₂ = (C₂⁵)³ = C₂¹⁵ and CRISP enumerates the subspace lattice of GF(2)¹⁵ — while **4×25 at |G| = 3.8 × 10⁷, twelve times larger, completed fine**. So |G| is a poor proxy and `MAXORD` alone does not protect.
+**Read the control first, always.** A clean run means nothing until the `--strip` / `ARK_SHAPES_STRIP=1` pass has been seen to fail: it re-scores with a condition known to be wrong, so a control that comes back clean means the harness is inert, not that the scoring is right. Expect UNDER-SCORE at exactly the shapes where stripping **changes** orb(c,d) — 59 of 241 in the n ≤ 100 sweep, and the predictor is exact. It is *not* "wherever gcd(d, F) > 1", which is 114 rows: stripping a single factor of 2 from an even d never changes orb, since orb = c·d/2 when −1 ∈ T and c·(d/2) when the halved d is odd.
 
-**The search has been replaced by a chain-witness check** (`CheckChainWitness`), which verifies the chain the construction supplies — Γ₂ the translations, normal, a p-group, with G/Γ₂ cyclic — in three cheap predicates and no lattice enumeration. That is all the scoring needs, since a shape is admissible if it has *some* chain. It does **not** establish that no other chain exists; `ARK_SHAPES_FULLOLIVER=1` restores the search for when that stronger question is wanted, guarded by `ARK_SHAPES_MAXRANK` (default 12). With the witness check the sweep is dominated by `Orbits` on C(n,2) pairs and NMAX can go much higher than 100.
+**UNDER-SCORE (scored < realised) is the failure that matters.** B(n) is an upper-bound claim, so a shape scored below what a group achieves makes B too small and can break μ(n) ≤ B(n). A restriction that looks conservative fails exactly this way. OVER-SCORE is unsound the other way — the cap crediting an orbital no group delivers.
 
-Still cap F: the informative axis is **c** — what divisor structure c − 1 brings — while F drives |G| = c^F·F·d. `ARK_SHAPES_MAXORD` (default 5 × 10⁷) remains a backstop; **shapes over it are reported SKIPPED, and a skipped shape is an untested shape.**
+**What these cover that the rest of the battery does not.** Every other check validates the **winner**; none looks at a shape that **loses**, so a mis-scored losing shape stays invisible until it becomes a winner at some larger n.
 
-**Done.** `NMAX=100 MAXF=4` — 241 shapes; `NMAX=200 MAXF=2` — 196 shapes. **0 mismatches in either.** Together they cover every prime power c ≤ 97 with every divisor d of c − 1, at F ∈ {2, 3, 4} up to n = 100 and F = 2 to n = 194, including c = 64 (a = 6, char 2), c = 81 (a = 4) and c = 97. Every row re-derives from the closed forms independently. Evidence recorded in `enumeration-proof.md` Part E.
+**Still owed.**
 
-> **Two output defects fixed after those runs; rerun once if the rows matter as an artefact rather than as a verdict.** `AppendTo(<filename>, ...)` formats for a terminal and **breaks long lines**, so about 19 rows of the second run — those with many orbitals, e.g. 2×97 at d = 1 with 48 of them — are split across lines and unparseable. The data is not wrong, it is *lost*: a line-by-line consumer sees fewer rows, not bad ones, which reads as success. Now written through a stream with `SetPrintFormattingStatus` false, and the row records `min×count` rather than the full list. Separately, `Orbits` on a large seed list warned on every call; the 2-subsets are a domain closed under `OnSets`, so `OrbitsDomain` is the right entry point and removes both the warning and the cost.
-
-**Not yet covered, in value order.**
-
-1. **Lemma C's strip** — the one place a cyclic-layer restriction *is* real, hence the place where an over-eager repair could break something in the other direction. Highest value of the three.
-2. The **foreign block's** η = 2t/(r−1), against a realised AGL(1,r) twist.
-3. The **inter-class** term F·c·r, which needs the chain element linking two classes, hence a genuine two-class Oliver group rather than a single class.
+1. **Give the Oliver test something it can fail.** Every row returns `oliver=0`, correctly and unavoidably on a single fused class — and since the lattice search was replaced by `CheckChainWitness`, the check now verifies the supplied chain rather than searching for one. Either way it **cannot currently fail and is not evidence**. Extend to shapes that can fail it: a foreign block whose top prime does not divide r − 1, or a class with a non-cyclic layer.
+2. **Lemma C's strip** — the one place a cyclic-layer restriction *is* real, hence where an over-eager repair could break something in the other direction. Highest value of the three uncovered terms.
+3. The **foreign block's** η = 2t/(r−1), against a realised AGL(1,r) twist.
+4. The **inter-class** term F·c·r, which needs the chain element linking two classes, hence a genuine two-class Oliver group rather than a single class.
 
 ## R7. Consume the ladder worklist with the adaptive branch-and-bound
 

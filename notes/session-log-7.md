@@ -124,6 +124,24 @@ Realises the same configuration shapes in GAP and checks what the Python side ca
 
 Four GAP-specific errors were caught in review before shipping, worth noting since they are the kind that only surface at run time: booleans are not integers, so `(F mod 2 = 0) * x` and `Int(STRIP)` are both invalid; a basis of GF(p^a) needs the subfield named, `Basis(AsVectorSpace(GF(p), fld))`; and `Z(c)` is the canonical primitive root, avoiding a package dependency. Top-level loop variables are pre-declared for the same warning hygiene `ark_gap.g` uses.
 
+**The initial set is complete: four runs, all clean, plus a control that fires.**
+
+| run | shapes | result |
+|---|---|---|
+| `shape_realize.py --nmax 34` | 98 | 0 mismatches |
+| `shape_realize.py --nmax 22 --strip` | 47 | 8 UNDER-SCORE — control fires |
+| `ARK_SHAPES_NMAX=100 MAXF=4` | 241 | 0 mismatches |
+| `ARK_SHAPES_NMAX=200 MAXF=2` | 196 parsed | 0 mismatches |
+| `ARK_SHAPES_STRIP=1 NMAX=100 MAXF=4` | 241 | **59 UNDER-SCORE, 0 OVER-SCORE** — control fires |
+
+**The control agrees row-for-row with the exact predictor.** All 59 firings are precisely the shapes where stripping changes orb(c,d); zero OVER-SCOREs, and zero rows marked ok where scored ≠ realised. The crude predictor gcd(d, F) > 1 would name 114, wrong by 55.
+
+**The strip's damage grows with c, which is why hand-checking missed it.** At n = 10 it cost a factor of 2. Over the wider sweep the worst cases are **3×19 at d = 9 and d = 18, scored 57 against a realised 513 — a factor of 9** — with 8× cases at c = 17 and c = 49. The defect was mild in exactly the small configurations a person would check by hand and severe in the ones only a sweep reaches.
+
+**Runs to date: 134 shapes to n = 40, then 241 to n = 100 at MAXF = 4 — 0 mismatches throughout.** The n ≤ 100 sweep covers every prime power c ≤ 49 with F ∈ {2, 3, 4} and every divisor d of c − 1: 113 distinct (c, d) pairs, 52 distinct (F, c), max |G| = 3.8 × 10⁷. It reaches the three structurally new block sizes — **c = 27** (first odd cube), **c = 31** (first c − 1 with three distinct primes, 2·3·5), and **c = 41** (first c ≡ 1 mod 8 beyond 17, where d = 40 is a full twist at the largest 2-part in range).
+
+**An intermediate OOM was itself informative.** A first attempt died at 3×32 inside `NormalSubgroups`, and the cause was not |G| — 4×25 at |G| = 3.8 × 10⁷, twelve times larger, completed fine. It is the **rank of Γ₂**: at c = 32, F = 3 the bottom layer is C₂¹⁵ and CRISP enumerates the subspace lattice of GF(2)¹⁵. The fix was to stop searching for a chain and check the one the construction supplies (`CheckChainWitness`), which is what the scoring actually needs and costs three predicates.
+
 **First run: 134 shapes to n = 40, 0 mismatches, 0 not Oliver.** Independently re-derived here from the closed forms rather than trusting either script — scored intra = F·orb(c,d), scored cross = (F/2)c² at even F and F·c² at odd, group order = c^F·F·d, plus the conservation identities Σintra = F·C(c,2) and intra + cross = C(n,2): **0 of 134 rows fail**. Diffed against `shape_realize.py` on the 98 shapes both cover: **0 disagreements** between the two independent constructions. That also corroborates the additive-basis fix — GAP gives intra [4, 4, 4] at 2×4, d = 1, matching the fixed Python and not the buggy version's 2. The n = 33 counterexample appears as its own row: 2×13, d = 12 → intra 156 = 2·C(13,2), against the 78 the retired reading permits.
 
 > **Two caveats on that run, both worth keeping.**
