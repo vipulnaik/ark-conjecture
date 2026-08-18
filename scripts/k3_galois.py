@@ -2,7 +2,7 @@
 """
 k3_galois.py -- the Galois admissibility predicate for k = 3, implemented once
 so that the eventual k = 3 enumerator imports it instead of re-deriving it.
-Resolves item A19 of pending-checks.md.
+Registered among the companion files of pending-checks.md.
 
 THE PREDICATE (three-uniform-note.md section 2.2.2).  A matching block c = 2^a
 with twist d gains the Galois factor iff
@@ -17,7 +17,12 @@ wrong -- the Galois group C_a admits a LAYER SPLIT:
                          (iii) a/a' a prime power  [Gamma/Gamma_1 is a q-group]
 
 The tempting simplification "a is a prime power" is the a' = 1 branch ALONE and
-admits strictly fewer blocks.  Getting this wrong is dangerous in the unusual
+admits strictly fewer blocks.  Note also that gcd(a, 6) = 1 is NOT implied by
+the existence of a split and has to be tested separately: at a = 10, d = 31 a
+perfectly good split exists (a' = 2, top 5, and 31 | 2^5 - 1), yet the F_4
+escape of the theorem supplies a Galois-stable minimal orbit, so there is no
+gain at all.  A predicate testing only "p = 2, gcd(d, 6) = 1, split exists"
+OVER-credits, which is the safe direction here but still wrong.  Getting this wrong is dangerous in the unusual
 direction: section 5.8 of that document records that a k = 3 scoring which
 UNDER-credits the Galois part is not a loose upper bound but not an upper bound
 at all, unlike k = 2 where the analogous looseness is safe.
@@ -113,6 +118,21 @@ def _selftest():
     check("so at a=35 the twist choice selects the top prime (5 or 7) "
           "while the gain is lpf(a)=5 either way",
           r["q"] != r2["q"] and r["gain"] == r2["gain"] == 5)
+
+    check("a=10, d=31 is REJECTED though a split exists (gcd(a,6)=2, so the "
+          "F_4 escape applies and there is no gain)",
+          galois_admissible(10, 31) is None
+          and 31 % 1 == 0 and (2 ** 5 - 1) % 31 == 0)
+    def _split_exists(a, d):
+        """Conditions (i)-(iii) alone, with the gcd(a,6) clause omitted -- the
+        wrong predicate, defined here only to show what it would admit."""
+        m = _ord2(d)
+        return any((a // ap) % m == 0 and gcd(d, ap) == 1
+                   and _is_prime_power(a // ap) for ap in divisors(a))
+
+    check("and the rejection is the gcd(a,6) clause alone: the split "
+          "conditions (i)-(iii) on their own DO admit a=10, d=31",
+          _split_exists(10, 31))
 
     # the predicate must never REJECT something the naive reading accepts
     bad = []

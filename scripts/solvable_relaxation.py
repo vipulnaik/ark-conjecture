@@ -41,14 +41,24 @@ s_i, s_j every cross pair is one class of exactly s_i*s_j.  Hence
   PASS 6  UNCONDITIONAL FLOORS.  Section 3.5's constants: odd n reach 1/9 via
           three near-equal primes, even n only 1/16 via four (parity forces the
           fourth -- three odd primes sum odd, and the part 2 scores 1).  Checks
-          that neither floor binds in range and that both exceed Oliver's worst
-          conditional ceiling.
+          that neither floor binds in range, and compares each against Oliver's
+          worst conditional ceiling 7-4sqrt3 = 0.07180 -- which the odd floor
+          exceeds and the even floor does not.  The asymmetry is the section's
+          headline and is asserted in that form.
 
   PASS 5  AGAINST OLIVER.  B_solv >= B_safe at every tabulated n (Oliver groups
           are solvable), and the per-residue ceiling ratios match the closed
-          forms: the eight Oliver ceilings of aod section 3.3.5 collapse to two.
+          forms: the six Oliver ceilings of aod section 3.3.5, keyed mod 12,
+          collapse to two.
 
-Usage: python3 solvable_relaxation.py [path/to/mu_table_safe_v4.csv]
+          The keying is mod 12, not mod 24.  A fused rung is reachable at full
+          twist at every odd n -- the block-permutation image is a QUOTIENT of
+          the cyclic layer, not a subgroup, so one entangled generator supplies
+          the block count and the full twist together -- so no mod-8 condition
+          survives into the ceiling.  Residues 7 and 15 (mod 24) therefore sit
+          at eta = 1/2 with the rest of class 3 mod 12, not at eta = 1.
+
+Usage: python3 solvable_relaxation.py [path/to/current_mu_table.csv]
 Exits nonzero on any failure.
 """
 import csv
@@ -56,7 +66,7 @@ import sys
 from math import comb, isqrt, log, sqrt
 from statistics import median
 
-TABLE = sys.argv[1] if len(sys.argv) > 1 else "mu_table_safe_v4.csv"
+TABLE = sys.argv[1] if len(sys.argv) > 1 else "mu_table_safe_v5_code_v3.csv"
 # The frontier is read from the table rather than hardcoded, so this script does
 # not silently compare a stale range against a freshly extended one.
 with open(TABLE) as _f:
@@ -226,36 +236,63 @@ check("odd n admit three near-equal primes approaching 1/9 (%s)"
 check("even n admit four near-equal primes approaching 1/16 (%s)"
       % ", ".join("%.5f" % x[0] for x in r4),
       all(x and x[0] > 0.057 for x in r4))
-check("the unconditional floors exceed Oliver's worst conditional ceiling 0.05051",
-      1 / 16 > 0.050510 and 1 / 9 > 0.050510)
+# The note's comparison is asymmetric and the asymmetry is the point: the ODD
+# floor beats Oliver's worst conditional ceiling, the EVEN floor falls just
+# below it.  Checking both against a smaller constant would hide that.
+WORST = 7 - 4 * sqrt(3)                   # n = 11 mod 12, the global minimum
+check("the odd unconditional floor 1/9 EXCEEDS Oliver's worst conditional "
+      "ceiling %.5f -- a proved bound beating a conjectural one" % WORST,
+      1 / 9 > WORST)
+check("the even unconditional floor 1/16 falls just BELOW it (%.5f < %.5f), "
+      "so the comparison runs the other way at even n" % (1 / 16, WORST),
+      1 / 16 < WORST)
 
 # ---- pass 5: against Oliver ------------------------------------------------
 tab = {int(r["n"]): int(r["mu_bound"]) for r in csv.DictReader(open(TABLE))}
 shared = [n for n in sorted(tab) if n in D and n not in pps]
 check("B_solv >= B_safe at all %d shared n (Oliver groups are solvable)" % len(shared),
       all(D[n][0] >= tab[n] for n in shared))
+# The invariant is not merely an inequality: on a matching class the Oliver
+# score F*C(c,2) = s*(c-1)/2 EQUALS this document's solvable score at c = P(s),
+# so exact attainments are expected and their count is a free structural check
+# on any rebuild -- a violation would mean the Oliver side is crediting a class
+# no solvable group can carry.
+att = [n for n in shared if D[n][0] == tab[n]]
+print("      B_solv = B_safe at %d of %d shared n (matching-class coincidence)"
+      % (len(att), len(shared)))
+# The share of class-11 values exceeding their own class ceiling, which the
+# note quotes and the rebuild moves.  Printed rather than asserted.
+c11 = [n for n in shared if n % 12 == 11]
+over = [n for n in c11 if tab[n] / comb(n, 2) > 7 - 4 * sqrt(3)]
+print("      class 11 mod 12: %d of %d tabulated values exceed the class "
+      "ceiling 7-4sqrt3" % (len(over), len(c11)))
 # aod section 3.3.5, as the JOINT optimum over (F, eta).  The last two lines are
 # the residues whose optimum takes F = 4 rather than F = 2.
-OLIVER = {**{r: 0.25 for r in (0, 4, 6, 10, 12, 16, 18, 22)},
-          **{r: (2 - sqrt(3)) / 2 for r in (2, 8, 14, 20)},
-          **{r: 3 - 2 * sqrt(2) for r in (1, 9, 13, 21)},
-          **{r: 0.125 for r in (3, 19)},
-          **{r: 5 - 2 * sqrt(6) for r in (5, 17)},
-          **{r: 1 / 9 for r in (7, 15)},
-          **{r: 7 - 4 * sqrt(3) for r in (11, 23)}}
-solv_cap = {r: (CAP1 if r % 2 == 0 else CAP2) for r in range(24)}
-ratios = {r: solv_cap[r] / OLIVER[r] for r in range(24)}
-check("Oliver's seven ceilings collapse to two under the relaxation",
-      len(set(round(v, 9) for v in OLIVER.values())) == 7
+OLIVER = {**{r: 0.25 for r in (0, 4, 6, 10)},
+          **{r: (2 - sqrt(3)) / 2 for r in (2, 8)},
+          **{r: 3 - 2 * sqrt(2) for r in (1, 9)},
+          **{r: 0.125 for r in (3, 7)},
+          **{r: 5 - 2 * sqrt(6) for r in (5,)},
+          **{r: 7 - 4 * sqrt(3) for r in (11,)}}
+check("the ceiling table is keyed mod 12 and covers every residue",
+      sorted(OLIVER) == list(range(12)))
+solv_cap = {r: (CAP1 if r % 2 == 0 else CAP2) for r in range(12)}
+ratios = {r: solv_cap[r] / OLIVER[r] for r in range(12)}
+check("Oliver's six ceilings collapse to two under the relaxation",
+      len(set(round(v, 9) for v in OLIVER.values())) == 6
       and len(set(round(v, 9) for v in solv_cap.values())) == 2)
-check("worst ceiling ratio is (3-2sqrt2)/(7-4sqrt3) = %.4f at 11 and 23"
-      % ratios[23], abs(ratios[23] - 2.3897) < 1e-3
-      and abs(ratios[11] - ratios[23]) < 1e-9)
-check("at 7 and 15 the whole cost is the fusion count, eta being 1 on both sides",
-      abs(ratios[7] - (3 - 2 * sqrt(2)) * 9) < 1e-9 and abs(ratios[7] - ratios[15]) < 1e-9)
+check("worst ceiling ratio is (3-2sqrt2)/(7-4sqrt3) = %.4f at n = 11 mod 12"
+      % ratios[11], abs(ratios[11] - 2.3897) < 1e-3
+      and ratios[11] == max(ratios.values()))
+check("class 3 mod 12 (which absorbed 7, 15 mod 24) sits at eta = 1/2, "
+      "ratio %.4f -- the twist losing the 2-part of r-1, not a fusion count"
+      % ratios[3],
+      abs(ratios[3] - (3 - 2 * sqrt(2)) * 8) < 1e-9
+      and abs(ratios[3] - ratios[7]) < 1e-9)
 check("ratio is exactly 1 where Oliver already reaches eta = 1",
-      all(abs(ratios[r] - 1.0) < 1e-9
-          for r in (0, 4, 6, 10, 12, 16, 18, 22, 1, 9, 13, 21)))
+      all(abs(ratios[r] - 1.0) < 1e-9 for r in (0, 4, 6, 10, 1, 9)))
+check("the chain is free on six of the twelve residues",
+      sum(1 for r in ratios if abs(ratios[r] - 1.0) < 1e-9) == 6)
 print("\n      global constant: Oliver %.5f (n = 11 mod 12) vs solvable %.5f"
       % (min(OLIVER.values()), min(solv_cap.values())))
 print("      per-residue ceiling ratios:",

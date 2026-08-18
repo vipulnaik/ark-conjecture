@@ -301,3 +301,34 @@ The documents' own scripts (`solvable_relaxation.py`, `k3_galois.py`, the §5.6 
 ### 12.3 Not done
 
 The two documents' own scripts remain unuploaded, so `solvable_relaxation.py`'s nineteen checks and `k3_galois.py`'s self-test were not updated to match — in particular **the gcd(a, 6) = 1 clause of finding 1 should be confirmed present in `k3_galois.py`'s predicate**, which the corollary's new box now asserts. Nothing else in §11 is outstanding.
+
+
+## 13. The two companion scripts (Opus, same session)
+
+*Both uploaded after the §12 document pass and edited to match. Both now exit 0.*
+
+### 13.1 `k3_galois.py` — the corollary's assertion was already true
+
+**The gcd(a, 6) = 1 clause §12.2 asserted is present and correct in the predicate.** `galois_admissible` tests it before anything else, so the finding-1 bug never reached the code — the document's corollary had drifted from its own implementation rather than the reverse. Two edits:
+
+- **A regression for the a = 10, d = 31 case**, which the self-test did not cover. It now checks both that the predicate rejects it *and* — via a deliberately wrong `_split_exists` helper defined inline for the purpose — that conditions (i)–(iii) on their own **do** admit it, so the test pins the gcd clause as the thing doing the work rather than merely observing a rejection.
+- The docstring's "Resolves item A19 of pending-checks.md" repointed (no A19 exists), and the gcd-versus-split independence written into the header prose alongside the existing prime-power-versus-split warning, since they are the same class of error one level apart.
+
+### 13.2 `solvable_relaxation.py` — two substantive corrections
+
+1. **The `OLIVER` dict was v4-era and carried the retired value.** It keyed 24 residues with **1/9 at 7, 15** — the pre-correction three-part F = 4 reading — and asserted "seven ceilings". Rekeyed mod 12 to the six current constants, with 7 folded into class 3 at η = 1/2. The dependent checks moved with it: the worst-ratio check now asserts 11 is the argmax rather than naming 11 and 23; the old "at 7 and 15 the whole cost is the fusion count, η being 1 on both sides" check — which asserted the *retired mathematics* and passed because the dict agreed with it — is replaced by one asserting class 3's ratio is the η = 1/2 value; and a new check asserts the chain is free on six of twelve. A guard now asserts the table covers all twelve residues, so a future partial rekey fails loudly.
+2. **The floor comparison was stated against the wrong constant.** It checked both unconditional floors against 0.05051 — the class-5 ceiling — and passed trivially. The note's actual claim is asymmetric and is its §3½ headline: **1/9 exceeds Oliver's worst conditional ceiling 7 − 4√3 = 0.07180, and 1/16 (= 0.0625) falls just below it.** Both directions are now asserted separately, so the asymmetry cannot be lost again.
+
+Also: the default table argument moved off `mu_table_safe_v4.csv`, and the script now **prints the two figures the note quotes and the rebuild moves** — the exact-attainment count and the class-11 exceedance share — against whatever table it is given, so the note's pending marks have a regeneration command rather than a description.
+
+**One document figure corrected as a result.** The note's "86 of the 118 class-11 values" has the right numerator and the **wrong denominator**: run against the v4 table the script gives **86 of 163**. On the current partial rebuild it is 58 of 65. The note's pending mark now records both, and the fraction is no longer stated as a bare count.
+
+### 13.3 Registered in `pending-checks.md`
+
+`solvable_relaxation.py`'s **comparison pass** is now **R6c**, owed on every table extension — the rest of the script computes B_solv from scratch and reads no table, so only that pass expires. It earns an item rather than a line in R1 because it is the cheapest independent check available on a rebuild: no certificate, no GAP, no second enumeration, and a violation of B ≤ B_solv would mean the Oliver side is crediting a class no solvable group carries. The item also records that the two figures the script prints — the attainment count and the class-11 share — are what the note's pending marks should be requoted from, with the wrong-denominator incident as the reason to requote rather than copy forward. Indexed in the banner, bringing the owed-run table to twelve.
+
+`k3_galois.py` is **deliberately not registered**: it takes no table and scans a fixed range of a, so it is static, and one run per environment suffices. R6c says so explicitly, so the absence reads as a decision rather than an oversight.
+
+### 13.4 Still owed
+
+Neither script's arithmetic was re-verified from scratch here — §11's independent recomputation already covers the quantities they assert, and the two agree wherever they overlap (0.12296 at 551, 0.49981 at 2594, the k ≥ 3 exclusion, 58 of 65). The medians `solvable_relaxation.py` prints (0.16836 / 0.4156 on the v4 table, 0.16882 / 0.4182 on the abstract partition maximum) still differ slightly from the note's quoted 0.16734 / 0.4167, which look to predate a range or filter change; the note now describes what the figures are over, but the exact provenance of the quoted pair is unreconciled and is the one loose end in this pair of files.

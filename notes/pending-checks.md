@@ -28,6 +28,7 @@
 > | `audit_fmid.py` | the only artefact behind the shared-block-count admission, and it reads the table | R6b |
 > | `ladder_verify.py` | rung B now scores at the full twist and `CAP` is keyed mod 12; floor, worklist and per-class reporting all move | R7 |
 > | `verify_witness.g` | rebuilt around the entangled generator, with three new regression witnesses; it has never been run in this form | R8 |
+> | `solvable_relaxation.py` (comparison pass) | B ≤ B_solv is a free structural check on any rebuild, and two figures the note quotes come from it | R6c |
 
 > **The table is a contiguous prefix plus a biased tail.** Rows above the contiguous frontier are worklist rows, not range, so every distributional figure is quoted over the prefix — see R0. Read counts of the read-pass state in the session logs; this file carries only what is outstanding.
 
@@ -185,6 +186,20 @@ python3 audit_fmid.py            # expects: 0 configurations scoring above B(n)
 **Why it needs rerunning.** The screen compares an optimistic score against a recorded B(n), so it is only as strong as the table it reads. Run it against the rebuilt table, not a superseded one. Its scope cuts — δ ≤ 0.13, F ≤ 25, fused classes only — are stated in the script's docstring and are bounds on where such a configuration could *win*, not on where one could exist.
 
 **If it ever returns a hit**, that is not a bug in the screen: it is a configuration the enumeration admits and the table does not reflect, and the right response is to score it exactly rather than to tighten the admission.
+
+## R6c. The solvable relaxation's comparison pass
+
+*Owed on every table extension, and only the comparison pass is: the rest of `solvable_relaxation.py` computes B_solv from scratch and does not read the table at all.*
+
+```bash
+python3 solvable_relaxation.py <current table>.csv
+```
+
+**What it checks that nothing else does.** B(n) ≤ B_solv(n) is a structural invariant, not a coincidence: an Oliver group is solvable, so its score can never exceed the solvable maximum. On a matching class the two coincide exactly — the Oliver score F·C(c,2) = s(c−1)/2 is the solvable score at c = P(s) — so **exact attainments are expected, and a violation means the Oliver side is crediting a class no solvable group carries.** That makes this the cheapest independent check on any rebuild: it needs no certificate, no GAP, and no second enumeration.
+
+**Two figures it prints rather than asserts**, both quoted in `solvable-relaxation.md` and both moved by the rebuild: the exact-attainment count, and the share of n ≡ 11 (mod 12) rows exceeding their own class ceiling. Requote the document's pending-marked figures from the run rather than from the last recorded pair — the class-11 fraction in particular has had a wrong denominator once.
+
+*Not owed on extension:* `k3_galois.py`'s self-test is static — it takes no table and scans a fixed range of a — so one run per environment suffices. It passes as of this session, including the a = 10 regression that pins the gcd(a, 6) clause.
 
 ## R7. Consume the ladder worklist with the adaptive branch-and-bound
 
