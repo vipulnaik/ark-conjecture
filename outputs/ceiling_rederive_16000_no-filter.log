@@ -1,0 +1,13 @@
+
+ceiling_rederive.py -- UNFILTERED (escapes included), n in [8000, 16000]
+
+ cls12   emp sup    tabled   ratio  F     eta  witness
+     1   0.17154   0.17157  0.9998  2  1.0000  n=13237 c=3877 r=5483
+     3   0.12963   0.12500  1.0370  2  1.0000  n=8043 c=2048 r=3947  <-- EXCEEDS
+     5   0.14386   0.10102  1.4241  2  1.0000  n=8153 c=2187 r=3779  <-- EXCEEDS
+     7   0.17119   0.12500  1.3695  2  1.0000  n=13999 c=4096 r=5807  <-- EXCEEDS
+     9   0.17154   0.17157  0.9998  2  1.0000  n=14193 c=4157 r=5879
+    11   0.12496   0.07180  1.7404  2  0.5000  n=8747 c=2187 r=4373  <-- EXCEEDS
+
+Exceedances here are section 3.3.8's escapes, not counterexamples:
+re-run without --no-filter and they disappear.
