@@ -332,3 +332,30 @@ Also: the default table argument moved off `mu_table_safe_v4.csv`, and the scrip
 ### 13.4 Still owed
 
 Neither script's arithmetic was re-verified from scratch here — §11's independent recomputation already covers the quantities they assert, and the two agree wherever they overlap (0.12296 at 551, 0.49981 at 2594, the k ≥ 3 exclusion, 58 of 65). The medians `solvable_relaxation.py` prints (0.16836 / 0.4156 on the v4 table, 0.16882 / 0.4182 on the abstract partition maximum) still differ slightly from the note's quoted 0.16734 / 0.4167, which look to predate a range or filter change; the note now describes what the figures are over, but the exact provenance of the quoted pair is unreconciled and is the one loose end in this pair of files.
+
+
+## 14. R6a's two runs, and `audit_fmid.py`'s table argument (Opus, same session)
+
+### 14.1 R6a is satisfied — both runs verified independently, not just read
+
+**Filtered, n ∈ [12000, 24000].** All six classes approach their tabulated constants **from below**, ratios 0.9994–0.9999, with the expected (F, η) at every one: F = 2 at classes 1, 3, 5, 7, 9 and **F = 4 with η = 1/3 at class 11**, which is the row that had to come out right for the entangled correction to hold. All six mod-12 pairs {a, a+12} agree in cap, F and η. This is the re-derivation doing its job — it scans real configurations rather than replaying the congruence argument, so agreement is evidence rather than tautology.
+
+**Unfiltered, n ∈ [8000, 16000].** Exceedances at exactly **3, 5, 7, 11**, as R6a predicts, and — the check that mattered — **every witness c is a prime power**: 2048 = 2¹¹, 2187 = 3⁷, 4096 = 2¹², 2187. The candidate-list defect that admitted 6, 12, 20, 24 is fixed, and this output is the confirmation.
+
+**All six witness densities were recomputed from scratch** rather than taken on trust, scoring each configuration from its (F, c, r) and maximising over q-power divisors of r − 1. Every one reproduces to within 5 × 10⁻⁵, and the binding term is identifiable in each case (at class 3 it is the within-class cross term (F/2)c² = 2048², not the matching or foreign intra). The residual difference is rounding in the reported column.
+
+**One documentation defect found by doing this.** `ceiling_rederive.py`'s own docstring described the escapes as *"classes 5, 11, 17 and 23 … by 1.48× at class 11 … via c or oddpart(r−1) being a power of 3"*. All three details are wrong now: the classes are 3, 5, 7, 11 (mod-12 keying), the class-11 factor is 1.74×, and the mechanism is **c a pure power of 2 or of 3** — 2048 and 4096 are the class-3 and class-7 witnesses, and neither has anything to do with ℓ = 3. Corrected, and the prime-power witness check written into the docstring rather than living only in `pending-checks.md`. The same wrong mechanism had propagated into R6a's text and is fixed there too.
+
+### 14.2 `audit_fmid.py` — table as argument, and which table is right
+
+The hardcoded upload path is now a positional argument defaulting to the current table, with `--nmax`. The docstring gained a **WHICH TABLE** section, because the answer is not symmetric and the asymmetry is the useful part:
+
+> The screen compares an **optimistic candidate score** against a **recorded B(n)**. A table that *understates* B makes it **fire more often**; one that *overstates* B makes it **miss**. A stale table is therefore noisy rather than unsound — the tolerable direction — but its hits are uninformative.
+
+**Demonstrated rather than asserted.** Against v4 the screen reports **2 hits**, n = 1739 and 2223. Both are artefacts of stale rows: the current enumerator scores those n at **118341** and **307193**, against candidate scores of 97656 and 166872. Neither hit survives contact with a current value. Worth recording *why* they looked like hits — at 1739 the candidate is two fused classes 2×313 + 2×313 + 487\*, while the enumerator's actual winner is the single class 4×313 + 487\*, i.e. the same blocks fused once rather than twice, which the shared-block-count screen does not generate.
+
+**A coverage trap, closed.** The v5 run returns 0 hits — but 1739 and 2223 are past the partial rebuild's frontier, so they are not screened at all, and the clean verdict is partly clean by absence. A short frontier's silence looks exactly like a pass. The script now prints, before the verdict, how many **non-prime-power** n in range are missing from the file (prime powers excluded, since their absence is correct): currently **1,274 rows screened, 912 unscreened values in [6, 2600]**. R6b now says to read that line first.
+
+### 14.3 What this leaves
+
+R6a is done and marked so, with the standing rerun condition (§3.3.5 or the script changing) kept. R6b remains owed and is now explicitly owed *twice over* — once for the table it reads and once for the range it covers; it will not be satisfiable until the rebuild's contiguous frontier reaches 2600. The banner index is unchanged at twelve, since R6a's entry was never in it.

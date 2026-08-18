@@ -158,14 +158,16 @@ ARK_SHAPES_STRIP=1 ARK_SHAPES_NMAX=100 ARK_SHAPES_MAXF=4 gap -q -o 4g ark_shapes
 
 ## R6a. The ceiling table's independent re-derivation
 
-*Static: it scans configurations, not table rows, so it does not rerun on extension. One run per environment, and again if §3.3.5 changes or the script does. **Owed now:** the `--no-filter` candidate list was tested for prime-power-ness on the odd part alone, which admitted block sizes no Oliver group has (6, 12, 20, 24, …), so any earlier unfiltered output mixed real escapes with phantoms. The filtered mode was unaffected.*
+*Static: it scans configurations, not table rows, so it does not rerun on extension. One run per environment, and again if §3.3.5 changes or the script does.*
+
+> **✔ Both runs done, and both clean.** Filtered, n ∈ [12000, 24000]: all six classes approach their tabulated constants **from below** (ratios 0.9994–0.9999) with the expected (F, η) at every one — F = 2 at classes 1, 3, 5, 7, 9 and **F = 4 at class 11** — and all six mod-12 pairs {a, a+12} agree in cap, F and η. Unfiltered, n ∈ [8000, 16000]: exceedances at exactly **3, 5, 7, 11**, and **every witness c is a prime power** (2048, 2187, 4096, 2187), so the candidate-list defect is fixed. All six witness densities were independently recomputed and reproduce to 5 × 10⁻⁵. Rerun only if §3.3.5 or the script changes.
 
 ```bash
 python3 ceiling_rederive.py --nmax 24000 --mod12   # expect all six from below, all pairs agree
 python3 ceiling_rederive.py --nmax 16000 --no-filter  # control: expect exceedances at 3, 5, 7, 11
 ```
 
-**`--no-filter` is the control and must exceed.** It removes §3.3.8's escape filter, and the exceedances that appear — witnesses with c or oddpart(r−1) a pure power of 3, so the ℓ = 3 obstruction evaporates — are that section working as documented, not counterexamples. A `--no-filter` run that comes back clean means the filter is not doing what its comment says. **Check the witnesses are prime powers**: a non-prime-power c in that column means the candidate list is admitting block sizes no group has, and the escapes it reports are then partly phantom.
+**`--no-filter` is the control and must exceed.** It removes §3.3.8's escape filter, and the exceedances that appear — witnesses with **c a pure power of 2 or of 3**, so the ℓ = 2 or ℓ = 3 obstruction on the foreign prime evaporates — are that section working as documented, not counterexamples. A `--no-filter` run that comes back clean means the filter is not doing what its comment says. **Check the witnesses are prime powers**: a non-prime-power c in that column means the candidate list is admitting block sizes no group has, and the escapes it reports are then partly phantom.
 
 ## R6b. Re-screen the shared-block-count configurations against the rebuilt table
 
@@ -180,10 +182,14 @@ The enumerator does not require two fused classes' block counts to be coprime, a
 | F_mid vs a foreign prime r | counting: orb(r, ·) ≥ B forces r ≥ √(2B), and r \| F_mid then makes the class size overrun n (argument) |
 
 ```bash
-python3 audit_fmid.py            # expects: 0 configurations scoring above B(n)
+python3 audit_fmid.py <current table>.csv   # expects: 0 configurations scoring above B(n)
 ```
 
-**Why it needs rerunning.** The screen compares an optimistic score against a recorded B(n), so it is only as strong as the table it reads. Run it against the rebuilt table, not a superseded one. Its scope cuts — δ ≤ 0.13, F ≤ 25, fused classes only — are stated in the script's docstring and are bounds on where such a configuration could *win*, not on where one could exist.
+**Which table, and why the answer is not symmetric.** The screen compares an *optimistic* candidate score against a *recorded* B(n). A table that understates B makes it **fire more often**; one that overstates B makes it **miss**. So a stale table is noisy rather than unsound — the tolerable direction — but its hits are uninformative, since each may be the candidate beating a stale row rather than a real configuration. Run it against the current table. Demonstrated: against v4 it reports 2 hits (n = 1739 and 2223); both are **artefacts of the stale rows**, since the current enumerator scores those n at 118341 and 307193, far above the candidates' 97656 and 166872. Neither survives contact with a current value.
+
+**Coverage is part of the result.** Where the current table is partial, the rows it does not reach are simply not screened, and a clean verdict over a short frontier says nothing about the rest — the silence looks exactly like a pass. The script now prints the count of non-prime-power n in range that are absent from the file; **read that line before reading the verdict.** As of the current partial rebuild it screens 1,274 rows with 912 non-prime-power values in [6, 2600] unscreened, so the 0-hit verdict is real but covers well under half the intended range.
+
+**Why it needs rerunning.** It reads the table, so it is only as strong as the table it reads. Its scope cuts — δ ≤ 0.13, F ≤ 25, fused classes only — are stated in the script's docstring and are bounds on where such a configuration could *win*, not on where one could exist.
 
 **If it ever returns a hit**, that is not a bug in the screen: it is a configuration the enumeration admits and the table does not reflect, and the right response is to score it exactly rather than to tighten the admission.
 

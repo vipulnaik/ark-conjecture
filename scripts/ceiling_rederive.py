@@ -16,10 +16,18 @@ WHAT THE FILTER IS FOR, AND WHY A NAIVE SUP IS THE WRONG STATISTIC.
 Section 3.3.8 lists four routes that exceed a class ceiling on a sparse set of n
 (O(n/log n) or O(log n) supply).  A sup over any range picks the luckiest n in
 it, so it MEASURES THE ESCAPES rather than the ceiling.  Run unfiltered, classes
-5, 11, 17 and 23 exceed their closed forms -- by 1.48x at class 11 -- every time
-via c or oddpart(r-1) being a power of 3.  Those are not counterexamples; they
-are section 3.3.8 working as documented, and their disappearance when the filter
-goes on is itself a check on that section's account of them.
+3, 5, 7 and 11 exceed their closed forms -- by 1.74x at class 11 -- every time
+via c being a pure power of 2 or of 3, which is what makes the ell = 2 or
+ell = 3 local obstruction on the foreign prime evaporate.  Those are not
+counterexamples; they are section 3.3.8 working as documented, and their
+disappearance when the filter goes on is itself a check on that section's
+account of them.
+
+READ THE WITNESS COLUMN, not just the ratios.  Every c reported in unfiltered
+mode must be a PRIME POWER: a composite c there means the candidate list is
+admitting block sizes no Oliver group has, and the escapes it reports are then
+partly phantom.  (That was once a live defect -- the list tested prime-power-ness
+on the odd part alone, admitting 6, 12, 20, 24, ...)
 
 The generic family is therefore: c a prime >= 5 (excluding the ell=2 and ell=3
 evasions at c a power of 2 or 3), the foreign twist a prime power at q >= 5

@@ -27,14 +27,38 @@ exceeds B(n), no exact reading can either.  Being optimistic on the candidate
 side and comparing against a recorded B(n) that is itself a valid score means
 both directions of the comparison are safe.
 
+WHICH TABLE TO SCREEN AGAINST, since the answer is not symmetric.  The screen
+compares an optimistic candidate score against a RECORDED B(n), so a table that
+understates B makes the comparison FIRE MORE OFTEN, and one that overstates it
+makes the screen miss.  Run it against the CURRENT table.  Against a superseded
+one that understates B at some rows -- as a pre-correction table does -- a hit
+is uninformative: it may be the candidate beating a stale row rather than a real
+configuration, and every such hit has to be re-scored by hand before it means
+anything.  The failure direction is therefore noisy rather than unsound, which
+is the tolerable direction, but it is not a reason to feed it an old file.
+
+Where the current table is PARTIAL, the rows it does not reach are simply not
+screened, and the script says how many so the gap cannot be read as a pass.
+
 SCOPE CUTS, stated rather than buried.  Only rows with delta <= 0.13 are
 screened (two fused classes need sum sqrt(F) >= 2*sqrt(2), so delta <= 1/8, plus
 slack for the optimistic scoring), and F is capped at FMAX below.  Both are
 bounds on where such a configuration could possibly win, not on where one could
 exist.
 """
+import argparse
 import csv
+import sys
 from math import comb, gcd, isqrt
+
+_ap = argparse.ArgumentParser(description=__doc__,
+                              formatter_class=argparse.RawDescriptionHelpFormatter)
+_ap.add_argument("table", nargs="?", default="mu_table_safe_v5_code_v3.csv",
+                 help="the mu table to screen against; give the CURRENT one "
+                      "(see WHICH TABLE in the module docstring)")
+_ap.add_argument("--nmax", type=int, default=2600,
+                 help="screen rows with n <= NMAX (default 2600)")
+ARGS = _ap.parse_args()
 
 N = 2700
 sieve = bytearray([1]) * (N + 1)
@@ -75,10 +99,30 @@ for r in range(3, N + 1, 2):
     EFF[r] = max((2 ** a) / m, 2 * best / m)
 
 rows = []
-for r in csv.DictReader(open('/mnt/user-data/uploads/mu_table_safe_v4.csv')):
+for r in csv.DictReader(open(ARGS.table)):
     n = int(r['n'])
-    if n <= 2600:
+    if n <= ARGS.nmax:
         rows.append((n, int(r['mu_bound'])))
+if not rows:
+    sys.exit("no rows read from %s -- wrong file?" % ARGS.table)
+# Coverage matters as much as the verdict: a screen that reads a partial table
+# is silent about every n the table does not reach, and the silence looks
+# exactly like a pass.  Report it.
+_present = {n for n, _ in rows}
+_pp = set()
+for _p in [x for x in range(2, ARGS.nmax + 1) if sieve[x]]:
+    _v = _p
+    while _v <= ARGS.nmax:
+        _pp.add(_v)
+        _v *= _p
+_gaps = [n for n in range(6, ARGS.nmax + 1) if n not in _present and n not in _pp]
+print("screening %s: %d rows, n <= %d, %d "
+      "non-prime-power values in that range absent from the table "
+       "(unscreened)" % (ARGS.table, len(rows), ARGS.nmax, len(_gaps)))
+if _gaps:
+    print("  first absent n: %s%s"
+          % (", ".join(str(x) for x in _gaps[:10]),
+             " ..." if len(_gaps) > 10 else ""))
 
 def coeff(F):
     return F if F % 2 else F // 2
