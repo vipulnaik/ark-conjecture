@@ -386,3 +386,49 @@ Every parity rule re-derived by hand from cycle types: (T), (M), (F1), and (F2)'
 ### 15.5 Skipped
 
 The monotone-transitive scan itself (`oliver_transitive_scan.g`, GAP) and its CSP tables were not rerun — internal consistency and the group-theory spot checks stood in. The chiral document's computational verifications (§3's sign checks, §5's group orbital lists) were re-derived rather than re-run. general-k's §3 ledger row on k = 4 full density (item 3 of its open list) remains open as stated. The 10⁶ ladder run continues (240k, floor unchanged at 0.04621 @ 2759).
+
+
+## 16. R6's GAP sweeps at `-o 8g` (Opus, same session)
+
+**All three runs clean, no truncation, and the guard's job is done.** 134 / 241 / 211 rows; every line parses against the full row grammar and carries a verdict; all `ok`. The `-o 4g` truncation that motivated the rerun does not recur, so `pending-checks.md`'s invocations now specify **`-o 8g`**, with the reason recorded next to the truncation warning rather than only in the command: the maxf = 2 sweep's largest groups reach order ≈ 1.8 × 10⁶ on 194 points, which 4 GB does not hold.
+
+**Verified rather than read.** The intra column was re-derived from (F, c, d) at **all 586 rows across the three live files** and reproduces exactly — including the `char2` flag, which is the piece most likely to be wrong and is exercised at c = 4, 8, 16, 32, 64. Four structural invariants hold in every row: n = F·c, d | c − 1, c a prime power, and |Γ| = c^F·d·F. Coverage of the wide sweep is complete: **every prime power c ≤ 100 appears, with every prime-power twist d | c − 1 at each**, no gaps — so the "later rows untested" defect is fully retired rather than merely absent from the summary line.
+
+**Both controls fire, and fire *only* where they should.** 21 of 134 rows in the narrow control and 59 of 241 in the maxf = 4 control go UNDER-SCORE. In every one the *expected* column is unchanged and the *actual* is strictly lower, and — the check that makes the control informative rather than decorative — **no `ok` row differs from its live counterpart at all.** So the strip damages exactly the rows where stripping changes orb(c, d) and nothing else, which is the predictor R6 already states in place of a remembered count.
+
+*One methodological note.* An obvious-looking invariant — that the reported intra and cross classes partition C(n,2) — **fails everywhere and is not a defect**: the script reports the *minimum* class of each type with its multiplicity, not the full class list, so at F ≥ 3 there are further cross classes of other sizes. I record it because it is the kind of check that would look like 91 failures in a summary and is really one wrong assumption about the output format.
+
+R6's owed-run entry is struck from the banner index, which is back to eleven.
+
+### 16.1 R6's four "still owed" items: none is blocked, and the order should change
+
+Each was prototyped far enough to judge cost and to see whether anything stands in the way. **All four are buildable in `shape_realize.py`'s existing Python** — `orbitals()` plus `field()` — with no table dependency and, for three of them, no GAP. The ordering in R6 has been rewritten to **3 → 4 → 2 → 1**, roughly the reverse of how they were written, for reasons the prototypes made visible:
+
+- **Item 3 (foreign η) is the cheapest by a wide margin and should be first.** A foreign block is a *prime* block, so no field construction arises: AGL(1, r) at twist t is two permutations of ℤ/r. Prototyped over **47 (r, t) pairs**, r ≤ 43, every prime-power t | r − 1 — **0 mismatches**, endpoints and odd-t (no halving) cases included.
+- **Item 4 (inter-class F·c·r) is cheaper than its description suggests.** "A chain element linking two classes" is one generator: a diagonal element acting as the twist on the matching block and as twist or translation on the foreign one, which is precisely what makes Γ₁ cyclic across both. Prototyped at seven (c, d, r, t): every intra and cross term realised exactly as scored, the cross class a single orbital of size c·r throughout. **The prototype also walked into the trap `fused_class_group` documents** — building c = 9 by translating by 1 generates ℤ/3, not 𝔽₉, and reports a spurious mismatch. Recorded in the item, since anyone writing this fresh will hit it.
+- **Item 2 (Lemma C) is reframed by its prototype, and that is the useful outcome.** Forcing the matching twist and the foreign translations into a single cyclic layer (r | d, eight cases) **did not strip the matching twist at all** — the matching intra came out at full uncoupled score every time. The cost landed on the **foreign** block, left with translations only: orbital r, t = 1. So the check to write is not "did the matching block lose its twist" but *"what is the largest foreign twist still realisable once the layer is cyclic, and does the enumerator credit more than that"*. That is a statement about the foreign term, so it wants item 3's machinery first — which is why 2 moves after 3 and 4 despite being the highest-value of the four.
+- **Item 1 (the Oliver test) has the only real dependency**, and it is mild: it is GAP-side, so it needs the `-o 8g` environment rather than the Python harness, and the shapes that can make it fail are exactly the two-class ones item 4 builds. Doing it after 4 means those shapes are specified once rather than invented twice.
+
+The prototypes are exploratory and are **not** recorded as passes — they cover a handful of parameters with no `--strip` control, which by R6's own standard makes them not yet evidence. What they establish is that nothing is blocked.
+
+
+## 17. R6 item 1 implemented: `oliver_negative.g` (Opus, same session)
+
+*Written to be run on the GAP machine in this session. Not executed here — no GAP in this environment — so every constructed group's orders and structure were verified independently in Python first, and the script asserts them as its own first expectations so that a construction slip is distinguishable from a predicate failure.*
+
+**The problem restated.** `ark_shapes.g` reports `oliver=0` on every row. That is correct and unavoidable — a single fused class always carries the chain — but it means a predicate hardwired to return 0 would produce byte-identical output. The column is not evidence until something can move it.
+
+**Four parts, in increasing strength.**
+
+- **A, asserted negatives.** Simple nonabelian groups must return `fail`, by a theorem rather than a computation: only N = 1 and N = G are available; N = 1 leaves G/N = G, no p-group; N = G needs G/O_p(G) cyclic, false. A₅, A₆, A₇, PSL(2,7), PSL(2,11), S₅, S₆, plus four positives (C₆, elementary abelian 8, S₄ via A₄, AGL(1,5)) so the predicate is not merely always-fail.
+- **B, a population where the verdict varies.** All transitive groups of degrees 6..DEGMAX, distribution reported, **solvable non-Oliver groups listed separately** — those are the informative negatives, part A's insoluble ones being cheap. Asserts both directions: some fail, some pass. This is the part that converts the column into evidence, and it is also the one that can be skipped by a missing `transgrp`, so a missing package counts as a failure rather than a silent pass.
+- **C, the two predicates against each other.** Witness = 0 must imply search ≠ fail, since "is *this* chain good" is strictly stronger than "is there *any* chain". Guarded on bottom-layer rank a·F rather than |G| — the 3×32 lesson, where |G| = 3.0 × 10⁶ exhausted 4 GB while 4×25 at 3.8 × 10⁷ completed.
+- **D, broken chains, one clause at a time.** D1 violates the p-group clause only (Γ₂ = C₂² × C₃, order 12, normal, cyclic quotient of order 3). D2 violates cyclicity only (two independent order-4 twists on two 5-blocks, quotient C₄ × C₄ of order 16). **D2′ is the minimal pair**: the same two blocks with the twists carried diagonally on one generator, quotient C₄ — must be *accepted*, which is what shows the witness responds to the chain rather than to the point set. D3 violates normality (a point stabiliser in AGL(1,5)).
+
+**The design point worth keeping.** D reports *two* verdicts and asserts only one. A rejected witness does not make the group non-Oliver — another chain may exist, and at D1 and D2 one does. Printing the search verdict beside it without asserting it makes the witness-versus-search gap visible as the intended distinction rather than leaving a reader to discover it as an apparent inconsistency.
+
+**Verified before writing, so failures are attributable.** All part-D orders were computed independently: |Γ₂| = 12 and |G| = 36 with normal Γ₂ and cyclic quotient at D1; |G| = 400 and 100 with quotients 16 and 4 at D2/D2′; Γ₂ of order 4, non-normal in AGL(1,5) of order 20 at D3. The script asserts each of these as an expectation of its own, so if one fails the message says "the construction is wrong" rather than "the predicate is wrong".
+
+**Still open after this**, and it belongs with item 4 rather than here: the specifically *configuration*-shaped negative the item first envisaged — a foreign block whose top prime does not divide r − 1 — needs the two-class builder. D1 and D2 cover the two ways such a configuration actually degenerates, which is what can be tested without that builder.
+
+*One GAP-side risk I could not retire without an interpreter:* the script is syntax-checked only by inspection and a bracket-balance pass. If it dies on a parse error, the likeliest sites are part B's `LoadPackage` guard and the `Expect` helper's global assignment to `nfail`.

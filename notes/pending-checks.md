@@ -23,7 +23,6 @@
 > | `wide_cert.py` | same, plus `fused_lo` now admits composite block counts, which raises B_lo and shrinks pass 2 | R1 |
 > | `a18_verify.py`, `t5_verify.py` | range-scoped dominations that expire silently as the table grows | R1 |
 > | `check_doc_figures.py` | the pass that replaces ⟦PENDING-REBUILD⟧ figures | R1 |
-> | `ark_shapes.g` wide sweep | the previous output was truncated mid-line, so its later rows are untested | R6 |
 > | `ceiling_rederive.py --no-filter` | the candidate list admitted non-prime-power block sizes, so earlier unfiltered output mixed real escapes with phantoms | R6a |
 > | `audit_fmid.py` | the only artefact behind the shared-block-count admission, and it reads the table | R6b |
 > | `ladder_verify.py` | rung B now scores at the full twist and `CAP` is keyed mod 12; floor, worklist and per-class reporting all move | R7 |
@@ -134,9 +133,9 @@ python3 check_doc_figures.py $TABLE *.md
 ```bash
 python3 shape_realize.py --nmax 34            # expect 0 mismatches
 python3 shape_realize.py --nmax 22 --strip    # control: expect UNDER-SCOREs
-ARK_SHAPES_NMAX=100 ARK_SHAPES_MAXF=4 gap -q -o 4g ark_shapes.g
-ARK_SHAPES_NMAX=200 ARK_SHAPES_MAXF=2 gap -q -o 4g ark_shapes.g
-ARK_SHAPES_STRIP=1 ARK_SHAPES_NMAX=100 ARK_SHAPES_MAXF=4 gap -q -o 4g ark_shapes.g
+ARK_SHAPES_NMAX=100 ARK_SHAPES_MAXF=4 gap -q -o 8g ark_shapes.g
+ARK_SHAPES_NMAX=200 ARK_SHAPES_MAXF=2 gap -q -o 8g ark_shapes.g
+ARK_SHAPES_STRIP=1 ARK_SHAPES_NMAX=100 ARK_SHAPES_MAXF=4 gap -q -o 8g ark_shapes.g
 ```
 
 **Read the control first, always.** A clean run means nothing until the `--strip` / `ARK_SHAPES_STRIP=1` pass has been seen to fail: it re-scores with a condition known to be wrong, so a control that comes back clean means the harness is inert, not that the scoring is right. Expect UNDER-SCORE at exactly the shapes where stripping **changes** orb(c,d), and check the count against that predictor rather than against a remembered number. It is *not* "wherever gcd(d, F) > 1", which names roughly twice as many rows: stripping a single factor of 2 from an even d never changes orb, since orb = c·d/2 when −1 ∈ T and c·(d/2) when the halved d is odd.
@@ -145,16 +144,30 @@ ARK_SHAPES_STRIP=1 ARK_SHAPES_NMAX=100 ARK_SHAPES_MAXF=4 gap -q -o 4g ark_shapes
 
 **What these cover that the rest of the battery does not.** Every other check validates the **winner**; none looks at a shape that **loses**, so a mis-scored losing shape stays invisible until it becomes a winner at some larger n — which can be many degrees above where the defect is first present and detectable.
 
-**A wide sweep can be cut short by memory pressure part way through a line, and the truncated rows carry no verdict.** They are untested, but they look like data, so a summary counting mismatches over the file counts them as passes. `ark_shapes.g` re-reads its own output and FAILs on any row without a verdict; if a run reports truncation, lower `ARK_SHAPES_MAXF` or raise the GAP workspace rather than reading the summary line.
+**A wide sweep can be cut short by memory pressure part way through a line, and the truncated rows carry no verdict.** They are untested, but they look like data, so a summary counting mismatches over the file counts them as passes. `ark_shapes.g` re-reads its own output and FAILs on any row without a verdict; if a run reports truncation, raise the GAP workspace or lower `ARK_SHAPES_MAXF` rather than reading the summary line. **`-o 8g` is what the invocations above use because `-o 4g` is what truncated** — the largest groups in the maxf=2 sweep reach order ~1.8 × 10⁶ on 194 points, and the 4 GB ceiling is not enough for them.
 
-**Owed runs.** The wide GAP sweep (`ARK_SHAPES_NMAX=200 ARK_SHAPES_MAXF=2`) wants repeating: its output was cut short part way through a line, so every row past the truncation point is untested while looking like data. `ark_shapes.g` now FAILs on that condition rather than reporting a clean summary over it, so the rerun is also what confirms the guard fires or stays quiet.
+> **✔ All three runs done at `-o 8g`, and clean.** No truncation anywhere: 134 / 241 / 211 rows, every line well-formed and carrying a verdict, all `ok`. Coverage of the wide sweep is complete — **every prime power c ≤ 100 present, and every prime-power twist d | c − 1 at each**, with no gaps. The intra column was independently re-derived at all 586 rows across the three files and reproduces exactly, `char2` flag included; n = F·c, d | c − 1, c a prime power and |Γ| = c^F·d·F hold in every row. **Both controls fire and fire correctly**: 21 of 134 rows in the narrow control and 59 of 241 in the maxf = 4 control go UNDER-SCORE, the expected column is unchanged in every one, the actual is strictly lower in every one, and **no `ok` row differs from its live counterpart** — so the strip is doing exactly the damage it should and nothing else.
 
-**Still owed.**
+**Still owed** — *and none of the four is blocked. All are buildable in `shape_realize.py`'s existing Python, with no GAP and no table dependency; the ordering below is by cost, and it is roughly the reverse of the order they were written in.*
 
-1. **Give the Oliver test something it can fail.** Every row returns `oliver=0`, correctly and unavoidably on a single fused class — and since the lattice search was replaced by `CheckChainWitness`, the check now verifies the supplied chain rather than searching for one. Either way it **cannot currently fail and is not evidence**. Extend to shapes that can fail it: a foreign block whose top prime does not divide r − 1, or a class with a non-cyclic layer.
-2. **Lemma C's foreign strip** — the one cyclic-layer restriction that *is* real, hence where an over-eager repair could break something in the other direction. Highest value of the three uncovered terms, and the natural shape to build is a configuration that genuinely shares a prime between a matching twist and a foreign block.
-3. The **foreign block's** η = 2t/(r−1), against a realised AGL(1,r) twist.
-4. The **inter-class** term F·c·r, which needs the chain element linking two classes, hence a genuine two-class Oliver group rather than a single class.
+3. The **foreign block's** η = 2t/(r−1), against a realised AGL(1,r) twist. **Do this one first: it is an afternoon's work and the machinery is already there.** A foreign block is a prime block, so no field construction is needed at all — `AGL(1,r)` at twist t is two permutations of ℤ/r, and `orbitals()` already scores it. *Prototyped: 47 (r, t) pairs over r ≤ 43 and every prime-power t | r − 1, **0 mismatches**, including the t = 1 and t = r − 1 endpoints and the odd-t cases where the halving does not apply.* Turning that into a proper `--foreign` mode with a `--strip` control is mechanical.
+4. The **inter-class** term F·c·r. **Also unblocked, and cheaper than it sounds.** The "chain element linking two classes" is one generator: a single diagonal element acting as the twist on the matching block and as the twist (or a translation) on the foreign one, which is what makes Γ₁ cyclic across both. *Prototyped at seven (c, d, r, t) combinations: every intra term and every cross term realised exactly as scored, the cross class being a single orbital of size c·r in all of them.* **A caution the prototype earned:** building the matching block at c = 9 by translating by 1 alone generates ℤ/3, not 𝔽₉, and under-builds the group — the same trap `fused_class_group` documents. Use the existing `field()` basis, or restrict the first pass to prime c.
+2. **Lemma C's foreign strip** — still the highest-value of the four, and now with a sharper target than "build a shape that shares a prime". *Prototyped at eight (c, d, r) with r | d, and the result reframes the check:* forcing the twist and the foreign translations into one cyclic layer **does not strip the matching twist at all** — the matching intra came out at its full uncoupled score in every case. What it costs is the **foreign** side: the foreign block was left with translations only, orbital r, i.e. t = 1 and η = 0. So the check to write is not "did the matching block lose its twist" but **"what is the largest foreign twist still realisable once the layer is cyclic, and does the enumerator credit more than that"** — which is a statement about the foreign term, and therefore wants item 3 built first. Do 3, then 4, then 2.
+1. ~~**Give the Oliver test something it can fail.**~~ **Written: `oliver_negative.g`.** Every `ark_shapes.g` row returns `oliver=0`, correctly and unavoidably on a single fused class, so the column could not distinguish the real predicate from one that returns 0 unconditionally. The new script supplies the missing negatives in four parts:
+
+```bash
+gap -q -o 8g oliver_negative.g                          # default, degrees 6..11
+OLIVER_NEG_DEGMAX=12 gap -q -o 8g oliver_negative.g     # wider part B, slower
+```
+
+- **A — asserted negatives.** Simple nonabelian groups must return `fail`, and for a reason that is a theorem rather than a computation: only N = 1 and N = G are available, N = 1 leaves G/N = G which is no p-group, and N = G needs G/O_p(G) cyclic. A₅, A₆, A₇, PSL(2,7), PSL(2,11), S₅, S₆ — plus four positives, so the predicate is not merely always-fail.
+- **B — a population where the verdict varies.** Every transitive group of degrees 6..DEGMAX, with the distribution reported and the **solvable** non-Oliver groups listed separately: those are the informative negatives, since part A's insoluble ones fail too cheaply to test much. This is the part that turns the column into evidence. It asserts both that some fail and that some pass.
+- **C — the two predicates against each other.** `CheckChainWitness` answers "is *this* chain good", `IsOliverTop` answers "is there *any* chain", so witness = 0 must imply search ≠ fail. Checked across the fused-class shapes, guarded on bottom-layer rank rather than |G| (the 3×32 lesson).
+- **D — broken chains, one clause violated at a time.** D1: Γ₂ = C₂² × C₃ is not a p-group, with normality and cyclicity intact so only that clause can fire. D2: two independent twists give quotient C₄ × C₄, not cyclic. D2′: the *same* two blocks with the twists carried diagonally on one generator — must be accepted, which is the minimal pair showing the witness responds to the chain and not to the point set. D3: Γ₂ not normal.
+
+**Read D's two verdict columns, not one.** A rejected witness does **not** mean the group is non-Oliver — another chain may exist, and at D1 and D2 one does. The script prints the search verdict alongside without asserting it, because that gap *is* the witness-versus-search distinction rather than a defect in either. All group orders in part D were verified independently before the script was written (|Γ₂| = 12, |G| = 36 at D1; quotients of order 16 and 4 at D2 and D2′; Γ₂ non-normal of order 4 in AGL(1,5) at D3), so a mismatch there is a GAP-side finding and not a construction slip.
+
+*Still open after this*: the specifically **configuration**-shaped negative the item first envisaged — a foreign block whose top prime does not divide r − 1 — needs the two-class builder of item 4 and belongs with that work. D1 and D2 cover the two ways such a configuration actually degenerates, which is the part that can be tested now.
 
 ## R6a. The ceiling table's independent re-derivation
 
