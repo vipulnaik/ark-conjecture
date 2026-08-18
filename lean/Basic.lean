@@ -32,10 +32,15 @@
     6.  Why c = 3 mod 4 is the good case (Euler's criterion)
 -/
 
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Combinatorics.Choose.Basic
-import Mathlib.NumberTheory.LegendreSymbol.QuadraticReciprocity
-import Mathlib.Data.ZMod.Basic
+/-
+  IMPORTS.  `import Mathlib` pulls everything.  It is slower to elaborate (tens of
+  seconds on first open, then cached) but it cannot produce an unknown-module
+  error, which is the right trade while the file is still a sketch.  The narrow
+  imports this file used to carry included `Mathlib.Combinatorics.Choose.Basic`,
+  which does not exist -- binomial coefficients live in `Mathlib.Data.Nat.Choose`.
+  Narrow them once the proofs compile, not before.
+-/
+import Mathlib
 
 namespace Ark
 

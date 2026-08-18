@@ -42,11 +42,9 @@ one.  If this file buys one thing, it is that.
 8. Assembly: the Theorem, modulo the two hypotheses
 -/
 
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Data.Nat.GCD.Basic
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Tactic
+-- `import Mathlib` pulls everything: slower to elaborate, but no unknown-module
+-- errors while the file is a sketch.  Narrow these once the proofs compile.
+import Mathlib
 
 namespace Note
 
