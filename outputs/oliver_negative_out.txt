@@ -1,0 +1,263 @@
+# part A: asserted negatives
+A5 on 5 points|got=fail|want=fail|ok
+A6 on 6 points|got=fail|want=fail|ok
+A7 on 7 points|got=fail|want=fail|ok
+PSL(2,7) on 7 points|got=fail|want=fail|ok
+PSL(2,11)|got=fail|want=fail|ok
+S5 on 5 points|got=fail|want=fail|ok
+S6 on 6 points|got=fail|want=fail|ok
+C6 cyclic|got=0|want=0|ok
+elementary abelian 8|got=0|want=0|ok
+S4 (solvable, Oliver via A4)|got=true|want=true|ok
+AGL(1,5) = F20|got=true|want=true|ok
+# part B: transitive-group population
+T(6,1)|order=6|solvable=true|oliver=0
+T(6,2)|order=6|solvable=true|oliver=0
+T(6,3)|order=12|solvable=true|oliver=[ 2 ]
+T(6,4)|order=12|solvable=true|oliver=0
+T(6,5)|order=18|solvable=true|oliver=0
+T(6,6)|order=24|solvable=true|oliver=0
+T(6,7)|order=24|solvable=true|oliver=[ 2 ]
+T(6,8)|order=24|solvable=true|oliver=[ 2 ]
+T(6,9)|order=36|solvable=true|oliver=[ 2 ]
+T(6,10)|order=36|solvable=true|oliver=0
+T(6,11)|order=48|solvable=true|oliver=[ 2 ]
+T(6,12)|order=60|solvable=false|oliver=fail
+T(6,13)|order=72|solvable=true|oliver=[ 2 ]
+T(6,14)|order=120|solvable=false|oliver=fail
+T(6,15)|order=360|solvable=false|oliver=fail
+T(6,16)|order=720|solvable=false|oliver=fail
+T(7,1)|order=7|solvable=true|oliver=0
+T(7,2)|order=14|solvable=true|oliver=0
+T(7,3)|order=21|solvable=true|oliver=0
+T(7,4)|order=42|solvable=true|oliver=0
+T(7,5)|order=168|solvable=false|oliver=fail
+T(7,6)|order=2520|solvable=false|oliver=fail
+T(7,7)|order=5040|solvable=false|oliver=fail
+T(8,1)|order=8|solvable=true|oliver=0
+T(8,2)|order=8|solvable=true|oliver=0
+T(8,3)|order=8|solvable=true|oliver=0
+T(8,4)|order=8|solvable=true|oliver=0
+T(8,5)|order=8|solvable=true|oliver=0
+T(8,6)|order=16|solvable=true|oliver=0
+T(8,7)|order=16|solvable=true|oliver=0
+T(8,8)|order=16|solvable=true|oliver=0
+T(8,9)|order=16|solvable=true|oliver=0
+T(8,10)|order=16|solvable=true|oliver=0
+T(8,11)|order=16|solvable=true|oliver=0
+T(8,12)|order=24|solvable=true|oliver=0
+T(8,13)|order=24|solvable=true|oliver=0
+T(8,14)|order=24|solvable=true|oliver=[ 2 ]
+T(8,15)|order=32|solvable=true|oliver=0
+T(8,16)|order=32|solvable=true|oliver=0
+T(8,17)|order=32|solvable=true|oliver=0
+T(8,18)|order=32|solvable=true|oliver=0
+T(8,19)|order=32|solvable=true|oliver=0
+T(8,20)|order=32|solvable=true|oliver=0
+T(8,21)|order=32|solvable=true|oliver=0
+T(8,22)|order=32|solvable=true|oliver=0
+T(8,23)|order=48|solvable=true|oliver=[ 2 ]
+T(8,24)|order=48|solvable=true|oliver=[ 2 ]
+T(8,25)|order=56|solvable=true|oliver=0
+T(8,26)|order=64|solvable=true|oliver=0
+T(8,27)|order=64|solvable=true|oliver=0
+T(8,28)|order=64|solvable=true|oliver=0
+T(8,29)|order=64|solvable=true|oliver=0
+T(8,30)|order=64|solvable=true|oliver=0
+T(8,31)|order=64|solvable=true|oliver=0
+T(8,32)|order=96|solvable=true|oliver=0
+T(8,33)|order=96|solvable=true|oliver=0
+T(8,34)|order=96|solvable=true|oliver=[ 2 ]
+T(8,35)|order=128|solvable=true|oliver=0
+T(8,36)|order=168|solvable=true|oliver=[ 3 ]
+T(8,37)|order=168|solvable=false|oliver=fail
+T(8,38)|order=192|solvable=true|oliver=0
+T(8,39)|order=192|solvable=true|oliver=[ 2 ]
+T(8,40)|order=192|solvable=true|oliver=[ 2 ]
+T(8,41)|order=192|solvable=true|oliver=[ 2 ]
+T(8,42)|order=288|solvable=true|oliver=fail
+T(8,43)|order=336|solvable=false|oliver=fail
+T(8,44)|order=384|solvable=true|oliver=[ 2 ]
+T(8,45)|order=576|solvable=true|oliver=fail
+T(8,46)|order=576|solvable=true|oliver=fail
+T(8,47)|order=1152|solvable=true|oliver=fail
+T(8,48)|order=1344|solvable=false|oliver=fail
+T(8,49)|order=20160|solvable=false|oliver=fail
+T(8,50)|order=40320|solvable=false|oliver=fail
+T(9,1)|order=9|solvable=true|oliver=0
+T(9,2)|order=9|solvable=true|oliver=0
+T(9,3)|order=18|solvable=true|oliver=0
+T(9,4)|order=18|solvable=true|oliver=0
+T(9,5)|order=18|solvable=true|oliver=0
+T(9,6)|order=27|solvable=true|oliver=0
+T(9,7)|order=27|solvable=true|oliver=0
+T(9,8)|order=36|solvable=true|oliver=[ 2 ]
+T(9,9)|order=36|solvable=true|oliver=0
+T(9,10)|order=54|solvable=true|oliver=0
+T(9,11)|order=54|solvable=true|oliver=0
+T(9,12)|order=54|solvable=true|oliver=0
+T(9,13)|order=54|solvable=true|oliver=0
+T(9,14)|order=72|solvable=true|oliver=[ 2 ]
+T(9,15)|order=72|solvable=true|oliver=0
+T(9,16)|order=72|solvable=true|oliver=[ 2 ]
+T(9,17)|order=81|solvable=true|oliver=0
+T(9,18)|order=108|solvable=true|oliver=[ 2 ]
+T(9,19)|order=144|solvable=true|oliver=[ 2 ]
+T(9,20)|order=162|solvable=true|oliver=0
+T(9,21)|order=162|solvable=true|oliver=0
+T(9,22)|order=162|solvable=true|oliver=0
+T(9,23)|order=216|solvable=true|oliver=fail
+T(9,24)|order=324|solvable=true|oliver=[ 2 ]
+T(9,25)|order=324|solvable=true|oliver=fail
+T(9,26)|order=432|solvable=true|oliver=fail
+T(9,27)|order=504|solvable=false|oliver=fail
+T(9,28)|order=648|solvable=true|oliver=fail
+T(9,29)|order=648|solvable=true|oliver=fail
+T(9,30)|order=648|solvable=true|oliver=fail
+T(9,31)|order=1296|solvable=true|oliver=fail
+T(9,32)|order=1512|solvable=false|oliver=fail
+T(9,33)|order=181440|solvable=false|oliver=fail
+T(9,34)|order=362880|solvable=false|oliver=fail
+T(10,1)|order=10|solvable=true|oliver=0
+T(10,2)|order=10|solvable=true|oliver=0
+T(10,3)|order=20|solvable=true|oliver=[ 2 ]
+T(10,4)|order=20|solvable=true|oliver=0
+T(10,5)|order=40|solvable=true|oliver=[ 2 ]
+T(10,6)|order=50|solvable=true|oliver=0
+T(10,7)|order=60|solvable=false|oliver=fail
+T(10,8)|order=80|solvable=true|oliver=0
+T(10,9)|order=100|solvable=true|oliver=[ 2 ]
+T(10,10)|order=100|solvable=true|oliver=0
+T(10,11)|order=120|solvable=false|oliver=fail
+T(10,12)|order=120|solvable=false|oliver=fail
+T(10,13)|order=120|solvable=false|oliver=fail
+T(10,14)|order=160|solvable=true|oliver=0
+T(10,15)|order=160|solvable=true|oliver=[ 2 ]
+T(10,16)|order=160|solvable=true|oliver=[ 2 ]
+T(10,17)|order=200|solvable=true|oliver=[ 2 ]
+T(10,18)|order=200|solvable=true|oliver=0
+T(10,19)|order=200|solvable=true|oliver=[ 2 ]
+T(10,20)|order=200|solvable=true|oliver=[ 2 ]
+T(10,21)|order=200|solvable=true|oliver=[ 2 ]
+T(10,22)|order=240|solvable=false|oliver=fail
+T(10,23)|order=320|solvable=true|oliver=[ 2 ]
+T(10,24)|order=320|solvable=true|oliver=[ 2 ]
+T(10,25)|order=320|solvable=true|oliver=[ 2 ]
+T(10,26)|order=360|solvable=false|oliver=fail
+T(10,27)|order=400|solvable=true|oliver=[ 2 ]
+T(10,28)|order=400|solvable=true|oliver=[ 2 ]
+T(10,29)|order=640|solvable=true|oliver=[ 2 ]
+T(10,30)|order=720|solvable=false|oliver=fail
+T(10,31)|order=720|solvable=false|oliver=fail
+T(10,32)|order=720|solvable=false|oliver=fail
+T(10,33)|order=800|solvable=true|oliver=[ 2 ]
+T(10,34)|order=960|solvable=false|oliver=fail
+T(10,35)|order=1440|solvable=false|oliver=fail
+T(10,36)|order=1920|solvable=false|oliver=fail
+T(10,37)|order=1920|solvable=false|oliver=fail
+T(10,38)|order=1920|solvable=false|oliver=fail
+T(10,39)|order=3840|solvable=false|oliver=fail
+T(10,40)|order=7200|solvable=false|oliver=fail
+T(10,41)|order=14400|solvable=false|oliver=fail
+T(10,42)|order=14400|solvable=false|oliver=fail
+T(10,43)|order=28800|solvable=false|oliver=fail
+T(10,44)|order=1814400|solvable=false|oliver=fail
+T(10,45)|order=3628800|solvable=false|oliver=fail
+T(11,1)|order=11|solvable=true|oliver=0
+T(11,2)|order=22|solvable=true|oliver=0
+T(11,3)|order=55|solvable=true|oliver=0
+T(11,4)|order=110|solvable=true|oliver=0
+T(11,5)|order=660|solvable=false|oliver=fail
+T(11,6)|order=7920|solvable=false|oliver=fail
+T(11,7)|order=19958400|solvable=false|oliver=fail
+T(11,8)|order=39916800|solvable=false|oliver=fail
+the predicate separates the population (some fail)|got=true|want=true|ok
+and does not reject everything (some pass)|got=true|want=true|ok
+partB|oliver=108|notoliver=52|solvable_notoliver=11
+# part C: witness vs search
+2x3|d=1|witness=0|search=0
+2x3|d=2|witness=0|search=0
+3x3|d=1|witness=0|search=0
+3x3|d=2|witness=0|search=0
+4x3|d=1|witness=0|search=0
+4x3|d=2|witness=0|search=0
+2x5|d=1|witness=0|search=0
+2x5|d=2|witness=0|search=0
+2x5|d=4|witness=0|search=0
+3x5|d=1|witness=0|search=0
+3x5|d=2|witness=0|search=0
+3x5|d=4|witness=0|search=0
+4x5|d=1|witness=0|search=0
+4x5|d=2|witness=0|search=0
+4x5|d=4|witness=0|search=0
+2x7|d=1|witness=0|search=0
+2x7|d=2|witness=0|search=0
+2x7|d=3|witness=0|search=0
+2x7|d=6|witness=0|search=0
+3x7|d=1|witness=0|search=0
+3x7|d=2|witness=0|search=0
+3x7|d=3|witness=0|search=0
+3x7|d=6|witness=0|search=0
+4x7|d=1|witness=0|search=0
+4x7|d=2|witness=0|search=0
+4x7|d=3|witness=0|search=0
+4x7|d=6|witness=0|search=0
+2x11|d=1|witness=0|search=0
+2x11|d=2|witness=0|search=0
+2x11|d=5|witness=0|search=0
+2x11|d=10|witness=0|search=0
+3x11|d=1|witness=0|search=0
+3x11|d=2|witness=0|search=0
+3x11|d=5|witness=0|search=0
+3x11|d=10|witness=0|search=0
+2x13|d=1|witness=0|search=0
+2x13|d=2|witness=0|search=0
+2x13|d=3|witness=0|search=0
+2x13|d=4|witness=0|search=0
+2x13|d=6|witness=0|search=0
+2x13|d=12|witness=0|search=0
+3x13|d=1|witness=0|search=0
+3x13|d=2|witness=0|search=0
+3x13|d=3|witness=0|search=0
+3x13|d=4|witness=0|search=0
+3x13|d=6|witness=0|search=0
+3x13|d=12|witness=0|search=0
+2x4|d=1|witness=0|search=0
+2x4|d=3|witness=0|search=0
+3x4|d=1|witness=0|search=0
+3x4|d=3|witness=0|search=0
+4x4|d=1|witness=0|search=0
+4x4|d=3|witness=0|search=0
+2x8|d=1|witness=0|search=0
+2x8|d=7|witness=0|search=0
+2x9|d=1|witness=0|search=0
+2x9|d=2|witness=0|search=0
+2x9|d=4|witness=0|search=0
+2x9|d=8|witness=0|search=0
+3x9|d=1|witness=0|search=0
+3x9|d=2|witness=0|search=0
+3x9|d=4|witness=0|search=0
+3x9|d=8|witness=0|search=0
+4x9|d=1|witness=0|search=0
+4x9|d=2|witness=0|search=0
+4x9|d=4|witness=0|search=0
+4x9|d=8|witness=0|search=0
+2x16|d=1|witness=0|search=0
+2x16|d=3|witness=0|search=0
+2x16|d=5|witness=0|search=0
+2x16|d=15|witness=0|search=0
+no shape where the witness passes and the search fails|got=0|want=0|ok
+the comparison actually ran on a nonempty set|got=true|want=true|ok
+# part D: broken chains
+D1 |Gamma_2| = 12 = C_2^2 x C_3, as constructed|got=12|want=12|ok
+D1 |G| = 36 and the quotient has order 3|got=36|want=36|ok
+D1 Gamma_2 normal and quotient cyclic, so ONLY the p-group clause fires|got=true|want=true|ok
+D1 Gamma_2 is not a p-group -> witness rejects|got=fail|want=fail|ok
+D1|search=[ 3 ]
+D2 G/Gamma_2 = C_4 x C_4 is not cyclic -> witness rejects|got=fail|want=fail|ok
+D2 Gamma_2 is a normal 5-group, so only the cyclic clause fires|got=true|want=true|ok
+D2|search=[ 2 ]
+D2' the same blocks, twists diagonal on one generator -> witness accepts|got=0|want=0|ok
+D3 Gamma_2 not normal -> witness rejects|got=fail|want=fail|ok
+D3 but the group itself IS Oliver, so this is the witness clause only|got=true|want=true|ok
+SUMMARY|PASS
