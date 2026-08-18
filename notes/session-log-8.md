@@ -483,3 +483,33 @@ Also trimmed as work-list-irrelevant: R6a's completed-run box (reduced to its co
 ### 18.4 One structural correction found while trimming
 
 The banner index and the item bodies had drifted: `ceiling_rederive.py` was still listed as owed in the banner after R6a was marked complete, and `audit_fmid.py`'s entry did not mention the coverage half of its obligation. Both fixed. The index is now ten entries and each has a matching `## R…` section — asserted mechanically rather than by eye.
+
+
+## 19. Review of `small-degree-computation.md` and `small-degree-verification.md` (Fable; sync pass, edits made)
+
+*Scope per instruction: sync and currency only, no expansion of the small-degree framework.*
+
+### 19.1 Verified clean
+
+**The load-bearing comparisons hold against the current artefacts.** B(10) = 20 and B(12) = 18 re-read off `mu_table_safe_v4.csv` (rows n = 10, 12: mu_bound 20 and 18, densities 0.444444 and 0.272727), matching both files' m\* = B claims — and both values are stable under the entangled-generator correction, since orb(5,4) and orb(4,3) are capped at C(c,2) either way. "Theorem 2.1 at m = 5: 2·C(5,2) = 20" checked against the notes: Theorem 2.1 exists, is the n = 2·(odd prime power) exact-value theorem, and is the right citation. Census arithmetic re-added at both degrees (967 = 95+159+14+699 with 699 = 673+18+6+2; 7,115 = 295+657+67+6,096 with 6,096 = 6,004+88+2+2; stage sums 24+319+6+618 and 194+969+28+5,924 both exact). The two graph-count constants are correct (12,005,168 labelled-iso classes at n = 10; 1.65 × 10¹¹ at n = 12). χ(M₁₀) = −1215 = −5·3⁵ as stated. Neither file mentions Illies, F_mid, mod-24, or any retired constant — both are clean of the arithmetic programme's corrected material, mostly by not touching it. The stage-A count of 194 at n = 12 is consistent with 301 transitive groups minus non-Oliver-non-p and over-MAXT drops; no conflict with the monotone-transitive scan.
+
+### 19.2 Stale references found and fixed (all in `small-degree-verification.md`)
+
+Five cross-references pointed at a superseded numbering of the computation document, and two values disagreed with the notes' own implementation note:
+
+- **"item 5b" → item 11**, twice (the Commands banner and item 1's levers): the EGF/cheap-battery decision that may obviate stage 3 is item 11; 5b is the did-stage-C-finish question and says nothing about the EGF.
+- **"§8.4 route" → `small-degree-computation.md` §5.4**: the exponential-formula/EGF methods live in §5.4 (the χ kill); §8.4 is the truncation-knob table.
+- **"§9.7" → §2.4**, twice (item 12's decisive-at-t≤3 claim; item 13's skeleton one-of-two): §9.7 does not exist in the current computation document.
+- **Item 10's "d = 10" → d = 4**: the twist must divide c − 1 = 4, and the notes' §2.4 implementation note — which item 10 is citing — says (k = 2, d = 4). **"Theorem 2.4" → Theorem 3.1**, same source: the rotation-in-the-top-layer allowance is Theorem 3.1's, and no Theorem 2.4 exists in the notes.
+
+### 19.3 Sync additions from this session's results
+
+- **The Oliver predicate's status upgraded from *sound* to *exercised*** in both files (`small-degree-computation.md` §3.1; verification item 5): `oliver_negative.g`'s PASS gives the identical verbatim predicate seven asserted simple-group negatives, a 160-group population it separates 108/52 with eleven solvable failures, witness-vs-search agreement on 71 shapes, and four broken chains rejected clause by clause. Explicitly scoped: this verifies *the predicate*, and touches exhaustiveness (5a/5b) not at all.
+- **The multi-prime-tag question (§8.6 / item 6) gains its first known-current datum**: the degree 6–11 population returns no two-prime verdict under the current predicate — weight on "groups genuinely admit at most one usable q", without settling the emitted files, whose intransitive and p-subgroup stages the population does not cover. The re-emission remains the decider.
+- **§4.1's n = 10 attainer cell corrected to the artefact-pinned record**: eight groups, one partition, two conditions, wreath present as `B2:5x2:3.1` — the old cell named only `A:17`, `A:18` and implied both were the wreath. The trivial-top witness is an **order-200** group, not the order-800 wreath: a fused-class realisation with cyclic quotient, same order and partition as `aod` §3.2.3's entangled construction — stated with the honest caveat that two non-isomorphic order-200 realisations share the partition and the record does not say which `A:18` is.
+- **§10 item 3 (Angel–Borja) annotated** with the arithmetic programme's deliberate deprioritisation, so the two files no longer imply different valuations of the same run without acknowledging each other.
+- **`monotone-transitive-note.md`'s citation of §10 item 7 tightened**: that item's negative control is for the adversary game against Adamaszek's ℰ; the Illies CSP run is a control of the same kind for a different layer, and the note now says so instead of claiming identity.
+
+### 19.4 Skipped
+
+The two files' internal computational records (probe timings, VF2 throughput, dedup tables, the 230/203/27 reproduction) were spot-checked for arithmetic only, not re-derived from checkpoints — they are the verification file's own pinned artefacts and re-deriving them is its job, not this pass's. The `TemplateGroup` defect (item 10) remains open-deferred as recorded; no attempt to re-run any battery.

@@ -134,7 +134,7 @@ Four stages, chosen because GAP's comparative advantage is subgroup lattices and
 
 Each emitted line carries a key, a description, a tag, and the orbital map. The tag is `P<p>` for a p-group, `0` for a trivial top, or a `+`-separated list of usable top primes.
 
-**The Oliver test is sound.** `IsOliverTop` iterates over normal subgroups N, checks N/O_p(N) cyclic for some p, and records q only when Γ/N is verified to be a q-group. Taking Γ₂ = O_p(N) is WLOG since any normal p-subgroup with cyclic quotient lies in O_p(N); normality in Γ is automatic because O_p(N) is characteristic in N ◁ Γ.
+**The Oliver test is sound, and now exercised against negatives.** `IsOliverTop` iterates over normal subgroups N, checks N/O_p(N) cyclic for some p, and records q only when Γ/N is verified to be a q-group. Taking Γ₂ = O_p(N) is WLOG since any normal p-subgroup with cyclic quotient lies in O_p(N); normality in Γ is automatic because O_p(N) is characteristic in N ◁ Γ. The same predicate, verbatim, passes a negative-control battery (`oliver_negative.g`): seven asserted simple-group negatives, a 160-group transitive population at degrees 6–11 that it separates 108 to 52 with eleven solvable failures, agreement with the chain-witness check on 71 fused shapes, and four deliberately broken chains rejected one clause at a time. So the `oliver` column is a predicate demonstrated to vary, not a constant.
 
 **What was dropped is recorded and large.** At n = 12, `done_keys.txt` has 16,353 keys against 7,115 emitted, so **9,238 groups were built and discarded** — non-Oliver, or exceeding the `MAXT = 12` orbital cap. That is 56% of everything GAP constructed, and it bounds what raising MAXT could add.
 
@@ -190,10 +190,10 @@ This is the section the rest of the programme cites.
 
 | | exhaustive maximum m\* | achieved by | B(n) predicts |
 |---|---|---|---|
-| **n = 10** | **20** (density 0.444) | AGL(1,5)≀C₂ — `A:17`, `A:18` | Theorem 2.1 at m = 5: 2·C(5,2) = 20 |
+| **n = 10** | **20** (density 0.444) | 8 groups, **1 orbital partition** [20, 25], 2 distinct conditions — incl. `B2:5x2:3.1` = T(5,3) ≀ T(2,1), the wreath, and a trivial-top witness (`A:18`, order 200) | Theorem 2.1 at m = 5: 2·C(5,2) = 20 |
 | **n = 12** | **18** (density 0.273) | 8 groups, **1 orbital partition**, 3 distinct conditions | the wreath bound at (𝔽₄⋊C₃)≀C₃ |
 
-**Exceeded zero ways at both degrees.** At n = 12 the eight attainers are the seven transitive groups `A:85, 164, 166, 207, 228, 229, 265` together with **`B2:4x3:4.1` = T(4,4) ≀ T(3,1)** — which is the direct confirmation that the wreath construction attains the optimum, rather than merely being consistent with it. All eight share the orbital partition **[18, 48]**, and their tags are six at q = 3, one at q = 2, and one at `0`: **the optimum is witnessed by a trivial-top group**, hence by χ = 1 exactly, the harshest condition available.
+**Exceeded zero ways at both degrees, and the attainer structure is parallel.** At n = 12 the eight attainers are the seven transitive groups `A:85, 164, 166, 207, 228, 229, 265` together with **`B2:4x3:4.1` = T(4,4) ≀ T(3,1)** — the direct confirmation that the wreath construction attains the optimum, rather than merely being consistent with it. All eight share the orbital partition **[18, 48]**, tags six at q = 3, one at q = 2, one at `0`: **the optimum is witnessed by a trivial-top group**, hence by χ = 1 exactly, the harshest condition available. At n = 10 the same three-way count holds — eight attainers, one partition, two conditions — with the wreath among them as `B2:5x2:3.1` and the trivial-top witness an **order-200** group rather than the order-800 wreath — a fused-class realisation with cyclic quotient, of the same order and orbital partition as the entangled-generator construction of `arithmetic-of-density.md` §3.2.3. (Two non-isomorphic order-200 realisations share that partition, the entangled one and the block-permutation-plus-twist one, neither containing the other; the record does not say which `A:18` is, and for the trivial-top point it does not matter.)
 
 Note the shape of both optima: **t = 2**, so §2.4's criterion applies at its sharpest. At n = 10 it reads *any counterexample contains exactly one of 2K₅ (20 edges) and K₅,₅ (25 edges)*; at n = 12, *exactly one of the 18-edge and 48-edge orbitals*.
 
@@ -345,7 +345,7 @@ A second, smaller question: `ConjugacyClassesSubgroups` on the Sylow 2-subgroup 
 
 ### 8.6 A dead strengthening
 
-`IsOliverTop` returns *every* usable top prime as a `+`-separated tag, and the solvers enforce χ ≡ 1 mod the lcm — strictly stronger than any single chain. **No group at either degree has a multi-prime tag.** Across 8,082 groups the tags are exactly `0`, `2`, `3` and `P*`. Either the emitted files predate the change, or no group in this range admits two usable top primes and the strengthening is worth nothing. It needs one re-emission from a known-current script to distinguish these; if the answer is the second, the path should be retired rather than left as dead code.
+`IsOliverTop` returns *every* usable top prime as a `+`-separated tag, and the solvers enforce χ ≡ 1 mod the lcm — strictly stronger than any single chain. **No group at either degree has a multi-prime tag.** Across 8,082 groups the tags are exactly `0`, `2`, `3` and `P*`. Either the emitted files predate the change, or no group in this range admits two usable top primes and the strengthening is worth nothing. A known-current run of the same predicate over the 160 transitive groups of degrees 6–11 (`oliver_negative.g`) also returns no two-prime verdict, which is weight on the second reading without settling the emitted files — those include intransitive and p-subgroup stages the population does not. One re-emission distinguishes the readings; if the answer is the second, the path should be retired rather than left as dead code.
 
 ---
 
@@ -367,7 +367,7 @@ The connection to §5.3 is worth noting. K₁,₈ is forced IN while the spannin
 
 1. **Run a cheap n = 12 battery.** A `--maxt 6` cut is 125 conditions with a much smaller catalog, and stage 3 scales with V², so plausibly hours rather than weeks. If it returns UNSAT, n = 12 is settled and neither the 22-day stage 3 nor the closure machinery of §8.3 is needed. If SAT, the result is a solution to χ-test and the §8.3 question becomes concrete. **This ordering inverts the current dependency and should be checked first.**
 2. **Re-probe the 54 CAP classes** at a larger node budget, before any statement about the free band or any escalation decision that depends on its width (§5.5).
-3. **Run the n = 10 CSP against Angel–Borja's five surviving types** (§4.3). Non-circular validation if it reproduces their eliminations; a publishable increment if it kills more.
+3. **Run the n = 10 CSP against Angel–Borja's five surviving types** (§4.3). Non-circular validation if it reproduces their eliminations; a publishable increment if it kills more. *(The arithmetic programme's literature item deliberately deprioritises this — the exhaustive n = 10 and n = 12 m\* comparisons already validate the machinery more strongly — so its standing here is as an increment on Angel–Borja, not as validation the framework is waiting on.)*
 4. **Close or refute the subdirect-product hole** (§8.5) — the only thing standing between "no enumerated group exceeds B(n)" and "the exhaustive optimum is the predicted construction".
 5. **Decide how S is computed at n = 12** (§8.3): full down-closure versus the exponential-formula route.
 6. **Settle the multi-prime tag question** (§8.6) and either exercise or retire the lcm strengthening.
