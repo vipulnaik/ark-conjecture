@@ -1,0 +1,241 @@
+2x3|d=1|n=6|order=18|oliver=0|intra 6/[ 6 ]|cross 9/[ 9 ]|ok
+2x3|d=2|n=6|order=36|oliver=0|intra 6/[ 6 ]|cross 9/[ 9 ]|ok
+3x3|d=1|n=9|order=81|oliver=0|intra 9/[ 9 ]|cross 27/[ 27 ]|ok
+3x3|d=2|n=9|order=162|oliver=0|intra 9/[ 9 ]|cross 27/[ 27 ]|ok
+4x3|d=1|n=12|order=324|oliver=0|intra 12/[ 12 ]|cross 18/[ 36, 18 ]|ok
+4x3|d=2|n=12|order=648|oliver=0|intra 12/[ 12 ]|cross 18/[ 36, 18 ]|ok
+2x4|d=1|n=8|order=32|oliver=0|intra 4/[ 4, 4, 4 ]|cross 16/[ 16 ]|ok
+2x4|d=3|n=8|order=96|oliver=0|intra 12/[ 12 ]|cross 16/[ 16 ]|ok
+3x4|d=1|n=12|order=192|oliver=0|intra 6/[ 6, 6, 6 ]|cross 48/[ 48 ]|ok
+3x4|d=3|n=12|order=576|oliver=0|intra 18/[ 18 ]|cross 48/[ 48 ]|ok
+4x4|d=1|n=16|order=1024|oliver=0|intra 8/[ 8, 8, 8 ]|cross 32/[ 64, 32 ]|ok
+4x4|d=3|n=16|order=3072|oliver=0|intra 24/[ 24 ]|cross 32/[ 64, 32 ]|ok
+2x5|d=1|n=10|order=50|oliver=0|intra 10/[ 10, 10 ]|cross 25/[ 25 ]|ok
+2x5|d=2|n=10|order=100|oliver=0|intra 10/[ 10, 10 ]|cross 25/[ 25 ]|ok
+2x5|d=4|n=10|order=200|oliver=0|intra 20/[ 20 ]|cross 25/[ 25 ]|ok
+3x5|d=1|n=15|order=375|oliver=0|intra 15/[ 15, 15 ]|cross 75/[ 75 ]|ok
+3x5|d=2|n=15|order=750|oliver=0|intra 15/[ 15, 15 ]|cross 75/[ 75 ]|ok
+3x5|d=4|n=15|order=1500|oliver=0|intra 30/[ 30 ]|cross 75/[ 75 ]|ok
+4x5|d=1|n=20|order=2500|oliver=0|intra 20/[ 20, 20 ]|cross 50/[ 100, 50 ]|ok
+4x5|d=2|n=20|order=5000|oliver=0|intra 20/[ 20, 20 ]|cross 50/[ 100, 50 ]|ok
+4x5|d=4|n=20|order=10000|oliver=0|intra 40/[ 40 ]|cross 50/[ 100, 50 ]|ok
+2x7|d=1|n=14|order=98|oliver=0|intra 14/[ 14, 14, 14 ]|cross 49/[ 49 ]|ok
+2x7|d=2|n=14|order=196|oliver=0|intra 14/[ 14, 14, 14 ]|cross 49/[ 49 ]|ok
+2x7|d=3|n=14|order=294|oliver=0|intra 42/[ 42 ]|cross 49/[ 49 ]|ok
+2x7|d=6|n=14|order=588|oliver=0|intra 42/[ 42 ]|cross 49/[ 49 ]|ok
+3x7|d=1|n=21|order=1029|oliver=0|intra 21/[ 21, 21, 21 ]|cross 147/[ 147 ]|ok
+3x7|d=2|n=21|order=2058|oliver=0|intra 21/[ 21, 21, 21 ]|cross 147/[ 147 ]|ok
+3x7|d=3|n=21|order=3087|oliver=0|intra 63/[ 63 ]|cross 147/[ 147 ]|ok
+3x7|d=6|n=21|order=6174|oliver=0|intra 63/[ 63 ]|cross 147/[ 147 ]|ok
+4x7|d=1|n=28|order=9604|oliver=0|intra 28/[ 28, 28, 28 ]|cross 98/[ 196, 98 ]|ok
+4x7|d=2|n=28|order=19208|oliver=0|intra 28/[ 28, 28, 28 ]|cross 98/[ 196, 98 ]|ok
+4x7|d=3|n=28|order=28812|oliver=0|intra 84/[ 84 ]|cross 98/[ 196, 98 ]|ok
+4x7|d=6|n=28|order=57624|oliver=0|intra 84/[ 84 ]|cross 98/[ 196, 98 ]|ok
+2x8|d=1|n=16|order=128|oliver=0|intra 8/[ 8, 8, 8, 8, 8, 8, 8 ]|cross 64/[ 64 ]|ok
+2x8|d=7|n=16|order=896|oliver=0|intra 56/[ 56 ]|cross 64/[ 64 ]|ok
+3x8|d=1|n=24|order=1536|oliver=0|intra 12/[ 12, 12, 12, 12, 12, 12, 12 ]|cross 192/[ 192 ]|ok
+3x8|d=7|n=24|order=10752|oliver=0|intra 84/[ 84 ]|cross 192/[ 192 ]|ok
+4x8|d=1|n=32|order=16384|oliver=0|intra 16/[ 16, 16, 16, 16, 16, 16, 16 ]|cross 128/[ 256, 128 ]|ok
+4x8|d=7|n=32|order=114688|oliver=0|intra 112/[ 112 ]|cross 128/[ 256, 128 ]|ok
+2x9|d=1|n=18|order=162|oliver=0|intra 18/[ 18, 18, 18, 18 ]|cross 81/[ 81 ]|ok
+2x9|d=2|n=18|order=324|oliver=0|intra 18/[ 18, 18, 18, 18 ]|cross 81/[ 81 ]|ok
+2x9|d=4|n=18|order=648|oliver=0|intra 36/[ 36, 36 ]|cross 81/[ 81 ]|ok
+2x9|d=8|n=18|order=1296|oliver=0|intra 72/[ 72 ]|cross 81/[ 81 ]|ok
+3x9|d=1|n=27|order=2187|oliver=0|intra 27/[ 27, 27, 27, 27 ]|cross 243/[ 243 ]|ok
+3x9|d=2|n=27|order=4374|oliver=0|intra 27/[ 27, 27, 27, 27 ]|cross 243/[ 243 ]|ok
+3x9|d=4|n=27|order=8748|oliver=0|intra 54/[ 54, 54 ]|cross 243/[ 243 ]|ok
+3x9|d=8|n=27|order=17496|oliver=0|intra 108/[ 108 ]|cross 243/[ 243 ]|ok
+4x9|d=1|n=36|order=26244|oliver=0|intra 36/[ 36, 36, 36, 36 ]|cross 162/[ 324, 162 ]|ok
+4x9|d=2|n=36|order=52488|oliver=0|intra 36/[ 36, 36, 36, 36 ]|cross 162/[ 324, 162 ]|ok
+4x9|d=4|n=36|order=104976|oliver=0|intra 72/[ 72, 72 ]|cross 162/[ 324, 162 ]|ok
+4x9|d=8|n=36|order=209952|oliver=0|intra 144/[ 144 ]|cross 162/[ 324, 162 ]|ok
+2x11|d=1|n=22|order=242|oliver=0|intra 22/[ 22, 22, 22, 22, 22 ]|cross 121/[ 121 ]|ok
+2x11|d=2|n=22|order=484|oliver=0|intra 22/[ 22, 22, 22, 22, 22 ]|cross 121/[ 121 ]|ok
+2x11|d=5|n=22|order=1210|oliver=0|intra 110/[ 110 ]|cross 121/[ 121 ]|ok
+2x11|d=10|n=22|order=2420|oliver=0|intra 110/[ 110 ]|cross 121/[ 121 ]|ok
+3x11|d=1|n=33|order=3993|oliver=0|intra 33/[ 33, 33, 33, 33, 33 ]|cross 363/[ 363 ]|ok
+3x11|d=2|n=33|order=7986|oliver=0|intra 33/[ 33, 33, 33, 33, 33 ]|cross 363/[ 363 ]|ok
+3x11|d=5|n=33|order=19965|oliver=0|intra 165/[ 165 ]|cross 363/[ 363 ]|ok
+3x11|d=10|n=33|order=39930|oliver=0|intra 165/[ 165 ]|cross 363/[ 363 ]|ok
+4x11|d=1|n=44|order=58564|oliver=0|intra 44/[ 44, 44, 44, 44, 44 ]|cross 242/[ 484, 242 ]|ok
+4x11|d=2|n=44|order=117128|oliver=0|intra 44/[ 44, 44, 44, 44, 44 ]|cross 242/[ 484, 242 ]|ok
+4x11|d=5|n=44|order=292820|oliver=0|intra 220/[ 220 ]|cross 242/[ 484, 242 ]|ok
+4x11|d=10|n=44|order=585640|oliver=0|intra 220/[ 220 ]|cross 242/[ 484, 242 ]|ok
+2x13|d=1|n=26|order=338|oliver=0|intra 26/[ 26, 26, 26, 26, 26, 26 ]|cross 169/[ 169 ]|ok
+2x13|d=2|n=26|order=676|oliver=0|intra 26/[ 26, 26, 26, 26, 26, 26 ]|cross 169/[ 169 ]|ok
+2x13|d=3|n=26|order=1014|oliver=0|intra 78/[ 78, 78 ]|cross 169/[ 169 ]|ok
+2x13|d=4|n=26|order=1352|oliver=0|intra 52/[ 52, 52, 52 ]|cross 169/[ 169 ]|ok
+2x13|d=6|n=26|order=2028|oliver=0|intra 78/[ 78, 78 ]|cross 169/[ 169 ]|ok
+2x13|d=12|n=26|order=4056|oliver=0|intra 156/[ 156 ]|cross 169/[ 169 ]|ok
+3x13|d=1|n=39|order=6591|oliver=0|intra 39/[ 39, 39, 39, 39, 39, 39 ]|cross 507/[ 507 ]|ok
+3x13|d=2|n=39|order=13182|oliver=0|intra 39/[ 39, 39, 39, 39, 39, 39 ]|cross 507/[ 507 ]|ok
+3x13|d=3|n=39|order=19773|oliver=0|intra 117/[ 117, 117 ]|cross 507/[ 507 ]|ok
+3x13|d=4|n=39|order=26364|oliver=0|intra 78/[ 78, 78, 78 ]|cross 507/[ 507 ]|ok
+3x13|d=6|n=39|order=39546|oliver=0|intra 117/[ 117, 117 ]|cross 507/[ 507 ]|ok
+3x13|d=12|n=39|order=79092|oliver=0|intra 234/[ 234 ]|cross 507/[ 507 ]|ok
+4x13|d=1|n=52|order=114244|oliver=0|intra 52/[ 52, 52, 52, 52, 52, 52 ]|cross 338/[ 676, 338 ]|ok
+4x13|d=2|n=52|order=228488|oliver=0|intra 52/[ 52, 52, 52, 52, 52, 52 ]|cross 338/[ 676, 338 ]|ok
+4x13|d=3|n=52|order=342732|oliver=0|intra 156/[ 156, 156 ]|cross 338/[ 676, 338 ]|ok
+4x13|d=4|n=52|order=456976|oliver=0|intra 104/[ 104, 104, 104 ]|cross 338/[ 676, 338 ]|ok
+4x13|d=6|n=52|order=685464|oliver=0|intra 156/[ 156, 156 ]|cross 338/[ 676, 338 ]|ok
+4x13|d=12|n=52|order=1370928|oliver=0|intra 312/[ 312 ]|cross 338/[ 676, 338 ]|ok
+2x16|d=1|n=32|order=512|oliver=0|intra 16/[ 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16 ]|cross 256/[ 256 ]|ok
+2x16|d=3|n=32|order=1536|oliver=0|intra 48/[ 48, 48, 48, 48, 48 ]|cross 256/[ 256 ]|ok
+2x16|d=5|n=32|order=2560|oliver=0|intra 80/[ 80, 80, 80 ]|cross 256/[ 256 ]|ok
+2x16|d=15|n=32|order=7680|oliver=0|intra 240/[ 240 ]|cross 256/[ 256 ]|ok
+3x16|d=1|n=48|order=12288|oliver=0|intra 24/[ 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24 ]|cross 768/[ 768 ]|ok
+3x16|d=3|n=48|order=36864|oliver=0|intra 72/[ 72, 72, 72, 72, 72 ]|cross 768/[ 768 ]|ok
+3x16|d=5|n=48|order=61440|oliver=0|intra 120/[ 120, 120, 120 ]|cross 768/[ 768 ]|ok
+3x16|d=15|n=48|order=184320|oliver=0|intra 360/[ 360 ]|cross 768/[ 768 ]|ok
+4x16|d=1|n=64|order=262144|oliver=0|intra 32/[ 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32 ]|cross 512/[ 1024, 512 ]|ok
+4x16|d=3|n=64|order=786432|oliver=0|intra 96/[ 96, 96, 96, 96, 96 ]|cross 512/[ 1024, 512 ]|ok
+4x16|d=5|n=64|order=1310720|oliver=0|intra 160/[ 160, 160, 160 ]|cross 512/[ 1024, 512 ]|ok
+4x16|d=15|n=64|order=3932160|oliver=0|intra 480/[ 480 ]|cross 512/[ 1024, 512 ]|ok
+2x17|d=1|n=34|order=578|oliver=0|intra 34/[ 34, 34, 34, 34, 34, 34, 34, 34 ]|cross 289/[ 289 ]|ok
+2x17|d=2|n=34|order=1156|oliver=0|intra 34/[ 34, 34, 34, 34, 34, 34, 34, 34 ]|cross 289/[ 289 ]|ok
+2x17|d=4|n=34|order=2312|oliver=0|intra 68/[ 68, 68, 68, 68 ]|cross 289/[ 289 ]|ok
+2x17|d=8|n=34|order=4624|oliver=0|intra 136/[ 136, 136 ]|cross 289/[ 289 ]|ok
+2x17|d=16|n=34|order=9248|oliver=0|intra 272/[ 272 ]|cross 289/[ 289 ]|ok
+3x17|d=1|n=51|order=14739|oliver=0|intra 51/[ 51, 51, 51, 51, 51, 51, 51, 51 ]|cross 867/[ 867 ]|ok
+3x17|d=2|n=51|order=29478|oliver=0|intra 51/[ 51, 51, 51, 51, 51, 51, 51, 51 ]|cross 867/[ 867 ]|ok
+3x17|d=4|n=51|order=58956|oliver=0|intra 102/[ 102, 102, 102, 102 ]|cross 867/[ 867 ]|ok
+3x17|d=8|n=51|order=117912|oliver=0|intra 204/[ 204, 204 ]|cross 867/[ 867 ]|ok
+3x17|d=16|n=51|order=235824|oliver=0|intra 408/[ 408 ]|cross 867/[ 867 ]|ok
+4x17|d=1|n=68|order=334084|oliver=0|intra 68/[ 68, 68, 68, 68, 68, 68, 68, 68 ]|cross 578/[ 1156, 578 ]|ok
+4x17|d=2|n=68|order=668168|oliver=0|intra 68/[ 68, 68, 68, 68, 68, 68, 68, 68 ]|cross 578/[ 1156, 578 ]|ok
+4x17|d=4|n=68|order=1336336|oliver=0|intra 136/[ 136, 136, 136, 136 ]|cross 578/[ 1156, 578 ]|ok
+4x17|d=8|n=68|order=2672672|oliver=0|intra 272/[ 272, 272 ]|cross 578/[ 1156, 578 ]|ok
+4x17|d=16|n=68|order=5345344|oliver=0|intra 544/[ 544 ]|cross 578/[ 1156, 578 ]|ok
+2x19|d=1|n=38|order=722|oliver=0|intra 38/[ 38, 38, 38, 38, 38, 38, 38, 38, 38 ]|cross 361/[ 361 ]|ok
+2x19|d=2|n=38|order=1444|oliver=0|intra 38/[ 38, 38, 38, 38, 38, 38, 38, 38, 38 ]|cross 361/[ 361 ]|ok
+2x19|d=3|n=38|order=2166|oliver=0|intra 114/[ 114, 114, 114 ]|cross 361/[ 361 ]|ok
+2x19|d=6|n=38|order=4332|oliver=0|intra 114/[ 114, 114, 114 ]|cross 361/[ 361 ]|ok
+2x19|d=9|n=38|order=6498|oliver=0|intra 342/[ 342 ]|cross 361/[ 361 ]|ok
+2x19|d=18|n=38|order=12996|oliver=0|intra 342/[ 342 ]|cross 361/[ 361 ]|ok
+3x19|d=1|n=57|order=20577|oliver=0|intra 57/[ 57, 57, 57, 57, 57, 57, 57, 57, 57 ]|cross 1083/[ 1083 ]|ok
+3x19|d=2|n=57|order=41154|oliver=0|intra 57/[ 57, 57, 57, 57, 57, 57, 57, 57, 57 ]|cross 1083/[ 1083 ]|ok
+3x19|d=3|n=57|order=61731|oliver=0|intra 171/[ 171, 171, 171 ]|cross 1083/[ 1083 ]|ok
+3x19|d=6|n=57|order=123462|oliver=0|intra 171/[ 171, 171, 171 ]|cross 1083/[ 1083 ]|ok
+3x19|d=9|n=57|order=185193|oliver=0|intra 513/[ 513 ]|cross 1083/[ 1083 ]|ok
+3x19|d=18|n=57|order=370386|oliver=0|intra 513/[ 513 ]|cross 1083/[ 1083 ]|ok
+4x19|d=1|n=76|order=521284|oliver=0|intra 76/[ 76, 76, 76, 76, 76, 76, 76, 76, 76 ]|cross 722/[ 1444, 722 ]|ok
+4x19|d=2|n=76|order=1042568|oliver=0|intra 76/[ 76, 76, 76, 76, 76, 76, 76, 76, 76 ]|cross 722/[ 1444, 722 ]|ok
+4x19|d=3|n=76|order=1563852|oliver=0|intra 228/[ 228, 228, 228 ]|cross 722/[ 1444, 722 ]|ok
+4x19|d=6|n=76|order=3127704|oliver=0|intra 228/[ 228, 228, 228 ]|cross 722/[ 1444, 722 ]|ok
+4x19|d=9|n=76|order=4691556|oliver=0|intra 684/[ 684 ]|cross 722/[ 1444, 722 ]|ok
+4x19|d=18|n=76|order=9383112|oliver=0|intra 684/[ 684 ]|cross 722/[ 1444, 722 ]|ok
+2x23|d=1|n=46|order=1058|oliver=0|intra 46/[ 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46 ]|cross 529/[ 529 ]|ok
+2x23|d=2|n=46|order=2116|oliver=0|intra 46/[ 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46 ]|cross 529/[ 529 ]|ok
+2x23|d=11|n=46|order=11638|oliver=0|intra 506/[ 506 ]|cross 529/[ 529 ]|ok
+2x23|d=22|n=46|order=23276|oliver=0|intra 506/[ 506 ]|cross 529/[ 529 ]|ok
+3x23|d=1|n=69|order=36501|oliver=0|intra 69/[ 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69 ]|cross 1587/[ 1587 ]|ok
+3x23|d=2|n=69|order=73002|oliver=0|intra 69/[ 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69 ]|cross 1587/[ 1587 ]|ok
+3x23|d=11|n=69|order=401511|oliver=0|intra 759/[ 759 ]|cross 1587/[ 1587 ]|ok
+3x23|d=22|n=69|order=803022|oliver=0|intra 759/[ 759 ]|cross 1587/[ 1587 ]|ok
+4x23|d=1|n=92|order=1119364|oliver=0|intra 92/[ 92, 92, 92, 92, 92, 92, 92, 92, 92, 92, 92 ]|cross 1058/[ 2116, 1058 ]|ok
+4x23|d=2|n=92|order=2238728|oliver=0|intra 92/[ 92, 92, 92, 92, 92, 92, 92, 92, 92, 92, 92 ]|cross 1058/[ 2116, 1058 ]|ok
+4x23|d=11|n=92|order=12313004|oliver=0|intra 1012/[ 1012 ]|cross 1058/[ 2116, 1058 ]|ok
+4x23|d=22|n=92|order=24626008|oliver=0|intra 1012/[ 1012 ]|cross 1058/[ 2116, 1058 ]|ok
+2x25|d=1|n=50|order=1250|oliver=0|intra 50/[ 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50 ]|cross 625/[ 625 ]|ok
+2x25|d=2|n=50|order=2500|oliver=0|intra 50/[ 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50 ]|cross 625/[ 625 ]|ok
+2x25|d=3|n=50|order=3750|oliver=0|intra 150/[ 150, 150, 150, 150 ]|cross 625/[ 625 ]|ok
+2x25|d=4|n=50|order=5000|oliver=0|intra 100/[ 100, 100, 100, 100, 100, 100 ]|cross 625/[ 625 ]|ok
+2x25|d=6|n=50|order=7500|oliver=0|intra 150/[ 150, 150, 150, 150 ]|cross 625/[ 625 ]|ok
+2x25|d=8|n=50|order=10000|oliver=0|intra 200/[ 200, 200, 200 ]|cross 625/[ 625 ]|ok
+2x25|d=12|n=50|order=15000|oliver=0|intra 300/[ 300, 300 ]|cross 625/[ 625 ]|ok
+2x25|d=24|n=50|order=30000|oliver=0|intra 600/[ 600 ]|cross 625/[ 625 ]|ok
+3x25|d=1|n=75|order=46875|oliver=0|intra 75/[ 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75 ]|cross 1875/[ 1875 ]|ok
+3x25|d=2|n=75|order=93750|oliver=0|intra 75/[ 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75 ]|cross 1875/[ 1875 ]|ok
+3x25|d=3|n=75|order=140625|oliver=0|intra 225/[ 225, 225, 225, 225 ]|cross 1875/[ 1875 ]|ok
+3x25|d=4|n=75|order=187500|oliver=0|intra 150/[ 150, 150, 150, 150, 150, 150 ]|cross 1875/[ 1875 ]|ok
+3x25|d=6|n=75|order=281250|oliver=0|intra 225/[ 225, 225, 225, 225 ]|cross 1875/[ 1875 ]|ok
+3x25|d=8|n=75|order=375000|oliver=0|intra 300/[ 300, 300, 300 ]|cross 1875/[ 1875 ]|ok
+3x25|d=12|n=75|order=562500|oliver=0|intra 450/[ 450, 450 ]|cross 1875/[ 1875 ]|ok
+3x25|d=24|n=75|order=1125000|oliver=0|intra 900/[ 900 ]|cross 1875/[ 1875 ]|ok
+4x25|d=1|n=100|order=1562500|oliver=0|intra 100/[ 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 ]|cross 1250/[ 2500, 1250 ]|ok
+4x25|d=2|n=100|order=3125000|oliver=0|intra 100/[ 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 ]|cross 1250/[ 2500, 1250 ]|ok
+4x25|d=3|n=100|order=4687500|oliver=0|intra 300/[ 300, 300, 300, 300 ]|cross 1250/[ 2500, 1250 ]|ok
+4x25|d=4|n=100|order=6250000|oliver=0|intra 200/[ 200, 200, 200, 200, 200, 200 ]|cross 1250/[ 2500, 1250 ]|ok
+4x25|d=6|n=100|order=9375000|oliver=0|intra 300/[ 300, 300, 300, 300 ]|cross 1250/[ 2500, 1250 ]|ok
+4x25|d=8|n=100|order=12500000|oliver=0|intra 400/[ 400, 400, 400 ]|cross 1250/[ 2500, 1250 ]|ok
+4x25|d=12|n=100|order=18750000|oliver=0|intra 600/[ 600, 600 ]|cross 1250/[ 2500, 1250 ]|ok
+4x25|d=24|n=100|order=37500000|oliver=0|intra 1200/[ 1200 ]|cross 1250/[ 2500, 1250 ]|ok
+2x27|d=1|n=54|order=1458|oliver=0|intra 54/[ 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54 ]|cross 729/[ 729 ]|ok
+2x27|d=2|n=54|order=2916|oliver=0|intra 54/[ 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54 ]|cross 729/[ 729 ]|ok
+2x27|d=13|n=54|order=18954|oliver=0|intra 702/[ 702 ]|cross 729/[ 729 ]|ok
+2x27|d=26|n=54|order=37908|oliver=0|intra 702/[ 702 ]|cross 729/[ 729 ]|ok
+3x27|d=1|n=81|order=59049|oliver=0|intra 81/[ 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81 ]|cross 2187/[ 2187 ]|ok
+3x27|d=2|n=81|order=118098|oliver=0|intra 81/[ 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81 ]|cross 2187/[ 2187 ]|ok
+3x27|d=13|n=81|order=767637|oliver=0|intra 1053/[ 1053 ]|cross 2187/[ 2187 ]|ok
+3x27|d=26|n=81|order=1535274|oliver=0|intra 1053/[ 1053 ]|cross 2187/[ 2187 ]|ok
+2x29|d=1|n=58|order=1682|oliver=0|intra 58/[ 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58 ]|cross 841/[ 841 ]|ok
+2x29|d=2|n=58|order=3364|oliver=0|intra 58/[ 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58 ]|cross 841/[ 841 ]|ok
+2x29|d=4|n=58|order=6728|oliver=0|intra 116/[ 116, 116, 116, 116, 116, 116, 116 ]|cross 841/[ 841 ]|ok
+2x29|d=7|n=58|order=11774|oliver=0|intra 406/[ 406, 406 ]|cross 841/[ 841 ]|ok
+2x29|d=14|n=58|order=23548|oliver=0|intra 406/[ 406, 406 ]|cross 841/[ 841 ]|ok
+2x29|d=28|n=58|order=47096|oliver=0|intra 812/[ 812 ]|cross 841/[ 841 ]|ok
+3x29|d=1|n=87|order=73167|oliver=0|intra 87/[ 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87 ]|cross 2523/[ 2523 ]|ok
+3x29|d=2|n=87|order=146334|oliver=0|intra 87/[ 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87 ]|cross 2523/[ 2523 ]|ok
+3x29|d=4|n=87|order=292668|oliver=0|intra 174/[ 174, 174, 174, 174, 174, 174, 174 ]|cross 2523/[ 2523 ]|ok
+3x29|d=7|n=87|order=512169|oliver=0|intra 609/[ 609, 609 ]|cross 2523/[ 2523 ]|ok
+3x29|d=14|n=87|order=1024338|oliver=0|intra 609/[ 609, 609 ]|cross 2523/[ 2523 ]|ok
+3x29|d=28|n=87|order=2048676|oliver=0|intra 1218/[ 1218 ]|cross 2523/[ 2523 ]|ok
+2x31|d=1|n=62|order=1922|oliver=0|intra 62/[ 62, 62, 62, 62, 62, 62, 62, 62, 62, 62, 62, 62, 62, 62, 62 ]|cross 961/[ 961 ]|ok
+2x31|d=2|n=62|order=3844|oliver=0|intra 62/[ 62, 62, 62, 62, 62, 62, 62, 62, 62, 62, 62, 62, 62, 62, 62 ]|cross 961/[ 961 ]|ok
+2x31|d=3|n=62|order=5766|oliver=0|intra 186/[ 186, 186, 186, 186, 186 ]|cross 961/[ 961 ]|ok
+2x31|d=5|n=62|order=9610|oliver=0|intra 310/[ 310, 310, 310 ]|cross 961/[ 961 ]|ok
+2x31|d=6|n=62|order=11532|oliver=0|intra 186/[ 186, 186, 186, 186, 186 ]|cross 961/[ 961 ]|ok
+2x31|d=10|n=62|order=19220|oliver=0|intra 310/[ 310, 310, 310 ]|cross 961/[ 961 ]|ok
+2x31|d=15|n=62|order=28830|oliver=0|intra 930/[ 930 ]|cross 961/[ 961 ]|ok
+2x31|d=30|n=62|order=57660|oliver=0|intra 930/[ 930 ]|cross 961/[ 961 ]|ok
+3x31|d=1|n=93|order=89373|oliver=0|intra 93/[ 93, 93, 93, 93, 93, 93, 93, 93, 93, 93, 93, 93, 93, 93, 93 ]|cross 2883/[ 2883 ]|ok
+3x31|d=2|n=93|order=178746|oliver=0|intra 93/[ 93, 93, 93, 93, 93, 93, 93, 93, 93, 93, 93, 93, 93, 93, 93 ]|cross 2883/[ 2883 ]|ok
+3x31|d=3|n=93|order=268119|oliver=0|intra 279/[ 279, 279, 279, 279, 279 ]|cross 2883/[ 2883 ]|ok
+3x31|d=5|n=93|order=446865|oliver=0|intra 465/[ 465, 465, 465 ]|cross 2883/[ 2883 ]|ok
+3x31|d=6|n=93|order=536238|oliver=0|intra 279/[ 279, 279, 279, 279, 279 ]|cross 2883/[ 2883 ]|ok
+3x31|d=10|n=93|order=893730|oliver=0|intra 465/[ 465, 465, 465 ]|cross 2883/[ 2883 ]|ok
+3x31|d=15|n=93|order=1340595|oliver=0|intra 1395/[ 1395 ]|cross 2883/[ 2883 ]|ok
+3x31|d=30|n=93|order=2681190|oliver=0|intra 1395/[ 1395 ]|cross 2883/[ 2883 ]|ok
+2x32|d=1|n=64|order=2048|oliver=0|intra 32/[ 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32 ]|cross 1024/[ 1024 ]|ok
+2x32|d=31|n=64|order=63488|oliver=0|intra 992/[ 992 ]|cross 1024/[ 1024 ]|ok
+3x32|d=1|n=96|order=98304|oliver=0|intra 48/[ 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48 ]|cross 3072/[ 3072 ]|ok
+3x32|d=31|n=96|order=3047424|oliver=0|intra 1488/[ 1488 ]|cross 3072/[ 3072 ]|ok
+2x37|d=1|n=74|order=2738|oliver=0|intra 74/[ 74, 74, 74, 74, 74, 74, 74, 74, 74, 74, 74, 74, 74, 74, 74, 74, 74, 74 ]|cross 1369/[ 1369 ]|ok
+2x37|d=2|n=74|order=5476|oliver=0|intra 74/[ 74, 74, 74, 74, 74, 74, 74, 74, 74, 74, 74, 74, 74, 74, 74, 74, 74, 74 ]|cross 1369/[ 1369 ]|ok
+2x37|d=3|n=74|order=8214|oliver=0|intra 222/[ 222, 222, 222, 222, 222, 222 ]|cross 1369/[ 1369 ]|ok
+2x37|d=4|n=74|order=10952|oliver=0|intra 148/[ 148, 148, 148, 148, 148, 148, 148, 148, 148 ]|cross 1369/[ 1369 ]|ok
+2x37|d=6|n=74|order=16428|oliver=0|intra 222/[ 222, 222, 222, 222, 222, 222 ]|cross 1369/[ 1369 ]|ok
+2x37|d=9|n=74|order=24642|oliver=0|intra 666/[ 666, 666 ]|cross 1369/[ 1369 ]|ok
+2x37|d=12|n=74|order=32856|oliver=0|intra 444/[ 444, 444, 444 ]|cross 1369/[ 1369 ]|ok
+2x37|d=18|n=74|order=49284|oliver=0|intra 666/[ 666, 666 ]|cross 1369/[ 1369 ]|ok
+2x37|d=36|n=74|order=98568|oliver=0|intra 1332/[ 1332 ]|cross 1369/[ 1369 ]|ok
+2x41|d=1|n=82|order=3362|oliver=0|intra 82/[ 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82 ]|cross 1681/[ 1681 ]|ok
+2x41|d=2|n=82|order=6724|oliver=0|intra 82/[ 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82 ]|cross 1681/[ 1681 ]|ok
+2x41|d=4|n=82|order=13448|oliver=0|intra 164/[ 164, 164, 164, 164, 164, 164, 164, 164, 164, 164 ]|cross 1681/[ 1681 ]|ok
+2x41|d=5|n=82|order=16810|oliver=0|intra 410/[ 410, 410, 410, 410 ]|cross 1681/[ 1681 ]|ok
+2x41|d=8|n=82|order=26896|oliver=0|intra 328/[ 328, 328, 328, 328, 328 ]|cross 1681/[ 1681 ]|ok
+2x41|d=10|n=82|order=33620|oliver=0|intra 410/[ 410, 410, 410, 410 ]|cross 1681/[ 1681 ]|ok
+2x41|d=20|n=82|order=67240|oliver=0|intra 820/[ 820, 820 ]|cross 1681/[ 1681 ]|ok
+2x41|d=40|n=82|order=134480|oliver=0|intra 1640/[ 1640 ]|cross 1681/[ 1681 ]|ok
+2x43|d=1|n=86|order=3698|oliver=0|intra 86/[ 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86 ]|cross 1849/[ 1849 ]|ok
+2x43|d=2|n=86|order=7396|oliver=0|intra 86/[ 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86 ]|cross 1849/[ 1849 ]|ok
+2x43|d=3|n=86|order=11094|oliver=0|intra 258/[ 258, 258, 258, 258, 258, 258, 258 ]|cross 1849/[ 1849 ]|ok
+2x43|d=6|n=86|order=22188|oliver=0|intra 258/[ 258, 258, 258, 258, 258, 258, 258 ]|cross 1849/[ 1849 ]|ok
+2x43|d=7|n=86|order=25886|oliver=0|intra 602/[ 602, 602, 602 ]|cross 1849/[ 1849 ]|ok
+2x43|d=14|n=86|order=51772|oliver=0|intra 602/[ 602, 602, 602 ]|cross 1849/[ 1849 ]|ok
+2x43|d=21|n=86|order=77658|oliver=0|intra 1806/[ 1806 ]|cross 1849/[ 1849 ]|ok
+2x43|d=42|n=86|order=155316|oliver=0|intra 1806/[ 1806 ]|cross 1849/[ 1849 ]|ok
+2x47|d=1|n=94|order=4418|oliver=0|intra 94/[ 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94 ]|cross 2209/[ 2209 ]|ok
+2x47|d=2|n=94|order=8836|oliver=0|intra 94/[ 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 94 ]|cross 2209/[ 2209 ]|ok
+2x47|d=23|n=94|order=101614|oliver=0|intra 2162/[ 2162 ]|cross 2209/[ 2209 ]|ok
+2x47|d=46|n=94|order=203228|oliver=0|intra 2162/[ 2162 ]|cross 2209/[ 2209 ]|ok
+2x49|d=1|n=98|order=4802|oliver=0|intra 98/[ 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98 ]|cross 2401/[ 2401 ]|ok
+2x49|d=2|n=98|order=9604|oliver=0|intra 98/[ 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98, 98 ]|cross 2401/[ 2401 ]|ok
+2x49|d=3|n=98|order=14406|oliver=0|intra 294/[ 294, 294, 294, 294, 294, 294, 294, 294 ]|cross 2401/[ 2401 ]|ok
+2x49|d=4|n=98|order=19208|oliver=0|intra 196/[ 196, 196, 196, 196, 196, 196, 196, 196, 196, 196, 196, 196 ]|cross 2401/[ 2401 ]|ok
+2x49|d=6|n=98|order=28812|oliver=0|intra 294/[ 294, 294, 294, 294, 294, 294, 294, 294 ]|cross 2401/[ 2401 ]|ok
+2x49|d=8|n=98|order=38416|oliver=0|intra 392/[ 392, 392, 392, 392, 392, 392 ]|cross 2401/[ 2401 ]|ok
+2x49|d=12|n=98|order=57624|oliver=0|intra 588/[ 588, 588, 588, 588 ]|cross 2401/[ 2401 ]|ok
+2x49|d=16|n=98|order=76832|oliver=0|intra 784/[ 784, 784, 784 ]|cross 2401/[ 2401 ]|ok
+2x49|d=24|n=98|order=115248|oliver=0|intra 1176/[ 1176, 1176 ]|cross 2401/[ 2401 ]|ok
+2x49|d=48|n=98|order=230496|oliver=0|intra 2352/[ 2352 ]|cross 2401/[ 2401 ]|ok
