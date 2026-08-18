@@ -139,6 +139,17 @@ ARK_SHAPES_STRIP=1 ARK_SHAPES_NMAX=100 ARK_SHAPES_MAXF=4 gap -q -o 4g ark_shapes
 3. The **foreign block's** η = 2t/(r−1), against a realised AGL(1,r) twist.
 4. The **inter-class** term F·c·r, which needs the chain element linking two classes, hence a genuine two-class Oliver group rather than a single class.
 
+## R6a. The ceiling table's independent re-derivation
+
+*Static: it scans configurations, not table rows, so it does not rerun on extension. One run per environment, and again if §3.3.5 changes.*
+
+```bash
+python3 ceiling_rederive.py --nmax 24000 --mod12   # expect all six from below, all pairs agree
+python3 ceiling_rederive.py --nmax 16000 --no-filter  # control: expect exceedances at 3, 5, 7, 11
+```
+
+**`--no-filter` is the control and must exceed.** It removes §3.3.8's escape filter, and the exceedances that appear — with witnesses like c = 3⁷ and c = 4·3⁶ — are that section working as documented, not counterexamples. A `--no-filter` run that comes back clean means the filter is not doing what its comment says.
+
 ## R7. Consume the ladder worklist with the adaptive branch-and-bound
 
 > **⟦PENDING-REBUILD⟧ Owed, and it was not before.** The figures below describe the **pre-patch** ladder: `ladder_verify.py`'s S7 F ≥ 3 loop was missing Lemma C's guard, and the patched script has not been rerun, so there is no current 10⁶ scan and no current worklist. The floor the pruning is keyed to has also moved. Re-run the ladder first, regenerate the worklist, and only then read the numbers below as live. *For the record of the superseded run:* against the old 10⁶ ladder, `--floor 0.04` pruned all **46,520** entries on their supplied lower bounds — the old worklist minimum being 0.04453 — so the branch-and-bound has no survivor to examine and δ ≥ 1/25 over 10⁶ is established without computing a single further B(n). What follows is **sharpening**, wanted only if a tighter constant is the goal, plus the mechanics for whenever the range is extended.

@@ -1,76 +1,183 @@
-"""Independent re-derivation of aod section 3.3.5's ceiling table.
-
-Deliberately NOT a congruence argument: it scans real configurations of the
-additive family n = F*c + r under the CORRECTED scoring (full twist at any
-fusion count) and reports the empirical sup of density per residue class mod 24.
-If the closed forms are right, the sup should approach them from below.
+#!/usr/bin/env python3
 """
+ceiling_rederive.py -- re-derive arithmetic-of-density.md section 3.3.5's ceiling
+table WITHOUT using the congruence argument that produced it.
+
+The table is derived in the documents from congruences: which r mod 8 is
+reachable at each (class, F), what v_2(r-1) that forces, hence which eta.  Any
+re-derivation by the same route agrees with itself and confirms nothing.  This
+script instead SCANS REAL CONFIGURATIONS n = F*c + r under the current scoring
+and takes the empirical sup of density per residue class, then compares.
+
+    delta(n) = m* / C(n,2),   m* = min( F*orb(c,c-1), (F/2)c^2, orb(r,t), F*c*r )
+
+WHAT THE FILTER IS FOR, AND WHY A NAIVE SUP IS THE WRONG STATISTIC.
+
+Section 3.3.8 lists four routes that exceed a class ceiling on a sparse set of n
+(O(n/log n) or O(log n) supply).  A sup over any range picks the luckiest n in
+it, so it MEASURES THE ESCAPES rather than the ceiling.  Run unfiltered, classes
+5, 11, 17 and 23 exceed their closed forms -- by 1.48x at class 11 -- every time
+via c or oddpart(r-1) being a power of 3.  Those are not counterexamples; they
+are section 3.3.8 working as documented, and their disappearance when the filter
+goes on is itself a check on that section's account of them.
+
+The generic family is therefore: c a prime >= 5 (excluding the ell=2 and ell=3
+evasions at c a power of 2 or 3), the foreign twist a prime power at q >= 5
+(excluding rung B-prime at q = 2, and the r = 2^v * 3^e + 1 family), and F even.
+
+USAGE
+    python3 ceiling_rederive.py                 # generic family, n in [N/2, N]
+    python3 ceiling_rederive.py --nmax 90000    # wider range, slower
+    python3 ceiling_rederive.py --no-filter     # the escapes, deliberately
+    python3 ceiling_rederive.py --mod12         # check every pair {a, a+12}
+
+Exits nonzero if a tabulated class is exceeded (filtered mode) or if any
+mod-12 pair disagrees.
+"""
+import argparse
+import bisect
 import sys
-from sympy import isprime
 from math import comb, sqrt
 
-NMAX = int(sys.argv[1]) if len(sys.argv) > 1 else 60000
+# section 3.3.5, keyed mod 12.  Six constants.
+CEILING = {
+    1: 3 - 2 * sqrt(2),   9: 3 - 2 * sqrt(2),
+    3: 0.125,             7: 0.125,
+    5: 5 - 2 * sqrt(6),
+    11: 7 - 4 * sqrt(3),
+}
+# expected (F, eta) attaining each, for reporting
+ATTAINER = {1: (2, 1.0), 9: (2, 1.0), 3: (2, 0.5), 7: (2, 0.5),
+            5: (2, 1 / 3), 11: (4, 1 / 3)}
 
-# prime powers and prime sieve
-sieve = bytearray([1]) * (NMAX + 1); sieve[0] = sieve[1] = 0
-for i in range(2, int(NMAX**.5) + 1):
-    if sieve[i]: sieve[i*i::i] = bytearray(len(sieve[i*i::i]))
-primes = [i for i in range(2, NMAX + 1) if sieve[i]]
-ppow = []            # odd prime powers >= 3
-for p in primes:
-    if p == 2: continue
-    v = p
-    while v <= NMAX: ppow.append(v); v *= p
-ppow.sort()
 
-def best_twist(m):
-    """largest prime-power divisor of m (the foreign twist t = q^e)"""
-    best, mm, d = 1, m, 2
-    while d * d <= mm:
-        if mm % d == 0:
-            pk = 1
-            while mm % d == 0: mm //= d; pk *= d
-            if pk > best: best = pk
-        d += 1
-    if mm > 1 and mm > best: best = mm
-    return best
+def sieve_upto(n):
+    s = bytearray([1]) * (n + 1)
+    s[0] = s[1] = 0
+    for i in range(2, int(n ** .5) + 1):
+        if s[i]:
+            s[i * i::i] = bytearray(len(s[i * i::i]))
+    return s
 
-def score(n, F, c, r):
-    """corrected m* for F fused c-blocks + one foreign r"""
-    intra = F * (c * (c - 1) // 2)          # full twist: F*orb(c,c-1) = F*C(c,2)
-    cross = (F // 2) * c * c if F % 2 == 0 else F * c * c
-    t = best_twist(r - 1)
-    foreign = r * t if t % 2 else r * t // 2   # odd t cannot contain -1
-    inter = (F * c) * r
-    return min(intra, cross, foreign, inter)
 
-import bisect
-best_by_class = {}
-# sample n: all n in [NMAX//2, NMAX]
-for n in range(NMAX // 2 | 1, NMAX + 1, 2):
-    cls = n % 24
-    bd = 0.0
-    for F in (2, 4, 6, 8):
-        lim = n // F
-        hi = bisect.bisect_right(ppow, lim)
-        for c in ppow[:hi]:
-            r = n - F * c
-            if r < 3 or not sieve[r]: continue
-            d = score(n, F, c, r) / comb(n, 2)
-            if d > bd: bd = d; bF, bc, br = F, c, r
-    if bd > 0:
-        cur = best_by_class.get(cls)
-        if cur is None or bd > cur[0]:
-            best_by_class[cls] = (bd, n, bF, bc, br)
+def factor_odd_part(m):
+    """prime factorisation of the odd part of m, as {p: e}"""
+    while m % 2 == 0:
+        m //= 2
+    f, d = {}, 3
+    while d * d <= m:
+        while m % d == 0:
+            f[d] = f.get(d, 0) + 1
+            m //= d
+        d += 2
+    if m > 1:
+        f[m] = f.get(m, 0) + 1
+    return f
 
-CLOSED = {1:('3-2sqrt2',3-2*sqrt(2)), 9:('3-2sqrt2',3-2*sqrt(2)), 13:('3-2sqrt2',3-2*sqrt(2)),
-          21:('3-2sqrt2',3-2*sqrt(2)), 3:('1/8',0.125), 19:('1/8',0.125),
-          5:('5-2sqrt6',5-2*sqrt(6)), 17:('5-2sqrt6',5-2*sqrt(6)),
-          7:('?',0.125), 15:('?',0.125), 11:('7-4sqrt3',7-4*sqrt(3)), 23:('7-4sqrt3',7-4*sqrt(3))}
-print(f"n in [{NMAX//2}, {NMAX}]   (odd classes only)\n")
-print(f"{'cls':>4} {'emp sup':>9} {'closed':>9} {'name':>11} {'ratio':>7}  witness")
-for cls in sorted(k for k in best_by_class if k % 2):
-    bd, n, F, c, r = best_by_class[cls]
-    nm, cf = CLOSED.get(cls, ('-', 0))
-    print(f"{cls:>4} {bd:9.5f} {cf:9.5f} {nm:>11} {bd/cf:7.4f}  n={n} F={F} c={c} r={r}"
-          f" (c%8={c%8}, r%8={r%8}, t={best_twist(r-1)}, eta={2*best_twist(r-1)/(r-1):.4f})")
+
+def twist(m, generic):
+    """largest admissible prime-power divisor of m used as the foreign twist.
+
+    generic=True: q >= 5 only, and the pure-3-power odd part is rejected --
+    that is the r = 2^v*3^e+1 escape, which reaches eta the congruences forbid.
+    generic=False: any prime power, including q = 2 (rung B-prime).
+    """
+    f = factor_odd_part(m)
+    if generic:
+        if not f or set(f) == {3}:
+            return 1
+        return max((q ** e for q, e in f.items() if q >= 5), default=1)
+    best = max((q ** e for q, e in f.items()), default=1)
+    two = 1
+    x = m
+    while x % 2 == 0:
+        x //= 2
+        two *= 2
+    return max(best, two)
+
+
+def orb(c, d, char2=False):
+    """min intra-orbital: c*d/2 when -1 in T (always in char 2), else c*d"""
+    v = c * d // 2 if (char2 or d % 2 == 0) else c * d
+    return min(v, comb(c, 2))
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--nmax", type=int, default=30000)
+    ap.add_argument("--no-filter", action="store_true",
+                    help="include section 3.3.8's escapes (expect exceedances)")
+    ap.add_argument("--mod12", action="store_true",
+                    help="also check that each pair {a, a+12} agrees")
+    args = ap.parse_args()
+    generic = not args.no_filter
+    N = args.nmax
+    sieve = sieve_upto(N)
+    primes = [i for i in range(2, N + 1) if sieve[i]]
+    cand = [p for p in primes if p >= 5] if generic else \
+           [q for q in range(3, N + 1) if sieve[q] or
+            (lambda x: len(factor_odd_part(x)) <= 1)(q)]
+
+    best24 = {}
+    for n in range(N // 2 | 1, N + 1, 2):
+        bd, bw = 0.0, None
+        for F in (2, 4, 6, 8):
+            hi = bisect.bisect_right(cand, n // F)
+            for c in cand[:hi]:
+                r = n - F * c
+                if r < 5 or not sieve[r]:
+                    continue
+                t = twist(r - 1, generic)
+                if t == 1:
+                    continue
+                m = min(F * comb(c, 2), (F // 2) * c * c, orb(r, t), F * c * r)
+                d = m / comb(n, 2)
+                if d > bd:
+                    bd, bw = d, (F, c, r, t)
+        if bd > 0:
+            k = n % 24
+            if k not in best24 or bd > best24[k][0]:
+                best24[k] = (bd,) + bw + (n,)
+
+    mode = "generic family" if generic else "UNFILTERED (escapes included)"
+    print(f"ceiling_rederive.py -- {mode}, n in [{N//2}, {N}]\n")
+    print(f"{'cls12':>6} {'emp sup':>9} {'tabled':>9} {'ratio':>7} "
+          f"{'F':>2} {'eta':>7}  witness")
+    rc = 0
+    for a in sorted(k for k in CEILING):
+        halves = [best24[x] for x in (a, a + 12) if x in best24]
+        if not halves:
+            continue
+        bd, F, c, r, t, n = max(halves)
+        cf = CEILING[a]
+        eta = 2 * t / (r - 1)
+        flag = ""
+        if bd > cf * (1 + 1e-4):
+            flag = "  <-- EXCEEDS"
+            if generic:
+                rc = 1
+        print(f"{a:>6} {bd:9.5f} {cf:9.5f} {bd/cf:7.4f} {F:>2} {eta:7.4f}  "
+              f"n={n} c={c} r={r}{flag}")
+
+    if args.mod12:
+        print("\nmod-12 keying: each pair {a, a+12} must agree in cap, F and eta")
+        for a in range(1, 12, 2):
+            x, y = best24.get(a), best24.get(a + 12)
+            if not (x and y):
+                continue
+            fx = (x[1], round(2 * x[4] / (x[3] - 1), 4))
+            fy = (y[1], round(2 * y[4] / (y[3] - 1), 4))
+            ok = abs(x[0] - y[0]) < 3e-4 and fx == fy
+            if not ok:
+                rc = 1
+            print(f"  {a:>2} vs {a+12:>2}: {x[0]:.5f} / {y[0]:.5f}  "
+                  f"F,eta {fx} / {fy}   {'agree' if ok else 'DISAGREE'}")
+
+    if not generic:
+        print("\nExceedances here are section 3.3.8's escapes, not counterexamples:"
+              "\nre-run without --no-filter and they disappear.")
+    return rc
+
+
+if __name__ == "__main__":
+    sys.exit(main())
