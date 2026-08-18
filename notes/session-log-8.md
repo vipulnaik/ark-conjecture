@@ -455,3 +455,31 @@ All four parts, every expectation met. **Part D's two verdict columns diverged e
 **One incidental identification worth keeping.** T(8,36), order 168 = 8·7·3, solvable, is the **only** group in the whole population with a nontrivial top prime other than 2 — every other Oliver verdict is `0` (trivial top) or `[2]`. It is AΓL(1,8): translations C₂³, twist C₇, Frobenius C₃ — exactly the framework's Galois-block chain, the c = 8 row of `three-uniform-note.md` §3.1. The one place in a 160-group sweep where q = 3 appears is the construction the k = 3 work is built on, which is a small piece of external corroboration for that shape being genuinely special rather than an artefact of how the census was written.
 
 **Fed back into `monotone-transitive-note.md`** §3, as a sharpening of its Proposition 2 discussion: the group-versus-subgroup distinction it draws for Sₙ in §5 is now instantiated at small degree with counts, since eleven groups fail the chain themselves at degrees where a Sylow subgroup satisfies it and settles the question anyway.
+
+
+## 18. `pending-checks.md` split into a work list and a lessons file (Opus, same session)
+
+*The file had grown to 504 lines carrying two different kinds of content: what to run, and why the checks are shaped as they are. Split along that line. `pending-checks.md` is now 386 lines and holds only work; the interpretive material moved to a new **`verification-lessons.md`** (107 lines), dehistoricized throughout.*
+
+### 18.1 Why a new file rather than folding into `monotone-transitive-note.md`
+
+That was the obvious candidate and it is the right home for exactly one of the moved items — the transitive-group population and what it says about group-versus-subgroup admissibility, which went there in §17. The rest is not about the transitive setting at all: it is **cross-cutting methodology** about how this programme's checks fail, and it would be invisible filed under a note on monotone Boolean functions. So `verification-lessons.md`, with the population result staying where it belongs mathematically and only a pointer from the lessons file.
+
+### 18.2 What moved
+
+- **The four failure sites** (T1's taxonomy), which was the largest interpretive block in the file and is referenced from three items. Now `verification-lessons.md` §1, with T1 reduced to what is owed: a further independent reading, and the standing observation that a reading running sites 1–3 leaves site 4 untouched.
+- **Asymmetric failure directions** — under- versus over-scoring, rebuilds never lowering, anti-permissive conditions being invisible, stale screen inputs being noisy rather than unsound, and the float-boundary argument from A20. Now §2. A20 keeps the code and the behavioural check; the reasoning is a pointer.
+- **"Silence that reads as success"** — truncated rows, skipped shapes, partial inputs, inert controls, tests that cannot fail, vacuously agreeing modes. Now §3, gathered from six separate items that each stated one instance.
+- **Witness versus search**, including the two cautions on reading an admissibility population. Now §4.
+- **Figure and range rot**, including the asymptotic-verdict-versus-count point and the contiguous-prefix rule. Now §5.
+- **Cost as a design constraint** (§6) and **tooling notes** (§7) — the output-formatter corruption, under-building a group, entangled-versus-separate generators, GAP's lack of implicit string concatenation, guarding on rank rather than order.
+
+### 18.3 What stayed, and the rule applied
+
+Kept in `pending-checks.md`: commands, inputs, expected output shapes, and the traps **specific to running that particular check correctly** — which table to point a screen at, that `-o 8g` is required, that a control's failure count is checked against a predictor, that a worklist must be regenerated before it is consumed. The test used throughout: *would someone about to run this need it, or is it something they would want to have read at some point?* The second kind moved.
+
+Also trimmed as work-list-irrelevant: R6a's completed-run box (reduced to its conditional rerun trigger), the long per-script descriptions in R1 (reduced to what to read off each), T4's and T6's unchanged prose (left, being genuinely owed items), and the historical framing in T5a and A9.
+
+### 18.4 One structural correction found while trimming
+
+The banner index and the item bodies had drifted: `ceiling_rederive.py` was still listed as owed in the banner after R6a was marked complete, and `audit_fmid.py`'s entry did not mention the coverage half of its obligation. Both fixed. The index is now ten entries and each has a matching `## R…` section — asserted mechanically rather than by eye.
