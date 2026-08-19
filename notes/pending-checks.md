@@ -42,6 +42,8 @@
 
 *Everything else in the document is proved, and the per-n machinery (eight necessary conditions + search) makes each computed value unconditional independently of items 2–4.*
 
+**Owed source check — the E–H exponent's exact form.** `aod` §3.6 and `literature-findings.md` now state Shparlinski's §5 Elliott–Halberstam consequence as n^{3/2−ε} for every ε, on the grounds that E–H is quantified for fixed ε > 0 (level z^{1−ε}) and so no single application reaches 3/2. **This is inference, not a quoted bound** — the §5 remark states the improvement without writing an exponent, and the arXiv version is what was read. Confirm against the published version; if he does claim a bare n^{3/2}, the reasoning behind it needs recovering, since the unconditional n^{5/4+o(1)}'s `+o(1)` is the subpolynomial-loss convention and does not supply the difference.
+
 ## Where the residual risk sits
 
 *Ranked, so the item order below has a stated basis. The reasoning behind this ranking — the failure-site taxonomy it comes from — is `verification-lessons.md` §1.*
