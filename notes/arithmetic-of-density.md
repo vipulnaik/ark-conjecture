@@ -647,7 +647,7 @@ So the uncovered region is not open-ended. It is a *finite* interval, roughly [5
 
 with K = 1 for the even family n = c + r of §3.1 and K = 2 for the odd family n = 2c + r of §3.2. A solution is a q making all three prime, with c in a window around x\*.
 
-**Testing at the right centre is the whole point.** The count is taken over a window centred on x\*, and x\* = √η/(1 + k√η) equals the equal split 1/(k+1) **only at η = 1**. At the obstructed residues they diverge sharply — at (C, η = 1/6) the equal split sits 0.109 from x\* = 0.22474, more than twice the window half-width — so a window centred on the equal split covers a region that cannot reach the ceiling at all, and a count taken there says nothing about attainment. Each row below uses its own residue's x\*, taken from the table in §3.3 — including the **F** column, which is 4 at the residues 7, 11, 15 and 23 whose ceiling the F = 4 shape attains, and where the system is therefore c = (n − r)/4 rather than (n − r)/2. Those four rows need the F = 4 optima rather than the F = 2 ones, which required extending `count_check.py` to fusion counts not dividing D, and turned up three defects in its local-factor computation, all inert at F ≤ 2 (`pending-checks.md` R9).
+**Testing at the right centre is the whole point.** The count is taken over a window centred on x\*, and x\* = √η/(1 + k√η) equals the equal split 1/(k+1) **only at η = 1**. At the obstructed residues they diverge sharply — at (C, η = 1/6) the equal split sits 0.109 from x\* = 0.22474, more than twice the window half-width — so a window centred on the equal split covers a region that cannot reach the ceiling at all, and a count taken there says nothing about attainment. Each row below uses its own residue's x\*, taken from the table in §3.3 — including the **F** column, which is 4 at the residues **11 and 23** whose ceiling the F = 4 shape attains, and where the system is therefore c = (n − r)/4 rather than (n − r)/2 (rows 7 and 15 are tested at F = 4 as well, but that is no longer their ceiling's cell — see the footnote under the table). Those rows need the F = 4 optima rather than the F = 2 ones, which required extending `count_check.py` to fusion counts not dividing D, and turned up three defects in its local-factor computation, all inert at F ≤ 2 (`pending-checks.md` R9).
 
 **How the prediction is computed.** The window has a fixed *relative* width, so the three log factors are not constant across it — at D = 12 the parameter q sweeps a factor of about 1.9 from one end to the other. The predicted count is therefore the integral of 𝔖(n)/(log q · log r · log c) across the window rather than its value at the midpoint. The two differ by well under a percent, and by more at larger D since log q ≈ log(n/(3D)) is smaller there, so nothing below turns on the choice; the integral is simply the quantity the heuristic actually predicts.
 
@@ -673,12 +673,14 @@ with K = 1 for the even family n = c + r of §3.1 and K = 2 for the odd family n
 | 21 | 2 | 2 | 0.29289 | 1.0198 | 0.097 |
 | 3 | 2 | 4 | 0.25000 | 0.9354 | 0.143 |
 | 19 | 2 | 4 | 0.25000 | 0.9030 | 0.134 |
-| 7 | 4 | 2 | 0.16667 | 1.0233 | 0.095 |
-| 15 | 4 | 2 | 0.16667 | 1.0197 | 0.090 |
+| 7 † | 4 | 2 | 0.16667 | 1.0233 | 0.095 |
+| 15 † | 4 | 2 | 0.16667 | 1.0197 | 0.090 |
 | 5 | 2 | 6 | 0.22474 | 1.0068 | 0.121 |
 | 17 | 2 | 6 | 0.22474 | 1.0056 | 0.123 |
 | 11 | 4 | 6 | 0.13397 | 0.8977 | 0.110 |
 | **23** | 4 | 6 | 0.13397 | 1.0625 | 0.109 |
+
+**† Rows 7 and 15 test a cell that is no longer their ceiling's.** Under the current mod-12 keying those two classes take **F = 2 at η = 1/2**, cell (D, x\*) = (4, 0.25000), sharing the 1/8 row with 3 and 19; the (F, D, x\*) = (4, 2, 0.16667) tested here was their cell when cap₄(1) = 1/9 was read as their ceiling. The two measurements are sound as counts — the F = 4 system at those residues is a genuine Bateman–Horn system and its count matches — but they do not test those classes *at their own ceiling's balance point*, which is what the rest of the table does. Re-run them at (F, D, x\*) = (2, 4, 0.25000), in the `--parts` invocation below, and the qualification disappears.
 
 ```bash
 # F = 1 and F = 2 rows (the even family and the three-part / fused rungs)
@@ -723,7 +725,7 @@ with sd falling like n^{−1/2} throughout — 0.146 → 0.103 → 0.092 on the 
 >
 > *It cannot obstruct the family, and that is a triviality rather than an observation.* Read the condition the other way round: at a fixed n the degenerate q are exactly the **prime divisors of (n−1)/2**, of which there are ω((n−1)/2) ≤ log₂ n — measured over odd n ∈ [10⁴, 4·10⁴], mean 2.56 and maximum 5. Every other prime is non-degenerate, so the obstruction removes O(log n) candidates from an unbounded supply. What is *not* settled by that is whether some non-degenerate q also has supply near the balance point and an efficiency worth having; that is the parametric question of §3.5 and Hypothesis (H), not a separate obstruction.
 
-**What this establishes.** The local analysis and the singular series are confirmed at every residue mod 24 — finer than the mod-12 law now requires, so the agreement across each pair {a, a+12} is itself a check on the rekey — in both families, each at the balance point its own ceiling is derived from — the count matches, and the vanishing predictions vanish. It says nothing about §3.5's global question, whether solutions exist for *every* large n, which is where the conjecture lives. What it removes is the possibility that the constants are right but the model is wrong.
+**What this establishes.** The local analysis and the singular series are confirmed at every residue mod 24 — finer than the mod-12 law now requires, so the agreement across each pair {a, a+12} is itself a check on the rekey — in both families, each at the balance point its own ceiling is derived from (with the two † rows the exception noted under the table) — the count matches, and the vanishing predictions vanish. It says nothing about §3.5's global question, whether solutions exist for *every* large n, which is where the conjecture lives. What it removes is the possibility that the constants are right but the model is wrong.
 
 ## 4. The remaining configurations (S1, S2, S6–S10, and the escapes): what survives asymptotically
 
@@ -808,7 +810,7 @@ That is a Bateman–Horn system with a nonlinear form, and most of its members a
 
 The interval has ratio (1 − √δ₀)/√δ₀, which is largest at the smallest ceiling. At δ₀ = 7 − 4√3 = 0.071797, the smallest ceiling, the range is (0.2679, 0.7321) — ratio **2.73 < 4**, so it holds **at most two powers of 2**. (The old ceiling 0.050510 gave the wider range (0.2247, 0.7753) at ratio 3.45, so the conclusion held there too and is only strengthened.) At the unobstructed odd residues, δ₀ = 0.171573, the range is (0.4142, 0.5858) with ratio 1.41, holding at most one.
 
-**Counting by a rather than by n.** Fix the block size 2^a and ask which n it can serve. The constraint above inverts to n ∈ (1.290·2^a, 4.449·2^a), so r = n − 2^a runs over an interval of length at most 3.16·2^a, and the number of primes in it is at most
+**Counting by a rather than by n.** Fix the block size 2^a and ask which n it can serve. The constraint above inverts to n ∈ (1.366·2^a, 3.732·2^a) at the current smallest ceiling. The count below is run instead on the **wider** interval n ∈ (1.290·2^a, 4.449·2^a), which is the inversion of the older, lower ceiling 0.050510 — deliberately, since a wider interval can only *over*-count and the bound is an upper bound. So r = n − 2^a runs over an interval of length at most 3.16·2^a, and the number of primes in it is at most
 
 > 3.16·2^a / log(0.290·2^a)  ≤  (3.16/log 2)·2^a/a  for a ≥ 3.
 
@@ -1072,10 +1074,10 @@ So an *unfused* unequal-size shape is infeasible above density 1/9 whatever p is
 >   |---|---|---|---|---|---|---|---|
 >   | 1/9 | 3 | 6 | 7 | 7 | 24 | 32 | **26** |
 >   | 1/16 | 4 | 10 | 14 | 14 | 65 | 109 | **80** |
->   | 0.04 = 1/25 | 5 | 15 | 25 | 24 | — | — | — |
+>   | 0.04 = 1/25 | 5 | 15 | 26 | 24 | — | — | — |
 >   | 1/400 | 20 | 210 | 8,266 | — | — | — | — |
 >
->   The two "sizes free" columns differ by whether a per-class penalty is charged. The **penalised** column is the one to quote, but the penalty's justification is the density ceiling above rather than a twist-parity argument: a class of size c′ ≤ c/p contributes at most (c′/n)², so an unequal shape needs x ≥ √(δ₀F)·(1 + 1/p) across its two sizes rather than √(δ₀F) for each, and that pushes some newly admitted shapes back out of feasibility. At δ₀ = 1/9 the effect is total — no unequal shape is feasible — which is why the one-size and penalised counts should agree at the top row and the table's 24 versus 26 there is worth re-deriving. At the conjectured floor of 1/25 the purely additive disjunction would be **24-way rather than 15-way** (the table's own bottom row); at the old 1/50 floor the pairs were 63 against 28 for the additive count and 1,956 against 982 for the raw one. A factor of about two in each case, not an explosion.
+>   The two "sizes free" columns differ by whether a per-class penalty is charged. *(The additive "sizes free" column is Σ_{k≤K}Σ_{j<k}p(j) evaluated directly: 7, 14, 26, 8,266.)* The **penalised** column is the one to quote, but the penalty's justification is the density ceiling above rather than a twist-parity argument: a class of size c′ ≤ c/p contributes at most (c′/n)², so an unequal shape needs x ≥ √(δ₀F)·(1 + 1/p) across its two sizes rather than √(δ₀F) for each, and that pushes some newly admitted shapes back out of feasibility. At δ₀ = 1/9 the effect is total — no unequal shape is feasible — which is why the one-size and penalised counts should agree at the top row and the table's 24 versus 26 there is worth re-deriving. At the conjectured floor of 1/25 the purely additive disjunction would be **24-way rather than 15-way** (the table's own bottom row); at the old 1/50 floor the pairs were 63 against 28 for the additive count and 1,956 against 982 for the raw one. A factor of about two in each case, not an explosion.
 >
 >   The growth of the additive count becomes Σ_{k≤K}Σ_{j<k}p(j) ~ K·p(K) = exp(π√(2K/3) + O(log K)), i.e. **exp(c·δ₀^{−1/4})** — worse than quadratic but still subexponential, and still far below the raw fusion count's exp(2.53·δ₀^{−1/3}).
 > - **The ceiling table of §3.3 is not at risk.** A configuration with two unequal matching sizes has its smaller class capped at (c′/n)² ≤ 1/(p+1)², so its cap is *below* the equal-size shape of the same part count. Such shapes would enlarge the covering set without raising any class ceiling, so §3.3's caps stand as caps and §6.6's collapse argument is unaffected in kind, though the gaps ε it needs would have to be rechecked against the new shapes' caps.

@@ -504,6 +504,69 @@ if A.only in ("all", "scope"):
         if not i2:
             print("[ok] I2: every constant count matches the ceiling table.")
 
+    # (I3) WHICH RESIDUES TAKE F = 4 IS THE CEILING TABLE'S TO SAY.  The rekey
+    #      moved classes 7 and 15 off the F = 4 rung and onto F = 2 at eta = 1/2,
+    #      but "F = 4 attains the class ceiling at 7, 11, 15, 23" survived in
+    #      prose, in a script docstring and in a census expect string -- each
+    #      sentence true when written and none of them a figure, a constant count
+    #      or a strip prescription, so I1, I2 and PASS 1 are all blind to it.
+    #      Read the F assignment off the table's own rung column, reduce every
+    #      quoted list mod the table's modulus, and compare as sets.  Residues
+    #      mod 24 are accepted since a mod-12 law is legitimately written either
+    #      way; it is the SET that must agree.
+    if ncap and nmod:
+        f4 = set()
+        for d in DOCS:
+            try: txt = open(d).read()
+            except OSError: continue
+            m = re.search(r"\| *n mod %d *\|.*?\n(?:\|.*\n)+" % nmod, txt)
+            if not m:
+                continue
+            for l in m.group(0).split("\n")[2:]:
+                if not l.startswith("|"):
+                    continue
+                cells = [c.strip() for c in l.strip("|").split("|")]
+                if len(cells) < 2:
+                    continue
+                if re.search(r"F *= *4", cells[1]):
+                    for r_ in re.findall(r"\d+", cells[0].replace("*", "")):
+                        f4.add(int(r_) % nmod)
+            if f4:
+                break
+        if f4:
+            print(f"[ceiling table] F = 4 attains the cap at n = "
+                  f"{sorted(f4)} (mod {nmod})")
+            CLAIM = re.compile(
+                r"F *= *4[^.|]{0,80}?(?:attains|sets|takes|wins)[^.|]{0,40}?"
+                r"(?:class )?ceiling[^.|]{0,40}?at\s+(?:n\s*[=≡]\s*)?"
+                r"((?:\d+\s*(?:,|and|or)?\s*)+)"
+                r"\(mod\s*(\d+)\)", re.I)
+            i3 = 0
+            for d in DOCS + [f for f in A.docs if f.endswith(".py")]:
+                try: txt = open(d).read()
+                except OSError: continue
+                # Scan the WHOLE text, not line by line: these claims wrap across
+                # lines in prose and are reflowed in docstrings, and a per-line
+                # scan silently misses exactly the wrapped ones -- which is how
+                # the stale docstring survived. Newlines (and comment/quote
+                # furniture at a line start) collapse to a single space, with the
+                # line number recovered from the match offset.
+                flat = re.sub(r"\n\s*(?:[#>*]\s*)?", " ", txt)
+                starts = [m.start() for m in re.finditer(r"\n\s*(?:[#>*]\s*)?", txt)]
+                for m in CLAIM.finditer(flat):
+                    quoted = {int(x) % nmod
+                              for x in re.findall(r"\d+", m.group(1))}
+                    if quoted == f4:
+                        continue
+                    ln = txt.count("\n", 0, m.start()) + 1
+                    findings += 1; i3 += 1
+                    print(f"{d} L~{ln}  *** INVARIANT I3 *** says F = 4 attains "
+                          f"the ceiling at {sorted(quoted)} (mod {nmod} "
+                          f"reduced) against the table's {sorted(f4)}")
+                    print(f"   {flat[max(0, m.start()-40):m.end()+40].strip()[:170]}\n")
+            if not i3:
+                print("[ok] I3: every F = 4 residue list matches the ceiling table.")
+
 # --------------------------------------------------------------- PASS 7 tables
 #
 # A markdown table whose separator row has a different number of columns from

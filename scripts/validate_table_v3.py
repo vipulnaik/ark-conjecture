@@ -103,7 +103,7 @@ def classify(r):
 
     S7 is split by fusion count -- S7f2, S7f3, S7f4, ... -- and NOT lumped at
     F >= 3.  The granularity is the point: F = 4 attains the class ceiling at
-    n = 7, 11, 15, 23 (mod 24) (aod section 3.3.5), so it is a distinct family
+    n = 11 (mod 12) (aod section 3.3.5), so it is a distinct family
     rather than a tail of the F = 3 escape, and lumping it hid that.  While
     "S7" covered every F >= 3, a migration into F = 4 was reported as a
     migration into the F = 3 escape, and the census showed one number where
@@ -1014,10 +1014,12 @@ def c_zero_share_trend(R, base):
 
 
 @check("C", "census winner counts by shape", "aod section 2.0, ep census",
-       expect="asymptotic WINNING shares over all n: S3 12/24 (50%) at even n, S7f2 8/24 "
-              "(33.3%) at the odd residues 1,3,5,9,13,17,19,21, S7f4 4/24 (16.7%) at 7,11,15,23 "
+       expect="asymptotic WINNING shares over all n: S3 12/24 (50%) at even n, S7f2 10/24 "
+              "(41.7%) at the odd residues 1,3,5,7,9,13,15,17,19,21, S7f4 2/24 (8.3%) at 11 and 23 "
               "where F = 4 sets the class ceiling; S1, S2, S4, S5, S6, ties and the odd-F S7fk "
-              "all -> 0.  At computed sizes S1 and S2 are still large because omega(n)=2 has "
+              "all -> 0.  (Classes 7 and 15 belong to S7f2 under the mod-12 keying: their "
+              "ceiling cell is F = 2 at eta = 1/2, shared with 3 and 19 at 1/8.)  At computed "
+              "sizes S1 and S2 are still large because omega(n)=2 has "
               "not thinned, and S4 still wins a few values where supply fails the winners above")
 def c_census(R, base):
     d = Counter(r.shape for r in R)

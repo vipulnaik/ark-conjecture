@@ -229,8 +229,37 @@ The items §4 listed as skipped were returned to and completed. What they found,
 
 **Still not done:** `aod` §§3.8, 4.1–4.2, 6.1–6.5 and `notes` §§8–11 line by line; `check_doc_figures.py`'s PASS 5 and PASS 8 internals (PASS 1 and PASS 6 were read this pass and are sound); `wide_cert` at 10⁵ and a 10⁶ ladder rerun on the widened families.
 
+## 4c. Third pass — the remaining document sections, and invariant I3
+
+The last of §4's skipped items were completed: `aod` §§3.8, 4.1–4.5 and 6.1–6.5 read line by line, `notes` §§8–11 likewise, and `check_doc_figures.py`'s PASS 5 and PASS 8 internals, which completes a read of all eight passes.
+
+**Fixed:**
+
+- **`aod` §3.8's rows 7 and 15 test a cell that is no longer their ceiling's.** They are run at (F, D, x\*) = (4, 2, 0.16667), which was their assignment when cap₄(1) = 1/9 was read as their ceiling; under the mod-12 keying they take F = 2 at η = 1/2, cell (4, 0.25000), sharing the 1/8 row with 3 and 19 — as the bash comment below the table already said, while the table, its lead-in and its closing summary did not. The measurements are sound as counts of the F = 4 system and are kept; the two rows are daggered, a footnote states the position, the lead-in now names only 11 and 23, and the summary carries the exception. Re-running them at (2, 4, 0.25000) removes the qualification.
+- The same stale residue list in **`validate_table_v3.py`**, twice: `c_census`'s expect string (S7f2 8/24 at 1,3,5,9,13,17,19,21 and S7f4 4/24 at 7,11,15,23 → 10/24 and 2/24, with the keying note) and `classify`'s docstring.
+- **`wide_cert.py`'s normal-mode prompt** still said "rests only on the eight necessary conditions" — the residual of §4b's banner fix, which covered the `--no-theorems` banner and the docstring but not the else branch.
+- `aod` §4.3's inversion constants (1.290, 4.449) invert the *old* 0.050510 ceiling, not the current (1.366, 3.732). They are retained — a wider interval can only over-count, and the result is an upper bound — but the text now says that is why, instead of leaving them as an apparently stale pair. The downstream A := ⌊log₂(N/1.290)⌋ is consistent with the retained constants.
+- `aod` §6.2's partition table, additive "sizes free" at δ₀ = 1/25: 25 → **26** (Σ_{k≤5}Σ_{j<k}p(j) = 1+2+4+7+12). The column is now given explicitly as 7, 14, 26, 8,266 so the arithmetic is checkable in place. Nothing downstream quoted the 25.
+- `notes` §9's triangle-freeness list omitted n = 24 and 69 while listing larger members, and silently skipped 27; corrected, with a parenthesis noting that the n which are themselves prime powers (9, 27, 81 — m a power of 3) are left out because KSS already settles them, the criterion covering them redundantly. `C₄-freeness at both` gained its **m ≥ 4** scope, since 2K₃ and 3K₃ are C₄-free.
+- `notes` §11 problem 1's "fixes its value in every class **mod 24**" → mod 12.
+
+**Invariant I3 added to `check_doc_figures.py` PASS 2.** The §3.8 defect was invisible to everything: it is an F-assignment, not a figure (PASS 1), not a constant count (I2), not a strip prescription (I1), and it appeared identically in prose, in a script docstring and in a census expect string. I3 reads the F = 4 residue set off the ceiling table's own rung column, reduces every quoted list mod the table's modulus, and compares as sets — so a mod-24 spelling of the mod-12 law passes, since it is the set that must agree, not the notation.
+
+Two implementation notes worth keeping, because the first cost a wrong "clean" verdict:
+
+- **It scans the flattened text, not line by line.** The claim wraps across lines in prose and is reflowed in docstrings; a per-line scan missed the very docstring the invariant was written for, and reported `[ok]`. The scan now collapses newlines and leading comment/quote furniture, recovering the line number from the match offset.
+- The pattern needed an optional `n =` between "at" and the residue list, which is how the docstring spells it and the prose does not.
+
+Verified by injection: with `classify`'s docstring reverted to the stale list, I3 reports `validate_table_v3.py L~97 … says F = 4 attains the ceiling at [3, 7, 11] (mod 12 reduced) against the table's [11]`; with it repaired, `[ok]`. The reduction is what makes the message readable — 7, 11, 15, 23 mod 24 is three distinct classes mod 12, and naming them is more useful than echoing the original list.
+
+**Post-edit:** `check_doc_figures` unchanged at 16 pre-existing informational findings, PASS 4 and PASS 7 clean, I1/I2/I3 all `[ok]`; `validate_table_v3.py` on v5 22 PASS / 0 FAIL; `wide_cert 2000` still 1666/1666.
+
+**Also run this pass:** `wide_cert` at **10,000** — 8,719 of 8,719 certified, 0 unresolved, in both modes, agreeing exactly. That extends the collapse fivefold past the previous run under both trusted-base framings.
+
+**Still not done:** `wide_cert` at 10⁵; the 10⁶ ladder rerun on the widened families (cost grows like N²/log N, so this is hours, and the 20,000 smoke test stands in the meantime); the GAP battery re-run for `verify_witness.g`'s new `transitive_parts` check on the proper-prime-power witnesses `3x4` and `1x9`, GAP being unavailable here; and `small-degree-computation.md`, which was never in scope.
+
 ## 5. Files touched
 
-`orbital-evasiveness-notes.md`, `arithmetic-of-density.md`, `enumeration-proof.md`, `pending-checks.md`, `literature-findings.md`, `check_doc_figures.py`, `converse_check.py`, `wide_cert.py`, `fb_common.py`, `mu_enumerate_v3.py`, and in the second pass `fallback_cert.py`, `ladder_verify.py`, `validate_table_v3.py`, `ark_shapes.g`, `verify_witness.g`.
+`orbital-evasiveness-notes.md`, `arithmetic-of-density.md`, `enumeration-proof.md`, `pending-checks.md`, `literature-findings.md`, `check_doc_figures.py`, `converse_check.py`, `wide_cert.py`, `fb_common.py`, `mu_enumerate_v3.py`, in the second pass `fallback_cert.py`, `ladder_verify.py`, `validate_table_v3.py`, `ark_shapes.g`, `verify_witness.g`, and in the third `arithmetic-of-density.md`, `orbital-evasiveness-notes.md`, `validate_table_v3.py`, `wide_cert.py` and `check_doc_figures.py` again.
 
 Not touched: the tables, `ceiling_rederive.py`, and every `*_out*.txt` / `*.log` artefact. Note that `ladder_weak.txt` **was** regenerated at N = 20,000 as a smoke test of the widened families and is not the 10⁶ artefact.

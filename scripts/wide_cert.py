@@ -344,6 +344,7 @@ if NO_THM:
     print("Quote the result with those, not as the eight conditions alone.")
 else:
     print("Rerun with --no-theorems to establish that: it stubs the dispatch and")
-    print("drops the E.3(ii) resolution, so the run rests only on the eight")
-    print("necessary conditions of fb_common.py being necessary.  Doing this on each")
-    print("extension is cheap and localises any error in E.1 / E.3 / E.4 at once.")
+    print("drops the E.3(ii) resolution, so the run rests on the eight necessary")
+    print("conditions of fb_common.py plus their two scoped dependencies, which")
+    print("that run's banner spells out.  Doing this on each extension is cheap")
+    print("and localises any error in E.1 / E.3 / E.4 at once.")
