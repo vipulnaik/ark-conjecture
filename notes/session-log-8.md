@@ -746,3 +746,17 @@ Clean on the two figure findings fixed earlier; no new stale figures in the mate
 **One checker improvement, from a false positive it produced.** Both note files reported `Theorem 1.4` as *** DANGLING ***. It is **BBKN's** Theorem 1.4 — a cited paper's result under that paper's numbering, which cannot resolve against our anchors and must not be reported. The pass already had this exemption but only as a per-file switch for `literature-findings.md`. Generalised: a named result immediately preceded by an external attribution (`BBKN's Theorem 1.4`, `Shparlinski's Theorem 2`) is skipped in any file, via a list of the authors and groups these documents cite. Attribution binds only when it sits immediately before the label, so our own results are unaffected. Dangling count 2 → 0.
 
 *Worth recording as a principle for this checker:* a pass that reports every correctly-cited piece of the literature as an error trains the reader to skip it, which is worse than the pass not existing. Same reasoning as the `fixed`-in-the-history-pass tuning.
+
+## 33. `converse_check.py`
+
+The F.4 spot checks were ad hoc, so they are now a script: `python3 converse_check.py <table.csv>`, with `--delta0` to check every row against one global floor (the form F.4 is actually stated in) rather than each row's own density (the sharper form), `--nmax` / `--frontier` / `--all-rows` for range, and `--verbose` to list violations. Reuses `fb_common.Arith` rather than adding a sympy dependency.
+
+**It reports the two figures the documents quote**, since those are what will move: the max cofactor (currently **12**, against (H)'s d ≤ 12) and F.4's slack against it (currently **3.6**). Both print with a pointer to the sites that need editing if they change — `ep` F.4 and `aod` §6 for the first, the gap inventory for the second.
+
+**Writing it found a defect in my own earlier spot check.** The frontier detection first used "gap wider than 60", which swallowed four worklist rows and reported 2,190 rows and 1,413 foreign primes where the documents say 2,186 and 1,409. The first gap above 10 in the v4 table is exactly 2600 → 2627, so the threshold is 10; that reproduces the documented counts, and the reasoning is now a comment rather than a magic number. The figures I reported last turn were computed with an explicit `n <= 2600` filter and so were correct, but the discrepancy would have been invisible without writing the frontier logic down.
+
+**Negative control**: `--delta0 0.35` yields 796 violations and exit 1, so a failure is demonstrably reachable rather than assumed.
+
+**A datum the script surfaced for free**: with `--all-rows`, F.4's inequalities hold at all 2,240 rows out to n = 4427, including the low-density worklist subsample — the population most likely to break them, since the bound is 2/δ and those rows have the smallest δ. Not recorded in the documents, since the worklist is not a fair sample, but it is worth knowing the checks do not degrade there.
+
+The script's own footer restates the limit rather than leaving it to the reader: a PASS is consistency, not confirmation, because the checks test the inequalities and not the derivation — in particular not T8's prime-power step, without which F.4 is vacuous rather than false.
