@@ -71,11 +71,14 @@ What he proves, with quantifiers, since this is where the comparison has to be c
 | BBKN Thm 1.4(a) | all large n | n^{3/2−ε} | Chowla |
 | Shparlinski Cor. 3 | all but O(x^{0.354}(log x)⁴) n ≤ x | c·n^{1.677} | none (Baker–Harman) |
 | Shparlinski Cor. 4 | all but O((log x)⁴) n ≤ x | c·n^{3/2} | none |
-| Shparlinski §5 remark | all large n | n^{3/2} | Elliott–Halberstam |
+| Shparlinski §5 remark (i) | all large n | n^{3/2} | Elliott–Halberstam — extends the Bombieri–Vinogradov averaging to z^{1−ε}, upgrading his Thm 1 |
+| Shparlinski §5 remark (ii) | almost all n | n^{2−o(1)} | Elliott–Halberstam — gives any α < 1 in his Thm 2, whose unconditional α = 0.677 is Baker–Harman |
 
 Three things follow.
 
 **`aod` §5's comparison against the 2010 ERH baseline is stale.** Shparlinski's Theorem 1 gets n^{5/4+o(1)} for all large n *unconditionally*, matching BBKN's ERH result without ERH. Any sentence of ours comparing to "the ERH bound n^{5/4−ε}" is comparing to something that no longer needs ERH.
+
+**The §5 remark carries two consequences, not one, and they differ in quantifier.** Both are Elliott–Halberstam, but (i) upgrades Theorem 1 (all large n, 5/4 → 3/2) and (ii) upgrades Theorem 2 (almost all n, 1.677 → 2 − o(1)) — the exponent being 1 + α throughout, which is what makes α → 1 read as 2 − o(1). Compressing them attaches the larger exponent to the stronger quantifier, which errs in our favour. Shparlinski also notes that Chowla's route to 3/2 concerns *individual* progressions and so may be harder than E–H, so the θ = 1/2 rung has two independent conjectural paths. And he sets aside the stronger unconditional results of Bombieri–Friedlander–Iwaniec, Mikawa and Fouvry because they restrict the residue classes a in ψ(y, m, a) — a considered exclusion, not an oversight, and the first thing to check if anyone proposes adding such a rung.
 
 **The two-quantifier-column point survives and is worth keeping.** Shparlinski's stronger exponents (1.677 and 3/2) both carry exceptional sets. On the *all large n* row the unconditional state of the art is 5/4, so a result of ours that holds for all large n is not undercut by the 1.677 figure. The comparison table in the paper needs a quantifier column or it will mislead in our favour, which is worse than misleading against us.
 
