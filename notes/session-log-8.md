@@ -921,3 +921,17 @@ The four-part structure, as requested:
 **Two structural facts added while writing.** Cofactors are essentially **even** — an odd d needs Q(r) = 2^k, so r = d·2^k + 1 is Fermat-like: among S_12 below 2·10⁶ the odd cofactors contribute 5, 6, 4, 3, 5, 2 members against 7,755 at d = 2 alone. So D is in effect a bound on even cofactors, and (H)'s d ≤ 12 permits six. And the window behaviour is benign (92.5% of the cumulative count in [0.04x, x] against 96% for primes), so **the obstacle is the size of ρ, not its localisation** — which narrows the T4 reading task.
 
 **Trimming, as instructed.** §6.7 lost the density digressions now owned by §6.8, keeping only what 6.8 does not carry: the two-branch statement, the layer asymmetry, the table measurements, the Zhang non-transfer, and the round-trip constants. §6.7 is 21 lines, §6.8 is 27, against the ~40 the merged version had reached. Pointers in `ep` F.4, the notes' §6 and T8 updated to name §6.8 for the hypothesis and §6.7 for the converse.
+
+## 45. (SP) reframed into window form — ρ was pinned, not a parameter
+
+Vipul caught a real defect in §44's formulation: written as a cumulative **asymptotic equality** |S_D ∩ [1,x]| = ρ(x)·π(x)(1 + o(1)), ρ is essentially unique, so (SP_{D,ρ}) was not a family of hypotheses at all but a single assertion wearing a subscript. The two-sidedness that made it usable is exactly what removed its freedom.
+
+**Fixed by putting the window inside the definition**, which repairs both problems at once:
+
+> Fix D ≥ 1, a window ratio c ∈ (0,1), and ρ. **(SP_{D,c,ρ}):** for all large x, |S_D ∩ [cx, x]| ≥ ρ(x)·π(x).
+
+Now ρ is a genuine **lower bound**, and the hypothesis weakens monotonically as ρ shrinks, c falls and D grows — three real parameters. The localisation content is preserved rather than derived: a cumulative lower bound is compatible with S_D empty on [x/2, x] and dense below, and getting a window count out of cumulative counts requires bounding a *difference*, hence an upper bound at cx as well (the PNT-to-Bertrand point, which is now the *motivation* for the window form rather than a property of the statement).
+
+Bullets restated against the new form: **(i)** bounded multiplicative gaps are exactly (SP_{D, 1/Λ, 1/π(x)}) — window ratio 1/Λ, one member required; **(ii)** a floor gives (SP_{D, c, 1/π(x)}) with D = 2/δ₀ and c = δ₀/2; **(iii)** measured window constants κ(D,c) with ρ(x) = (κ + o(1))/log x — 0.700 and 2.285 at (2, 0.04) and (12, 0.04), 0.333 and 1.080 at c = 0.5, each stable to ~1% across 10⁵–2·10⁶; **(iv)** unchanged, and still the open link.
+
+*Worth noting the failure mode, since it is a general one:* strengthening a hypothesis to make an implication work (one-sided → two-sided) removed the parameter that made it a family, and the symptom was invisible because the statement still typechecked as a parameterised definition. The window form gets the strength without the loss because it asserts the localised consequence directly instead of asserting enough to derive it.
