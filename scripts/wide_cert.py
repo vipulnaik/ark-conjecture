@@ -23,9 +23,11 @@ true B(n) to settle and is NOT a counterexample.
 
 --no-theorems disables every Part E-prime clause: `branch_settled` dispatches
 nothing, so all branches reach the search, and `e3ii_resolves` stops resolving.
-A run in that mode rests only on the eight necessary conditions of fb_common.py
-being necessary -- a much smaller trusted base -- so it is the mode to quote, and
-it should agree with the normal run exactly.  If it ever stops agreeing while the
+A run in that mode consults no Part E-prime theorem -- a much smaller trusted
+base -- so it is the mode to quote, and it should agree with the normal run
+exactly.  Quote it accurately: the base is the eight necessary conditions PLUS
+unfused-foreign scoring (Lemma D2, range-scoped below n = 1582) and condition
+(4)'s strip (Corollary C-prime, inheriting J0a at a >= 2); the banner says so.  If it ever stops agreeing while the
 normal run passes, the error is localised to E.1 / E.3 / E.4 or their tables.
 
 Usage: python3 wide_cert.py NMAX [--no-theorems] [--menu] [--refresh]
@@ -327,10 +329,19 @@ print()
 print("The theorem dispatch in pass 2 is an optimisation, not part of the proof.")
 if NO_THM:
     print("THIS RUN USED NONE OF IT: --no-theorems was set, so every s-branch went")
-    print("to the search and no Part E-prime clause was consulted.  The result above")
-    print("therefore rests only on the eight necessary conditions of fb_common.py")
-    print("being necessary.  Compare it against a normal run at the same NMAX; they")
-    print("should agree exactly, including on the unresolved values.")
+    print("to the search and no Part E-prime clause was consulted.  Compare it")
+    print("against a normal run at the same NMAX; they should agree exactly,")
+    print("including on the unresolved values.")
+    print()
+    print("WHAT THE TRUSTED BASE STILL IS.  The eight necessary conditions of")
+    print("fb_common.py, PLUS two dependencies underneath them, both scoped:")
+    print("  * foreign parts scored UNFUSED -- fused foreign classes are excluded by")
+    print("    Lemma D2's domination, a range check below n = 1582 (a18_verify.py)")
+    print("    and a theorem above it, not by condition (3);")
+    print("  * condition (4)'s strip, licensed by Corollary C-prime, which inherits")
+    print("    J0a at a >= 2 (automatic at a = 1).  Measured over v4 at n <= 1200:")
+    print("    24 strip decisions, all licensed, none at a >= 2.")
+    print("Quote the result with those, not as the eight conditions alone.")
 else:
     print("Rerun with --no-theorems to establish that: it stubs the dispatch and")
     print("drops the E.3(ii) resolution, so the run rests only on the eight")

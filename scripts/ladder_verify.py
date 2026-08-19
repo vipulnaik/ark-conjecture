@@ -35,8 +35,10 @@ THE FAMILIES (all scored in SAFE mode, so each is a genuine lower bound)
 THE S7 FAMILY, AND WHY IT WAS MISSING.  Until 2026-08 the enumeration required
 the block-permuting group to sit in the top q-group, so F had to be a q-power.
 It may instead sit in the cyclic layer, where the only requirement is that
-Gamma_1/Gamma_2 stay cyclic -- so F may be any integer coprime to the
-twists and the foreign primes -- prime power or not, odd or even.  See enumeration-proof.md Part 0.  Adding it here
+Gamma_1/Gamma_2 stay cyclic -- so F may be any integer, prime power or not, odd
+or even, and needs NO coprimality with the class's own twist (an entangled
+generator supplies both from one cyclic subgroup); what it must avoid are the
+foreign primes.  See enumeration-proof.md Part 0.  Adding it here
 can only RAISE the reported floor, since this script takes a max over families
 and every family is a genuine construction.
 
@@ -391,9 +393,17 @@ def achieved(n, stop_at=None):
         if n % F == 0:
             for FF in (F, n // F):
                 c = n // FF
-                if ispp[FF] and ispp[c]:
-                    q = base[FF]
-                    v = min(FF * comb(c, 2), (FF if q % 2 else FF // 2) * c * c)
+                # The BLOCK COUNT need not be a prime power.  Requiring ispp[FF]
+                # was the pre-repair reading, in which the block-permuting group
+                # had to sit in the top q-group; a cyclic-layer rotation may have
+                # any order, and `6x13` at n = 78 is the winner there.  Dropping
+                # the guard only adds genuine configurations, so the family
+                # remains a lower bound.  The cross coefficient is keyed on the
+                # parity of F -- with FF composite there is no top prime to key
+                # on, and F's parity is the correct rule in every case anyway
+                # (the minimum pair-orbital of a transitive group of degree F).
+                if ispp[c]:
+                    v = min(FF * comb(c, 2), (FF if FF % 2 else FF // 2) * c * c)
                     if v > best * C:
                         best = v / C
         F += 1
@@ -517,13 +527,28 @@ def achieved(n, stop_at=None):
             d_tw = STRIP[c]
             while d_tw % r == 0:
                 d_tw //= r
-            # The fused class sits in the cyclic layer alongside the twist, and
-            # a cyclic group has a unique subgroup of each order, so the twist
-            # must be coprime to F.  Scoring the intra term at Fp*C(c,2)
-            # regardless would credit a twist the configuration cannot have and
-            # make this an UPPER bound on the family rather than a lower one.
-            # The correct cap is Fp * orb(c, dmax) with dmax the largest divisor
-            # of c-1 coprime to F.
+            # WHY THE TWIST IS CUT HERE, AND WHY THAT IS A WEAKNESS AND NOT THE
+            # MATHEMATICS.  The tempting argument -- the fused class sits in the
+            # cyclic layer alongside the twist, a cyclic group has a unique
+            # subgroup of each order, so the twist must be coprime to F -- is
+            # REFUTED.  It treats the block-permutation image, a QUOTIENT of the
+            # layer, as a subgroup of it.  An entangled generator (a rotation
+            # whose step-multipliers have product a generator of F_c^*) supplies
+            # the rotation and the FULL twist from one cyclic subgroup at any
+            # F_mid, which is exactly what rung B thirty lines above says and
+            # what makes `6x13` the winner at n = 78.  So Fp*C(c,2) is realisable
+            # and cutting to Fp*orb(c, dmax) UNDERSTATES the family.
+            #
+            # The cut is retained only because it is SAFE in this file's
+            # direction: understating a family lowers a max over families, so
+            # every reported floor and worklist stays a valid lower bound.  It
+            # costs sharpness, not correctness.  Measured over v4's 154 fused
+            # (F >= 3) plus foreign winners, the branch structure's cut intra
+            # never falls below B once the eff_at(q) branches are considered, so
+            # nothing reported to date is affected -- but raising this to the
+            # full twist (and revisiting the EFF_EX exclusions, which the
+            # branch-per-q structure already works around) would tighten the
+            # ladder and shrink the worklists.
             intra = Fp * orb_ld(c, d_tw, base[c] == 2)
             v = min(intra, cross_coeff * c * c, m * r, e * comb(r, 2))
             if v > best * C:

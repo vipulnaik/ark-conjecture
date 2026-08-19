@@ -16,9 +16,12 @@ An empty candidate list proves mu(n) = B(n) at each n in the table.
 
 --no-theorems disables every Part E-prime clause: no s-branch is dispatched, so
 all of them reach the search, and `e3ii_resolves` stops resolving.  A run in that
-mode rests only on the eight necessary conditions of `fb_common.py` being
-necessary -- a much smaller trusted base than this file's structure suggests --
-so it is the mode to quote.  It should agree with the normal run exactly; if it
+mode consults no Part E-prime theorem -- a much smaller trusted base than this
+file's structure suggests -- so it is the mode to quote.  Quote it accurately:
+the base is NOT the eight necessary conditions alone.  Unfused-foreign scoring
+rests on Lemma D2 (range-scoped below n = 1582, `a18_verify.py`), and condition
+(4)'s strip rests on Corollary C-prime, which inherits J0a at a >= 2; the run
+banner states both.  It should agree with the normal run exactly; if it
 ever stops agreeing while the normal run passes, the error is localised at once
 to E.1 / E.3(ii) / E.3(iii) / E.4, Lemma E.2's bound, or the MERSENNE / REPUNIT3
 tables.
@@ -138,14 +141,29 @@ if not bad:
     print("realises it, and mu(n) = B(n) is proved at each of these n.")
     if a.no_theorems:
         print()
-        print("AND IT RESTS ONLY ON THE EIGHT NECESSARY CONDITIONS.  No Part E-prime")
-        print("theorem was consulted: every s-branch was searched and e3ii_resolves")
-        print("resolved nothing.  The theorems explain why the search is cheap and are")
-        print("what any statement about ALL n must go through, but they carry no weight")
-        print("in the per-n proof above.")
+        print("AND NO PART E-PRIME THEOREM WAS CONSULTED: every s-branch was searched")
+        print("and e3ii_resolves resolved nothing.  The theorems explain why the search")
+        print("is cheap and are what any statement about ALL n must go through, but they")
+        print("carry no weight in the per-n proof above.")
+        print()
+        print("WHAT THE TRUSTED BASE STILL IS.  Not the eight necessary conditions")
+        print("alone -- two dependencies sit underneath them and are scoped:")
+        print("  * Foreign parts are scored UNFUSED.  pair_candidates applies condition")
+        print("    (3) as a single block, which is not necessary for a fused foreign")
+        print("    class; what excludes those is Lemma D2's domination, whose in-range")
+        print("    half is a18_verify.py and whose theorem form (D2-prime) starts at")
+        print("    n = 1582.  Below that the exclusion is the range check, not a proof.")
+        print("  * Condition (4)'s strip is licensed by Corollary C-prime, whose Lemma C")
+        print("    step pins the multiplier by a Frobenius exponent -- automatic at")
+        print("    a = 1, but assuming a semilinear stabiliser (J0a, open) at a >= 2.")
+        print("    Measured over v4 at n <= 1200: 24 strip decisions, all licensed,")
+        print("    NONE at a >= 2, so the J0a exposure is empty in fact over that range")
+        print("    -- a measurement to repeat on the rebuild, not a theorem.")
     else:
         print()
         print("Rerun with --no-theorems to shrink the trusted base to the eight")
-        print("necessary conditions alone.  Cheap, and worth redoing on every table")
-        print("extension rather than citing a previous session for it.")
+        print("necessary conditions plus their two scoped dependencies (unfused-")
+        print("foreign via Lemma D2, and condition (4)'s strip via Corollary C-prime),")
+        print("which that run's banner spells out.  Cheap, and worth redoing on every")
+        print("table extension rather than citing a previous session for it.")
 sys.exit(1 if bad else 0)

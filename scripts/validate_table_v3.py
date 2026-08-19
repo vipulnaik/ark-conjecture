@@ -438,7 +438,15 @@ def c_cross_coeff(R, base):
     computes, row by row, against the rule written out here -- which catches a
     regression in the scorer, the thing actually at risk.  The rescoring is kept
     as a live tripwire: it acquires teeth the moment `binds` is nonzero, and the
-    check says so rather than reporting a pass it did not earn."""
+    check says so rather than reporting a pass it did not earn.
+
+    NOTE on `binds`.  The intra term it compares against is built from the OLD
+    stripped dmax, not from SAFE's flat F*C(c,2).  A stripped dmax is SMALLER, so
+    `intra` is smaller and `fkey <= intra` fires LESS often -- the statistic
+    under-reports how often the cross term binds.  For a tripwire that is the
+    conservative direction only in the sense that it cannot manufacture a false
+    alarm; it can suppress a real one.  Rebuild it on the flat cap alongside
+    c_realisable's dmax."""
     wrong, binds, tested, discriminating = [], 0, 0, 0
     for r in R:
         for F, c, foreign in r.cls:
@@ -597,7 +605,13 @@ def c_s5(R, base):
         rr = [x for _, x, f in r.cls if f][0]
         u = oddpart(rr - 1)
         cm[c % 8] += 1; us[u] += 1
-        if u > 9:                      # cap_2(1/u) drops below (5-2sqrt6)/2 past u = 9
+        # cap_2(1/u) drops below 0.050510 = (5-2sqrt6)/2 past u = 9.  MIND THE
+        # LABEL: 0.050510 is cap_4(1/6), and was the class-23 ceiling under the
+        # older unfused reading -- it is NOT the worst F = 2 ceiling, which is
+        # cap_2(1/6) = (2-sqrt3)/4 = 0.066987.  Against that the condition would
+        # tighten to u <= 5.  Either bound leaves the family exponential and
+        # nothing downstream moves; the observed u are 1 and 3.
+        if u > 9:
             big.append((r.n, rr, u))
     return ("FAIL" if big else "PASS",
             f"{len(rows)} winners; c mod 8 = {dict(sorted(cm.items()))}, "
@@ -762,10 +776,22 @@ def c_realisable(R, base):
     is vacuous is worse than none: it reads as reassurance.  Over v4 to n = 2000
     the counts are 1,034 rows for (b) and 1,239 for (c), so neither is idle.
 
-    Note (c) is STRICTER than SAFE's dmax, which strips only the class's own
-    F_mid.  That is deliberate and is the point of the check: SAFE is free to be
-    loose because looseness is safe for an upper bound, but the CONSTRUCTION is
-    not, and attainment needs the construction.  A FAIL here would mean a scored
+    Note (c) is STRICTER than SAFE, which since the entangled-generator
+    correction strips NOTHING at all -- the cap is the flat F*C(c,2).  That is
+    deliberate and is the point of the check: SAFE is free to be loose because
+    looseness is safe for an upper bound, but the CONSTRUCTION is not, and
+    attainment needs the construction.
+
+    STALENESS FLAG, deliberate and conservative.  The `dmax` this check builds
+    below still carries the OLD construction's F_mid strip
+    (`coprime_part(..., F // ft)`).  Part E no longer describes the carrier that
+    way -- an entangled generator supplies rotation and full twist from one
+    cyclic subgroup, so the class's own F_mid does not have to be stripped out of
+    its twist.  Stripping it makes the carrier SMALLER, hence more coprime to the
+    foreigns and the other F_mid values, hence the test EASIER to pass: the check
+    as written can miss a carrier collision, never invent one.  So a PASS here is
+    weaker than it looks and a FAIL would still be real.  Rebuilding it on the
+    unstripped twist is the correct tightening and is owed.  A FAIL here would mean a scored
     row whose Part E group cannot be built as described -- which is a gap in
     attainment, not in the bound, so it is reported as group A (investigate
     before trusting the row) rather than as a contradiction with the documents."""
