@@ -792,3 +792,25 @@ Vipul's read was right, and the structural argument is stronger than the length 
 The opener keeps three sentences: what the covering statement is, and a pointer saying the arithmetic consequence exists and lives at the end. Opener is 11 lines against 25 before; §6 is unchanged in total length, so nothing was cut, only relocated.
 
 Checked after the move: no duplicated passage (each of five distinctive phrases appears exactly once), 91/91 tables well-formed, 0 dangling refs, hygiene clean. Inbound pointers sharpened from `§6` to `§6.7` at every F.4-related site — `ep` F.4's discussion pointer, five in `pending-checks.md` (gap inventory, R1 read-off, T8 twice, the rebuild note), the §3.6 cross-reference, and `converse_check.py`'s docstring — while leaving the unrelated `§6` references (the feasible-set pointer in T4, the Catalan/Pillai note) alone, since those point at the shape-counting material that stayed put.
+
+## 37. F.4's reach into the other documents, and the bookend checker run
+
+### 37.1 `orbital-evasiveness-notes.md` — yes, and it had a section waiting for it
+
+The notes' **§6 is literally titled "The converse: μ encodes prime distribution"**, and until now carried only the *covering* form. Added a paragraph there giving the sharper reading, deliberately **at the level of shape rather than of constants**: a floor forces, for almost all n, a prime linear in n whose r − 1 carries a prime-power divisor of bounded cofactor. The point that earns it a place in the notes is the comparison to their own §5 ladder — the rungs supply a factor of size r^θ for θ < 1, a floor demands one of *linear* size, so the shifted-prime condition is **necessary** and not merely a convenient sufficient input.
+
+Scoped explicitly, per the instruction to allow for the statement moving: one reading, constants and the precise divisor condition may still change, and the argument rests on a layer-assignment step (T8). The closing line says which part to rely on — the direction of the implication, not the numerals.
+
+### 37.2 The short note — **no**, and the bridge records why
+
+Recommending against, and the reasons are about the note's role rather than the mathematics. It would genuinely strengthen the Elliott–Halberstam paragraph, since it explains *structurally* why no θ < 1 rung reaches the conclusion rather than leaving that as an observation about exponents — that is the temptation, and it is worth naming. But F.4 has had one reading and depends on a step whose failure makes it **vacuous rather than merely weaker**; and the note's own claim runs the other way, so a converse is context rather than load-bearing. Adding unreviewed material to the one document written for strangers is the wrong trade.
+
+Recorded as a **deliberate omission in `note-to-framework-bridge.md`** — which is exactly what that document is for — with a revisit condition: when T8 is discharged, the two-sentence version earns a place in the note's §5 comparison. The bridge's existing "reverse implication" row now points at §6 and §6.7 and cross-references the note.
+
+`pending-checks.md` T8 gains a **blast radius**: if the prime-power step fails, three sites need editing (`aod` §6.7's equivalence claim, the notes' §6 paragraph, the bridge's revisit condition) — and the short note carries none of it, which is why discharging T8 is not urgent for anything arXiv-facing.
+
+### 37.3 The bookend run — one real finding
+
+Tables 91/91, refs 0 dangling, hygiene clean, history 10 (all the good kind). **PASS 5 caught a genuine drift the earlier runs did not**: the `density_floor_conjecture` tagged duplicate had gone out of step, `aod`'s copy still asserting "verified unconditionally for every n ≤ 10⁶, δ ≥ 0.04453 at n = 11183" while `orbital-evasiveness-notes.md`'s copy was correctly marked ⟦PENDING-REBUILD⟧ with the corrected interim (δ ≥ 0.0462 over n ≤ 10⁵ at n = 2759). Synced to the marked version — this is exactly the failure mode the DUP tagging exists for, one copy updated during the correction and the other missed.
+
+Following that up: §5's own ladder headline **δ ≥ 0.04453 at n = 11183** was likewise unmarked, though it is the home of the figure and three other statements in that section do carry the marker. Marked, with the note that `ladder_verify.py`'s families understate, so the 1/25 conjecture is unaffected whichever way the rerun lands. **R7 requotes both.**

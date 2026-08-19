@@ -29,11 +29,13 @@
 | the halving under $A_n$-invariance, and the arity axis | `chiral-graph-properties.md`, `general-k-note.md` | orthogonal to the note's claim entirely |
 | the part-count bound $k < 1/\sqrt\delta$ | Prop. F.1 | only needed to make the *search* finite |
 | prime-power block sizes $c = p^e$ | throughout | the note takes $c$ prime for self-containedness |
-| the reverse implication, $\mu \Rightarrow$ prime statements | `arithmetic-of-density.md` §6 | not needed for evasiveness |
+| the reverse implication, $\mu \Rightarrow$ prime statements | `arithmetic-of-density.md` §6, §6.7 | not needed for evasiveness — see the note below on why the sharper form stays out |
 | the full $\theta$-ladder of shifted-prime inputs, with quantifiers and attributions | `arithmetic-of-density.md` §3.6 | the note carries the three rungs that bear on it — Bombieri–Vinogradov, Baker–Harman, Chowla — and the framing of (H) as the $\theta = 1$ endpoint; what it omits is the Elliott–Halberstam rung, the two-column attribution split, and the primary-source caveats |
 | the parametric-vs-fixed-system distinction, and where Bateman–Horn does and does not apply | `arithmetic-of-density.md` §3.5 | the note states the conclusion — (H) is of Goldbach type, not a Bateman–Horn statement — without the full comparison |
 
 The exponent $2$ in the note's Theorem needs none of this. What the omitted material buys is a much better constant, exact values, and the reverse direction.
+
+> **A deliberate omission, recorded so it reads as a decision rather than an oversight.** The framework now has a converse in a sharper form than the covering statement: a density floor *forces* a shifted prime with a prime-power divisor of bounded cofactor (`enumeration-proof.md` Prop. F.4, `arithmetic-of-density.md` §6.7). It is tempting to add to the note, because it would strengthen the paragraph on Elliott--Halberstam — it explains *structurally* why no $\theta < 1$ rung reaches the note's conclusion, rather than leaving that as an observation about exponents. **It stays out anyway**, for two reasons that are about the note's role rather than the mathematics. It has had one reading, and it depends on a step about which layer of the chain supplies a foreign block's twist — the framework's least reliable category of step, and one whose failure would make the Proposition *vacuous* rather than merely weaker (`pending-checks.md` T8). And the note's claim is an implication *in the other direction*; a converse is interesting context but is not load-bearing for anything the note asserts, so it would be new unreviewed material in the one document written to be read by strangers. **Revisit when T8 is discharged**: at that point the two-sentence version — a floor demands a linear-sized prime-power divisor, which is exactly what the ladder cannot supply — would earn its place in §5's comparison.
 
 ---
 
