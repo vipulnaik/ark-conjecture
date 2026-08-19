@@ -8,11 +8,19 @@
 #   (1) the group is an Oliver group with the chain the enumeration assumed --
 #       Gamma_2 a p-group, Gamma_1/Gamma_2 CYCLIC, Gamma/Gamma_1 a q-group;
 #   (2) min u-orbital equals mu_bound;
-#   (3) the orbital MULTISET equals the value formula's terms.
+#   (3) every term of the value formula is realised as an orbital size.
 #
 # (3) is the part worth having.  Matching only the minimum can pass while the
 # construction is realising a different group from the intended one, since the
 # minimum is a min over four terms and several configurations share it.
+#
+# BE PRECISE ABOUT (3)'s STRENGTH.  It is set containment, not multiset
+# equality: the check is that the DISTINCT predicted values all occur among the
+# DISTINCT realised orbital sizes.  Multiplicities are deliberately not matched,
+# because the construction may legitimately split one predicted class into
+# several orbitals of equal size -- but the consequence is that a group
+# realising a predicted value the wrong number of times passes.  The sum check
+# (orbital sizes total C(n,2)) is what catches the grosser version of that.
 #
 # WHAT THIS DOES AND DOES NOT SETTLE.  It settles that the enumeration's score at
 # this n is ATTAINED, i.e. mu(n) >= B(n).  It says nothing about completeness
@@ -98,7 +106,8 @@ end;
 # one cyclic-layer generator); the block rotation has order F.
 BuildConfig := function(w, twists)
   local n, offs, cl, gens, i, b, base, c, F, fld, elts, gen, u, addmap, mulmap,
-        perm, images, x, s, gsub, gtop, gcyc, gbot, e, prim, ftop, fmid, dq, dcyc;
+        perm, images, x, s, gsub, gtop, gcyc, gbot, e, prim, ftop, fmid, dq, dcyc,
+        blocks;
   offs := [];  n := 0;
   for cl in w.classes do Add(offs, n);  n := n + cl.F * cl.c;  od;
   gens := rec(bottom := [], cyclic := [], top := []);
@@ -196,15 +205,20 @@ BuildConfig := function(w, twists)
       Add(gens.cyclic, PermList(images));
     fi;
   od;
-  return rec(n := n, gens := gens);
+  # the point range of each class, so the caller can check each is one orbit
+  blocks := [];
+  for i in [1..Length(w.classes)] do
+    Add(blocks, [offs[i] + 1 .. offs[i] + w.classes[i].F * w.classes[i].c]);
+  od;
+  return rec(n := n, gens := gens, blocks := blocks);
 end;
 
 # --------------------------------------------------------- Oliver chain checking
 # The chain is asserted by CONSTRUCTION above, then VERIFIED here.  Verifying is
 # the point: the generator placement records what the enumeration assumed, and
 # this checks the assumption rather than trusting it.
-CheckOliverChain := function(cfg, p, q)
-  local G, G2, G1, ok, quo;
+CheckOliverChain := function(cfg, p, q, blocks)
+  local G, G2, G1, ok, quo, orbs, b, covered;
   G2 := Group(cfg.gens.bottom);
   G1 := Group(Concatenation(cfg.gens.bottom, cfg.gens.cyclic));
   G  := Group(Concatenation(cfg.gens.bottom, cfg.gens.cyclic, cfg.gens.top));
@@ -215,7 +229,13 @@ CheckOliverChain := function(cfg, p, q)
   ok.middle_is_cyclic := IsCyclic(G1 / G2);
   ok.top_is_q_group   := IsPGroup(G / G1) and
                          (Size(G/G1) = 1 or PrimePGroup(G / G1) = q);
-  ok.transitive_parts := true;                 # each block orbit is a full block
+  # Each CLASS must be one orbit of G.  This was a hardcoded `true` -- a field
+  # printed beside genuine checks, reading as one, testing nothing.  If a class
+  # splits, the construction is not the transitive configuration the enumeration
+  # scored, and the pair-orbital terms are being compared against the wrong
+  # group.  `blocks` is the list of point ranges, one per class, from BuildConfig.
+  orbs := Orbits(G, [1..cfg.n]);
+  ok.transitive_parts := ForAll(blocks, b -> ForAny(orbs, o -> Set(o) = Set(b)));
   ok.all              := ForAll(RecNames(ok), f -> ok.(f) = true);
   return rec(G := G, G1 := G1, G2 := G2, ok := ok);
 end;
@@ -269,7 +289,7 @@ VerifyWitness := function(str, muBound)
   Print("p, q      : ", w.p, ", ", w.q, "\n");
   Print("n         : ", n, "   C(n,2) = ", Binomial(n, 2), "\n");
   Print("twists    : ", twists, "   (foreign primes stripped; no F_mid cut)\n");
-  chain := CheckOliverChain(cfg, w.p, w.q);
+  chain := CheckOliverChain(cfg, w.p, w.q, cfg.blocks);
   Print("|Gamma|   : ", Size(chain.G), "\n");
   for f in RecNames(chain.ok) do
     if f <> "all" then Print("  chain ", f, ": ", chain.ok.(f), "\n"); fi;

@@ -237,7 +237,7 @@ end;;
 pa := fail;; p := fail;; a := fail;; c := fail;; F := fail;; d := fail;;
 sh := fail;; sc := fail;; re := fail;; oq := fail;; status := "";;
 
-nbad := 0;; ntested := 0;; nnonoliver := 0;; nskip := 0;;
+nbad := 0;; ntested := 0;; nnonoliver := 0;; nskip := 0;; outok := true;;
 
 if STRIP then
   Print("ark_shapes.g -- scoring mode: RETIRED F_mid strip (control)\n\n");
@@ -321,8 +321,13 @@ CheckOutputComplete := function(fname, expected)
   bad := 0;
   for l in lines do
     t := SplitString(l, "|");
+    # NOT-OLIVER belongs here: it is a VERDICT (the shape was tested and found
+    # inadmissible), not a truncation.  Omitting it made an inadmissible shape
+    # read as a lost row -- currently dormant, since no row carries it, which is
+    # exactly why it could sit here unnoticed.
     if Length(t) = 0 or not (t[Length(t)] in
-         ["ok", "UNDER-SCORE", "OVER-SCORE", "SKIPPED-over-MAXORD"]) then
+         ["ok", "UNDER-SCORE", "OVER-SCORE", "NOT-OLIVER",
+          "SKIPPED-over-MAXORD"]) then
       bad := bad + 1;
     fi;
   od;
@@ -342,13 +347,25 @@ CheckOutputComplete := function(fname, expected)
   return true;
 end;
 CloseStream(OUTSTREAM);
-if not CheckOutputComplete(OUT, ntested + nskip) then
-  nbad := nbad + 1;
+# Keep the two failure kinds APART.  An incomplete output file is a run defect
+# and says nothing about the scoring; folding it into nbad made a truncated
+# control run print "the strip is detected as expected", which is the wrong
+# conclusion drawn from the wrong evidence.
+outok := CheckOutputComplete(OUT, ntested + nskip);;
+if not outok then
+  Print("*** FAIL: output integrity -- the verdicts above do not cover the ",
+        "whole sweep, whatever the scoring mode ***\n");
 fi;
-if STRIP and nbad > 0 then
-  Print("The strip is detected as expected -- this is the control.\n");
-fi;
-if (not STRIP) and nbad > 0 then
-  Print("*** FAIL: the current scoring does not match realised orbitals ***\n");
+if STRIP then
+  if nbad > 0 then
+    Print("The strip is detected as expected -- this is the control.\n");
+  else
+    Print("*** FAIL: the control found NO mismatch.  The retired strip should ",
+          "under-score; if it does not, this sweep is not exercising it ***\n");
+  fi;
+else
+  if nbad > 0 then
+    Print("*** FAIL: the current scoring does not match realised orbitals ***\n");
+  fi;
 fi;
 QUIT_GAP(0);
