@@ -305,12 +305,6 @@ def value(sel, p, spf, q=None):
             char2 = (p == 2)
             # The twist splits as d = d_cyc * d_q, one factor per layer that can
             # hold it: d_q a q-power in Gamma/Gamma_1, d_cyc in the cyclic layer.
-            # Only d_cyc has to be coprime to Fmid -- they sit in the SAME cyclic
-            # group, which has a unique subgroup of each order.  This is a proven
-            # necessary condition, not a Lemma C-style conjecture, so SAFE mode
-            # may use it: the unconditional cap on the part becomes
-            # F*orb(c, dmax) rather than F*C(c,2), which is strictly tighter
-            # whenever Fmid > 1 and still bounds any admissible stabiliser.
             # The F_mid coprimality cut is NOT a necessary condition, and
             # imposing it is unsound in the dangerous direction.  The tempting
             # argument -- C_{F_mid} and the twist's cyclic part sit in one

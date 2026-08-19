@@ -19,6 +19,32 @@ such a configuration, and every over-approximation errs permissive.  A candidate
 that survives may be spurious; a real one is never discarded.  In particular the
 certificate is sound against any B <= B_safe(n), which is what lets wide_cert.py
 substitute a lower bound.
+
+WHAT "ONLY THE EIGHT NECESSARY CONDITIONS" DOES AND DOES NOT MEAN.  Both
+certificates advertise that a --no-theorems run rests only on the conditions
+below.  That is true of the Part E-prime THEOREMS, and it is what the switch
+buys, but two further dependencies sit underneath the conditions themselves and
+should be named wherever the slogan is quoted:
+
+  * UNFUSED FOREIGN PARTS.  Condition (3) scores a foreign part as a single
+    block, orb(r, t) >= B, and the leftover tests admit foreign parts only at
+    F = 1.  For a FUSED foreign class of F' blocks the intra term is
+    F'*orb(r, t), so (3) is not necessary for it.  What excludes fused-foreign
+    configurations is Lemma D2's domination (m* <= n*min(F',r)/2), whose
+    range-scoped half is checked by `a18_verify.py` and which beyond the table
+    needs only delta >> n^-1/2.  So the trusted base is: these conditions, PLUS
+    D2/D2-prime over the range, PLUS Part 0's shape space.  Rerun a18_verify.py
+    on every extension -- `pending-checks.md` R1 schedules it.
+  * SEMILINEARITY AT a >= 2.  Condition (4)'s strip licence is Corollary C',
+    and Lemma C's proof pins the multiplier via a Frobenius exponent, i.e.
+    inside AGammaL(1, c).  At a = 1 that is automatic (GL(1,p) is cyclic); at
+    a >= 2 it assumes the stabiliser is semilinear, which is open (J0a).  Set
+    set_strip_trace() and count how many LICENSED strips fire at a >= 2 to
+    measure the exposure rather than argue about it.  Measured on the v4 table
+    over n <= 1200: 24 strip decisions, all licensed, NONE at a >= 2 -- so the
+    a >= 2 case is not reached there and the exposure is empty in fact over that
+    range.  Repeat the count on every extension; one licensed strip at a >= 2
+    puts J0a back into the collapse's trusted base.
 """
 from math import comb, isqrt, gcd
 
@@ -288,7 +314,8 @@ def theorem_report(A, n, B, caps_m, caps_r):
 #                                         and orb is monotone in it.
 #   (4) F * orb(c, dmax) >= B             necessary by the leftover twist cap: the
 #       dmax strip of the foreign prime r is licensed by Corollary C' whenever
-#       sharing_bound(p, a, r) < B, at EVERY a and not only at a = 1 -- see
+#       sharing_bound(p, a, r) < B, at every a for a SEMILINEAR stabiliser --
+#       automatic at a = 1, and at a >= 2 inheriting J0a, see the header -- see
 #       sharing_bound() for the argument and for why the gate is local.  ONLY
 #       the foreign prime is stripped.  Stripping the block count as well is
 #       unsound (the rotation's image is a quotient of the cyclic layer, not a

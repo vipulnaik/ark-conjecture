@@ -99,23 +99,38 @@ def orb_full(c, t, char2):
 def three_part_lo(n, cap=None):
     """(1,c)+(1,c)+(1,r*).  Terms C(c,2) ~ c^2/2 and cap(r*) <= r*^2/2 balance
     at c ~ r* ~ n/3, so scan c outward from n/3.  Needs n - 2c prime, hence
-    exists mainly for odd n."""
+    exists mainly for odd n.
+
+    SHARE PAIRS ARE SKIPPED (r* | c-1).  Scoring such a pair at
+    min(C(c,2), c*r*, cap(r*)) OVER-credits it: the coupling of Lemma C cuts
+    either the c-twist or the foreign twist, so that value is not realised by
+    any group.  An over-credited B_lo is ANTI-permissive -- B_lo feeds the s_max
+    and foreign-cap FILTERS, so too large a value drops candidate (pair, n)
+    combinations and can turn an unresolved n into a silent pass, the one error
+    class this file cannot see in its own output.  Measured over n <= 2600 no
+    share pair ever set or came within 0.1% of setting B_lo, so the guard costs
+    nothing; it removes the question instead of relying on that staying true."""
     best = 0
     for c in near(PPs, n // 3, cap or SCAN_CAP):
         rr = n - 2 * c
         if rr < 3 or not A.is_prime(rr) or rr == A.prime_power(c)[0]:
             continue
+        if (c - 1) % rr == 0:
+            continue                          # share pair: see the docstring
         best = max(best, min(comb(c, 2), c * rr, fcap(rr)))
     return best
 
 def two_part_lo(n, cap=None):
     """(1,c)+(1,r*).  Balances at c ~ r* ~ n/2.  Covers even n, where the
-    three-part shape does not exist."""
+    three-part shape does not exist.  Share pairs (r* | c-1) are skipped for the
+    reason given in three_part_lo."""
     best = 0
     for c in near(PPs2, n // 2, cap or SCAN_CAP):
         rr = n - c
         if rr < 3 or not A.is_prime(rr) or rr == A.prime_power(c)[0]:
             continue
+        if (c - 1) % rr == 0:
+            continue                          # share pair: see three_part_lo
         best = max(best, min(comb(c, 2), c * rr, fcap(rr)))
     return best
 
@@ -159,12 +174,20 @@ t1 = time.time()
 # that changing SCAN_CAP, WEAK, or any of the family functions silently reuses a
 # stale bound and the run "certifies" against old data.  --refresh exists but
 # relies on remembering; this does not.
+# Everything B_lo depends on has to be in here, not just what is defined in this
+# file: the families call fb.foreign_cap, fb.orb and me.seed_value, so a fix to
+# any of those would otherwise silently reuse a stale cache -- exactly the
+# failure this signature exists to prevent.
 _SIG = hashlib.sha1("|".join([
     str(SCAN_CAP), str(WEAK),
     three_part_lo.__doc__ or "", two_part_lo.__doc__ or "", fused_lo.__doc__ or "",
     _MODE,
     str(three_part_lo.__code__.co_code), str(two_part_lo.__code__.co_code),
     str(fused_lo.__code__.co_code), str(near.__code__.co_code),
+    str(orb_full.__code__.co_code),
+    str(fb.foreign_cap.__code__.co_code), str(fb.orb.__code__.co_code),
+    str(fb.qpart.__code__.co_code),
+    str(me.seed_value.__code__.co_code),
 ]).encode()).hexdigest()[:10]
 CACHE = os.path.join(os.environ.get("WIDE_CERT_CACHE", _HERE), f"blo_{NMAX}_{_SIG}.txt")
 if os.path.exists(CACHE) and '--refresh' not in _A:

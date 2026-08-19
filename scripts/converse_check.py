@@ -10,10 +10,27 @@ and yields three inequalities that any winner must satisfy:
   (1) foreign parts:  (r-1)/Q <= 2/delta,  Q the largest prime-power divisor
                       of r-1.  This is the statement's content: r-1 carries a
                       prime-power divisor of BOUNDED COFACTOR.
-  (2) foreign parts:  r >= delta*n.  The prime is linear in n.
+  (2) foreign parts:  r >= delta*n.  The prime is linear in n.  NOTE this is a
+                      SHARPENING of what F.4 proves, not F.4's own inequality:
+                      the Proposition concludes r >= delta*(n-1)/2, and the
+                      factor-2 improvement comes from combining the foreign
+                      intra cap F*C(r,2) with F <= n/r rather than from F.4's
+                      proof.  So a violation here would contradict the sharper
+                      form, and F.4 as stated only if it exceeded 2x.  Kept in
+                      the sharp form because that is what the table satisfies
+                      and what a sharpening question would consume.
   (3) all-matching:   n = M*p^b with M <= 1/delta, p^b a prime power.  This is
                       the branch that makes the exceptional set density zero
-                      and so licenses the "almost all" in the statement.
+                      and so licenses the "almost all" in the statement.  It is
+                      branch (a), which is WIDER than the one-part shapes: any
+                      configuration with no foreign part lands there, including
+                      multi-class ones such as n = 640 = 1*256 + 3*128.  Rows
+                      like that are identified by the absence of a starred prime
+                      in the witness, not by parts == 1, and are counted and
+                      checked separately below -- see check().  There are none
+                      in v4 or in the v5 prefix, but a rebuild could produce
+                      one, and a row falling through BOTH branches unchecked is
+                      the silent failure this script exists to prevent.
 
 WHAT THIS SCRIPT DOES AND DOES NOT ESTABLISH.  It tests the INEQUALITIES, not
 the DERIVATION.  A wrong constant, or the unjustified layer assignment flagged
@@ -92,7 +109,7 @@ def load(path, nmax, contiguous_only=True, frontier=None, gap=10):
 
 
 def check(rows, ar, delta0=None, verbose=False):
-    res = {"foreign": 0, "onepart": 0,
+    res = {"foreign": 0, "onepart": 0, "multimatch": 0, "unchecked": [],
            "v1": [], "v2": [], "v3": [],
            "max_cofactor": (0, None),
            "tight1": (0.0, None), "tight2": (9e9, None), "tight3": (0.0, None)}
@@ -123,15 +140,30 @@ def check(rows, ar, delta0=None, verbose=False):
             if r / (d * n) < res["tight2"][0]:
                 res["tight2"] = (r / (d * n), (n, r))
 
-        # (3): the all-matching branch, identified by a single part
-        if row["parts"] == 1:
+        # (3): the all-matching branch = branch (a) = NO foreign part at all.
+        # Identified by the absence of a starred prime in the witness rather than
+        # by parts == 1, so that a multi-class all-matching row (n = 640 =
+        # 1*256 + 3*128 and the like) is checked rather than falling through both
+        # branches silently.  The bound is the same either way: every class needs
+        # c_i > delta*(n-1), and writing p^b for the smallest block size gives
+        # n = p^b * (cofactor) with the cofactor bounded by 1/delta -- which the
+        # largest prime-power divisor of n bounds from above, so testing against
+        # it is the permissive reading.
+        if not FOREIGN.search(row["witness"]):
             res["onepart"] += 1
+            if row["parts"] > 1:
+                res["multimatch"] += 1
             pb = ar.largest_pp_divisor(n)
             M = n // pb
             if M > 1 / d:
                 res["v3"].append((n, pb, M, round(1 / d, 2)))
             if M * d > res["tight3"][0]:
                 res["tight3"] = (M * d, (n, pb, M))
+        elif not any(ar.is_prime(int(m.group(1)))
+                     for m in FOREIGN.finditer(row["witness"])):
+            # A starred part that is not prime cannot be a foreign block, so this
+            # row reached neither branch.  Report it rather than passing it.
+            res["unchecked"].append((n, row["witness"]))
 
     return res
 
@@ -179,6 +211,15 @@ def main():
     print(rowsfmt.format("(3) M <= 1/delta, n=M*p^b [licenses 'almost all']",
                          R["onepart"], len(R["v3"])))
     print()
+    print(f"branch (a) rows: {R['onepart']} with no foreign part, of which "
+          f"{R['multimatch']} are MULTI-CLASS all-matching")
+    if R["multimatch"] == 0:
+        print("   (none in range; the check is live but currently vacuous -- a "
+              "rebuild could produce one)")
+    if R["unchecked"]:
+        print(f"*** {len(R['unchecked'])} row(s) reached NEITHER branch "
+              f"(starred part not prime): {R['unchecked'][:4]}")
+    print()
 
     if R["tight1"][1]:
         print(f"tightest (1): ratio/bound {R['tight1'][0]:.4f} at "
@@ -206,7 +247,7 @@ def main():
             for v in R[key]:
                 print(f"   VIOLATION {label}: {v}")
 
-    bad = len(R["v1"]) + len(R["v2"]) + len(R["v3"])
+    bad = len(R["v1"]) + len(R["v2"]) + len(R["v3"]) + len(R["unchecked"])
     print()
     if bad:
         print(f"*** {bad} violation(s) -- F.4 is contradicted by the table. ***")

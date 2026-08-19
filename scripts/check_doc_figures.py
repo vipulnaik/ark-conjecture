@@ -23,6 +23,15 @@ which nothing else notices.  So this script runs five passes.
           like "delta > 1/25 forces s <= 3, and every computed value has delta >=
           0.0418" is a theorem plus a range assertion, and the range assertion
           expires without any figure changing.  Checked against the current floor.
+          This pass also carries two INVARIANTS -- staleness classes that are
+          prose rather than figures, so no other pass can see them, and both live
+          defects found by a fresh read: (I1) no sentence may prescribe an F_mid
+          strip on the SAFE cap, which the entangled-generator repair made
+          anti-permissive and which the notes' own pitfall box was still
+          teaching; (I2) every quoted count of ceiling constants must match the
+          cardinality and modulus of the ceiling table itself, read off the
+          table rather than hardcoded -- three mod-24-era counts survived the
+          re-keying to six constants mod 12 in sentences that read as true.
 
   PASS 3  PROSE.  Status markers that drift because they are sentences, not
           numbers.  The signal is CONTRADICTION -- a file asserting both that the
@@ -378,6 +387,122 @@ if A.only in ("all", "scope"):
         print("no threshold assertion recognised.")
     print("\nNOTE: these patterns are a WHITELIST. Silence means 'nothing recognised',")
     print("not 'nothing to find'. Add a pattern whenever a new range assertion is written.")
+
+    # ---- INVARIANTS.  Two staleness classes that are PROSE rather than figures,
+    # so nothing above sees them.  Both were live defects found by a fresh read in
+    # 2026-08 and both are one grep once stated.
+    #
+    # (I1) THE SAFE CAP MUST NOT BE DESCRIBED WITH AN F_mid STRIP.  The corrected
+    #      shape space makes that cut anti-permissive (the block-rotation image is
+    #      a quotient of the cyclic layer, not a subgroup; an entangled generator
+    #      supplies rotation and full twist together), and the live cap in
+    #      `mu_enumerate_v3.py` is the flat F*C(c,2).  The defect this catches is
+    #      a sentence PRESCRIBING the strip -- including, as it happened, the very
+    #      pitfall box whose job is to warn readers off it.  Sentences that name
+    #      the strip in order to reject it are exempt, detected by a negation
+    #      marker.  The F*orb(c, dmax) form is legitimate in the CERTIFICATES,
+    #      where dmax strips the licensed FOREIGN prime and nothing else, so the
+    #      trigger is the co-occurrence of dmax with F_mid, not dmax alone.
+    print()
+    NEG = re.compile(r"\b(not|never|no |unsound|anti-permissive|invalid|"
+                     r"illusory|false|tempting|must not|cannot)\b", re.I)
+    i1 = 0
+    for d in DOCS:
+        try: txt = open(d).read()
+        except OSError: continue
+        for ln, line in enumerate(txt.split("\n"), 1):
+            if "dmax" not in line:
+                continue
+            if not re.search(r"F_mid|coprime to F\b|block count", line):
+                continue
+            if NEG.search(line):
+                continue
+            findings += 1; i1 += 1
+            print(f"{d} L{ln}  *** INVARIANT I1 *** dmax described with an F_mid "
+                  f"strip and no negation: the SAFE cap is the flat F*C(c,2)")
+            print(f"   {line.strip()[:170]}\n")
+    if not i1:
+        print("[ok] I1: no sentence prescribes an F_mid strip on the SAFE cap.")
+
+    # (I2) CONSTANT COUNTS MUST MATCH THE CEILING TABLE.  Three mod-24-era counts
+    #      ("seven mod-24 ceilings", "eight constants", "seven distinct delta_0")
+    #      survived the re-keying to mod 12 with six constants, each in a sentence
+    #      that reads as true.  The table is the authority, so read its cardinality
+    #      off it rather than hardcoding: aod section 3.3.5's rows are keyed by a
+    #      "n mod 12" header and their cap column holds the constants.
+    WORDS = {"two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7,
+             "eight": 8, "nine": 9, "ten": 10, "twelve": 12}
+    ncap = nmod = None
+    for d in DOCS:
+        try: txt = open(d).read()
+        except OSError: continue
+        m = re.search(r"\| *n mod (\d+) *\|.*?\n(?:\|.*\n)+", txt)
+        if m:
+            nmod = int(m.group(1))
+            body = [l for l in m.group(0).split("\n")[2:] if l.startswith("|")]
+            caps = set()
+            for l in body:
+                cells = [c.strip() for c in l.strip("|").split("|")]
+                if cells and cells[-1]:
+                    caps.add(cells[-1].strip("* "))
+            ncap = len(caps)
+            break
+    if ncap:
+        print(f"\n[ceiling table] {ncap} distinct constants, keyed mod {nmod}")
+        # The patterns are deliberately NARROW.  A loose "(number) ... constants"
+        # form matches half the prose in these files -- "two engines", "the
+        # constants die at k >= 3", "keyed mod 12 with six constants" (capturing
+        # the 12) -- and a noisy invariant is one nobody reads.  So each pattern
+        # below must name the counted object explicitly.
+        PATS = [
+            # "seven mod-24 ceilings", "six mod-12 ceilings", "six ceilings"
+            # The lookbehind matters: "the mod-12 ceilings" is a KEYING and not a
+            # count, and without it the modulus is read as the cardinality.
+            re.compile(r"(?<!mod )(?<!mod-)\b(" + "|".join(WORDS) + r"|\d+)\b"
+                       r"(?: mod[- ](\d+))? (?:class )?ceilings\b", re.I),
+            # "seven distinct delta_0", "six distinct constants"
+            re.compile(r"\b(" + "|".join(WORDS) + r"|\d+)\b distinct "
+                       r"(?:δ₀|delta_0|ceilings|constants)\b", re.I),
+            # "the eight constants come from", "the six constants"
+            re.compile(r"\bthe (" + "|".join(WORDS) + r"|\d+) constants\b", re.I),
+            # "keyed mod 12 with six constants" -- both numbers in one phrase
+            re.compile(r"keyed mod (\d+) with (" + "|".join(WORDS) + r"|\d+) "
+                       r"constants", re.I),
+        ]
+        i2 = 0
+        for d in DOCS:
+            try: txt = open(d).read()
+            except OSError: continue
+            for ln, line in enumerate(txt.split("\n"), 1):
+                probe = despan(line)
+                for pi, pat in enumerate(PATS):
+                    for m in pat.finditer(probe):
+                        if pi == 3:
+                            mod, raw = int(m.group(1)), m.group(2).lower()
+                        else:
+                            raw = m.group(1).lower()
+                            mod = int(m.group(2)) if pat.groups > 1 and m.group(2) else None
+                        k = WORDS.get(raw)
+                        if k is None:
+                            try: k = int(raw)
+                            except ValueError: continue
+                        if re.search(r"collaps|solvable|k = 3|k >= 3|k ≥ 3", line):
+                            continue     # a different table's cardinality
+                        if pi == 0 and mod is None and k <= 2:
+                            continue     # "two ceilings" = the two crude bounds of
+                                         # notes section 2, not this table
+                        if pi == 2 and not re.search(
+                                r"ceiling|δ₀|delta_0|shifted-prime|residue", line):
+                            continue     # "the two constants" a script reports
+                        if k == ncap and (mod is None or mod == nmod):
+                            continue
+                        findings += 1; i2 += 1
+                        print(f"{d} L{ln}  *** INVARIANT I2 *** quotes {k} "
+                              f"constants{f' mod {mod}' if mod else ''} against the "
+                              f"table's {ncap} mod {nmod}")
+                        print(f"   {line.strip()[:170]}\n")
+        if not i2:
+            print("[ok] I2: every constant count matches the ceiling table.")
 
 # --------------------------------------------------------------- PASS 7 tables
 #
