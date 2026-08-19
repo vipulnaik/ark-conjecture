@@ -768,3 +768,17 @@ Answering the question directly: **v4 is not good enough, and this belongs in R1
 Added as step 5 of R1's command list, with a read-off note. Ran against the v5 partial frontier as a partial answer: **0 violations over 789 foreign primes and 485 one-part winners at n ≤ 1546, max cofactor still 12 at the same witness** (n = 221, r = 157, Q = 13). So the corrected shape space has not disturbed the inequalities or the headline constant on the range rebuilt so far — reassuring, since n = 221's witness surviving the correction is what keeps the (H)-matching coincidence alive.
 
 **One distinction the R1 note now makes, because it would otherwise generate a false alarm.** The two constants behave differently under a rerun. Max cofactor is a maximum over witnesses and moves only if the shape space changes which primes win — a change there *is* a finding. Slack is max-cofactor against 2/floor, so it moves whenever the **floor** moves, and is therefore range-dependent even on a perfectly correct table: v5-partial reads 2.9 against v4's 3.6 purely because the floor over a shorter range is higher. Requote slack with its range; do not read a change in it as evidence of anything. Both statement sites are marked ⟦PENDING-REBUILD⟧ accordingly.
+
+## 35. The δ₀ versus δ₀² question — and the squared constant was slack, not structure
+
+Vipul asked why two different denominators appear for the same quantity D. Working it through showed the **δ₀² was an artefact of a lossy step in my own proof**, and F.4 now carries D = 2/δ₀ on both branches.
+
+**Where the asymmetry looked like it came from.** Each branch bounds a product against n². The foreign branch has a *two*-factor product r·Q against the single constraint r ≤ n — one quantity, one constraint, one division by δ₀. The all-matching branch has a *three*-factor product F·c·d against F·c ≤ n, and that extra factor is what invited the second division.
+
+**Why it was avoidable.** I had derived c ≥ δ₀n and F ≤ 1/δ₀ separately and then used them as independent facts to bound d ≥ δ₀n²/(2Fc). But F and c are not independent — F·c is bounded by n **jointly**, which is the constraint actually available. Keeping the product together gives d ≥ δ₀n²/(2·Fc) ≥ δ₀n/2 in one step, hence (c − 1)/d ≤ 2/δ₀, matching the foreign branch exactly. Splitting the product spends δ₀ twice for nothing.
+
+**Checked before editing**: ~4·10⁵ random admissible configurations, **0 violations** of the tighter bound, tightest ratio 0.5 (consistent with the orb halving, so even 2/δ₀ is a factor 2 loose in the sharp direction).
+
+**Consequences, all applied.** F.4's statement is now a single D = 2/δ₀ with no branch-dependent constant; the proof records the joint-versus-separate point explicitly, since it is exactly the step a re-derivation would get wrong again; `aod` §6's round trip is **700 uniformly** rather than 700 and 245,000, which also simplifies the equivalence claim — the three surviving differences are now prime-power-versus-prime, almost-all-versus-all, and a factor ≈ 58, with no fourth term about the branches diverging.
+
+**And it leaves a tripwire worth having.** Both branches now carry the *same* constant, so T8 records that a future derivation making them differ is itself a signal of a lost joint constraint rather than a real feature. That is a better invariant than the number 700.
