@@ -582,3 +582,12 @@ Per the session's instruction, the remaining proved-vs-empirical daylight is now
 ### 21.6 Skipped, for the record
 
 Not re-derived this pass: Part H's cost model beyond spot-reading; the measured distributions in Part I (marked ⟦PENDING-REBUILD⟧ and owned by the rebuild); `brute.py`'s 142-value agreement (recorded, not rerun); the q-pinning measurements (32,830 parts) and the e = 1 table (2 configurations), taken as recorded. The two-part reduction's n ≤ 1200 verification and the 437-shape sweep are R-item territory, not re-run here.
+
+
+## 22. Lean cross-environment check: the first real skew, and the convention it fixes
+
+Vipul ran all three files under the laptop toolchain: **`Basic.lean` passes** (its first compile anywhere — the A9 next-step is discharged) and `Note.lean` reconfirmed. **`ArkCore.lean` failed there with 3 errors, 0 sorries** — all one cause: `List.mem_cons_self` takes its arguments *explicitly* in core 4.15.0 and *implicitly* under the laptop's toolchain, so `List.mem_cons_self a rest` typechecks in exactly one of the two environments. Three sites (in `exists_min_member` and `length_mul_le_sum`) now discharge the membership with `simp`; the container recompiles clean, zero sorries.
+
+Worth keeping, because it is a small instance of the same shape as §20.4's per-machine episode: **a file can be simultaneously correct and uncompilable, and which one you observe depends on where you run it.** Nothing about the mathematics was wrong — the proof term was fine, the *name* was the version-dependent part. Hence the convention now recorded in the file header and A9: prefer a tactic to a named library lemma wherever the goal is trivial, since the name is what carries the dependence. Flagged as the likeliest next offenders: the `Nat.mul_le_mul_left` / `mul_le_mul_right` / `mul_lt_mul_left` family, whose argument order and implicit/explicit split have both moved historically — this file uses them at a dozen sites and cannot test them from here.
+
+Status now: **all three Lean files compile**, `ArkCore.lean` with every proof complete. Next is the substantive step rather than a compile step — discharging `Note.lean`'s sorries on the laptop, importing the ℕ statements from `ArkCore` rather than re-proving them.

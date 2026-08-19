@@ -14,6 +14,13 @@ lives here, proved.
 `pairs n = n*(n-1)/2` (bridge to Mathlib: `Nat.choose_two_right`), and
 Proposition F.1 is stated in squared form.
 
+**Portability note.** `List.mem_cons_self`'s arguments are explicit in core
+4.15.0 and implicit under the laptop's toolchain, so naming it with arguments
+compiles in one environment and fails in the other.  Those sites now discharge
+the membership with `simp`, which is stable across both.  The general rule for
+this file: prefer a tactic to a named library lemma wherever the goal is
+trivial, since the named form is what carries the version dependence.
+
 **The compiler earned its keep on first contact**: the draft split the central
 inequality's block case at `r ≥ 13`, and the slack chain fails there —
 `r² − 7r − 84 < 0` at 13 — so the split is at 14, the finite side `n ≤ 65`
@@ -107,10 +114,10 @@ theorem exists_min_member (parts : List Nat) (hne : parts ≠ []) :
   | nil => exact absurd rfl hne
   | cons a rest ih =>
     rcases rest with _ | ⟨b, rest'⟩
-    · exact ⟨a, List.mem_cons_self a [], by intro s hs; simp at hs; omega⟩
+    · exact ⟨a, by simp, by intro s hs; simp at hs; omega⟩
     · obtain ⟨t, htmem, htle⟩ := ih (by simp)
       by_cases hat : a ≤ t
-      · refine ⟨a, List.mem_cons_self a _, ?_⟩
+      · refine ⟨a, by simp, ?_⟩
         intro s hs
         rcases List.mem_cons.mp hs with h | h
         · omega
@@ -127,7 +134,7 @@ theorem length_mul_le_sum (t : Nat) (parts : List Nat)
   induction parts with
   | nil => simp
   | cons a rest ih =>
-    have ha : t ≤ a := h a (List.mem_cons_self a rest)
+    have ha : t ≤ a := h a (by simp)
     have := ih (fun s hs => h s (List.mem_cons_of_mem a hs))
     simp only [List.length_cons, List.sum_cons]
     have : (rest.length + 1) * t = rest.length * t + t := by
