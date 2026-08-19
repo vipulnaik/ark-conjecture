@@ -249,8 +249,22 @@ def solve(pin_class, pin_val, nodecap):
         if found[0] or capped[0]: return
         while k < len(unknowns) and x[unknowns[k]] is not None: k += 1
         if k == len(unknowns):
-            if all(group_ok(gi, x) for gi in range(len(ALLG))):
-                found[0] = True
+            # HARD ABORT on a failing group, matching stage4_fast.py's leaf.  A
+            # leaf reached with a failing group means the pend/undo bookkeeping
+            # has desynchronised -- the signature of the false-SAT bug the solver
+            # was rewritten to fix.  Silently returning (not setting found[0])
+            # would degrade that into an undercount of SAT verdicts, i.e. into
+            # spurious UNSATs -- and here the UNSAT rows ARE the forced classes,
+            # the most-quoted output of this script.  So the corruption would
+            # land squarely on the results, with no tripwire.
+            bad = [gi for gi in range(len(ALLG)) if not group_ok(gi, x)]
+            if bad:
+                log(f"FATAL: leaf reached with {len(bad)} failing group(s): "
+                    + ", ".join(ALLG[gi]['key'] for gi in bad[:5]))
+                raise AssertionError(
+                    "bookkeeping bug: leaf violates group conditions; no "
+                    "forced/free verdict from this run may be trusted")
+            found[0] = True
             return
         i = unknowns[k]
         for val in (0, 1):

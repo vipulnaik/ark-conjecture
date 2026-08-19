@@ -90,6 +90,20 @@ def parse_q(tag):
     m = 1
     for q in qs:
         m = m * q // gcd(m, q)
+    if len(qs) > 1:
+        # The lcm strengthening is legitimate HERE and only here, because the tag
+        # is emitted by ark_gap.g's IsOliverTop, which verifies each q against an
+        # actual normal subgroup witnessing a chain with that top prime.  The
+        # same lcm taken over ark_intersect.py's twist primes would NOT be, since
+        # a twist prime need not be a valid top prime -- and on a CSP whose useful
+        # answer is UNSAT, an unjustified constraint is a spurious proof of ARK.
+        #
+        # Logged because it has never fired across 8,082 groups at n = 10 and
+        # n = 12, so its first firing is either a new capability or a sign the
+        # tag is being produced by something other than IsOliverTop.  Either way
+        # it should not pass unnoticed.  (Same log as probe_backbone.py's.)
+        log(f"multi-prime tag {tag!r}: enforcing chi = 1 mod lcm = {m} "
+            f"(verified top primes {qs})")
     return m
 
 oliver = [g for g in groups if not g['tag'].startswith('P')]
@@ -159,12 +173,12 @@ def full_prop():
     return True
 
 if not full_prop():
-    log("UNSAT at initial propagation => ARK HOLDS UNCONDITIONALLY AT n=10")
+    log(f"UNSAT at initial propagation => ARK HOLDS UNCONDITIONALLY AT n={NVERT}")
     sys.exit()
 for gi in range(len(ALLG)):
     pend[gi] = sum(1 for c in ALLG[gi]['classes'] if x[c] is None)
     if pend[gi] == 0 and not group_ok(gi, x):
-        log(f"UNSAT: group {ALLG[gi]['key']} fails at root => ARK HOLDS AT n=10")
+        log(f"UNSAT: group {ALLG[gi]['key']} fails at root => ARK HOLDS AT n={NVERT}")
         sys.exit()
 
 unknowns = [i for i in range(V) if x[i] is None]
@@ -294,7 +308,11 @@ with open('csp_result.txt', 'w') as f:
     out(f"stage4_fast: nodes={nodes[0]} time={time.time()-t0:.0f}s "
         f"memo={len(memo)}" + (" [INTERRUPTED: results partial]" if interrupted else ""))
     if sols[0] == 0 and not interrupted:
-        out("UNSAT => THE ARK CONJECTURE HOLDS UNCONDITIONALLY AT n = 10")
+        # NVERT, not a literal.  This is the string an UNSAT run gets quoted
+        # from, and it is the only outcome here that would be a theorem, so a
+        # hardcoded degree would misattribute the strongest result the pipeline
+        # can produce.  Same for the two log lines above.
+        out(f"UNSAT => THE ARK CONJECTURE HOLDS UNCONDITIONALLY AT n = {NVERT}")
         out("(archive all ckpt_*.pkl + groups_out.txt and rerun once to reproduce)")
     else:
         out(f"admissible patterns: {sols[0]}"

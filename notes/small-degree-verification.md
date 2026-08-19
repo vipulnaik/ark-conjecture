@@ -70,8 +70,9 @@ python3 consume_gap.py --infile groups_out.txt --maxgroups 1000 --maxt 8 --procs
 # does groups_out.txt predate the multi-top-prime change to ark_gap.g?
 awk -F'|' '$3 ~ /\+/' groups_out.txt | wc -l    # 0 => pre-change, or no group has two usable q
 
-# item 3  involution pressure points
-python3 probe_backbone.py --classes 393,401,405,108,437,439,457,493
+# item 3  the 15 unprobed involution partners (computed from the catalog;
+#   the old list here was assembled by edge count and had three errors)
+python3 probe_backbone.py --classes 414,434,439,457,493,541,543,548,549,555,560,561,562,565,566
 
 # item 4  the 54 CAP classes at a larger budget
 python3 probe_backbone.py --classes <the 54 CAP ids> --nodecap 20000000
@@ -121,15 +122,24 @@ So `--maxgroups 200` silently drops 3 conditions, while **`--maxt 8` silently dr
 
 Now automatic, folded into the item-1 run (`--verify`, default 3000 random ordered pairs re-decided by VF2). The n = 10 acceptance test was bit-identical agreement with an archived full-VF2 reference; there is no such reference at any other degree, and roughly 80% of ordered pairs are settled by inference alone. Until this passes, the n = 12 order matrix is an unchecked implementation of checked rules.
 
-## 3. Settle the duality involution empirically
+## 3. Settle the duality involution empirically — pressure point resolved, 15 partners still unprobed
 
-`probe_backbone.py` computes the complement class of every forced class and reports violations plus the specific unprobed complements the theorem predicts. Three pressure points in the current n = 10 record, all cheap to close:
+`probe_backbone.py` computes the complement class of every forced class and reports violations plus the specific unprobed complements the theorem predicts.
 
-- the three forced-OUT classes at 38 edges (393, 401, 405) require three forced-IN classes at 7 edges, and the only 7-edge class probed (**class 108**) came back **free**. If 108 is the complement of any of the three, **the theorem is contradicted**; if not, the partners are unprobed.
-- the five forced-IN classes at 8 edges require five forced-OUT at 37 edges; no 37-edge class has been probed.
-- the forced-IN class at 2 edges requires a forced-OUT at 43; no 43-edge class has been probed.
+**The one apparent contradiction is not one.** *Verified* against `ckpt_catalog.pkl`: the complements of the three 38-edge forced-OUT classes **393, 401, 405** are classes **457, 414, 434** respectively, all at 7 edges — **not class 108**. Class 108 is a different 7-edge class, and its being free says nothing about the theorem. So the earlier reading, that a free 7-edge class might contradict the involution, was a same-edge-count coincidence; the partners are simply unprobed.
 
-The practical corollary — probe one representative per complement pair, halving the sweep — is currently being relied on without this check.
+**The complete list of unprobed partners is 15 classes**, computed from the catalog rather than inferred from edge counts:
+
+| predicted | classes | edges |
+|---|---|---|
+| forced **IN** | 414, 434, 439, 457, 493 | 7, 7, 9, 7, 9 |
+| forced **OUT** | 541, 543, 548, 549, 555, 560, 561, 562, 565, 566 | 37–43 |
+
+Each is a two-sided test: confirmation roughly doubles the known backbone for 30 probes, and a violation would refute the involution argument that the whole halved-sweep practice rests on. The record currently stands at 30 confirmed pairs and 0 violations, so these 15 are the entire outstanding exposure.
+
+```bash
+python3 probe_backbone.py --classes 414,434,439,457,493,541,543,548,549,555,560,561,562,565,566
+```
 
 ## 4. Re-probe the 54 CAP classes at a larger node budget
 
@@ -190,7 +200,9 @@ Distinct (partition, prime) conditions in the n = 10 file, by orbital cap:
 
 ## 8. `Catalog.classify` is a mutating lookup used as a pure query
 
-In `stage4_fast.py`, `probe_backbone.py` and `chi_test.py` the idiom `x[cat.classify(set())] = 1` assumes the empty graph is already in the catalog. If it were not, `classify` would **append**, silently extending `cat.reps` and desynchronising `V` from the order matrix. The same hazard applies to the complement lookups in the involution check, which is why that block asserts the catalog did not grow. **Verified latent, and half-closed.** The empty graph is present in both catalogs (at n = 12 the full 0–66 edge range is), so the idiom does not currently mutate anything — the code is correct *by accident of the catalog's contents*, not by construction. `probe_backbone.py`'s two call sites now use a read-only lookup that raises with the reason if a graph is absent; `stage4_fast.py` and `chi_test.py` still carry the idiom and want the same treatment.
+In `stage4_fast.py` the idiom `x[cat.classify(set())] = 1` assumes the empty graph is already in the catalog. If it were not, `classify` would **append**, silently extending `cat.reps` and desynchronising `V` from the order matrix. The same hazard applies to the complement lookups in the involution check, which is why that block asserts the catalog did not grow. **Verified latent, and half-closed.** The empty graph is present in both catalogs (at n = 12 the full 0–66 edge range is), so the idiom does not currently mutate anything — the code is correct *by accident of the catalog's contents*, not by construction. `probe_backbone.py`'s two call sites now use a read-only lookup that raises with the reason if a graph is absent; **`stage4_fast.py` still carries the idiom** and wants the same treatment.
+
+*`chi_test.py` does not carry it* — *verified* by reading the shipped file, which never calls `classify` at all: it takes `cst['cat'].reps` and works from the representatives, with the empty graph checked by a post-hoc assertion on the down-closure. An earlier version of this item named it alongside the other two; that was stale.
 
 ## 9. `mono` is only ever called on representatives with the same vertex count
 
@@ -198,9 +210,13 @@ The complement trick in `ark_intersect.mono` rests on σ(E_H) ⊆ E_G ⟺ σ⁻�
 
 ## 10. `TemplateGroup` places the block rotation in the cyclic middle layer
 
-The implementation note in `orbital-evasiveness-notes.md` §2.4 describes the defect as a spurious coprimality filter plus a prime-only k, and both symptoms are visible in `candidate_groups`. They are not the cause. `TemplateGroup`'s own chain model puts the rotation in Γ₁/Γ₂ — its docstring requires d, the foreign primes and s pairwise coprime — and separately enforces k = s with s prime. Theorem 3.1 places the rotation in the top q-group, whence any d | c−1 is admissible and k need only be a prime power. Consequence: the template misses μ(10) = 20 (k = 2, d = 4) and μ(12) = 18 (k = 4). (`orbital-evasiveness-notes.md` §2.4's implementation note carries the same statement with these values.)
+The implementation note in `orbital-evasiveness-notes.md` §2.4 describes the defect as a spurious coprimality filter plus a prime-only k, and both symptoms are visible in `candidate_groups`. They are not the cause. `TemplateGroup`'s own chain model puts the rotation in Γ₁/Γ₂ — its docstring requires d, the foreign primes and s pairwise coprime — and separately enforces k = s with s prime. Consequence: the template misses μ(10) = 20 (k = 2, d = 4) and μ(12) = 18 (k = 4). (`orbital-evasiveness-notes.md` §2.4's implementation note carries the same statement with these values.)
 
-**Do not repair this in the enumerator alone.** Relaxing the filter builds groups that `TemplateGroup` marks invalid, and an unconditional `break` over the twist candidates then discards the smaller d that had been working — n = 22 fell from 110 to 55. That change was reverted. The `break` bug is genuine and independent and has been fixed (break only after a valid group is actually produced); with it fixed and the filter restored, the template reproduces Run 1 exactly at n = 6, 10, 12, 15, 18, 21, 22, 26 (6, 10, 10, 30, 36, 28, 110, 78). The real repair is to move the rotation into the top layer inside `TemplateGroup`, updating its Oliver validity check and `desc_parts`, which also changes what `top_prime` parses. **Open, deliberately deferred** — the GAP path has no such restriction and supersedes this enumerator, so the value is in correctness of the record rather than in better μ bounds.
+> **The prescribed repair is stated against the pre-entangled shape space, and it is the weaker of the two available.** The claim as written — Theorem 3.1 puts the rotation in the top q-group, so any d | c−1 is admissible and k need only be a **prime power** — is the old reading. Under the entangled-generator correction the rotation may sit in the **cyclic layer at any k**, carrying the full twist through a single generator z of order F·d whose block-permutation image is a *quotient* of that layer (`arithmetic-of-density.md` §3.2.3); k need not be a prime power at all, and `6x13` at n = 78 is the standing witness.
+>
+> **This is not a refinement — it is which repair reaches the n = 10 optimum.** §4.1 of `small-degree-computation.md` records that one m\* = 20 attainer, `A:18` of order 200, has a **trivial top**, and a trivial top means there is *no* top layer for a rotation to live in. That witness is realisable only by the cyclic-layer route. So the top-layer repair as prescribed would reproduce the tag-`2` attainers and **not** the χ = 1-exact one — the harshest condition the machinery has, and the one the doc elsewhere treats as the point of the n = 10 result. The repair to implement is the cyclic-layer one, or both.
+
+**Do not repair this in the enumerator alone.** Relaxing the filter builds groups that `TemplateGroup` marks invalid, and an unconditional `break` over the twist candidates then discards the smaller d that had been working — n = 22 fell from 110 to 55. That change was reverted. The `break` bug is genuine and independent and has been fixed (break only after a valid group is actually produced); with it fixed and the filter restored, the template reproduces Run 1 exactly at n = 6, 10, 12, 15, 18, 21, 22, 26 (6, 10, 10, 30, 36, 28, 110, 78). The real repair is to move the rotation into the layer the corrected space allows — cyclic, for the trivial-top realisation — inside `TemplateGroup`, updating its Oliver validity check and `desc_parts`, which also changes what `top_prime` parses. **Open, deliberately deferred** — the GAP path has no such restriction and supersedes this enumerator, so the value is in correctness of the record rather than in better μ bounds.
 
 ## 11. Decide how S will be computed at n = 12
 
@@ -232,4 +248,5 @@ By `small-degree-computation.md` §2.4 the χ constraint is decisive at t ≤ 3 
 
 > **Both degrees' `groups_out.txt` share a filename, and each upload has overwritten the other.** Keep them as `groups_out_10.txt` and `groups_out_12.txt`, or check the orbital-map length before use — 45 entries at n = 10, 66 at n = 12. The same collision has already cost this file two rounds, and it silently swaps a census rather than failing.
 
-- **`stage4_fast.py`.** Unreviewed, and now the only remaining place the lcm hazard could land — `probe_backbone.py`'s copy of that logic has been read and its tag path is legitimate.
+- ~~**`stage4_fast.py`.** Unreviewed, and now the only remaining place the lcm hazard could land~~ — **read in full; the lcm hazard is absent.** Its `parse_q` is the same tag-fed path as `probe_backbone.py`'s: the lcm is taken only over primes emitted by `IsOliverTop`, never over `ark_intersect`'s twist primes, and the lcm arithmetic is correct. The pend/undo discipline, the post-decrement check ordering, the greedy group-completion ordering and the leaf hard abort are all sound. Two sync fixes were applied rather than left as findings: the three UNSAT verdict strings hardcoded `n=10` while `NVERT` was computed (an n = 12 UNSAT would have printed the wrong degree in the one string that would be quoted as a theorem), and the multi-prime firing log from `probe_backbone.py` was missing.
+- **`smith.py`, `oliver_mu.py`, `ark_intersect.py`.** Still unreviewed and not in the working set. `fp_acyclic` has been checked *behaviourally* — all 75 group conditions re-verified on `solution1.pkl` against an independent from-scratch 𝔽_p-homology implementation, 0 failures — but the shipped implementation itself has not been read, and `ark_intersect.mono` (item 9) has not either.

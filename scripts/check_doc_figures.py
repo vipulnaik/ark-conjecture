@@ -293,7 +293,12 @@ def despan(line):
 
 # Files that legitimately describe superseded states.  Prose contradictions and
 # expired thresholds inside them are the record, not a defect.
-ARCHIVE = re.compile(r"session-log|pending-checks|README", re.I)
+# Files whose CHARTER is to carry history: session logs, run/check lists, and
+# small-degree-verification.md, which is state-tracking by its own header
+# ("what is outstanding, what has been verified against which artefact") in the
+# same way pending-checks.md is for the arithmetic programme.  Edit-history
+# phrasing and superseded figures are correct there, not drift.
+ARCHIVE = re.compile(r"session-log|pending-checks|verification|README", re.I)
 
 # ----------------------------------------------------------------- PASS 2 scope
 
@@ -1085,8 +1090,13 @@ if A.only in ("all", "history"):
 
     hist_hits = 0
     for d in DOCS:
-        if "session-log" in d or "journal" in d:
-            continue                      # logs are the one place history belongs
+        # Use the shared ARCHIVE list, not a private one: the set of files whose
+        # charter is to carry history is the same set for figures and for prose,
+        # and keeping two lists meant pending-checks.md and the state-tracking
+        # verification files were exempt from stale-figure reports but still
+        # reported for the edit-history phrasing that is correct in them.
+        if ARCHIVE.search(d) or "journal" in d:
+            continue
         try: txt = open(d).read()
         except OSError: continue
         shown = False

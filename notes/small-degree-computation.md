@@ -14,7 +14,7 @@ The computations serve three purposes that are easy to run together and should b
 
 **(a) Cross-validating the framework and the search against each other.** μ(n) is defined as a maximum over Oliver groups, and `enumeration-proof.md` computes a bound B(n) by a *classification* argument — it enumerates configuration shapes and scores them, never touching an actual group. An exhaustive group search computes the same quantity by construction rather than by classification, so agreement is evidence in **both directions at once**: it is the only non-circular check that the classification has not missed a shape, and it is simultaneously the only check that the GAP enumeration, the orbital-map extraction and the Oliver test are computing what they claim to. A disagreement would not say which side was wrong, only that one of them was — which is why §4 records both readings.
 
-**(b) Cross-validating against the literature.** KSS settle n = 6; Adamaszek settles n ≤ 5 and identifies the unique nonevasive property at 5 vertices; Angel–Borja reduce n = 10 to five candidate types by a wholly different method. Reproducing these is cheap, and again it cuts both ways: a reproduction is evidence that the pipeline is correct, and it is also evidence that *our reading of the literature* is correct — that we have the right statement of Oliver's condition, the right notion of the fixed complex, and the right convention for χ. Several of the sign and normalisation conventions in §2 are only pinned down by these reproductions.
+**(b) Cross-validating against the literature.** KSS settle n = 6; Adamaszek settles n ≤ 5 and identifies the unique nonevasive property at 5 vertices up to duality (it and its set-complement are the only two — §4.3); Angel–Borja reduce n = 10 to five candidate types by a wholly different method. Reproducing these is cheap, and again it cuts both ways: a reproduction is evidence that the pipeline is correct, and it is also evidence that *our reading of the literature* is correct — that we have the right statement of Oliver's condition, the right notion of the fixed complex, and the right convention for χ. Several of the sign and normalisation conventions in §2 are only pinned down by these reproductions.
 
 *Neither (a) nor (b) is a one-way audit of the code.* Treating them as such is the natural mistake, and it discards half their value: the framework's own statements are what the code is tested against, so the code passing is a statement about the framework too.
 
@@ -144,6 +144,8 @@ By §2.1 a group's condition depends only on (orbital partition, prime). Dedupli
 
 **The key must be a complete invariant of the partition, and the first one shipped was not.** `consume_gap.py` originally keyed on (orbital count, sorted sizes, tag, per-vertex valency signature) — strong but incomplete — and used it to *discard*. Measured at n = 12: **41 of 278 collision buckets merged inequivalent partitions**, and the retained representatives covered 381 of the 425 conditions — 44 dropped, 10.4% overall and **22.4% of the Smith conditions**. The failure direction is the dangerous one (§1.2): a dropped condition turns a real UNSAT into SAT. The corrected key canonicalises the partition itself, via a layered graph with a node per point, per pair and per orbital, so a colour-preserving isomorphism must carry orbitals onto orbitals.
 
+**The loss is worse at n = 10, and that is where the published results are.** The same measurement against the n = 10 file gives **40 Oliver conditions kept where 125 exist**, so the published battery carried **75 of 167 available conditions, 45%** — a three-to-one merge rather than n = 12's ten percent. Everything in §5 was computed on that battery; §5.1 states the consequence and §10 carries the rerun.
+
 *A trap for anyone re-measuring this.* Ordering tied orbitals by their GAP index makes the canonical form index-dependent, over-splits equivalent partitions, and inflates the apparent loss roughly sevenfold. Tied orbitals must share a colour class.
 
 ### 3.3 The union-graph catalog
@@ -220,11 +222,13 @@ At n = 10 the enumeration's structural lemmas were checked against the actual or
 
 ### 5.1 The battery
 
-967 groups → 75 selected (after dedup and the orbital cap): tags {trivial-top 18, q = 2 17, q = 3 5, P2 29, P3 3, P5 2, P7 1}, orbital counts 2 through 10, V = 1,242 classes.
+967 groups → 75 selected: tags {trivial-top 18, q = 2 17, q = 3 5, P2 29, P3 3, P5 2, P7 1}, orbital counts 2 through 10, V = 1,242 classes.
+
+> **This is 75 of 167 available conditions, and the shortfall is the old dedup key's, not the orbital cap's.** The `--maxt 10` cut leaves 167 distinct (partition, prime) conditions in the n = 10 file; the key that produced the 75 was the incomplete invariant of §3.2, which merged Oliver conditions roughly three to one — 40 kept where 125 exist (`small-degree-verification.md` item 7). By §1.2's asymmetry this is safe for §4.1's μ(10) = 20, which is read off `groups_out.txt` and never touches the battery, and unsafe in exactly one direction for everything in §§5.2–5.5: **dropping conditions can only turn a real UNSAT into a SAT.**
 
 ### 5.2 SAT, and the surviving skeleton
 
-The CSP is **satisfiable**, and has remained so across every escalation of the battery. The found solution has 214 IN classes, IN edge counts running 0–25 and OUT 8–45. Its skeleton — the maximal IN classes, which generate the minimal monotone extension — has **10 generators at 12, 13, 15, 15, 15, 15, 18, 18, 20, 25 edges**.
+The CSP is **satisfiable on the 75-condition battery**, and has remained so across every escalation of that battery — every one of which was taken under the same truncation (§5.1), so the run on the full 167 conditions is untried rather than confirmatory. The found solution has 214 IN classes, IN edge counts running 0–25 and OUT 8–45. Its skeleton — the maximal IN classes, which generate the minimal monotone extension — has **10 generators at 12, 13, 15, 15, 15, 15, 18, 18, 20, 25 edges**.
 
 Consistent with §2.4: the solution has 2K₅ **in** and K₅,₅ **out**, which is exactly the one-of-two the two-orbital criterion demands, satisfied legitimately. That is why n = 10 remained SAT and why the global χ test was needed.
 
@@ -241,6 +245,8 @@ A detail that bears on §9: **K₁,₈ is forced IN but K₁,₉ — the spannin
 ### 5.4 The χ kill
 
 Nine minimal completions have been killed *exactly* by the global χ test, via three cross-validated methods: an exponential formula over signed connected-component weights, a two-sort EGF log(eˣ + eʸ − 1) for bipartite components, and nauty/geng streams. χ values run from ~1.8×10⁴ to ~9.3×10⁵ in absolute value, against the required conspiracy value of 1. Samples: χ(closure K₅,₅) = **−288,729**; χ(α ≥ 5) = 36,541; χ(max-deg ≤ 1) = **−1,215 = −5·3⁵**, the matching complex M₁₀, a recognisable object with known homology.
+
+**The published solution's own canonical extension is a tenth kill, and the largest.** Running `chi_test.py` on `solution1.pkl` enumerates a down-closure of **64,333 iso classes** (153,468,934,696 labelled graphs) and returns S = −15,183,000, hence **χ = 15,183,001** — an order of magnitude outside the nine above. So the §5.2 skeleton dies to the same one-integer test that every other candidate has, which is what §2.0's "died to a single integer" refers to and why the SAT of §5.2 has never become a candidate counterexample.
 
 Remaining: nine patterns involving two structural closures (subgraphs of C₅[K₂]; of C₅⊔C₅ ∪ K₅,₅) that need a dedicated subgraph-class enumeration.
 
@@ -279,7 +285,7 @@ The mechanism behind the persistent SAT is structural rather than computational.
 - **Monotone propagation** carries IN downward and never generates an OUT.
 - **The only OUT-generator in the entire system is nontriviality** — the single constraint that Kₙ ∉ P.
 
-So the constraint system is **one-sided**. Adding groups adds IN-pressure and almost no OUT-pressure, which is why escalating the battery has not changed the verdict and, on this analysis, would not be expected to.
+So the constraint system is **one-sided**. Adding groups adds IN-pressure and almost no OUT-pressure, which is why escalating the battery has not changed the verdict and, on this analysis, would not be expected to. *The mechanism is structural and does not depend on which battery was run; the empirical half of the claim does, and every escalation so far was inside the 75-condition truncation (§5.1). The full-battery run is the diagnosis's cheapest test as well as its cheapest threat.*
 
 ### 7.2 The cone escape
 
@@ -361,15 +367,17 @@ The connection to §5.3 is worth noting. K₁,₈ is forced IN while the spannin
 
 ## 10. Open questions
 
-**Settled and not at risk:** μ(10) = 20 and μ(12) = 18 over the enumerated groups, exceeded zero ways; the optima match the predicted constructions; the order matrix and the involution are verified.
+**Settled and not at risk:** μ(10) = 20 and μ(12) = 18 over the enumerated groups, exceeded zero ways; the optima match the predicted constructions; the order matrix and the involution are verified. *These read off `groups_out.txt` or the catalog directly and are untouched by the battery truncation of §5.1 — the SAT verdict and everything derived from it are not on this list.*
 
 **Open, in rough order of expected value:**
 
-1. **Run a cheap n = 12 battery.** A `--maxt 6` cut is 125 conditions with a much smaller catalog, and stage 3 scales with V², so plausibly hours rather than weeks. If it returns UNSAT, n = 12 is settled and neither the 22-day stage 3 nor the closure machinery of §8.3 is needed. If SAT, the result is a solution to χ-test and the §8.3 question becomes concrete. **This ordering inverts the current dependency and should be checked first.**
-2. **Re-probe the 54 CAP classes** at a larger node budget, before any statement about the free band or any escalation decision that depends on its width (§5.5).
-3. **Run the n = 10 CSP against Angel–Borja's five surviving types** (§4.3). Non-circular validation if it reproduces their eliminations; a publishable increment if it kills more. *(The arithmetic programme deprioritises this: the exhaustive n = 10 and n = 12 m\* comparisons validate the machinery more strongly. Its standing is as an increment on Angel–Borja, not as validation the framework is waiting on.)*
-4. **Close or refute the subdirect-product hole** (§8.5) — the only thing standing between "no enumerated group exceeds B(n)" and "the exhaustive optimum is the predicted construction".
-5. **Decide how S is computed at n = 12** (§8.3): full down-closure versus the exponential-formula route.
-6. **Settle the multi-prime tag question** (§8.6) and either exercise or retire the lcm strengthening.
-7. **Climb the ladder, if a candidate ever warrants it** (§2.0). Nothing in the pipeline probes above ℤ-acyclicity, because no candidate has yet survived the χ = 1 rung to need it. If the n = 12 battery returns SAT and its skeleton passes the global χ test, the adversary game of §3.8 stops being a last resort and becomes the next tool — and `adversary.py` should be validated against Adamaszek's ℰ as a negative control before any EVASIVE verdict from it is trusted.
-8. **The two structural closures** at n = 10 (subgraphs of C₅[K₂], of C₅⊔C₅ ∪ K₅,₅) that the χ kill has not reached (§5.4).
+1. **Rerun the n = 10 CSP on the full 167-condition battery.** The published SAT was computed on 75 of 167 available conditions (§5.1), the old dedup key having merged the rest, and dropping conditions can only turn a real UNSAT into a SAT — so the positive verdict does not transfer. This is the cheapest run on the list (stage 3 has completed at n = 10 before) and **the only one whose outcome could settle a degree outright**: UNSAT settles n = 10, and SAT puts the framework's only satisfiability claim on an untruncated battery and hands `chi_test.py` a fresh skeleton worth killing.
+2. **Run a cheap n = 12 battery.** A `--maxt 6` cut is 125 conditions with a much smaller catalog, and stage 3 scales with V², so plausibly hours rather than weeks. If it returns UNSAT, n = 12 is settled and neither the 22-day stage 3 nor the closure machinery of §8.3 is needed. If SAT, the result is a solution to χ-test and the §8.3 question becomes concrete. **This ordering inverts the current dependency and should be checked first.**
+3. **Re-probe the 54 CAP classes** at a larger node budget, before any statement about the free band or any escalation decision that depends on its width (§5.5).
+4. **Probe the 15 unprobed involution partners** of the forced classes — `414, 434, 439, 457, 493` (predicted forced IN, 7–9 edges) and `541, 543, 548, 549, 555, 560, 561, 562, 565, 566` (predicted forced OUT, 37–43 edges). Each is a cheap two-sided test of the duality of §2.3 and would roughly double the known backbone if it confirms.
+5. **Run the n = 10 CSP against Angel–Borja's five surviving types** (§4.3). Non-circular validation if it reproduces their eliminations; a publishable increment if it kills more. *(The arithmetic programme deprioritises this: the exhaustive n = 10 and n = 12 m\* comparisons validate the machinery more strongly. Its standing is as an increment on Angel–Borja, not as validation the framework is waiting on.)*
+6. **Close or refute the subdirect-product hole** (§8.5) — the only thing standing between "no enumerated group exceeds B(n)" and "the exhaustive optimum is the predicted construction".
+7. **Decide how S is computed at n = 12** (§8.3): full down-closure versus the exponential-formula route.
+8. **Settle the multi-prime tag question** (§8.6) and either exercise or retire the lcm strengthening.
+9. **Climb the ladder, if a candidate ever warrants it** (§2.0). Nothing in the pipeline probes above ℤ-acyclicity, because no candidate has yet survived the χ = 1 rung to need it. If the n = 12 battery returns SAT and its skeleton passes the global χ test, the adversary game of §3.8 stops being a last resort and becomes the next tool — and `adversary.py` should be validated against Adamaszek's ℰ as a negative control before any EVASIVE verdict from it is trusted.
+10. **The two structural closures** at n = 10 (subgraphs of C₅[K₂], of C₅⊔C₅ ∪ K₅,₅) that the χ kill has not reached (§5.4).
