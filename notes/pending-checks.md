@@ -29,6 +29,19 @@
 
 *Do not restate the inequality as `B_safe ≤ μ`.* `B_safe` over-counts per configuration; what holds is B_refined ≤ μ ≤ B_safe, the endpoints collapsing where the certificate applies.
 
+## The enumeration-proof gap inventory
+
+*One place for the daylight between what `enumeration-proof.md` proves and what it verifies. Fresh-eyes read of the full document, 2026-08-18 (session-log-8 §21). The gap has moved in both directions since the document began — unexpected winners found (cyclic-layer block counts, the fused rungs, the Fermat escapes, the two-foreign shape at the extremes) and exclusions gained (E′'s collapse machinery, the D2′/C′ dominations, q-pinning) — and this is what remains between the two:*
+
+1. **Part 0 completeness** (μ ≤ B_safe's whole load): a shape missing from the space fails silently, and the only tests that could see one are the exhaustive GAP comparisons at n = 10 and 12. Verification-lessons §1 site 4. → risk item 2 below, `small-degree-verification.md` item 5.
+2. **The two-part reduction of Theorem 2.3**: verified to n = 1200, Goldbach-tier to prove; nothing rests on it but B₀'s O(n) cost claim.
+3. **Minimality k ≤ 3 below δ = 1/16** (J item 1): free above 1/16 by F.3; counting saturates at 4 (F.2 is tight); any proof is arithmetic — must *produce* a strong ≤3-part decomposition — and the wide B₃/B₂ margins close the perturbation route.
+4. **The collapse's theorem-side residue** (J items 2, 2a): E.3(ii)'s global promotion (the leftover case; the bare pair is resolved), and the s = 4 / s = 5 branches, theoremless and reachable only below δ = 1/25 and 1/36 respectively (sharp thresholds — the s-ladder, not F.3's k-ladder). Per-n the certificates close everything; the gap is only over *all* n.
+5. **J0a's non-semilinear stabilisers**: an irreducible non-ΓL(1) subgroup of GL(a, p) is an unstated assumption bearing on attainment only (the ΓL(1) case is proved harmless at k = 2; B_safe is untouched either way).
+6. **Lemma B′**: proved, second reading done and confirmed; the one structural lemma whose failure would break B_safe itself, so further scrutiny stays profitable. → T1.
+
+*Everything else in the document is proved, and the per-n machinery (eight necessary conditions + search) makes each computed value unconditional independently of items 2–4.*
+
 ## Where the residual risk sits
 
 *Ranked, so the item order below has a stated basis. The reasoning behind this ranking — the failure-site taxonomy it comes from — is `verification-lessons.md` §1.*
@@ -363,8 +376,8 @@ Needs `Fraction` imported and the raw string kept on the `Row` as `delta_str` �
 
 **Two obligations, and the first is the one that rots silently.**
 
-1. **Sync.** The Lean statements encode claims from these documents — ceiling values, coefficient rules, threshold ladders, the `orb` definition. When a document changes, the Lean can quietly stop matching it, and nothing in this repository's checks looks at `.lean` files. Any revision to §3.3.5's table, to the cap algebra, to `orb`, or to the E′ s-bound should be followed by a pass over `Basic.lean` and `Note.lean`. The ceiling table is the sharpest case: the entries are enumerated one per constant, so a table that gains or loses a constant leaves a list of the wrong length — which is useful only if someone looks.
-2. **Progress.** Phase 0 (`Note.lean`) compiles. Beyond that the order is in the README; the near-term item is compiling `Basic.lean`, which has never been run and whose statements were reviewed by inspection only.
+1. **Sync.** The Lean statements encode claims from these documents — ceiling values, coefficient rules, threshold ladders, the `orb` definition. When a document changes, the Lean can quietly stop matching it, and nothing in this repository's checks looks at `.lean` files. Any revision to §3.3.5's table, to the cap algebra, to `orb`, or to the E′ s-bound should be followed by a pass over `Basic.lean`, `Note.lean` **and `ArkCore.lean`**. The ceiling table is the sharpest case: the entries are enumerated one per constant, so a table that gains or loses a constant leaves a list of the wrong length — which is useful only if someone looks.
+2. **Progress.** Two compiled artefacts, on two machines. **`Note.lean` compiles on the laptop** (with Mathlib; sorries expected, per `leancheck.sh`'s counting). **`ArkCore.lean` compiles and is fully proved in the container** — zero sorries against core Lean 4.15.0 — covering the ℕ half of phases 0 and 1: `central_even`/`central_odd`, Lemma D1, the capacity bound, F.1 in squared form, `orb_full`, and every `decide` table. The container recipe for a bare toolchain is in the README (direct GitHub tarball; elan's release server is off the allowlist; **Mathlib stays unreachable there**, so Mathlib-side work is laptop work). Next: compile `Basic.lean` on the laptop, which has never been run anywhere; then start discharging `Note.lean`'s sorries, importing the ℕ statements from `ArkCore` rather than re-proving them.
 
 **What it is not for.** Formalising the arithmetic layer does not check the group theory, and reaches no layer-assignment claim — which is where this framework's defects have been. Re-read the README's closing caveat before spending time here.
 

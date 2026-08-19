@@ -15,13 +15,19 @@
   ordinary Mathlib material.
 
   And that layer is where our actual errors have been.  In one review pass we
-  found: an off-by-one in the s-threshold ladder of Part E' (stated as
-  "delta > 1/25 forces s <= 3" when the bound gives s <= 4); a coefficient rule
-  keyed on the wrong variable (F's parity, not q's); and a mechanism claim about
-  fusion layers that contradicted our own Theorem 2.1.  The first two are exactly
-  what a proof assistant catches for free.  So the expected value here is not
-  "certainty about the theorems" but "the class of mistake we keep making, made
-  impossible".
+  found: an off-by-one hazard between the two threshold ladders of Parts E'/F
+  (the s-ladder s <= 1/sqrt(d) - 1 and the k-ladder k <= 1/sqrt(d) are offset
+  by one, and reading them as coinciding shifts a threshold in either
+  direction -- the sharp facts are "delta > 1/25 forces s <= 3" and
+  "delta > 1/25 forces k <= 4"); a coefficient rule keyed on the wrong
+  variable (F's parity, not q's); and a mechanism claim about fusion layers
+  that contradicted our own Theorem 2.1.  The first two are exactly what a
+  proof assistant catches for free.  So the expected value here is not
+  "certainty about the theorems" but "the class of mistake we keep making,
+  made impossible".  (An earlier version of THIS header was itself a casualty
+  of the ladder confusion: it accused the documents' sharp "s <= 3 at
+  delta > 1/25" of being the error, which is backwards -- that statement is
+  correct, and the header had silently substituted the k-ladder.)
 
   Sections:
     1.  orb and the cap on a block's intra-orbital
@@ -126,18 +132,20 @@ theorem s_bound_iff (s : ℕ) (δ : ℝ) (hδ : 0 < δ) :
     (s : ℝ) ≤ 1 / Real.sqrt δ - 1 ↔ ((s : ℝ) + 1) ^ 2 * δ ≤ 1 := by
   sorry
 
-/-- **The corrected threshold ladder.**  `δ > 1/(s+1)^2` forces at most `s`.
-The documents had this shifted: they wrote `δ > 1/25 → s ≤ 3`, but `1/25` is
-`1/(4+1)^2`, so it forces `s ≤ 4`.  Note the shape of the statement — the
-threshold and the conclusion are tied by the *same* `s`, which is precisely the
-discipline that was missing in prose. -/
+/-- **The threshold ladder, slack form.**  `δ > 1/(s+1)^2` forces at most `s`.
+As stated this is the **k-ladder** (Corollary F.3 of the companion, where it is
+sharp for the part count); for the fallback parameter `s` of Part E′ it is true
+but slack by one — the sharp s-statement is `δ > 1/(s+2)^2 → ≤ s`, i.e.
+`δ > 1/25 → s ≤ 3`, since `s ≤ 1/√δ − 1`.  Keeping the two ladders apart is the
+discipline; tying threshold and conclusion by the *same* variable in a stated
+theorem, as here, is what makes a silent substitution impossible. -/
 theorem s_threshold (s : ℕ) (δ : ℝ) (hδ : 0 < δ) (h : 1 / ((s : ℝ) + 1) ^ 2 < δ)
     (t : ℕ) (ht : (t : ℝ) ≤ 1 / Real.sqrt δ - 1) : t ≤ s := by
   sorry
 
-example : (1 : ℝ) / 16 = 1 / ((3 : ℝ) + 1) ^ 2 := by norm_num  -- δ > 1/16 → s ≤ 3
-example : (1 : ℝ) / 25 = 1 / ((4 : ℝ) + 1) ^ 2 := by norm_num  -- δ > 1/25 → s ≤ 4
-example : (1 : ℝ) / 36 = 1 / ((5 : ℝ) + 1) ^ 2 := by norm_num  -- δ > 1/36 → s ≤ 5
+example : (1 : ℝ) / 16 = 1 / ((3 : ℝ) + 1) ^ 2 := by norm_num  -- δ > 1/16 → k ≤ 3, s ≤ 2
+example : (1 : ℝ) / 25 = 1 / ((4 : ℝ) + 1) ^ 2 := by norm_num  -- δ > 1/25 → k ≤ 4, s ≤ 3
+example : (1 : ℝ) / 36 = 1 / ((5 : ℝ) + 1) ^ 2 := by norm_num  -- δ > 1/36 → k ≤ 5, s ≤ 4
 
 /-! ## 5. The cap algebra
 

@@ -513,3 +513,72 @@ Five cross-references pointed at a superseded numbering of the computation docum
 ### 19.4 Skipped
 
 The two files' internal computational records (probe timings, VF2 throughput, dedup tables, the 230/203/27 reproduction) were spot-checked for arithmetic only, not re-derived from checkpoints — they are the verification file's own pinned artefacts and re-deriving them is its job, not this pass's. The `TemplateGroup` defect (item 10) remains open-deferred as recorded; no attempt to re-run any battery.
+
+
+## 20. Lean: a toolchain obtained, and `ArkCore.lean` compiled with every proof complete (same session)
+
+### 20.1 The toolchain, and the recipe worth keeping
+
+elan installs but cannot resolve any toolchain in this container — every lookup, even for a pinned version, goes through `release.lean-lang.org`, which the proxy blocks (the "Unexpected character: H" parse error is the deny page). The toolchain **tarball** is on GitHub releases, which is allowed: download `lean-4.15.0-linux.tar.zst` directly, extract via Python's `zstandard` (no `zstd` binary in the image), and `lean` runs bare. **Mathlib remains unreachable** — its cache host is blocked and a source build is days — so `Note.lean` and `Basic.lean` cannot compile here. The recipe is in the Lean README; it converts "no toolchain available" from a standing fact into a solved problem.
+
+### 20.2 What was built: the Mathlib-free core, proved
+
+`ArkCore.lean`, 39 declarations, **compiles clean with zero sorries** against core Lean 4.15.0. It is the ℕ half of `Note.lean` + `Basic.lean`: `pairs` (core Lean has no `Nat.choose`) with the doubling identity; `orb` and **`orb_full`** (Basic's first sorry, proved — the full-twist 2-homogeneity, case split on the parity of c − 1); **Lemma D1**; **`size_of_capacity`** with the 0 < m degeneracy Basic flagged; **Proposition F.1 in squared form** `2m·k² < n²` (core has no `Nat.sqrt` either), via an explicit minimal-member lemma; the complete `decide` block — `dList`, the admissible-d table (verified beforehand against the note's mod-12 table, entry for entry), `twelve_needed_only_at_eleven`, the ℓ = 3 degeneration — and the prize, **`central_even` and `central_odd`**: the note's Theorem-arithmetic in ℕ, multiplied through by 350.
+
+### 20.3 The compiler caught an error in its own draft, immediately
+
+The block case's draft split the region at r ≥ 13 and closed the generic side by the slack chain 12·n(n−1) ≤ 300r² ≤ 350·r(r−1) − 4200. **That chain is false at r = 13** — r² − 7r − 84 = −6 there — and writing the proof exposed it before the compiler even ran; the split moved to 14, with r ≤ 13 forcing n ≤ 65 and going to `decide` (with the twist pinned to t = 1 by a monotonicity lemma, since the efficiency bound licenses exactly t ≥ 1 there). The satisfying structural fact: **the region's true numerical worst — ratio 1.0096 at n = 65, r = 13 — sits on the `decide` side**, which is *why* no uniform slack argument covers it and the finite check is load-bearing rather than decorative. This is precisely the README's advertised error class ("a min-of-polynomials evaluated at the wrong point" / thresholds off by one), caught in the formalisation's own first draft.
+
+Environment lessons for the file: core Lean 4.15 lacks `Nat.choose`, `Nat.sqrt`, `by_contra`, `set`, `ring`, `push_neg`, `interval_cases`, `Nat.mul_sub`, `Nat.div_le_div_right`; it has `omega` (which abstracts nonlinear terms as atoms — the workhorse: prove product inequalities as `have`s, let omega do the linear gluing), `decide` with `Nat.decidableBallLT`, `ac_rfl`, `rcases`/`obtain`, `by_cases`, `calc`, `simp`. Doubly-nested bounded quantifiers under a list-membership ball failed to synthesize `Decidable`; primality as a `Bool` function sidesteps the instance question and is robust to the Mathlib instance churn `Note.lean`'s comment worries about.
+
+### 20.4 Sync findings
+
+- **`pending-checks.md` A9 and the Lean README contradicted each other — and the resolution went the wrong way first.** A9 said "Phase 0 (`Note.lean`) compiles"; the README said neither file had ever been compiled. I resolved it by treating the README (the designated home document) as authoritative and "correcting" A9 — **wrong**: `Note.lean` had compiled on Vipul's laptop, and the README's header was the stale artefact, describing the drafting container as if it described the project. Both now record the per-machine truth: `Note.lean` compiles on the laptop (Mathlib, sorries expected), `ArkCore.lean` compiles proved in the container, `Basic.lean` compiled nowhere yet. *Worth keeping from the episode: "which file is authoritative" is the wrong question when the two files describe different environments — the contradiction was real information about a missing dimension (per-machine status), not a tiebreak to adjudicate. The README now states compile status per machine.*
+- **`Basic.lean` carried one stale string**: "the surd column of the mod-24 ceiling table" → mod-12. Everything else in both files checked current in the review before compiling — all six `capF` constants exact against the mod-12 table (including 1/8 at {3, 7} and 7 − 4√3 at 11 with the correct class labels), the `capF 4 1 = 1/9`-is-not-an-entry note, the entangled-generator commentary in §6, `HypH`'s `IsPrimePow` scoping, and the admissible table.
+- The README gains the toolchain recipe, the ArkCore status, and the r = 13/14 episode as a concrete instance of its own thesis; phase 0's status line now says the ℕ half is done, with the Mathlib remainder enumerated (`Density`/ℝ wrappers, the `ZMod` CRT step, singular series).
+
+### 20.5 What remains for the Lean line
+
+`Basic.lean` on the laptop, which has never been run anywhere; then discharging `Note.lean`'s sorries there, importing the ℕ statements from `ArkCore` rather than re-proving them; then phase 2's balance-point lemmas per the README's phasing. A9's sync obligation now covers three files, and its status line is per-machine.
+
+
+## 21. Fresh-eyes critical read of `enumeration-proof.md`, start to finish (Fable; edits applied)
+
+*Prompted by the observation that the proved-vs-empirical gap has moved in both directions over the sessions — unexpected winners found, number-theoretic exclusions gained. Question: does the document's remaining gap structure hold up, and is it consistent with the companions?*
+
+### 21.1 Verdict
+
+The core architecture survives the fresh read. The B_refined ≤ μ ≤ B_safe sandwich with per-n certificate collapse is coherent; the proofs of B, B′ (incl. Step 0 and the degenerate branch), C, D1, D2, D2q, F.1, F.2, G.1–G.4 all read sound; and the gap structure is real and well-tracked. The ~15 findings below are **drift and cross-era inconsistency** — mostly pre-correction remnants and measurement statements from different table eras contradicting each other — not new mathematical errors in the document. The one mathematical error found this pass is in `Basic.lean`, not in ep (21.4).
+
+### 21.2 Verified clean (recomputed or re-read, no issue)
+
+Worked cases A–F recomputed (incl. n = 308's chain and terms, n = 3239's terms); the extraspecial table (18·4 + 54·5 = 342; orb rows); Cap(17)'s L(2¹⁶−1) = 257; E.2, E.3(i)'s p = 3 forcing, E.4's (16, 5) uniqueness logic; census row sums 900 + 777 + 493 + 16 = 2,186 and the S7 sub-counts; F.1/F.2/F.3 and the G.4 axis bounds; B′'s proof in full; Lemma C's proof (conjugation as a single power map) and its witness pairs; D2's three steps and D2q's seven; the F.3 box on the two-ladder offset — **confirmed sharp and correct**: s ≤ 1/√δ − 1 gives s ≤ 3 exactly at δ > 1/25, verified numerically; the sharp s-ladder confirmed at all four thresholds (1/9→1, 1/16→2, 1/25→3, 1/36→4).
+
+### 21.3 Findings and edits (E1–E14, all applied)
+
+- **E1** Corollary D2′ duplicated verbatim before and after D2q — first copy removed; the survivor's stale "supersedes reduction (R1)" pointer (current R1 is the equal-size merge, unrelated) reworded to the layer-independence point it was making.
+- **E2** Header line said B′ had "one reading and no independent scrutiny", contradicting the inventory and item 3 ("read in detail by a second reader"). Fixed to second-read-confirmed.
+- **E3** Part E's "general configuration" still said classes are "permuted by transitive q-groups (so each class has q-power size)" — pre-correction. Now F = F_mid·F_top.
+- **E4** The realisability bullets built only top-layer fusion; added the entangled-cyclic-layer clause with the n = 33/78/105 regressions and the n = 255 battery row as its builds.
+- **E5** "Cᵢ_F" typo → C_F.
+- **E6** The certificate description said "F a q-power", contradicting the widened-F box three paragraphs later. Now "F any integer" with the split noted.
+- **E7** Two sites (the E.3-corollary paragraph and J item 2) said s = 4 and s = 5 "become reachable below 1/16" — the slack ladder, contradicting item 2a's sharp statement in the same document. Both fixed to the sharp thresholds (1/25, 1/36), with the consequence stated: the theorem-side reduction is complete down to 1/25, not 1/16.
+- **E8** Census S4 row's "16 winners" with a rising trend contradicted the first-instance table's "no winner in the computed range". Annotated: v4-era, 15 of 16 already exceeded by entangled readings (all but n = 1529), expect ~0–1 on rebuild.
+- **E9** The three-part box's "R1 cannot merge because F₁ + F₂ = 2 is not a power of q" — pre-correction explanation, now false: the cyclic-layer merge **is** available at those odd q and is precisely what exceeds 15 of the 16. Rewritten.
+- **E10** R1 itself scope-noted: as stated it is the top-layer case; the cyclic-layer merge extends it under the coprimality budget.
+- **E11** "The unique two-foreign winner is n = 1175" contradicted the same Part's later statement that n = 1175 is now fused (`1x619* + 4x139`). Fixed: only known two-foreign instance is n = 3059, beyond the contiguous range, the global density minimum.
+- **E12** "Lemma C's gcd condition holds in all 5,025" — retired phrasing. Reworded as: no witness carries a share, consistent with C′'s domination; the admissibility reading is retired.
+- **E13** Part I's n = 10 comparison row said one attaining group; aligned with the pinned record (8 groups, exemplar T(10,17), order 200).
+- **E14** J item 1 claimed all three older sub-narrowings "follow from k ≤ 3"; the third (at most one fused class) does not — two fused classes are only two parts. Fixed: first two follow, third separately open.
+
+### 21.4 The one mathematical error: `Basic.lean`, not ep (E15, applied)
+
+`Basic.lean`'s header and §4 claimed the documents' "δ > 1/25 → s ≤ 3" was an off-by-one error with truth s ≤ 4. **Backwards.** s ≤ 3 is the sharp, correct statement; Basic.lean had silently substituted the k-ladder (F.3: δ > 1/(K+1)² → k ≤ K, sharp for the part count) for the s-ladder — exactly the confusion ep's F.3 box warns produces "an off-by-one in either direction". The `s_threshold` theorem as stated is true-but-slack for s (it *is* the k-ladder); header, docstring and the three ladder examples rewritten, with a note that the header itself was a casualty of the confusion it now documents. Honest correction owed and recorded: I had marked Basic.lean "checked current" earlier this session (§20.4) and missed this — the capF constants were verified numerically then, the ladder block was not. `ArkCore.lean` is unaffected (it contains no s-ladder).
+
+### 21.5 Gap inventory, and the cross-references
+
+Per the session's instruction, the remaining proved-vs-empirical daylight is now inventoried in one place — `pending-checks.md`, "The enumeration-proof gap inventory", six items: (1) Part 0 completeness [site 4; only the GAP degrees test it]; (2) the two-part reduction of Thm 2.3 [verified to 1200, Goldbach-tier]; (3) k ≤ 3 below 1/16 [J1]; (4) the collapse's theorem-side residue — E.3(ii)'s global promotion plus the theoremless s ≥ 4 branches below 1/25 [J2/J2a]; (5) J0a's non-semilinear stabilisers [attainment only]; (6) B′'s standing invitation to further scrutiny. `arithmetic-of-density.md` (header) and `orbital-evasiveness-notes.md` ("What none of this touches" box) now reference the inventory with one line each, so it has one home rather than three.
+
+### 21.6 Skipped, for the record
+
+Not re-derived this pass: Part H's cost model beyond spot-reading; the measured distributions in Part I (marked ⟦PENDING-REBUILD⟧ and owned by the rebuild); `brute.py`'s 142-value agreement (recorded, not rerun); the q-pinning measurements (32,830 parts) and the e = 1 table (2 configurations), taken as recorded. The two-part reduction's n ≤ 1200 verification and the 437-shape sweep are R-item territory, not re-run here.

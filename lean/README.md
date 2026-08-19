@@ -1,6 +1,21 @@
 # Formalising the ARK framework: what is worth doing, and in what order
 
-*`Basic.lean` is a first pass at phase 1 and `Note.lean` at phase 0. **Neither has been compiled** — no toolchain available. Statements are the deliverable; the tactic blocks are sketches. Both were reviewed after the entangled-generator correction; see the change notes at the head of each.*
+*`Basic.lean` is a first pass at phase 1 and `Note.lean` at phase 0; both import Mathlib. **`Note.lean` compiles on the laptop** (against Mathlib, with its sorries as expected state); **`Basic.lean` has not been compiled anywhere**; the tactic blocks in both are sketches. **`ArkCore.lean` is different: it is compiled and fully proved** — zero sorries against core Lean 4.15.0 — and covers the ℕ half of both files: the central inequality (`central_even`, `central_odd`), Lemma D1, the capacity bound, Proposition F.1 in squared form, `orb` with the full-twist collapse, and every `decide` table. All three were reviewed after the entangled-generator correction.*
+
+**Toolchain, and how to get one in the working container.** elan cannot resolve any toolchain there — every lookup goes through `release.lean-lang.org`, which is off the network allowlist — but the toolchain tarball itself is on GitHub releases, which is on it:
+
+```bash
+curl -sSfL https://github.com/leanprover/lean4/releases/download/v4.15.0/lean-4.15.0-linux.tar.zst -o lean.tar.zst
+python3 -c "import zstandard,tarfile; tarfile.open(fileobj=zstandard.ZstdDecompressor().stream_reader(open('lean.tar.zst','rb')),mode='r|').extractall('.')"   # no zstd binary in the image
+export PATH=$PWD/lean-4.15.0-linux/bin:$PATH
+lean ArkCore.lean        # bare invocation; no lakefile needed for the core file
+```
+
+**Mathlib remains out of reach there** — `lake exe cache get` needs its cache host, and a source build is days — which is what makes the core/Mathlib split load-bearing rather than aesthetic: everything that is genuinely about ℕ lives in `ArkCore.lean` and is *proved*, while `Note.lean` / `Basic.lean` keep the real-number material (`Density`, `capF`, the surd table) as Mathlib sketches to be compiled wherever Mathlib exists. `leancheck.sh` is for the latter situation (a lake project root); the core file needs only `lean` itself.
+
+*(A drift note, since this header has now been wrong in both directions: it said "neither has been compiled" after `Note.lean` had compiled on the laptop — the header described the drafting container and was read as describing the project. Compile status is per-machine here, because the container and the laptop have different reach; this header now says which.)*
+
+**What compiling immediately paid for.** The draft of the central inequality's block case split the region at `r ≥ 13`; the slack chain fails there — `r² − 7r − 84 < 0` at 13 — and the compiler refused it, forcing the split to 14 with the finite side `n ≤ 65` discharged by `decide`. The region's true numerical worst (`350·m*/pairs n = 1.0096`, at `n = 65, r = 13`) sits **on the finite side**, which is precisely why no uniform slack argument covers it and the `decide` is not decoration. One compile session caught exactly the class of error this project exists to catch, in its own draft.
 
 ## The split that makes this tractable
 
@@ -32,7 +47,7 @@ There is a second benefit that matters more in practice: **a definition forces t
 
 ## Phase 0 — the short note, which is a better first target than phase 1
 
-*Added after the note was drafted for arXiv. If anything here gets formalised, this is the piece to start with, and it is smaller than phase 1.*
+*Added after the note was drafted for arXiv. **Status: the ℕ half is done** — `ArkCore.lean` proves `central_even`/`central_odd` (the construction inequality, multiplied through by 350), `mStarOdd_le_even`, the full admissible-`d` table block, and the degeneration example, leaving to Mathlib only the `Density`/`ℝ` wrappers, the `ZMod` chinese-remainder step, and the singular-series material.*
 
 `mu-theta-n2-note.md` is self-contained, is the artefact that will be read by strangers, and — per the table above — its error record is **disproportionately of the kind Lean catches**: a units mismatch between two displays, a region whose worst case sits at a corner, an asymptotic class stated as `O` where the content is a fixed fraction. Formalising just the note is perhaps 200–400 lines and needs nothing outside Mathlib.
 
