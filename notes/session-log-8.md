@@ -902,3 +902,22 @@ is a *difference* of cumulative counts. Lower-bounding it therefore needs a lowe
 (SP) restated accordingly: the count of S_D up to x is ρ(x)·π(x)·(1 + o(1)), explicitly two-sided.
 
 **Measured, and the localisation is not the problem.** |S_12| against x/log²x runs 3.57, 2.99, 2.72, 2.67 over x = 10⁴ → 2·10⁶ — settling slowly, consistent with ρ(x) ≈ C·log D/log x rather than a constant. More to the point, the proportional-window behaviour is already benign: at c = 0.04 the window [0.04x, x] holds 89.5%, 92.0%, 92.5% of the cumulative count across that range, against 96% for the primes themselves. So S_D is **not** concentrated low, and nothing in the data suggests the window is the obstacle. **The obstacle is the size of ρ, not its localisation** — which sharpens the T4 question further: the reading task is about whether the exceptional-set step tolerates a 1/log x density, and can take the window behaviour as unproblematic.
+
+## 44. Hypothesis (SP) promoted to §6.8, parameters fixed rather than quantified
+
+Restructured per Vipul's outline. §6.7 keeps the converse itself; **§6.8 is the hypothesis**, with the parameters *fixed* rather than existentially quantified inside the statement — which is what makes the four claims below able to name *which* version each concerns:
+
+> Fix D ≥ 1 and ρ. **(SP_{D,ρ}):** |S_D ∩ [1,x]| = ρ(x)·π(x)·(1 + o(1)), where S_D = {r prime : (r − 1)/Q(r) ≤ D}.
+
+The four-part structure, as requested:
+
+1. **Bounded multiplicative gaps are the special case ρ = ρ_gap**, with ρ_gap(x) = (log x/log Λ)/π(x) — the weakest ρ forcing one member per window, a count growing like log x rather than x/log²x.
+2. **δ₀ ⟹ (SP_{D, ρ_gap}) with D = Λ = 2/δ₀**, one inequality in both roles.
+3. **Empirics and Bateman–Horn support far more: ρ(x) = (C_D + o(1))/log x.** Measured against li₂(x) at 2·10⁶: C_2 ≈ 0.692, C_12 ≈ 2.26, C_50 ≈ 4.02. The D = 2 case is a clean check *on the prediction* — Sophie Germain, whose constant should be 2C₂/2 = C₂ ≈ 0.660 after the r ≤ x versus q ≤ x/2 halving, against 0.692 measured, ≈ 5%. So the supported hypothesis exceeds ρ_gap by a factor of order x/log³x.
+4. **(SP) at that ρ would give δ₀ for almost all n** — via the exceptional-set machinery — **conditional on the one open link**, whether that machinery tolerates ρ ≍ 1/log x.
+
+**One correction to the outline.** Bullet 4 as proposed read as an implication to be recorded; it is the *open* direction, so it is stated as what would follow plus where the gap is. The gap is precisely that the machinery is applied in the literature to a set of relative density ≈ 1 − α, positive for fixed α < 1 and vanishing as α → 1, and bounded cofactor is the α = 1 endpoint.
+
+**Two structural facts added while writing.** Cofactors are essentially **even** — an odd d needs Q(r) = 2^k, so r = d·2^k + 1 is Fermat-like: among S_12 below 2·10⁶ the odd cofactors contribute 5, 6, 4, 3, 5, 2 members against 7,755 at d = 2 alone. So D is in effect a bound on even cofactors, and (H)'s d ≤ 12 permits six. And the window behaviour is benign (92.5% of the cumulative count in [0.04x, x] against 96% for primes), so **the obstacle is the size of ρ, not its localisation** — which narrows the T4 reading task.
+
+**Trimming, as instructed.** §6.7 lost the density digressions now owned by §6.8, keeping only what 6.8 does not carry: the two-branch statement, the layer asymmetry, the table measurements, the Zhang non-transfer, and the round-trip constants. §6.7 is 21 lines, §6.8 is 27, against the ~40 the merged version had reached. Pointers in `ep` F.4, the notes' §6 and T8 updated to name §6.8 for the hypothesis and §6.7 for the converse.
