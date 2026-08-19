@@ -782,3 +782,13 @@ Vipul asked why two different denominators appear for the same quantity D. Worki
 **Consequences, all applied.** F.4's statement is now a single D = 2/δ₀ with no branch-dependent constant; the proof records the joint-versus-separate point explicitly, since it is exactly the step a re-derivation would get wrong again; `aod` §6's round trip is **700 uniformly** rather than 700 and 245,000, which also simplifies the equivalence claim — the three surviving differences are now prime-power-versus-prime, almost-all-versus-all, and a factor ≈ 58, with no fourth term about the branches diverging.
 
 **And it leaves a tripwire worth having.** Both branches now carry the *same* constant, so T8 records that a future derivation making them differ is itself a signal of a lost joint constraint rather than a real feature. That is a better invariant than the number 700.
+
+## 36. `aod` §6: the converse material moved out of the opener into §6.7
+
+Vipul's read was right, and the structural argument is stronger than the length one. §6's opener exists to set up the covering statement that §§6.1–6.5 then spend five subsections constructing; F.4 is a **different consequence** that feeds none of that machinery, so parking a full treatment there made the reader carry it through the whole shape-counting apparatus for no reason.
+
+**Moved to §6.7, "The other direction: what a floor forces arithmetically"** — placed after §6.6 deliberately, because the two are the same move at different targets: 6.6 runs the implication backwards to **systems** (a floor makes some member of a finite explicit list solvable), 6.7 runs it backwards to **arithmetic** (a floor forces a shifted prime with a bounded-cofactor prime-power divisor). Reading them adjacent is what makes the pair legible, and 6.7's opening paragraph now says so explicitly rather than leaving the parallel to be noticed.
+
+The opener keeps three sentences: what the covering statement is, and a pointer saying the arithmetic consequence exists and lives at the end. Opener is 11 lines against 25 before; §6 is unchanged in total length, so nothing was cut, only relocated.
+
+Checked after the move: no duplicated passage (each of five distinctive phrases appears exactly once), 91/91 tables well-formed, 0 dangling refs, hygiene clean. Inbound pointers sharpened from `§6` to `§6.7` at every F.4-related site — `ep` F.4's discussion pointer, five in `pending-checks.md` (gap inventory, R1 read-off, T8 twice, the rebuild note), the §3.6 cross-reference, and `converse_check.py`'s docstring — while leaving the unrelated `§6` references (the feasible-set pointer in T4, the Catalan/Pillai note) alone, since those point at the shape-counting material that stayed put.

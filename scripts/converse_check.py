@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 converse_check.py -- re-run the numerical checks behind Proposition F.4
-(`enumeration-proof.md` Part F; discussion in `arithmetic-of-density.md` §6).
+(`enumeration-proof.md` Part F; discussion in `arithmetic-of-density.md` §6.7).
 
 F.4 says a density floor FORCES a shifted-prime statement.  Its proof turns on
 each part of a winning configuration having to clear delta*C(n,2) on its own,
@@ -26,7 +26,7 @@ will move as the table extends:
 
   * MAX COFACTOR: the largest (r-1)/Q occurring anywhere.  At the v4 frontier
     this is 12 -- (H)'s own d <= 12, recovered from the opposite direction.
-    Quoted in `ep` F.4 and `aod` 6.  If it moves, both want editing, and a
+    Quoted in `ep` F.4 and `aod` 6.7.  If it moves, both want editing, and a
     value above 12 would weaken the claim that (H)'s constant is the natural one.
   * SLACK: max cofactor against the bound 2/floor.  Quoted as "loose by a
     factor ~4"; it is the size of the sharpening question in the gap inventory.
@@ -193,7 +193,7 @@ def main():
     mc, where = R["max_cofactor"]
     if where:
         print(f"MAX COFACTOR (r-1)/Q anywhere: {mc:.0f}  at n,r,Q = {where}")
-        print(f"   compare (H)'s own d <= 12.  Quoted in `ep` F.4 and `aod` 6;")
+        print(f"   compare (H)'s own d <= 12.  Quoted in `ep` F.4 and `aod` 6.7;")
         print(f"   edit both if this moves.")
         bound = 2 / (A.delta0 if A.delta0 else floor)
         print(f"SLACK: bound 2/floor = {bound:.0f} against {mc:.0f} used"
