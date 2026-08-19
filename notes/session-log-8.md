@@ -702,3 +702,29 @@ Since bounded multiples of prime powers have density zero, the clean statement h
 **Why this is the θ = 1 counterpart of E–H, and what the round trip costs.** The ladder's rungs give a prime factor of size r^θ for θ < 1; F.4 shows a density floor requires one of size (r−1)/D, *linear* in r. So the bounded-cofactor condition is not merely sufficient for a floor but **necessary** for one — which is the sharpest available reason to think no θ < 1 input can ever give a positive density floor, and it upgrades §3.6's "E–H is not almost (H)" from an observation about how (H) is phrased to a theorem about what a floor demands. The constants do loosen, as anticipated: (H)'s d ≤ 12 → δ₀ = 1/350 → D = 700 (or 245,000 through the all-matching branch), a factor ~58 lost on the clean branch. Three differences survive the round trip and are named in `aod` §6 rather than glossed: prime-power versus prime divisor, almost-all versus all n, and the constant. **The shape of the statement is what does not degrade**, and that is what makes it an equivalence up to constants rather than a pair of one-way implications.
 
 Written as Proposition F.4 with proof in `enumeration-proof.md` Part F (after F.3, before the division-of-labour table, which it complements — that table says number theory never answers "which configurations are admissible"; F.4 says the converse traffic is real and runs the other way). Discussion in `aod` §6, cross-referenced from §3.6's endpoint paragraph. Filed in the gap inventory as **closed, opening a sharpening question** — whether either direction can be tightened — which is a research item, not a gap: nothing currently claimed depends on it.
+
+## 31. `aod` §6 reread: restructured, and F.4's numerics checked
+
+### 31.1 Structural problem found and fixed
+
+The F.4 material had been inserted **between** the section's opening not/does pair — "it does not force any single Bateman–Horn system" / "what it does force is a covering statement" — splitting a deliberate rhetorical pairing and burying the covering claim that §§6.1–6.5 then spend five subsections developing. Reordered so the arc reads: does not force one system → **does** force a covering statement over shapes (the subject of the rest of the section) → **also** forces an arithmetic statement (F.4, self-contained). The two forced things are different in kind — which systems, versus what any of them must supply — and the section now says so rather than leaving the reader to notice. One duplicated paragraph removed in the process.
+
+Also trimmed: the F.4 block had restated the two-branch proof at more length than a discussion section needs, when the proof is in `ep` Part F. It now gives the mechanism in one sentence (the score is a minimum, so every part must clear the floor alone) and spends its length on what is actually at stake — the exceptional set, the constants, and the comparison to §3.6.
+
+### 31.2 Numerical checks: three predictions, all hold, and one striking constant
+
+Checked all three inequalities of F.4 against the 2,186 contiguous rows:
+
+| prediction | instances | violations | tightest |
+|---|---|---|---|
+| (r − 1)/Q ≤ 2/δ | 1,409 foreign primes | **0** | ratio/bound 0.498 |
+| r ≥ δ·n | same | **0** | r/(δn) = 2.003 at n = 2040 |
+| M ≤ 1/δ (all-matching) | 777 one-part winners | **0** | **0.9996** at n = 2594 |
+
+Two findings worth more than the confirmation itself.
+
+**The all-matching bound is essentially attained** at n = 2594 = 2·1297, ratio 0.9996 — and that is the same row §6.1 identifies as sitting on the feasibility boundary (√2 = 1.41421 against 1/√δ = 1.41449, slack 0.0003). Two independent constraints, derived by different routes, bind simultaneously at one value. That is a good sign both are tight rather than merely true.
+
+**The largest cofactor (r − 1)/Q anywhere in the table is exactly 12**, at n = 221 with r = 157, Q = 13. That is (H)'s own d ≤ 12, recovered from the opposite direction and with no reference to it — evidence that the hypothesis's constant is not an artefact of how it was written down but the value the optima actually use. Recorded in both `ep` F.4 and `aod` §6.
+
+The same measurement quantifies the Proposition's slack honestly: the global floor gives D = 44 where 12 suffices, so F.4's bound is loose by a factor ≈ 4 against observed optima. That is where the sharpening question filed in the gap inventory would start, and it is now stated with a number rather than as a suspicion.
