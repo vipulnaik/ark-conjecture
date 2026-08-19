@@ -676,3 +676,29 @@ Twelve patterns (edit-history adverbs, references to superseded versions of our 
 Two tuning rounds were needed and both are recorded as comments in the pass, since they are the kind of thing that gets re-broken: **`fixed` and `dropped` had to come out of the status-verb alternation** — "fixed pointwise", "fixed by every Galois element", "a fixed prime" are ordinary mathematics and swamped the report — with repaired defects caught instead by a narrower pattern requiring a defect as subject; and `--baseline` / `.csv` references had to be exempted, since naming a prior *artefact* as a command input is not the same as citing superseded prose.
 
 Down to 9 findings from 22, and the remainder are mostly the good kind: "an earlier draft asserted X, which is wrong for reason Y" in `monotone-transitive-note.md`, `three-uniform-note.md` and `literature-findings.md`. Those earn their place by warning a reader off a tempting error, which is the test the pass's own footer states — would a first-time reader need the phrase? One genuine session reference removed from `enumeration-proof.md` ("a question noticed during this review" → "an open question").
+
+## 30. §2a review, Part J status, and the converse (Proposition F.4)
+
+### 30.1 `pending-checks.md` §2a — three items outdated, one badly
+
+- **T4's source-check list was wrong on both count and location.** It said "three checks, each flagged at its site in `aod` §3.6"; in fact the Santha–Yao/Scheidweiler–Triesch priority question lives in §5 and the `notes` reference list, not §3.6, and the E–H ε-form check added this session makes four. Rewritten to list four with correct homes.
+- **A9 had become self-contradictory and duplicative** — the largest defect found in §2a. It stated phase 0 complete in one paragraph and then, in the next, gave "Next: compile `Basic.lean` on the laptop... then start discharging `Note.lean`'s sorries" as the forward plan, both of which are done. It also carried the compile-status discussion twice. Rewritten around a three-row per-file status table (which file, which environments, how many sorries), with the two environment lessons — import mechanics and lemma-name drift — consolidated as a pair rather than scattered.
+- **T1 and T2** updated in passing: T1 records the later full-document critical pass and what its finding profile confirms (statements checked against each other is not the same as checking a step whose plausibility does the work); T2's J0a bullet points at its gap-inventory entry rather than restating it.
+
+### 30.2 Part J: no meaningful open part is misstated
+
+Read against the gap inventory. J0, J0a, and items 1–5 all describe live questions accurately, and item 2a's sharp-threshold text is correct after the §21 fix. The one substantive thing to say is that **Part J's items and the inventory's six are the same set viewed from two ends** — Part J organises by what would have to be proved, the inventory by what the risk is — and neither now contains an item the other lacks.
+
+### 30.3 The converse: Proposition F.4
+
+*The session's one new piece of mathematics, and it is elementary given F.1.*
+
+**The mechanism that makes a converse available**: the score is a *minimum* over orbitals, so every part must clear δ₀·C(n,2) **on its own**. A part clears it only by being large and carrying a large twist, and both conditions convert directly into arithmetic.
+
+Two branches. **Foreign part present:** it is a prime r with q-power twist Q, contributing ≤ r·Q; from r·Q ≥ δ₀n²/2 and r ≤ n, Q ≥ δ₀n/2, and since Q | r − 1 < r ≤ n, **(r − 1)/Q ≤ 2/δ₀**. **All-matching:** each class has c_i ≥ δ₀n and F_i ≤ 1/δ₀, the intra term F_i·orb ≤ F_i c_i d_i forces d_i ≥ δ₀²n/2 and (c_i − 1)/d_i ≤ 2/δ₀². This branch additionally pins n itself: n = p^b·(bounded cofactor), i.e. **n = M·p^b with M ≤ 1/δ₀**.
+
+Since bounded multiples of prime powers have density zero, the clean statement holds for almost all n: **a prime r ≥ δ₀n whose r − 1 has a prime-power divisor of cofactor ≤ 2/δ₀**. One honest caveat measured rather than asserted: the density decays only like H_M/log n — at n ≤ 10⁵ about **44%** of integers are still within a factor 25 of a prime power — so the exclusion is asymptotic and no computation will display it.
+
+**Why this is the θ = 1 counterpart of E–H, and what the round trip costs.** The ladder's rungs give a prime factor of size r^θ for θ < 1; F.4 shows a density floor requires one of size (r−1)/D, *linear* in r. So the bounded-cofactor condition is not merely sufficient for a floor but **necessary** for one — which is the sharpest available reason to think no θ < 1 input can ever give a positive density floor, and it upgrades §3.6's "E–H is not almost (H)" from an observation about how (H) is phrased to a theorem about what a floor demands. The constants do loosen, as anticipated: (H)'s d ≤ 12 → δ₀ = 1/350 → D = 700 (or 245,000 through the all-matching branch), a factor ~58 lost on the clean branch. Three differences survive the round trip and are named in `aod` §6 rather than glossed: prime-power versus prime divisor, almost-all versus all n, and the constant. **The shape of the statement is what does not degrade**, and that is what makes it an equivalence up to constants rather than a pair of one-way implications.
+
+Written as Proposition F.4 with proof in `enumeration-proof.md` Part F (after F.3, before the division-of-labour table, which it complements — that table says number theory never answers "which configurations are admissible"; F.4 says the converse traffic is real and runs the other way). Discussion in `aod` §6, cross-referenced from §3.6's endpoint paragraph. Filed in the gap inventory as **closed, opening a sharpening question** — whether either direction can be tightened — which is a research item, not a gap: nothing currently claimed depends on it.

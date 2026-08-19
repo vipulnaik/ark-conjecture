@@ -751,6 +751,16 @@ Two consequences.
 >
 > *Do not conflate this with the s-bound of Part E′.* That one reads s ≤ 1/√δ − 1 and governs (c−1)/r, not the part count. The two ladders descend from the same counting inequality k, s < 1/√δ, but they are **offset by one**, because F.1 bounds k by 1/√δ while E′ bounds s by 1/√δ − 1: δ > 1/(K+1)² gives k ≤ K, whereas s ≤ K needs only δ > 1/(K+2)². So at δ > 1/25 the k-ladder reads 4 and the s-ladder reads 3. That shared source is for the *arithmetic*, not a shared mechanism for the *content*: the two quantities are unrelated, and an argument bounding one says nothing about the other. (The offset is the thing to keep straight — "s ≤ 3 at δ > 1/25" is correct and sharp, and reading the two ladders as coinciding is what produces an off-by-one in either direction.)
 
+> **Proposition F.4 (the converse: a density floor forces a shifted-prime statement).** Suppose μ(n) ≥ δ₀·C(n,2). Then, with **D = 2/δ₀²**, the winning configuration exhibits a prime power m ≥ δ₀·n together with a **prime-power divisor** Q of m − 1 satisfying **(m − 1)/Q ≤ D**. Moreover m is a *prime* r, and D may be taken to be **2/δ₀**, unless n = M·p^b for a prime power p^b and an integer M ≤ 1/δ₀.
+>
+> *Proof.* The score is a minimum over orbitals, so **every** part's own intra term is ≥ δ₀·C(n,2) > δ₀n²/2 — this is what makes the converse available at all, and it is the same feature that makes the forward direction hard.
+>
+> If a **foreign part** is present, it is a prime r with twist Q = q^e supplied by the top layer, contributing at most r·Q. From r·Q ≥ δ₀n²/2 and r ≤ n we get Q ≥ δ₀n/2; and Q | r − 1 < r ≤ n gives (r − 1)/Q ≤ 2/δ₀. Both r and Q are therefore linear in n.
+>
+> If **no foreign part** is present, every part is a matching class of F_i blocks of size c_i = p^{a_i}, all sharing the chain prime p (Part B). From F_i·c_i²/2 ≥ δ₀n²/2 with F_i c_i ≤ n: c_i ≥ δ₀n and F_i ≤ 1/δ₀. The intra term is F_i·orb(c_i, d_i) ≤ F_i·c_i·d_i, so d_i ≥ δ₀²n/2 and (c_i − 1)/d_i ≤ 2/δ₀², with d_i a q-power dividing c_i − 1. This branch also constrains n itself: writing b = min a_i, n = Σ F_i p^{a_i} = p^b·(Σ F_i p^{a_i − b}) with p^b ≥ δ₀n, so the cofactor is at most 1/δ₀. ∎
+>
+> **What the second branch costs, and why it is not a defect of the statement.** Integers of the form M·p^b with M bounded have density → 0, so for **almost all** n the all-matching branch is unavailable and the conclusion is the clean one: *a prime r linear in n whose r − 1 has a prime-power divisor of bounded cofactor*. But the decay is only of order H_M/log n — at n ≤ 10⁵ roughly 44% of integers are still within a factor 25 of a prime power — so this is an asymptotic exclusion and not one any computation will exhibit.
+
 This is the structural answer to the question of whether the enumeration needs Hardy–Littlewood-type input to cut down cases. It does not. The division of labour is:
 
 | question | apparatus | conditional? |
