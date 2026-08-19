@@ -238,13 +238,13 @@ theorem delta0_le_density {n m : ℕ} (h2 : 2 ≤ n) (h : n.choose 2 ≤ 350 * m
   -- Difference-is-nonneg, rather than a `div_le_div` iff-lemma: the iff-lemmas
   -- in this corner of Mathlib have been renamed more than once (this proof
   -- previously used `div_le_div_iff`, which 4.33's Mathlib no longer has),
-  -- whereas `div_nonneg`, `field_simp`, `ring` and `linarith` have been stable
-  -- for years.  Same pattern in `half_is_ceiling`.
+  -- whereas `div_nonneg`, `field_simp` and `linarith` have been stable for
+  -- years.  Same pattern in `half_is_ceiling`.  (`field_simp` closes the
+  -- rearrangement outright here; a trailing `ring` is a no-op and the unused-
+  -- tactic linter says so.)
   have hid : (m : ℝ) / (n.choose 2 : ℝ) - 1 / 350
       = (350 * (m : ℝ) - (n.choose 2 : ℝ)) / (350 * (n.choose 2 : ℝ)) := by
-    first
-      | (field_simp; ring)
-      | field_simp
+    field_simp
   have hnn : 0 ≤ (350 * (m : ℝ) - (n.choose 2 : ℝ)) / (350 * (n.choose 2 : ℝ)) :=
     div_nonneg (by linarith) (by positivity)
   linarith
@@ -418,9 +418,7 @@ theorem half_is_ceiling (n m : ℕ) (hn : 2 ≤ n) (h : 2 * m ≤ n.choose 2) :
     push_cast at this; linarith
   have hid : (1 : ℝ) / 2 - (m : ℝ) / (n.choose 2 : ℝ)
       = ((n.choose 2 : ℝ) - 2 * (m : ℝ)) / (2 * (n.choose 2 : ℝ)) := by
-    first
-      | (field_simp; ring)
-      | field_simp
+    field_simp
   have hnn : 0 ≤ ((n.choose 2 : ℝ) - 2 * (m : ℝ)) / (2 * (n.choose 2 : ℝ)) :=
     div_nonneg (by linarith) (by positivity)
   linarith

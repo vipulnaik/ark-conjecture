@@ -4,11 +4,13 @@
 
 | file | laptop (Mathlib) | container (core 4.15.0) | sorries |
 |---|---|---|---|
-| `Note.lean` | compiles | n/a — needs Mathlib | **nonzero** — sketch, statements are the deliverable |
+| `Note.lean` | compiles | n/a — needs Mathlib | **zero — every proof complete** (six imported from `ArkCore`) |
 | `Basic.lean` | compiles | n/a — needs Mathlib | **nonzero** — same |
 | `ArkCore.lean` | compiles | compiles | **zero — every proof complete** |
 
-*So `ArkCore.lean` is the only file that is *proved* rather than merely well-formed; the other two are Mathlib sketches whose tactic blocks are placeholders, and their sorry count is the expected state rather than a defect (`leancheck.sh` reports it separately for exactly this reason — a count that DROPS unexpectedly is the thing to notice). **`ArkCore.lean` is different: it is compiled and fully proved** — zero sorries against core Lean 4.15.0 — and covers the ℕ half of both files: the central inequality (`central_even`, `central_odd`), Lemma D1, the capacity bound, Proposition F.1 in squared form, `orb` with the full-twist collapse, and every `decide` table. All three were reviewed after the entangled-generator correction.*
+*So **phase 0 is done**: `Note.lean` and `ArkCore.lean` are both fully proved, and between them they cover the note's entire arithmetic layer — the construction inequality, the admissible-`d` table, the density and ceiling statements, `orb`, Lemma D1, the capacity bound, F.1. `Basic.lean` remains the sketch, and its sorry count is the expected state rather than a defect (`leancheck.sh` reports it separately for exactly this reason — a count that DROPS unexpectedly is the thing to notice).*
+
+*What this does and does not establish is worth restating, because a green checker invites over-reading: it verifies that **the arithmetic between the hypotheses and the conclusion is correct, and that the units are consistent**. The note's theorem remains conditional on (H) and on Oliver's theorem, neither of which is formalised or formalisable here. That is the check that was worth having before arXiv, and it is now had.* **`ArkCore.lean` is different: it is compiled and fully proved** — zero sorries against core Lean 4.15.0 — and covers the ℕ half of both files: the central inequality (`central_even`, `central_odd`), Lemma D1, the capacity bound, Proposition F.1 in squared form, `orb` with the full-twist collapse, and every `decide` table. All three were reviewed after the entangled-generator correction.*
 
 **Toolchain, and how to get one in the working container.** elan cannot resolve any toolchain there — every lookup goes through `release.lean-lang.org`, which is off the network allowlist — but the toolchain tarball itself is on GitHub releases, which is on it:
 
