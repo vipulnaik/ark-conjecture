@@ -70,6 +70,17 @@ one.  If this file buys one thing, it is that.
 -- `import Mathlib` pulls everything: slower to elaborate, but no unknown-module
 -- errors while the file is a sketch.  Narrow these once the proofs compile.
 import Mathlib
+-- The Mathlib-free ℕ core.  **This import resolves through `LEAN_PATH` / lake's
+-- build dirs, never through the filesystem next to this file** -- putting
+-- `ArkCore.lean` in the same folder is NOT enough, since Lean imports the
+-- compiled `.olean`.  Two ways to satisfy it:
+--   (a) one-off:  lake env lean -o ArkCore.olean ArkCore.lean
+--                 LEAN_PATH=$PWD:$LEAN_PATH lake env lean Note.lean
+--       (use `lake env` for both, so the .olean is built by the toolchain that
+--        will load it -- a 4.15-built olean will not load into 4.33)
+--   (b) in-project: move the files under the lake library's source dir and
+--       change this line to `import Ark.ArkCore` (matching the lakefile's
+--       `lean_lib` name).  This is what `leancheck.sh` assumes.
 import ArkCore
 
 namespace Note

@@ -19,6 +19,15 @@ export PATH=$PWD/lean-4.15.0-linux/bin:$PATH
 lean ArkCore.lean        # bare invocation; no lakefile needed for the core file
 ```
 
+**Importing `ArkCore` from `Note.lean`.** Lean resolves imports through `LEAN_PATH` and lake's build directories, **not** through the filesystem beside the importing file, and it loads the compiled `.olean` rather than the source — so co-locating the two `.lean` files does nothing, and `PATH` is not consulted at all. Either build the olean and point `LEAN_PATH` at it:
+
+```bash
+lake env lean -o ArkCore.olean ArkCore.lean
+LEAN_PATH=$PWD:$LEAN_PATH lake env lean Note.lean
+```
+
+(`lake env` on both, so the olean is built by the toolchain that will load it — a 4.15-built olean will not load into 4.33), or move the files under the lake library's source directory and import by its module prefix, `import Ark.ArkCore`. The second is what `leancheck.sh` assumes, since it runs from the project root.
+
 **Mathlib remains out of reach there** — `lake exe cache get` needs its cache host, and a source build is days — which is what makes the core/Mathlib split load-bearing rather than aesthetic: everything that is genuinely about ℕ lives in `ArkCore.lean` and is *proved*, while `Note.lean` / `Basic.lean` keep the real-number material (`Density`, `capF`, the surd table) as Mathlib sketches to be compiled wherever Mathlib exists. `leancheck.sh` is for the latter situation (a lake project root); the core file needs only `lean` itself.
 
 *(A drift note, since this header has now been wrong in both directions: it said "neither has been compiled" after `Note.lean` had compiled on the laptop — the header described the drafting container and was read as describing the project. Compile status is per-machine here, because the container and the laptop have different reach; this header now says which.)*
