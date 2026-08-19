@@ -814,3 +814,51 @@ Recorded as a **deliberate omission in `note-to-framework-bridge.md`** — which
 Tables 91/91, refs 0 dangling, hygiene clean, history 10 (all the good kind). **PASS 5 caught a genuine drift the earlier runs did not**: the `density_floor_conjecture` tagged duplicate had gone out of step, `aod`'s copy still asserting "verified unconditionally for every n ≤ 10⁶, δ ≥ 0.04453 at n = 11183" while `orbital-evasiveness-notes.md`'s copy was correctly marked ⟦PENDING-REBUILD⟧ with the corrected interim (δ ≥ 0.0462 over n ≤ 10⁵ at n = 2759). Synced to the marked version — this is exactly the failure mode the DUP tagging exists for, one copy updated during the correction and the other missed.
 
 Following that up: §5's own ladder headline **δ ≥ 0.04453 at n = 11183** was likewise unmarked, though it is the home of the figure and three other statements in that section do carry the marker. Marked, with the note that `ladder_verify.py`'s families understate, so the 1/25 conjecture is unaffected whichever way the rerun lands. **R7 requotes both.**
+
+## 38. The Sophie Germain / bounded-gaps analogy, and a literature item it produced
+
+Vipul observed that F.4's weakened condition — r − 1 = dQ with d ≤ D — stands to Sophie Germain as bounded prime gaps stand to twin primes, and asked whether a Zhang-style route could settle it short of the full Elliott–Halberstam ladder.
+
+**The analogy is exact in structure**, and worth keeping for that reason alone: d = 2 is Sophie Germain, bounded d is the weakened form, and letting D grow like r^ε *is* the E–H rung — so θ → 1 is literally "D allowed to grow slowly", and bounded D sits at the endpoint just as bounded gaps sit below twin primes.
+
+**But the mechanism does not transfer, and the reason is specific enough to record so the hope is not re-entertained.** GPY/Maynard proves at least 2 of k linear forms prime **without specifying which**, and for bounded gaps that is harmless because the forms n + h_i are interchangeable — any two give a gap. Our two primes are asymmetric: one must divide the other minus one. Sieving {n, 2n+1, …, Dn+1} and being handed 3n + 1 and 5n + 1 with n composite yields nothing, since the large prime-power divisor of r − 1 = 3n must come from n itself. A prime at a **designated** form is the twin-prime barrier itself, which those methods route around rather than break.
+
+**The part that is actionable is the residue observation, and it is sharper than it first looks.** This framework only ever needs r ≡ 1 (mod Q) — modulus varying and large, residue *fixed at 1*. That is precisely the regime where the unconditional level-of-distribution results beat Bombieri–Vinogradov (BFI reach 4/7 for fixed a). **And it is exactly the literature Shparlinski's §5 discards** — he sets aside BFI, Mikawa and Fouvry because they restrict the residue classes, which does not suit his formulation. Ours satisfies that restriction for free. Two turns ago we recorded his exclusion as a considered judgement rather than an oversight; it is, *for his setup*, and the §3.6 note now says exactly that while flagging that the reason may not bind here.
+
+Filed as a T4 literature item with the sizing stated so it is not oversold: 4/7 does not approach the level → 1 that bounded cofactor needs, so the realistic prize is the ladder's **almost-all exponents**, and two obstacles want checking first — whether the well-factorable/smooth-modulus conditions are compatible with Q ranging over prime powers, and whether the averaging reaches modulus Q ≈ r/D at all.
+
+**One quantitative by-product, measured.** Bounded-cofactor primes have density ≈ C·log D/log x among primes — at D = 12, the fractions are 0.343, 0.235, 0.182 at x = 10⁴, 10⁵, 10⁶, tracking log 12/log x. So the set is **twin-prime-thin**, no positive-proportion statement about it can hold, and (H) is a Goldbach condition over a set that thin. That is the quantitative form of `aod` §3.5's "independently twin-prime-hard" remark, which until now was asserted rather than sized. Recorded in §6.7 and in the T4 item.
+
+## 39. Two corrections to Proposition F.4, the second material
+
+Vipul, on a reread: (i) the proof asserted "δ₀·C(n,2) > δ₀n²/2", which is backwards — C(n,2) < n²/2; (ii) more seriously, the multiplicative-engine case ought to qualify more of the statement than it did.
+
+**(i) is a slip, fixed by carrying n(n−1).** The Proposition now runs on δ₀n(n−1)/2 throughout, which costs nothing: the foreign chain gives Q ≥ δ₀(n−1)/2 and Q ≤ r − 1 ≤ n − 1, so (r − 1)/Q ≤ 2/δ₀ exactly as before, and the all-matching branch gives M < n/(δ₀(n−1)), which is 1/δ₀ up to 1 + O(1/n).
+
+**(ii) is a real defect, and worse than the objection stated.** Checked against Part 0's shape space, which is explicit: a p-characteristic part carries a **twist any divisor of c_i − 1**, because it is drawn from the *cyclic layer*; only a **foreign** twist is a q-power, and that is forced by Lemma B′ (AGL(1,r) is nonabelian, so the translations occupy the abelian layer and the twist is pushed into the top). So in the all-matching branch the twist may be the **full c − 1** — cofactor 1, divisor not a prime power — and the branch yields **no arithmetic statement whatever**, not a weaker one. At n = M·p^b the multiplicative engine reaches density ≈ 1/M with no shifted-prime input at all.
+
+F.4 is therefore restated as a genuine **dichotomy**: either (a) n = M·p^b with M ≤ 1/δ₀, or (b) a prime r with a prime-power divisor of r − 1 at cofactor ≤ 2/δ₀; (a) has density zero, so (b) holds for almost all n. The previous form had (a) qualifying only the *primality* of the witness, leaving the divisor conclusion apparently unconditional — wrong, and the natural error to repeat, since the branches look parallel until one asks which layer supplies each twist. Both the deleted claim and the reason are recorded at the statement, in `aod` §6.7, and in T8, so a future restatement meets the trap rather than rediscovering it. Also deleted: `aod` §6.7's line that the conclusion "survives with r − 1 replaced by p^b − 1 at the same bound", which was the same error in its most explicit form.
+
+**A silver lining that changes T8's standing.** Working out which layer supplies which twist *answers* T8's headline question rather than leaving it open: the foreign twist's confinement is **Lemma B′'s content**, a proved lemma, not an unstated assumption. So the exposure is B′'s correctness — already T1's standing item, and the one structural lemma whose failure would break B_safe itself — plus one reading of a new argument. T8 and the risk ranking are rewritten accordingly; the item drops from "an unexamined layer-assignment claim" to "rests on a proved lemma that is itself under standing scrutiny", which is a materially better place to be.
+
+**Nothing measured changes.** The three inequalities still hold at every row, and branch (3) of `converse_check.py` was always testing the M ≤ 1/δ condition of case (a) rather than a divisor claim — so the script was already checking the dichotomy's correct form, and only its docstring needed correcting to say so.
+
+## 40. Shape-by-shape audit of F.4 against S1–S10 — and it found the gap numerics could not
+
+Vipul asked whether F.4 had been checked against the census shapes rather than only numerically, on the grounds that the table exhibits only shapes that *win* and may be flattering the constants. It had not been — the proof splits on whether a foreign part is present, which partitions the shapes but never walks them. Doing the walk:
+
+| shape | branch | note |
+|---|---|---|
+| S1, S2 | **(a)** | the multiplicative engine |
+| S3, S4, S5, S7 | **(b)** | one foreign part each |
+| S6 | **(b)** | two outside blocks; either serves |
+| **S9** | **(b)** | **needed an amendment — see below** |
+| S8, S10 | — | killed (D1, D2q); nothing exists to quantify over |
+
+**S9 is the gap, and it is exactly the kind numerics cannot surface.** A *fused* outside class of F blocks of prime size r contributes F·r·Q, not r·Q, and the first draft bounded the foreign part using r ≤ n — the unfused case. The fix is the **joint** bound F·r ≤ n, giving Q ≥ δ₀n(n−1)/(2·F·r) ≥ δ₀(n−1)/2 and the same conclusion. Numerics could never have caught it: S9 is dominated by Lemma D2 and **wins at zero values in the table**, so no row exercises it. Domination is not non-existence, and F.4 quantifies over configurations rather than over winners.
+
+*Worth flagging as a pattern:* this is the **second** time the joint-versus-separate bound has been the defect in this Proposition — the first produced the spurious 2/δ₀² in the matching branch. Same shape of error, different branch. Recorded in T8 as the thing to check first on any restatement.
+
+**A second finding, in the other direction: branch (a) is wider than S1 ∪ S2.** Any all-matching configuration lands there, including multi-class shapes the census does not name because they win nowhere — n = 640 = 1·256 + 3·128 (`aod` §6.2) is two matching classes with no foreign part, reaches δ = 0.1192, and satisfies (a) with p^b = 128, M = 5 against 1/δ = 8.4 (checked). The proof gets these right *because* it splits on the presence of a foreign part rather than on the census; a shape-by-shape proof would have missed them. So the audit both closed a gap and confirmed the proof's organising principle was the correct one.
+
+**S10 is instructive rather than vacuous.** It is killed precisely because its twist is forced into the cyclic layer beside the translations and is therefore trivial — the degenerate boundary of the very confinement branch (b) depends on. That the shape space already kills it is mild independent support for Lemma B′'s placement argument.
