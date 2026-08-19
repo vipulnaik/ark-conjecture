@@ -757,7 +757,7 @@ Two consequences.
 >
 > **(b) Shifted-prime branch.** There is a prime r ≥ δ₀(n−1)/2 with a **prime-power divisor Q of r − 1** satisfying **(r − 1)/Q ≤ 2/δ₀**.
 >
-> Integers of the form (a) have density zero, so **(b) holds for almost all n**.
+> Integers of the form (a) have density zero, so **(b) holds for almost all n**. Branch (b)'s multiplicative content extracts as an n-free hypothesis on the set of primes — bounded cofactor plus bounded multiplicative gaps, both constants 2/δ₀ — which `arithmetic-of-density.md` §6.7 states as Hypothesis (SP) and shows to be *strictly weaker* than (H), the additive clause below not being expressible n-freely.
 >
 > *Proof.* The score is a minimum over orbitals, so **every** part's intra term is at least δ₀·C(n,2) = δ₀n(n−1)/2 — this is what makes a converse available at all, and it is the same feature that makes the forward direction hard.
 >
