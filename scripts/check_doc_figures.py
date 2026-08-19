@@ -49,6 +49,13 @@ which nothing else notices.  So this script runs five passes.
           blind to: excising a section leaves its inbound pointers behind, and
           a reader following one has no way to tell a typo from a move.
 
+  PASS 8  HISTORY.  Dehistoricization.  Sentences describing how a document
+          came to say what it says, rather than what is true.  Invisible to
+          every other pass, since they are grammatical and accurate; the
+          giveaway is that a first-time reader would not need them.  Era
+          labels on measurements and the literature's own history are exempt
+          by subject, since both look identical to a regex and are load-bearing.
+
   PASS 4  HYGIENE.  Doubled sentence fragments and doubled bold runs, which
           ad-hoc string replacement produces and which no reader catches.
 
@@ -66,7 +73,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("table")
 ap.add_argument("docs", nargs="+")
 ap.add_argument("--pass", dest="only", default="all",
-                choices=["all", "figures", "scope", "prose", "hygiene", "census", "refs", "tables"])
+                choices=["all", "figures", "scope", "prose", "hygiene", "census", "refs", "tables", "history"])
 ap.add_argument("--quiet", action="store_true", help="findings only")
 A = ap.parse_args()
 DOCS = [d for d in A.docs if d.endswith(".md")]
@@ -809,6 +816,94 @@ if A.only in ("all", "census"):
     print("\nThe census is duplicated ON PURPOSE. Keep both copies in step: a new")
     print("shape needs a row in each, and S-numbers are append-only -- never renumber,")
     print("since they are the key the two documents are joined by.")
+
+
+# ------------------------------------------------------------- PASS 8 history
+
+# Dehistoricization.  These documents are meant to read as descriptions of what
+# is true, not as a record of how they came to say it.  Edits made in the frame
+# of "what changed" carry that frame into the prose, and the resulting sentences
+# are invisible to every other pass: they are grammatical, accurate, and about
+# the project's editing history rather than about mathematics.
+#
+# Two categories are deliberately NOT flagged, because they look identical to a
+# regex and are load-bearing:
+#   * era labels on measurements -- "v4-era", "v4 baseline", PENDING-REBUILD --
+#     which say which artefact a number came from, and matter while a rebuild
+#     is outstanding;
+#   * history of the LITERATURE ("Baker-Harman's exponent has since been
+#     improved"), which is the field's history, not ours.
+# The separation is by subject, so the patterns below are tuned to phrases whose
+# subject can only be one of our own documents, statements or scripts.
+
+if A.only in ("all", "history"):
+    print("\n" + "=" * 72); print("PASS 8  HISTORY"); print("=" * 72)
+
+    HIST = [
+        (re.compile(r"\b(previously|formerly|originally)\b(?!\s+(known|published))", re.I),
+         "edit-history adverb"),
+        (re.compile(r"\b(?:an?|the)\s+(?:older|earlier|previous|old)\s+"
+                    r"(?:version|reading|draft|caveat|claim|frontier|space|table|cell|row|wording|statement)\b", re.I),
+         "reference to a superseded version of our own text"),
+        (re.compile(r"\bused to (?:be|say|read|claim)\b", re.I), "edit-history verb"),
+        (re.compile(r"\b(?:was|were) (?:once|earlier) (?:flagged|stated|written|called)\b", re.I),
+         "edit-history verb"),
+        # NB "fixed" and "dropped" are excluded from this alternation on purpose:
+        # "fixed pointwise", "fixed by every Galois element", "a fixed prime" are
+        # ordinary mathematics and swamp the report.  A repaired defect is caught
+        # by the narrower pattern below, which requires a defect as the subject.
+        (re.compile(r"\b(?:is|has been|was) (?:now )?(?:retired|superseded|rewritten|"
+                    r"reworded|excised)\b", re.I),
+         "status-of-our-text verb"),
+        (re.compile(r"\b(?:bug|defect|error|typo|slip|clause|filter)\b[^.]{0,60}?"
+                    r"\b(?:has been|was|is now) (?:fixed|corrected|removed|repaired)\b", re.I),
+         "repair narrative"),
+        (re.compile(r"\bno longer (?:says|reads|claims|holds here)\b", re.I), "status-of-our-text verb"),
+        (re.compile(r"\bthis (?:session|pass|rewrite|round|review)\b", re.I), "reference to a work session"),
+        (re.compile(r"\bwe (?:found|noticed|corrected|fixed|caught|removed|rewrote|split|discovered)\b", re.I),
+         "first-person narrative of our own process"),
+        (re.compile(r"\b(?:both )?ha(?:s|ve) happened\b", re.I), "incident narrative"),
+        (re.compile(r"\buntil (?:it was|recently|this)\b", re.I), "edit-history clause"),
+        (re.compile(r"\bwhich is what this (?:pass|section|run) was for\b", re.I), "pass-naming heading"),
+        (re.compile(r"\bthe (?:old|former) (?:space|reading|shape space) (?:forbade|allowed|required)\b", re.I),
+         "argument framed against a superseded shape space"),
+    ]
+    # subject-based exemptions: literature history and artefact era labels
+    EXEMPT = re.compile(
+        r"v\d+[- ](?:era|baseline|count|census)|PENDING-REBUILD|"
+        r"Baker.Harman|Shparlinski|BBKN|Elliott|Chowla|Bombieri|Maynard|Lichtman|Oliver's|"
+        r"\bin the literature\b|\bof the literature\b|\bhas since been improved\b|"
+        # `--baseline`-style references name a prior ARTEFACT (a CSV, a run), which
+        # is a legitimate input to a command, not a superseded piece of prose.
+        r"--baseline|`--|\.csv\b|\bbaseline\b", re.I)
+
+    hist_hits = 0
+    for d in DOCS:
+        if "session-log" in d or "journal" in d:
+            continue                      # logs are the one place history belongs
+        try: txt = open(d).read()
+        except OSError: continue
+        shown = False
+        for ln, line in enumerate(txt.split("\n"), 1):
+            if EXEMPT.search(line):
+                continue
+            for pat, what in HIST:
+                m = pat.search(line)
+                if m:
+                    if not shown:
+                        print(f"\n{d}:"); shown = True
+                    hist_hits += 1; findings += 1
+                    print(f"   L{ln:<6} [{what}] ...{line[max(0, m.start()-45):m.start()+95].strip()}...")
+                    break
+    if not hist_hits:
+        print("none found -- the documents describe what is true, not how they came to say it.")
+    else:
+        print(f"\n{hist_hits} historicizing phrase(s).")
+    print("\nNot all are wrong: a claim genuinely ABOUT a superseded state needs to")
+    print("say so. The test is whether a first-time reader, with no knowledge of")
+    print("this project's editing, would need the phrase. Era labels on measurements")
+    print("(v4-era, PENDING-REBUILD) and the literature's own history are exempt by")
+    print("subject and are not reported.")
 
 # --------------------------------------------------------------- PASS 4 hygiene
 

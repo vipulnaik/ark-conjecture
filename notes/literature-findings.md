@@ -310,7 +310,7 @@ Neither half of our pipeline is new on its own. *Topology reduces to arithmetic 
 
 **Same pipeline, one layer down.** They ask when the natural degree m = (q^n − 1)/(q − 1) of PSL_n(q) is prime — the last open case in the classification of permutation groups of prime degree, everything else following from CFSG. Their answer is not a theorem: they present heuristic arguments and computational evidence based on the Bateman–Horn Conjecture supporting the conjecture that infinitely many such 'projective primes' exist. So: **group-theoretic existence at degree n, reduced to a prime-value question, settled conditionally and stated as such.** That is `aod` §§3–4 with a different group family.
 
-**Four presentational lessons, which is what this pass was for.**
+**Four presentational lessons.**
 
 1. **They never call it a theorem, and they say what it is in the abstract.** "Heuristic arguments and computational evidence … to support a conjecture." The reduction and the numerics are the contribution; the conditional statement is labelled at first mention, not in a remark at the end.
 2. **They validate the conjecture empirically at the range they use it, before relying on it.** Tables of the Bateman–Horn estimate E(x) against the true count P(x): for type (1,3), E/P = 0.99966 to 1.00004 across x = 10¹⁰ to 10¹¹, relative error −0.0052% at 10⁹. **This is exactly what `aod` §3's tables do** — measure the achieved densities against the predicted ceilings and report the agreement — and it is worth knowing that the practice is standard in this genre rather than something we invented. It also tells us how to *frame* those tables: not as verification of our formulas but as evidence that the number-theoretic input behaves as predicted in our range.
