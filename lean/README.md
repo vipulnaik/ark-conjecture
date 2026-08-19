@@ -1,6 +1,14 @@
 # Formalising the ARK framework: what is worth doing, and in what order
 
-*`Basic.lean` is a first pass at phase 1 and `Note.lean` at phase 0; both import Mathlib. **`Note.lean` compiles on the laptop** (against Mathlib, with its sorries as expected state); **`Basic.lean` has not been compiled anywhere**; the tactic blocks in both are sketches. **`ArkCore.lean` is different: it is compiled and fully proved** — zero sorries against core Lean 4.15.0 — and covers the ℕ half of both files: the central inequality (`central_even`, `central_odd`), Lemma D1, the capacity bound, Proposition F.1 in squared form, `orb` with the full-twist collapse, and every `decide` table. All three were reviewed after the entangled-generator correction.*
+*Compile status, per file and per environment — kept explicit because "compiles" and "proves" have come apart here, and only the checker's sorry count separates them.*
+
+| file | laptop (Mathlib) | container (core 4.15.0) | sorries |
+|---|---|---|---|
+| `Note.lean` | compiles | n/a — needs Mathlib | **nonzero** — sketch, statements are the deliverable |
+| `Basic.lean` | compiles | n/a — needs Mathlib | **nonzero** — same |
+| `ArkCore.lean` | compiles | compiles | **zero — every proof complete** |
+
+*So `ArkCore.lean` is the only file that is *proved* rather than merely well-formed; the other two are Mathlib sketches whose tactic blocks are placeholders, and their sorry count is the expected state rather than a defect (`leancheck.sh` reports it separately for exactly this reason — a count that DROPS unexpectedly is the thing to notice). **`ArkCore.lean` is different: it is compiled and fully proved** — zero sorries against core Lean 4.15.0 — and covers the ℕ half of both files: the central inequality (`central_even`, `central_odd`), Lemma D1, the capacity bound, Proposition F.1 in squared form, `orb` with the full-twist collapse, and every `decide` table. All three were reviewed after the entangled-generator correction.*
 
 **Toolchain, and how to get one in the working container.** elan cannot resolve any toolchain there — every lookup goes through `release.lean-lang.org`, which is off the network allowlist — but the toolchain tarball itself is on GitHub releases, which is on it:
 
