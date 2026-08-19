@@ -55,7 +55,8 @@
 3. **Part E's realisability.** No per-n verification, and no coverage at the fusion count that sets the ceiling at n ≡ 11 (mod 12). → **T2**, **R8**
 4. **§3.3.5's ceilings.** Exposure is the shared supply hypothesis plus a class-11 entry resting on 676 > 675. → **T6**
 5. **The κ parameters at k = 3.** Whether κ can be steered independently of the congruences fixing F and η. No risk to k = 2. → **T7**
-6. **The eight necessary conditions of `fb_common.py`.** Both certificates rest on these and nothing else, and what matters is *necessity*. → **T3**
+6. **Proposition F.4's twist-is-a-prime-power step.** New, unreviewed, and the whole converse is vacuous without it — and it is a layer-assignment claim, the category with the worst record here. → **T8**
+7. **The eight necessary conditions of `fb_common.py`.** Both certificates rest on these and nothing else, and what matters is *necessity*. → **T3**
 
 ---
 
@@ -331,6 +332,20 @@ Both coordinates of the joint optimum are settled without a search. The **F side
 - **Class 11's entry rests on 676 > 675.** The comparison 7 − 4√3 > (2 − √3)/4 reduces to 26 > 15√3, the narrowest possible integer margin. The derivation removes the way the η there was most likely to be wrong, but the margin is what it is, and anything upstream that moves it flips the class. *(Independently re-verified, along with every closed-form constant in §3.3.5 and the cap_F(η) = cap₁(Fη)/F identity. The exposure here is the supply hypothesis and the margin, not the arithmetic.)*
 
 *The ceiling table's independent re-derivation is `ceiling_rederive.py` (R6-adjacent); the working is recorded in the session log.*
+
+### T8. Proposition F.4 (the converse) — one reading, and one step carries the whole statement
+
+*New material with no independent scrutiny. The statement, proof and measurements are all from one pass by one reader; the measurements agree with it, but they were written by the same pass and so are not independent evidence (`verification-lessons.md` §1, site 4).*
+
+**The step to press first, because the Proposition is vacuous without it: why must the foreign twist Q be a prime power?** F.4 concludes that r − 1 has a *prime-power* divisor of bounded cofactor. If Q were merely some divisor of r − 1, the conclusion would be empty — Q = r − 1 always satisfies it — so the entire arithmetic content rests on the twist being confined to the top q-group. **That is a layer-assignment claim, and layer-assignment claims are this framework's worst-performing category**: the F_mid coprimality clause and the c mod 8 fusion mechanism were both exactly this, and both were wrong in the permissive direction. The specific question to answer: can a foreign block's twist draw on the cyclic layer the way a fused class's block count does, giving a non-prime-power twist order? Part E's construction says no and Part A's chain structure says no, but the same was believed of block counts. **If the answer is yes, F.4 survives only in the weakened form "some divisor", which is no statement at all**, and `aod` §6's equivalence claim goes with it.
+
+**Three smaller steps wanting a second look.**
+
+- **"Every part clears δ₀·C(n,2) on its own."** Load-bearing and stated in one line. The direction is safe as used — a part's intra term is an orbital or a union of them, so the minimum orbital is at most that term either way — but confirm there is no part *kind* whose contribution is not bounded below by an orbital at all.
+- **The all-matching branch's use of a shared chain prime p** (Part B) to conclude n = M·p^b. If two matching classes could sit at different primes, the branch's constraint on n weakens and the exceptional set is no longer density zero — which is what licenses "almost all".
+- **The constants**, which are the least interesting and the most likely to be off by a factor of 2: the orb halving at even twist, C(n,2) versus n²/2, and whether D = 2/δ₀ should be 4/δ₀. Nothing structural turns on it, but `aod` §6 quotes 700 and 245,000 as round-trip figures and those inherit any slip.
+
+**What the measurements do and do not support.** All three inequalities hold at every contiguous row with zero violations, and two independent constraints bind simultaneously at n = 2594 — genuine corroboration that the bounds are tight rather than merely true. But the measurements test the *inequalities*, not the *derivation*: a wrong constant or an unjustified layer assignment would produce inequalities that still hold on the table, since the table's winners satisfy the true statement whatever the proof says. **The measured maximum cofactor of 12 is the strongest single datum here** — it matches (H)'s own constant from the opposite direction — and it is also the reason to suspect F.4's D = 44 is loose by ~4, which is the sharpening question the gap inventory records.
 
 ### T5a. Re-derive `three-part-family-split.md` §1.2's competing-rates argument on every revision
 

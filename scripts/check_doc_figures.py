@@ -491,6 +491,17 @@ NOT_OURS = re.compile(r"session-log|pending-checks|README", re.I)
 # exactly what the convention was introduced to make possible.
 PREFIXED_ONLY = re.compile(r"literature-findings", re.I)
 
+# Authors and groups cited in these documents.  A named result immediately
+# preceded by one of these is that paper's result under that paper's numbering,
+# so it cannot be resolved against our own anchors and must not be reported.
+EXTERNAL_ATTR = re.compile(
+    r"\b(BBKN|Shparlinski|Oliver|Illies|Angel|Borja|Adamaszek|Baker|Harman|"
+    r"Chowla|Bombieri|Vinogradov|Elliott|Halberstam|Kahn|Saks|Sturtevant|Black|"
+    r"Jones|Zvonkin|Skorobogatov|Sofos|Montgomery|Vaughan|Pintz|Scheidweiler|"
+    r"Triesch|Santha|Yao|Huppert|Smith|Maynard|Lichtman|Friedlander|Iwaniec|"
+    r"Mikawa|Fouvry|Li|Bateman|Horn|Schinzel|Brun|Titchmarsh)"
+    r"(?:'s|s'|--|\s*\(\d{4}\)|,)?\s*$", re.I)
+
 def norm(label):
     """B', B′ and B’ are the same lemma.  Normalise the prime mark, or every
     citation that picks a different one reports as dangling."""
@@ -615,6 +626,13 @@ if A.only in ("all", "refs"):
                           if 0 <= m.start() - x.end() <= 40]
                 if prefixed_only and not names:
                     continue          # bare result name: a cited paper's
+                # A result attributed to an external author is THEIR numbering,
+                # not ours -- "BBKN's Theorem 1.4", "Shparlinski's Theorem 2".
+                # Without this, every correctly-cited piece of the literature
+                # reports as dangling, which trains the reader to skip the pass.
+                # Attribution binds only when it is immediately before the label.
+                if EXTERNAL_ATTR.search(line[max(0, m.start() - 30):m.start()]):
+                    continue
                 nm = names[-1].group(1) if names else d
                 target = ALIAS.get(nm, nm)
                 if target not in known_docs:

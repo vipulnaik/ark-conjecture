@@ -728,3 +728,21 @@ Two findings worth more than the confirmation itself.
 **The largest cofactor (r − 1)/Q anywhere in the table is exactly 12**, at n = 221 with r = 157, Q = 13. That is (H)'s own d ≤ 12, recovered from the opposite direction and with no reference to it — evidence that the hypothesis's constant is not an artefact of how it was written down but the value the optima actually use. Recorded in both `ep` F.4 and `aod` §6.
 
 The same measurement quantifies the Proposition's slack honestly: the global floor gives D = 44 where 12 suffices, so F.4's bound is loose by a factor ≈ 4 against observed optima. That is where the sharpening question filed in the gap inventory would start, and it is now stated with a number rather than as a suspicion.
+
+## 32. F.4 filed as a risk item; second `check_doc_figures.py` run
+
+### 32.1 T8: the step that makes F.4 non-vacuous, and why it is the risky kind
+
+Filed as **T8** in §2a and inserted at **rank 6** of the residual-risk list. The question that matters is not whether the inequalities are right — they are checked — but **why the foreign twist Q must be a prime power**. With Q merely a divisor of r − 1 the Proposition is *vacuous*, since Q = r − 1 always satisfies the cofactor bound. So the entire arithmetic content rests on the twist being confined to the top q-group, and **that is a layer-assignment claim** — the category with the worst record in this framework, containing both the F_mid coprimality clause and the c mod 8 fusion mechanism, each wrong in the permissive direction. Part E's construction and Part A's chain structure both say the confinement holds; the same was believed of block counts. The concrete question: can a foreign block's twist draw on the cyclic layer the way a fused class's block count does? Flagged at both statement sites (`ep` F.4, `aod` §6) rather than only in `pending-checks`, since a reader meeting the Proposition should meet the dependency with it.
+
+Three smaller items also filed: the one-line "every part clears the floor on its own" (safe as used, since a part's intra term is an orbital or a union, but confirm no part kind escapes); the all-matching branch's use of a shared chain prime p, without which the exceptional set is not density zero and "almost all" fails; and the constants, where a factor of 2 would propagate into `aod` §6's quoted 700 and 245,000.
+
+**The limit of the measurements is stated explicitly in T8**, because it is easy to over-read them: they test the *inequalities*, not the *derivation*. A wrong constant or an unjustified layer assignment still produces inequalities that hold on the table, since the table's winners satisfy the true statement whatever the proof says. This is site 4 of `verification-lessons.md` §1 in a new place — the measurements and the Proposition came from the same pass.
+
+### 32.2 The run
+
+Clean on the two figure findings fixed earlier; no new stale figures in the material added this session. Tables 91/91 well-formed, hygiene clean, census in step, history pass at 10 (all the good kind — "an earlier draft asserted X, which is wrong for reason Y").
+
+**One checker improvement, from a false positive it produced.** Both note files reported `Theorem 1.4` as *** DANGLING ***. It is **BBKN's** Theorem 1.4 — a cited paper's result under that paper's numbering, which cannot resolve against our anchors and must not be reported. The pass already had this exemption but only as a per-file switch for `literature-findings.md`. Generalised: a named result immediately preceded by an external attribution (`BBKN's Theorem 1.4`, `Shparlinski's Theorem 2`) is skipped in any file, via a list of the authors and groups these documents cite. Attribution binds only when it sits immediately before the label, so our own results are unaffected. Dangling count 2 → 0.
+
+*Worth recording as a principle for this checker:* a pass that reports every correctly-cited piece of the literature as an error trains the reader to skip it, which is worse than the pass not existing. Same reasoning as the `fixed`-in-the-history-pass tuning.
