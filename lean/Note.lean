@@ -222,7 +222,7 @@ theorem central_odd (n c r t : ℕ) (hn : 10 ≤ n)
 
 /-- **The cast step, isolated.**  This is the *only* real-number content in
 §4: everything else is `ArkCore`'s ℕ inequality.  Factoring it out means the
-`div_le_div_iff` manipulation is written once rather than twice, and it is what
+cast-and-divide manipulation is written once rather than twice, and it is what
 carries the unit — `Density` is relative to `n.choose 2`, so a hypothesis in
 `n^2` could not be fed to it. -/
 theorem delta0_le_density {n m : ℕ} (h2 : 2 ≤ n) (h : n.choose 2 ≤ 350 * m) :
@@ -231,9 +231,22 @@ theorem delta0_le_density {n m : ℕ} (h2 : 2 ≤ n) (h : n.choose 2 ≤ 350 * m
   have hpos : (0 : ℝ) < (n.choose 2 : ℝ) := by
     have : 0 < n.choose 2 := Nat.choose_pos h2
     exact_mod_cast this
-  rw [div_le_div_iff (by norm_num) hpos]
-  have : ((n.choose 2 : ℕ) : ℝ) ≤ ((350 * m : ℕ) : ℝ) := by exact_mod_cast h
-  push_cast at this
+  have hne : ((n.choose 2 : ℕ) : ℝ) ≠ 0 := ne_of_gt hpos
+  have hcast : ((n.choose 2 : ℕ) : ℝ) ≤ 350 * (m : ℝ) := by
+    have : ((n.choose 2 : ℕ) : ℝ) ≤ ((350 * m : ℕ) : ℝ) := by exact_mod_cast h
+    push_cast at this; linarith
+  -- Difference-is-nonneg, rather than a `div_le_div` iff-lemma: the iff-lemmas
+  -- in this corner of Mathlib have been renamed more than once (this proof
+  -- previously used `div_le_div_iff`, which 4.33's Mathlib no longer has),
+  -- whereas `div_nonneg`, `field_simp`, `ring` and `linarith` have been stable
+  -- for years.  Same pattern in `half_is_ceiling`.
+  have hid : (m : ℝ) / (n.choose 2 : ℝ) - 1 / 350
+      = (350 * (m : ℝ) - (n.choose 2 : ℝ)) / (350 * (n.choose 2 : ℝ)) := by
+    first
+      | (field_simp; ring)
+      | field_simp
+  have hnn : 0 ≤ (350 * (m : ℝ) - (n.choose 2 : ℝ)) / (350 * (n.choose 2 : ℝ)) :=
+    div_nonneg (by linarith) (by positivity)
   linarith
 
 /-- The two bounds in the note's own unit.  **This is the statement whose type
@@ -399,9 +412,17 @@ theorem half_is_ceiling (n m : ℕ) (hn : 2 ≤ n) (h : 2 * m ≤ n.choose 2) :
   have hpos : (0 : ℝ) < (n.choose 2 : ℝ) := by
     have : 0 < n.choose 2 := Nat.choose_pos hn
     exact_mod_cast this
-  rw [div_le_div_iff hpos (by norm_num)]
-  have hcast : ((2 * m : ℕ) : ℝ) ≤ ((n.choose 2 : ℕ) : ℝ) := by exact_mod_cast h
-  push_cast at hcast
+  have hne : ((n.choose 2 : ℕ) : ℝ) ≠ 0 := ne_of_gt hpos
+  have hcast : 2 * (m : ℝ) ≤ ((n.choose 2 : ℕ) : ℝ) := by
+    have : ((2 * m : ℕ) : ℝ) ≤ ((n.choose 2 : ℕ) : ℝ) := by exact_mod_cast h
+    push_cast at this; linarith
+  have hid : (1 : ℝ) / 2 - (m : ℝ) / (n.choose 2 : ℝ)
+      = ((n.choose 2 : ℝ) - 2 * (m : ℝ)) / (2 * (n.choose 2 : ℝ)) := by
+    first
+      | (field_simp; ring)
+      | field_simp
+  have hnn : 0 ≤ ((n.choose 2 : ℝ) - 2 * (m : ℝ)) / (2 * (n.choose 2 : ℝ)) :=
+    div_nonneg (by linarith) (by positivity)
   linarith
 
 /-! ## 8. Assembly
