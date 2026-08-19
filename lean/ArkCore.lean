@@ -262,6 +262,19 @@ theorem case_block_small_t1 : ∀ n < 66, ∀ r < 14,
     10 ≤ n → n ≤ 5 * r → pairs n ≤ 350 * blockValue r 1 := by
   decide
 
+/-- **`blockValue_lower`** (`Note.lean` §2's first sorry, proved here instead):
+the efficiency bound in the form the estimate uses, `2·blockValue ≥ r(r−1)/12`,
+stated multiplied through with the `+1` absorbing the floor. -/
+theorem blockValue_lower (r t : Nat) (h : EfficiencyBound r t) :
+    r * (r - 1) ≤ 12 * (2 * blockValue r t + 1) := by
+  unfold EfficiencyBound at h
+  unfold blockValue
+  have h1 : r * (r - 1) ≤ 12 * (r * t) := by
+    calc r * (r - 1) ≤ r * (12 * t) := Nat.mul_le_mul_left r h
+      _ = 12 * (r * t) := by ac_rfl
+  have h2 : r * t ≤ 2 * (r * t / 2) + 1 := by omega
+  omega
+
 /-- `blockValue` is monotone in the twist. -/
 theorem blockValue_mono (r : Nat) {t t' : Nat} (h : t ≤ t') :
     blockValue r t ≤ blockValue r t' := by

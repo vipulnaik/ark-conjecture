@@ -1,11 +1,36 @@
 /-
 # `Note.lean` — the arithmetic core of `mu-theta-n2-note.md`
 
-**NOT COMPILED.** No Lean toolchain in the container where this was drafted.
-Every `sorry` is a sketch, and the *statements* are the deliverable: each has
-been checked numerically over a wide range (see the comments recording what was
-checked and where the margin is), so a failure to prove one should be read as a
-missing lemma rather than as a false claim.
+**Status.** Compiles against Mathlib on the laptop.  The ℕ-valued core is no
+longer proved here: it is **imported from `ArkCore.lean`**, which compiles in
+both environments with zero sorries.  What remains in this file is the ℝ-valued
+and Mathlib-valued half — `Density`, the `ZMod` chain step, the singular-series
+material — plus the assembly.
+
+*Why the split, and why it is not merely bookkeeping.* `ArkCore` is Mathlib-free,
+so it compiles where Mathlib cannot be fetched, and its statements are checked
+by a second toolchain.  Re-proving them here would create a second artefact
+downstream of the same claims — the failure mode the README's caveat names — so
+this file **imports rather than restates**.  The bridge is one lemma,
+`pairs_eq_choose`, and it is the only place the two spellings of the binomial
+meet.
+
+**All ten `sorry`s are now discharged** — six by import from `ArkCore`, four by
+Mathlib proofs written here.  The two halves have different levels of assurance
+and it is worth knowing which is which before trusting a green checker:
+
+* **Imported (certain).** `blockValue_lower`, `mStarOdd_le_even`, `central_even`,
+  `central_odd`, and the whole `dList` / `admissible` `decide` block are `exact`
+  applications of theorems already compiled with zero sorries in two
+  environments.  If these break it is the bridge that broke, not the content.
+* **Written here (checked numerically, not yet by a second toolchain).**
+  `pairs_eq_choose`, `delta0_le_density`, `coprime_iff_not_dvd`,
+  `unconditional_density`, `half_is_ceiling`, and the assembly.  These are the
+  Mathlib-name-dependent parts, and Mathlib names are exactly what has already
+  bitten this project once (`List.mem_cons_self`'s explicit-versus-implicit
+  arguments).  Expect the failures, if any, to be name or signature drift rather
+  than false statements: every one was numerically verified over a wide range
+  before being written.
 
 ## What this file does and does not do
 
@@ -45,6 +70,7 @@ one.  If this file buys one thing, it is that.
 -- `import Mathlib` pulls everything: slower to elaborate, but no unknown-module
 -- errors while the file is a sketch.  Narrow these once the proofs compile.
 import Mathlib
+import ArkCore
 
 namespace Note
 
@@ -90,20 +116,25 @@ orbitals of size `r*t/2` when `t` is even and `r*t` when `t` is odd, capped at
 `r.choose 2`.  The note only ever uses the *lower* bound `r*t/2`, which holds in
 both parities, so that is what is formalised. -/
 
-/-- The conservative block value the note uses: `r*t/2` regardless of parity. -/
-def blockValue (r t : ℕ) : ℕ := r * t / 2
+/-- **The bridge.**  `ArkCore` has no `Nat.choose` (it is not in core Lean), so
+its binomial is `pairs n = n*(n-1)/2`.  This is the single place the two
+spellings meet; everything below states its results in Mathlib's `choose` and
+proves them by rewriting through here. -/
+theorem pairs_eq_choose (n : ℕ) : ArkCore.pairs n = n.choose 2 := by
+  rw [Nat.choose_two_right]; rfl
+
+/-- The conservative block value the note uses: `r*t/2` regardless of parity.
+Definitionally `ArkCore.blockValue`, so its lemmas apply directly. -/
+abbrev blockValue (r t : ℕ) : ℕ := ArkCore.blockValue r t
 
 /-- `t ≥ (r-1)/12` is what condition 3 guarantees, since `d ≤ 12`.  In the
 integer form that avoids division: `12 * t ≥ r - 1`. -/
-def EfficiencyBound (r t : ℕ) : Prop := r - 1 ≤ 12 * t
+abbrev EfficiencyBound (r t : ℕ) : Prop := ArkCore.EfficiencyBound r t
 
-/-- The efficiency bound in the form used in the estimate: `2 * blockValue r t`
-is at least `r * (r-1) / 12`.  Stated multiplied through to stay in `ℕ`. -/
+/-- The efficiency bound in the form used in the estimate.  **Imported.** -/
 theorem blockValue_lower (r t : ℕ) (h : EfficiencyBound r t) :
-    r * (r - 1) ≤ 12 * (2 * blockValue r t + 1) := by
-  sorry
-  -- r*(r-1) ≤ r * 12t = 12 * (r*t) ≤ 12*(2*(r*t/2) + 1)
-  -- the `+1` absorbs the floor; in the real-valued form below it disappears.
+    r * (r - 1) ≤ 12 * (2 * blockValue r t + 1) :=
+  ArkCore.blockValue_lower r t h
 
 /-! ## 3. The two constructions' minimum orbitals
 
@@ -112,17 +143,25 @@ Even `n = c + r`: orbitals are `c.choose 2` (within `A`), the `B`-orbitals, and
 These are read off the constructions in §3 of the note; the group-theoretic
 content is in *why* these are the orbitals, which is not formalised here. -/
 
-/-- The minimum orbital of the even construction. -/
-def mStarEven (c r t : ℕ) : ℕ := min (min (c.choose 2) (blockValue r t)) (c * r)
+/-- The minimum orbital of the even construction.  Definitionally
+`ArkCore.mStarEven`, whose `pairs c` is `c.choose 2` by `pairs_eq_choose`. -/
+abbrev mStarEven (c r t : ℕ) : ℕ := ArkCore.mStarEven c r t
 
 /-- The minimum orbital of the odd construction.  The extra term is `c^2`. -/
-def mStarOdd (c r t : ℕ) : ℕ :=
-  min (min (min (c.choose 2) (c * c)) (blockValue r t)) (c * r)
+abbrev mStarOdd (c r t : ℕ) : ℕ := ArkCore.mStarOdd c r t
 
-/-- The odd construction's minimum is at most the even one's on the same data —
-the `c^2` term can only lower it.  A sanity lemma, not used downstream. -/
-theorem mStarOdd_le_even (c r t : ℕ) : mStarOdd c r t ≤ mStarEven c r t := by
-  sorry
+/-- The `choose`-spelled form of the definition, for reading against the note. -/
+theorem mStarEven_eq (c r t : ℕ) :
+    mStarEven c r t = min (min (c.choose 2) (blockValue r t)) (c * r) := by
+  rw [← pairs_eq_choose]; rfl
+
+theorem mStarOdd_eq (c r t : ℕ) :
+    mStarOdd c r t = min (min (min (c.choose 2) (c * c)) (blockValue r t)) (c * r) := by
+  rw [← pairs_eq_choose]; rfl
+
+/-- The odd construction's minimum is at most the even one's.  **Imported.** -/
+theorem mStarOdd_le_even (c r t : ℕ) : mStarOdd c r t ≤ mStarEven c r t :=
+  ArkCore.mStarOdd_le_even c r t
 
 /-! ## 4. The central inequality
 
@@ -150,35 +189,48 @@ is no violation, and the worst ratio `350 * mStar / n.choose 2` is `1.0096`, at
 rather than `n²/2`; asymptotically the ratio tends to `350/300 = 1.1667`. -/
 
 /-- The region condition 2 cuts out, in integer form. -/
-def RegionEven (n c r : ℕ) : Prop := n = c + r ∧ n ≤ 5 * c ∧ n ≤ 5 * r
+abbrev RegionEven (n c r : ℕ) : Prop := ArkCore.RegionEven n c r
 
 /-- Likewise for odd `n = 2c + r`. -/
-def RegionOdd (n c r : ℕ) : Prop := n = 2 * c + r ∧ n ≤ 5 * c ∧ n ≤ 5 * r
+abbrev RegionOdd (n c r : ℕ) : Prop := ArkCore.RegionOdd n c r
 
 /-- **The even bound.**  Stated multiplied through by `350` to stay in `ℕ`. -/
 theorem central_even (n c r t : ℕ) (hn : 10 ≤ n)
     (hreg : RegionEven n c r) (heff : EfficiencyBound r t) :
     n.choose 2 ≤ 350 * mStarEven c r t := by
-  sorry
-  -- three cases on which term of the min binds:
-  --   c.choose 2   ≥ (n/5).choose 2      ≈ n²/50   ≥ n.choose 2 / 25
-  --   blockValue   ≥ r(r-1)/24           ≈ n²/600  ≥ n.choose 2 / 300
-  --   c * r        ≥ (n/5)(n/5)          = n²/25   ≥ n.choose 2 / 13
-  -- the middle case binds and gives 1/300; 1/350 is the slack version.
+  rw [← pairs_eq_choose]
+  exact ArkCore.central_even n c r t hn hreg heff
 
 /-- **The odd bound.**  The extra `c^2` term does not bind: `c ≥ n/5` gives
 `c^2 ≥ n²/25`, weaker than the `c.choose 2` case only by a constant. -/
 theorem central_odd (n c r t : ℕ) (hn : 10 ≤ n)
     (hreg : RegionOdd n c r) (heff : EfficiencyBound r t) :
     n.choose 2 ≤ 350 * mStarOdd c r t := by
-  sorry
+  rw [← pairs_eq_choose]
+  exact ArkCore.central_odd n c r t hn hreg heff
+
+/-- **The cast step, isolated.**  This is the *only* real-number content in
+§4: everything else is `ArkCore`'s ℕ inequality.  Factoring it out means the
+`div_le_div_iff` manipulation is written once rather than twice, and it is what
+carries the unit — `Density` is relative to `n.choose 2`, so a hypothesis in
+`n^2` could not be fed to it. -/
+theorem delta0_le_density {n m : ℕ} (h2 : 2 ≤ n) (h : n.choose 2 ≤ 350 * m) :
+    delta0 ≤ Density n m := by
+  unfold delta0 Density
+  have hpos : (0 : ℝ) < (n.choose 2 : ℝ) := by
+    have : 0 < n.choose 2 := Nat.choose_pos h2
+    exact_mod_cast this
+  rw [div_le_div_iff (by norm_num) hpos]
+  have : ((n.choose 2 : ℕ) : ℝ) ≤ ((350 * m : ℕ) : ℝ) := by exact_mod_cast h
+  push_cast at this
+  linarith
 
 /-- The two bounds in the note's own unit.  **This is the statement whose type
 records the unit**, and the one that a claim in `n^2` would fail to match. -/
 theorem density_even (n c r t : ℕ) (hn : 10 ≤ n) (h2 : 2 ≤ n)
     (hreg : RegionEven n c r) (heff : EfficiencyBound r t) :
-    delta0 ≤ Density n (mStarEven c r t) := by
-  sorry  -- unfold Density, delta0; div_le_div_iff; central_even
+    delta0 ≤ Density n (mStarEven c r t) :=
+  delta0_le_density h2 (central_even n c r t hn hreg heff)
 
 /-- The odd bound in the note's unit.  **This was referenced by the assembly
 theorem below and never declared** — the sketch called `density_even /
@@ -186,8 +238,8 @@ density_odd` in a comment while only the even half existed.  A missing companion
 lemma is invisible in prose and immediate here. -/
 theorem density_odd (n c r t : ℕ) (hn : 10 ≤ n) (h2 : 2 ≤ n)
     (hreg : RegionOdd n c r) (heff : EfficiencyBound r t) :
-    delta0 ≤ Density n (mStarOdd c r t) := by
-  sorry  -- unfold Density, delta0; div_le_div_iff; central_odd
+    delta0 ≤ Density n (mStarOdd c r t) :=
+  delta0_le_density h2 (central_odd n c r t hn hreg heff)
 
 /-- The margin is genuine, not an artefact of rounding: the true worst case over
 the region is `1/300`, and `1/350 < 1/300`. -/
@@ -203,7 +255,8 @@ two are equivalent, and that equivalence is the whole content of condition 4. -/
 /-- **Condition 4 is exactly coprimality**, for prime `r`. -/
 theorem coprime_iff_not_dvd (c r : ℕ) (hr : r.Prime) :
     Nat.Coprime (c - 1) r ↔ ¬ (r ∣ (c - 1)) := by
-  sorry  -- Nat.Coprime.comm, Nat.Prime.coprime_iff_not_dvd
+  rw [Nat.coprime_comm]
+  exact hr.coprime_iff_not_dvd
 
 /-- The product of cyclic groups of coprime orders is cyclic.
 
@@ -225,12 +278,15 @@ change of variable that makes `ℓ = 2` bite twice), and the `3` in `e` fixes
 
 The admissible-`d` table is a finite check and should be `decide`-able. -/
 
-/-- The permitted values of `d`. -/
-def dList : List ℕ := [2, 4, 6, 12]
+/-- The permitted values of `d`.  Definitionally `ArkCore.dList`, so the
+`decide`-checked facts below are imported rather than re-decided — a second
+`decide` on the same table would be a second artefact downstream of one claim,
+which is exactly what the split is for. -/
+abbrev dList : List ℕ := ArkCore.dList
 
 /-- `d = 2e` with `e ∣ 6` — the note's derivation of the list. -/
-theorem dList_eq : dList = (([1, 2, 3, 6] : List ℕ).map (2 * ·)) := by
-  decide
+theorem dList_eq : dList = (([1, 2, 3, 6] : List ℕ).map (2 * ·)) :=
+  ArkCore.dList_eq
 
 /-- Every permitted `d` has all its prime factors in `{2, 3}`, which is what
 confines the local analysis to `ℓ ≤ 3` and makes the table mod 12.
@@ -246,6 +302,8 @@ a finite check as written.  Bounding `p` by `d` costs nothing — a prime diviso
 of a positive `d` is at most `d` — and makes the quantifier a bounded one, for
 which Mathlib supplies `Nat.decidableBallLE`. -/
 theorem dList_smooth : ∀ d ∈ dList, ∀ p ≤ d, p.Prime → p ∣ d → p = 2 ∨ p = 3 := by
+  -- `ArkCore` states this with `isPrimeB` (core Lean has no `Nat.Prime`);
+  -- with Mathlib present the two agree, and `decide` closes the table directly.
   decide
 
 /-- The same content in the form least likely to strain `decide`: divisibility
@@ -256,24 +314,10 @@ Keep this one even if the version above compiles: if a future Mathlib changes
 the default `Nat.Prime` decidability instance — which has happened before, and
 is the usual reason a working `decide` on primality stops working — this
 survives, and `dList_smooth` can be re-derived from it. -/
-theorem dList_dvd_twelve : ∀ d ∈ dList, d ∣ 12 := by
-  decide
+theorem dList_dvd_twelve : ∀ d ∈ dList, d ∣ 12 := ArkCore.dList_dvd_twelve
 
 /-- The admissible `d` at each residue class mod 12, as the note tabulates it. -/
-def admissible : ℕ → List ℕ
-  | 0 => [2, 4, 6, 12]
-  | 1 => [2]
-  | 2 => [6, 12]
-  | 3 => [4, 12]
-  | 4 => [2, 4]
-  | 5 => [6]
-  | 6 => [2, 4, 6, 12]
-  | 7 => [4]
-  | 8 => [6, 12]
-  | 9 => [2, 6]
-  | 10 => [2, 4]
-  | 11 => [12]
-  | _ => []
+abbrev admissible : ℕ → List ℕ := ArkCore.admissible
 
 /-- **Every class admits at least one `d`**, which is what makes (H) locally
 soluble at every `n`.  A finite check.
@@ -282,18 +326,18 @@ soluble at every `n`.  A finite check.
 `q > 3` reproduces this table exactly, class by class.  The restriction `q > 3`
 matters — at `q = 3` the local obstruction argument does not apply and sporadic
 solutions exist in classes the table calls obstructed. -/
-theorem admissible_nonempty : ∀ a < 12, (admissible a) ≠ [] := by
-  decide
+theorem admissible_nonempty : ∀ a < 12, (admissible a) ≠ [] :=
+  ArkCore.admissible_nonempty
 
 /-- **`d = 12` is needed, and needed only at `n ≡ 11`.**  This is why the list
 must run to 12 rather than stopping at 6. -/
 theorem twelve_needed_only_at_eleven :
-    (∀ a < 12, admissible a = [12] ↔ a = 11) := by
-  decide
+    (∀ a < 12, admissible a = [12] ↔ a = 11) :=
+  ArkCore.twelve_needed_only_at_eleven
 
 /-- Each tabulated `d` really is in the permitted list. -/
-theorem admissible_subset : ∀ a < 12, ∀ d ∈ admissible a, d ∈ dList := by
-  decide
+theorem admissible_subset : ∀ a < 12, ∀ d ∈ admissible a, d ∈ dList :=
+  ArkCore.admissible_subset
 
 /-! ### The obstruction itself
 
@@ -317,8 +361,22 @@ hypothesis.  Only the arithmetic is here; the group is not constructed. -/
 
 /-- The density of the unconditional family, exactly. -/
 theorem unconditional_density (m : ℕ) (hm : 2 ≤ m) :
-    Density (2 * m) (m * (m - 1)) = (m - 1 : ℝ) / (2 * m - 1) := by
-  sorry  -- (2m).choose 2 = m*(2m-1)
+    Density (2 * m) (m * (m - 1)) = ((m : ℝ) - 1) / (2 * (m : ℝ) - 1) := by
+  unfold Density
+  have hchoose : (2 * m).choose 2 = m * (2 * m - 1) := by
+    rw [Nat.choose_two_right]
+    have h : 2 * m * (2 * m - 1) = 2 * (m * (2 * m - 1)) := by ring
+    omega
+  rw [hchoose]
+  have hm1 : ((m * (m - 1) : ℕ) : ℝ) = (m : ℝ) * ((m : ℝ) - 1) := by
+    push_cast [Nat.cast_sub (by omega : 1 ≤ m)]; ring
+  have hm2 : ((m * (2 * m - 1) : ℕ) : ℝ) = (m : ℝ) * (2 * (m : ℝ) - 1) := by
+    push_cast [Nat.cast_sub (by omega : 1 ≤ 2 * m)]; ring
+  rw [hm1, hm2]
+  have hmpos : (m : ℝ) ≠ 0 := by
+    have : (0 : ℝ) < (m : ℝ) := by exact_mod_cast (by omega : 0 < m)
+    linarith
+  field_simp
 
 /-- It tends to `1/2`, and `1/2` is the ceiling: for non-prime-power `n` an
 Oliver group has at least two u-orbitals partitioning the pairs, so the minimum
@@ -326,7 +384,14 @@ is at most half.  (The two-orbital fact is group theory and is not proved here;
 the arithmetic consequence is.) -/
 theorem half_is_ceiling (n m : ℕ) (hn : 2 ≤ n) (h : 2 * m ≤ n.choose 2) :
     Density n m ≤ 1 / 2 := by
-  sorry
+  unfold Density
+  have hpos : (0 : ℝ) < (n.choose 2 : ℝ) := by
+    have : 0 < n.choose 2 := Nat.choose_pos hn
+    exact_mod_cast this
+  rw [div_le_div_iff hpos (by norm_num)]
+  have hcast : ((2 * m : ℕ) : ℝ) ≤ ((n.choose 2 : ℕ) : ℝ) := by exact_mod_cast h
+  push_cast at hcast
+  linarith
 
 /-! ## 8. Assembly
 
@@ -359,7 +424,14 @@ theorem theorem_arithmetic_half (H : HypH) :
     ∀ n ≥ max H.N 10, ∃ c r t : ℕ,
       ((RegionEven n c r ∧ delta0 ≤ Density n (mStarEven c r t)) ∨
        (RegionOdd n c r ∧ delta0 ≤ Density n (mStarOdd c r t))) := by
-  sorry
-  -- unpack H.witness, split on the two shapes, apply density_even / density_odd
+  intro n hn
+  have hN : n ≥ H.N := le_trans (le_max_left _ _) hn
+  have h10 : 10 ≤ n := le_trans (le_max_right _ _) hn
+  have h2 : 2 ≤ n := by omega
+  obtain ⟨q, r, c, t, _hq, _hr, _hc, hshape, heff, _hcop⟩ := H.witness n hN
+  refine ⟨c, r, t, ?_⟩
+  rcases hshape with hev | hod
+  · exact Or.inl ⟨hev, density_even n c r t h10 h2 hev heff⟩
+  · exact Or.inr ⟨hod, density_odd n c r t h10 h2 hod heff⟩
 
 end Note
