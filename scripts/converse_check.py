@@ -30,7 +30,11 @@ and yields three inequalities that any winner must satisfy:
                       checked separately below -- see check().  There are none
                       in v4 or in the v5 prefix, but a rebuild could produce
                       one, and a row falling through BOTH branches unchecked is
-                      the silent failure this script exists to prevent.
+                      the silent failure this script exists to prevent.  A
+                      starred part that is NOT prime contradicts Lemma B'
+                      outright, and is reported wherever it occurs -- including
+                      on a row that also carries a legitimate prime star, which
+                      would otherwise pass on the strength of that one.
 
 WHAT THIS SCRIPT DOES AND DOES NOT ESTABLISH.  It tests the INEQUALITIES, not
 the DERIVATION.  A wrong constant, or the unjustified layer assignment flagged
@@ -123,7 +127,13 @@ def check(rows, ar, delta0=None, verbose=False):
         for m in FOREIGN.finditer(row["witness"]):
             r = int(m.group(1))
             if not ar.is_prime(r):
-                continue                      # not a foreign prime; skip
+                # Lemma B' says a starred part is always prime, so this is a
+                # finding rather than a part to skip.  Report every one, not
+                # only the rows where NO starred part is prime -- a row mixing
+                # a prime and a non-prime star would otherwise pass silently
+                # on the strength of the prime one.
+                res["unchecked"].append((n, row["witness"]))
+                continue
             res["foreign"] += 1
             Q = ar.largest_pp_divisor(r - 1)
             cof = (r - 1) / Q
@@ -159,11 +169,9 @@ def check(rows, ar, delta0=None, verbose=False):
                 res["v3"].append((n, pb, M, round(1 / d, 2)))
             if M * d > res["tight3"][0]:
                 res["tight3"] = (M * d, (n, pb, M))
-        elif not any(ar.is_prime(int(m.group(1)))
-                     for m in FOREIGN.finditer(row["witness"])):
-            # A starred part that is not prime cannot be a foreign block, so this
-            # row reached neither branch.  Report it rather than passing it.
-            res["unchecked"].append((n, row["witness"]))
+        # Rows whose only starred parts are non-prime reach neither branch; they
+        # are already reported by the loop above, which flags a non-prime star
+        # wherever it occurs.
 
     return res
 
