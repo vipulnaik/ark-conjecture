@@ -682,7 +682,12 @@ NOT_OURS = re.compile(r"session-log|pending-checks|README", re.I)
 # belongs to whichever paper the sentence names.  Here we check only the
 # prefixed ones and skip the rest, which is the most that can be checked and is
 # exactly what the convention was introduced to make possible.
-PREFIXED_ONLY = re.compile(r"literature-findings", re.I)
+# Documents in which a BARE result name ("Theorem 2", "Lemma 7") is the CITED
+# PAPER'S numbering rather than ours, so only an explicitly prefixed reference
+# resolves against our anchors.  literature-findings.md states this convention
+# in its header; shparlinski-constants.md works inside a single paper, where
+# every bare label is that paper's and prefixing all of them would be noise.
+PREFIXED_ONLY = re.compile(r"literature-findings|shparlinski-constants", re.I)
 
 # Authors and groups cited in these documents.  A named result immediately
 # preceded by one of these is that paper's result under that paper's numbering,
@@ -1073,6 +1078,28 @@ if A.only in ("all", "history"):
         (re.compile(r"\bthis (?:session|pass|rewrite|round|review)\b", re.I), "reference to a work session"),
         (re.compile(r"\bwe (?:found|noticed|corrected|fixed|caught|removed|rewrote|split|discovered)\b", re.I),
          "first-person narrative of our own process"),
+        # First-person SINGULAR process narration.  The plural forms above did not
+        # catch "I checked this specifically", "an early version of my check",
+        # "I went looking for": a reader who was not present has no use for who
+        # did what, only for what is true.  Verbs only, so a bare "I" in prose
+        # (or a variable named I) does not fire.
+        (re.compile(r"\bI (?:checked|found|noticed|went looking|expected|tried|"
+                    r"drafted|wrote|imported|built|got|ran|verified|first)\b"),
+         "first-person-singular narrative of our own process"),
+        (re.compile(r"\b(?:my|our) (?:check|reading|draft|first version|earlier version)\b", re.I),
+         "first-person narrative of our own process"),
+        # A document narrating its OWN drafting.  Distinct from the superseded-text
+        # pattern above, which needs an "older/earlier" adjective; these phrase the
+        # same thing as a history of composition and so read as clean.
+        (re.compile(r"\bthe first (?:version|draft) of (?:this|the)\b", re.I),
+         "narration of this document's own drafting"),
+        (re.compile(r"\b(?:this|the) (?:document|note|section|file) was (?:first )?"
+                    r"(?:drafted|written|commissioned|composed)\b", re.I),
+         "narration of this document's own drafting"),
+        (re.compile(r"\b(?:before|until|prior to) this (?:reading|pass|review|note)\b", re.I),
+         "edit-history clause"),
+        (re.compile(r"\ban? early version of\b", re.I),
+         "reference to a superseded version of our own text"),
         (re.compile(r"\b(?:both )?ha(?:s|ve) happened\b", re.I), "incident narrative"),
         (re.compile(r"\buntil (?:it was|recently|this)\b", re.I), "edit-history clause"),
         (re.compile(r"\bwhich is what this (?:pass|section|run) was for\b", re.I), "pass-naming heading"),
@@ -1101,16 +1128,29 @@ if A.only in ("all", "history"):
         except OSError: continue
         shown = False
         for ln, line in enumerate(txt.split("\n"), 1):
-            if EXEMPT.search(line):
-                continue
             for pat, what in HIST:
                 m = pat.search(line)
-                if m:
-                    if not shown:
-                        print(f"\n{d}:"); shown = True
-                    hist_hits += 1; findings += 1
-                    print(f"   L{ln:<6} [{what}] ...{line[max(0, m.start()-45):m.start()+95].strip()}...")
-                    break
+                if not m:
+                    continue
+                # The exemption is checked in the match's OWN CLAUSE, not over the
+                # whole line and not in a fixed character window.  Line-wide, a
+                # single "Shparlinski" or "BBKN" anywhere in a sentence exempts
+                # everything else in it -- which silently disabled this pass for an
+                # entire document about one author, where the name appears on
+                # nearly every line.  A fixed window has the same failure in
+                # miniature: an author named at the end of one sentence exempts the
+                # start of the next.  The subject test the exemption encodes is
+                # per-clause, so the clause is the right unit.
+                lo = max((line.rfind(c, 0, m.start()) for c in ".!?"), default=-1) + 1
+                hi = min((h for h in (line.find(c, m.end()) for c in ".!?")
+                          if h != -1), default=len(line))
+                if EXEMPT.search(line[lo:hi + 1]):
+                    continue
+                if not shown:
+                    print(f"\n{d}:"); shown = True
+                hist_hits += 1; findings += 1
+                print(f"   L{ln:<6} [{what}] ...{line[max(0, m.start()-45):m.start()+95].strip()}...")
+                break
     if not hist_hits:
         print("none found -- the documents describe what is true, not how they came to say it.")
     else:

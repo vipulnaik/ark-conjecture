@@ -279,8 +279,87 @@ A separate object from the arithmetic programme: `small-degree-computation.md` (
 
 **Not covered → closed:** the n = 10 `groups_out.txt` arrived after the pass and every figure resting on it was re-verified directly: 967 lines all well-formed (`check_groups.py` green), census 95/159/14/699 with p-split 673/18/6/2, stages A 24 / B 319 / B2 6 / C 618, 756 groups at `--maxt 10`, and — by re-running the complete canonical dedup key — **167 distinct conditions = 125 Oliver + 42 p-group**, confirming the 75-of-167 truncation figure from the file itself rather than from item 7's record. The 8 attainers all sit on partition (20, 25) and collapse to exactly 2 distinct conditions (seven tag-2 plus the trivial-top `A:18`), matching §4.1's three-way count. Still unread: `smith.py`, `oliver_mu.py` and `ark_intersect.py` remain unread, `fp_acyclic` having been checked behaviourally rather than by reading.
 
+## 4e. Fifth pass — T8 (Proposition F.4, `aod` §§6.7–6.8) and the Shparlinski reading
+
+T8's thorough read was done independently, then the §6.8(iv) literature question was settled by fetching Shparlinski (arXiv:1304.0188) and reading Theorem 2's proof rather than its statement. The container has no arXiv egress; ar5iv via web search worked.
+
+**The read itself.** Both F.4 branches re-derived from scratch and correct; the census walk, the S9 joint bound, branch (a) being wider than S1 ∪ S2 (the n = 640 example checks), the round trip 700, the 44, and the ≈58 and ≈4 slack factors all recompute. `converse_check.py` reproduces on both tables: 0 violations, max cofactor 12 at (221, 157, 13).
+
+**T8's three smaller steps, all three resolved and marked so:**
+
+- *Every part clears the floor* — no part **kind** escapes, but a part of support 1 has no intra orbital at all, so the sentence is about s_i ≥ 2; such a part is excluded outright by its cross orbitals. Proviso added to the proof.
+- *The shared chain prime* — resolved **structurally** rather than by Part B citation, which is the stronger form: given the chain, a block class of size s^k with k ≥ 2 and s ≠ p has non-cyclic elementary-abelian translations whose only home is the bottom Γ₂, a p-group. So it does not exist; a second prime forces k = 1, which is the foreign case. The dichotomy is exhaustive per chain, and only *some* chain is needed. Now in the proof.
+- *The constants* — re-derived, correct, n(n−1) consistent. One imprecision, conservative: the foreign class's smallest intra orbital is at most F·r·Q/2, so the derivation discards a factor 2 in the safe direction. Retained.
+
+**One defect found: §6.8(ii)'s window constant sat exactly on a degenerate boundary.** The claim gave (SP) with **c = δ₀/2 exactly**, on the argument that an empty window makes the n in its upper part fail (b). But an n fails only if its whole r-range lies inside the window, needing n ≤ x and n ≥ x + 1 — no such n, so at the endpoint the emptiness implies nothing and the constant was unproved at its own value. Any c < δ₀/2 opens a positive-proportion interval and the argument runs. Fixed in §6.8(ii) and in `ep` F.4's aside (Λ > 2/δ₀ strictly). This is the **third** endpoint-where-a-constant-is-quoted-exactly defect in this framework, after the F.1/E′ offset and the D2′ closed-form tie — worth treating as a recurring category rather than three coincidences.
+
+**The Shparlinski question answered, and it had been filed under the wrong mechanism.** T4 asked whether the almost-all step survives relative density ≈ 1/log x, presuming the machinery was circle-method and density-hungry. It is neither:
+
+- Theorem 2's engine is **Balog–Sárközy's sumset theorem**, whose hypothesis is a **pure cardinality condition**. The input set enters through #ℛ and nothing else.
+- So thinness costs **one logarithm, not the argument**: #ℰ ≪ x^{2γ−1}log⁴x at an S_D-type input against log³x at Baker–Harman — still o(x) for every γ < 1. "One logarithm short of what the machinery consumes" was wrong.
+- **No equidistribution clause is needed.** That requirement belongs to a circle-method route; §6.8(v)'s "very likely insufficient as it stands" was describing a different pipeline.
+- **What blocks the floor is the companion exponent, at every input density.** The certified prime factor is capped at ≤ x/(2√2 log x), sub-linear, so γ = 1 is unreachable even with a full-density input; and a floor needs the **companion** n − r to carry a linear prime factor at bounded cofactor — the α = 1 endpoint again, on the other side.
+
+**Two things came out of this that are new rather than corrective.** A demonstration: running Theorem 2 with ℛ = S_D itself makes the r-side term reach Ω(n²) while the min stays pinned at p²k ≈ n^{1+γ}, so substituting the endpoint hypothesis on the input side buys nothing — all of (H)'s difficulty is in the companion clause. And a positive conditional now stated in §6.8(iv): **(SP) at any ρ ≍ 1/log^C x gives f(n) ≫ n^{2−ε} for almost all n**, every ε > 0, exceptional set O(x^{1−2ε}log^{C+3}x) — the ladder's limiting exponent from the bounded-cofactor hypothesis alone, with no Baker–Harman input.
+
+**Where a density obstruction does live**, now recorded correctly: certifying a *linear* prime factor needs Sárközy–Stewart's dense-sumset theorem, which wants **positive density in the integers on both sets**; S_D at ≈ 1/log²x is two logarithms short of *that*. Not one log short of a circle-method requirement.
+
+**Edited:** `aod` §6.8(ii) (strict c), (iv) (rewritten), the density-currency and equidistribution paragraphs (re-aimed), the closing box and §3.6's echo at L589 (the "exponent and density compete for one resource" framing was wrong in both places), §6.7's round-trip summary; `ep` F.4's proof (two provisos) and its gaps aside; `pending-checks.md` T8 (three resolutions, the new finding, standing header) and T4 (question replaced by the answer).
+
+**Not done:** Balog–Sárközy's own proof internals were not re-derived — the *statement* Theorem 2 consumes was confirmed to have a pure-cardinality hypothesis, which settles the equidistribution question at the level it is used, but the sieve is taken on citation. Baker–Harman's 0.677 likewise. Lemma B′ remains T1's item and has still had one reading; F.4 now has two.
+
+## 4f. Sixth pass — `shparlinski-constants.md`, a standalone constants-level account
+
+Written because the published argument uses `≫`/`≪` and unnamed absolute constants throughout, which is free at his exponents (1.677, 3/2) and not free at ours (the γ = 1 endpoint). Scope: Theorem 2 only, Theorem 1 and its Bombieri–Vinogradov argument deliberately excluded. Standalone and **lightly audited by design** — one pass, no independent reading — so it does not add audit surface to the main documents; `aod` §6.8(iv) and `pending-checks.md` T4 each gained one pointer to it and nothing else.
+
+**What the constants turn out to be.** Two are unextractable — Balog–Sárközy's `c` and the implied constant `c₁` in Lemma 7's conclusion — and the note says so up front. Everything else comes out: the window constant needs `c₀ < A/4` (a cumulative hypothesis minus π(c₀x), the same lower-plus-upper structure that makes (SP) a window statement); the good case gives `f(n) ≥ (A/8)^{1+α}·n^{1+γ}`; the exceptional bound is `#ℰ ≤ max{(8c/A)(log x)³, (8/(Ac₁²))·x^{2γ−1}(log x)³}` per dyadic block. **The two unextractable constants turn out not to matter**, since every threshold that decides anything sits at the `loglog x/log x` scale where a constant factor is absorbed — which is worth knowing, being the one thing we could not have computed.
+
+**The quantitative result, which is what the ≫-notation was hiding.** `#ℰ = o(x)` permits γ to vary with x up to `γ < 1 − (k/2)·loglog x/log x`, k = 3 at a constant-relative-density input and 4 at ours. Translating to the certified companion prime factor:
+
+- Baker–Harman input → `p ≫ n/(log n)^{3/2}`
+- bounded-cofactor input → `p ≫ n/(log n)²`
+- what a floor needs → `p ≥ δ₀·n`
+
+**So thinness costs `(log n)^{1/2}` and the endpoint costs `(log n)²`.** That is the sharpest form of the §6.8(iv) finding and it makes the situation legible: the method reaches within a squared logarithm and cannot cross. Note `(log x)² > 25 = 1/δ₀` for every `x > e⁵ ≈ 148`, so the gap opens with x rather than closing — the right direction for something the method can never do.
+
+**Also established here:** the structural cap `certified P(n−r) ≤ x/(2√2·(log x)^{3/2})`, which holds at *any* input density since both sets live in [1,x] — run backwards, certifying `p ≥ x/25` at x = 10¹² would need `#ℰ ≥ 933·x`, larger than the interval it lives in. And a prime-versus-prime-power check the main documents never made: Shparlinski's `P(·)` is the largest *prime* divisor while our Q is the largest *prime-power* divisor, so the sieve's output is stronger than we need (safe direction) — and measured over primes `r ≤ 2·10⁶`, Q is a proper prime power for 5.4% of all primes but only **0.55% within S₁₂**, the bounded-cofactor condition making a proper power an unlikely route into the set. The distinction never becomes load-bearing.
+
+**One strategic consequence, now recorded in T4.** The fixed-residue level-of-distribution family (BFI, Mikawa, Fouvry) attacks the **input** side, which this reading shows is not where the difficulty is — so it should rank below the sumset question rather than beside it. And the highest-value next check is **Sárközy–Stewart's actual hypothesis**, taken here from Shparlinski's characterisation of it rather than the original; if it is weaker than "cardinalities of order N", the endpoint accounting changes materially.
+
+**Correction applied the same session, on Vipul's catch: the objective function was also stated up to constants, and I had imported it as printed.** BBKN's / Shparlinski's `f(n) = max min{p²k, pkr, qr}` is not a minimum of orbital sizes. Verified by explicit orbit enumeration rather than by formula:
+
+| term | true orbital | overstatement |
+|---|---|---|
+| `p²k` | `k·C(p,2) = kp(p−1)/2` | `2p/(p−1) → 2` |
+| `pkr` | `kpr`, *if* the cross pairs form a single orbital | structural condition, not a constant |
+| `qr` | `rq` (q odd), `rq/2` (q even) | 1, or 2 at q = 2 |
+
+Not an error in the source — Lemma 5 carries an unspecified `c` in front of f, which absorbs any bounded factor. It is exactly what this document cannot absorb.
+
+**Three things came out of checking it.** (i) The `qr` term is essentially exact since q is prime hence odd, so **`ep` F.4's `F·r·Q` is tight and cannot be sharpened by recovering a factor 2** — I went looking for that sharpening specifically and there is none; `aod` §6.8's "cofactors are essentially even, hence Q odd" is what closes it. (ii) The `pkr` term hides a *structural* condition rather than a constant: an early version of my check used simultaneous rather than independent block translations, which creates a diagonal orbital of size `kp` and collapses m\* from `kp(p−1)/2` to `p`. So f is a valid lower bound on m\* only for a Γ whose orbital structure has been verified, not a formula to evaluate at an arbitrary quadruple. (iii) **§6 had reached the right answer via two cancelling errors** — the factor 2 that `p²k` gains over `kp(p−1)/2`, against the factor 2 that `δ₀n²` gains over `δ₀·C(n,2)`. Either alone would have moved the constant. Recorded in the document, since a cancelling pair is what a spot-check does not catch.
+
+**Cross-check that the corrected expressions are right:** at p = 5, k = 2 the enumeration gives m\* = 20 = **μ(10)**, matching the GAP battery independently; Shparlinski's `p²k` would give 50 at the same group, above the proven ceiling ⌊C(10,2)/2⌋ = 22.
+
+**Nothing in the headline results moved** — the `(log n)^{3/2}` / `(log n)²` / `δ₀n` ladder, the sub-linear cap and the γ threshold all live at logarithmic scale where a factor of 2 is invisible. What moved: §2.2's leading constant halved to `(A/8)^{1+α}/2`, and §6 now derives `p ≳ δ₀n` and cofactor `≤ 2/δ₀` correctly, agreeing with F.4 as it must. The document gained §1.5 and a closing rule: **any expression taken from a source that works up to constants must be re-derived from the underlying object before it touches a δ₀.**
+
+**`check_doc_figures.py`:** the new file joins `literature-findings` in `PREFIXED_ONLY`, since it works inside a single paper and every bare "Lemma 7" / "Theorem 2" is that paper's numbering — without it the file reported 13 dangling references, all spurious. With it, 0.
+
+## 4g. Dehistoricisation of the constants note, and a PASS 8 defect it exposed
+
+Six passages in `shparlinski-constants.md` narrated its own drafting rather than stating what is true — the cancelling-errors box in §6, the objective-function bullet in §9, the `pkr` structural-condition bullet, the F.4-tightness parenthesis, the §3 lead-in, and the §7 closing. All rewritten to say the thing without the history: the §6 box now names the trap prospectively ("deriving this from `p²k ≥ δ₀n²` instead *also* yields `p ≥ δ₀n`, because the two factors of 2 cancel"), which is more useful to a first-time reader than an account of having fallen into it.
+
+**PASS 8 caught none of them, for two independent reasons, and both are now fixed.**
+
+*The exemption was line-scoped.* `EXEMPT` carries author names (`Shparlinski`, `BBKN`, `Baker.Harman`, …) so that the literature's own history is not reported — but it was tested against the **whole line**, so a single mention of an author anywhere in a sentence exempted every other clause in it. In a document about one author, where the name appears on nearly every line, **this disabled the pass entirely**: it reported "none found" on a file with six historicizing passages. Narrowing to a fixed character window has the same failure in miniature (an author named at the end of one sentence exempts the start of the next — verified, it swallowed the §9 bullet at a 60-character window). The exemption is now evaluated in the match's **own clause**, bounded by sentence punctuation, which is the unit the subject test actually encodes.
+
+*The pattern list had no first-person-singular or self-drafting forms.* Added: `I checked|found|went looking|built|imported|…`, `my/our check|reading|draft`, `the first version/draft of this`, `this document/note/section was (first) drafted|written|commissioned`, `before/until this reading`, and `an early version of`. The plural `we found|noticed|…` was already there; the singular forms are what a single-author working note produces.
+
+Verified by injection: all five restored phrasings fire, at the right lines and with the right labels, and the repaired file reports clean. Also verified that legitimate exemptions still hold — "Baker–Harman's exponent has since been improved", v4-era and ⟦PENDING-REBUILD⟧ labels, `--baseline` references, and "Shparlinski previously stated the bound without an exponent" all remain unreported.
+
+**The fix surfaced three pre-existing hits** that the line-scoped exemption had been hiding: `ep` L768 (F.4's census walk, "the one shape the first draft of the proof did not cover" — rewritten to "the shape the split is easiest to get wrong on"), and two in `literature-findings.md` (L278 "narrower than I first wrote", L360 "The first version of this argument used Oliver-chain groups") which are **left as they stand for a decision** — that file's charter is arguably to record how findings were reached, in which case it belongs in `ARCHIVE` alongside `pending-checks.md` rather than being edited.
+
 ## 5. Files touched
 
-`orbital-evasiveness-notes.md`, `arithmetic-of-density.md`, `enumeration-proof.md`, `pending-checks.md`, `literature-findings.md`, `check_doc_figures.py`, `converse_check.py`, `wide_cert.py`, `fb_common.py`, `mu_enumerate_v3.py`, in the second pass `fallback_cert.py`, `ladder_verify.py`, `validate_table_v3.py`, `ark_shapes.g`, `verify_witness.g`, in the third `arithmetic-of-density.md`, `orbital-evasiveness-notes.md`, `validate_table_v3.py`, `wide_cert.py` and `check_doc_figures.py` again, and in the fourth `small-degree-computation.md`, `small-degree-verification.md`, `orbital-evasiveness-notes.md`, `stage4_fast.py`, `probe_backbone.py` and `check_doc_figures.py`.
+`orbital-evasiveness-notes.md`, `arithmetic-of-density.md`, `enumeration-proof.md`, `pending-checks.md`, `literature-findings.md`, `check_doc_figures.py`, `converse_check.py`, `wide_cert.py`, `fb_common.py`, `mu_enumerate_v3.py`, in the second pass `fallback_cert.py`, `ladder_verify.py`, `validate_table_v3.py`, `ark_shapes.g`, `verify_witness.g`, in the third `arithmetic-of-density.md`, `orbital-evasiveness-notes.md`, `validate_table_v3.py`, `wide_cert.py` and `check_doc_figures.py` again, in the fourth `small-degree-computation.md`, `small-degree-verification.md`, `orbital-evasiveness-notes.md`, `stage4_fast.py`, `probe_backbone.py` and `check_doc_figures.py`, in the fifth `arithmetic-of-density.md`, `enumeration-proof.md` and `pending-checks.md`, in the sixth a new file `shparlinski-constants.md` plus pointers in `arithmetic-of-density.md` and `pending-checks.md` and one regex in `check_doc_figures.py`, and in the seventh `shparlinski-constants.md`, `enumeration-proof.md` and `check_doc_figures.py`'s PASS 8.
 
 Not touched: the tables, `ceiling_rederive.py`, and every `*_out*.txt` / `*.log` artefact. Note that `ladder_weak.txt` **was** regenerated at N = 20,000 as a smoke test of the widened families and is not the 10⁶ artefact.
