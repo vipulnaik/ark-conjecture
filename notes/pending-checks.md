@@ -441,15 +441,17 @@ Needs `Fraction` imported and the raw string kept on the `Row` as `delta_str` �
 
 **Open decision.** Group A's banner says a FAIL there means the run or parser is broken. That holds for its other four tests, not this one — it checks a presentation column no other check reads. Either move it to group B or amend the message.
 
-### A21. `aod` §6.2's partition-factor table — the top row does not agree with its own argument
+### A21. `aod` §6.2's partition-factor table — RESOLVED: the prose was right, the count was wrong at the boundary
 
-*Self-flagged inside the section, which is why it is repeated here: a caveat written into the prose it qualifies does not surface when one is reading this file to gauge what is left, and this one has survived several passes for that reason.*
+**Re-derived.** The additive columns decode exactly and were correct as printed: the multiplier is the **partition** function p(j), not the Bell number, and Σ_{k≤K} Σ_{j<k} p(j) reproduces 7, 14, 26 and 8,266 at K = 3, 4, 5, 20. The all-shapes columns were recomputed under the same convention, with feasibility read strictly, giving **24 / 34 / 24**, **65 / 115 / 67**, **164 / 357 / 178** — so the top row now agrees, as §6.2's own argument requires.
 
-The table gives, at δ₀ = 1/9, a one-size count of **24** against a penalised sizes-free count of **26**. The section's own justification says the penalty is total at that density — *"at δ₀ = 1/9 the effect is total — no unequal shape is feasible"* — and if no unequal shape is feasible the two columns must agree. So either the penalty is not total at 1/9, or the 26 is computed without it, or the 24 is not the count the comparison wants.
+**Where the 26 came from.** The only unequal shape the penalty admits at δ₀ = 1/9 is the two-part `{1,1}` at exact equality: base cost 2, penalised cost 2·(1 + 1/2) = 3 = L. Admitting the equality case is what made the columns disagree. The arithmetic settles which reading is right rather than leaving it to convention: that family's density is (c′/n)² with c′ ≤ n/(p+1), which at p = 2 **approaches 1/9 from below and never attains it** — the best instance anywhere is n = 3072 = 2048 + 1024 at δ = 0.11104 against 1/9 = 0.11111. An unattained supremum is not a feasible shape, so feasibility is strict and the top row reads 24.
 
-**What to do:** re-derive both columns at the top row directly from the feasibility criterion Σ√Fᵢ ≤ 1/√δ₀ with the x ≥ √(δ₀F)·(1 + 1/p) penalty applied, and reconcile. The raw N(δ₀) column is independently confirmed (24 / 65 / 83 / 122 / 164 by direct enumeration of the criterion), so the discrepancy is in the penalised column or in what the one-size column is counting, not in the criterion.
+**A second defect found in the same pass, and it is the more interesting one.** The penalty x ≥ √(δ₀F)·(1 + 1/p) is derived from the density ceiling, which prices the smaller class at C(c′,2) — the **unfused** reading. Applied to a fused smaller class it is too harsh by exactly the factor fusion supplies. Witness: `n = 640 = 1·256 + 3·128` has base cost 2.73 and penalised cost 4.10, so the penalty rejects it, yet it is a real configuration at **δ = 0.1192 > 1/9** — and it is §6.2's *own* quoted example, two paragraphs above the table. So the penalised entries are **lower bounds**, not exact counts, and §6.2 now says so.
 
-**Scope of the exposure:** the counts of §6.1 and §6.4 below 1/9, and nothing structural — §6.2's own summary already says the exposure is to the specific numbers rather than to the argument. The covering statement of §6.6 quotes N_add, which is counted directly rather than through this table and is unaffected.
+**This is the section's own gotcha, committed by the counting.** §6.2 warns in bold that a ceiling derived for the unfused reading does not transfer to the fused one; the penalty column then transfers it. Worth noting as a pattern: the warning and the violation sat in the same subsection, and the violation is in a table rather than in prose, which is why reading the argument had not caught it.
+
+**Exposure, now closed.** §6.1 and §6.4's counts below 1/9 were the stated exposure. They are unchanged — those columns were always the raw and one-size counts, which were correct; what moved is the partition-factor commentary beside them. §6.6's covering statement quotes N_add, counted directly, and never touched this table.
 
 ### A22. `validate_table_v3.py`'s group-A expectation is scoped to the current table
 
