@@ -202,13 +202,66 @@ Certifying a **linear** prime factor is not out of the literature's reach in gen
 
 ---
 
+## 7.5 Which congruence class the input is about, and what fixing it does and does not buy
+
+*The one place where the algebra of this framework and the analytic literature disagree about what is interesting. Nothing in §§2–7 changes; this section says which conjecture the machinery is actually a consumer of, and closes `pending-checks.md` T4's fixed-residue item.*
+
+### The hierarchy is real
+
+Elliott–Halberstam is usually stated with a supremum over residue classes:
+
+> **EH(θ):** `Σ_{q ≤ x^θ} sup_{(a,q)=1} |π(x;q,a) − π(x)/φ(q)| ≪_A x/(log x)^A`.
+
+Dropping the supremum to a **single fixed** `a` gives a strictly weaker statement, **EH(a; θ)**, and that is where every unconditional advance past the square-root barrier lives — the supremum is what Bombieri–Vinogradov's `θ = 1/2` cannot be pushed past. Fixing `a` alone reaches `Q = x^{1/2 + 1/(log log x)^B}`; fixing `a` and using well-factorable weights gives Bombieri–Friedlander–Iwaniec's `x^{4/7−ε}`; Maynard's *Primes in arithmetic progressions to large moduli I* is subtitled *Fixed Residue Classes* and reaches `x^{11/21}`; Lichtman's quadrilinear moduli reach `x^{17/32}`. Dropping the absolute values as well permits levels beyond even EH's own `x^{1−ε}`, at the cost of yielding only an aggregate, from which no single modulus can be extracted.
+
+### Analytically `a = 1` is not distinguished; algebraically it is the only class that means anything
+
+Every result above is stated for an arbitrary fixed nonzero `a ∈ ℤ`, with implied constants depending on `a`. The methods see `a` through `gcd(a,q)`, through its size, and as a parameter in the Kloosterman sums `S(a, n; q)` — the residue-dependence that exists is a *uniformity* artefact of automorphic input, restricting one to the same small `a` across all moduli, not a claim that any particular `a` is easier.
+
+For this framework the asymmetry is total:
+
+> `r ≡ 1 (mod Q)` ⟺ `Q | r − 1` ⟺ `𝔽_r^×` has a subgroup of order `Q` ⟺ **AGL(1,r) contains a twist of order Q**.
+
+No other residue class corresponds to a subgroup, so no other residue class corresponds to a group we can build a block out of. The framework's entire arithmetic input is therefore a statement about the single class the analytic machinery treats as an arbitrary parameter. Write **EH(1; θ)** for that specialisation. Two remarks keep this from being merely a notational preference:
+
+- **The field's own headline results in this direction are also about `a = 1`**, for the same reason at one remove: "shifted primes with a large prime factor" *is* the `a = 1` question, and Baker–Harman's `α = 0.677` — improved to `0.679` by Li using Maynard's BFI-type triple convolution estimates — requires moduli of size `r^{0.677}`, far beyond `x^{1/2}`. **That exponent exists only because the residue is fixed.** So the `α` in §2.1's hypothesis (BH) is not an independent input: it is a reading of how far EH(1; θ) has been pushed.
+- Consequently the shifted-prime ladder of `aod` §3.6 is best understood as a ladder in **θ for the class 1**, not in θ for EH proper.
+
+### Our machinery consumes only EH(1), and that resolves an inherited caution
+
+Shparlinski's §5 sets aside the fixed-residue literature (BFI, Mikawa, Fouvry) as "requiring some restrictions on the residue classes", which reads as a reason those results are unavailable to us. **It is a statement about his Theorem 1, not his Theorem 2.**
+
+- **Theorem 1** builds its residue by CRT — `a ≡ n (mod p)` and `a ≡ 1 (mod q)` — so `a` **varies with n**. That is why it needs Bombieri–Vinogradov in the `sup`-over-`a` form, and why fixed-`a` improvements do not apply to it.
+- **Theorem 2** never forms such a residue. Its two inputs are (BH), which is purely about the class 1, and Balog–Sárközy, which is a sumset theorem with no congruence content whatever (§3(a)). Its only congruence-sensitive dependence is **EH(1)**.
+
+Since this framework consumes Theorem 2 and not Theorem 1, the exclusion Shparlinski names does not bind here. *(`pending-checks.md` T4's fixed-residue item asked exactly this: whether the restriction he names is one our formulation already satisfies. It is — but see the next paragraph for why that is worth less than it looks.)*
+
+### What fixing the residue does **not** buy: the endpoint
+
+The natural hope is that EH(1; θ) might survive to `θ = 1` where EH(θ) does not. Friedlander–Granville anticipated precisely this and refuted it. Their *Limitations to the equi-distribution of primes III* (Compositio 81 (1992), 19–32) opens by noting that there are several reasons to suspect the expected asymptotic might hold for large `q` when `a` is kept fixed — their earlier constructions had `a` growing with `x`, and BFI had already given fixed-`a` results past `x^{1/2}` — and then produces a construction that fixes `a`:
+
+> **Corollary (Friedlander–Granville).** For any fixed integer `a ≠ 0` and any `N > 0`, the asymptotic `π(x;q,a) ~ π(x)/φ(q)` cannot hold uniformly in the range `q ≤ x/(log x)^N`.
+
+So **EH(1) fails at the endpoint exactly as EH does.** Fixing the residue buys a great deal in the interior — the whole `1/2 → 17/32 → 4/7` ladder — and nothing at all at `θ = 1`. EH(1; 1−ε) remains open and plausible; EH(1) at level `x/(log x)^N` is false.
+
+### The consequence for (H) and (SP): they must be counting statements, not equidistribution statements
+
+Bounded cofactor asks for `Q ≍ r/D` with `D` bounded — moduli at the very top of the range, inside Friedlander–Granville's failure window. What keeps this from being fatal is that the framework never needs a per-modulus asymptotic: at `Q ≍ r/D` the number of `r ≤ x` in the single class `1 (mod Q)` is `O(D)`, a **bounded** count, so an asymptotic there is not merely unavailable but meaningless. What (SP) asserts is a count **aggregated over Q**, which irregular individual moduli do not disturb.
+
+> **So the shape of any proof is constrained before its content is.** (H) and (SP) cannot be derived from an equidistribution statement of the usual asymptotic form at level ≈ 1, because that statement is **false**, even at `a = 1`, even with the residue fixed. They must come from a counting or sieve argument tolerant of irregular moduli. This is independent of the density accounting of §7 and cuts in the same direction: the input that could work is not of the level-of-distribution genre at all.
+
+*Consistent with the rest of the note:* §6 already located the difficulty in the **companion** clause rather than in the input set, and this section says the same thing from the other side — the input-side conjecture (EH(1)) is exactly the one whose endpoint is known to be false, so pushing on it was never going to reach `Ω(n²)`.
+
+---
+
 ## 8. What would have to be true
 
 Stated as targets rather than hopes, in decreasing order of plausibility:
 
 1. **A sumset theorem certifying `P(a−b) ≫ N/(log N)^θ` for `θ < 2` at input densities `1/log N` and `1/log²N`.** This is the direct successor question. Anything with `θ = 0` at those densities would close §6 outright; anything with `θ < 2` narrows the gap of §5 without closing it, and would sharpen Result A's exponent past `2 − ε`.
 2. **A cofactor-controlled version of any of the above.** Note that even a linear-factor result gives `p ≫ N` with an unspecified constant, whereas a floor needs `p ≥ δ₀n` with δ₀ *ours*; the constant in the sumset conclusion becomes the constant in the floor. So the round trip that `aod` §6.7 records — `d ≤ 12` out, `D ≤ 700` back — would acquire a third loss here.
-3. **A route that is not a sumset argument at all.** Since §3(b)'s cap is structural to playing two subsets of `[1,x]` against each other, the linear-factor requirement may simply be the wrong thing to ask of this genre. The fixed-residue level-of-distribution results (BFI, Mikawa, Fouvry — `pending-checks.md` T4) are the other family in the room, and they attack the *input* side, which §6 shows is not where the difficulty is. **That is an argument for de-prioritising them relative to how T4 currently ranks them**, and it is the one strategic consequence of this note.
+3. **A route that is not a sumset argument at all.** Since §3(b)'s cap is structural to playing two subsets of `[1,x]` against each other, the linear-factor requirement may simply be the wrong thing to ask of this genre.
+4. **Not** a stronger level-of-distribution result. The fixed-residue family (BFI, Mikawa, Fouvry, Maynard, Lichtman) is the other family in the room, and §7.5 rules it out twice over: it attacks the **input** side, which §6 shows is not where the difficulty is; and its own endpoint — the level a bounded cofactor would need — is **false**, by Friedlander–Granville, even with the residue fixed at 1. **This is the one strategic consequence of the note:** those results should rank below the sumset question rather than beside it, and the interior improvements they supply move `α`, which §6 shows buys nothing.
 
 ---
 
@@ -218,6 +271,7 @@ Stated as targets rather than hopes, in decreasing order of plausibility:
 - **The orbital sizes in §1.5 were verified by explicit orbit enumeration**, not by reading them off a formula: the matching part via `𝔽_p^k ⋊ (C_{p−1} × C_k)` at five (p,k) pairs, the foreign part via `C_r ⋊ C_Q` at six (r,Q) pairs. The p = 5, k = 2 case reproduces `μ(10) = 20` independently. What is *not* verified is that these are the orbital structures of the groups BBKN's Lemma 5 actually quantifies over — I reconstructed the natural construction, and the agreement with μ(10) is evidence but not proof that it is theirs.
 - **Balog–Sárközy's own proof is not read.** The *statement* Shparlinski consumes has been confirmed to carry a pure-cardinality hypothesis, which is what settles §3(a); the sieve producing it is taken on citation, as are the constants c and c₁.
 - **Baker–Harman's α = 0.677** and the value of A are taken on citation. The 0.679 improvement noted in `aod` §3.6 does not change anything here.
+- **§7.5's literature claims are from primary sources for the two that carry weight** — Friedlander–Granville III was read (the Corollary is quoted verbatim in substance, and their own statement that fixing `a` had been expected to help is in their §2) and Shparlinski's §5 remark likewise. The ladder of fixed-residue levels (BFI `4/7`, Maynard `11/21`, Lichtman `17/32`, the `x^{1/2+1/(log log x)^B}` figure) is taken from abstracts and survey statements, not from the papers; none of it is load-bearing, since §7.5's conclusions turn on the endpoint being false rather than on where the interior ladder currently stands. **Not checked:** whether Baker–Harman's proof really routes through fixed-residue level results in the way §7.5 asserts — the exponent `0.677 > 1/2` makes it structurally necessary, and Li's use of Maynard's triple convolution estimates corroborates it, but I did not read Baker–Harman.
 - **Sárközy–Stewart is taken from Shparlinski's characterisation of it** ("cardinalities of order N"), not from the original. If their hypothesis is weaker than that — e.g. density `1/log N` — then §7 changes materially and §8 item 1 is partly answered already. **This is the single highest-value thing to check next in this document.**
 - The dyadic-block accounting (§1, `(log x)³` per block versus `(log x)⁴` overall) is my reconstruction of the discrepancy between the paper's proof and its theorem statement; it is the natural reading but is not stated in the paper.
 - One pass, one reader. The numerical checks (§1.5 orbit enumerations, §2.3 crossover, §3(b) caps, §4.1 prime-power census over r ≤ 2·10⁶, §5 threshold arithmetic) are reproducible from the snippets in the session log but are not wrapped in a script.
