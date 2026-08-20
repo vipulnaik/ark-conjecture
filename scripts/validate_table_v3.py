@@ -478,10 +478,77 @@ def c_cross_coeff(R, base):
 
 @check("B", "S2 winners sit at density (c-1)/(Fc-1), i.e. 1/F up to O(1/n)", "aod section 2.1")
 def c_s2(R, base):
+    """This checks the WINNERS only: where a fused single class took the row,
+    its recorded density must be the shape's own value.  It says nothing about
+    the rows S2 did not win, which is the wider claim -- see c_s2_identity."""
     rows = [r for r in R if r.shape == "S2"]
     bad = [(r.n, r.delta) for r in rows
            if abs(r.delta - (r.cls[0][1] - 1) / (r.cls[0][0] * r.cls[0][1] - 1)) > 1e-6]
     return ("FAIL" if bad else "PASS", f"{len(rows)} S2 winners, {len(bad)} off 1/F", bad[:5])
+
+
+def _largest_prime_power_divisor(n):
+    best, m, d = 1, n, 2
+    while d * d <= m:
+        if m % d == 0:
+            e = 1
+            while m % d == 0:
+                m //= d; e *= d
+            best = max(best, e)
+        d += 1 if d == 2 else 2
+    return max(best, m)
+
+
+@check("B", "the fused shape's density is a LOWER BOUND at every non-prime-power n",
+       "aod section 2.1")
+def c_s2_identity(R, base):
+    """The wider claim, and a genuinely independent one.  After the entangled-
+    generator correction the fusion count F is an arbitrary integer carried by
+    the cyclic layer, so the single fused class needs only that c be a prime
+    power.  Hence it EXISTS at every non-prime-power n -- take c = Q(n), the
+    largest prime-power divisor, and F = n/Q(n) > 1 -- and optimising over c
+    gives an identity rather than a bound:
+
+        delta_S2(n) = (Q(n) - 1) / (n - 1),      value F * C(Q, 2).
+
+    Every row must therefore clear F * C(Q, 2).  This is worth having next to
+    the enumerator's own outputs because it is arithmetic where they are a
+    search: it derives from the shape space directly and never consults the
+    scoring code, so a disagreement means one of the two is wrong and the
+    check cannot be satisfied by a bug shared between them.
+
+    Exact integers, not floats -- the two agree to eleven places at the rows
+    that matter, and a tolerance would hide precisely the near-misses.
+
+    BASELINE BEHAVIOUR, which is the reason this is not a bare FAIL.  On a
+    current-scoring table the expected count is 0.  On the v4 baseline exactly
+    two rows fail, n = 78 and n = 222, and they are not defects: they are the
+    two entries of entangled_exceedances.txt with no top prime, i.e. the
+    composite-F, top-trivial configurations the superseded shape space could
+    not express at all.  So {78, 222} is the CORRECT baseline answer and is
+    reported as INFO; any other set is a FAIL worth stopping on.
+    """
+    bad = []
+    for r in R:
+        if r.n < 6:
+            continue
+        c = _largest_prime_power_divisor(r.n)
+        if c == r.n:                    # prime power: S1's domain, no F > 1
+            continue
+        s2 = (r.n // c) * (c * (c - 1) // 2)
+        if s2 > r.B:
+            bad.append((r.n, r.B, s2))
+    if not bad:
+        return ("PASS", f"{len(R)} rows, none below the identity", [])
+    ns = {n for n, _, _ in bad}
+    if ns == {78, 222}:
+        return ("INFO",
+                "78 and 222 fall below it -- the expected baseline pair "
+                "(composite F, trivial top; see entangled_exceedances.txt), "
+                "not a defect", bad)
+    return ("FAIL",
+            f"{len(bad)} row(s) below the fused shape's own value, and NOT the "
+            f"expected baseline pair", bad[:5])
 
 
 @check("B", "the fusion layer is readable off the top prime: S5 has q = 2, S7-at-F=2 has q odd",

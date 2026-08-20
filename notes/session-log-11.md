@@ -74,6 +74,7 @@ The note itself remains correct on its own terms and was not otherwise touched.
 - **Invariant I4** — no sentence gates the fused shape on ω(n) or on F being a prime power. Fires only on a *requirement*: an earlier draft flagged every statistic about how the ω(n) = 2 population thins, ~20 findings, which would have trained the reader to ignore it. Also masks table cells, after a header row produced a cross-cell false positive.
 - **Invariant I5** — no bare `(BCG)`. Fires only in **quantifier-sensitive company** (yields, implies, buys, all large, almost all), sentence-locally. Bare tags in clause-level prose — "(BCG)'s d ≤ 12", "(BCG) demands both on the same variable" — are correct and exempt; demanding a suffix there would put twenty suffixes into prose that does not depend on which variant is meant. I5 caught the §6.7 constant finding above.
 - **Pass 9, the S2 identity** against the live table, in exact integers. Reports 0 on a current-scoring table and names {78, 222} as the expected baseline pair, flagging any *other* set as a real defect.
+- **`validate_table_v3.py` group B gains the same check**, as `c_s2_identity`, alongside the existing `c_s2` — which was checking only that S2 *winners* sit at 1/F, a within-winner consistency test that says nothing about the rows S2 did not win. The new one is the wider claim and is independent of the enumerator in a way the rest of the validator is not: it derives the value from the shape space arithmetically and never consults the scoring code, so a disagreement means one of the two is wrong and cannot be satisfied by a bug shared between them. Both docstrings now say which is which. On a baseline it returns **INFO**, not FAIL, so it does not double-count the group-A failure that the same correction already produces.
 
 ## 8. Final state
 
@@ -82,7 +83,8 @@ The note itself remains correct on its own terms and was not otherwise touched.
 | `check_doc_figures.py`, canonical five | **7 findings**, all decisions; I1–I5 and S2 all `[ok]` |
 | same, `shparlinski-constants.md` + `sp-to-floor.md` | **0 findings**; I1, I2, I4, I5, S2 `[ok]` |
 | same, note + bridge | 11 findings, **all cross-document references** to `aod`/`ep` theorem names the checker was not given; not defects |
-| `validate_table_v3.py` v5 | 22 PASS / **0 FAIL** / 12 INFO / 5 SKIP |
+| `validate_table_v3.py` v5 | **23** PASS / **0 FAIL** / 12 INFO / 5 SKIP |
+| same, v4 baseline | 21 PASS / 1 FAIL (the expected group-A re-derivation on 18 rows) / 13 INFO; the new S2 check returns INFO naming {78, 222} |
 | `converse_check.py` v5 | unchanged counts; negative control at `--delta0 0.35` exits 1 |
 | S2 identity, v5 / v4 | 0 violations / exactly {78, 222} |
 
