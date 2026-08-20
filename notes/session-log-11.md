@@ -105,6 +105,16 @@ Added after the passes above, on the judgement that the note's *arithmetic* find
 
 **A27** files the second reading, structured so the cheap tier (a)–(c) can be checked in an hour and the expensive tier is ordered by value — the Reduction Lemma's foreign orbital first, being the term that already carried a factor-2 error and still has one reader.
 
+## 8c. §6.2's partition-factor table, re-derived (was A21)
+
+**The additive columns were correct.** The multiplier is the **partition** function p(j), not the Bell number: Σ_{k≤K} Σ_{j<k} p(j) reproduces 7, 14, 26 and 8,266 at K = 3, 4, 5, 20 exactly. Recomputing the all-shapes columns under that convention with feasibility read strictly gives 24 / 34 / **24**, 65 / 115 / **67**, 164 / 357 / **178**, so the top row agrees as §6.2's own argument requires.
+
+**The 24-versus-26 gap was a boundary artefact.** Exactly one unequal shape sits at equality at δ₀ = 1/9 — the two-part `{1,1}`, base cost 2, penalised 2·(1 + 1/2) = 3 = L. Which reading is right is settled by arithmetic rather than convention: that family's density is (c′/n)² with c′ ≤ n/(p+1), which at p = 2 **approaches 1/9 from below and never attains it**, the best instance anywhere being n = 3072 = 2048 + 1024 at δ = 0.11104 against 0.11111. An unattained supremum is not a feasible shape.
+
+**A second defect, found in the same pass and more consequential.** The penalty is derived from the *unfused* density ceiling and is too harsh on a fused smaller class. `n = 640 = 1·256 + 3·128` is rejected by it at penalised cost 4.10 against L = 3, yet is a real configuration at δ = 0.1192 > 1/9 — and it is §6.2's **own** quoted example, two paragraphs above the table. The penalised entries are therefore lower bounds; §6.2 now says so, and A21 is trimmed to the live remainder (derive the fusion-aware penalty, low priority).
+
+**The pattern worth keeping.** §6.2 warns in bold that a ceiling derived for the unfused reading does not transfer to the fused one, and its own penalty column then transfers it. The warning and the violation are in the same subsection. It survived several readings because the violation is in a **table**: reading an argument does not check the arithmetic beside it, and `check_doc_figures.py` checks figures against the *table of μ*, not against a document's own derivations. That is a gap no current pass covers.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).
@@ -113,7 +123,7 @@ Added after the passes above, on the judgement that the note's *arithmetic* find
 
 1. **T3, the necessity read of `fb_common.py`'s eight conditions.** Not attempted in three sessions now. It is the trusted base for μ(n) = B(n) over the certified range, it is a reading task, and it is the category no numeric pass reaches — which is precisely the category that produced the entangled-generator finding.
 2. **T1/T2 and the GAP side.** `verify_witness.g`, `ark_shapes.g`, `ladder_verify.py`, `mu_enumerate_v3.py` unrun; the finding note's repair item 6 (the n = 33 regression witness) wants confirming.
-3. **A21's re-derivation** — arithmetic, self-contained.
+3. **A21**, now trimmed to its live remainder: a fusion-aware penalty for §6.2's partition-factor table. Low priority — the exposure is a commentary figure.
 4. **The §2 correction has one reader.** The orbital enumeration behind the 42% constant change is six lines and reproducible, and the bridge's independent version of the same parity argument corroborates it, but it has propagated into `aod` §3.5.3, four sections of `sp-to-floor.md` and the bridge on my reading alone.
 
 **The methodological note, now with three instances.** A corrected claim propagates to the places that *state* it and not to the places that *use* it in passing. This session's version is worse than the previous two: the correct parity argument was written in the bridge, and the same document set later acquired **two independent wrong versions of it** — `sp-to-floor.md`'s halved orbital and T8's inverted factor-2 claim. Nobody re-derived; each wrote the plausible thing. The grep that would have caught it is for the *rule stated as a premise*, and the cheaper habit is to check whether the project already contains the argument before making it again.

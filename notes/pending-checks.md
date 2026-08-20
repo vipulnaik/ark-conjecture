@@ -441,17 +441,13 @@ Needs `Fraction` imported and the raw string kept on the `Row` as `delta_str` �
 
 **Open decision.** Group A's banner says a FAIL there means the run or parser is broken. That holds for its other four tests, not this one — it checks a presentation column no other check reads. Either move it to group B or amend the message.
 
-### A21. `aod` §6.2's partition-factor table — RESOLVED: the prose was right, the count was wrong at the boundary
+### A21. A fusion-aware penalty for §6.2's partition-factor table
 
-**Re-derived.** The additive columns decode exactly and were correct as printed: the multiplier is the **partition** function p(j), not the Bell number, and Σ_{k≤K} Σ_{j<k} p(j) reproduces 7, 14, 26 and 8,266 at K = 3, 4, 5, 20. The all-shapes columns were recomputed under the same convention, with feasibility read strictly, giving **24 / 34 / 24**, **65 / 115 / 67**, **164 / 357 / 178** — so the top row now agrees, as §6.2's own argument requires.
+The all-shapes **penalised** column of `aod` §6.2 is a **lower bound**, not an exact count. Its penalty `x ≥ √(δ₀F)·(1 + 1/p)` comes from the density ceiling, which prices the smaller class at C(c′,2) — the *unfused* reading — so it is too harsh on a shape whose smaller class is fused, by exactly the factor fusion supplies. `n = 640 = 1·256 + 3·128` is the witness: penalised cost 4.10 against L = 3, rejected, yet a real configuration at δ = 0.1192.
 
-**Where the 26 came from.** The only unequal shape the penalty admits at δ₀ = 1/9 is the two-part `{1,1}` at exact equality: base cost 2, penalised cost 2·(1 + 1/2) = 3 = L. Admitting the equality case is what made the columns disagree. The arithmetic settles which reading is right rather than leaving it to convention: that family's density is (c′/n)² with c′ ≤ n/(p+1), which at p = 2 **approaches 1/9 from below and never attains it** — the best instance anywhere is n = 3072 = 2048 + 1024 at δ = 0.11104 against 1/9 = 0.11111. An unattained supremum is not a feasible shape, so feasibility is strict and the top row reads 24.
+**What to do:** derive the penalty for the fused reading (the smaller class is worth F′·C(c′,2), so the requirement should scale with √F′ rather than being charged per size-group), and recount the three all-shapes entries. Expect them to rise, staying between the current penalised figures and the unpenalised 34 / 115 / 357.
 
-**A second defect found in the same pass, and it is the more interesting one.** The penalty x ≥ √(δ₀F)·(1 + 1/p) is derived from the density ceiling, which prices the smaller class at C(c′,2) — the **unfused** reading. Applied to a fused smaller class it is too harsh by exactly the factor fusion supplies. Witness: `n = 640 = 1·256 + 3·128` has base cost 2.73 and penalised cost 4.10, so the penalty rejects it, yet it is a real configuration at **δ = 0.1192 > 1/9** — and it is §6.2's *own* quoted example, two paragraphs above the table. So the penalised entries are **lower bounds**, not exact counts, and §6.2 now says so.
-
-**This is the section's own gotcha, committed by the counting.** §6.2 warns in bold that a ceiling derived for the unfused reading does not transfer to the fused one; the penalty column then transfers it. Worth noting as a pattern: the warning and the violation sat in the same subsection, and the violation is in a table rather than in prose, which is why reading the argument had not caught it.
-
-**Exposure, now closed.** §6.1 and §6.4's counts below 1/9 were the stated exposure. They are unchanged — those columns were always the raw and one-size counts, which were correct; what moved is the partition-factor commentary beside them. §6.6's covering statement quotes N_add, counted directly, and never touched this table.
+**Priority: low.** The top row is unaffected — a fused unequal shape needs n to be a sum of two distinct p-power multiples, a density-zero condition that puts it among §6.5's escapes rather than in the covering accounting — and §6.6's covering statement quotes N_add, which is counted directly and never uses this table. So the exposure is to a commentary figure, and §6.2 now states the direction of the error.
 
 ### A22. `validate_table_v3.py`'s group-A expectation is scoped to the current table
 
