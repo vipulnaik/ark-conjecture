@@ -90,6 +90,21 @@ The note itself remains correct on its own terms and was not otherwise touched.
 
 The seven remaining canonical findings: two coincidental old-checkpoint numeric matches, four scope reports on the sub-1/16 tail (covered by the PENDING banner, and confirming Part I's tail figures shrink sharply on the rebuild), and one legitimate historical citation in `literature-findings.md`.
 
+## 8b. `aod` §6.9 — promoting the note, tiered by standing
+
+Added after the passes above, on the judgement that the note's *arithmetic* findings are robust independently of its analytic half while the theorem is not. §6.9 states four things as findings and cites the fifth:
+
+- **(a), (b) as arithmetic** — the identity `δ(k,d) = cap_k(2/d)` and the six-cell (F, d) match. Neither depends on the circle method, on (BH-SW), or on any step the note takes on citation; if the analytic half were wholly wrong, both would survive.
+- **(c) with its three-way status kept explicit**, in a table. (SP) for *arbitrary* sets is refuted; **for the actual S_D it remains open**, since the counterexample's concentration is unconditionally excluded by sieve upper bounds; the companion-exponent diagnosis is unchanged. Flattening these into "(SP) does not suffice" was the main drafting risk and the table exists to prevent it.
+- **(d)** sharpens §6.8(iv) positively: what decides a hypothesis's reach is whether it pins **local densities**, not how thin its set is.
+- **(e)** cites the theorem with its standing attached — one pass, one reader, two steps on citation, squarefree-only singular series, five-pair enumeration, constants re-derived once after a factor-2 error. The part that changes what the framework claims is the *shape* of the conclusion: not "beats 1/25" but **almost all n attain their own class ceiling**.
+
+**Hedges cut, and one deliberately not cut.** §3.5.4's "do not treat the shared modulus as an identification" now stands in weakened form — three independent derivations agreeing cell by cell is evidence the mod-12 keying is intrinsic — but the warning against transferring *arbitrary* facts between the tables is kept, since the shape space has been wrong once in the permissive direction (A24). §6.8(iv) gains (c) and (d) inline. Nothing in §6.8 was deleted.
+
+**One correction to my own earlier work this session.** Pass B put **(BH-SW) ⟹ (BCG-AA)** into §3.5.3 unqualified, which is the same over-commitment §6.9 is designed to avoid — a one-pass result stated inside the hypothesis section, where a reader takes it as established. It now carries a pointer to §6.9(e)'s standing, with a note that the (AL)/(AA) split does not depend on it. The split is sound on its own; the specific implication is not yet.
+
+**A27** files the second reading, structured so the cheap tier (a)–(c) can be checked in an hour and the expensive tier is ordered by value — the Reduction Lemma's foreign orbital first, being the term that already carried a factor-2 error and still has one reader.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).

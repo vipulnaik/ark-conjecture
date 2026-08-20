@@ -471,6 +471,20 @@ The ceiling table is a theorem about the Oliver-admissible family **as currently
 
 `mu-theta-n2-note.md` remains **correct on its own terms** — its family is the unfused one, its window is deliberately generous, its constant crude by design — and nothing here touches its Theorem. What changed around it: its hypothesis is now **(BCG_{1/5})**, and its relation to the framework's is **non-nesting in both directions**, not "a weaker form of the same thing". (BCG-AL) hands over an `F = 4` configuration at n ≡ 11 (mod 12) with `c/n ≈ 0.134`, which the note's `c ≥ n/5` rejects; the note in turn is far weaker in constant and restricted to `n = c + r` and `n = 2c + r`. `note-to-framework-bridge.md` §4 now says this. **Before any circulation:** re-read the note's §5 θ-ladder against `aod` §3.6's current attributions, and decide whether the note should mention the F = 4 shape at all or stay deliberately silent about it.
 
+### A27. A second reading of `sp-to-floor.md`, now that `aod` §6.9 quotes it
+
+Promoting the note's findings into `aod` raises the value of a second reading rather than lowering it, and §6.9 is written so the tiers can be checked independently.
+
+**Cheap and self-contained (an hour):** (a) the identity `1/(√k+√(d/2))² = cap_k(2/d)`, algebra; (b) the six-cell (F, d) match against §3.5.3's clause 3, a table comparison; (c) the generic-set counterexample, elementary. If these three hold, §6.9(a)–(d) stand whatever happens to the rest, which is why they are separated out.
+
+**The real read (a day or more), in descending value:**
+1. **The Reduction Lemma's orbital structure**, proved rather than enumerated at five (p,k) pairs — and specifically the foreign term, which carried a factor-2 error through the note's first draft and set its headline constant 42% low. The corrected value `rQ` at odd Q is verified by enumeration and matches `shparlinski-constants.md` §1.5, but **it has one reader**.
+2. **The major-arc assembly** (§4.2), where the hypothesis is actually consumed; the singular-series completion is sketched for squarefree `q` only.
+3. The two [STANDARD] steps used on citation — the Vinogradov dilation lemma and the Siegel–Walfisz manipulation.
+4. §7's end-to-end run, which is separately blocked on A23's rerun.
+
+**What a disagreement would cost.** (a)–(d) are quoted in `aod` §§3.5.3, 6.8 and 6.9 and would survive; (e) is cited rather than restated, so a failure there retracts a citation and the strengthened reading of the asymptotic half, not any unconditional claim. That asymmetry is deliberate and should be preserved if §6.9 is ever expanded.
+
 ### A9. The Lean formalisation — keep it in step, and keep it moving
 
 *Home: the Lean project's own `README.md`, which carries the phasing, the case for and against, and the failure-mode analysis. **This item exists so the work resurfaces even when nobody thinks to mention it**; do not restate the reasoning here.*
