@@ -1,7 +1,9 @@
 # The arithmetic of the density ladder
 
 > **Pending: the numerical rebuild.** Figures marked ⟦PENDING-REBUILD⟧ are read off a table that
-> predates the current SAFE cap and are known low at 289 rows — the density floor and its argmin, the
+> predates the current SAFE cap and are known low at 289 rows (a rescan's *lower bounds*, so a
+> validator re-derivation flags only the subset — 18 — whose own recorded witness re-scores higher,
+> the rest being exceeded by a different configuration) — the density floor and its argmin, the
 > census winner counts, and per-row witnesses. `mu_enumerate_v3.py` is the enumerator; running
 > `check_doc_figures.py` against its completed output is the pass that replaces them. Unmarked figures
 > from the current table remain correct as lower bounds but may rise. Structural and asymptotic claims
@@ -1153,7 +1155,7 @@ At the conjectured floor that is **9 systems at odd n and 6 at even n** (§6.4; 
 — one system, not a disjunction. Three caveats:
 
 - **The density-zero families must be excluded by hand**, being bounded by no class ceiling: n a prime power (S1), ω(n) = 2 (S2), and the escapes of §4.3 — c a power of 2, c or (r−1)/2 a power of 3, and r = 2^a·u + 1 with u small. Each is O(n/log n) or thinner, so "most n" survives, but the statement is about the complement of an explicit sparse set.
-- **The gap between consecutive ceilings bounds ε**, and it is not uniform: 0.0048 at n ≡ 11 (mod 12) — the gap from 7 − 4√3 down to (2 − √3)/4, as computed above; a gap computed against F = 2 optima instead gives 0.0085, so state which optima — but the classes where two rungs tie — 7 and 15, where cap_B(1/4) = cap_C(1/2) exactly — admit **no** such ε, and there the disjunction genuinely cannot be collapsed.
+- **The gap between consecutive ceilings bounds ε**, and it is not uniform: 0.0048 at n ≡ 11 (mod 12) — the gap from 7 − 4√3 down to (2 − √3)/4, as computed above — while the classes where two rungs tie — 7 and 15, where cap_B(1/4) = cap_C(1/2) exactly — admit **no** such ε, and there the disjunction genuinely cannot be collapsed. Any ε quoted here must name the rung it is measured to, since the runner-up differs between a class's two mod-24 halves even where its value does not.
 - **It is conditional in the direction that matters.** The hypothesis is a lower bound on μ that we do not have; the argument shows that *if* the floor conjecture holds just under a class ceiling, the arithmetic consequence is sharp. That is a statement about the strength of the conclusion, not evidence for it.
 
 So: **the route yields robustness at floors well below the ceilings, and sharp single-system statements at floors just beneath them.** The closer δ₀ sits to a class ceiling the stronger the arithmetic and the harder the hypothesis — worth stating because it identifies which floor conjecture would be worth proving. A floor of 1/25 gives a 9-way disjunction at odd n; a floor just under 7 − 4√3 at n ≡ 11 (mod 12) gives a single Bateman–Horn system.

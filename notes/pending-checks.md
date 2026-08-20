@@ -81,7 +81,7 @@ python3 mu_enumerate_v3.py --nmax <N> --fill-gaps --out mu_table_safe_v5_code_v3
 
 ## R1. Routine, after any new batch of table values
 
-> **⟦PENDING-REBUILD⟧ Expectations suspended while the rebuild runs.** Reference points so a deviation is recognisable: `validate_table_v3.py` gave **21 PASS / 0 FAIL / 14 INFO / 3 SKIP** against the previous table as `--baseline`. `check_doc_figures.py` does not go to zero — most PASS 1 flags are coincidental numeric matches, so read it finding by finding. Certificate counts are requoted from their reruns. A validator asserting a congruence on the matching block's residue would FAIL on any correct table.
+> **⟦PENDING-REBUILD⟧ Expectations suspended while the rebuild runs.** Reference points so a deviation is recognisable: `validate_table_v3.py` gives **0 FAIL** on an enumerator output under the current scoring — 22 PASS / 0 FAIL / 12 INFO / 5 SKIP on the in-progress rebuild — but **not** when pointed at a *baseline*, where group A's re-derivation check fires on every row whose recorded winner is a cyclic-fused class scored under the superseded cut twist (18 rows on v4; see A22, which pairs that count with the 289). `check_doc_figures.py` does not go to zero — most PASS 1 flags are coincidental numeric matches, so read it finding by finding. Certificate counts are requoted from their reruns. A validator asserting a congruence on the matching block's residue would FAIL on any correct table.
 
 Each of these is a per-n statement that does not extend itself. Point them at the current enumerator output with the previous table as `--baseline`. **Run in order — the first gates the rest.**
 
@@ -440,6 +440,20 @@ Needs `Fraction` imported and the raw string kept on the `Row` as `delta_str` �
 **What the test must still reject**, and what any change to it is re-checked against: one-in-the-last-place errors in *either* direction, truncation rather than rounding, and wholly wrong values — while accepting a tie rounded either way and strings at 4, 6 or 8 decimals at their own precision. Eleven such cases plus the full table are the standing behavioural check.
 
 **Open decision.** Group A's banner says a FAIL there means the run or parser is broken. That holds for its other four tests, not this one — it checks a presentation column no other check reads. Either move it to group B or amend the message.
+
+### A21. `aod` §6.2's partition-factor table — the top row does not agree with its own argument
+
+*Self-flagged inside the section, which is why it is repeated here: a caveat written into the prose it qualifies does not surface when one is reading this file to gauge what is left, and this one has survived several passes for that reason.*
+
+The table gives, at δ₀ = 1/9, a one-size count of **24** against a penalised sizes-free count of **26**. The section's own justification says the penalty is total at that density — *"at δ₀ = 1/9 the effect is total — no unequal shape is feasible"* — and if no unequal shape is feasible the two columns must agree. So either the penalty is not total at 1/9, or the 26 is computed without it, or the 24 is not the count the comparison wants.
+
+**What to do:** re-derive both columns at the top row directly from the feasibility criterion Σ√Fᵢ ≤ 1/√δ₀ with the x ≥ √(δ₀F)·(1 + 1/p) penalty applied, and reconcile. The raw N(δ₀) column is independently confirmed (24 / 65 / 83 / 122 / 164 by direct enumeration of the criterion), so the discrepancy is in the penalised column or in what the one-size column is counting, not in the criterion.
+
+**Scope of the exposure:** the counts of §6.1 and §6.4 below 1/9, and nothing structural — §6.2's own summary already says the exposure is to the specific numbers rather than to the argument. The covering statement of §6.6 quotes N_add, which is counted directly rather than through this table and is unaffected.
+
+### A22. `validate_table_v3.py`'s group-A expectation is scoped to the current table
+
+The R1 reference point reads *0 FAIL*, which holds for an enumerator output under the current scoring. Run against a **baseline** it does not: a row whose recorded winner is a cyclic-fused class scored under the superseded cut twist re-derives *higher* from its own witness, so group A's re-derivation check fires. On the v4 baseline that is **18 rows of 2,186** — a subset of the 289 known-low rows, the other ~271 being exceeded by a different configuration rather than by a rescoring of their own witness, and so invisible to a check that re-derives from the recorded witness. **Neither number is a defect**; the pairing of them is the thing to state, since 289 and 18 look like they should match and do not. Either scope the expectation in R1's banner or have the check name the baseline case when `--baseline` is supplied.
 
 ### A9. The Lean formalisation — keep it in step, and keep it moving
 

@@ -1,7 +1,9 @@
 # The Minimum-Orbital Function μ(n): Limits and Arithmetic Content of the Group-Theoretic Approach to Sparse Evasiveness
 
 > **Pending: the numerical rebuild.** Figures marked ⟦PENDING-REBUILD⟧ are read off a table that
-> predates the current SAFE cap and are known low at 289 rows — the density floor and its argmin, the
+> predates the current SAFE cap and are known low at 289 rows (a rescan's *lower bounds*, so a
+> validator re-derivation flags only the subset — 18 — whose own recorded witness re-scores higher,
+> the rest being exceeded by a different configuration) — the density floor and its argmin, the
 > census winner counts, and per-row witnesses. `mu_enumerate_v3.py` is the enumerator; running
 > `check_doc_figures.py` against its completed output is the pass that replaces them. Unmarked figures
 > from the current table remain correct as lower bounds but may rise. Structural and asymptotic claims
