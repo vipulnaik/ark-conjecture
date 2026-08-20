@@ -115,6 +115,20 @@ Added after the passes above, on the judgement that the note's *arithmetic* find
 
 **The pattern worth keeping.** §6.2 warns in bold that a ceiling derived for the unfused reading does not transfer to the fused one, and its own penalty column then transfers it. The warning and the violation are in the same subsection. It survived several readings because the violation is in a **table**: reading an argument does not check the arithmetic beside it, and `check_doc_figures.py` checks figures against the *table of μ*, not against a document's own derivations. That is a gap no current pass covers.
 
+## 8d. §6 read start to finish, retitled, and the counting extracted
+
+**Retitled.** "Running the implication backwards, correctly" no longer described the section once §6.9 was added — §§6.1–6.8 run the implication backwards, §6.9 runs it forwards. Now "Running the implication in both directions", with a sentence at the head saying where the two meet: §6.7 shows a floor *demands* a bounded-cofactor shifted prime, §6.9 shows that hypothesis *delivers* the floor. A one-clause link from §6.6 to §6.9 rather than a bridge — they answer different questions under one framework.
+
+**Three numerical fixes in §6.7.** The stale "44% within a factor 25 of a prime power" is replaced by the identity form, which states it better than the statistic did: branch (a) is the multiplicative engine's own branch, so the n it covers at floor δ₀ are exactly those with Q(n) ≥ δ₀n — **43.0%** at δ₀ = 1/25, n ≤ 10⁵ (43.5% divisor form). The `D = 44` clause now names its δ₀ (the verified floor 0.04453; the conjectured 1/25 gives 50), since the round trip two paragraphs later explicitly says every use should. And the crux paragraph — which was doing five jobs in one block — is broken, with the four surviving differences as a list.
+
+**`shape-counting.md`, new.** The seam is **claims stay, derivations move**: every number §6 quotes remains visible in §6, and what leaves is how it was obtained. That rule is deliberate — the A21 penalty bug survived several readings because it sat in a table rather than an argument, so moving *claims* out would have made the failure mode worse, not better.
+
+Moved: the Meinardus derivation (Dirichlet series, constant 2.5317, fitted slope 2.405, the 10–11× overstatement at L = 5–7 — all re-verified this session); the partition-factor table entire, with the penalty derivation and the boundary analysis; the floor-row recomputation apparatus; and the superseded unequal-shape admitting count, retained for audit rather than deleted. Left behind: the criterion, the N(δ₀) and N_add tables, one sentence for the growth rate, and one for what the partition factor costs — plus §6.2's conclusions and the n = 640 gotcha, which are load-bearing prose.
+
+The new document's header states its **standing explicitly** — verified arithmetic, not a one-pass sketch — so it does not inherit the "lightly audited" reading from `sp-to-floor.md` and `shparlinski-constants.md` by association. It is in `check_doc_figures.py`'s canonical invocation, both so its figures are checked and so the refs pass does not flag `aod`'s citations to it as dangling.
+
+§6 is ~120 lines shorter with nothing the argument uses removed; the canonical run stays at 7 findings.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).

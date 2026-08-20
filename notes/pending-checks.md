@@ -441,13 +441,15 @@ Needs `Fraction` imported and the raw string kept on the `Row` as `delta_str` �
 
 **Open decision.** Group A's banner says a FAIL there means the run or parser is broken. That holds for its other four tests, not this one — it checks a presentation column no other check reads. Either move it to group B or amend the message.
 
-### A21. A fusion-aware penalty for §6.2's partition-factor table
+### A21. A fusion-aware penalty for the partition-factor table
 
-The all-shapes **penalised** column of `aod` §6.2 is a **lower bound**, not an exact count. Its penalty `x ≥ √(δ₀F)·(1 + 1/p)` comes from the density ceiling, which prices the smaller class at C(c′,2) — the *unfused* reading — so it is too harsh on a shape whose smaller class is fused, by exactly the factor fusion supplies. `n = 640 = 1·256 + 3·128` is the witness: penalised cost 4.10 against L = 3, rejected, yet a real configuration at δ = 0.1192.
+*The table itself now lives in `shape-counting.md` §4; this is the live remainder.*
+
+The all-shapes **penalised** column (`shape-counting.md` §4) is a **lower bound**, not an exact count. Its penalty `x ≥ √(δ₀F)·(1 + 1/p)` comes from the density ceiling, which prices the smaller class at C(c′,2) — the *unfused* reading — so it is too harsh on a shape whose smaller class is fused, by exactly the factor fusion supplies. `n = 640 = 1·256 + 3·128` is the witness: penalised cost 4.10 against L = 3, rejected, yet a real configuration at δ = 0.1192.
 
 **What to do:** derive the penalty for the fused reading (the smaller class is worth F′·C(c′,2), so the requirement should scale with √F′ rather than being charged per size-group), and recount the three all-shapes entries. Expect them to rise, staying between the current penalised figures and the unpenalised 34 / 115 / 357.
 
-**Priority: low.** The top row is unaffected — a fused unequal shape needs n to be a sum of two distinct p-power multiples, a density-zero condition that puts it among §6.5's escapes rather than in the covering accounting — and §6.6's covering statement quotes N_add, which is counted directly and never uses this table. So the exposure is to a commentary figure, and §6.2 now states the direction of the error.
+**Priority: low.** The top row is unaffected — a fused unequal shape needs n to be a sum of two distinct p-power multiples, a density-zero condition that puts it among §6.5's escapes rather than in the covering accounting — and §6.6's covering statement quotes N_add, which is counted directly and never uses this table. So the exposure is to a commentary figure, and `shape-counting.md` §4 states the direction of the error.
 
 ### A22. `validate_table_v3.py`'s group-A expectation is scoped to the current table
 
