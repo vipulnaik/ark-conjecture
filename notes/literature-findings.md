@@ -82,9 +82,9 @@ Three things follow.
 
 **The two-quantifier-column point survives and is worth keeping.** Shparlinski's stronger exponents (1.677 and 3/2) both carry exceptional sets. On the *all large n* row the unconditional state of the art is 5/4, so a result of ours that holds for all large n is not undercut by the 1.677 figure. The comparison table in the paper needs a quantifier column or it will mislead in our favour, which is worse than misleading against us.
 
-**The whole picture is one parameter, and the ceiling is a level-of-distribution barrier.** Writing θ for the guaranteed size of a prime factor of r − 1, the route delivers n^{1+θ}: Bombieri–Vinogradov θ = 1/4 gives 5/4 for all large n, Chowla-type θ = 1/2 gives 3/2, Baker–Harman θ = 0.677 with positive relative density gives 1.677 for almost all n, and Elliott–Halberstam θ → 1 gives n^{2−o(1)}. Our (H) is the θ = 1 endpoint. Unlike Chowla's 1/2 — the value of a *conjecture* — Baker–Harman's is the current output of a *method*, resting on Brun–Titchmarsh on average, i.e. on primes in progressions to moduli past x^{1/2}. The exponent moves whenever that control does: **Runbo Li (arXiv:2508.18285, 2025) has raised it to 0.679** via Maynard's triple-convolution estimates, in the lineage that took Bombieri–Friedlander–Iwaniec's x^{29/56} to Maynard's x^{11/21} and Lichtman's x^{17/32}. **Cite 0.679, not 0.677.**
+**The whole picture is one parameter, and the ceiling is a level-of-distribution barrier.** Writing θ for the guaranteed size of a prime factor of r − 1, the route delivers n^{1+θ}: Bombieri–Vinogradov θ = 1/4 gives 5/4 for all large n, Chowla-type θ = 1/2 gives 3/2, Baker–Harman θ = 0.677 with positive relative density gives 1.677 for almost all n, and Elliott–Halberstam θ → 1 gives n^{2−o(1)}. Our (BCG-AL) is the θ = 1 endpoint. Unlike Chowla's 1/2 — the value of a *conjecture* — Baker–Harman's is the current output of a *method*, resting on Brun–Titchmarsh on average, i.e. on primes in progressions to moduli past x^{1/2}. The exponent moves whenever that control does: **Runbo Li (arXiv:2508.18285, 2025) has raised it to 0.679** via Maynard's triple-convolution estimates, in the lineage that took Bombieri–Friedlander–Iwaniec's x^{29/56} to Maynard's x^{11/21} and Lichtman's x^{17/32}. **Cite 0.679, not 0.677.**
 
-**The γ = 1 endpoint reframing is precisely locatable.** Shparlinski's Theorem 2 is parameterised by α, defined by the density of primes r with P(r − 1) > r^α, where P is the largest prime divisor. Baker–Harman gives α = 0.677 unconditionally, now 0.679 (Li 2025); he notes "the standard heuristic suggests that the condition of Theorem 2 holds with any α < 1", and that Elliott–Halberstam gives any α < 1. Our hypothesis (H) is effectively the **γ = α = 1 endpoint** of that ladder. Presenting (H) that way says something informative about its cost — it is the limit of a parameterised family whose current unconditional value is 0.677 — rather than asserting a barrier.
+**The γ = 1 endpoint reframing is precisely locatable.** Shparlinski's Theorem 2 is parameterised by α, defined by the density of primes r with P(r − 1) > r^α, where P is the largest prime divisor. Baker–Harman gives α = 0.677 unconditionally, now 0.679 (Li 2025); he notes "the standard heuristic suggests that the condition of Theorem 2 holds with any α < 1", and that Elliott–Halberstam gives any α < 1. Our hypothesis (BCG-AL) is effectively the **γ = α = 1 endpoint** of that ladder. Presenting (BCG-AL) that way says something informative about its cost — it is the limit of a parameterised family whose current unconditional value is 0.677 — rather than asserting a barrier.
 
 *One technical mismatch to be careful about.* Shparlinski's α concerns the largest **prime** divisor P(r − 1). Our efficiency η is built from the largest prime **power** divisor of the odd part of r − 1, together with the 2-part. These are not the same quantity and the ladder does not transfer verbatim. Worth checking whether his Theorem 2 goes through with the prime-power version before we claim to be its endpoint.
 
@@ -154,7 +154,7 @@ That is `notes` §8 territory almost exactly — the same n, the same tool, the 
 
 0. **Read Angel–Borja** (item 6), before writing anything about n = 10. Same degree, same tool, same target; unknown overlap.
 1. ~~**Read Black's spacing definition** (item 4).~~ **Superseded by items 4 and 17.** The framework is now identified; what replaces "read it" is a specific comparison — does our group data give better *spacing* at composite non-prime-power n than the sequences already in the literature? *(Items 2 and 3 below are resolved — see the second pass; item 4's other actions live in `pending-checks.md` T4.)*
-2. **Check whether Shparlinski's Theorem 2 survives the prime-power version of α** (item 2). If it does, "the γ = 1 endpoint" is a clean and accurate framing for (H); if not, we need a different way to say it.
+2. **Check whether Shparlinski's Theorem 2 survives the prime-power version of α** (item 2). If it does, "the γ = 1 endpoint" is a clean and accurate framing for (BCG-AL); if not, we need a different way to say it.
 3. **Read Scheidweiler–Triesch and Korneffel–Triesch properly** (item 3). I have n²/3 secondhand; the primary source should be checked before it goes in a comparison table.
 4. **Decide the framing** (item 1). Not a literature question any more — the literature is now clear. It is a decision about what the paper claims, and it should be made before more writing happens, because it determines whether `aod` §3 is a contribution or a recap.
 
@@ -221,7 +221,7 @@ Neither implies the other. Ours is the stronger conclusion on a smaller class; t
 
 ## 8. What is still open in T4
 
-**Only the Shparlinski prime-power question**, and it needs the paper body. His Theorem 2 ladder is stated for the largest **prime** divisor of r − 1; our η is built from the largest prime **power** divisor of the odd part, together with the 2-part. The two agree when r − 1 = 2q and differ otherwise. If his argument transfers verbatim to the prime-power version, "(H) is the θ = 1 endpoint" is exact rather than approximate; if it does not, `aod` §3.6's caveat has to stay. This is a judgement about a proof's robustness, not a fact to look up.
+**Only the Shparlinski prime-power question**, and it needs the paper body. His Theorem 2 ladder is stated for the largest **prime** divisor of r − 1; our η is built from the largest prime **power** divisor of the odd part, together with the 2-part. The two agree when r − 1 = 2q and differ otherwise. If his argument transfers verbatim to the prime-power version, "(BCG-AL) is the θ = 1 endpoint" is exact rather than approximate; if it does not, `aod` §3.6's caveat has to stay. This is a judgement about a proof's robustness, not a fact to look up.
 
 ---
 
@@ -327,6 +327,18 @@ Neither half of our pipeline is new on its own. *Topology reduces to arithmetic 
 
 > **This is the most actionable item in this file.** If the averaging can be made to work over our shape families, `aod` §4's density claim moves from conditional to unconditional, which changes what the paper is. The obstacles to check: our polynomials are constrained by the coprimality budget, so the family we average over is not a generic family of polynomials; and their result is for linear polynomials in several variables, which fits our two-part shapes better than our fused ones. **Worth a serious read before `aod` §4 is written, not after.**
 
+## 15b. What BBKN should be cited for: the case split, not the construction
+
+**BBKN's `n log n` proof splits on the size of the largest prime-power divisor**, and the split is the durable contribution. When `Q(n)` is large the bound follows with no fusion at all; when `Q(n)` is small the cofactor `n/Q(n)` is large, and they decompose it into a sum of primes by **Vinogradov's three-primes theorem**, using the resulting cyclic groups of coprime orders to keep the layer cyclic and so obtain enough (not complete) fusion for the right order.
+
+**That split is the framework's S2 identity, arrived at from the other end.** `aod` §2.1 records `δ_S2(n) = (Q(n) − 1)/(n − 1)` for every non-prime-power n, so "largest prime-power divisor large" *is* "the universal fused shape suffices", their threshold is our δ₀, and the complementary case is where every analytic hypothesis in this project earns its keep. Reading the two side by side is the clearest available statement of what the arithmetic difficulty is.
+
+**The Vinogradov step, by contrast, should not be read as evidence about what fusion requires.** It manages coprimality in order to keep `Γ₁/Γ₂` cyclic, which the **entangled generator** (`entangled-generator-finding.md`) achieves at *any* fusion count F, with no decomposition and no hypothesis: `⟨z⟩` is cyclic of order `F(c − 1)` because the block rotation is a quotient of the layer rather than a subgroup of it. So the published construction imports an analytic input (ternary Goldbach) that the corrected shape space does not need, and quantifies over a proper subfamily of the admissible groups.
+
+**This is not looseness about constants; it is a different kind of slack, and it was rational.** At `θ ≤ 0.677` the binding term is the companion prime and any admissible family delivers the same `Ω(n^{1+θ})`, so optimizing the construction would have bought exactly nothing — `shparlinski-constants.md` §5 quantifies the same point from the other side, the method reaching `n/(log n)²` where the endpoint needs `δ₀n`. **Constants get absorbed by an unspecified `c` downstream; hypotheses get absorbed by an exponent gap.** Both are invisible until someone runs the argument at θ = 1, and then both surface at once. Cite BBKN for the split; do not cite their construction as a constraint on ours.
+
+**One caveat that cuts the other way, and should stay visible.** Nobody has searched for the *optimal* Oliver-admissible family, because until this framework there was no reason to. So the absence of the entangled construction from the published work is not evidence against it — and the absence of anything better from the literature is not evidence for its optimality either. The ceiling table is a theorem about the shape space **as currently characterized**; whether that characterization is complete is open, and it is the one place a further factor could still hide.
+
 ## 16. What this settles about our standing
 
 The division we should state explicitly, in `arithmetic-of-density.md` §3's opening rather than anywhere later:
@@ -340,7 +352,7 @@ The division we should state explicitly, in `arithmetic-of-density.md` §3's ope
 | the fallback branch, e = 1 at δ > 1/9 | **unconditional** | Proposition F.1 at k = 3 |
 | the fallback branch, e = 1 at δ ≤ 1/9 | **a bounded search, empty over the computed range** | not a theorem; the check is per n |
 | the fallback branch, e ≥ 2 and q = 2 | **open** | needs domination, not supply |
-| the fallback branch being a finite residue overall (`ep` Part E″) | **conditional**, and only partly established | a floor δ ≥ δ₀, i.e. (H); plus Lemma C at a > 1 for the p-characteristic half |
+| the fallback branch being a finite residue overall (`ep` Part E″) | **conditional**, and only partly established | a floor δ ≥ δ₀, i.e. (BCG-AL); plus Lemma C at a > 1 for the p-characteristic half |
 | the global floor conjecture (`aod` §5) | **conjectural**, verified to 10⁶ over four families | — |
 
 **The fourth row is the one most likely to be misread**, so state it carefully wherever it appears. The fallback branch has been *characterised* — a named finite residue under a stated hypothesis — not *closed*. B_refined = B_safe remains a per-n certificate rather than a theorem, and the characterisation itself is conditional on a density floor, which q-pinning needs. (The p-characteristic half of the leftover is unconditional: Lemma C's coupling and Corollary C′ close it at every a.) A well-characterised open problem and a solved one read alike once the boxes are written; the table is where the difference has to be visible.
@@ -429,7 +441,7 @@ and the orbital size is m\* ~ n^{1+θ} — which is exactly the ladder's edge bo
 | shifted primes, θ ∈ (0.679, 1) | **infinitude open**, not just density |
 | shifted primes, θ = 1 (bounded cofactor) | Sophie Germain regime; Hardy–Littlewood / Bateman–Horn class |
 
-So there is **one wall, and it is not at the top rung** — it is the gap between the top rung and the endpoint, and no sieve improvement crosses it. This is also why (H) belongs in the Bateman–Horn class rather than being a strengthened Baker–Harman, and why the Goldbach half becomes moot at the endpoint: one cannot average over a set not known to be infinite.
+So there is **one wall, and it is not at the top rung** — it is the gap between the top rung and the endpoint, and no sieve improvement crosses it. This is also why (BCG-AL) belongs in the Bateman–Horn class rather than being a strengthened Baker–Harman, and why the Goldbach half becomes moot at the endpoint: one cannot average over a set not known to be infinite.
 
 **Two things unverified, flagged rather than asserted.**
 

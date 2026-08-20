@@ -82,7 +82,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("table")
 ap.add_argument("docs", nargs="+")
 ap.add_argument("--pass", dest="only", default="all",
-                choices=["all", "figures", "scope", "prose", "hygiene", "census", "refs", "tables", "history"])
+                choices=["all", "figures", "scope", "prose", "hygiene", "census", "refs", "tables", "history", "s2"])
 ap.add_argument("--quiet", action="store_true", help="findings only")
 A = ap.parse_args()
 DOCS = [d for d in A.docs if d.endswith(".md")]
@@ -572,6 +572,96 @@ if A.only in ("all", "scope"):
             if not i3:
                 print("[ok] I3: every F = 4 residue list matches the ceiling table.")
 
+    # (I4) S2 IS NOT GATED ON omega(n) OR ON F BEING A PRIME POWER.  After the
+    # entangled-generator correction the fusion count F is an arbitrary integer
+    # carried by the cyclic layer, so the single fused class exists at EVERY
+    # non-prime-power n and its density is (Q(n)-1)/(n-1).  The superseded rule
+    # -- "F must be a q-power, hence omega(n) <= 2" -- reads as a plausible
+    # premise wherever it survives, and it survived in five places across two
+    # rounds of repair precisely because it is prose and not a figure.  n = 78
+    # = 6*13 is the standing three-prime counterexample.
+    # Only a REQUIREMENT trips this.  Statements measuring how the omega(n) = 2
+    # population thins, or reporting its share of the table, are legitimate and
+    # frequent; an earlier draft of this pass fired on all of them and would
+    # have trained the reader to ignore I4 entirely.
+    S2GATE = re.compile(
+        r"(?:requir\w*|needs?|demands?|only if|available only|exists? only|"
+        r"restricted to|confined to|gated on)"
+        r"[^.|]{0,60}?(?:omega\(n\)|\u03c9\(n\))\s*[=\u2264<]{1,2}\s*[23]"
+        r"|(?:omega\(n\)|\u03c9\(n\))\s*[=\u2264<]{1,2}\s*[23]"
+        r"[^.|]{0,40}?(?:is required|is needed|outright)"
+        r"|(?:fusion|block)\s+count\s+(?:must\s+be|has to be)\s+(?:a\s+)?"
+        r"(?:q-)?(?:prime\s+)?power",
+        re.I)
+    # Sentences that mention the correction, or that quote the old rule in order
+    # to refute it, are the point rather than a regression.
+    S2OK = re.compile(r"entangl|supersed|no longer|not\s+(?:even\s+)?true"
+                      r"|refut|old\s+(?:rule|form)|counterexample|correct(?:ed|ion)"
+                      r"|F_mid|arbitrary integer", re.I)
+    i4 = 0
+    for d in DOCS:
+        try: txt = open(d).read()
+        except OSError: continue
+        flat = re.sub(r"\n\s*(?:[#>*]\s*)?", " ", txt)
+        for m in S2GATE.finditer(flat):
+            ctx = flat[max(0, m.start() - 300):m.end() + 300]
+            if S2OK.search(ctx):
+                continue
+            ln = txt.count("\n", 0, m.start()) + 1
+            findings += 1; i4 += 1
+            print(f"{d} L~{ln}  *** INVARIANT I4 *** gates the fused shape on "
+                  f"omega(n) or on F being a prime power; after the entangled "
+                  f"correction S2 exists at every non-prime-power n")
+            print(f"   {ctx[260:-260].strip()[:170]}\n")
+    if not i4:
+        print("[ok] I4: no surviving omega(n) / prime-power gate on the fused shape.")
+
+    # (I5) THE HYPOTHESIS IS NEVER NAMED BARE.  (BCG) comes in two quantifier
+    # strengths with materially different status -- (BCG-AL) is implied by no
+    # fixed Bateman-Horn system, (BCG-AA) is -- and the note's fixed-window
+    # variant (BCG_{1/5}) is incomparable to both.  A bare "(BCG)" is therefore
+    # an error of STATEMENT, not a stylistic matter, and this pass exists to
+    # make it catchable.  Generic uses that are about the name itself, or that
+    # range over both variants deliberately, are exempted by context.
+    # A bare "(BCG)" is fine where the sentence is about the CLAUSES -- d <= 12,
+    # the shape, the local analysis -- since both variants share them, and
+    # demanding a suffix there would put ~20 suffixes into prose that does not
+    # depend on which one is meant.  It is an error only where the sentence
+    # turns on the QUANTIFIER: what the hypothesis yields, implies, or buys,
+    # and for how many n.  So the trigger is a bare tag in quantifier-sensitive
+    # company, which is exactly the class of statement that can be wrong.
+    BARE = re.compile(r"\(BCG\)(?!\s*[-\u2013]\s*(?:AL|AA)|_)")
+    QUANT = re.compile(r"all (?:sufficiently )?large|almost all|every large"
+                       r"|for all but|exceptional set|implies|implied by"
+                       r"|yields|buys|delivers|grants?|granting|assuming"
+                       r"|conditional on", re.I)
+    BAREOK = re.compile(r"both variants|either variant|the name|two quantifier"
+                        r"|variant|locally soluble|/\(SP\)|\(BCG\)/"
+                        r"|errors of statement", re.I)
+    i5 = 0
+    for d in DOCS:
+        try: txt = open(d).read()
+        except OSError: continue
+        flat = re.sub(r"\n\s*(?:[#>*]\s*)?", " ", txt)
+        for m in BARE.finditer(flat):
+            ctx = flat[max(0, m.start() - 220):m.end() + 220]
+            if BAREOK.search(ctx):
+                continue
+            # Sentence-local test: the clause the tag sits in, not the paragraph.
+            lo = max(flat.rfind(".", 0, m.start()), flat.rfind("**", 0, m.start()))
+            hi = flat.find(".", m.end())
+            sent = flat[lo + 1: hi if hi > 0 else m.end() + 200]
+            if not QUANT.search(sent):
+                continue
+            ln = txt.count("\n", 0, m.start()) + 1
+            findings += 1; i5 += 1
+            print(f"{d} L~{ln}  *** INVARIANT I5 *** bare (BCG) in a "
+                  f"quantifier-sensitive sentence; name the variant -- "
+                  f"(BCG-AL), (BCG-AA), or (BCG_{{1/5}})")
+            print(f"   {ctx[190:-190].strip()[:170]}\n")
+    if not i5:
+        print("[ok] I5: every (BCG) reference names its variant.")
+
 # --------------------------------------------------------------- PASS 7 tables
 #
 # A markdown table whose separator row has a different number of columns from
@@ -900,6 +990,74 @@ if A.only in ("all", "prose"):
     print("\n('all but N' and 'no exceptions' are counts written as words, which no")
     print(" numeric sweep will ever catch. Recheck them against the table by hand.)")
 
+# ------------------------------------------------------------------ PASS 9 S2
+#
+# The single fused class needs only that c be a prime power, and after the
+# entangled-generator correction F is an arbitrary integer carried by the cyclic
+# layer.  So the shape exists at EVERY non-prime-power n, and taking c = Q(n),
+# the largest prime-power divisor, gives an identity rather than a bound:
+#
+#     delta_S2(n) = (Q(n) - 1) / (n - 1),        F = n/Q(n) > 1.
+#
+# Every row of the table must therefore clear F*C(Q,2) -- in exact integers, not
+# floats, since the two agree to eleven places at the rows that matter.  This is
+# worth a pass of its own because it checks the entangled correction from a
+# direction that never touches the enumerator: the identity is arithmetic, the
+# table is a search output, and a disagreement means one of them is wrong.
+#
+# Expected: 0 rows on any current-scoring table.  On the v4 BASELINE exactly two
+# rows fail -- n = 78 and n = 222 -- which are precisely the two entries of
+# entangled_exceedances.txt with no top prime (q=None), i.e. the composite-F,
+# top-trivial configurations the superseded shape space could not express.  So a
+# baseline run reporting {78, 222} is CORRECT and reporting fewer is the signal.
+
+def largest_prime_power_divisor(n):
+    best, m, d = 1, n, 2
+    while d * d <= m:
+        if m % d == 0:
+            e = 1
+            while m % d == 0:
+                m //= d; e *= d
+            best = max(best, e)
+        d += 1 if d == 2 else 2
+    return max(best, m)
+
+
+def pass9_s2(rows, quiet=False):
+    findings = 0
+    viol = []
+    for r in rows:
+        n = r["n"]
+        if n < 6:
+            continue
+        c = largest_prime_power_divisor(n)
+        if c == n:                      # prime power: S1's domain, no F > 1
+            continue
+        mu = int(r["mu_bound"])
+        s2 = (n // c) * (c * (c - 1) // 2)
+        if s2 > mu:
+            viol.append((n, mu, s2))
+    if not viol:
+        if not quiet:
+            print("[ok] S2: delta_S2(n) = (Q(n)-1)/(n-1) holds at every row.")
+        return 0
+    baseline = {78, 222}
+    ns = {n for n, _, _ in viol}
+    print(f"S2 identity exceeded at {len(viol)} row(s): "
+          f"{[n for n, _, _ in viol[:12]]}")
+    for n, mu, s2 in viol[:6]:
+        print(f"   n={n}: recorded {mu}, fused shape {n//largest_prime_power_divisor(n)}"
+              f"x{largest_prime_power_divisor(n)} gives {s2}")
+    if ns == baseline:
+        print("   -- exactly the expected v4 baseline pair (78, 222); "
+              "not a defect, see entangled_exceedances.txt")
+    else:
+        findings += 1
+        print("   *** these are NOT the expected baseline pair; either the "
+              "table is wrong at these n or the identity's domain is")
+    return findings
+
+
 # ---------------------------------------------------------------- PASS 5 census
 
 # Statements duplicated across documents on purpose are delimited by
@@ -941,6 +1099,10 @@ def norm(desc):
     drop = {"the", "a", "an", "of", "with", "and", "class", "classes", "block",
             "blocks", "one", "n", "layer", "copies", "count", "at", "in", "to"}
     return tuple(sorted(w for w in d.split() if w not in drop))
+
+if A.only in ("all", "s2"):
+    print("\n" + "=" * 72); print("PASS 9  S2 IDENTITY"); print("=" * 72)
+    findings += pass9_s2(rows, quiet=False)
 
 if A.only in ("all", "census"):
     print("\n" + "=" * 72); print("PASS 5  CENSUS"); print("=" * 72)

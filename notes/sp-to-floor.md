@@ -16,9 +16,11 @@ The question: can the almost-all-Goldbach machinery take Hypothesis (SP) — a *
 >
 > `μ(n) ≥ (δ(n mod 12) − ε)·C(n,2)`,
 >
-> with the per-class constants of §4.4, uniformly `δ(·) ≥ 1/(10 + 4√6) ≈ 0.0505` — the binding class being **n ≡ 11 (mod 12)**.
+> with the per-class constants of §4.4, uniformly `δ(·) ≥ 7 − 4√3 ≈ 0.0718` — the binding class being **n ≡ 11 (mod 12)**.
 
-Two things about the constant before anything else. It exceeds `1/25`, the framework's working floor. And it is keyed **mod 12** — the same modulus that keys the ceiling table — for a reason visible in the proof: the residues of `r = dQ + 1` are pinned mod 4 and mod 3 by the choice of `d | 12`, and those two pins are the only local constraints that ever bind.
+**The per-class constants are the framework's ceiling table** (§3), so the theorem's sharper statement is: **(BH-SW) implies that almost all n attain their own class ceiling, up to ε.** That is the exact asymptotic half of the floor conjecture, meeting the ceiling from below — not a positive constant that happens to beat 1/25, but the best constant the shape space permits at each n. In the framework's names, **(BH-SW) ⟹ (BCG-AA)** (`arithmetic-of-density.md` §3.5.3), cell by cell in the (F, d) grid.
+
+Two things about the constant before anything else. It exceeds `1/25`, the framework's working floor, by a factor 1.8. And it is keyed **mod 12** — the same modulus that keys the ceiling table, and §3 shows this is an identity rather than a coincidence — for a reason visible in the proof: the residues of `r = dQ + 1` are pinned mod 4 and mod 3 by the choice of `d | 12`, and those two pins are the only local constraints that ever bind.
 
 ---
 
@@ -32,7 +34,7 @@ For an even `d` and coprime residue data `(q, b)`, let
 
 > `π_d(t; q, b) = 𝔰_d(q, b) · 𝔖_d · t/(log t)² · (1 + O_B((log t)^{−B′}))`,
 
-where `𝔖_d` is the Bateman–Horn constant of the pair `{Q, dQ+1}` and `𝔰_d(q, b)` are **the standard local proportions of that pair** — the density of the local model in which `Q` and `dQ+1` are independently "prime-like" mod q. Explicitly, `𝔰_d(q,b)` is supported on `b` with `(b, q) = 1` and `b ≡ dQ̄ + 1` for a unit `Q̄`, with the natural weights; §5.2 uses only two of its properties: it is the **specific** BH local measure (not an abstract one), and its Fourier coefficients `τ_d(q, a) = Σ_b 𝔰_d(q,b) e(ab/q)` inherit Ramanujan-sum decay from that specificity.
+where `𝔖_d` is the Bateman–Horn constant of the pair `{Q, dQ+1}` and `𝔰_d(q, b)` are **the standard local proportions of that pair** — the density of the local model in which `Q` and `dQ+1` are independently "prime-like" mod q. Explicitly, `𝔰_d(q,b)` is supported on `b` with `(b, q) = 1` and `b ≡ dQ̄ + 1` for a unit `Q̄`, with the natural weights; §4.2 uses only two of its properties: it is the **specific** BH local measure (not an abstract one), and its Fourier coefficients `τ_d(q, a) = Σ_b 𝔰_d(q,b) e(ab/q)` inherit Ramanujan-sum decay from that specificity.
 
 Three remarks. **(i)** This is Bateman–Horn for finitely many *fixed* systems, with Siegel–Walfisz-quality uniformity in progressions to **polylogarithmic** moduli — no level-of-distribution content whatever; the moduli here and the moduli in `shparlinski-constants.md` §7.5's endpoint discussion differ by the entire ladder, and Friedlander–Granville's endpoint failure is about the latter. **(ii)** It implies (SP) trivially (take q = 1), so the theorem is genuinely a strengthening of the hypothesis side, and §6 shows the strengthening is not removable by this method. **(iii)** Proper prime powers `Q = q^j`, `j ≥ 2` are excluded from the systems; they only ever *add* members to S_D, so excluding them is safe for a lower bound, and they are rare in it anyway (0.55% of S₁₂ below 2·10⁶).
 
@@ -42,13 +44,17 @@ Three remarks. **(i)** This is Bateman–Horn for finitely many *fixed* systems,
 
 **Reduction Lemma.** Let `k ∈ {1, 2, 4}`, `d ∈ {2, 4, 6, 12}`, and suppose `n = kp + r` with `p, r` prime, `r = dQ + 1`, `Q` prime, `gcd(k(p−1), r) = 1`, `p` odd, `p ≠ r`, and `r ∈ (αn, βn]` for window constants `0 < α < β < 1`. Then
 
-> `μ(n) ≥ min{ k·C(p,2), 2p²·[k=4], p²·[k=2], k·p·r, r·Q/2 } ≥ (min{u²/k, 2αu, α²/d} − o(1)) · n²/2`, `u := 1 − β`.
+> `μ(n) ≥ min{ k·C(p,2), 2p²·[k=4], p²·[k=2], k·p·r, r·Q } ≥ (min{u²/k, 2αu, 2α²/d} − o(1)) · n²/2`, `u := 1 − β`.
 
-*Construction and proof.* [INTERFACE + VERIFIED COMPUTATIONALLY] Take the group `Γ = (𝔽_p^k ⋊ ⟨g⟩) × (C_r ⋊ C_Q)` on `kp + r` points, where `g` is the **entangled generator** `(v_0, …, v_{k−1}) ↦ (ζ v_{k−1}, v_0, …, v_{k−2})`, `ζ` a primitive root mod p, so `⟨g⟩` is cyclic of order `k(p−1)` with `g^k = ζ·diag` — the cyclic-layer rotation with full twist that the framework's corrected shape space provides at any k. The Oliver chain: `Γ₂ = 𝔽_p^k` (bottom p-group), `Γ₁/Γ₂ = ⟨g⟩ × C_r` (cyclic — this is where `gcd(k(p−1), r) = 1` is used, and it holds automatically in our windows since `r > k(p−1)` and r is prime), top `= C_Q` (q-group, Q prime). The orbitals, enumerated explicitly at `(p,k) ∈ {(5,2),(7,2),(5,3),(5,4),(7,4)}` and in every case matching the formulas: matching intra `k·C(p,2)` in a single orbital (full twist reached through `g^k`); cross-block `p²·(orbit structure of C_k on block-pairs)`, smallest `p²` at k = 2 and `2p²` at k = 4 (the antipodal orbit), in all cases `≥ k·C(p,2)·(1 − o(1))` so never binding below the intra term; part-to-part cross `k·p·r`, a single orbital by joint transitivity; foreign intra `r·Q` for odd Q and `r·Q/2` for even (the `−1 ∈ C_Q` dichotomy of `shparlinski-constants.md` §1.5) — the stated bound uses the safe halved value. With `pk = n − r ∈ [un, (1−α)n)` and `Q = (r−1)/d`, the numerical form follows. ∎
+*Construction and proof.* [INTERFACE + VERIFIED COMPUTATIONALLY] Take the group `Γ = (𝔽_p^k ⋊ ⟨g⟩) × (C_r ⋊ C_Q)` on `kp + r` points, where `g` is the **entangled generator** `(v_0, …, v_{k−1}) ↦ (ζ v_{k−1}, v_0, …, v_{k−2})`, `ζ` a primitive root mod p, so `⟨g⟩` is cyclic of order `k(p−1)` with `g^k = ζ·diag` — the cyclic-layer rotation with full twist that the framework's corrected shape space provides at any k. The Oliver chain: `Γ₂ = 𝔽_p^k` (bottom p-group), `Γ₁/Γ₂ = ⟨g⟩ × C_r` (cyclic — this is where `gcd(k(p−1), r) = 1` is used, and it holds automatically in our windows since `r > k(p−1)` and r is prime), top `= C_Q` (q-group, Q prime). The orbitals, enumerated explicitly at `(p,k) ∈ {(5,2),(7,2),(5,3),(5,4),(7,4)}` and in every case matching the formulas: matching intra `k·C(p,2)` in a single orbital (full twist reached through `g^k`); cross-block `p²·(orbit structure of C_k on block-pairs)`, smallest `p²` at k = 2 and `2p²` at k = 4 (the antipodal orbit), in all cases `≥ k·C(p,2)·(1 − o(1))` so never binding below the intra term; part-to-part cross `k·p·r`, a single orbital by joint transitivity; foreign intra `r·Q` for odd Q and `r·Q/2` for even (the `−1 ∈ C_Q` dichotomy of `shparlinski-constants.md` §1.5), and **Q is odd throughout this note**, so the bound uses `r·Q`.
 
-**Window optimization.** [PROVED HERE, closed form verified against a grid search] Maximizing `min{u²/k, 2αu, α²/d}` over `0 < α < β < 1`: the cross term never binds, the balance `u²/k = α²/d` gives `α = u√(d/k)`, the constraint `α ≤ β = 1 − u` gives `u ≤ 1/(1 + √(d/k))`, and
+> **The halved value is not the conservative choice here; it is the wrong one, and using it costs a factor 2 in the objective.** Every `d` in the grid is even, so `Q = (r − 1)/d` is an odd prime in every window, and `−1 ∉ C_Q`: the true orbital is `rQ`. Verified by direct orbit enumeration at `(r,Q) = (13,3), (31,5), (11,5)` — sizes 39, 155, 55, exactly `rQ` — against `(13,4), (31,2), (41,8)` giving 26, 31, 164, exactly `rQ/2`. The same argument, in the same form, is already made in `note-to-framework-bridge.md` §5 for the note's construction: an even twist order would force `q = 2` and hence a bounded `r`, which the window excludes. Writing `rQ/2` "to be safe" is only safe when the halving can occur. With `pk = n − r ∈ [un, (1−α)n)` and `Q = (r−1)/d`, the numerical form follows. ∎
 
-> **`δ(k, d) = 1/(√k + √d)²`** — as a supremum; any `δ(k,d) − ε` is attained with a nondegenerate window.
+**Window optimization.** [PROVED HERE, closed form verified against a grid search] Maximizing `min{u²/k, 2αu, 2α²/d}` over `0 < α < β < 1`: the cross term never binds, the balance `u²/k = 2α²/d` gives `α = u√(d/(2k))`, the constraint `α ≤ β = 1 − u` gives `u ≤ 1/(1 + √(d/(2k)))`, and
+
+> **`δ(k, d) = 1/(√k + √(d/2))²`** — as a supremum; any `δ(k,d) − ε` is attained with a nondegenerate window.
+>
+> **This is the framework's ceiling formula.** `1/(√k + √(d/2))² = cap_k(2/d)` identically, where `cap_F(η) = η/(1 + √(Fη))²` is the cap of `arithmetic-of-density.md` §3.3.5 — so the grid below is that document's ceiling table read at `F = k`, `η = 2/d`, and the optimal window `u = √k/(√k + √(d/2))` is its balance point `x*`.
 
 The window is degenerate at the optimum (`α = β`), which is why the theorem carries an ε; the empirical run of §7 backs the windows off by 4% and loses exactly the predicted 8%.
 
@@ -62,15 +68,17 @@ The window is degenerate at the optimum (`α = β`), which is why the theorem ca
 - **mod 3**: `3 | d` forces `r ≡ 1 (mod 3)`; `3 ∤ d` forces `r ≡ 2 (mod 3)` (the unit class of Q is pinned by `r ≢ 0`). Either way `kp` has two available classes, covering two of the three residues of n; the two `d`-types are complementary.
 - **Every other prime ℓ is free**: for `ℓ ∤ kd`, `ℓ ≥ 5`, both `p` and `Q` range over units with at most one excluded value each, and `#{(p̄, Q̄)}` solving the congruence is `≥ ℓ − 3 > 0`. [PROVED HERE]
 
-Hence the per-class grid, with `δ(k,d) = (√k + √d)^{−2}`:
+Hence the per-class grid, with `δ(k,d) = (√k + √(d/2))^{−2} = cap_k(2/d)`:
 
 | n mod 12 | (k, d) | δ | | n mod 12 | (k, d) | δ |
 |---|---|---|---|---|---|---|
-| 0, 4, 6, 10 | (1, 2) | `3 − 2√2 ≈ 0.1716` | | 3, 7 | (2, 4) | `(√2+2)^{−2} ≈ 0.0858` |
-| 1, 9 | (2, 2) | `1/8 = 0.1250` | | 5 | (2, 6) | `(√2+√6)^{−2} ≈ 0.0670` |
-| 2, 8 | (1, 6) | `(1+√6)^{−2} ≈ 0.0840` | | **11** | **(4, 6)** | **`(2+√6)^{−2} ≈ 0.0505`** |
+| 0, 4, 6, 10 | (1, 2) | `1/4 = 0.2500` | | 3, 7 | (2, 4) | `1/8 = 0.1250` |
+| 1, 9 | (2, 2) | `3 − 2√2 ≈ 0.1716` | | 5 | (2, 6) | `(√2+√3)^{−2} ≈ 0.1010` |
+| 2, 8 | (1, 6) | `(1+√3)^{−2} ≈ 0.1340` | | **11** | **(4, 6)** | **`7 − 4√3 ≈ 0.0718`** |
 
-The binding class `n ≡ 11 (mod 12)` needs simultaneously `k ≡ 0 (mod 4)` with `d ≡ 2 (mod 4)` (or the transpose `(6,4)`, same constant) and `3 | kd` — it is the class where both pins act against each other, and `(4,6)` and `(6,4)` are the cheapest resolutions, at the same `(√k+√d)²= 10 + 4√6`. Alternatives are strictly worse: `(2,12)` and `(12,2)` give `≈ 0.0420`. **This is the mod-12 keying appearing from the arithmetic side with no reference to the ceiling table** — the same two moduli, 4 and 3, pinning the same quantity `r − 1`'s divisor structure. Whether the resemblance to the table's keying is an identity or a rhyme is left as a question for the framework documents.
+The binding class `n ≡ 11 (mod 12)` needs simultaneously `k ≡ 0 (mod 4)` with `d ≡ 2 (mod 4)` (or the transpose `(6,4)`, same constant) and `3 | kd` — it is the class where both pins act against each other, and `(4,6)` and `(6,4)` are the cheapest resolutions, at the same `(√k+√(d/2))² = 7 + 4√3`. Alternatives are strictly worse: `(2,12)` and `(12,2)` give `≈ 0.0670`.
+
+**This grid is the framework's ceiling table, not a resemblance to it.** Every cell agrees with `arithmetic-of-density.md` §3.3.5 exactly — 1/4, 3 − 2√2, (1+√3)^{−2}, 1/8, (√2+√3)^{−2}, 7 − 4√3 — under the identification `F = k`, `η = 2/d`, and the binding constant is the framework's global constant `7 − 4√3` at the same extremal class. It also reproduces clause 3 of (BCG) cell by cell: `d = 2` at the even classes and at 1, 9; `d = 4` at 3, 7; `d = 6` at 2, 8, 5 and 11; `F = 4` at 11 alone. So the mod-12 keying is the *same* optimization arrived at twice, and the surprise is not the agreement of two formulas but that **the analytic route selects the same (F, d) per class with no access to the shape space at all** — the two moduli 4 and 3 pin `r − 1`'s divisor structure identically whether one is enumerating Oliver groups or solving a congruence for a circle-method window.
 
 ---
 
@@ -117,7 +125,7 @@ For all but `O_A(x (log x)^{−A})` of the n in the slab, `R(n) ≥ (1 − o(1))
 
 ### 4.4 The constant
 
-`δ₀ = min over classes = δ(4,6) = 1/(10 + 4√6) = 0.05051…` at `n ≡ 11 (mod 12)`, with the full per-class table in §3. For comparison — and the comparison needs its caveats attached — the framework records that **(H) yields δ₀ = 1/350 for all large n**; this route yields `≈ 1/19.8` for **almost all** n from a *different* hypothesis. The gain has one honest source: (H) hands over a single r per n, while (BH-SW) populates the whole window, letting the balance point `r ≈ α·n` be *chosen* — the constant is then a window-geometry optimum rather than a worst case. The costs are the almost-all quantifier and the asymptotic (rather than one-sided) form of the hypothesis.
+`δ₀ = min over classes = δ(4,6) = 7 − 4√3 = 0.071797…` at `n ≡ 11 (mod 12)`, with the full per-class table in §3 — which is to say δ₀ is the framework's global asymptotic constant, and this route attains it. For comparison — and the comparison needs its caveats attached — the framework records that **(BCG_{1/5}) yields δ₀ = 1/350 for all large n**; this route yields `≈ 1/13.9` for **almost all** n from a *different* hypothesis. The gain has one honest source: (BCG_{1/5}) hands over a single r per n, while (BH-SW) populates the whole window, letting the balance point `r ≈ α·n` be *chosen* — the constant is then a window-geometry optimum rather than a worst case. The costs are the almost-all quantifier and the asymptotic (rather than one-sided) form of the hypothesis.
 
 ---
 
@@ -146,9 +154,9 @@ The last row is the point of the whole exercise: the route from the multiplicati
 
 > `ℬ* = {r prime : r ≡ b (mod m)} ∩ window`, `#ℬ* ≍ x/(φ(m) log x) ≍ x/(log x)²` — **the (SP) scale exactly.**
 
-For any n with `n ≡ b (mod ℓ)` for some `ℓ ≤ L`: every `r ∈ ℬ*` has `ℓ | n − r = kp`, and `k ≤ K < ℓ` forces `p = ℓ` — impossible for p of linear size. The n thus excluded have density `1 − Π_{ℓ ≤ L}(1 − 1/ℓ) = 1 − O(1/log L) → 1`. So **almost all n are unrepresentable** from a set satisfying the cardinality hypothesis. The richness of the companion set `{kp}` — which covers every *unit* class mod every modulus — is helpless here, because the attack forces the **zero** class, where the only escape is `p = ℓ` itself.
+For any n with `n ≡ b (mod ℓ)` for some `ℓ ≤ L`: every `r ∈ ℬ*` has `ℓ | n − r = kp`, and `k ≤ K < ℓ` forces `p = ℓ` — impossible for p of linear size. The n thus excluded have density `1 − Π_{K < ℓ ≤ L}(1 − 1/ℓ) = 1 − O(log K/log L) → 1` — the product must start above `K`, since an `ℓ ≤ K` may divide `k` and then excludes nothing; the conclusion is unaffected, the Mertens tail still tending to 1. So **almost all n are unrepresentable** from a set satisfying the cardinality hypothesis. The richness of the companion set `{kp}` — which covers every *unit* class mod every modulus — is helpless here, because the attack forces the **zero** class, where the only escape is `p = ℓ` itself.
 
-Two corollaries. The counterexample also carries *abstract* Siegel–Walfisz-type equidistribution data (it has limiting densities mod every fixed q — concentrated ones), so "cardinality + equidistribution with unspecified limits" is equally dead: the hypothesis must pin the densities themselves, which is what (BH-SW)'s exactness does. And it retroactively justifies the ε-free claim in `aod` §6.8(v) that (SP) as stated is insufficient for this route however large ρ is.
+Two corollaries. The counterexample also carries *abstract* Siegel–Walfisz-type equidistribution data (it has limiting densities mod every fixed q — concentrated ones), so "cardinality + equidistribution with unspecified limits" is equally dead: the hypothesis must pin the densities themselves, which is what (BH-SW)'s exactness does. And it retroactively justifies the ε-free claim in `aod` §6.8(iv) that (SP) as stated is insufficient for this route however large ρ is.
 
 ### 6.2 Why this does not close the question for the actual S_D
 
@@ -156,7 +164,7 @@ The counterexample set is concentrated in one class mod m with `φ(m) ≍ log x`
 
 ### 6.3 The resolution of the either/or
 
-So, to the question as posed: **something stronger than (SP) is needed for this method — the exact Bateman–Horn local structure, and §6.1 shows the exactness is doing real work, not tidying** — and with it the proof completes at `δ₀ = 1/(10+4√6) − ε` for almost all n. The cardinality-only version is neither proved nor refuted for the actual S_D; it is refuted for generic sets, and the transference route is the named candidate for rescuing it.
+So, to the question as posed: **something stronger than (SP) is needed for this method — the exact Bateman–Horn local structure, and §6.1 shows the exactness is doing real work, not tidying** — and with it the proof completes at `δ₀ = 7 − 4√3 − ε` for almost all n. The cardinality-only version is neither proved nor refuted for the actual S_D; it is refuted for generic sets, and the transference route is the named candidate for rescuing it.
 
 ---
 
@@ -164,10 +172,12 @@ So, to the question as posed: **something stronger than (SP) is needed for this 
 
 All [VERIFIED COMPUTATIONALLY], reproducible from the session log:
 
-- **Closed form.** `δ(k,d) = (√k+√d)^{−2}` against a 2000² grid at nine (k,d) pairs; agreement to the grid resolution.
+- **Closed form.** `δ(k,d) = (√k+√(d/2))^{−2}` against a 2000² grid at nine (k,d) pairs; agreement to the grid resolution. ⟦PENDING-RERUN⟧ *The grid check was run against the pre-correction objective; the closed form has been re-derived and matches `cap_k(2/d)` algebraically, but the grid search has not been rerun.*
 - **Orbitals.** The entangled construction at `(p,k) ∈ {(5,2),(7,2),(5,3),(5,4),(7,4)}`: matching intra exactly `k·C(p,2)`, single orbital; smallest cross-block orbital `p²` (k=2), `2p²` (k=4, antipodal), never binding; `m* = k·C(p,2)` in every case.
 - **Local grid.** Coverage of every class at every prime-power modulus in `{4, 8, 16, 3, 9, 5, 7}` and every prime `< 200`; the per-(k,d) failures are exactly the mod-4 and mod-3 pins described in §3, nothing else.
-- **End-to-end.** At `x = 4·10⁶` with per-class `(k,d)` and windows backed off 4% inside the optima: **zero exceptional n among the 400,000 consecutive `n ∈ (10⁶, 1.4·10⁶]`**, and the worst realized `δ(n)` in each class sits within the predicted 8% of its ideal — e.g. class 11 realizes 0.04655 against the ideal 0.05051. The BH pair counts feeding this: 13,933 / 7,422 / 10,280 / 5,420 pairs for d = 2, 4, 6, 12 below 4·10⁶.
+- **End-to-end.** At `x = 4·10⁶` with per-class `(k,d)` and windows backed off 4% inside the optima: **zero exceptional n among the 400,000 consecutive `n ∈ (10⁶, 1.4·10⁶]`**, and the worst realized `δ(n)` in each class sits within the predicted 8% of its ideal — e.g. class 11 realizes 0.04655 against the ideal 0.05051. The BH pair counts feeding this: 13,934 / 7,422 / 10,281 / 5,420 pairs for d = 2, 4, 6, 12 below 4·10⁶ *(recount; the earlier 13,933 and 10,280 differ by an endpoint convention at the window edge)*.
+
+  ⟦PENDING-RERUN⟧ **The end-to-end run scored foreign orbitals at `rQ/2` and so inherits the factor-2 undercount corrected in §2.** The structural conclusion — zero exceptional n, realized values within a predictable margin of ideal — is unaffected, since both sides of the comparison move together; the *numbers* are not. Expected on a rerun with `orb = rQ` at odd Q: class 11 realizing `≈ 0.066` against the ideal `0.0718`. Not rerun here.
 
 ---
 
@@ -175,6 +185,6 @@ All [VERIFIED COMPUTATIONALLY], reproducible from the session log:
 
 - **One pass, one reader**, and the two evaluations labeled [STANDARD] — the Vinogradov dilation lemma and the Siegel–Walfisz major-arc manipulation — are used, not rewritten. The singular-series completion is sketched for squarefree q only.
 - The Reduction Lemma's constructions are verified by orbit enumeration at five parameter pairs, not proved for all (p, k); the general proof is a finite orbit computation in the same pattern and is not expected to hold surprises, but it has not been written.
-- The comparison `1/19.8` vs `1/350` compares **different hypotheses with different quantifiers**; it should not be quoted without both caveats.
+- The comparison `1/13.9` vs `1/350` compares **different hypotheses with different quantifiers**; it should not be quoted without both caveats.
 - The transference question of §6.2 is raised, not begun. If it succeeds, (SP) as literally stated suffices and this note's hypothesis is overkill; if it fails in an instructive way, the failure would locate exactly how much distributional information the truth requires. Either outcome is informative, which is what makes it the right next question on this side of the framework.
-- The mod-12 coincidence with the ceiling table's keying is observed, not explained.
+- The mod-12 agreement with the ceiling table is **explained** (§3): it is the same optimization, `δ(k,d) = cap_k(2/d)`, and not a coincidence. What remains genuinely open is one level up — *why the analytic route selects the same (F, d) at every residue class when it has no access to the shape space*. The congruence conditions that pin `d` here are conditions on `r − 1`'s divisor structure, and the shape space's conditions are on which Oliver chains exist; that these agree cell by cell is a fact about the arithmetic of `r = dQ + 1`, and it is the reason to believe the mod-12 keying is intrinsic rather than an artifact of how either table was built.
