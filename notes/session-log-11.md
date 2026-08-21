@@ -150,6 +150,27 @@ The new document's header states its **standing explicitly** — verified arithm
 
 **`check_doc_figures.py` over all eleven documents: 11 findings, all pre-existing in the core five.** The companion documents contribute none. Four apparent DANGLING references when the five are run alone — Lemma D2, Lemma B, `aod` §3.6 — are glob artifacts and vanish with the full set, the same false-positive class as the note/bridge pair.
 
+## 8f. The small-degree material, consistency pass
+
+*`small-degree-computation.md`, `small-degree-verification.md`, with `ark_gap.g`, `consume_gap.py`, `chi_test.py`, `check_groups.py` and the n = 10 outputs. Consistency only, no expansion.*
+
+**Already in sync on everything this session changed.** Both documents carry the entangled-generator correction, and `small-degree-verification.md` §item-8 carries it in the sharp form — it flags a prescribed repair as "stated against the pre-entangled shape space and the weaker of the two available", naming `6x13` at n = 78 as the standing witness that k need not be a prime power. The four `(H)` matches in `ark_gap.g` are GAP subgroup variables, not the hypothesis; no rename applies.
+
+**The one substantive addition, and it is a confirmation rather than a repair.** At the two degrees where μ is known by exhaustive group search, it equals the S2 identity exactly:
+
+| n | Q(n) | F = n/Q | F·C(Q,2) | μ, exhaustive | δ_S2 = (Q−1)/(n−1) |
+|---|---|---|---|---|---|
+| 10 | 5 | 2 | **20** | **20** | 4/9 = 0.4444 |
+| 12 | 4 | 3 | **18** | **18** | 3/11 = 0.2727 |
+
+This is a better check than the table-wide one added earlier in the session. The `check_doc_figures.py` pass compares the identity against `mu_table_safe_*.csv`, which is an *enumerator output* — both sides are classification arguments. Here the right-hand side is a maximum over actually-constructed groups, so the identity is checked against ground truth. It also explains the attainer structure the documents record — one orbital partition at both degrees, eight attainers each — rather than leaving it a coincidence: there is essentially one optimal shape and it is this one. Recorded in `small-degree-computation.md` §4.1, with the consequence stated: the framework's difficulty lies entirely at the n where this shape is *not* good enough, and neither 10 nor 12 is such an n.
+
+**One attribution sharpened.** The "theoretical ceiling of 1/2" at n = 10 is now attributed — it holds for every *solvable* transitive group at non-prime-power n (`solvable-relaxation.md` Proposition 1), not only for Oliver ones, so the headroom above 0.444 is genuinely small rather than an artefact of the chain condition. Same line added to `check_groups.py`'s report, which prints the ceiling next to the achieved value.
+
+**Scripts run.** `check_groups.py` on the n = 10 file: GREEN, 967 groups, no malformed lines, max m\* = 20 at eight groups including the order-200 trivial-top witness — matching the documents exactly. `chi_test.py` and `consume_gap.py` were read but not run (they need the pickled CSP state and hours of compute respectively).
+
+**Five old-checkpoint figure matches across the two documents, all coincidental** — `20.6` and `20.8` are percentages of a group census matching a stale `pct delta >= 1/4` checkpoint. No action.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).
