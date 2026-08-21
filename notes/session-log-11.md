@@ -226,6 +226,16 @@ What replaces it is narrower and better specified — **the runner-up ordering**
 
 **What survives is narrower and is a reading rather than a question.** The argument compares at fixed order, so it settles attainment but not **primitivity**: the field subgroup of order t is irreducible only when t divides no p^b − 1 for proper b | a, so at a twist order lying inside a subfield the block group is imprimitive and Lemma B's affine reading needs ΓL(1, c)'s Frobenius element to restore irreducibility. The scoped claim to carry is that the twist may be taken inside **ΓL(1, c)** without loss; the check owed is that Part E's constructions do reach for Frobenius at subfield-order twists instead of assuming irreducibility.
 
+## 8k. The migration report was truncating its own tail
+
+**The symptom:** `validate_table_v3.py`'s shape-migration check showed no migrations into S2, though n = 78 and n = 222 plainly moved there under the corrected shape space. **The cause was display, not detection** — the check ranked pairs by count and printed the top eight, and there are 22 distinct pairs. `S3 -> S2: 2` sat twelfth.
+
+**Ranking by count buries the wrong end.** A large count is a systematic reclassification — `S3 -> S7f3` at 28 rows is a whole family absorbed by the fused rung, and the check's own summary line already says as much in prose. A count of one or two is the interesting case: a shape reached at a handful of n because the corrected space can express a configuration the old one could not at all. Here the two rows are the **only** migrations into S2 in the table, and they are the same pair `c_s2_identity` names as its expected baseline exceptions — the two composite-F, top-trivial winners, reached from a completely different direction.
+
+**The fix is to print every pair, and the reason it is safe is structural.** The number of distinct pairs is at most S(S − 1) in the number of shape labels, and S is bounded — about ten base shapes, with the fusion variants S7fk running only to F ≤ 1/δ by Part G.4. So the list cannot grow unboundedly unless the fusion bound is wrong, which would itself be worth seeing; the check now says so and flags the case explicitly. Twenty-two lines against a cap of eight.
+
+**Recorded in `verification-lessons.md` §5** as a lesson the file did not have: a summary ranked by frequency hides the rare events, and before capping such a list, check whether its length is bounded by construction — if it is, there is nothing to cap.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).

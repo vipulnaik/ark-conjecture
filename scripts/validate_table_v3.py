@@ -374,18 +374,43 @@ def c_monotone(R, base):
 
 @check("A", "shape migrations against the baseline", "pending-checks A0, A7",
        expect="the shape-space repair moves winners between census rows -- most often a "
-              "3-part c+c+r* becoming the 2-part fused 2xc+r*. Any per-shape count written "
-              "against the baseline is stale for every n listed here")
+              "3-part c+c+r* becoming the 2-part fused 2xc+r*, which is the head of the "
+              "distribution. Read the TAIL too: a pair with one or two rows is usually a "
+              "shape the corrected space can express and the old one could not. Any "
+              "per-shape count written against the baseline is stale for every n listed here")
 def c_migrate(R, base):
+    """Every pair is listed, not the top few.  The number of DISTINCT pairs is
+    bounded by S*(S-1) where S is the number of shape labels, and S is bounded
+    because the census has ~10 base shapes and the fusion variants S7fk run only
+    to F <= 1/delta -- Part G.4's bound, so F <= 25 at the conjectured floor.
+    So this list cannot grow unboundedly unless the fusion bound is wrong, and
+    that would itself be worth seeing.
+
+    Ranking by count and truncating hides exactly the wrong end.  A LARGE count
+    is a systematic reclassification -- a whole family absorbed by the fused
+    rung -- and one line of the summary says as much.  A count of one or two is
+    the interesting case: a shape reached at a handful of n, often because the
+    corrected space can express a configuration the old one could not at all.
+    The two migrations into S2 (n = 78 and n = 222, composite F with a trivial
+    top) sat twelfth by count and were invisible under an eight-line cap; they
+    are the same pair c_s2_identity names as its expected baseline exceptions,
+    reached from the other direction."""
     if not base:
         return ("SKIP", "no --baseline given", [])
     mig = Counter()
     for r in R:
         if r.n in base and base[r.n][1] != r.shape:
             mig[(base[r.n][1], r.shape)] += 1
-    ex = [f"{o} -> {n_}: {k}" for (o, n_), k in sorted(mig.items(), key=lambda t: -t[1])[:8]]
+    # Sorted by count for readability, but nothing is dropped.
+    ex = [f"{o} -> {n_}: {k}" for (o, n_), k in
+          sorted(mig.items(), key=lambda t: (-t[1], t[0]))]
+    labels = {s for pair in mig for s in pair}
+    if len(mig) > len(labels) * (len(labels) - 1):
+        ex.append(f"*** {len(mig)} pairs over {len(labels)} labels exceeds "
+                  f"S*(S-1) -- the label set is not what this check assumes")
     tot = sum(mig.values())
-    return ("INFO", f"{tot} of {len([r for r in R if r.n in base])} winners changed shape", ex)
+    return ("INFO", f"{tot} of {len([r for r in R if r.n in base])} winners "
+                    f"changed shape, over {len(mig)} distinct pairs", ex)
 
 
 # ==========================================================================
