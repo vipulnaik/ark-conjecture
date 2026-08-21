@@ -1,5 +1,13 @@
 # T5 resolved: Lemma C is false, and the coupling that replaces it closes the gap at every a
 
+> # ⚠ ARCHIVED — resolution integrated; retained for its proof and witnesses
+>
+> **⟦ARCHIVED⟧ The coupling theorem is now the framework's statement**, carried in `enumeration-proof.md` Part D as Lemma C's replacement, with the n = 28 and n = 10 witnesses. `pending-checks.md`'s T5 survives as an item but has been rewritten around the coupling rather than around the old lemma, so this note is the *derivation* behind a live entry and not itself a work item. **The mathematics is current**; the framing as pending work is not.
+>
+> **What has moved since.** The range check is against `mu_table_safe_v4.csv`, now a superseded baseline — the direction is unaffected, a corrected B(n) only rising against a fixed bound. The condition-(4) analysis here is also the origin of a distinction the framework leans on elsewhere: a strip that is *not* necessary absolutely but *is* necessary above a threshold. That reading, and the n·log₂n threshold, are current.
+>
+> **One thing to carry if this note is ever reopened:** its Remark (i) is a clean instance of the failure mode `verification-lessons.md` §1 calls site 2 — the lemma's *statement* was stronger than its own proof's conclusion, and survived because it was only ever tested against the case the proof did cover.
+
 *Resolution note for item T5 of `pending-checks.md`. Verification: `t5_verify.py` (eight checks — the a = 2 witness, the coupling's tightness and its negative control, the a = 1 boundary, and the range check — all passing). Status: the coupling theorem is **proved here** with one reading; the witnesses are **machine-verified**. For Vipul's review before integration, as with Lemma D2.*
 
 **Summary.** T5 asked for Lemma C — a cyclic-layer twist on a p-characteristic part shares no prime with any outside block — at a > 1, where the proof's conjugation argument does not close because the top element may act through Galois. The answer, continuing this session's pattern:

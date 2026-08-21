@@ -171,6 +171,27 @@ This is a better check than the table-wide one added earlier in the session. The
 
 **Five old-checkpoint figure matches across the two documents, all coincidental** — `20.6` and `20.8` are percentages of a group census matching a stale `pct delta >= 1/4` checkpoint. No action.
 
+## 8g. Six older documents: four archived, two kept in service
+
+**No `(H)` in any of them**, so the rename needed nothing. Each archive candidate gained a banner stating what was integrated, what has moved, and where the current statement lives.
+
+**`fusion-count-ceilings.md` — ⟦ARCHIVED⟧, but its citation is live.** Its conclusion *is* the framework's ceiling table: the cap as a joint optimum over (F, η), and the global constant 7 − 4√3 rather than (5 − 2√6)/2, with the F = 4 rung at the extremal class coming from here. Two things are stale — it is keyed **mod 24** throughout, before the rekey to mod 12 and the reduction from seven constants to six, and it predates the entangled correction, so its reasoning about what a cyclic-layer fusion costs on the matching side now answers *nothing*. **Worth knowing before it moves:** `aod` §3.3.5 cites it by name as where the trade-off is worked. The citation is to the derivation and remains accurate, but archiving it puts a live reference into an unmaintained file.
+
+**`three-part-family-split.md` — banner extended.** It already carried the entangled deprecation; two later changes compound it. The mod-24 → mod-12 rekey makes every residue list here finer than the framework's, and the extremal class is now set by the two-part F = 4 shape, which lies **outside the three-part family this document is about** — so its 0.050510 is a within-family cap at η = 1/6, not a class ceiling. That distinction was not load-bearing when it was written and is now.
+
+**`a18-resolution.md`, `t5-resolution.md` — ⟦ARCHIVED⟧, mathematics current.** A18 is closed and gone from the work list; its five edit sites were carried out, so the note is now the **authority** behind Lemma D2's replacement rather than a proposal. T5 survives as an item but rewritten around the coupling. Both banners say so, and both flag that their range checks are against v4, now a superseded baseline — direction unaffected, since a corrected B(n) only rises against a fixed bound. **`a18-resolution.md` §4's r = q sub-case is still open** and jointly load-bearing with the census's S10 row, which is the reason to keep the note reachable rather than merely stored.
+
+**`johnson-presentations.md` — one stale script name**, `mu_enumerate_v2.py` → `v3`. Otherwise current, and its §3 framing sits well with this session's work: the arithmetic enters at the base size m, not the coordinate count.
+
+**`verification-lessons.md` — two lessons added, both earned this session.** Its site taxonomy had no entry for either failure this session actually produced.
+
+- **Site 3's commonest form is a document contradicting *itself*, and no automated pass reaches it.** A figure check compares a document's numbers against the *table*; it has no notion of a document's own derivations, so §6.2's penalty column contradicting its own worked example two paragraphs above passed every pass. Reading the argument does not catch it either, because the contradiction is in a table. **Both known instances sat in tables**, and both survived several readings.
+- **Site 3b: an argument the project already contains, made again and made wrong.** The parity dichotomy on the foreign orbital was derived correctly in `note-to-framework-bridge.md`, and two later documents each re-derived it wrongly in opposite directions — one costing a headline constant a factor of two. Nobody consulted the existing version. *Before deriving a step, grep for it.*
+
+**`pending-checks.md`'s companion-file register** updated for all four archivals, including that the resolution notes' mathematics is current and that A18 §4 remains open.
+
+**Full-corpus `check_doc_figures.py` — 19 documents, 24 findings, none in these six.** The dangling-lemma hits when the archived notes are run without `enumeration-proof.md` are the usual glob artifact.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).

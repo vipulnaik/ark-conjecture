@@ -1,5 +1,17 @@
 # The mod-24 ceilings as a joint optimisation over (F, η)
 
+> # ⚠ ARCHIVED — superseded snapshot, retained for its derivation only
+>
+> **⟦ARCHIVED⟧ This note's conclusion was accepted and is now the framework's ceiling table; the note itself has not been maintained since, and two things in it are stale.**
+>
+> **What was integrated.** The central claim — that §3.3.5's ceiling is a **joint** optimum over (F, η) rather than an optimisation of η at a fusion count fixed in advance, and that the global constant is therefore **7 − 4√3** rather than (5 − 2√6)/2 — is now the framework's position, carried in `arithmetic-of-density.md` §3.3.5 and its supporting boxes. The F = 4 rung at the extremal class comes from here.
+>
+> **What is stale, and both matter for reading the tables below.** *(i)* The keying is **mod 24 throughout**; the table was later rekeyed to **mod 12** and the constant count reduced from seven to six, since the mod-24 refinement turned out to track the twist cut rather than the ceiling. A mod-24 ceiling table is now a signal that the cut has been wrongly assumed forced. *(ii)* The note predates the **entangled-generator correction**, so wherever it reasons about what a cyclic-layer fusion costs on the matching side, the answer is now *nothing* — the block-permutation image is a quotient of the layer, not a subgroup, and the full twist survives fusion.
+>
+> **Where the current statement lives:** `arithmetic-of-density.md` §3.3.5 for the table, §3.3.4a for the η column, `entangled-generator-finding.md` for the correction. **Read this note for its derivation of the cap formula and the shape of the (F, η) trade-off, not for its constants or its residue keying.**
+>
+> *`aod` §3.3.5 still cites this note as where the trade-off is worked; that citation is to the derivation and remains accurate.*
+
 *Standalone note for review. Nothing here is merged into `arithmetic-of-density.md`, `enumeration-proof.md` or the census; §7 lists the edit sites if it survives scrutiny.*
 
 **The claim.** §3.3.5's table fixes the fusion count first and optimises η within it. The joint optimum over (F, η) is strictly higher at four of the twelve odd residues, and the global constant moves from **(5 − 2√6)/2** to **7 − 4√3**.

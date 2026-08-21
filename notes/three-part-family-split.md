@@ -1,6 +1,8 @@
 # The three-part family's internal split: which reading realises it
 
-> # ⚠ DEPRECATED — historical snapshot, not a current result
+> # ⚠ ARCHIVED — historical snapshot, not a current result
+>
+> **⟦ARCHIVED⟧ Retained only for the three results in the banner below; not maintained, and not given further cleanup passes.** Two later changes compound the one this banner already records. The ceiling table was **rekeyed from mod 24 to mod 12** and its constant count reduced from seven to six, so every mod-24 residue list here is finer than the framework's; and the extremal class is now set by the **two-part F = 4 shape** at 7 − 4√3, which lies outside the three-part family this document is about — so the 0.050510 appearing in its tables is a *within-family* cap at η = 1/6 and not a class ceiling, a distinction that was not load-bearing when this was written and is now. Current statements: `arithmetic-of-density.md` §3.3.5.
 >
 > **⟦DEPRECATED-EG⟧** **The competition this document analyses no longer exists.** Its entire subject is the internal split of the three-part family n = 2c + r between S4 (unfused), S5 (top-layer fused) and S7 at F = 2 (cyclic-layer fused), and that split is decided throughout by the **c mod 8 law** — S4 winning at c ≡ 1, a tie at c ≡ 5, the fused rung at c ≡ 3, 7. The entangled-generator correction of 2026-08-16 (`entangled-generator-finding.md`) refutes the mechanism that law rested on: a cyclic-layer fusion does **not** cut the twist to the odd part of c − 1, because the block-permutation image is a quotient of the cyclic layer rather than a subgroup. With the full twist available at every c, the fused rung scores 2·C(c,2) against the unfused C(c,2) **at every c**, so:
 >

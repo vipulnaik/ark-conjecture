@@ -100,7 +100,7 @@ At prime power m this is **tight up to a factor of 2**: AGL(1, m) has order m(m�
 >
 > **What is the minimum order of an Oliver group on m points whose minimum orbital is ≥ δ·C(m,2), for m not a prime power?**
 >
-> `mu_enumerate_v2.py` could answer it over the computed range: it already enumerates every configuration with its density, and would only need each configuration's group order recorded alongside.
+> `mu_enumerate_v3.py` could answer it over the computed range: it already enumerates every configuration with its density, and would only need each configuration's group order recorded alongside.
 
 ---
 

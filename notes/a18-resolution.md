@@ -1,5 +1,13 @@
 # A18 resolved: Lemma D2 is false at F ≥ 3, and the shapes it missed never win
 
+> # ⚠ ARCHIVED — resolution integrated; retained for its proof and witness
+>
+> **⟦ARCHIVED⟧ A18 is closed and no longer appears in `pending-checks.md`.** The five edit sites listed in §5 were carried out: Lemma D2's status, Theorem 3.1's "never fused" clause, the census rows for S9 and S10, and the enumerator comment all now read as this note prescribes. **The mathematics here — the n = 85 witness, the fused-outside domination theorem, and the Sylow-r cyclicity step its F < r branch consumes — is current and is the authority for those statements**; what is stale is only the note's framing as pending work.
+>
+> **Two figures have moved since.** The range check is against `mu_table_safe_v4.csv` (2,081 rows, worst ratio 0.83 at n = 56); v4 is now a **baseline** superseded by the rebuild, and 289 of its rows are known low — which affects the *margin* the check reports but not its direction, since a corrected B(n) only rises and the domination bound is unchanged. The n ≥ 1582 threshold rests on the ladder's unconditional δ ≥ 0.02516, which also stands.
+>
+> **Still open, and it is the reason to keep this note reachable:** the **r = q sub-case** of §4 — F ≥ 2 fused outside blocks with r = q — where both halves of the argument lose their footing and which is jointly load-bearing with the census's S10 row.
+
 *Resolution note for item A18 of `pending-checks.md`. Verification code: `a18_verify.py`, which (i) constructs the witness group and computes its orbitals exhaustively, (ii) machine-checks its Oliver chain, and (iii) runs the domination bound against every row of `mu_table_safe_v4.csv`. All three passes are reproduced below. Status of each claim: the witness and the range check are **verified** (independent computation); the two-case bound is **proved here** and has had one reading.*
 
 **Summary.** A18 asked whether Lemma D2's conclusion — an orbit of fused outside blocks always has a class of at most half its size, so outside blocks are never fused — survives the corrected shape space, where the block-permuting group need not have prime-power degree. The answer splits:
