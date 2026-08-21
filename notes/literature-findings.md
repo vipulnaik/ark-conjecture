@@ -327,6 +327,16 @@ Neither half of our pipeline is new on its own. *Topology reduces to arithmetic 
 
 > **This is the most actionable item in this file.** If the averaging can be made to work over our shape families, `aod` §4's density claim moves from conditional to unconditional, which changes what the paper is. The obstacles to check: our polynomials are constrained by the coprimality budget, so the family we average over is not a generic family of polynomials; and their result is for linear polynomials in several variables, which fits our two-part shapes better than our fused ones. **Worth a serious read before `aod` §4 is written, not after.**
 
+## 15a. Sárközy–Stewart's hypothesis, checked
+
+**The endpoint tool wants positive density, and Shparlinski's one-line characterisation of it is accurate.** The result at issue — Sárközy–Stewart, *On divisors of sums of integers II*, J. Reine Angew. Math. **365** (1986), 171–191, invoked by Shparlinski in the remark after his Lemma 7 — is restated in the later literature as: for `A, B ⊆ {1,…,N}` of positive relative density, some `a + b` has largest prime factor `≥ c₂N`, with `c₂` depending only on the density constant. Two independent sources give it that way, so the "cardinalities of order N" reading needs no correction.
+
+**The nuance that matters for us.** The Sárközy–Stewart series does handle sets that are merely "not too small"; what changes is the *conclusion*, which weakens correspondingly. The **linear** prime factor — the only thing that certifies a density floor rather than an exponent — is what positive density buys. So the two-logarithm gap between `S_D` at `≈ 1/log²x` and the hypothesis is real and is not an artefact of how the theorem was quoted.
+
+**Why this was worth checking, and what it settles.** It was the highest-value open item in `shparlinski-constants.md`, because a weaker hypothesis would have materially changed that document's §7 accounting and partly answered its §8. It closes **negatively**: the accounting stands. The successor question is different in kind — not "was this theorem quoted correctly" but "does any endpoint-capable sumset result tolerate a set of density `1/log²x`" — and that is a literature search rather than a citation check.
+
+**Not read: the original.** Two agreeing secondary statements retire the question of mischaracterisation; they do not formally exclude a variant elsewhere in the series (I–V) pairing a weaker density with a linear conclusion.
+
 ## 15b. What BBKN should be cited for: the case split, not the construction
 
 **BBKN's `n log n` proof splits on the size of the largest prime-power divisor**, and the split is the durable contribution. When `Q(n)` is large the bound follows with no fusion at all; when `Q(n)` is small the cofactor `n/Q(n)` is large, and they decompose it into a sum of primes by **Vinogradov's three-primes theorem**, using the resulting cyclic groups of coprime orders to keep the layer cyclic and so obtain enough (not complete) fusion for the right order.

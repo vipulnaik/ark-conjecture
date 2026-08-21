@@ -206,6 +206,16 @@ What replaces it is narrower and better specified — **the runner-up ordering**
 
 **Risk-ranking item 6** updated: F.4's shared-chain-prime step now carries both branches explicitly, the s = q case running through Lemma B′ Case 2 rather than the "only Γ₂ can hold it" sentence that is false there.
 
+## 8i. The Sárközy–Stewart hypothesis, checked and closed
+
+**The item.** `shparlinski-constants.md` §9 named this "the single highest-value thing to check next in this document", and `pending-checks.md` T4 carried it as the highest-value next check on that side. The worry was that the endpoint tool's hypothesis was taken from Shparlinski's one-line characterisation ("cardinalities of order N") rather than the original, and that if it were weaker — density `1/log N`, say — then §7's whole density accounting would change and §8's first open item would be partly answered.
+
+**Checked against two independent secondary restatements, and the characterisation is accurate.** The hypothesis is **positive relative density**: for `A, B ⊆ {1,…,N}` with `#A, #B ≥ c₁N`, some `a + b` has `P(a + b) ≥ c₂N` with `c₂` depending only on `c₁`. The nuance worth carrying is that the Sárközy–Stewart series *does* treat sets that are merely "not too small" — but those yield correspondingly weaker bounds on `P(a + b)`, and the **linear** prime factor, which is the only thing that certifies a density floor rather than an exponent, is what positive density buys.
+
+**So it closes negatively**, which is the outcome that leaves the accounting standing rather than the one that would have improved it: Baker–Harman's set at `≈ 0.37/log x` and `S_12` at `≈ 2.67/log²x` remain one and two logarithms from the hypothesis, and that gap is real rather than an artefact of how the theorem was quoted. Recorded in `sc` §9, `pending-checks.md` T4, and a new `literature-findings.md` §15a.
+
+**What the successor question is, and why it is different in kind.** Not "was this theorem quoted correctly" — that is now settled — but "does *any* endpoint-capable sumset result tolerate a set of density `1/log²x`". That is a literature search rather than a citation check, and it is now the only remaining route on this side. The residual on the item itself is small: the original was not read, so a variant elsewhere in the series (I–V) pairing a weaker density with a linear conclusion is not formally excluded.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).
