@@ -4,7 +4,7 @@
 
 ## 1. The claim that fails
 
-Theorem 3.1 (orbital-evasiveness-notes §3), the SAFE cap in `mu_enumerate_v2.value()` (dmax = q-part × largest divisor coprime to F_mid), fb_common condition (4)'s F_mid-gcd strip, rung B's "twist cut to the odd part of c − 1," and (H) clause 4 all rest on one argument: *the cyclic layer Γ₁/Γ₂ carries the block rotation C_{F_mid} and the twist's cyclic part, a cyclic group has a unique subgroup of each order, so the two are pairwise coprime.*
+Theorem 3.1 (orbital-evasiveness-notes §3), the SAFE cap in `mu_enumerate_v2.value()` (dmax = q-part × largest divisor coprime to F_mid), fb_common condition (4)'s F_mid-gcd strip, rung B's "twist cut to the odd part of c − 1," and (BCG) clause 4 all rest on one argument: *the cyclic layer Γ₁/Γ₂ carries the block rotation C_{F_mid} and the twist's cyclic part, a cyclic group has a unique subgroup of each order, so the two are pairwise coprime.*
 
 The argument assumes C_{F_mid} is a **subgroup** of the layer. It is only a **quotient** (the block-permutation image). This is the same projection-vs-subgroup error as the historical n = 308 "block counts are q-powers" bug, one level down.
 
@@ -33,7 +33,7 @@ Generators for independent re-verification (points 0–12, 13–25, 26–32): t�
 3. **The S4 census story reverts.** 15 of the 16 S4 winners (all but 1529) are exceeded by entangled S7-at-F=2 readings — the SAFE "tightening" that resurrected S4 was unsound.
 4. **fb_common condition (4) is anti-permissive**, so both collapse certificates (`fallback_cert.py`, `wide_cert.py`) may discard real candidates: their "empty candidate list" proofs are void until the F_mid-gcd strip (fb_common lines ~560–564 and the parallel strip in `single_part_ok`/`multi_part_ok`) is removed and the runs repeated. The 90,299-value collapse claim and μ = B attainment claims inherit this.
 5. **Ceiling table §3.3.5, classes 7 and 15 mod 24: 1/9 → 1/8.** Freeing c mod 4 lets n ≡ 7 (mod 8) reach r ≡ 5 (mod 8) (v = 2, η₂ = 1/2) at F = 2, and neither class has the ℓ = 3 cut, so cap₂(1/2) = 1/8 beats the F = 4 reading's 1/9. **Classes 11 and 23 are unchanged** (the ℓ = 3 obstruction is untouched and the mod-8 arithmetic at n ≡ 3 (mod 8) gives the same v = 2), so the global constant 7 − 4√3 survives. All other classes: unchanged (verified residue by residue; the mod-8 improvement matters only where c ≡ 3 (mod 4) previously forced the *worse* r residue).
-6. **(H) clause 4 (c ≡ 3 mod 4) is unnecessary**; §3.3.4a's congruence chains need rewriting as "best of two residues" rather than forced; rung B's description changes from "twist cut to the odd part" to "full twist available at every c."
+6. **(BCG) clause 4 (c ≡ 3 mod 4) is unnecessary**; §3.3.4a's congruence chains need rewriting as "best of two residues" rather than forced; rung B's description changes from "twist cut to the odd part" to "full twist available at every c."
 7. **`mu-theta-n2-note.md`** rests on the mod-24 apparatus and the attainment claims; it needs review before any arXiv submission.
 
 ## 4. What survives
@@ -53,7 +53,7 @@ Generators for independent re-verification (points 0–12, 13–25, 26–32): t�
 1. `mu_enumerate_v2.value()`: delete the `_coprime_part(·, Fmid)` factor from dmax (twist cap becomes dq · (rest)), and re-derive `_coprime_ok`: foreign-prime distinctness stays; F_mid entries leave the list (their exclusions were never necessities; shares are dominated per audit_fmid, but cite that as a measured fact, not a theorem — or prove the domination lemma).
 2. Rebuild the table (289 known-low rows first; the winner may change at others too since relative scores shift). Expect the three-part count, the S4 census, the tail membership, and the floor row to move together, as Part I's own warning predicts.
 3. fb_common: remove the F_mid strips (condition (4) reverts to dq·rest with only the licensed foreign strip); rerun both certificates; recompute the collapse coverage.
-4. Rewrite Theorem 3.1's coprimality clause (F_mids leave; foreign primes stay; add the entangled-generator remark), §3.3.4a, §3.3.5 rows 7/15, (H), rung-B prose, and the §3.2 three-way comparison (S7-at-F=2 vs S5 collapses: the cyclic reading now equals the top reading's twist and beats its foreign efficiency, so S5 is dominated at odd q — check whether S5 retains any role beyond q = 2 Fermat configurations).
+4. Rewrite Theorem 3.1's coprimality clause (F_mids leave; foreign primes stay; add the entangled-generator remark), §3.3.4a, §3.3.5 rows 7/15, (BCG), rung-B prose, and the §3.2 three-way comparison (S7-at-F=2 vs S5 collapses: the cyclic reading now equals the top reading's twist and beats its foreign efficiency, so S5 is dominated at odd q — check whether S5 retains any role beyond q = 2 Fermat configurations).
 5. Re-run the mod-24 ladder constants and the 10⁶ verification with the corrected rung B (floor will rise; classes 7/15 get new caps).
 6. Add the n = 33 group to `verify_witness.g` as a permanent regression witness, tagged to this finding.
 7. Re-read D1/D2/D2q under the corrected space (J0's standing instruction) — D2's foreign-fusion domination should be checked against entangled foreign readings specifically.
