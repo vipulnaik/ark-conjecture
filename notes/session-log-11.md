@@ -216,6 +216,16 @@ What replaces it is narrower and better specified — **the runner-up ordering**
 
 **What the successor question is, and why it is different in kind.** Not "was this theorem quoted correctly" — that is now settled — but "does *any* endpoint-capable sumset result tolerate a set of density `1/log²x`". That is a literature search rather than a citation check, and it is now the only remaining route on this side. The residual on the item itself is small: the original was not read, so a variant elsewhere in the series (I–V) pairing a weaker density with a linear conclusion is not formally excluded.
 
+## 8j. J0a's non-semilinear stabilisers, largely discharged
+
+**The item** (gap-inventory 5, and the second half of T2): Part E's construction takes a matching block's twist inside the field's multiplicative group, but the stabiliser of a primitive affine group of degree p^a may be **any** irreducible subgroup of GL(a, p). The worry was that some non-field stabiliser realises a block orbital the field construction cannot, so that a recorded value might be unattainable by the group the framework actually builds. It bears on attainment rather than on B_safe, and no precondition check reaches it — a witness records a twist *order*, not the group the twist lives in.
+
+**It resolves in two lines, at a fixed twist order.** Any orbit of H ≤ GL(a, p) on the c − 1 nonzero vectors has size at most |H| = t, by orbit–stabiliser. The multiplicative subgroup of 𝔽_c^× of order t is **semiregular** — its orbits are the cosets, all of size exactly t — so it attains that bound at every vector simultaneously. Since the block's contribution is decided by its *minimum* orbit, **no subgroup of order t beats the field subgroup of order t**, and the same holds for the ± version governing pair orbitals. Reaching for an exotic stabiliser cannot help.
+
+*(Checked exhaustively over the subgroups of GL(2, p) at p = 3, 5, 7 — no subgroup anywhere has minimum orbit exceeding its order. That is a sanity check on the statement, not evidence for it; the bound is orbit–stabiliser and holds in general.)*
+
+**What survives is narrower and is a reading rather than a question.** The argument compares at fixed order, so it settles attainment but not **primitivity**: the field subgroup of order t is irreducible only when t divides no p^b − 1 for proper b | a, so at a twist order lying inside a subfield the block group is imprimitive and Lemma B's affine reading needs ΓL(1, c)'s Frobenius element to restore irreducibility. The scoped claim to carry is that the twist may be taken inside **ΓL(1, c)** without loss; the check owed is that Part E's constructions do reach for Frobenius at subfield-order twists instead of assuming irreducibility.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).
