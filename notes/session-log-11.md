@@ -192,6 +192,20 @@ This is a better check than the table-wide one added earlier in the session. The
 
 **Full-corpus `check_doc_figures.py` — 19 documents, 24 findings, none in these six.** The dangling-lemma hits when the archived notes are run without `enumeration-proof.md` are the usual glob artifact.
 
+## 8h. A pass over `pending-checks.md` itself
+
+**An error of mine, found by taking T6 seriously.** Checking whether the class-11 margin could be derisked meant recomputing the analytic route's optimum, which exposed a claim I had left standing in `sp-to-floor.md` §3: that `(4,6)` and its transpose `(6,4)` give the same constant. **They did before the Reduction Lemma correction and do not after it.** The pre-correction objective `1/(√k+√d)²` is symmetric in (k,d); the corrected one carries `√(d/2)` and is not, so the transpose falls from 0.0718 to 0.0670. The `(12,2)` alternative likewise reads 0.0502, not the 0.0670 the note gives. Both fixed. This is the same failure the log has been cataloguing all session — a correction reaching the places that *state* the rule and not a passing use — committed by me, three edits after writing the warning.
+
+The fix improves the result rather than merely repairing it: **at class 11 the optimum is now unique, not a tied pair.** A tie is fragile; a strict optimum at a 0.0718 : 0.0670 margin is not.
+
+**T6's class-11 bullet, derisked.** The bullet's worry is that the entry rests on 26 > 15√3, the narrowest possible integer margin. What is new is that **both sides of that comparison are now reproduced by a route with no access to the shape space**: the circle-method optimisation selects (4,6) → 7 − 4√3 at class 11 with (6,4) and (2,12) → (2 − √3)/4 as runners-up, from congruence conditions on r − 1 alone. Same winner, same runner-up, same margin. So the residual exposure is no longer that the **argmax is misidentified** — a shape-space error big enough to flip class 11 would have to be mirrored by an unrelated error in the congruence analysis landing on the same two constants. Only the supply hypothesis remains, and the risk ranking's item 4 now says so.
+
+**T5a, rewritten around what is actually live.** It stood as "re-derive `three-part-family-split.md` §1.2's competing-rates argument on every revision" — an instruction to keep re-checking a document that is now archived and will get no revisions. Worse, the claim it guards is **refuted rather than provisional**: the 1 : 1 : 2 split rested on the c mod 8 law, whose mechanism the entangled correction removes, so S7 takes the family and the other two shares tend to zero. Both `ep`'s S4 census row and `aod` §3.2.5 already said this; the work item had not caught up.
+
+What replaces it is narrower and better specified — **the runner-up ordering**, which is what `aod` §7's disjunction-collapse actually needs. Two ordered sub-questions: where Lemma C's coupling bites (deciding S5 versus S4 for second place), and whether the resulting gap is bounded below. **The first is a congruence condition, not an extreme-value argument** — which is the real improvement, since the old item's fragility was entirely in its extreme-value step. Plus a note on what not to reuse from the archived tables: mod-24 keying, pre-entangled reasoning, and a 0.050510 that is a within-family cap rather than a class ceiling.
+
+**Risk-ranking item 6** updated: F.4's shared-chain-prime step now carries both branches explicitly, the s = q case running through Lemma B′ Case 2 rather than the "only Γ₂ can hold it" sentence that is false there.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).
