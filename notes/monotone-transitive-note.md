@@ -131,7 +131,7 @@ Those groups are the *only* possible homes for a counterexample, since every oth
 
 The last two rows are the sharp statement, and they are stronger than the scan's criterion required: **G is minimal transitive and is not itself an Oliver group.** So the failure is not that some transitive subgroup was missed — there are none to miss. Every route into Proposition 1 is closed at once, and closed for a single reason.
 
-> **A correction, from checking the source.** An earlier draft of this note asserted that Illies (1978) gives a non-evasive *monotone* transitive Boolean function on 12 variables, making degree 12 the known home of a counterexample. **That is wrong, and the error matters because it inverts the status of the whole question.**
+> **What Illies (1978) does and does not give, since the citation is routinely misread.** Illies is often quoted as supplying a non-evasive *monotone* transitive Boolean function on 12 variables, which would make degree 12 the known home of a counterexample. **That reading is wrong, and the error matters because it inverts the status of the whole question.**
 >
 > Rivest and Vuillemin's original conjecture asked only that f be **weakly symmetric** (invariant under a transitive group) with f(∅) = f(X) — *monotonicity was not assumed*. **Illies's counterexample refutes that version**, and Aigner subsequently repaired the conjecture by *adding* monotonicity. Kahn–Saks–Sturtevant say so explicitly: "they proposed a somewhat stronger version … in which monotonicity was replaced by the weaker condition: F contains exactly one of ∅, X; a counterexample to this was provided by Illies." There is also an infinite family of counterexamples to the set-system version, of which Illies's is the smallest member.
 >
@@ -143,7 +143,7 @@ The last two rows are the sharp statement, and they are stronger than the scan's
 
 ## 5. What this sharpens about graph properties
 
-The question this document was written to answer is what makes graph properties different, and the scan gives a sharper answer than "the group is bigger".
+What makes graph properties different is the question this section answers, and the scan gives a sharper answer than "the group is bigger".
 
 **The criterion fails as early as it possibly can — and where it fails, the conjecture itself remains open, not false (§4).** Degrees 4 through 9, 11 and 13 admit no failure at all — every transitive group there contains a transitive Oliver subgroup, so every nontrivial monotone invariant property at those degrees is evasive, unconditionally and without any of this framework. Degree 6 being clean, the earliest a failure could occur is 10, and it does: **T(10,7) = A₅ on pairs**, with **T(12,162)** the second — and, subject to the six still-open almost-simple cases at degrees 10, 12 and 14, the only two through degree 14. A failure of the criterion is an open door, not a counterexample: the literature verifies the monotone weakly-symmetric conjecture through n = 14 (§4), and the exhaustive searches of §6 reproduce that at both failing groups.
 

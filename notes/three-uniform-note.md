@@ -351,15 +351,15 @@ The third argument of orb₃ is not decoration in the census: it changes one row
 
 A factor of three, entirely from the arithmetic of 18 = 2·3².
 
-**So the earlier reading — that k = 3 "reduces to binary Goldbach" — is wrong, and wrong in an instructive way.** What changes at k = 3 is that the *term-type* comparison disappears: only intra terms bind, so there is nothing to trade against anything. **The allocation problem remains** — parts share a fixed n and the objective is a minimum — and its solution is not equal parts, because the parts have unequal efficiencies (§5.2). The balance point is in fact the same as k = 2's (§5.7). What does **not** change is the shifted-prime requirement, because that comes from Lemma B′ and the layer structure, not from the pairing.
+**The tempting reading — that k = 3 "reduces to binary Goldbach" — is wrong, and wrong in an instructive way.** What changes at k = 3 is that the *term-type* comparison disappears: only intra terms bind, so there is nothing to trade against anything. **The allocation problem remains** — parts share a fixed n and the objective is a minimum — and its solution is not equal parts, because the parts have unequal efficiencies (§5.2). The balance point is in fact the same as k = 2's (§5.7). What does **not** change is the shifted-prime requirement, because that comes from Lemma B′ and the layer structure, not from the pairing.
 
 **Which n escape it.** Only the pure-matching shapes:
 
-- **S1**, needing n a prime power;
-- **S2**, needing n = F·c with c a prime power and F = F_mid·F_top;
+- **S1**, at n a prime power;
+- **S2**, at n = F·c with c a prime power and F = F_mid·F_top > 1;
 - more generally, configurations whose parts are *all* p-characteristic for one p, i.e. n a sum of powers of a single prime with admissible multiplicities.
 
-Those are density-zero sets. **Every other n needs at least one foreign block, hence a shifted prime**, so the supply question at k = 3 is the k = 2 question over again — Bateman–Horn for the matching parts, shifted primes for the foreign one — with only the intra-versus-cross comparison removed — the balance-point analysis itself survives unchanged (§5.7).
+> **What makes those density-zero is a bounded cofactor, not the rarity of the shape.** S2 *exists* at every non-prime-power n — F is an arbitrary integer carried by the cyclic layer, so take c = Q(n), the largest prime-power divisor (`arithmetic-of-density.md` §2.1). What is rare is its being any good: its efficiency falls like 1/F, so it escapes the foreign block only where the cofactor n/Q(n) is small, and bounded cofactor times the prime powers is a density-zero set. The k = 2 form of this is `aod` §6.5, and the argument is arity-independent — §5.3's efficiency table has the fused row falling like 1/F at k = 3 exactly as at k = 2. **Every other n needs at least one foreign block, hence a shifted prime**, so the supply question at k = 3 is the k = 2 question over again — Bateman–Horn for the matching parts, shifted primes for the foreign one — with only the intra-versus-cross comparison removed — the balance-point analysis itself survives unchanged (§5.7).
 
 > **Consequence for §7's constants.** The S3 row's n²/(4κ) tacitly assumed t of order r, i.e. a safe-prime-like foreign block. Without that assumption the row is r·t/κ, which is n^{1+θ} at best and can be as small as Θ(n) when the only available q-power divisor of r − 1 is 2. The constants below are therefore **conditional on the same shifted-prime input as the k = 2 ceilings**, and only S1 and S2 are unconditional.
 

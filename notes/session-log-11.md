@@ -129,6 +129,27 @@ The new document's header states its **standing explicitly** — verified arithm
 
 §6 is ~120 lines shorter with nothing the argument uses removed; the canonical run stays at 7 findings.
 
+## 8e. The five companion documents, brought into sync
+
+*`three-uniform-note.md`, `solvable-relaxation.md`, `general-k-note.md`, `chiral-graph-properties.md`, `monotone-transitive-note.md`, with `k3_galois.py` and `solvable_relaxation.py`. Read in full; scripts run. Small edits only — none needed structural work.*
+
+**They were already ahead of `aod` on the entangled correction.** All five carry it correctly, including the subtle form: `chiral-graph-properties.md` §3 derives a separate parity rule (F2) for the entangled generator and warns in bold that the naive product rule (F1) is *not* the one the framework needs — from which it concludes that even fusion counts are unconditionally available at odd n, so the F = 4 shape setting the class-11 ceiling is not exposed under A_n at all. `three-uniform-note.md` opens by warning against importing an F_mid coprimality budget, at either arity. Nothing to propagate.
+
+**Six sync edits.**
+
+1. `chiral-graph-properties.md`'s one `(H)` renamed, phrased so it reads as clause-level and does not trip I5.
+2. **`three-uniform-note.md` §4.4's escape list carried the pre-identity reading of S2** — listing it among shapes that "need" a special n and calling the result density-zero. Corrected to the §2.1 form: S2 *exists* at every non-prime-power n; what is rare is its being good, its efficiency falling like 1/F, so the escape is a bounded-cofactor condition. Arity-independent — §5.3's own efficiency table has the fused row falling like 1/F at k = 3 exactly as at k = 2. **I4 did not catch this**, since the sentence never mentions ω(n); it is the same claim in different words.
+3. **`solvable-relaxation.md` Proposition 2 is the S2 identity**, independently derived and stated first. Its `score(s) = s·(P(s) − 1)/2` at a single orbit gives density (P(n) − 1)/(n − 1), which is δ_S2 with P = Q. Now cross-referenced, with the consequence made explicit: the Oliver fused matching class and the solvable single orbit are the *same construction*, so the chain costs nothing on that shape and its whole price is paid on shapes with a foreign block.
+4. Its v4-era ratio statistics gained the rebuild-prefix figure — the two scores already coincide at **796 of 1,790 shared n (44%)** against 41% on v4, the predicted direction.
+5. Its "289 corrected rows" phrasing gained the A22 parenthetical, the 289 and the 18 counting different things.
+6. Four historicizing phrases dehistoricized, including `monotone-transitive-note.md`'s correction about Illies (1978) — reworded from "an earlier draft asserted" to what the citation does and does not give, which is the durable content and is a misreading others make too.
+
+**Both scripts pass.** `k3_galois.py`: 9/9, including that the layer-split predicate is a strict superset of the naive "a is a prime power" reading with first witness a = 35. `solvable_relaxation.py`: all passes against the rebuild prefix.
+
+**One figure worth flagging rather than fixing.** `solvable_relaxation.py` reports that **77 of 94** class-11 values exceed the class ceiling 7 − 4√3. That is expected — the ceilings bound the balanced additive family, not μ, as both `aod` §3.3.5 and `three-uniform-note.md` §5.7 say — but 82% is high enough that a reader meeting it cold will read it as a contradiction. The script prints rather than asserts it, which is right; a note has been added where it is requoted.
+
+**`check_doc_figures.py` over all eleven documents: 11 findings, all pre-existing in the core five.** The companion documents contribute none. Four apparent DANGLING references when the five are run alone — Lemma D2, Lemma B, `aod` §3.6 — are glob artifacts and vanish with the full set, the same false-positive class as the note/bridge pair.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).
