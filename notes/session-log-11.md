@@ -236,6 +236,18 @@ What replaces it is narrower and better specified — **the runner-up ordering**
 
 **Recorded in `verification-lessons.md` §5** as a lesson the file did not have: a summary ranked by frequency hides the rare events, and before capping such a list, check whether its length is bounded by construction — if it is, there is nothing to cap.
 
+## 8l. A9 — the Lean layer, synced and independently compiled
+
+**The compile is reproduced rather than remembered.** The README's container recipe works as written: the 4.15.0 tarball is on GitHub releases, which is on the network allowlist, and `ArkCore.lean` compiles against core Lean with **no output at all** — no errors, no warnings, and crucially no `declaration uses 'sorry'`. That silence is the actual evidence for the zero-sorry claim, since a sketch full of sorries compiles perfectly happily and only the warning count separates the two. A9's obligation 2 now rests on a rerun.
+
+**The sync item A9 exists to catch, caught.** `Note.lean`'s hypothesis structure was `HypH`, and `ArkCore.lean` referred to "conditions 2 and 3 of (H)". `Note.lean` formalises `mu-theta-n2-note.md`, so its hypothesis is the **note's** — fixed `n/5` window, all large n — which this session named **(BCG_{1/5}-AL)**. The old name invited conflation with the framework's (BCG-AL) and additionally carried the Schinzel collision the rename existed to remove. Renamed to `HypBCG`, with the **non-nesting** recorded at the docstring: at `n ≡ 11 (mod 12)` the framework's optimum is the `F = 4` shape at `c/n ≈ 0.134`, which the `n/5` window rejects, while the note's constant is far weaker — so neither implies the other and the structure must not be read as the framework's. Recompiled clean after the change.
+
+**The ceiling table needed nothing**, which is the reassuring half. `Basic.lean` §5 already carries six entries keyed mod 12 with the `F = 4` rung at class 11, matching `aod` §3.3.5 as it currently stands — including `capF 2 (1/3) = 5 − 2√6` at class 5 and `capF 4 (1/3) = 7 − 4√3` as the global constant. The list-length-as-check device works: a table gaining or losing a constant would leave a list of the wrong length.
+
+**What I could add without Mathlib: the statements are now pre-verified.** Every sorried claim in §5 was checked numerically to 30 places — all six entries, `capF 4 1 = 1/9` with its comparison against `capF 2 (1/2)`, the pairwise distinctness of the six, `capF_scaling` over a grid of `F` and `η`, and `cap_two_foreign` over `m₁, m₂ ≤ 7`. All true. This follows the file's own rule that a computable claim is checked before it is asserted, and it means **a proof that fails to close in §5 is an encoding problem rather than a false statement** — which is worth knowing in advance, given that two of the project's three Lean failures so far were name drift rather than wrong mathematics. Recorded in the docstring.
+
+**Phase 1 remains the next Lean work**, unchanged: `Basic.lean`'s 18 sorries, where the cap algebra and the mod-12 table live, and whose proofs have never been attempted.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).

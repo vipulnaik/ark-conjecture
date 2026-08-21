@@ -297,7 +297,9 @@ theorem case_block (n r t : Nat) (hn10 : 10 ≤ n) (hn : n ≤ 5 * r)
     omega
 
 /-- **The even central inequality** (`Note.lean` `central_even`, proved):
-under conditions 2 and 3 of (H), the even construction's minimum orbital is
+under conditions 2 and 3 of (BCG_{1/5}-AL) — the note's fixed-window
+hypothesis, not the framework's class-keyed one — the even construction's
+minimum orbital is
 at least `pairs n / 350`. -/
 theorem central_even (n c r t : Nat) (hn : 10 ≤ n)
     (hreg : RegionEven n c r) (heff : EfficiencyBound r t) :

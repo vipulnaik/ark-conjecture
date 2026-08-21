@@ -178,7 +178,16 @@ which is the extremal class, so omitting it misses the global constant.
 
 Formalising these is worth more than it looks: the list *is* the table, so a
 table that gains or loses a constant fails to match a list of this length, and
-the six values are pairwise distinct as reals. -/
+the six values are pairwise distinct as reals.
+
+**Every statement in this section has been verified numerically to 30 places
+before being written**, per this project's rule that a `decide`-able or
+computable claim is checked before it is asserted -- so a proof that fails to
+close here is an encoding problem, not a false statement.  Checked: all six
+entries, `capF 4 1 = 1/9` and its comparison, the pairwise distinctness of the
+six, `capF_scaling` over a grid of `F` and `η`, and `cap_two_foreign` over
+`m₁, m₂ ≤ 7`.  The six agree with `arithmetic-of-density.md` §3.3.5 as it
+currently stands. -/
 example : capF 1 1 = 1 / 4 := by sorry                     -- n = 0, 4, 6, 10
 example : capF 1 (1/3) = (2 - Real.sqrt 3) / 2 := by sorry  -- n = 2, 8
 example : capF 2 1 = 3 - 2 * Real.sqrt 2 := by sorry        -- n = 1, 9

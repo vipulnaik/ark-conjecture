@@ -5,12 +5,15 @@
 | file | laptop (Mathlib) | container (core 4.15.0) | sorries |
 |---|---|---|---|
 | `Note.lean` | compiles | n/a — needs Mathlib | **zero — every proof complete** (six imported from `ArkCore`) |
+| | | | *hypothesis renamed `HypH` → `HypBCG`; see below* |
 | `Basic.lean` | compiles | n/a — needs Mathlib | **nonzero** — same |
 | `ArkCore.lean` | compiles | compiles | **zero — every proof complete** |
 
 *So **phase 0 is done**: `Note.lean` and `ArkCore.lean` are both fully proved, and between them they cover the note's entire arithmetic layer — the construction inequality, the admissible-`d` table, the density and ceiling statements, `orb`, Lemma D1, the capacity bound, F.1. `Basic.lean` remains the sketch, and its sorry count is the expected state rather than a defect (`leancheck.sh` reports it separately for exactly this reason — a count that DROPS unexpectedly is the thing to notice).*
 
 *What this does and does not establish is worth restating, because a green checker invites over-reading: it verifies that **the arithmetic between the hypotheses and the conclusion is correct, and that the units are consistent**. The note's theorem remains conditional on (H) and on Oliver's theorem, neither of which is formalised or formalisable here. That is the check that was worth having before arXiv, and it is now had.* **`ArkCore.lean` is different: it is compiled and fully proved** — zero sorries against core Lean 4.15.0 — and covers the ℕ half of both files: the central inequality (`central_even`, `central_odd`), Lemma D1, the capacity bound, Proposition F.1 in squared form, `orb` with the full-twist collapse, and every `decide` table. All three were reviewed after the entangled-generator correction.*
+
+**The container build is reproduced, and the recipe below works as written.** `ArkCore.lean` compiles against core 4.15.0 with **no output at all** — no errors, no warnings, and no `declaration uses 'sorry'`, which is the actual evidence for the zero-sorry claim, a silent compile being the only thing that distinguishes a complete proof from a sketch. Total cost is a 265 MB download and a few minutes.
 
 **Toolchain, and how to get one in the working container.** elan cannot resolve any toolchain there — every lookup goes through `release.lean-lang.org`, which is off the network allowlist — but the toolchain tarball itself is on GitHub releases, which is on it:
 
@@ -20,6 +23,8 @@ python3 -c "import zstandard,tarfile; tarfile.open(fileobj=zstandard.ZstdDecompr
 export PATH=$PWD/lean-4.15.0-linux/bin:$PATH
 lean ArkCore.lean        # bare invocation; no lakefile needed for the core file
 ```
+
+**The hypothesis is the note's, and the name now says so.** `Note.lean` formalises `mu-theta-n2-note.md`, whose hypothesis is the **fixed `n/5` window, all large n** — in the framework's naming, **(BCG_{1/5}-AL)**. It is *not* the framework's (BCG-AL), and the two are **not nested in either direction**: at `n ≡ 11 (mod 12)` the framework's optimum is the `F = 4` shape with `c/n ≈ 0.134`, which the `n/5` window rejects outright, while the note's constant is far weaker. The structure was called `HypH`, which invited exactly that conflation and additionally collided with Schinzel's Hypothesis H; it is now `HypBCG`, with the non-nesting recorded at its docstring. Renamed and recompiled.
 
 **A note on lemma names, earned twice.** Two of this project's three Lean failures so far were **name drift, not wrong mathematics**: `List.mem_cons_self`'s explicit-vs-implicit arguments across toolchains, and `div_le_div_iff`, which 4.33's Mathlib no longer has under that name. Neither statement was false. The working rule that follows: **where a goal is trivial or routine, reach for a tactic or a decomposition into ancient lemmas rather than for a named iff-lemma.** The division inequalities are now proved by "difference is nonneg" — `div_nonneg`, `field_simp`, `ring`, `linarith`, `positivity`, all stable for years — instead of by whatever `div_le_div_*` is currently called. Ordering-and-division iff-lemmas are the highest-churn corner of Mathlib and worth routing around on sight.
 

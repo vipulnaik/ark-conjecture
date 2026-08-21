@@ -39,11 +39,19 @@ The note's Theorem is conditional on two things this file cannot reach:
 * **Oliver's fixed-point theorem**, which is not in Mathlib and whose
   formalisation is a research project in its own right.  It appears here as
   `OliverAnnihilation`, a hypothesis.
-* **Hypothesis (H)**, which is a Goldbach-type existence statement and is
-  conjectural.  It appears as `HypH`.
+* **Hypothesis (BCG_{1/5}-AL)** — bounded-cofactor Goldbach with the note's
+  fixed `n/5` window, for all large `n` — which is a Goldbach-type existence
+  statement and is conjectural.  It appears as `HypBCG`.
+
+  The framework's own hypothesis is `(BCG-AL)`, keyed to each residue class's
+  ceiling with a shrinkable window; the two are **not nested in either
+  direction**, so this file formalises the note's and nothing stronger.  At
+  `n ≡ 11 (mod 12)` the framework's optimum is the `F = 4` shape with
+  `c/n ≈ 0.134`, which the `n/5` window here rejects outright; and this
+  hypothesis is far weaker in constant.  See `note-to-framework-bridge.md` §4.
 
 What is formalised is **the gap between them** — the arithmetic that takes the
-output of (H) to the conclusion `δ ≥ 1/350`.  That is the whole of §3 of the
+output of the hypothesis to the conclusion `δ ≥ 1/350`.  That is the whole of §3 of the
 note, and it is where every error the note has actually had has lived: a units
 mismatch between two displayed bounds, a min-of-polynomials evaluated at an
 interior point rather than at the boundary corner where its minimum sits, and an
@@ -427,9 +435,17 @@ theorem half_is_ceiling (n m : ℕ) (hn : 2 ≤ n) (h : 2 * m ≤ n.choose 2) :
 
 The Theorem, with both unreachable inputs explicit. -/
 
-/-- **Hypothesis (H)**, as a hypothesis.  Every sufficiently large `n` admits
-`q, r, c` prime with the shape, region, efficiency and coprimality conditions. -/
-structure HypH where
+/-- **Hypothesis (BCG_{1/5}-AL)**, as a hypothesis: bounded-cofactor Goldbach
+at the note's fixed `n/5` window, for all large `n`.  Every sufficiently large
+`n` admits `q, r, c` with the shape, region, efficiency and coprimality
+conditions.
+
+The subscript is load-bearing.  `RegionEven`/`RegionOdd` below encode the
+window as `c, r ≥ n/5`, which is the note's; the framework's `(BCG-AL)` uses a
+window that shrinks to each class's balance point, and at `n ≡ 11 (mod 12)`
+that point sits at `c/n ≈ 0.134`, outside this one.  So neither hypothesis
+implies the other and this structure must not be read as the framework's. -/
+structure HypBCG where
   N : ℕ
   /-- `c` is a **prime power**, not a prime: the matching block is `𝔽_c` and the
   note's own constructions use `c = p^a`.  Writing `c.Prime` here would state a
@@ -450,7 +466,7 @@ that needs the configuration to come from an actual Oliver group — the content
 §3 of the note that lives in group theory.  What is proved here is that *if* the
 construction is an Oliver group with the stated orbitals, *then* the density
 bound follows.  Separating the two is the point of the exercise. -/
-theorem theorem_arithmetic_half (H : HypH) :
+theorem theorem_arithmetic_half (H : HypBCG) :
     ∀ n ≥ max H.N 10, ∃ c r t : ℕ,
       ((RegionEven n c r ∧ delta0 ≤ Density n (mStarEven c r t)) ∨
        (RegionOdd n c r ∧ delta0 ≤ Density n (mStarOdd c r t))) := by

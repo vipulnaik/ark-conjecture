@@ -517,7 +517,7 @@ Promoting the note's findings into `aod` raises the value of a second reading ra
    | `Note.lean` | laptop | **0 — every proof complete**, six by import from `ArkCore` |
    | `Basic.lean` | laptop | nonzero — the remaining sketch, phase 1 |
 
-   Between the first two the note's whole arithmetic layer is proved; what stays conditional is (BCG-AL) and Oliver, neither formalisable. **Next Lean work is phase 1: `Basic.lean`'s sorries**, where the mod-12 ceiling table and cap algebra live — and its statements carry the ladder correction while its proofs have never been attempted, so nothing there has been pre-checked by a compiler.
+   Between the first two the note's whole arithmetic layer is proved; what stays conditional is **(BCG_{1/5}-AL)** — the *note's* fixed-window hypothesis, formalised as `HypBCG`, not the framework's class-keyed (BCG-AL), the two being non-nested — and Oliver, neither formalisable. `ArkCore.lean`'s clean compile against core 4.15.0 with no `sorry` warning has been **independently reproduced** in a container built from the GitHub-releases tarball, so the zero-sorry claim rests on a rerun rather than on a remembered result. **Next Lean work is phase 1: `Basic.lean`'s sorries**, where the mod-12 ceiling table and cap algebra live — and its statements carry the ladder correction while its proofs have never been attempted, so nothing there has been pre-checked by a compiler.
 
 **Two environment lessons, both earned by a failed run, and both about names rather than mathematics.**
 
