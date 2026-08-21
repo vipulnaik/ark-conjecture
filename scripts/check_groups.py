@@ -82,7 +82,8 @@ for g in oliver[:args.top]:
 if oliver:
     best = oliver[0]['mstar']
     print(f"mu_lower from this file: {best}/{NPAIRS} = {best/NPAIRS:.3f}"
-          f"   (proven ceiling for non-prime-power n: {NPAIRS//2}/{NPAIRS} = 0.500)")
+          f"   (proven ceiling for non-prime-power n: {NPAIRS//2}/{NPAIRS} = 0.500;"
+          f" it holds for every solvable transitive group, not just Oliver ones)")
 
 if args.maxt:
     keep = [g for g in groups if g['t'] <= args.maxt]
