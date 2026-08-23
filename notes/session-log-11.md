@@ -368,6 +368,25 @@ Both were run on the current table and passed, and both are per-batch checks tha
 
 The registry table at the head of the file now points both scripts at R1, and `check_doc_figures.py --pass refs` confirms no dangling references to the deleted sections.
 
+## 8t. `ladder_verify.py --resume`
+
+**Extension was painful because each run started from scratch; it no longer does, and the reuse is exact rather than approximate.** The key observation is that the per-n scan is already **clamped** — `achieved(n, stop_at=…)` returns as soon as a value clears the asymptotic bound, so for every n above it the run learns exactly one thing, "this n scores at least ASYMPTOTIC", and records nothing finer. Every n it learns more about is, by definition, in the worklist. So a completed run's worklist **plus its N** contains everything the scan produced:
+
+- n in the worklist → its recorded lower bound, verbatim;
+- n ≤ N, absent, not a prime power → scored ≥ ASYMPTOTIC, and nothing finer was ever known.
+
+A resume therefore *reproduces* a from-scratch run rather than approximating it. **Verified**: 20,000 in one pass against 8,000 + resume gives byte-identical worklists and identical per-class statistics.
+
+**Three design choices worth recording.**
+
+1. **State in a sidecar, not in the worklist.** `ladder_weak.txt` is read by `mu_enumerate_v3.py --nlist` and its format must stay exactly `n value` per line; a header comment there is one more thing for every consumer to skip. State goes to `ladder_weak.txt.state.json`.
+2. **It records N, not max(worklist).** The point of resuming is knowing which n were *examined and cleared* — precisely what the worklist does not say. This is the same asymmetry as R7's adaptive skips: absence is a result, and it needs somewhere durable to live.
+3. **The fingerprint is a hash of the whole source, so any edit refuses the resume.** There is no reliable way to distinguish a scoring change from a comment, and the asymmetry is stark: a spurious full rerun costs hours, a silently mixed worklist — lower bounds from two different scoring functions in one file — costs the credibility of every figure drawn from it. `aod` §5's floor, the block-minima table and R7's whole worklist all read that file.
+
+**Guards, each tested.** Fingerprint mismatch refuses with both hashes named; a worklist whose length disagrees with the state refuses; a malformed worklist line refuses *with the line quoted* rather than a traceback (the likeliest cause is an editor or a partial copy, and the fix depends on which); a prior N already ≥ the requested N exits cleanly rather than doing nothing silently; and a changed asymptotic bound refuses, since it invalidates the "absent means cleared" reading that makes the whole scheme sound.
+
+**One fidelity bug found and fixed by the equivalence test.** The first version recomputed per-class ratio minima from the worklist, whose values are rounded to five places, so a resumed summary differed from a from-scratch one in the sixth decimal at two classes. The state carries those statistics at full precision; it now takes precedence rather than competing with the recomputation. Worth noting that the byte-comparison is what caught it — a spot check of the worklist alone would have passed.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).

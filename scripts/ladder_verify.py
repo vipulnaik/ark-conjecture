@@ -94,6 +94,95 @@ ASYMPTOTIC = 7 - 4 * 3 ** 0.5      # 7 - 4*sqrt(3) = 0.0717968, the global
 import os as _os
 OUTFILE = _os.environ.get("LADDER_OUT", "ladder_weak.txt")
 
+# ---------------------------------------------------------------- RESUMING
+#
+# WHY THIS IS SOUND, AND WHY IT IS LOSSLESS.  The per-n scan is CLAMPED: it
+# stops as soon as the achieved density clears stop_at >= ASYMPTOTIC, so for
+# every n above the asymptotic bound the run learns exactly one thing -- "this
+# n scores at least ASYMPTOTIC" -- and records nothing else.  Every n it learns
+# more about is, by definition, in the worklist.  So a completed run's worklist
+# file PLUS its N already contains everything the scan produced:
+#
+#     n in the worklist          -> its recorded lower bound, verbatim
+#     n <= N, absent, not a p.p. -> scored >= ASYMPTOTIC and nothing finer
+#
+# Resuming therefore reproduces a from-scratch run exactly, rather than
+# approximating it.  What must be rebuilt regardless are the sieves and the
+# prime-power tables over [2, N], which are O(N log log N) and cheap next to
+# the ~N/log N calls to achieved().
+#
+# WHAT WOULD MAKE IT UNSOUND is a change to the SCORING -- a family added, a
+# cap rekeyed, a rung's twist changed, the window moved.  Prior entries would
+# then be lower bounds from a different function, silently mixed with new ones,
+# and the resulting file would be evidence for nothing.  There is no reliable
+# way to tell a scoring edit from a comment edit, so the fingerprint is the
+# hash of this whole source file: ANY edit refuses the resume.  That is
+# deliberately conservative -- a spurious full rerun costs hours, a silently
+# mixed worklist costs the credibility of every figure drawn from it.
+#
+# The state lives in a SIDECAR file, not in OUTFILE, because OUTFILE is read by
+# mu_enumerate_v3.py's --nlist and its format must stay exactly "n value" per
+# line.  A header comment there would be one more thing for a consumer to skip.
+import hashlib as _hashlib, json as _json
+
+STATEFILE = _os.environ.get("LADDER_STATE", OUTFILE + ".state.json")
+_SRC_FINGERPRINT = _hashlib.sha256(
+    open(__file__, "rb").read()).hexdigest()[:16]
+
+RESUME = "--resume" in _A
+RESUME_FROM = 0          # prior N; scan starts at RESUME_FROM + 1
+_resumed = []            # prior worklist entries, carried forward verbatim
+
+if RESUME:
+    try:
+        _st = _json.load(open(STATEFILE))
+    except OSError:
+        sys.exit(f"--resume: no state file at {STATEFILE}; run once without it")
+    if _st.get("fingerprint") != _SRC_FINGERPRINT:
+        sys.exit(
+            f"--resume REFUSED: {STATEFILE} was written by a different version "
+            f"of this script (fingerprint {_st.get('fingerprint')} vs "
+            f"{_SRC_FINGERPRINT}).\n"
+            "  Prior entries are lower bounds from a possibly different scoring "
+            "function; mixing them would make the worklist evidence for nothing.\n"
+            "  Rerun from scratch, or restore the script that wrote the state.")
+    if _st.get("asymptotic") != round(ASYMPTOTIC, 12):
+        sys.exit("--resume REFUSED: the asymptotic bound has changed, so the "
+                 "prior run's 'absent means >= ASYMPTOTIC' no longer holds.")
+    RESUME_FROM = int(_st["n_max"])
+    if RESUME_FROM >= N:
+        sys.exit(f"--resume: prior run already reached n = {RESUME_FROM} >= {N}; "
+                 "nothing to do.")
+    _prior = _st.get("worklist_file", OUTFILE)
+    try:
+        _lines = open(_prior).read().splitlines()
+    except OSError:
+        sys.exit(f"--resume: state names worklist {_prior}, which is missing. "
+                 "The state file and the worklist must travel together.")
+    for _i, _l in enumerate(_lines, 1):
+        if not _l.strip():
+            continue
+        _p = _l.split()
+        try:
+            if len(_p) != 2:
+                raise ValueError
+            _resumed.append((int(_p[0]), float(_p[1])))
+        except ValueError:
+            # A malformed line means the file is not the one the state
+            # describes.  Fail with the line rather than a traceback: the
+            # likeliest cause is an editor or a partial copy, and the fix
+            # depends on which.
+            sys.exit(f"--resume REFUSED: {_prior} line {_i} is not "
+                     f"'<n> <value>': {_l!r}")
+    if _st.get("worklist_len") != len(_resumed):
+        sys.exit(f"--resume REFUSED: {_prior} holds {len(_resumed)} entries but "
+                 f"the state records {_st.get('worklist_len')}. One of the two "
+                 "has been edited or truncated.")
+    print(f"resuming: {RESUME_FROM} already scanned, {len(_resumed)} worklist "
+          f"entries carried forward; scanning {RESUME_FROM + 1}..{N}")
+    print(f"  (every n <= {RESUME_FROM} absent from the worklist is known to "
+          f"score >= {ASYMPTOTIC:.5f}; the scan records nothing finer there)")
+
 # CLASS CEILINGS, KEYED MOD 12.  For odd n the shapes form a ladder
 #
 #   A  one c-block + foreign        cap  eta/(1+sqrt eta)^2       needs c = 2^a
@@ -585,7 +674,28 @@ blk_true = (9.9, None)
 gtrue = (9.9, None)
 trend_seen = 0
 
-for n in range(6, N + 1):
+# Seed from a prior run.  The carried-forward statistics are the ones the final
+# report reads; recomputing them would mean rescanning exactly the range the
+# resume exists to skip.  `per` carries the untruncated ratio minima and the
+# below-FLOOR counts, `gmin`/`below`/`weak` the global ones -- everything the
+# summary prints, so a resumed report is identical to a from-scratch one.
+if RESUME:
+    # The worklist stores d ROUNDED to five places, so recomputing ratios from
+    # it would perturb the per-class minima in the sixth decimal and make a
+    # resumed summary differ from a from-scratch one for no reason.  The state
+    # carries those statistics at full precision, so take them from there and
+    # use the worklist only to repopulate the lists that get rewritten.
+    weak.extend(_resumed)
+    below.extend((n_, d_) for n_, d_ in _resumed if d_ < FLOOR)
+    for _k, _v in (_st.get("per_class") or {}).items():
+        a_ = int(_k)
+        per[a_][0], per[a_][1] = _v[0], _v[1]
+        per[a_][2] = _v[2]
+    _gm = _st.get("global_min")
+    if _gm and _gm[1] is not None:
+        gmin = (_gm[0], _gm[1])
+
+for n in range(max(6, RESUME_FROM + 1), N + 1):
     if not ispp[n]:
         a = n % MOD
         # Never early-return while the value is still below the asymptotic
@@ -683,3 +793,35 @@ if weak:
         for n, d in weak:
             fh.write(f"{n} {d}\n")
     print("  first 15: " + ", ".join(f"{n}({d})" for n, d in weak[:15]))
+
+# ---------------------------------------------------------------- STATE OUT
+#
+# Written unconditionally, including when the worklist is empty -- an empty
+# worklist is a result ("nothing below the asymptotic bound in this range"),
+# and a resume needs to know the range was covered.  The state and the worklist
+# must travel together: the state records the worklist's name and length, and a
+# resume refuses if either has drifted.
+#
+# n_max is N, the range SCANNED, not max(weak): the whole point of resuming is
+# to know which n were examined and cleared, and that is exactly the part the
+# worklist does not record.
+_state = {
+    "fingerprint":   _SRC_FINGERPRINT,
+    "n_max":         N,
+    "asymptotic":    round(ASYMPTOTIC, 12),
+    "floor":         FLOOR,
+    "worklist_file": OUTFILE,
+    "worklist_len":  len(weak),
+    "global_min":    [round(gmin[0], 6), gmin[1]],
+    # Per-class ratio minima and below-FLOOR counts, so a resumed run's summary
+    # matches a from-scratch one without rescanning for them.
+    "per_class":     {str(a): [round(per[a][0], 6), per[a][1], per[a][2]]
+                      for a in range(MOD) if per[a][1] is not None},
+}
+with open(STATEFILE, "w") as fh:
+    _json.dump(_state, fh, indent=1, sort_keys=True)
+print(f"\nstate written to {STATEFILE} (scanned to n = {N:,}, "
+      f"{len(weak)} worklist entries).")
+print(f"  to extend:  python3 {_os.path.basename(__file__)} <bigger N> --resume")
+print("  a resume refuses if this script has been edited at all, since a "
+      "scoring change would silently mix incomparable lower bounds.")

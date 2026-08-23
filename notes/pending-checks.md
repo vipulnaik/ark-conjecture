@@ -189,9 +189,16 @@ python3 ceiling_rederive.py --nmax 16000 --no-filter # control: expect exceedanc
 
 ```bash
 python3 ladder_verify.py 1000000                      # regenerates ladder_weak.txt
+python3 ladder_verify.py 2000000 --resume             # extend, reusing the prior scan
 python3 mu_enumerate_v3.py --nlist ladder_weak.txt \
         --floor 0.0400 --adaptive --out <current table>
 ```
+
+> **`--resume` makes extension cheap, and it is exact rather than approximate.** The per-n scan is *clamped*: it stops as soon as a value clears the asymptotic bound, so for every n above that bound the run learns exactly one thing and records nothing finer. Every n it learns more about is by definition in the worklist. So a completed run's worklist plus its N already contains everything the scan produced, and a resumed run reproduces a from-scratch one **byte for byte** — verified by running 20,000 in one pass and as 8,000 + resume, with identical worklists and identical per-class statistics.
+>
+> State lives in a sidecar `ladder_weak.txt.state.json` (override with `LADDER_STATE`), never in the worklist itself, whose format `mu_enumerate_v3.py --nlist` depends on. **It records N, not max(worklist)** — the point of resuming is knowing which n were examined and *cleared*, which is exactly what the worklist does not say.
+>
+> **The resume refuses on any edit to the script**, comparing a hash of the whole source. That is deliberately conservative — there is no reliable way to distinguish a scoring change from a comment, and the asymmetry is stark: a spurious full rerun costs hours, a silently mixed worklist costs the credibility of every figure drawn from it. It also refuses if the worklist and state disagree on length, if a worklist line is malformed, or if the asymptotic bound has moved (which would invalidate "absent means cleared").
 
 **The result, stated as a fraction because a rounded figure cannot follow a ≥:**
 
