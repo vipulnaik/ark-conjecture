@@ -280,6 +280,27 @@ What replaces it is narrower and better specified — **the runner-up ordering**
 
 **One reduction lost its empirical support and kept its justification**, which is worth separating. `ep`'s R1 note argued that distinct part sizes must not be merged, citing 257 winners using two p-characteristic classes. There are now **none** — the family migrated wholesale to fused two-part configurations. The reduction still stands, because it is a statement about which configurations are *distinct* rather than about which ones win, but the measured support is historical and the note now says so instead of quoting a live-looking count.
 
+## 8o. The ladder rerun — both numerical bottlenecks now cleared
+
+**Result: floor δ ≥ 0.04621 at n = 2759 over n ≤ 10⁶, with nothing anywhere below 1/25**, and an empty `below_floor.txt` — the adaptive run against a floor of 0.04 never needs a single μ(n) computation. 45,390 worklist entries.
+
+**The global minimum moved down a decade, which is the interesting part.** It was 0.04453 at n = 11183. The entangled correction lifts the [10⁴, 10⁵) decade to 0.04801 — **11183 stays that decade's argmin**, so the value rose without the location moving — while [10³, 10⁴) is lifted less, and the binding value is now 0.04621 at n = 2759. So the correction did not merely raise a number; it changed which decade holds the hard case.
+
+| decade | entries | minimum | at |
+|---|---|---|---|
+| [10², 10³) | 6 | 0.05703 | 527 |
+| **[10³, 10⁴)** | 205 | **0.04621** | **2759** |
+| [10⁴, 10⁵) | 3,299 | 0.04801 | 11183 |
+| [10⁵, 10⁶] | 41,880 | 0.05603 | 173627 |
+
+**Consistency check that came for free:** the ladder's value at n = 2183 is 0.04804 against the table's exact 0.048039 — the two artifacts agree at the table's own floor row, computed by different routes. And 2759 lies **outside** the computed range, which is why the ladder floor and the table floor differ at all.
+
+**Downstream figures updated.** N(δ₀) at the ladder floor: L = 4.652, k ≤ 4, F ≤ 21, **N(δ₀) = 112** (was 122 at 0.04453 — the floor rose, so the count fell), in `aod` §6.1 and `shape-counting.md`. The block-minima and worklist-decade tables in §5 regenerated. The Fermat-branch count recounted: **16** winners of shape `2×c + 257*`, densities 0.10319–0.16138, against a v4 count of 18.
+
+**Two thresholds in the resolution notes improved sharply**, both having been computed against an older, much weaker ladder constant of 0.02516: A18's fused-outside exclusion from **n ≥ 1582 → n ≥ 471**, and T5's sharing exclusion from **n ≥ 763 → n ≥ 371**. Both now overlap the computed table with far more room, so the theorem-above-threshold / check-below-threshold pairing is comfortable rather than tight.
+
+**All ⟦PENDING-LADDER-REBUILD⟧ tags discharged** — the rename served its purpose within one turn. Three tags my keyword heuristic had swept into that category turned out to be μ-table figures rather than ladder ones (the Fermat-branch count, the sub-1/16 tail, and a ladder-versus-table comparison); all three are now resolved on their merits. What remains tagged is only the certificate reruns and the one distribution that cannot be regenerated from the CSV.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).

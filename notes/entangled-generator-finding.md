@@ -39,7 +39,7 @@ Generators for independent re-verification (points 0–12, 13–25, 26–32): t�
 ## 4. What survives
 
 - **Lemma C's foreign strip.** Its proof is a conjugation argument on the r-primary component of the layer, which is a genuine subgroup (the foreign translations), independent of how rotations embed. Applied in the rescan above.
-- **All lower bounds**: `ladder_verify.py`'s families understate (twist cuts make them conservative), so the 10⁶ floor 0.04453 and the 1/25 conjecture stand and strengthen.
+- **All lower bounds**: `ladder_verify.py`'s families understate (twist cuts make them conservative), so the 10⁶ floor and the 1/25 conjecture stand and strengthen — as they did: the corrected-scoring rerun raises the floor from 0.04453 to **0.04621**, and moves its argmin from n = 11183 to n = 2759.
 - **F_mid-vs-foreign shares** remain dominated (the coupling kills the foreign twist: orb(r, 1) = r < B), and **F_mid-vs-F_mid shares** remain harmless in range (audit_fmid.py, run before this finding; its conclusion is unaffected since entanglement only raises the *twist*, which that audit's two candidates already received in the optimistic pass).
 - **The global asymptotic constant 7 − 4√3** and the extremal classes 11, 23 mod 24.
 - Parts A–D, G.1, the value formula's term structure, Prop. F.1, G.4 (none of these use the coprimality clause).

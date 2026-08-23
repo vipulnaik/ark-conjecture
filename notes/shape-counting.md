@@ -19,7 +19,7 @@ Enumerated directly by recursion over the multiset in nondecreasing order, with 
 | 1/9 | 3.000 | 3 | 9 | 24 | 6 |
 | 1/16 | 4.000 | 4 | 16 | 65 | 10 |
 | 0.051813 (`19x61`, n = 1159) | 4.393 | 4 | 19 | 83 | — |
-| 0.04453 (ladder-floor representative) | 4.739 | 4 | 22 | 122 | 10 |
+| 0.04621 (the ladder floor to 10⁶) | 4.652 | 4 | 21 | 112 | 10 |
 | 0.04 = 1/25 (conjectured) | 5.000 | 5 | 25 | 164 | 15 |
 
 **The additive count is not enumerated but counted directly.** With every F_i = 1 a shape is determined by its part count k ≤ K = ⌊L⌋ and its number of foreign parts i ∈ {1,…,k}, so **N_add(δ₀) = Σ_{k≤K} k = K(K+1)/2**, quadratic in L and hence ≈ 1/(2δ₀). This is the count `aod` §6.6's covering statement actually quotes, the fusion shapes having dropped from the asymptotic statement (§6.5).
