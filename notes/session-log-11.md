@@ -326,6 +326,16 @@ After both fixes: **15 findings**, and the eight figure flags are coincidental (
 
 **What a later non-adaptive rerun would still buy.** Nothing for the floor — that is settled. It would extend the **ladder calibration**: 36 exact-vs-ladder comparisons so far, bimodal at 56% tight and 44% loose up to 1.81×, and knowing *which* n the ladder is sharp at would tell us where it can be trusted without computing. n = 2759 adds one tight point at the most informative place.
 
+## 8q. The floor is a fraction, not a decimal
+
+**"δ ≥ 0.04621" was literally false.** The exact value is 175813/3804661 = **0.04620989885…**, so the natural 5-place rounding sits *above* it, and the claim failed at precisely the n that attains equality. Rounding is symmetric; a bound is not.
+
+The floor is now stated as **175813/3804661** throughout — in lowest terms, since 3804661 = 7·31·89·197 and 175813 = 11²·1453 share no factor — with 0.046209… as a truncation where a decimal reads better. Every occurrence after a `≥` was found and fixed across five documents; occurrences of 0.04621 as a *label* for the minimum are left, since those are harmless.
+
+**The same care was owed one level up, and it survives.** `ladder_verify.py` prints to five places, so any entry may sit up to 5·10⁻⁶ below what it shows, and the range claim rests on the whole file rather than on one row. Worst case for the next-lowest entry (0.04801 at n = 11183) is 0.048005 — clear of the minimum by more than 0.0017, so neither the floor nor its uniqueness depends on the printing precision. That was a fact to check, not a formality.
+
+**Recorded in `verification-lessons.md` §5** as a general rule: quote a bound as an exact rational or truncate toward it, never round — and where a scan's own output is rounded, the supported claim is "≥ printed − half an ulp of the printing", with any stronger conclusion needing its margin verified.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).

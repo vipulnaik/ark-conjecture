@@ -4,7 +4,7 @@
 >
 > **The table now carries one row beyond its contiguous range**, n = **2759**, computed by the adaptive run at floor 0.05 because it is the ladder's argmin. **So the prefix/tail discipline is live again, not hypothetical:** figures quoted "over the table" must say whether they mean the 2,186 contiguous values in [6, 2600] or the 2,187 rows in the file. The sub-1/16 tail is the case where it already bites — 7 contiguous, 8 counting n = 2759. `converse_check.py` and `validate_table_v3.py` scope their aggregates to the prefix automatically and report the tail separately.
 >
-> **The ladder run is also complete, so both numerical bottlenecks are cleared.** `ladder_verify.py` to 10⁶ under the corrected scoring: **45,390 worklist entries, floor δ ≥ 0.04621 at n = 2759, nothing anywhere below 1/25**, and the adaptive run against a floor of 0.04 returns an empty below-floor list — so the conjecture's finite half needs no μ(n) computation at all in that range. The ⟦PENDING-LADDER-REBUILD⟧ tags introduced to isolate that bottleneck have been discharged with it.
+> **The ladder run is also complete, so both numerical bottlenecks are cleared.** `ladder_verify.py` to 10⁶ under the corrected scoring: **45,390 worklist entries, floor δ ≥ 175813/3804661 = 0.046209898… attained at n = 2759, nothing anywhere below 1/25**, and the adaptive run against a floor of 0.04 returns an empty below-floor list — so the conjecture's finite half needs no μ(n) computation at all in that range. The ⟦PENDING-LADDER-REBUILD⟧ tags introduced to isolate that bottleneck have been discharged with it.
 >
 > **One tag remains in use.** ⟦**PENDING-REBUILD**⟧ now marks only figures awaiting a **certificate or script rerun** that has not happened — coverage counts, collapse shares, shape-scan totals — plus the one distributional figure that cannot be regenerated from the CSV at all (the orbital count t is not a column). Figures pending on either the μ-table rebuild or the ladder have been resolved and carry no tag.
 >
@@ -939,15 +939,19 @@ an **additive** three-part configuration at **n ≡ 17 (mod 24)**. It is **intra
 
 `ladder_verify.py` computes, for each n, the best density achievable by four explicit families, scanning the block size over a window wide enough to contain every balance point, x ∈ [0.10, 0.55]. Over all composite non-prime-power **n ≤ 10⁶** (78 minutes) the smallest value is
 
-> **δ ≥ 0.04621, at n = 2759 — and at that n the bound is attained exactly.**
+> **δ ≥ 175813/3804661 = 0.046209898…, attained exactly at n = 2759.** *(Quoted as a fraction deliberately: the 5-place rounding 0.04621 is **above** the true value, so it cannot stand after a ≥.)*
 >
 > The corrected-scoring run to 10⁶ is complete: 45,390 worklist entries, minimum **0.04621 at n = 2759**, and no entry anywhere below 0.04. The pre-correction scan gave 0.04453 at n = 11183; the correction lifts the [10⁴, 10⁵) decade above the [10³, 10⁴) one, so both the value and the argmin moved.
 >
 > **The ladder is sharp where it binds, and the two bounds pinch.** Running the enumerator at the argmin gives **B(2759) = 175813 / C(2759,2) = 0.0462099**, equal to the ladder's own value there. Since the ladder is a construction (a lower bound on μ) and B is the enumeration bound (an upper bound, granting μ ≤ B_safe), the two meet:
 >
-> > **μ(2759)/C(2759,2) = 175813/3804661 = 0.0462099… exactly**, and since every other n in range has a ladder value strictly above it — the next is 0.04801 at n = 11183 — this is the **unique global minimiser** over the range:
+> > **μ(2759)/C(2759,2) = 175813/3804661** exactly — in lowest terms, since 3804661 = 7·31·89·197 and 175813 = 11²·1453 — and since every other n in range has a ladder value strictly above it, this is the **unique global minimiser**:
 > >
-> > **min { μ(n)/C(n,2) : n ≤ 10⁶, composite, not a prime power } = 0.0462099…, attained only at n = 2759.**
+> > **min { μ(n)/C(n,2) : n ≤ 10⁶, composite, not a prime power } = 175813/3804661 = 0.046209898…, attained only at n = 2759.**
+>
+> **State this as a fraction, or truncate — do not round.** The decimal is 0.04620989885…, so the natural 5-place rounding **0.04621 lies above the true value** and "δ ≥ 0.04621" is literally false at the one n that attains it. Every quotation of this floor as a lower bound must use the fraction, or a truncation such as **0.046209**, and the same applies to the surrounding text: where 0.04621 appears as a *label* for the minimum it is harmless, but where it appears after a ≥ it is wrong.
+>
+> *The same care is owed to the rest of the scan, and it survives it.* `ladder_verify.py` prints to five places, so any entry could sit up to 5·10⁻⁶ below what it shows. The lowest printed value among the other 45,389 entries is 0.04801 at n = 11183, hence at worst 0.048005 — still clear of 175813/3804661 by more than 0.0017, so neither the minimum nor its uniqueness depends on the printing precision.
 >
 > That is an *exact determination of the minimum*, not a bound on it, and it is why the adaptive run stopped after one value: with M pinned at 0.0462099 no other entry can fall below it, so nothing else needed computing.
 >
@@ -987,7 +991,7 @@ So the low-density dips are a small-n phenomenon and the asymptotic floor is the
 > **Why the extremal residue is mod 12, as is everything else.** The local obstructions at ℓ = 2 and ℓ = 3 see only n mod 12, and nothing in the ceiling table sees anything finer (§3.3.4): at F = 2 the 2-adic dependence is mod 4, and the genuine mod-8 condition at F = 4 is constant on its class. So the extremal class is keyed no more coarsely than the rest of the table. The minimum over all residues is **7 − 4√3 = 0.071797**, attained on **n ≡ 11 (mod 12)**.
 
 <!-- DUP:density_floor_conjecture -->
-> **Conjecture (global density floor).** For every composite non-prime-power n, **μ(n) ≥ C(n,2)/25**, i.e. δ(n) ≥ 0.04 — verified unconditionally over the four-family ladder's range (corrected scoring, complete: **δ ≥ 0.04621 at n = 2759** over n ≤ 10⁶); and asymptotically **δ(n) ≥ 7 − 4√3 − o(1) = 0.071797…**, the extremal residue being **n ≡ 11 (mod 12)**, the odd class carrying the ℓ = 3 obstruction.
+> **Conjecture (global density floor).** For every composite non-prime-power n, **μ(n) ≥ C(n,2)/25**, i.e. δ(n) ≥ 0.04 — verified unconditionally over the four-family ladder's range (corrected scoring, complete: **δ ≥ 175813/3804661 = 0.046209898…**, attained at n = 2759, over n ≤ 10⁶); and asymptotically **δ(n) ≥ 7 − 4√3 − o(1) = 0.071797…**, the extremal residue being **n ≡ 11 (mod 12)**, the odd class carrying the ℓ = 3 obstruction.
 <!-- /DUP -->
 
 > **The finite constant was 1/50 and the gap between the two forms is the interesting part.** 1/50 was set when the observed floor was near 0.026 and falling with every extension of the range, so it was a modest safety margin under a moving target. The target then stopped moving down and moved up, and every fall turned out to be a scoring deficiency rather than a property of μ: the pre-repair shape space read n = 2291 at 0.037524 where the true value is 0.066767, and the pre-repair ladder read n = 8927 at 0.02516 where the corrected families put it above the asymptotic ceiling entirely, dropping it from the worklist. **The drift is one-directional for a structural reason.** B(n) is a *maximum* over admissible configurations, so a missing shape can only depress it — and a missing shape has no witness, hence nothing in the pipeline can detect one, whereas an over-credit is caught by re-deriving μ from the recorded witness. The errors that survive to be found later are therefore biased toward those that lower the floor, which is why the ratchet has run upward and why 1/25 should also be read as likely loose.
@@ -1016,7 +1020,7 @@ The worklist admits a search that converges fast, because `ladder_verify` return
 
 **What survives the enumeration defect, and what does not.** Every step used the table from below: `ladder_verify.py` scores explicit constructions, and B(n) ≤ μ(n) wherever the collapse certificate applies, which covers both survivors. So
 
-> **min { μ(n)/C(n,2) : n ≤ 10⁶ composite, not a prime power } = 0.0462099…, uniquely at n = 2759**
+> **min { μ(n)/C(n,2) : n ≤ 10⁶ composite, not a prime power } = 175813/3804661 = 0.046209898…, uniquely at n = 2759**
 
 is proved, the ladder alone supplying it: every one of the 10⁶ values scores at least that, with the minimum at **n = 11183 = 53·211**. In particular **δ(n) ≥ 1/25 throughout**, with 11% to spare. What the bound does not license is reading it as a *value* of μ — it is a lower bound at n = 2759 like everywhere else, and B(2759) has not been computed.
 
@@ -1300,7 +1304,7 @@ The middle row is the one to keep. The counterexample's structure is **unconditi
 
 ## 8. Open questions specific to this document
 
-1. **Extend the ladder past 10⁶.** The scan is complete below 10⁶ (§5) and gives δ ≥ 0.04621 at n = 2759, with nothing below 1/25 anywhere in range. Pushing further is O(N²/log N) — about 4 hours to 10⁶, so 10⁷ is multi-day. The lower envelope rises monotonically since [10⁴, 10⁵) and the global minimum has been fixed since n = 20,000, so the expected return is confirmation rather than a new minimum; the value is in how far the pattern can be pushed, not in what it is likely to find. **The cheaper win is at the other end**: computing B(n) at the ten lowest worklist entries, all in [10³, 10⁴], would either lift the verified floor above 1/25 with real margin or pin the minimum below 10⁶ exactly.
+1. **Extend the ladder past 10⁶.** The scan is complete below 10⁶ (§5) and gives δ ≥ 175813/3804661 = 0.046209898… at n = 2759, with nothing below 1/25 anywhere in range. Pushing further is O(N²/log N) — about 4 hours to 10⁶, so 10⁷ is multi-day. The lower envelope rises monotonically since [10⁴, 10⁵) and the global minimum has been fixed since n = 20,000, so the expected return is confirmation rather than a new minimum; the value is in how far the pattern can be pushed, not in what it is likely to find. **The cheaper win is at the other end**: computing B(n) at the ten lowest worklist entries, all in [10³, 10⁴], would either lift the verified floor above 1/25 with real margin or pin the minimum below 10⁶ exactly.
 
 2. **Bound the s = 4 and s = 5 branches.** The only item here that is a gap in a *proof* rather than in evidence. *Recount after the rebuild:* at n = 3239 and 3059 the density rises sharply under the corrected shape space, so both leave the sub-1/25 set and the branch may narrow without any new theorem. E.1 caps s = 1 by the Mersenne constants and E.3(iii) caps the s = 2 repunit branch; s = 4 has neither, and is not thin enough for an E.4-style collapse. An absolute cap would have to come from the foreign block's twist, as in those two. The search clears it at every computed n, so nothing is unproved — but the gap widens as the floor falls.
 
