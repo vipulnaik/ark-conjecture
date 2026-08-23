@@ -248,6 +248,24 @@ What replaces it is narrower and better specified — **the runner-up ordering**
 
 **Phase 1 remains the next Lean work**, unchanged: `Basic.lean`'s 18 sorries, where the cap algebra and the mod-12 table live, and whose proofs have never been attempted.
 
+## 8m. The completed run to 2600 — PENDING-REBUILD figures resolved
+
+**The table is complete, and that is a stronger statement than "extended".** All **2,186** eligible n — composite, non-prime-power — in [6, 2600], with **no gaps and no worklist-driven tail**. So every aggregate is a genuine range aggregate rather than a prefix statistic. *The prefix/tail discipline stays live as a method:* an R7 extension that fills higher n from a worklist re-creates a biased tail, since the worklist selects by low score, and aggregates would then need requoting over the contiguous part. A frontier banner saying exactly this now heads `aod`'s provenance box.
+
+**The invariants hold, and one of them lands exactly.** `validate_table_v3.py`: **24 PASS / 0 FAIL**. Per-n monotonicity: **0 rows lowered, exactly 289 raised** — matching the exceedance list row for row, which is the cleanest confirmation the 289 accounting has had. `converse_check.py`: 0 violations, max cofactor still 12 at (221, 157, 13). The S2 identity: 0 rows below it, so the baseline exceptions 78 and 222 have been absorbed as predicted.
+
+**The floor confirms the tentative value exactly**: **0.048039 at n = 2183 = 37·59**, witness `6x251 + 1x677*`. The documents already carried this as ⟦PENDING-REBUILD⟧ tentative; independent recomputation matches, and the tags are gone. n = 2183 was never among the 289 raised rows, so its value carried through untouched — which is why the tentative reading was right. Comfortably above 1/25.
+
+**The headline structural change: the three-part family is empty.** Part counts are **{1: 743, 2: 1443}** with nothing above — no three-part winners at all, where v4 had 16. The prediction in `ep` Part I was "expect this shape class to nearly empty"; it emptied completely, including n = 1529, the one row that had been expected to survive. The mechanism is exact rather than statistical: all 16 had the same shape — one foreign prime plus two unfused equal p-parts — and that is precisely what a cyclic-layer fusion supersedes, the two equal parts merging into one fused class at full twist and scoring strictly higher as a *two*-part configuration. **S4 and S6 are likewise empty.**
+
+**This dissolves a stated obstacle in the notes.** §9's k ≤ 3 discussion argued that a proof must *produce* a ≤3-class decomposition rather than perturb one, because three-class winners beat the best two-class configuration by a median factor of 1.69. There are now no three-class winners, so **every winner over the whole computed range already has k ≤ 2** — far inside what is being asked. What remains open is the theorem, not any computed obstruction to it.
+
+**Figures resolved.** Sub-1/16 tail **18 → 7** (n = 527, 1175, 2075, 2183, 2279, 2303, 2507), so F.1's free coverage rises from 97.7% to **99.68%**. `certified_K` **{2: 394, 3: 1546, 4: 239, 5: 7}**. Census, both duplicate copies in step: S2 743, S3 853, S5 21, S7f2 395, S7f3 102, S7f4 58, S7f6 14, with trends over thirds recomputed. Split-preference **437 → 472** of 1,210. Two-part maximum 0.24939 over all 1,443, none above 1/4. Drift table's third band rebased to [1500, 2600].
+
+**One figure deliberately left tagged, and one scoped.** The orbital-count distribution in the notes (t = 2 at 20.4%, …) cannot be regenerated — **t is not a column of the CSV** — so it keeps its tag with that reason stated, rather than being silently carried as current. And the decade table at `aod` §3.6 is the **worklist scan to 10⁶**, a different artifact that has not been rerun; the completed μ table settles only its overlap, so that entry is now scoped rather than retagged: over [10³, 2600] the minimum is 0.048039, and the `0.04574 at 1817` entry does not survive the corrected cap.
+
+**`check_doc_figures.py`: 11 findings, all decisions.** Three are the value 0.05703, which is *correct as printed* in all three places — it is the [10², 10³) decade minimum and the [6, 800) band minimum — and merely collides with an old floor checkpoint. Four are scope reports listing the seven sub-1/16 values, which the documents now state correctly. The rest are history phrases and one illustrative `n = 2,000`.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).
