@@ -336,6 +336,38 @@ The floor is now stated as **175813/3804661** throughout — in lowest terms, si
 
 **Recorded in `verification-lessons.md` §5** as a general rule: quote a bound as an exact rational or truncate toward it, never round — and where a scan's own output is rounded, the supported claim is "≥ printed − half an ulp of the printing", with any stronger conclusion needing its margin verified.
 
+## 8r. Full pass over `pending-checks.md`
+
+**R0 and R7 both move from "in progress" to done**, with what re-arms on a discretionary extension stated as a checklist rather than left to memory — the prefix/tail discipline, every "at every row" claim, `shape-counting.md` §3's floor rows, and appending the old maximum to `CHECKPOINTS`.
+
+**R7 gains its result and, more importantly, the reading of its silence.** Both runs terminated: floor 0.0400 pruned everything and wrote nothing; floor 0.05 wrote one value and skipped the rest. A new caution says that **a skipped n is a recorded result, not a gap** — the CSV shows a hole where the run proved a bound, and captured only in a terminal log, that hole later reads as an unfinished job.
+
+**The risk ranking is reordered, and the reordering is the substantive change.** Item 1 was "the table's and ladder's reach, both in motion"; both are now settled over their ranges, so that drops to 3 with its residual restated as *finiteness* rather than motion. **Part E's realisability rises to 1** — it is now the largest untested leg, and it acquired a new highest-value row: n = 2759 is the one n where the framework claims to know μ *exactly*, and that claim rests on one enumerator run and one ladder run, neither reproduced.
+
+**A24 is load-bearing for a second claim**, which is new. Completeness previously carried only μ ≤ B over the certified range; it now also carries the exactness of μ(2759). The failure still runs the safe way — a missing shape makes B too small, so the true μ would be larger and the floor an understatement — but the *exactness* is precisely as strong as A24.
+
+**Two new items, both from this session's own mistakes.** **A20a**: a bound may not be quoted as a rounded decimal, with the ladder's five-place printing analysed one level up (the file alone supports only "≥ printed − 5·10⁻⁶", which suffices here by 0.0017 but is a margin to check). **A23a**: the tail row changed what "current" means for `check_doc_figures.py`, with both fixes recorded and the general form stated — a checker's notion of "the current table" is a *population choice*, and a prefix-plus-tail file has two populations, so any new quantity needs classifying as extremal or distributional when it is added.
+
+**Figures requoted from the completed table rather than left tagged.** F.4's converse check: 0 violations at 1,443 foreign primes and 743 one-part winners, max cofactor 12 — and now with a **second attainer at n = 2759** (r = 1453, Q = 121), so the constant F.4 records is realised both at the smallest witness and at the hardest n. R6c's solvable comparison: exact attainment at 916 of 2,186. R6b is noted as **runnable for the first time**, its blocker having been the input rather than the logic.
+
+**Tag hygiene.** ⟦PENDING-REBUILD⟧ is down to a single occurrence, the rest having become ⟦PENDING-RERUN⟧ (certificate and script reruns) — the distinction being that nothing is now waiting on a *table*, only on runs nobody has performed. A9 records the `HypH` → `HypBCG` drift the sync obligation caught, and that `Basic.lean`'s phase-1 statements are numerically pre-verified, so a failure there is an encoding problem rather than a false statement.
+
+## 8s. R6b and R6c folded into R1
+
+Both were run on the current table and passed, and both are per-batch checks that were living outside the per-batch list — the arrangement most likely to lose them. Folded in as steps 6 and 7 of R1's command block, sections deleted.
+
+**The commands were the easy part; the caveats were the point.** Each carries one or two lines of annotation, because all three of the things that make these outputs readable would have vanished in a compression to a bash block:
+
+- **`audit_fmid.py`'s coverage line comes before its verdict.** "0 non-prime-power values in range absent from the table" is what makes the 0-hit verdict mean anything; a partial table gives a clean verdict over rows it never screened, and the silence is indistinguishable from a pass.
+- **It screens only the low-density rows** — 461 of 2,186 at δ ≤ 0.13. A scope statement, not a shortfall, but "461 of 2186" reads as a shortfall cold.
+- **`solvable_relaxation.py` prints two INFO lines that look alarming without their reason.** The class-11 share (91 of 119 above 7 − 4√3) is expected, the ceilings bounding the balanced additive family rather than μ; the attainment share (916 of 2,187) is the S2 identity showing through.
+
+**Two standing notes were inside the deleted sections and were rehomed rather than lost:** that `audit_fmid.py` is *the only artefact* behind the shape space's shared-block-count admission — the other two routes being covered by argument — so a hit is a configuration to score, not a reason to tighten the admission; and that `k3_galois.py` belongs to the static class, taking no table.
+
+**Figures updated from the run.** Attainment 916 of **2,187** (not 2,186 — my earlier note predated the tail row), class 11 now **91 of 119**. Worth one observation: **n = 2759 ≡ 11 (mod 12)**, and it is one of the 28 in that class that do *not* exceed the ceiling. The range minimiser sits in the extremal class, which is where the theory says the hard cases are — a small independent corroboration that the mod-12 keying is picking out something real rather than an artefact of the table.
+
+The registry table at the head of the file now points both scripts at R1, and `check_doc_figures.py --pass refs` confirms no dangling references to the deleted sections.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).
