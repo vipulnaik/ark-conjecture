@@ -41,9 +41,9 @@ So the raw set grows like exp(2.53·δ₀^{−1/3}) — subexponential in 1/δ�
 
 **Why this asymptotic is not the operative one.** It counts the raw set, including the fusion shapes, and those cover a density-zero set of n (`aod` §6.5). The covering statement runs over the purely additive shapes, whose count is quadratic. The raw growth rate matters only for the negative claim — that halving the floor does not square the disjunction — and for the contrast with the partition-factor growth below.
 
-## 3. The floor rows, and what to recompute after the rebuild
+## 3. The floor rows, and what to recompute when the range moves
 
-> *The floor rows want recomputing as the table extends.* At the conjectured floor of 1/25, L = 5.000 and the part cap is **k ≤ 5** — a substantial narrowing of the search this table sizes, since the count grows steeply in L. The exactly-computed floor — **⟦PENDING-REBUILD⟧** tentatively 0.048039 at n = 2183, giving L = 4.562, k ≤ 4, F ≤ 20 (v4's 0.045742 at n = 1817 gave L = 4.676, N(δ₀) = 112) — wants these rows re-derived after the rebuild. Recompute the affected rows rather than the whole table. (The 122 and 164 above, and the 112 here, are direct enumerations of the criterion, checked against the 24 / 65 / 83 rows by the same code.)
+> *The floor rows are keyed to the exactly-computed floor, so they move with it.* At the conjectured floor of 1/25, L = 5.000 and the part cap is **k ≤ 5** — a substantial narrowing of the search this table sizes, since the count grows steeply in L. **At the computed floor, now 0.048039 at n = 2183 over the complete range to 2600: L = 4.5625, k ≤ 4, F ≤ 20, N(δ₀) = 102.** (v4's 0.045742 at n = 1817 gave L = 4.676 and N(δ₀) = 112; the floor rose, so the count fell.) These rows want re-deriving after any discretionary extension that lowers the floor again. Recompute the affected rows rather than the whole table. (The 122 and 164 above, and the 112 here, are direct enumerations of the criterion, checked against the 24 / 65 / 83 rows by the same code.)
 
 
 ## 4. The partition factor: unequal matching sizes

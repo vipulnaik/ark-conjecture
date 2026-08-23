@@ -266,6 +266,20 @@ What replaces it is narrower and better specified — **the runner-up ordering**
 
 **`check_doc_figures.py`: 11 findings, all decisions.** Three are the value 0.05703, which is *correct as printed* in all three places — it is the [10², 10³) decade minimum and the [6, 800) band minimum — and merely collides with an old floor checkpoint. Four are scope reports listing the seven sub-1/16 values, which the documents now state correctly. The rest are history phrases and one illustrative `n = 2,000`.
 
+## 8n. Tag triage: R0/R1 closed, the ladder isolated as the bottleneck
+
+**`pending-checks.md` R1 now states R0/R1 as done** over [6, 2600] with the battery results inline, and says extension is **discretionary** rather than owed. It also names the three things that re-arm on any extension — the prefix/tail discipline, every "at every row" claim, and `shape-counting.md` §3's floor rows — so a future extension has a checklist rather than a memory.
+
+**Every ⟦PENDING-REBUILD⟧ tag in the corpus was read and triaged into three outcomes.**
+
+*Renamed to* ⟦**PENDING-LADDER-REBUILD**⟧ *— 21 tags* across `aod` (13), `ep` (4), the notes (3) and `pending-checks` (1). These are the unconditional floor, its argmin, and the range over which the four-family ladder certifies it: blocked on `ladder_verify.py` to 10⁶ and on nothing else. The rename makes the bottleneck visible in the diff, which was the point.
+
+*Resolved and untagged* — the μ-table figures. Beyond the headline floor and census: the c mod 8 diagnostic for cyclic-layer winners, which had been taken over an 806-row prefix and is now **{1: 92, 3: 100, 5: 101, 7: 96}** over all 395 — flat to within 5%, with 48.9% at c ≡ 1 (mod 4) against 9% under v4, so the prediction that the congruence would *disappear* rather than weaken is confirmed at a population where noise is no longer a plausible explanation. Also the two-class fused+foreign count (590, 27.0%), the shape totals (853 / 743 / 590 with S4 and S6 empty), `shape-counting.md` §3's floor row (L = 4.5625, k ≤ 4, F ≤ 20, N(δ₀) = 102), and `solvable-relaxation.md`'s equality share (**916 of 2,186, 41.9%**, from a rerun of its own script).
+
+*Kept, with the reason stated* — the remainder. These are **certificate and script reruns nobody has performed**: coverage counts, collapse shares, the shape-scan totals, `solvable-relaxation.md`'s ratio distribution. Plus the one figure that cannot be regenerated at all, the orbital-count distribution, since **t is not a column of the CSV**. Each now says which rerun it waits on rather than "pending the rebuild", which had become misleading once the rebuild finished.
+
+**One reduction lost its empirical support and kept its justification**, which is worth separating. `ep`'s R1 note argued that distinct part sizes must not be merged, citing 257 winners using two p-characteristic classes. There are now **none** — the family migrated wholesale to fused two-part configurations. The reduction still stands, because it is a statement about which configurations are *distinct* rather than about which ones win, but the measured support is historical and the note now says so instead of quoting a live-looking count.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).
