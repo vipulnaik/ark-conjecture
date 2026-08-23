@@ -301,6 +301,31 @@ What replaces it is narrower and better specified — **the runner-up ordering**
 
 **All ⟦PENDING-LADDER-REBUILD⟧ tags discharged** — the rename served its purpose within one turn. Three tags my keyword heuristic had swept into that category turned out to be μ-table figures rather than ladder ones (the Fermat-branch count, the sub-1/16 tail, and a ladder-versus-table comparison); all three are now resolved on their merits. What remains tagged is only the certificate reruns and the one distribution that cannot be regenerated from the CSV.
 
+## 8p. B(2759) computed — the ladder is sharp where it binds, and μ is pinned exactly
+
+**The adaptive run terminated after one value, and that is the result.** `mu_enumerate_v3.py` at floor 0.05 wrote **B(2759) = 175813, density 0.0462099** — *equal to the ladder's own bound there.* M was then pinned below every remaining ladder value, so all other candidates were skipped. **The skips are a finding, not an omission:** every other n in range has a ladder lower bound strictly above 0.0462099 (next is 0.04801 at n = 11183), so none can be the minimiser.
+
+**Ladder ≤ μ ≤ B pinches, which determines μ exactly at a four-digit n.** The ladder is a construction (a lower bound on μ); B is the enumeration bound (an upper bound, granting μ ≤ B_safe). They meet:
+
+> **μ(2759)/C(2759,2) = 175813/3804661 = 0.0462099…**, and since it is the unique n whose ladder value falls that low,
+>
+> **min { μ(n)/C(n,2) : n ≤ 10⁶, composite, not a prime power } = 0.0462099…, attained only at n = 2759.**
+
+That upgrades the range minimum from a bound to an **exact determination**. It also answers the question the run was for, in the affirmative: the ladder cannot be improved at the point where it binds.
+
+**Why 2759 is the hard case is now legible.** The witness is `1x1453* + 2x653` at q = 11, and the binding class is the **foreign intra orbital r·Q = 1453 × 121 = 175813** — not the matching term, which at 2·C(653,2) = 425756 is more than twice as large. The foreign twist order Q = 121 = 11² is a prime power as Lemma B′ requires, and its cofactor is **(r − 1)/Q = 1452/121 = 12**: exactly (BCG)'s d ≤ 12, at the boundary. *The worst n in a million is worst because its foreign block is as inefficient as the hypothesis permits and no more* — which is a much better statement of what the floor measures than the number alone. It also gives F.4's maximum-cofactor claim a second attainer, at an n four times the size of the first.
+
+**A correction to my own reasoning, worth recording because I nearly got it wrong.** Adding the tail row made `check_doc_figures.py` report 22 extra findings, and my first read was "checker artifact of the tail". It was not: the tool already patches the file floor into its current-figure set, so the documents' "the table floor is 0.048039" had genuinely become a *contiguous-range* figure quoted as the table's. Every one of those flags was correct. **The prefix/tail discipline arrived exactly where predicted and I was one step from dismissing it.** Ten floor statements across three documents are now explicitly scoped to [6, 2600], with the global minimum pointed at §5.
+
+**Two real tool fixes came out of it.**
+
+1. **Both floors are current figures.** The contiguous floor and the file floor answer different questions and a document may legitimately quote either; keeping only one made the other read as stale. `CUR` now carries both, with the scoping left to prose since no pass can check it.
+2. **Extremal quantities should be read off the whole file, distributional ones off the prefix.** A worklist row above CONTIG is computed *because* it may be a new minimum, so "the floor is X at n = Y" should quote the file while "the median is Z" should quote the prefix. The staleness test treated NMAX as stale for everything, which flagged the floor — a correct, current figure — as a defect on every run once a tail row existed.
+
+After both fixes: **15 findings**, and the eight figure flags are coincidental (`0.05703` is a genuinely current decade minimum; `0.400000` is an unrelated constant matching a percentage). `validate_table_v3.py` 23 PASS / 0 FAIL.
+
+**What a later non-adaptive rerun would still buy.** Nothing for the floor — that is settled. It would extend the **ladder calibration**: 36 exact-vs-ladder comparisons so far, bimodal at 56% tight and 44% loose up to 1.81×, and knowing *which* n the ladder is sharp at would tell us where it can be trusted without computing. n = 2759 adds one tight point at the most informative place.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).

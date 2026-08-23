@@ -199,9 +199,20 @@ BY_RANGE = {c: quantities([r for r in rows if r["n"] <= c]) for c in CHECKPOINTS
 # would appear and it stays valid on any superset.
 CUR = dict(BY_RANGE[CONTIG]) if CONTIG in BY_RANGE else dict(quantities(CONTIG_ROWS))
 _allq = quantities(rows)
+# BOTH floors are current figures, because they answer different questions and a
+# document may legitimately quote either.  The CONTIGUOUS floor is the minimum
+# over a genuine range; the FILE floor may be lower because a worklist row above
+# CONTIG is exactly where a new minimum appears.  Keeping only one of them makes
+# the other read as stale -- which it is not -- and that mislabels a correctly
+# scoped figure as a defect.  What a document must do is SAY WHICH; that is a
+# prose matter this pass cannot check, so it reports both as current and leaves
+# the scoping to the reader.
+CUR["density floor (contiguous)"] = CUR["density floor"]
+CUR["density floor at n (contiguous)"] = CUR["density floor at n"]
 if _allq["density floor"] < CUR["density floor"]:
     CUR["density floor"] = _allq["density floor"]
     CUR["density floor at n"] = _allq["density floor at n"]
+    CUR["row count (incl. tail)"] = _allq["row count"]
 
 if not A.quiet:
     print(f"{A.table}: {len(rows)} rows, n up to {NMAX}")
@@ -248,6 +259,14 @@ IGNORE = re.compile(
     r"(witness|attained at|mod 12|Fermat|Mersenne|repunit|orb\(|§|Theorem|Lemma|"
     r"Part [A-J]|20\d\d|arXiv|= \d+ ?[+·*]|\d+ ?[+·*] ?\d+|http)", re.I)
 
+# Extremal quantities stay valid on any superset of the rows, so for these the
+# whole file -- worklist tail included -- is the right population; distributional
+# ones must come from the contiguous prefix.  See the staleness test below.
+_EXTREMAL_KEYS = ("density floor", "density floor at n", "density max",
+                  "row count", "n max")
+def _extremal(k):
+    return k in _EXTREMAL_KEYS or k.startswith("row count")
+
 FIG = re.compile(r"(?<![\d.,])(\d{1,3},\d{3}|\d\.\d{4,6}|\d{1,3}\.\d(?=%))(?![\d.,])")
 
 if A.only in ("all", "figures"):
@@ -267,7 +286,17 @@ if A.only in ("all", "figures"):
                 # a figure agreeing with the aggregate over n <= CONTIG is right,
                 # and one agreeing only with the whole-file aggregate is quoting
                 # a range contaminated by the worklist tail.
+                #
+                # EXCEPT for the extremal quantities, where the whole file is the
+                # correct population and the prefix is not.  A worklist row above
+                # CONTIG is computed precisely because it may be a new minimum, so
+                # "the floor is X at n = Y" should quote the file, while "the
+                # median is Z" should quote the prefix.  Treating NMAX as stale
+                # for everything flags the floor -- a correct, current figure --
+                # as a defect, and does so on every run once a tail row exists.
                 if not hits or any(c == CONTIG for _, c in hits):
+                    continue
+                if any(c == NMAX and _extremal(k) for k, c in hits):
                     continue
                 where = ", ".join(sorted({f"{k} @ n<={c}" for k, c in hits}))
                 stale.append((ln, frag, where))
