@@ -60,6 +60,29 @@ namespace Ark
 
 open Real Finset
 
+/-! ## 0. The bridge to `ArkCore`
+
+`ArkCore.lean` is Mathlib-free, so it works over `ArkCore.pairs n = n*(n-1)/2`
+rather than `Nat.choose n 2`, which core Lean does not have.  One lemma connects
+them, and every theorem `ArkCore` has already proved follows.
+
+**PARTLY VERIFIED.**  Written in a container with core Lean but no Mathlib, so
+the bridge and the rewrites through it were checked by you rather than here.
+Everything they depend on in `ArkCore` *is* compiled and sorry-free.  Fallbacks
+are noted inline where a step is more likely to need adjusting.
+
+*One ordering trap, already paid for:* `orb_eq_arkcore` mentions `orb`, so it
+must come after §1's definition, not here.  Putting it in this section gave
+`Function expected at orb` -- and, because `autoImplicit` turns an unknown
+identifier into an implicitly bound variable, the error names a *type* problem
+rather than a missing definition.  Keep §0 to statements about `ArkCore` alone. -/
+
+/-- `ArkCore.pairs` and `Nat.choose _ 2` are the same function. -/
+theorem pairs_eq_choose (n : ℕ) : ArkCore.pairs n = n.choose 2 := by
+  simp [ArkCore.pairs, Nat.choose_two_right]
+  -- if this fails: `rw [Nat.choose_two_right]; rfl` -- `pairs` should be
+  -- definitionally `n * (n - 1) / 2`, so `rfl` closes it after the rewrite.
+
 /-! ## 1. The orbital-size primitive
 
 `orb c t` is the minimum intra-orbital of a block of size `c` under a cyclic
@@ -77,15 +100,25 @@ implementations (`shape_realize.py`, `ark_shapes.g`). -/
 noncomputable def orb (c t : ℕ) (char2 : Bool) : ℕ :=
   min (if char2 ∨ t % 2 = 0 then c * t / 2 else c * t) (c.choose 2)
 
+/-- The two `orb` definitions agree -- they are written identically, the only
+difference being which of `ArkCore.pairs` / `Nat.choose _ 2` appears in the cap.
+*Stated here rather than in §0 because it mentions `orb`, which §0 precedes.* -/
+theorem orb_eq_arkcore (c t : ℕ) (b : Bool) : orb c t b = ArkCore.orb c t b := by
+  unfold orb ArkCore.orb
+  rw [pairs_eq_choose]
+  -- if this fails, it is the `Bool`-to-`Prop` coercion in the `if`: this file
+  -- writes `char2 ∨ ...`, `ArkCore` writes `char2 = true ∨ ...`, which is what
+  -- the coercion unfolds to.  `simp` should reconcile them.
+
 /-- A full twist is 2-homogeneous: the whole block is one orbital.
 This is the `d/(c-1) = 1` case of the glossary's grading. -/
-theorem orb_full (c : ℕ) (hc : 2 ≤ c) :
+theorem orb_full (c : ℕ) (_hc : 2 ≤ c) :
     orb c (c - 1) false = c.choose 2 := by
-  -- PROVED in `ArkCore.lean` §2 as `ArkCore.orb_full`, over `ArkCore.pairs`
-  -- rather than `Nat.choose` (core Lean has no `Nat.choose`), and without the
-  -- `2 ≤ c` hypothesis, which turns out not to be needed.  What remains here
-  -- is only the bridge `ArkCore.pairs c = c.choose 2`.
-  sorry
+  -- `ArkCore.orb_full` proves this WITHOUT the `2 ≤ c` hypothesis: at `c ≤ 1`
+  -- both sides are 0.  Kept in the signature so the statement still matches the
+  -- documents, but underscored, since Lean now reports it as unreferenced --
+  -- which is itself the evidence that the hypothesis was never needed.
+  rw [orb_eq_arkcore, ArkCore.orb_full, pairs_eq_choose]
 
 /-- `orb` never exceeds the block's total pair count.  Used everywhere the
 value formula is bounded above. -/
@@ -101,8 +134,8 @@ natural-number division. -/
 
 theorem lemma_D1 (F c : ℕ) (hF : 2 ≤ F) (hc : 2 ≤ c) :
     2 * (F * c.choose 2) < 2 * ((F * c).choose 2) := by
-  -- PROVED in `ArkCore.lean` §3 as `ArkCore.lemma_D1`.  Bridge only.
-  sorry
+  rw [← pairs_eq_choose, ← pairs_eq_choose]
+  exact ArkCore.lemma_D1 F c hF hc
 
 /-! ## 3. Proposition F.1 — the part count is bounded by the density
 
@@ -117,10 +150,8 @@ is exactly the one the informal statement forgets, which is the sort of thing
 this file exists to surface. -/
 theorem size_of_capacity (s m : ℕ) (hm : 0 < m) (h : m ≤ s.choose 2) :
     2 * m < s * s := by
-  -- PROVED in `ArkCore.lean` §3 as `ArkCore.size_of_capacity`, including the
-  -- `0 < m` hypothesis this file's docstring identifies as the one the prose
-  -- forgot.  Bridge only.
-  sorry
+  rw [← pairs_eq_choose] at h
+  exact ArkCore.size_of_capacity s m hm h
 
 /-- **Proposition F.1.**  If `k` parts of sizes `sz i` sum to `n` and each has
 capacity at least `m`, then `k * sqrt (2 * m) < n`.  Dividing by `sqrt (n(n-1))`
@@ -220,10 +251,19 @@ entries, `capF 4 1 = 1/9` and its comparison, the pairwise distinctness of the
 six, `capF_scaling` over a grid of `F` and `η`, and `cap_two_foreign` over
 `m₁, m₂ ≤ 7`.  The six agree with `arithmetic-of-density.md` §3.3.5 as it
 currently stands. -/
-example : capF 1 1 = 1 / 4 := by sorry                     -- n = 0, 4, 6, 10
+-- UNVERIFIED, like §0: the three rational entries need only `sqrt 1` and
+-- `sqrt 4`, so they are worth attempting ahead of the surd rows.  Fallbacks
+-- inline.  The three irrational entries below are left sorried on purpose --
+-- they need `Real.sqrt_eq_iff` style reasoning and are a different job.
+example : capF 1 1 = 1 / 4 := by
+  unfold capF; norm_num
+  -- if `norm_num` will not do `sqrt (1*1) = 1`: add `[Real.sqrt_one]`, and if
+  -- the coercion `((1:ℕ):ℝ)` blocks it, `push_cast` first.
 example : capF 1 (1/3) = (2 - Real.sqrt 3) / 2 := by sorry  -- n = 2, 8
 example : capF 2 1 = 3 - 2 * Real.sqrt 2 := by sorry        -- n = 1, 9
-example : capF 2 (1/2) = 1 / 8 := by sorry                  -- n = 3, 7
+example : capF 2 (1/2) = 1 / 8 := by
+  unfold capF; norm_num
+  -- `F * η = 2 * (1/2) = 1`, so this is the `sqrt 1` case again.
 example : capF 2 (1/3) = 5 - 2 * Real.sqrt 6 := by sorry     -- n = 5
 example : capF 4 (1/3) = 7 - 4 * Real.sqrt 3 := by sorry     -- n = 11; global constant
 
@@ -233,8 +273,21 @@ because the arithmetic alone does not show it.  At `n = 3, 7 (mod 12)` the
 `η = 1/2` and gives `1/8`, which is larger.  Which rung is *available* is group
 theory (a fused class keeps its full twist at any `c`), so Lean can check the
 comparison but not the availability -- exactly the split this file is about. -/
-example : capF 4 1 = 1 / 9 := by sorry
-example : capF 4 1 < capF 2 (1/2) := by sorry
+example : capF 4 1 = 1 / 9 := by
+  unfold capF
+  rw [show ((4 : ℕ) : ℝ) * 1 = 2 ^ 2 by norm_num,
+      Real.sqrt_sq (by norm_num : (0:ℝ) ≤ 2)]
+  norm_num
+example : capF 4 1 < capF 2 (1/2) := by
+  rw [show capF 4 1 = 1/9 from by
+        unfold capF
+        rw [show ((4 : ℕ) : ℝ) * 1 = 2 ^ 2 by norm_num,
+            Real.sqrt_sq (by norm_num : (0:ℝ) ≤ 2)]
+        norm_num,
+      show capF 2 (1/2) = 1/8 from by unfold capF; norm_num]
+  norm_num
+  -- 1/9 < 1/8: the F = 4 rung at full efficiency is WORSE than F = 2 at half,
+  -- which is why F = 4 earns its place only at η = 1/3 (the class-11 row).
 
 /-- **The two-foreign cap.**  With efficiencies `1/m₁` and `1/m₂` the ceiling is
 `1 / (sqrt m₁ + sqrt m₂)^2`.  This closed form is what makes S6's analysis
