@@ -379,4 +379,72 @@ theorem admissible_subset : ∀ a < 12, ∀ d ∈ admissible a, d ∈ dList := b
 at `d = 6, n = 100, ℓ = 3` the third form `99 − 6q` vanishes identically. -/
 theorem degeneration_example : ∀ q < 3, (99 + 6 * 3 - 6 * q) % 3 = 0 := by decide
 
+/-! ## 7. The threshold ladders, and the offset between them (`Basic.lean` §4)
+
+`Basic.lean` §4 records that the documents ran two different ladders together
+and shifted one by one.  Both are statements about `1/√δ`, but they bound
+different quantities and sit at different offsets:
+
+* the **k-ladder** bounds the part count, `k ≤ 1/√δ`;
+* the **s-ladder** bounds the fallback parameter, `s ≤ 1/√δ − 1`.
+
+Reals and square roots are not needed to say this.  Writing `δ = m/N` and
+squaring clears both, which turns the whole question into `Nat` arithmetic --
+so it is provable here rather than waiting on Mathlib, and `decide` can check
+the documented thresholds outright. -/
+
+/-- **The s-ladder, sharp form.**  With `δ = m/N`, the hypothesis `N < (s+1)²m`
+is `δ > 1/(s+1)²` and `(t+1)²m ≤ N` is `t ≤ 1/√δ − 1`.
+
+The conclusion is `t < s`, i.e. `t ≤ s − 1`, which is **stronger than the
+`t ≤ s` that `Basic.lean` states** -- and the gap is exactly the slack that
+document's docstring describes.  Proving the sharp form is the point: it makes
+the offset a theorem instead of a remark, so a future substitution of one
+ladder for the other fails to typecheck rather than passing unnoticed.
+
+No positivity hypothesis on `m` is needed; at `m = 0` the first hypothesis is
+already false. -/
+theorem ladder_nat (s t m N : Nat)
+    (hlo : N < (s + 1) ^ 2 * m)
+    (hhi : (t + 1) ^ 2 * m ≤ N) : t < s := by
+  have h : (t + 1) ^ 2 * m < (s + 1) ^ 2 * m := Nat.lt_of_le_of_lt hhi hlo
+  have h2 : (t + 1) ^ 2 < (s + 1) ^ 2 := Nat.lt_of_mul_lt_mul_right h
+  rcases Nat.lt_or_ge (t + 1) (s + 1) with h3 | h3
+  · omega
+  · have : (s + 1) ^ 2 ≤ (t + 1) ^ 2 := Nat.pow_le_pow_left h3 2
+    omega
+
+/-- `k ≤ 1/√δ` at `δ = m/N`, squared. -/
+def kOK (k m N : Nat) : Bool := k ^ 2 * m ≤ N
+
+/-- `s ≤ 1/√δ − 1` at `δ = m/N`, squared. -/
+def sOK (s m N : Nat) : Bool := (s + 1) ^ 2 * m ≤ N
+
+/-- The largest argument below `n` satisfying `f`. -/
+def maxOK (f : Nat → Bool) : Nat → Nat
+  | 0     => 0
+  | n + 1 => if f (n + 1) then n + 1 else maxOK f n
+
+/-- **The two ladders differ by exactly one, at each documented threshold.**
+`δ` just above `1/16`, `1/25`, `1/36` is taken as `1/15`, `1/24`, `1/35`.
+This is the check that would have caught the shift: the two ladders are not
+equal and not free to be substituted, and the difference is a constant 1. -/
+theorem ladder_offset_16 :
+    maxOK (fun k => kOK k 1 15) 20 = maxOK (fun s => sOK s 1 15) 20 + 1 := by decide
+
+theorem ladder_offset_25 :
+    maxOK (fun k => kOK k 1 24) 20 = maxOK (fun s => sOK s 1 24) 20 + 1 := by decide
+
+theorem ladder_offset_36 :
+    maxOK (fun k => kOK k 1 35) 20 = maxOK (fun s => sOK s 1 35) 20 + 1 := by decide
+
+/-- And the documented values themselves: `δ > 1/16` gives `k ≤ 3` and `s ≤ 2`;
+`δ > 1/25` gives `k ≤ 4` and `s ≤ 3`.  These are the numbers the prose quotes,
+now `decide`-checked rather than asserted. -/
+theorem ladder_values_16 :
+    maxOK (fun k => kOK k 1 15) 20 = 3 ∧ maxOK (fun s => sOK s 1 15) 20 = 2 := by decide
+
+theorem ladder_values_25 :
+    maxOK (fun k => kOK k 1 24) 20 = 4 ∧ maxOK (fun s => sOK s 1 24) 20 = 3 := by decide
+
 end ArkCore

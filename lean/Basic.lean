@@ -47,6 +47,7 @@
   Narrow them once the proofs compile, not before.
 -/
 import Mathlib
+import Ark.ArkCore
 
 namespace Ark
 
@@ -73,9 +74,11 @@ noncomputable def orb (c t : ℕ) (char2 : Bool) : ℕ :=
 This is the `d/(c-1) = 1` case of the glossary's grading. -/
 theorem orb_full (c : ℕ) (hc : 2 ≤ c) :
     orb c (c - 1) false = c.choose 2 := by
+  -- PROVED in `ArkCore.lean` §2 as `ArkCore.orb_full`, over `ArkCore.pairs`
+  -- rather than `Nat.choose` (core Lean has no `Nat.choose`), and without the
+  -- `2 ≤ c` hypothesis, which turns out not to be needed.  What remains here
+  -- is only the bridge `ArkCore.pairs c = c.choose 2`.
   sorry
-  -- c-1 even  -> c*(c-1)/2 = choose c 2, and min x x = x
-  -- c-1 odd   -> c even, c*(c-1) > choose c 2, so the cap binds
 
 /-- `orb` never exceeds the block's total pair count.  Used everywhere the
 value formula is bounded above. -/
@@ -91,10 +94,8 @@ natural-number division. -/
 
 theorem lemma_D1 (F c : ℕ) (hF : 2 ≤ F) (hc : 2 ≤ c) :
     2 * (F * c.choose 2) < 2 * ((F * c).choose 2) := by
+  -- PROVED in `ArkCore.lean` §3 as `ArkCore.lemma_D1`.  Bridge only.
   sorry
-  -- 2 * choose n 2 = n * (n-1)
-  -- LHS = F * c * (c-1), RHS = F*c*(F*c-1)
-  -- difference = F*c*(F*c - c) = F*c*c*(F-1) > 0
 
 /-! ## 3. Proposition F.1 — the part count is bounded by the density
 
@@ -109,8 +110,10 @@ is exactly the one the informal statement forgets, which is the sort of thing
 this file exists to surface. -/
 theorem size_of_capacity (s m : ℕ) (hm : 0 < m) (h : m ≤ s.choose 2) :
     2 * m < s * s := by
+  -- PROVED in `ArkCore.lean` §3 as `ArkCore.size_of_capacity`, including the
+  -- `0 < m` hypothesis this file's docstring identifies as the one the prose
+  -- forgot.  Bridge only.
   sorry
-  -- 2 * choose s 2 = s * (s-1) < s * s, and 0 < m forces 1 ≤ s
 
 /-- **Proposition F.1.**  If `k` parts of sizes `sz i` sum to `n` and each has
 capacity at least `m`, then `k * sqrt (2 * m) < n`.  Dividing by `sqrt (n(n-1))`
@@ -141,11 +144,33 @@ discipline; tying threshold and conclusion by the *same* variable in a stated
 theorem, as here, is what makes a silent substitution impossible. -/
 theorem s_threshold (s : ℕ) (δ : ℝ) (hδ : 0 < δ) (h : 1 / ((s : ℝ) + 1) ^ 2 < δ)
     (t : ℕ) (ht : (t : ℝ) ≤ 1 / Real.sqrt δ - 1) : t ≤ s := by
+  -- PROVED in `ArkCore.lean` §7 as `ArkCore.ladder_nat`, and proved in the
+  -- SHARP form `t < s` rather than the slack `t ≤ s` stated here -- which is
+  -- exactly the offset this docstring describes.  Writing δ = m/N and squaring
+  -- removes both the real and the square root, so no Mathlib is needed:
+  --     ladder_nat : N < (s+1)^2 * m → (t+1)^2 * m ≤ N → t < s
+  -- What remains here is the bridge from `δ : ℝ` with `Real.sqrt` to that
+  -- rational form.  Consider restating this theorem at `t < s`: the slack
+  -- version is true but weaker than what is now available, and stating the
+  -- weaker one is how the two ladders came to look interchangeable.
   sorry
 
 example : (1 : ℝ) / 16 = 1 / ((3 : ℝ) + 1) ^ 2 := by norm_num  -- δ > 1/16 → k ≤ 3, s ≤ 2
 example : (1 : ℝ) / 25 = 1 / ((4 : ℝ) + 1) ^ 2 := by norm_num  -- δ > 1/25 → k ≤ 4, s ≤ 3
 example : (1 : ℝ) / 36 = 1 / ((5 : ℝ) + 1) ^ 2 := by norm_num  -- δ > 1/36 → k ≤ 5, s ≤ 4
+
+/-- **The offset is now a checked theorem, not a remark.**  `ArkCore.lean` §7
+carries `ladder_offset_16/25/36`, each of the form
+
+    maxOK (k-ladder) = maxOK (s-ladder) + 1
+
+`decide`-checked at δ just above each documented threshold, together with the
+quoted values themselves (`k ≤ 3, s ≤ 2` at 1/16; `k ≤ 4, s ≤ 3` at 1/25).
+These are the numbers the prose states, and the equation is the one that fails
+if the two ladders are ever substituted for one another.  The three `norm_num`
+lines above check the *thresholds*; the ArkCore theorems check the
+*conclusions*, which is the half that went wrong. -/
+example : True := trivial
 
 /-! ## 5. The cap algebra
 

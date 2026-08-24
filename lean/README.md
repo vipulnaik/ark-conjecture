@@ -104,6 +104,20 @@ There is a second benefit that matters more in practice: **a definition forces t
 
 **Never — the conjectural layer.** Hypothesis (H), the density floor conjecture, the 1 : 1 : 2 limit. These are conjectures; formalising a conjecture means formalising its statement, which is useful only if someone will prove it.
 
+## Phase 1 — started, from the `Nat` end
+
+**The threshold ladders are done, and they were the highest-value target in phase 1** — §4 of `Basic.lean` exists because the documents ran the k-ladder and the s-ladder together and shifted one by one. `ArkCore.lean` §7 now carries:
+
+- **`ladder_nat`**, the s-ladder, proved in the **sharp** form `t < s` where `Basic.lean` states the slack `t ≤ s`. Stating the weaker one is how the two ladders came to look interchangeable, so proving the sharp form makes the offset a theorem rather than a remark.
+- **`ladder_offset_16/25/36`**, `decide`-checked: `maxOK (k-ladder) = maxOK (s-ladder) + 1` at δ just above each documented threshold.
+- **`ladder_values_16/25`**, the numbers the prose quotes — `k ≤ 3, s ≤ 2` at 1/16, `k ≤ 4, s ≤ 3` at 1/25 — checked rather than asserted.
+
+**The move that made this cheap: write `δ = m/N` and square.** Both ladders are statements about `1/√δ`, and squaring clears the real and the square root together, leaving `Nat` arithmetic that core Lean proves outright and `decide` settles at the thresholds. No Mathlib, no `Real.sqrt` lemmas, no elaboration wait. *Where a real-valued statement is really an inequality between two squares, the `Nat` form is not an approximation of it — it is the same statement with the coercion removed*, and it is worth looking for before reaching for the analysis library.
+
+**Also wired: three of `Basic.lean`'s sorries were re-proving theorems `ArkCore.lean` already had** — `orb_full`, `lemma_D1`, `size_of_capacity` (the last including the `0 < m` hypothesis this file records as the one the prose forgot). Those now point at the proved versions, with only the `pairs`/`Nat.choose` bridge outstanding. The duplication was itself a hazard: two statements of one lemma drift, and the sorried copy is the one that drifts silently.
+
+**What is left in phase 1** is the part that genuinely needs Mathlib: the `capF` algebra and the six ceiling entries as algebraic numbers, `Real.sqrt_mul` for `capF_eq_k_sqrt`, and the `pairs = choose` bridges. All six ceiling identities are numerically pre-verified to 30 places, so a proof that fails to close there is an encoding problem rather than a false statement.
+
 ## What phase 1 would actually pin down
 
 Concretely, these documents' claims become theorems rather than assertions:
