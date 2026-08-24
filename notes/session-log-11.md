@@ -387,6 +387,22 @@ A resume therefore *reproduces* a from-scratch run rather than approximating it.
 
 **One fidelity bug found and fixed by the equivalence test.** The first version recomputed per-class ratio minima from the worklist, whose values are rounded to five places, so a resumed summary differed from a from-scratch one in the sixth decimal at two classes. The state carries those statistics at full precision; it now takes precedence rather than competing with the recomputation. Worth noting that the byte-comparison is what caught it — a spot check of the worklist alone would have passed.
 
+## 8u. R8's first run — two defects, both in the battery
+
+**The headline: no μ ≤ B violation.** Every constructed group scores at or below the current B(n), and the seven rows that ran all realised their predicted orbitals exactly. What broke is the battery's bookkeeping, in two independent ways.
+
+**Defect 1 — the expectation list is hand-maintained and has drifted, one row of it across the entangled correction.** Four of eight rows quote a `mu_bound` matching no current table (n = 26: 36 vs 156; n = 35: 105 vs 120; n = 308: 4134 vs 5671). Those pass anyway, because the row's number is meant to be *that configuration's own* score rather than B(n) — a distinction the file documents. But n = 247 FAILs, and the diagnosis is worth keeping: its expectation **1314 = F·c·18/2 is the matching intra with the twist cut from 72 to 18**, a pre-correction value. The constructed group takes the full twist, so its matching class is 2·C(73,2) = 5256 and the minimum passes to the foreign class at **r·Q = 101·25 = 2525** — the odd-Q rule this session corrected in `sp-to-floor.md`.
+
+> **So the FAIL is the battery doing its job.** These rows exist to fail if a twist cut by the block count is ever reintroduced; one of the *expectations* was itself computed under such a cut, the assertion fired, and it fired in the direction that matters — the stale value **under-scored**, which is the unsafe direction for an upper-bound claim. The fix is not just 1314 → 2525 but to **generate the expectations from the current table** instead of maintaining them by hand.
+
+**Defect 2 — the chain construction cannot build a composite F, which is the flagship case of the correction it was rebuilt for.** At n = 78 = `6x13` GAP aborts with "N must be a normal subgroup" at `G/G1`. Cause: the script splits F by `ftop := largest q-power dividing F`, giving ftop = 2, fmid = 3, and puts *part* of the block rotation in the top layer. That is the pre-entangled decomposition. The entangled generator carries its multiplier at one specific wrap boundary; conjugating by the top rotation moves that boundary, so the conjugate is not in G₁ and G₁ is not normal.
+
+The correct group puts **all** of F in the cyclic layer with a trivial top — one F-cycle with step-multipliers whose product is a primitive root. Built it in Python to check: multipliers (2,1,1,1,1,1) mod 13 give orbitals **{468, 507, 1014, 1014}**, matching `entangled-generator-finding.md` exactly, min 468 = B(78). **The fix is to prefer fmid = F, ftop = 1**, reaching for the top layer only when the configuration needs it.
+
+**What this says about the rebuild.** `verify_witness.g` was rebuilt around the entangled generator, and `pending-checks.md` recorded it as such — but the rebuild reached the **twist** and not the **block-rotation placement**. The two are different halves of the same correction, and the half that got missed is exactly the one the composite-F witness was added to exercise. That the crash happened on the first row testing it is the good outcome; the bad outcome would have been a composite-F row that quietly passed by building a different group.
+
+**A smaller point worth fixing while there.** The report prints `orbitals` as a multiset and `predicted` as a set — at n = 35, `[105, 245, 245]` against `[105, 245]` — so the two columns are not comparable by eye even when they agree. Print both the same way.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).

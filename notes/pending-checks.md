@@ -229,7 +229,24 @@ Run in that order; the cheap one may answer the expensive one's question. `--nma
 
 ## R8. Widen the Part E realisability battery
 
-*The one leg of μ(n) = B(n) with no per-n check. **⟦PENDING-RERUN⟧** `verify_witness.g` was rebuilt around the entangled generator and has still not been run; prior coverage stands at twelve values from the superseded battery, largest n = 575. This is now the **largest untested leg of the framework**, the table and the ladder both being settled over their ranges.*
+*The one leg of μ(n) = B(n) with no per-n check. **RUN — and it found two defects in its first outing, both in the battery rather than in the framework.** Details below; neither is a μ ≤ B violation, and every constructed group scores at or below the current B(n).*
+
+> **Defect 1: the `BATTERY` list's expectations are stale, and one is pre-entangled.** Four of eight rows quote a `mu_bound` matching no current table: n = 26 gives 36 against B = 156, n = 35 gives 105 against 120, n = 308 gives 4134 against 5671, and n = 247 gives **1314 against 2525** — the only one that FAILs, because 1314 is not even that configuration's own score. It is `F·c·18/2` with the matching twist **cut from 72 to 18**: a pre-correction value. The constructed group takes the full twist, so its matching intra is 2·C(73,2) = 5256 and the minimum passes to the foreign class at r·Q = 101·25 = **2525**, the odd-Q rule. **So the FAIL is the battery working**: the expectation was computed under the superseded cut, the assertion fired, and it fired in the direction that matters — the old expectation *under-scored*. Update the row to 2525, and regenerate every expectation from the current table rather than hand-maintaining them.
+>
+> **Defect 2: the chain construction cannot build a composite F, which is the flagship case of the entangled correction.** At n = 78 = `6x13` the script splits F = 6 by `ftop := largest q-power dividing F` → ftop = 2, fmid = 3, putting *part* of the block rotation in the top layer. That is the pre-entangled decomposition, and it does not close: the entangled generator carries its multiplier at one specific wrap boundary, conjugation by the top rotation moves that boundary, and G₁ is not normal in G — the error GAP reports. **The correct group puts all of F in the cyclic layer with a trivial top:** a single F-cycle on blocks with step-multipliers whose product is a primitive root, here (2,1,1,1,1,1) mod 13, giving ⟨z⟩ ≅ C₇₂ cyclic. *Verified independently:* that construction yields orbitals **{468, 507, 1014, 1014}**, matching `entangled-generator-finding.md` exactly, with min 468 = B(78). **The fix is to prefer fmid = F, ftop = 1** — use the top layer only when the configuration genuinely needs it — which is also what makes the n = 33 and n = 105 regressions meaningful rather than accidental.
+
+**Both defects are now fixed in `verify_witness.g`, and the file has NOT been run since** — there is no GAP in the container where the fix was made, so the changes carry static checks only. **Run the control first:**
+
+```bash
+ARK_WITNESS_FTOP_SPLIT=1 gap -q -o 8g verify_witness.g   # must still abort at n = 78
+gap -q -o 8g verify_witness.g                            # then the fixed path
+```
+
+The control restores the old split and should reproduce the `G/G1` normality abort; if it passes, the fix is not doing what it claims. The fixed path should carry n = 78 to `true` with orbitals {468, 507, 1014, 1014}. *Checked outside GAP by direct orbit enumeration:* the corrected placement gives {20, 25} at n = 10, {30, 75} at n = 15 and {468, 507, 1014, 1014} at n = 78.
+
+*Prior coverage stands at twelve values from the superseded battery, largest n = 575.*
+
+*(Historical note: `verify_witness.g` was rebuilt around the entangled generator, but the rebuild reached the twist and not the block-rotation placement, which is why the composite-F row is the one that crashes.)* **⟦PENDING-RERUN⟧** *after both defects are fixed; prior coverage stands at twelve values from the superseded battery, largest n = 575. This is now the **largest untested leg of the framework**, the table and the ladder both being settled over their ranges.*
 
 **Step 1 — run the battery.**
 

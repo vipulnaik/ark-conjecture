@@ -160,8 +160,32 @@ BuildConfig := function(w, twists)
     # At small c the two groups can share an orbital partition (at n = 10 both
     # have order 200 and neither contains the other), which is exactly how a
     # spurious twist-cut can pass every orbital check for a long time.
-    ftop := 1;  while F mod (ftop * w.q) = 0 do ftop := ftop * w.q; od;
-    fmid := F / ftop;
+    # PUT THE WHOLE BLOCK ROTATION IN THE CYCLIC LAYER.  The obvious split --
+    # Ftop := the largest q-power dividing F -- is the PRE-ENTANGLED reading,
+    # and at a composite F it does not produce a group with an Oliver chain at
+    # all.  Concretely at n = 78 = 6x13 with q = 2 it gives Ftop = 2, Fmid = 3:
+    # z steps by 2 and carries its multiplier at one wrap boundary, the top
+    # element steps by 3, and conjugating z by it moves the boundary, so the
+    # conjugate is not in G1 and G1 is NOT NORMAL.  GAP aborts at G/G1.
+    #
+    # After the entangled-generator correction there is no reason to reach for
+    # the top layer at all: F may be ANY integer in the cyclic layer, so take
+    # Fmid = F and let z be a full F-cycle whose step-multipliers have product
+    # generating dcyc.  Then <z> is cyclic of order F*dcyc, the whole rotation
+    # lives in G1, and the top carries only the q-power part of the twist --
+    # which is diagonal and so commutes with z, making G1 normal.  This is also
+    # the group `entangled-generator-finding.md` exhibits at n = 78, and it
+    # reproduces that note's orbitals {468, 507, 1014, 1014} exactly.
+    #
+    # ARK_WITNESS_FTOP_SPLIT=1 restores the old split.  Keep it: it is the
+    # CONTROL for this fix, and a control that reproduces the original failure
+    # is worth more than a green run of the fixed path.
+    if IsBound(GAPInfo.SystemEnvironment.ARK_WITNESS_FTOP_SPLIT) then
+      ftop := 1;  while F mod (ftop * w.q) = 0 do ftop := ftop * w.q; od;
+      fmid := F / ftop;
+    else
+      ftop := 1;  fmid := F;
+    fi;
     dq := 1;  while twists[i] mod (dq * w.q) = 0 do dq := dq * w.q; od;
     dcyc := twists[i] / dq;
     # --- top layer: pure q-power twist, diagonal across the class's blocks ---
@@ -296,8 +320,12 @@ VerifyWitness := function(str, muBound)
   od;
   sizes := OrbitalSizes(chain.G, n);
   terms := PredictedTerms(w, twists);
+  # Print both as sorted multisets.  `sizes` was a multiset and `terms` a set,
+  # so at n = 35 the two columns read [105, 245, 245] against [105, 245] and
+  # looked like a mismatch when they agree -- the construction may split a
+  # class into several orbitals of equal size, which the check below allows.
   Print("orbitals  : ", sizes, "  (sum ", Sum(sizes), ")\n");
-  Print("predicted : ", terms, "\n");
+  Print("predicted : ", terms, "   (as a set: ", Set(terms), ")\n");
   Print("min orbital / mu_bound : ", Minimum(sizes), " / ", muBound, "\n");
   # Collect the REASONS, not just the conjunction.  A bare "false" next to
   # orbital data that visibly matches the prediction invites the reader to
@@ -333,25 +361,63 @@ VerifyWitness := function(str, muBound)
   return verdict;
 end;
 
+# WHAT CHANGED, AND WHAT TO RUN FIRST.  The block rotation now lives entirely in
+# the cyclic layer (see BuildConfig).  Before trusting a green run, reproduce the
+# failure it fixes:
+#
+#     ARK_WITNESS_FTOP_SPLIT=1 gap -q -o 8g verify_witness.g
+#
+# should abort at n = 78 with "N must be a normal subgroup" at G/G1, and the
+# default run should carry that row to VERDICT true with orbitals
+# {468, 507, 1014, 1014}.  A control that reproduces the original failure is
+# worth more than a green run of the fixed path: if the control passes too, the
+# fix is not doing what this comment says it is.
+#
+# NOTE: this file has not been executed since the fix -- no GAP in the container
+# where it was made.  Its arithmetic was checked outside GAP: the corrected
+# placement reproduces {20, 25} at n = 10, {30, 75} at n = 15 and
+# {468, 507, 1014, 1014} at n = 78 by direct orbit enumeration.
+#
 # ------------------------------------------------------------------- the battery
 # Values with a known score, chosen to cover the shapes with the least
 # construction evidence: cyclic-layer fusion and the fused rung.  NOTE: the
 # second column is the configuration's own predicted min orbital, which equals
 # B(n) only where that configuration is the winner -- it is not at n = 247.
 # S4 (two matching + foreign) and every even F >= 4 remain uncovered (R8).
+#
+# THESE EXPECTATIONS ARE HAND-MAINTAINED, WHICH IS HOW ONE OF THEM WENT STALE
+# ACROSS THE ENTANGLED CORRECTION (see n = 247 below).  Four rows quote a value
+# matching no current table -- deliberately, since the column is the
+# configuration's own score and several of these configurations are no longer
+# the winner at their n -- so the reader cannot tell a deliberate mismatch from
+# a rotted one by inspection.  The durable fix is to GENERATE this list from
+# the current table: for each row, take the recorded witness and let
+# PredictedTerms compute the expectation, so a scoring change updates the
+# expectation and the construction together instead of only one of them.
+# Until then, re-derive any row you touch rather than trusting its number.
 BATTERY := [
   [ "p=5 q=2: 2x5",                20 ],   # n = 10, fused rung, mu(10)
   [ "p=2 q=3: 3x4",                18 ],   # n = 12, mu(12); trivial-top attainer
   [ "p=5 q=3: 3x5",                30 ],   # n = 15
   [ "p=3 q=2: 1x9 + 1x17*",        36 ],   # n = 26, Lemma C worked example
   [ "p=7 q=5: 5x7",               105 ],   # n = 35, Theorem 2.2
-  [ "p=73 q=5: 2x73 + 1x101*",   1314 ],   # n = 247, S7 at F = 2 (NOT S4, and not
-                                          # B(247): the S4 winner at this n is
-                                          # 1x101* + 1x73 + 1x73 with B = 2525.
-                                          # 1314 is this configuration's own score,
-                                          # so the row checks realisability of a
-                                          # non-optimal configuration.  S4 still has
-                                          # no battery entry -- see R8.
+  [ "p=73 q=5: 2x73 + 1x101*",   2525 ],   # n = 247, S7 at F = 2.  NOT B(247),
+                                          # which is 3280 at 4x41 + 1x83*; this is
+                                          # the configuration's OWN score, so the
+                                          # row checks realisability of a
+                                          # non-optimal configuration.
+                                          # WAS 1314, AND THAT WAS A PRE-CORRECTION
+                                          # VALUE: 1314 = F*c*18/2 is the matching
+                                          # intra with the twist CUT from 72 to 18.
+                                          # The group takes the full twist, so the
+                                          # matching class is 2*C(73,2) = 5256 and
+                                          # the minimum passes to the FOREIGN class
+                                          # at r*Q = 101*25 = 2525 (odd Q, so r*Q
+                                          # and not r*Q/2).  The row failing was the
+                                          # battery working: these entries exist to
+                                          # fire if a twist cut reappears, and one
+                                          # of the EXPECTATIONS had been computed
+                                          # under such a cut.
   [ "p=53 q=37: 3x53 + 1x149*",  4134 ],   # n = 308, cyclic-layer fusion
   # --- entangled-generator regressions.  These are the configurations a twist
   # cut by the block count scores BELOW what the group achieves, so they are the
