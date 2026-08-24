@@ -223,16 +223,51 @@ noncomputable def capF (F : ℕ) (η : ℝ) : ℝ := η / (1 + Real.sqrt (F * η
 /-- **Fusing `F` blocks is worth exactly `sqrt F` unfused classes.**  The
 `k`-class formula is `η / (1 + k sqrt η)^2`; this says `capF F η` is that
 formula at `k = sqrt F`. -/
-theorem capF_eq_k_sqrt (F : ℕ) (η : ℝ) (hη : 0 ≤ η) :
+theorem capF_eq_k_sqrt (F : ℕ) (η : ℝ) (_hη : 0 ≤ η) :
     capF F η = η / (1 + Real.sqrt F * Real.sqrt η) ^ 2 := by
-  sorry  -- Real.sqrt_mul
+  unfold capF
+  rw [Real.sqrt_mul (by positivity : (0:ℝ) ≤ (F : ℝ))]
+  -- `Real.sqrt_mul` wants nonnegativity of the LEFT factor only; `(F : ℝ) ≥ 0`
+  -- holds for any `F : ℕ`, so `η ≥ 0` is not needed -- underscored in the
+  -- signature to record that, as with `orb_full`'s `2 ≤ c`.  Two of this
+  -- file's stated hypotheses have now turned out to be unnecessary, which is
+  -- a small argument for formalising statements even where the proofs are
+  -- routine.  If the coercion blocks
+  -- `positivity`, use `Nat.cast_nonneg F`.
 
 /-- **`cap_F η = cap_1 (F η) / F`.**  This is why one rung's value at `η` is
 exactly half the next rung's at `2η` — the pairing visible in the surd column of
-the mod-24 ceiling table. -/
+the ceiling table, which is keyed **mod 12** (this docstring said mod 24, from
+before the rekey; the identity is unaffected). -/
 theorem capF_scaling (F : ℕ) (η : ℝ) (hF : 0 < F) :
     capF F η = capF 1 (F * η) / F := by
-  sorry
+  unfold capF
+  have hF' : (0:ℝ) < (F : ℝ) := by exact_mod_cast hF
+  -- both sides have the same `Real.sqrt (F * η)`: on the left it is
+  -- `sqrt (↑F * η)` outright, on the right `sqrt (↑(1:ℕ) * (↑F * η))`.
+  norm_num
+  field_simp
+  -- NOTE: `field_simp` closes this outright; an added `ring` errors with
+  -- "No goals to be solved" rather than being a harmless no-op.
+  -- if `norm_num` does not reduce `((1:ℕ):ℝ) * (↑F * η)` to `↑F * η`, do it by
+  -- hand first: `rw [Nat.cast_one, one_mul]`.  The mod-24 remark in the
+  -- docstring should now read mod-12; the identity itself is unaffected.
+
+/-- **The substitution that makes every ceiling entry uniform.**  Each entry is
+`capF F η` at an `F·η` whose square root is a known surd, so rather than
+computing `Real.sqrt (F * η)` four different ways, supply the root and its
+defining equation once.
+
+This is what turns the table from four ad-hoc surd manipulations into four
+instances of one arithmetic identity, and it is the reason the entries below all
+have the same three-line shape: substitute, record `s² = F·η`, clear
+denominators.  The remaining content in each is a rational identity that
+`nlinarith` closes from `s² = F·η` and `s ≥ 0` -- for the class-11 row, for
+example, `(7 − 4√3)(7 + 4√3) = 49 − 48 = 1`. -/
+theorem capF_of_sqrt (F : ℕ) (η s : ℝ) (hs : 0 ≤ s) (h : s ^ 2 = F * η) :
+    capF F η = η / (1 + s) ^ 2 := by
+  unfold capF
+  rw [← h, Real.sqrt_sq hs]
 
 /-- The ceiling table's entries as algebraic numbers.  One spot-check per
 distinct ceiling; there are **six**, keyed `mod 12`, and the `F = 4` rung
@@ -257,15 +292,42 @@ currently stands. -/
 -- they need `Real.sqrt_eq_iff` style reasoning and are a different job.
 example : capF 1 1 = 1 / 4 := by
   unfold capF; norm_num
+  -- (the two rational rows below could also go through `capF_of_sqrt` at s = 1
+  -- and s = 1; they are left direct because `norm_num` already closes them)
   -- if `norm_num` will not do `sqrt (1*1) = 1`: add `[Real.sqrt_one]`, and if
   -- the coercion `((1:ℕ):ℝ)` blocks it, `push_cast` first.
-example : capF 1 (1/3) = (2 - Real.sqrt 3) / 2 := by sorry  -- n = 2, 8
-example : capF 2 1 = 3 - 2 * Real.sqrt 2 := by sorry        -- n = 1, 9
+example : capF 1 (1/3) = (2 - Real.sqrt 3) / 2 := by
+  rw [capF_of_sqrt 1 (1/3) (Real.sqrt 3 / 3) (by positivity) (by
+        rw [div_pow, Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 3)]; push_cast; ring)]
+  have h3 : Real.sqrt 3 ^ 2 = 3 := Real.sq_sqrt (by norm_num)
+  have h3' : (0:ℝ) ≤ Real.sqrt 3 := Real.sqrt_nonneg 3
+  field_simp
+  nlinarith [h3, h3']
+example : capF 2 1 = 3 - 2 * Real.sqrt 2 := by
+  rw [capF_of_sqrt 2 1 (Real.sqrt 2) (Real.sqrt_nonneg 2) (by
+        rw [Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 2)]; push_cast; ring)]
+  have h2 : Real.sqrt 2 ^ 2 = 2 := Real.sq_sqrt (by norm_num)
+  have h2' : (0:ℝ) ≤ Real.sqrt 2 := Real.sqrt_nonneg 2
+  field_simp
+  nlinarith [h2, h2']
 example : capF 2 (1/2) = 1 / 8 := by
   unfold capF; norm_num
   -- `F * η = 2 * (1/2) = 1`, so this is the `sqrt 1` case again.
-example : capF 2 (1/3) = 5 - 2 * Real.sqrt 6 := by sorry     -- n = 5
-example : capF 4 (1/3) = 7 - 4 * Real.sqrt 3 := by sorry     -- n = 11; global constant
+example : capF 2 (1/3) = 5 - 2 * Real.sqrt 6 := by
+  rw [capF_of_sqrt 2 (1/3) (Real.sqrt 6 / 3) (by positivity) (by
+        rw [div_pow, Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 6)]; push_cast; ring)]
+  have h6 : Real.sqrt 6 ^ 2 = 6 := Real.sq_sqrt (by norm_num)
+  have h6' : (0:ℝ) ≤ Real.sqrt 6 := Real.sqrt_nonneg 6
+  field_simp
+  nlinarith [h6, h6']
+example : capF 4 (1/3) = 7 - 4 * Real.sqrt 3 := by
+  rw [capF_of_sqrt 4 (1/3) (2 * Real.sqrt 3 / 3) (by positivity) (by
+        rw [div_pow, mul_pow, Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 3)]
+        push_cast; ring)]
+  have h3 : Real.sqrt 3 ^ 2 = 3 := Real.sq_sqrt (by norm_num)
+  have h3' : (0:ℝ) ≤ Real.sqrt 3 := Real.sqrt_nonneg 3
+  field_simp
+  nlinarith [h3, h3']
 
 /-- `capF 4 1 = 1/9` is **not** a table entry, and the reason is worth recording
 because the arithmetic alone does not show it.  At `n = 3, 7 (mod 12)` the
