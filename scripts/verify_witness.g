@@ -36,6 +36,30 @@
 ###############################################################################
 
 # ---------------------------------------------------------------- witness parse
+# ----------------------------------------------------- global-name collision guard
+# This file defines a handful of globals with ordinary mathematical names, and
+# GAP's autoloaded packages define a great many.  A collision with a READ-ONLY
+# global aborts at the assignment with "Variable: 'X' is read only" -- a message
+# that names the variable and not this file, so it reads as a GAP problem rather
+# than ours.  That already happened once, with `Orb` from the autoloaded `orb`
+# package (now ArkOrb).
+#
+# Check up front and say what is wrong and what to do, rather than letting the
+# assignment fail 200 lines later.
+ArkGlobals := [ "ParseWitness", "StripCoprime", "ConstructionTwists",
+                "BuildConfig", "CheckOliverChain", "OrbitalSizes", "ArkOrb",
+                "PredictedTerms", "VerifyWitness", "BATTERY", "ArkGlobals" ];
+ArkClash := Filtered(ArkGlobals,
+                     nm -> IsBoundGlobal(nm) and IsReadOnlyGlobal(nm));
+if Length(ArkClash) > 0 then
+  Print("verify_witness.g: these names are already READ-ONLY globals, almost\n",
+        "certainly from an autoloaded package: ", ArkClash, "\n",
+        "  Either start GAP with -A (no autoloaded packages), or rename them\n",
+        "  here with an Ark prefix -- renaming is preferred, since depending on\n",
+        "  a start-up flag for correctness fails only for whoever omits it.\n");
+  QUIT_GAP(1);
+fi;
+
 ParseWitness := function(s)
   local p, q, parts, cls, tok, i, j, k, F, c, foreign, body;
   i := PositionSublist(s, "p=");  j := PositionSublist(s, "q=");
@@ -273,7 +297,13 @@ OrbitalSizes := function(G, n)
 end;
 
 # ------------------------------------------------------- the value formula terms
-Orb := function(c, t, char2)
+# NAMED ArkOrb, NOT Orb.  `Orb` belongs to the autoloaded `orb` package and is
+# READ-ONLY, so assigning to it aborts with "Variable: 'Orb' is read only"
+# unless GAP was started with -A.  Depending on a start-up flag for correctness
+# is a trap: the failure appears only for whoever omits it, and the message
+# names a variable rather than this file.  Prefixing every global defined here
+# removes the dependency instead of documenting it.
+ArkOrb := function(c, t, char2)
   local v;
   if t mod 2 = 0 or char2 then v := c * t / 2; else v := c * t; fi;
   return Minimum(v, Binomial(c, 2));
@@ -285,9 +315,9 @@ PredictedTerms := function(w, twists)
   for i in [1..Length(w.classes)] do
     cl := w.classes[i];  Add(sz, cl.F * cl.c);
     if cl.foreign then
-      Add(terms, Orb(cl.c, twists[i], false));
+      Add(terms, ArkOrb(cl.c, twists[i], false));
     else
-      Add(terms, cl.F * Orb(cl.c, twists[i], w.p = 2));
+      Add(terms, cl.F * ArkOrb(cl.c, twists[i], w.p = 2));
       if cl.F > 1 then
         # coefficient keyed on the PARITY OF F, not on q; exact for the regular
         # C_F block action this construction uses
@@ -365,17 +395,17 @@ end;
 # the cyclic layer (see BuildConfig).  Before trusting a green run, reproduce the
 # failure it fixes:
 #
-#     ARK_WITNESS_FTOP_SPLIT=1 gap -q -o 8g verify_witness.g
+#     ARK_WITNESS_FTOP_SPLIT=1 gap -q -A -o 8g verify_witness.g
 #
-# should abort at n = 78 with "N must be a normal subgroup" at G/G1, and the
-# default run should carry that row to VERDICT true with orbitals
-# {468, 507, 1014, 1014}.  A control that reproduces the original failure is
+# aborts at n = 78 with "N must be a normal subgroup" at G/G1 -- CONFIRMED --
+# while the default run carries that row to VERDICT true with orbitals
+# {468, 507, 1014, 1014}, as does every other row.  A control that reproduces the original failure is
 # worth more than a green run of the fixed path: if the control passes too, the
 # fix is not doing what this comment says it is.
 #
-# NOTE: this file has not been executed since the fix -- no GAP in the container
-# where it was made.  Its arithmetic was checked outside GAP: the corrected
-# placement reproduces {20, 25} at n = 10, {30, 75} at n = 15 and
+# Both paths have now been run: every verdict true on the default path, and the
+# control still aborts.  The arithmetic was independently checked outside GAP --
+# the corrected placement reproduces {20, 25} at n = 10, {30, 75} at n = 15 and
 # {468, 507, 1014, 1014} at n = 78 by direct orbit enumeration.
 #
 # ------------------------------------------------------------------- the battery

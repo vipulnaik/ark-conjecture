@@ -52,7 +52,7 @@
 
 *Ranked, so the item order below has a stated basis. The reasoning behind this ranking — the failure-site taxonomy it comes from — is `verification-lessons.md` §1.*
 
-1. **Part E's realisability.** No per-n verification, and no coverage at the fusion count that sets the ceiling at n ≡ 11 (mod 12) — and now also none at **n = 2759**, the one n where the framework claims μ *exactly* rather than boundedly. **This is the largest untested leg**, the table and ladder both being settled over their ranges. → **T2**, **R8**
+1. **Part E's realisability.** Ten values now verified end to end — the battery returns `true` on every row, including the composite-F construction the entangled correction turns on — so this is **evidence-backed at ten points rather than untested**. What keeps it at the top is what those points do *not* reach: **even F = 4**, the fusion count that sets the ceiling at n ≡ 11 (mod 12), and **n = 2759**, the one n where the framework claims μ *exactly* and whose binding class is a foreign block at a proper prime-power twist order. → **T2**, **R8**
 2. **Exhaustiveness of the GAP stages.** The only non-circular check in the framework; the subdirect-product hole is undischarged. → `small-degree-verification.md` item 5
 3. **The table's and ladder's reach — no longer in motion, and demoted for that reason.** The contiguous range is complete to 2600, the ladder to 10⁶ with an exact minimum at n = 2759, and further extension is discretionary. What remains is that both are *finite*: nothing here bears on n beyond 10⁶. → **R0**, **R7**, **R1** after any discretionary batch.
 4. **§3.3.5's ceilings.** Exposure is the shared supply hypothesis. The class-11 entry rests on 676 > 675, but **both sides of that comparison are now independently reproduced** by the circle-method route, which selects the same winner and the same runner-up from congruences alone (`aod` §6.9(b)) — so the argmax is no longer part of the exposure, only the supply. → **T6**
@@ -235,16 +235,22 @@ Run in that order; the cheap one may answer the expensive one's question. `--nma
 >
 > **Defect 2: the chain construction cannot build a composite F, which is the flagship case of the entangled correction.** At n = 78 = `6x13` the script splits F = 6 by `ftop := largest q-power dividing F` → ftop = 2, fmid = 3, putting *part* of the block rotation in the top layer. That is the pre-entangled decomposition, and it does not close: the entangled generator carries its multiplier at one specific wrap boundary, conjugation by the top rotation moves that boundary, and G₁ is not normal in G — the error GAP reports. **The correct group puts all of F in the cyclic layer with a trivial top:** a single F-cycle on blocks with step-multipliers whose product is a primitive root, here (2,1,1,1,1,1) mod 13, giving ⟨z⟩ ≅ C₇₂ cyclic. *Verified independently:* that construction yields orbitals **{468, 507, 1014, 1014}**, matching `entangled-generator-finding.md` exactly, with min 468 = B(78). **The fix is to prefer fmid = F, ftop = 1** — use the top layer only when the configuration genuinely needs it — which is also what makes the n = 33 and n = 105 regressions meaningful rather than accidental.
 
-**Both defects are now fixed in `verify_witness.g`, and the file has NOT been run since** — there is no GAP in the container where the fix was made, so the changes carry static checks only. **Run the control first:**
+**Both defects are fixed and the battery now returns `true` on every row**, including the composite-F row n = 78 that previously aborted. **Rerun both paths after any change to the construction:**
 
 ```bash
-ARK_WITNESS_FTOP_SPLIT=1 gap -q -o 8g verify_witness.g   # must still abort at n = 78
-gap -q -o 8g verify_witness.g                            # then the fixed path
+ARK_WITNESS_FTOP_SPLIT=1 gap -q -A -o 8g verify_witness.g   # must still abort at n = 78
+gap -q -A -o 8g verify_witness.g                            # then the fixed path
 ```
 
-The control restores the old split and should reproduce the `G/G1` normality abort; if it passes, the fix is not doing what it claims. The fixed path should carry n = 78 to `true` with orbitals {468, 507, 1014, 1014}. *Checked outside GAP by direct orbit enumeration:* the corrected placement gives {20, 25} at n = 10, {30, 75} at n = 15 and {468, 507, 1014, 1014} at n = 78.
+> **`-A` is belt and braces, not a requirement.** The script defined a global named `Orb`, which the autoloaded `orb` package owns and makes read-only, so without `-A` it aborted with `Variable: 'Orb' is read only` — a message naming a variable rather than this file. That global is now `ArkOrb`, and a **collision guard** at the top checks every global the file defines and, on a clash, names it and says what to do. *Renaming beats requiring the flag*: a script that is only correct under a start-up option fails exactly for whoever omits it, and the failure does not point at the cause.
 
-*Prior coverage stands at twelve values from the superseded battery, largest n = 575.*
+The control restores the old split and must still reproduce the `G/G1` normality abort at n = 78; **if the control ever passes, the fix has stopped doing what it claims** and a green run of the default path means nothing. The corrected placement was also checked outside GAP by direct orbit enumeration: {20, 25} at n = 10, {30, 75} at n = 15, {468, 507, 1014, 1014} at n = 78.
+
+**Coverage now**: ten rows, largest n = 308, spanning the fused rung at F = 2, 3, 5 and 6, a trivial-top attainer, cyclic-layer fusion beside a foreign block, Lemma C's worked example, and the three entangled-generator regressions. **What is still uncovered** and is what a widening should target, in order:
+
+1. **n = 2759**, the range minimiser and the one n where the framework claims μ *exactly* rather than boundedly. Its binding class is the **foreign** one at r·Q with Q = 11² a proper prime power — a stratum no current row reaches, every other foreign row here having prime Q.
+2. **Even F ≥ 4**, where the cross-class coefficient is (F/2)·c² rather than F·c². The battery has F = 6 at n = 78 but no F = 4, which is the fusion count that sets the ceiling at n ≡ 11 (mod 12).
+3. **A two-part row from the current table's own census**, since eight of the ten rows are configurations that are no longer winners at their n.
 
 *(Historical note: `verify_witness.g` was rebuilt around the entangled generator, but the rebuild reached the twist and not the block-rotation placement, which is why the composite-F row is the one that crashes.)* **⟦PENDING-RERUN⟧** *after both defects are fixed; prior coverage stands at twelve values from the superseded battery, largest n = 575. This is now the **largest untested leg of the framework**, the table and the ladder both being settled over their ranges.*
 

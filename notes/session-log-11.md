@@ -403,6 +403,26 @@ The correct group puts **all** of F in the cyclic layer with a trivial top — o
 
 **A smaller point worth fixing while there.** The report prints `orbitals` as a multiset and `predicted` as a set — at n = 35, `[105, 245, 245]` against `[105, 245]` — so the two columns are not comparable by eye even when they agree. Print both the same way.
 
+## 8v. R8 green — and what a green battery does and does not establish
+
+**Both defects fixed, every verdict now `true`.** The block rotation moves entirely into the cyclic layer (`ftop = 1, fmid = F`), n = 247's expectation is corrected from the pre-entangled 1314 to 2525, and `predicted` prints comparably to `orbitals`.
+
+**The old split is kept behind `ARK_WITNESS_FTOP_SPLIT=1`, as the control.** A green run of a fixed path is weak evidence on its own — it is consistent with the fix having disabled the test rather than repaired it. The control reproduces the original `G/G1` abort, so the two runs together say the construction changed in the way claimed. `pending-checks.md` now states that **if the control ever passes, the green run means nothing**, which is the sentence that makes the control durable rather than a one-off.
+
+**What ten green rows establish.** Part E's realisability moves from *untested* to *evidence-backed at ten points*, spanning the fused rung at F = 2, 3, 5, 6, a trivial-top attainer, cyclic-layer fusion beside a foreign block, and the three entangled-generator regressions. That is the leg with no per-n check at all a day ago.
+
+**Why it stays first in the risk ranking anyway**, restated around what the ten points miss rather than around their absence:
+
+1. **Even F = 4** — the cross-class coefficient is (F/2)·c² there, and F = 4 is the fusion count that sets the ceiling at n ≡ 11 (mod 12). The battery has F = 6 but no F = 4.
+2. **n = 2759** — the range minimiser, the one n where the framework claims μ *exactly*, and a stratum no row reaches: its binding class is the **foreign** one at r·Q with Q = 11² a proper prime power, every other foreign row here having prime Q.
+3. **Eight of the ten rows are no longer winners at their n**, so the battery tests the construction well and the current census hardly at all.
+
+**A third defect, found by running it in a normal environment rather than a flagged one.** The file defined a global named `Orb`, which the autoloaded `orb` package owns and makes read-only, so it aborted with `Variable: 'Orb' is read only` — a message naming a variable, not this file. Renamed to `ArkOrb`, and a **collision guard** now checks every global the file defines and reports a clash by name with what to do about it. *Renaming beats documenting the flag*: a script correct only under `-A` fails precisely for whoever omits it, and the failure does not point at the cause. Recorded as a general rule in `verification-lessons.md` §7.
+
+**The control is confirmed.** `ARK_WITNESS_FTOP_SPLIT=1` still aborts at n = 78 with the `G/G1` normality error, so the two runs together establish that the construction changed in the way claimed — not that the fix disabled the test.
+
+**The methodological point worth keeping.** The first run of a rebuilt script found two defects, and both were in the *harness* rather than the mathematics — a stale expectation and a construction that could not build the case the rebuild was for. That is the expected yield from running something that has never been run, and it is an argument for running the remaining unexecuted checks sooner rather than after more is built on them.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).
