@@ -50,6 +50,8 @@ The one lever on item 1 worth naming: **B(n) ≤ B_solv(n)**. A *missing* Oliver
 
 **A screen that compares an optimistic candidate against a recorded bound is asymmetric in its input.** A recorded bound that understates makes the screen fire more often — noisy, tolerable; one that overstates makes it **miss**. So a stale input is not neutral, and its hits are uninformative rather than wrong.
 
+**The empty configuration satisfies every hypothesis, and informal statements forget it.** A claim of the shape "*k* parts, each with property P, force a bound" is routinely false at *k* = 0: the hypotheses hold vacuously and the conclusion asserts something about nothing. Two instances turned up in one formalisation pass — a capacity bound that needed `0 < m`, and a part-count bound that needed `0 < k` and was outright false without it. *Check the empty case before anything else*, and note that this is the one class of defect a formalisation reliably catches, because the prover cannot skip the degenerate branch the way a reader does.
+
 **A tolerance equal to the exact boundary of the property it tests fails on the boundary cases** — those are the only inputs that reach it, and floating point settles them by accident of representation. The instance: a stored decimal density with *k* places is a correct rounding iff |stored − B/C| ≤ ½·10⁻ᵏ, and an exact tie lands a few ulps the wrong side of the tolerance in doubles. Exact ties are rare — one per few thousand rows — which is precisely why a tolerance that mishandles them survives. Widening the tolerance hides it while weakening the check. *Move the comparison into arithmetic with no boundary error rather than moving the boundary.*
 
 ---

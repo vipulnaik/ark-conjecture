@@ -66,6 +66,13 @@ open Real Finset
 rather than `Nat.choose n 2`, which core Lean does not have.  One lemma connects
 them, and every theorem `ArkCore` has already proved follows.
 
+**Two stated hypotheses have turned out to be unnecessary and one was missing.**
+`orb_full`'s `2 ≤ c` and `capF_eq_k_sqrt`'s `0 ≤ η` are not needed (both are
+underscored in their signatures, which is how Lean records it); `prop_F1` was
+*false* without `0 < k`.  That is three signature corrections from formalising
+statements whose proofs are routine -- the argument for doing this layer is
+less about the proofs than about being forced to state things exactly.
+
 **PARTLY VERIFIED.**  Written in a container with core Lean but no Mathlib, so
 the bridge and the rewrites through it were checked by you rather than here.
 Everything they depend on in `ArkCore` *is* compiled and sorry-free.  Fallbacks
@@ -156,11 +163,26 @@ theorem size_of_capacity (s m : ℕ) (hm : 0 < m) (h : m ≤ s.choose 2) :
 /-- **Proposition F.1.**  If `k` parts of sizes `sz i` sum to `n` and each has
 capacity at least `m`, then `k * sqrt (2 * m) < n`.  Dividing by `sqrt (n(n-1))`
 gives the form used in the documents, `k < 1 / sqrt delta`. -/
-theorem prop_F1 (k n m : ℕ) (hm : 0 < m) (sz : Fin k → ℕ)
+theorem prop_F1 (k n m : ℕ) (hk : 0 < k) (hm : 0 < m) (sz : Fin k → ℕ)
     (hsum : ∑ i, sz i = n) (hcap : ∀ i, m ≤ (sz i).choose 2) :
     (k : ℝ) * Real.sqrt (2 * m) < n := by
   sorry
-  -- each sz i > sqrt (2m) by size_of_capacity, then sum
+  -- STATEMENT DEFECT FOUND AND FIXED IN THE SIGNATURE: `0 < k` was missing and
+  -- the theorem was FALSE without it.  At `k = 0` the sum over `Fin 0` is `0`,
+  -- so `n = 0`, `hcap` is vacuous, and the conclusion reads `0 < 0`.
+  --
+  -- This is the same failure as the `0 < m` case recorded at `size_of_capacity`
+  -- above: the informal statement quantifies over a configuration and forgets
+  -- that the empty one satisfies its hypotheses.  Two instances in one file is
+  -- a pattern worth naming -- *whenever a claim is "k things each with property
+  -- P force a bound", check k = 0 before anything else.*
+  --
+  -- PROOF ROUTE.  `ArkCore.prop_F1_sq` has the squared content, sorry-free:
+  --     2 * m * (len * len) < sum * sum
+  -- over `List Nat`.  Two steps remain: transport `Fin k → ℕ` to a list via
+  -- `List.ofFn` (`List.sum_ofFn`, `List.length_ofFn`, and `hk` giving
+  -- `≠ []`), then take square roots -- `Real.sqrt_lt_sqrt` on the squared
+  -- inequality, with `Real.sqrt_mul_self` to strip the roots on both sides.
 
 /-! ## 4. Part E' — the s-bound, and the ladder that went wrong
 
@@ -171,7 +193,38 @@ theorem rather than a paraphrase. -/
 /-- The `s`-bound in the form that makes the threshold ladder immediate. -/
 theorem s_bound_iff (s : ℕ) (δ : ℝ) (hδ : 0 < δ) :
     (s : ℝ) ≤ 1 / Real.sqrt δ - 1 ↔ ((s : ℝ) + 1) ^ 2 * δ ≤ 1 := by
-  sorry
+  -- NOTE: `le_div_iff` and `div_lt_iff` were renamed with a `₀` suffix in
+  -- current Mathlib.  Rather than pick a name that will rot again, the two
+  -- directions below move across the division by hand -- multiplying by
+  -- `√δ > 0`, and rewriting the difference as a single quotient -- which uses
+  -- only long-stable lemmas.
+  have hs : 0 < Real.sqrt δ := Real.sqrt_pos.mpr hδ
+  have hsq : Real.sqrt δ ^ 2 = δ := Real.sq_sqrt hδ.le
+  have hnn : (0:ℝ) ≤ (s : ℝ) + 1 := by positivity
+  -- `((s+1)√δ)² = (s+1)²δ`: the bridge both directions turn on.
+  have hexp : (((s : ℝ) + 1) * Real.sqrt δ) ^ 2 = ((s : ℝ) + 1) ^ 2 * δ := by
+    rw [mul_pow, hsq]
+  constructor
+  · intro h
+    have h1 : (s : ℝ) + 1 ≤ 1 / Real.sqrt δ := by linarith
+    have h2 : ((s : ℝ) + 1) * Real.sqrt δ ≤ 1 := by
+      have hmul := mul_le_mul_of_nonneg_right h1 hs.le
+      rwa [one_div, inv_mul_cancel₀ (ne_of_gt hs)] at hmul
+    have h3 : (((s : ℝ) + 1) * Real.sqrt δ) ^ 2 ≤ 1 := by
+      nlinarith [mul_nonneg hnn hs.le, h2]
+    linarith [hexp ▸ h3]
+  · intro h
+    have h3 : (((s : ℝ) + 1) * Real.sqrt δ) ^ 2 ≤ 1 := by rw [hexp]; linarith
+    have h2 : ((s : ℝ) + 1) * Real.sqrt δ ≤ 1 := by
+      nlinarith [mul_nonneg hnn hs.le, h3]
+    have h1 : (s : ℝ) + 1 ≤ 1 / Real.sqrt δ := by
+      have hrw : 1 / Real.sqrt δ - ((s : ℝ) + 1)
+          = (1 - ((s : ℝ) + 1) * Real.sqrt δ) / Real.sqrt δ := by
+        field_simp
+      have : 0 ≤ 1 / Real.sqrt δ - ((s : ℝ) + 1) := by
+        rw [hrw]; exact div_nonneg (by linarith) hs.le
+      linarith
+    linarith
 
 /-- **The threshold ladder, slack form.**  `δ > 1/(s+1)^2` forces at most `s`.
 As stated this is the **k-ladder** (Corollary F.3 of the companion, where it is
@@ -182,16 +235,26 @@ discipline; tying threshold and conclusion by the *same* variable in a stated
 theorem, as here, is what makes a silent substitution impossible. -/
 theorem s_threshold (s : ℕ) (δ : ℝ) (hδ : 0 < δ) (h : 1 / ((s : ℝ) + 1) ^ 2 < δ)
     (t : ℕ) (ht : (t : ℝ) ≤ 1 / Real.sqrt δ - 1) : t ≤ s := by
-  -- PROVED in `ArkCore.lean` §7 as `ArkCore.ladder_nat`, and proved in the
-  -- SHARP form `t < s` rather than the slack `t ≤ s` stated here -- which is
-  -- exactly the offset this docstring describes.  Writing δ = m/N and squaring
-  -- removes both the real and the square root, so no Mathlib is needed:
-  --     ladder_nat : N < (s+1)^2 * m → (t+1)^2 * m ≤ N → t < s
-  -- What remains here is the bridge from `δ : ℝ` with `Real.sqrt` to that
-  -- rational form.  Consider restating this theorem at `t < s`: the slack
-  -- version is true but weaker than what is now available, and stating the
-  -- weaker one is how the two ladders came to look interchangeable.
-  sorry
+  -- The real-valued argument is the same one `ArkCore.ladder_nat` makes over
+  -- `Nat`, and it needs no bridge: `s_bound_iff` turns both sides into
+  -- polynomial inequalities and the squares compare directly.  Note the
+  -- conclusion proved is the SHARP `t < s`, weakened to `t ≤ s` only to match
+  -- the stated signature -- consider restating at `t < s`, since the slack
+  -- version is how the two ladders came to look interchangeable.
+  have hspos : (0:ℝ) < ((s : ℝ) + 1) ^ 2 := by positivity
+  -- again avoiding `div_lt_iff`, renamed to `div_lt_iff₀`: multiply through by
+  -- the positive square instead.
+  have h1 : 1 < ((s : ℝ) + 1) ^ 2 * δ := by
+    have hcalc : (1:ℝ) = ((s : ℝ) + 1) ^ 2 * (1 / ((s : ℝ) + 1) ^ 2) := by
+      field_simp
+    calc (1:ℝ) = ((s : ℝ) + 1) ^ 2 * (1 / ((s : ℝ) + 1) ^ 2) := hcalc
+      _ < ((s : ℝ) + 1) ^ 2 * δ := by exact mul_lt_mul_of_pos_left h hspos
+  have h2 : ((t : ℝ) + 1) ^ 2 * δ ≤ 1 := (s_bound_iff t δ hδ).mp ht
+  have h3 : ((t : ℝ) + 1) ^ 2 < ((s : ℝ) + 1) ^ 2 := by
+    nlinarith [hδ, h1, h2]
+  have h4 : (t : ℝ) < (s : ℝ) := by nlinarith [Nat.cast_nonneg (α := ℝ) t,
+                                               Nat.cast_nonneg (α := ℝ) s, h3]
+  exact le_of_lt (by exact_mod_cast h4)
 
 example : (1 : ℝ) / 16 = 1 / ((3 : ℝ) + 1) ^ 2 := by norm_num  -- δ > 1/16 → k ≤ 3, s ≤ 2
 example : (1 : ℝ) / 25 = 1 / ((4 : ℝ) + 1) ^ 2 := by norm_num  -- δ > 1/25 → k ≤ 4, s ≤ 3
