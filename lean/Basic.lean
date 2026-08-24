@@ -47,7 +47,14 @@
   Narrow them once the proofs compile, not before.
 -/
 import Mathlib
-import Ark.ArkCore
+-- The Mathlib-free ℕ core, carrying the ladder theorems of §4 and the proved
+-- versions of `orb_full`, `lemma_D1` and `size_of_capacity`.  Same convention as
+-- `Note.lean`: **this resolves through `LEAN_PATH` / lake's build dirs, not
+-- through the filesystem** -- an `ArkCore.lean` sitting beside this file is not
+-- enough, since Lean loads the compiled `.olean`.  See `Note.lean`'s import
+-- comment for the two ways to satisfy it; if you switch to the in-project
+-- layout, both files change to `import Ark.ArkCore` together.
+import ArkCore
 
 namespace Ark
 
