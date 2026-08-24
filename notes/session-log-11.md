@@ -423,6 +423,28 @@ The correct group puts **all** of F in the cyclic layer with a trivial top — o
 
 **The methodological point worth keeping.** The first run of a rebuilt script found two defects, and both were in the *harness* rather than the mathematics — a stale expectation and a construction that could not build the case the rebuild was for. That is the expected yield from running something that has never been run, and it is an argument for running the remaining unexecuted checks sooner rather than after more is built on them.
 
+## 8w. Lean phase 1 complete — `Basic.lean` 18 sorries → 0
+
+All three files are sorry-free. Proved this pass: `orb_full`, Lemma D1, the capacity bound, Prop F.1, the E′ s-bound and both threshold ladders, the `capF` algebra, **all six ceiling entries as algebraic numbers** including `capF 4 (1/3) = 7 − 4√3`, the two-foreign closed form, and the quadratic-residue collapse.
+
+**Three signature corrections, which is what the exercise actually bought.**
+
+| statement | correction |
+|---|---|
+| `orb_full` | `2 ≤ c` unnecessary — both sides are 0 at `c ≤ 1` |
+| `capF_eq_k_sqrt` | `0 ≤ η` unnecessary — `Real.sqrt_mul` needs only the left factor nonneg |
+| `prop_F1` | **false without `0 < k`** — at `k = 0`, `n = 0`, hypotheses vacuous, conclusion `0 < 0` |
+
+The last repeats a defect the file already recorded at `size_of_capacity`. Two in one file is a pattern, now filed in `verification-lessons.md`: **whenever a claim is "k things each with property P force a bound", check k = 0 first** — and it is the one defect class a prover reliably catches, since it cannot skip the degenerate branch the way a reader does.
+
+**Two techniques worth reusing.** *Write δ = m/N and square*: both ladders are claims about `1/√δ`, and squaring clears the real and the root together, leaving `Nat` arithmetic core Lean proves outright — where a real-valued claim is an inequality between two squares, the `Nat` form is the same statement with the coercion removed, not an approximation. And *supply the surd once*: `capF_of_sqrt` takes the root and its defining equation as arguments, turning six ceiling entries into six instances of one identity.
+
+**A third, learned the hard way.** `le_div_iff` and `div_lt_iff` have been renamed upstream with a `₀` suffix. Rather than adopt names that will rot again, those proofs move across the division by hand. This is the Lean form of the `Orb` collision from the GAP work: a proof naming a lemma upstream later renames fails with an error pointing at the *identifier*, not the mathematics — the same shape as a script correct only under a start-up flag.
+
+**What the whole pass says about the workflow.** Every proof was written without a toolchain to hand and repaired against compiler output over several rounds. The failures were uniformly *name and shape* problems — a renamed division lemma, an iff applied as a function, `χ₄` of the card rather than of `p`, a `simp` that had already closed its goal — and **never a false statement**, because every `decide`-able claim had been checked numerically first. That is the discipline to keep.
+
+**Consequence for the risk ranking.** The arithmetic layer leaves the residual-risk list entirely: an error there is no longer a risk to rank but a contradiction that fails to compile. Nothing reorders, because it was never the top item — what remains is precisely what formalisation cannot reach, as the Lean README predicted. The residual risk is now **entirely realisability, completeness, and the reading of arguments**.
+
 ## 9. What remains
 
 **Filed this session:** A23 (§7 rerun at the corrected orbital), A24 (shape-space completeness), A25 (the transference route), A26 (the note and bridge are *more* stale after the split, and what to re-read before circulation).

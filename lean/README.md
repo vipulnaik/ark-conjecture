@@ -6,8 +6,10 @@
 |---|---|---|---|
 | `Note.lean` | compiles | n/a — needs Mathlib | **zero — every proof complete** (six imported from `ArkCore`) |
 | | | | *hypothesis renamed `HypH` → `HypBCG`; see below* |
-| `Basic.lean` | compiles | n/a — needs Mathlib | **nonzero** — same |
+| `Basic.lean` | compiles | n/a — needs Mathlib | **zero — every proof complete**, from 18 |
 | `ArkCore.lean` | compiles | compiles | **zero — every proof complete** |
+
+**All three files are now sorry-free.** `Basic.lean` went 18 → 0 in one pass; what that pass actually bought is set out under *Phase 1* below, and it was not the proofs.
 
 *So **phase 0 is done**: `Note.lean` and `ArkCore.lean` are both fully proved, and between them they cover the note's entire arithmetic layer — the construction inequality, the admissible-`d` table, the density and ceiling statements, `orb`, Lemma D1, the capacity bound, F.1. `Basic.lean` remains the sketch, and its sorry count is the expected state rather than a defect (`leancheck.sh` reports it separately for exactly this reason — a count that DROPS unexpectedly is the thing to notice).*
 
@@ -96,35 +98,45 @@ There is a second benefit that matters more in practice: **a definition forces t
 
 ## Phasing
 
-**Phase 1 — the inequality core.** `Basic.lean`. Lemma D1, Proposition F.1, the E′ s-bound with its threshold ladder, the cap algebra and its two identities, the quadratic-residue collapse. All of this is self-contained, none needs the group theory, and it covers the parts of the documents that have actually been wrong. Perhaps a few hundred lines with proofs filled in.
+**Phase 1 — the inequality core. DONE**, see below. `Basic.lean`: Lemma D1, Proposition F.1, the E′ s-bound with its threshold ladder, the cap algebra and its two identities, the quadratic-residue collapse. Self-contained, none of it needing the group theory, and covering the parts of the documents that have actually been wrong.
 
-**Phase 2 — the balance-point optimisations.** Each family's ceiling is `max_x min(...)` of a few polynomials in `x`. These are real-analysis lemmas: routine in principle, fiddly in practice, and the payoff is that the mod-12 ceiling table becomes a checked computation rather than a table. A second payoff worth naming: the window identity `F · width = 1 − √λ` falls out of the same lemmas, and it is exact — the maximum is a *kink*, where an increasing branch meets a decreasing one, not a smooth turning point, which is why the cost of approaching the cap is `Θ(ε)` and not `Θ(√ε)`. The two-foreign closed form `1/(√m₁+√m₂)²` is the cleanest target here since it collapses an infinite family to one identity. Worth doing after phase 1, and only if phase 1 goes smoothly.
+**Phase 2 — the balance-point optimisations. Partly pre-empted:** the two-foreign closed form `1/(√m₁+√m₂)²` named below as its cleanest target is already proved in `Basic.lean`, and `capF_of_sqrt` is likely the lever for the rest, since a balance point is again a surd supplied once rather than computed repeatedly. Each family's ceiling is `max_x min(...)` of a few polynomials in `x`. These are real-analysis lemmas: routine in principle, fiddly in practice, and the payoff is that the mod-12 ceiling table becomes a checked computation rather than a table. A second payoff worth naming: the window identity `F · width = 1 − √λ` falls out of the same lemmas, and it is exact — the maximum is a *kink*, where an increasing branch meets a decreasing one, not a smooth turning point, which is why the cost of approaching the cap is `Θ(ε)` and not `Θ(√ε)`. The two-foreign closed form `1/(√m₁+√m₂)²` is the cleanest target here since it collapses an infinite family to one identity. Worth doing after phase 1, and only if phase 1 goes smoothly.
 
 **Phase 3 — the value formula as a definition, and the enumeration as a decision procedure.** Define a configuration, define its score by the Part G.3 formulas, define `B n` as the max over configurations, and prove the finiteness facts that make the search terminate (Prop F.1 bounding the part count, Part C bounding block sizes). This does *not* prove `μ = B` — that needs the group theory — but it does turn `B` into a Lean-checkable function, and then `native_decide` could in principle verify individual table rows. **This is where I would stop.** Verifying the whole CSV is a real project and the payoff over `validate_table.py` plus `brute.py` is small.
 
-**Never — the conjectural layer.** Hypothesis (H), the density floor conjecture, the 1 : 1 : 2 limit. These are conjectures; formalising a conjecture means formalising its statement, which is useful only if someone will prove it.
+**Never — the conjectural layer.** (BCG) in either quantifier strength, the density floor conjecture, and the 1 : 1 : 2 limit — the last of which is now *refuted* rather than open, the entangled correction having removed its mechanism. These are conjectures; formalising a conjecture means formalising its statement, which is useful only if someone will prove it.
 
-## Phase 1 — started, from the `Nat` end
+## Phase 1 — DONE
 
-**The threshold ladders are done, and they were the highest-value target in phase 1** — §4 of `Basic.lean` exists because the documents ran the k-ladder and the s-ladder together and shifted one by one. `ArkCore.lean` §7 now carries:
+`Basic.lean` is sorry-free. Everything the phase was scoped to cover is proved: `orb_full`, Lemma D1, the capacity bound, Prop F.1, the E′ s-bound and both threshold ladders, the `capF` algebra, all six ceiling entries as algebraic numbers, the two-foreign closed form, and the quadratic-residue collapse.
 
-- **`ladder_nat`**, the s-ladder, proved in the **sharp** form `t < s` where `Basic.lean` states the slack `t ≤ s`. Stating the weaker one is how the two ladders came to look interchangeable, so proving the sharp form makes the offset a theorem rather than a remark.
-- **`ladder_offset_16/25/36`**, `decide`-checked: `maxOK (k-ladder) = maxOK (s-ladder) + 1` at δ just above each documented threshold.
-- **`ladder_values_16/25`**, the numbers the prose quotes — `k ≤ 3, s ≤ 2` at 1/16, `k ≤ 4, s ≤ 3` at 1/25 — checked rather than asserted.
+**What made it cheap, and is worth reusing.**
 
-**The move that made this cheap: write `δ = m/N` and square.** Both ladders are statements about `1/√δ`, and squaring clears the real and the square root together, leaving `Nat` arithmetic that core Lean proves outright and `decide` settles at the thresholds. No Mathlib, no `Real.sqrt` lemmas, no elaboration wait. *Where a real-valued statement is really an inequality between two squares, the `Nat` form is not an approximation of it — it is the same statement with the coercion removed*, and it is worth looking for before reaching for the analysis library.
+- **`δ = m/N`, then square.** Both threshold ladders are statements about `1/√δ`; squaring clears the real *and* the square root together, leaving `Nat` arithmetic that core Lean proves outright and `decide` settles at each documented threshold. *Where a real-valued claim is an inequality between two squares, the `Nat` form is not an approximation of it — it is the same statement with the coercion removed.* Look for that before reaching for the analysis library.
+- **Supply the surd once.** `capF_of_sqrt` takes the root and its defining equation as arguments, so the six ceiling entries became six instances of one identity rather than six separate `Real.sqrt` manipulations. Each is then three lines: substitute, record `s² = F·η`, clear denominators.
+- **Prefer stable primitives to convenience lemmas.** `le_div_iff` and `div_lt_iff` have been renamed with a `₀` suffix upstream; the proofs here move across the division by hand instead, which costs a few lines and does not rot. This is the Lean form of a lesson already in `verification-lessons.md` §7 about scripts depending on their environment: a proof naming a lemma that upstream later renames fails with an error pointing at the identifier, not the mathematics.
 
-**Also wired: three of `Basic.lean`'s sorries were re-proving theorems `ArkCore.lean` already had** — `orb_full`, `lemma_D1`, `size_of_capacity` (the last including the `0 < m` hypothesis this file records as the one the prose forgot). Those now point at the proved versions, with only the `pairs`/`Nat.choose` bridge outstanding. The duplication was itself a hazard: two statements of one lemma drift, and the sorried copy is the one that drifts silently.
+**What formalising actually bought, which was not the proofs.** Three signature corrections, all in statements whose proofs turned out routine:
 
-**What is left in phase 1** is the part that genuinely needs Mathlib: the `capF` algebra and the six ceiling entries as algebraic numbers, `Real.sqrt_mul` for `capF_eq_k_sqrt`, and the `pairs = choose` bridges. All six ceiling identities are numerically pre-verified to 30 places, so a proof that fails to close there is an encoding problem rather than a false statement.
+| statement | correction |
+|---|---|
+| `orb_full` | `2 ≤ c` unnecessary — both sides are 0 at `c ≤ 1` |
+| `capF_eq_k_sqrt` | `0 ≤ η` unnecessary — `Real.sqrt_mul` needs only the left factor nonneg, and `(F : ℝ) ≥ 0` for any `F : ℕ` |
+| `prop_F1` | **false without `0 < k`** — at `k = 0` the sum over `Fin 0` is 0, so `n = 0`, the capacity hypothesis is vacuous, and the conclusion reads `0 < 0` |
 
-## What phase 1 would actually pin down
+The last is the same defect the file already recorded at `size_of_capacity`, which needed `0 < m` for exactly the same reason. **Two instances in one file is a pattern: whenever a claim is "k things each with property P force a bound", check k = 0 before anything else.** A prover cannot skip the degenerate branch the way a reader does, and *that* — not the proofs — is the case for this layer. It also sharpens the table above: the row "would Lean have caught it?" should really be read as "would stating it precisely have caught it?", and the answer there is broader than three of nine.
 
-Concretely, these documents' claims become theorems rather than assertions:
+**One thing the pass did not settle.** Every proof was written without a toolchain to hand and repaired against compiler output over several rounds. The failures were uniformly *name and shape* problems — a renamed division lemma, an iff applied as a function, `χ₄` of the card rather than of `p`, a `simp` that had already closed its goal — and never a false statement, because every `decide`-able claim had been checked numerically first. That is the workflow to keep, not an argument that it was unnecessary.
+
+## What phase 1 pinned down
+
+These documents' claims are now theorems rather than assertions:
 
 - `enumeration-proof.md` Part D1's inequality, Prop F.1, Prop F.2, the E′ s-bound and its ladder, E.3(i)'s `p = 3` forcing, E.4's `3 | 2^a − 1 ⇔ a even`.
 - `arithmetic-of-density.md` §3.3's `cap_F(η) = cap₁(Fη)/F` and the `k = √F` reading; §3.3.5's **six** table entries as algebraic numbers, keyed **mod 12**, one of them supplied by the `F = 4` rung — the extremal `7 − 4√3` at `n ≡ 11 (mod 12)`; §4.2's two-foreign closed form; §3.2.3's quadratic-residue collapse. *(The list length is itself the check: a table that gains or loses a constant will not match a list of six.)*
 - The `orb` identities used silently throughout, in particular `orb c (c−1) = choose c 2`.
+
+**What is left is phases 2 and 3, and neither is owed.** Phase 2's remaining content is the balance-point maxima; phase 3 would make `B n` a Lean-checkable function, and the README's own judgement — *this is where I would stop* — still stands, since `validate_table_v3.py` already covers the rows.
 
 ## A caveat about what this does *not* buy
 
