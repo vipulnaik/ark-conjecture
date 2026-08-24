@@ -649,8 +649,8 @@ So the picture is not "computed below, conjectural above" with an unreachable ba
 | | range | status |
 |---|---|---|
 | μ(n) known exactly | the computed table | computed |
-| collapse B_refined = B_safe certified | n ≤ 100,000 | computed from lower bounds (Part E″), at **every** composite non-prime-power value, 90,299 of 90,299 |
-| global floor δ ≥ 1/25 (scan value **0.04621**) | n ≤ 10⁶ | computed (§5), from the four-family ladder alone |
+| collapse B_refined = B_safe certified | n ≤ 100,000 | computed from lower bounds (Part E″), at **every** composite non-prime-power value, **90,299 of 90,299 (100.00%)** — *confirmed unchanged by the post-repair rerun* |
+| global floor δ ≥ 1/25 (scan value **175813/3804661 = 0.046209898…**) | n ≤ 10⁶ | computed (§5), from the four-family ladder alone |
 | global floor δ ≥ 1/25 | n > 10⁶ | conjectural, ineffectively |
 
 **Where the verification is hardest is a middle range, and it is bounded.** The lower envelope of achievable density does not fall away as n grows — it dips and then recovers. Minimum bound over the **46,520-entry** worklist, by decade:

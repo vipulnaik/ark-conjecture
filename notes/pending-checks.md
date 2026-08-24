@@ -4,20 +4,32 @@
 
 *This file is a work list. It carries what a run needs in order to be run correctly — the command, the input, the expected shape of the output, and the traps specific to that run. It does **not** carry the reasoning behind the checks: that is `verification-lessons.md`, and the explanatory logic needed while a run is in progress belongs in the script's own output.*
 
-> **Every run currently owed.** Each is expanded at its own item.
+> **What is owed, and what merely re-runs.** Each is expanded at its own item.
 >
-> | run | why owed | item |
+> **Nothing here is owed as a *run*: the full R1 battery has been executed against the completed table and passed, certificates included, and their figures are now requoted into the documents.**
+>
+> | run | result on the completed table |
+> |---|---|
+> | `fallback_cert.py --verbose` | 2,187 values to n = 2759, **0 candidates**; theorem-settled 1,940/2,187 (88.7%), s-branches 2,195/2,442 (89.9%); E.3(ii) residue 247; largest permitted s = 3 |
+> | `fallback_cert.py --no-theorems` | **still 0 candidates** at 0/2,187 settled by theorem — the per-n proof carries no theorem weight |
+> | `wide_cert.py 100000` | **90,299 of 90,299 (100.00%)**, unchanged by the entangled repair; weakest B_lo density 0.020004 at n = 26015, permitted s ≤ 6 |
+>
+> **The two `fallback_cert.py` runs are evidence precisely because the dispatch fires**: 89.9% of s-branches are dispatched normally and 0% under `--no-theorems`, so switching the theorems off genuinely moves work into the search. **`wide_cert.py` at this NMAX is the opposite case** — its dispatch settles *nothing*, the foreign-cap filter having removed the s = 1 and s = 3 branches the theorems cover before the dispatch sees them, so a `--no-theorems` run there would agree trivially and is no evidence. The script says so in its own banner; believe it rather than the symmetry with `fallback_cert.py`.
+>
+> **What is still owed is one measurement, not a run** — the condition-(4) strip trace is quoted from **v4 at n ≤ 1200** (24 decisions, all licensed, none at a ≥ 2). `fallback_cert.py --no-theorems` prints that paragraph verbatim from a stored figure, so a clean run does *not* refresh it; it needs instrumenting (T5). Two smaller ⟦PENDING-RERUN⟧ tags remain elsewhere: that instrumentation, and `sp-to-floor.md` §7's end-to-end rerun (A23).
+>
+> **Re-runs, triggered by a table extension rather than owed today** — R0 and R7 are complete over their ranges and further extension is discretionary:
+>
+> | run | trigger | item |
 > |---|---|---|
-> | `mu_enumerate_v3.py` (extend) | contiguous frontier short of where the documents' figures want it — an extension, not a redo | R0 |
-> | `validate_table_v3.py` | gates everything else; run on every batch | R1 |
-> | `fallback_cert.py`, both modes | unblocked; coverage counts requoted from the run | R1 |
-> | `wide_cert.py` | same, plus `fused_lo` now admits composite block counts | R1 |
-> | `a18_verify.py`, `t5_verify.py` | range-scoped dominations; they expire on extension | R1 |
-> | `check_doc_figures.py` | the pass that replaces ⟦PENDING-RERUN⟧ figures | R1 |
-> | `audit_fmid.py` | reads the table; read its coverage line before its verdict | R1 |
-> | `solvable_relaxation.py` (comparison pass) | B ≤ B_solv on the current table | R1 |
-> | `ladder_verify.py` | rung B now at full twist, `CAP` keyed mod 12; floor and worklist both move | R7 |
-> | `verify_witness.g` | rebuilt around the entangled generator; never run in this form | R8 |
+> | `validate_table_v3.py` | every batch; gates everything else | R1 |
+> | `check_doc_figures.py` | every batch; replaces range-scoped figures | R1 |
+> | `audit_fmid.py` | every batch; **read its coverage line before its verdict** | R1 |
+> | `solvable_relaxation.py` | every batch; B ≤ B_solv on the current table | R1 |
+> | `a18_verify.py`, `t5_verify.py` | range-scoped dominations, which expire silently on extension | R1 |
+> | `mu_enumerate_v3.py` (extend) | only if a question needs it | R0 |
+> | `ladder_verify.py --resume` | only if the range moves, or if rung B / `CAP` change | R7 |
+> | `verify_witness.g` | any change to the construction; **run the `ARK_WITNESS_FTOP_SPLIT=1` control first** | R8 |
 
 > **The table itself does not need recomputing.** The enumerator's scoring is unchanged from when the current rows were written, so rows already present are current values and a run in flight can continue. Everything owed above is downstream of the enumerator, or a script whose own scoring changed. The test for any artefact: does the script that produced it appear in the list?
 
@@ -33,7 +45,7 @@
 
 *One place for the daylight between what `enumeration-proof.md` proves and what it verifies. Fresh-eyes read of the full document, 2026-08-18 (session-log-8 §21). The gap has moved in both directions since the document began — unexpected winners found (cyclic-layer block counts, the fused rungs, the Fermat escapes, the two-foreign shape at the extremes) and exclusions gained (E′'s collapse machinery, the D2′/C′ dominations, q-pinning) — and this is what remains between the two:*
 
-1. **Part 0 completeness** (μ ≤ B_safe's whole load): a shape missing from the space fails silently, and the only tests that could see one are the exhaustive GAP comparisons at n = 10 and 12. Verification-lessons §1 site 4. → risk item 2 below, `small-degree-verification.md` item 5.
+1. **Part 0 completeness** (μ ≤ B_safe's whole load): a shape missing from the space fails silently. Three tests could see one, and all three are independent of the enumerator rather than derived from it — the exhaustive GAP comparisons at n = 10 and 12; **B ≤ B_solv**, which a *mis-scored* shape can violate even though a missing one cannot (R1 step 7); and the **S2 identity** δ_S2(n) = (Q(n) − 1)/(n − 1), arithmetic where the table is a search output. Verification-lessons §1 site 4. → risk item 2 below, `small-degree-verification.md` item 5, A24.
 2. **The two-part reduction of Theorem 2.3**: verified to n = 1200, Goldbach-tier to prove; nothing rests on it but B₀'s O(n) cost claim.
 3. **Minimality k ≤ 3 below δ = 1/16** (J item 1): free above 1/16 by F.3; counting saturates at 4 (F.2 is tight); any proof is arithmetic — must *produce* a strong ≤3-part decomposition — and the wide B₃/B₂ margins close the perturbation route.
 4. **The collapse's theorem-side residue** (J items 2, 2a): E.3(ii)'s global promotion (the leftover case; the bare pair is resolved), and the s = 4 / s = 5 branches, theoremless and reachable only below δ = 1/25 and 1/36 respectively (sharp thresholds — the s-ladder, not F.3's k-ladder). Per-n the certificates close everything; the gap is only over *all* n.
@@ -44,7 +56,7 @@
 
 **Not on this list, because it closed:** the converse direction — that a density floor *forces* a shifted-prime statement — is now Proposition F.4 of `enumeration-proof.md`, with the discussion in `aod` §6.7. It is elementary given F.1's machinery and needed no new input. **What it opens instead is a sharpening question**, which is a research item rather than a gap: the round trip (BCG_{1/5}) → δ₀ = 1/350 → D = 700 loses a factor ~58 against its own d ≤ 12, uniformly across both branches. Whether either direction can be tightened — a better constant in the note's central inequality, or a converse that reaches a prime rather than a prime power — decides how close to a genuine equivalence this is. Neither is needed for anything currently claimed.
 
-**Staleness defects already closed, listed so they are not rediscovered.** Four, all now corrected in the documents: the notes §1 SAFE-cap box prescribed the **F_mid strip** that the entangled-generator repair removed, i.e. the box warning readers off the wrong cap taught the wrong cap (the live cap in `mu_enumerate_v3.py` is the flat F·C(c,2), and `ep`'s four "F·orb(c, dmax)" descriptions of B_safe are now flat too — the F·orb(c, dmax) form survives only where it belongs, in the certificates' leftover twist cap); `aod` §3.3.5 quoted **cap₂(1/6) = 0.050510**, which is cap₄(1/6) — the correct value is (2 − √3)/4 = 0.066987, so the F = 4 margin at class 11 is 0.0048 and not 0.021, as §6.6 already had it; three surviving mod-24-era constant counts ("seven mod-24 ceilings", "eight constants", "seven distinct δ₀") against the table's six mod 12; and two winner counts contradicting the census in the same document (150/24 against 338/30 for the fused `2×c + r*` rung; 20 against 18 for the `2×c + 257*` Fermat winners, whose list also contained two n won by F = 4 shapes). `check_doc_figures.py --pass scope` now carries greppable invariants for the first and third of these.
+**Staleness defects already closed, listed so they are not rediscovered.** *The counts quoted inside this paragraph are the ones that were in contradiction at the time; do not read them as current census figures.* Four, all now corrected in the documents: the notes §1 SAFE-cap box prescribed the **F_mid strip** that the entangled-generator repair removed, i.e. the box warning readers off the wrong cap taught the wrong cap (the live cap in `mu_enumerate_v3.py` is the flat F·C(c,2), and `ep`'s four "F·orb(c, dmax)" descriptions of B_safe are now flat too — the F·orb(c, dmax) form survives only where it belongs, in the certificates' leftover twist cap); `aod` §3.3.5 quoted **cap₂(1/6) = 0.050510**, which is cap₄(1/6) — the correct value is (2 − √3)/4 = 0.066987, so the F = 4 margin at class 11 is 0.0048 and not 0.021, as §6.6 already had it; three surviving mod-24-era constant counts ("seven mod-24 ceilings", "eight constants", "seven distinct δ₀") against the table's six mod 12; and two winner counts contradicting the census in the same document (150/24 against 338/30 for the fused `2×c + r*` rung; 20 against 18 for the `2×c + 257*` Fermat winners, whose list also contained two n won by F = 4 shapes). `check_doc_figures.py --pass scope` now carries greppable invariants for the first and third of these.
 
 **Owed source check — the E–H exponent's exact form.** `aod` §3.6 and `literature-findings.md` now state Shparlinski's §5 Elliott–Halberstam consequence as n^{3/2−ε} for every ε, on the grounds that E–H is quantified for fixed ε > 0 (level z^{1−ε}) and so no single application reaches 3/2. **This is inference, not a quoted bound** — the §5 remark states the improvement without writing an exponent, and the arXiv version is what was read. Confirm against the published version; if he does claim a bare n^{3/2}, the reasoning behind it needs recovering, since the unconditional n^{5/4+o(1)}'s `+o(1)` is the subpolynomial-loss convention and does not supply the difference.
 
@@ -89,7 +101,7 @@ python3 mu_enumerate_v3.py --nmax <N> --fill-gaps --out mu_table_safe_v5_code_v3
 >
 > **If the range is extended, three things re-arm.** The prefix/tail discipline (a worklist-driven extension selects by low score, so aggregates must then be requoted over the contiguous part only); every range-scoped claim of the form "at every row of the table", which is a different statement after the table grows; and the floor rows of `shape-counting.md` §3, which are keyed to the computed floor.
 >
-> Reference points so a deviation is recognisable: `validate_table_v3.py` gives **0 FAIL** on an enumerator output under the current scoring, but **not** when pointed at a *baseline*, where group A's re-derivation check fires on every row whose recorded winner is a cyclic-fused class scored under the superseded cut twist (18 rows on v4; see A22, which pairs that count with the 289). The S2-identity check in group B is deliberately *not* a second FAIL on a baseline: it returns INFO naming n = 78 and n = 222, which are the correct baseline answer, and FAILs only on some other set. `check_doc_figures.py` does not go to zero — most PASS 1 flags are coincidental numeric matches, so read it finding by finding. Certificate counts are requoted from their reruns — and those reruns are what the remaining ⟦PENDING-REBUILD⟧ tags now mark, the μ-table figures having been resolved. Figures blocked on `ladder_verify.py` to 10⁶ carried ⟦**PENDING-LADDER-REBUILD**⟧; **that run has now completed** — floor **175813/3804661 = 0.046209898…** at n = 2759, nothing below 1/25 anywhere — so those tags are discharged and only the certificate-rerun ones remain.
+> Reference points so a deviation is recognisable: `validate_table_v3.py` gives **0 FAIL** on an enumerator output under the current scoring, but **not** when pointed at a *baseline*, where group A's re-derivation check fires on every row whose recorded winner is a cyclic-fused class scored under the superseded cut twist (18 rows on v4; see A22, which pairs that count with the 289). The S2-identity check in group B is deliberately *not* a second FAIL on a baseline: it returns INFO naming n = 78 and n = 222, which are the correct baseline answer, and FAILs only on some other set. `check_doc_figures.py` does not go to zero — most PASS 1 flags are coincidental numeric matches, so read it finding by finding. Certificate counts are requoted from their runs rather than carried forward; both certificates have been run against the completed table, returned 0 candidates, and their figures are now in `ep`'s certificate box and `aod` §5.1. The collapse coverage came back **unchanged at 90,299 of 90,299**, which is the outcome the entangled repair made uncertain — the repair removed an anti-permissive strip, so the candidate lists could have grown and did not. The ⟦PENDING-LADDER-REBUILD⟧ tags introduced to isolate the ladder are discharged with it: that run completed at floor **175813/3804661 = 0.046209898…**, n = 2759, nothing below 1/25 anywhere.
 
 > **The adaptive follow-up at floor 0.05 is also complete, and it terminated after one value.** `mu_enumerate_v3.py` computed **B(2759) = 175813**, i.e. 175813/3804661 = 0.046209898…, equal to the ladder's own bound there. *(Quote the fraction, not the 5-place rounding: 0.04621 lies above the true value and cannot follow a ≥.)* M was then pinned below every remaining ladder value, so all other candidates were skipped and nothing further was written. **The skips are a result, not an omission:** every other n in range has a ladder lower bound strictly above 0.0462099 (next is 0.04801 at n = 11183), so none can be the minimiser and none needed computing. **Capture such skips from the log at the time**: the CSV shows a hole where the run proved a bound, and a gap between 2600 and the next row later reads as an unfinished job.
 >
@@ -254,7 +266,7 @@ The control restores the old split and must still reproduce the `G/G1` normality
 2. **Even F ≥ 4**, where the cross-class coefficient is (F/2)·c² rather than F·c². The battery has F = 6 at n = 78 but no F = 4, which is the fusion count that sets the ceiling at n ≡ 11 (mod 12).
 3. **A two-part row from the current table's own census**, since eight of the ten rows are configurations that are no longer winners at their n.
 
-*(Historical note: `verify_witness.g` was rebuilt around the entangled generator, but the rebuild reached the twist and not the block-rotation placement, which is why the composite-F row is the one that crashes.)* **⟦PENDING-RERUN⟧** *after both defects are fixed; prior coverage stands at twelve values from the superseded battery, largest n = 575. This is now the **largest untested leg of the framework**, the table and the ladder both being settled over their ranges.*
+*A note on why the composite-F row was the one that crashed: the rebuild around the entangled generator reached the **twist** and not the **block-rotation placement**, and only a composite F exercises the second. Coverage before this pass was twelve values from the superseded battery, largest n = 575.*
 
 **Step 1 — run the battery.**
 
@@ -445,11 +457,7 @@ Both coordinates of the joint optimum are settled without a search. The **F side
 
 ### T5a. The runner-up ordering inside the three-part family
 
-*Rewritten: the 1 : 1 : 2 prediction this item used to guard is **refuted**, not provisional, and the document it lived in is archived. What remains is a narrower and better-specified question.*
-
-**What the item used to say.** `three-part-family-split.md` §1.2 predicted odd-n win shares of **1 : 1 : 2** among S4 (unfused), S5 (top-layer fused) and S7 at F = 2 (cyclic-layer fused), and the standing instruction was to re-derive it on every revision because the argument's second step is an extreme-value claim rather than a counting one.
-
-**Why it is now dead rather than provisional.** The whole three-way competition rested on the **c mod 8 law** — S4 winning at c ≡ 1, a tie at c ≡ 5, the fused rung at c ≡ 3, 7 — and the entangled-generator correction removes its mechanism: a cyclic-layer fusion does not cut the twist, so the fused rung scores 2·C(c,2) against the unfused C(c,2) **at every c** with no congruence in play. S4 is dominated everywhere, and S5's only remaining advantage over S7 was a twist cut neither now pays, leaving S7 ahead on its free choice of top prime. So the asymptotic split is not 1 : 1 : 2; **S7 takes the family**, and the shares of the other two tend to zero. `enumeration-proof.md`'s S4 census row and `aod` §3.2.5 both already say this.
+**The 1 : 1 : 2 prediction is refuted, not open.** `three-part-family-split.md` §1.2 predicts odd-n win shares of 1 : 1 : 2 among S4 (unfused), S5 (top-layer fused) and S7 at F = 2 (cyclic-layer fused); that document is archived and the prediction does not survive the corrected shape space. The whole three-way competition rested on the **c mod 8 law** — S4 winning at c ≡ 1, a tie at c ≡ 5, the fused rung at c ≡ 3, 7 — and the entangled-generator correction removes its mechanism: a cyclic-layer fusion does not cut the twist, so the fused rung scores 2·C(c,2) against the unfused C(c,2) **at every c** with no congruence in play. S4 is dominated everywhere, and S5's only remaining advantage over S7 was a twist cut neither now pays, leaving S7 ahead on its free choice of top prime. So the asymptotic split is not 1 : 1 : 2; **S7 takes the family**, and the shares of the other two tend to zero. `enumeration-proof.md`'s S4 census row and `aod` §3.2.5 both already say this.
 
 **What is genuinely still open, and it is what `aod` §7 needs.** The disjunction-collapse argument wants the **gap to the next shape down**, so the live question is the *runner-up* ordering, not the winner:
 
@@ -457,7 +465,7 @@ Both coordinates of the joint optimum are settled without a search. The **F side
 
 Two specific things a human pass should settle, in this order:
 
-1. **Where Lemma C's coupling bites.** S7's advantage over S5 is its free top prime; the coupling (`enumeration-proof.md` Part D) is what can take that away, by stripping S7's layer where the matching twist shares a prime with the foreign block. Wherever it bites, S5 is second; elsewhere S4 is. **This is a congruence condition, not an extreme-value argument** — which is the substantive improvement over the old item, whose fragility was entirely in the extreme-value step.
+1. **Where Lemma C's coupling bites.** S7's advantage over S5 is its free top prime; the coupling (`enumeration-proof.md` Part D) is what can take that away, by stripping S7's layer where the matching twist shares a prime with the foreign block. Wherever it bites, S5 is second; elsewhere S4 is. **This is a congruence condition, not an extreme-value argument**, which is why it is tractable: the fragility of the discarded 1 : 1 : 2 route lay entirely in its extreme-value step.
 2. **Whether the gap is bounded below by a constant.** §7 needs a gap, not an ordering. The candidates are cap-level quantities at each class, so this is arithmetic on the §3.3.5 table plus the coupling's density, and it should not need a search.
 
 **What not to reuse.** The archived note's tables are keyed **mod 24**, predate the entangled correction, and quote 0.050510 at class 11 as a *within-family* cap at η = 1/6 — which is not the class ceiling, that being 7 − 4√3 from the two-part F = 4 shape outside this family. Take the question from here and the constants from `aod` §3.3.5.
@@ -511,7 +519,9 @@ The all-shapes **penalised** column (`shape-counting.md` §4) is a **lower bound
 
 **Priority: low.** The top row is unaffected — a fused unequal shape needs n to be a sum of two distinct p-power multiples, a density-zero condition that puts it among §6.5's escapes rather than in the covering accounting — and §6.6's covering statement quotes N_add, which is counted directly and never uses this table. So the exposure is to a commentary figure, and `shape-counting.md` §4 states the direction of the error.
 
-### A22. `validate_table_v3.py`'s group-A expectation is scoped to the current table — SETTLED, retained as the reference point
+### A22. `validate_table_v3.py`'s group-A expectation is scoped to the current table
+
+*Not owed work — retained because it is the reference point that makes a baseline run readable, and the 289-vs-18 pairing is asked about repeatedly.*
 
 The R1 reference point reads *0 FAIL*, which holds for an enumerator output under the current scoring. Run against a **baseline** it does not: a row whose recorded winner is a cyclic-fused class scored under the superseded cut twist re-derives *higher* from its own witness, so group A's re-derivation check fires. On the v4 baseline that is **18 rows of 2,186** — a subset of the 289 known-low rows, the other ~271 being exceeded by a different configuration rather than by a rescoring of their own witness, and so invisible to a check that re-derives from the recorded witness. **Neither number is a defect**; the pairing of them is the thing to state, since 289 and 18 look like they should match and do not. Either scope the expectation in R1's banner or have the check name the baseline case when `--baseline` is supplied.
 
@@ -540,9 +550,11 @@ The ceiling table is a theorem about the Oliver-admissible family **as currently
 
 `sp-to-floor.md` §6.2 files it: S_D under (SP) has positive relative density inside the Selberg majorant for the pair `{Q, dQ+1}`, whose pseudorandomness is sieve-provable, and a restriction/transference estimate for `n = kp + r` against that majorant would give the representation for almost all n with **no distributional hypothesis on S_D at all**. §6.1's counterexample marks the boundary any such argument must respect — the count alone is provably insufficient — so a successful transference must consume the unconditional sieve upper bounds. A research question, not an afternoon; filed here because it is otherwise homeless outside a one-pass working note.
 
-### A26. The note and the bridge are *more* stale after the (AL)/(AA) split, not less
+### A26. The note before circulation: what to re-read, and one decision to make
 
-`mu-theta-n2-note.md` remains **correct on its own terms** — its family is the unfused one, its window is deliberately generous, its constant crude by design — and nothing here touches its Theorem. What changed around it: its hypothesis is now **(BCG_{1/5})**, and its relation to the framework's is **non-nesting in both directions**, not "a weaker form of the same thing". (BCG-AL) hands over an `F = 4` configuration at n ≡ 11 (mod 12) with `c/n ≈ 0.134`, which the note's `c ≥ n/5` rejects; the note in turn is far weaker in constant and restricted to `n = c + r` and `n = 2c + r`. `note-to-framework-bridge.md` §4 now says this. **Before any circulation:** re-read the note's §5 θ-ladder against `aod` §3.6's current attributions, and decide whether the note should mention the F = 4 shape at all or stay deliberately silent about it.
+*The naming and the non-nesting are done — the note carries `(BCG_{1/5})` with a paragraph explaining it, and `note-to-framework-bridge.md` §4 states the non-nesting. What is left is a reading and a judgement call.*
+
+`mu-theta-n2-note.md` remains **correct on its own terms** — its family is the unfused one, its window is deliberately generous, its constant crude by design — and nothing here touches its Theorem. What changed around it: its hypothesis is now **(BCG_{1/5})**, and its relation to the framework's is **non-nesting in both directions**, not "a weaker form of the same thing". (BCG-AL) hands over an `F = 4` configuration at n ≡ 11 (mod 12) with `c/n ≈ 0.134`, which the note's `c ≥ n/5` rejects; the note in turn is far weaker in constant and restricted to `n = c + r` and `n = 2c + r`. **Before any circulation:** re-read the note's §5 θ-ladder against `aod` §3.6's current attributions, and decide whether the note should mention the F = 4 shape at all or stay deliberately silent about it.
 
 ### A27. A second reading of `sp-to-floor.md`, now that `aod` §6.9 quotes it
 
