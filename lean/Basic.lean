@@ -1,10 +1,29 @@
 /-
   Ark/Basic.lean — a first formalisation pass at the ARK framework's ARITHMETIC layer.
 
-  WHAT THIS IS AND IS NOT.  None of this has been compiled: the container has no
-  Lean toolchain and no network access to fetch one.  Treat every proof below as
-  a claim about what the proof should look like, not as a checked proof.  The
-  statements are the valuable part; the tactic blocks will need work.
+  WHAT THIS IS AND IS NOT.  This file now COMPILES against Mathlib.  It began as
+  a sketch whose header said none of it had been compiled and that every proof
+  should be read as a claim about what a proof might look like; that is no
+  longer true, and the count went 18 sorries -> 0 over one pass.  Where a proof
+  was written without a toolchain to hand it carries an inline FALLBACK naming
+  the likely failure and an alternative route -- those comments are the residue
+  of that process and are worth keeping, since the lemma names most likely to
+  rot are exactly the ones they name.
+
+  WHAT FORMALISING ACTUALLY BOUGHT, which was not the proofs.  Three signature
+  corrections, all in statements whose proofs are routine:
+    * `orb_full`'s `2 <= c` is unnecessary (both sides are 0 at c <= 1);
+    * `capF_eq_k_sqrt`'s `0 <= eta` is unnecessary (`Real.sqrt_mul` needs only
+      the LEFT factor nonneg, and `(F : R) >= 0` for any `F : N`);
+    * `prop_F1` was FALSE without `0 < k` -- at `k = 0` the sum over `Fin 0` is
+      0, so `n = 0`, the capacity hypothesis is vacuous, and the conclusion
+      reads `0 < 0`.
+  The last is the same defect this file already recorded at `size_of_capacity`,
+  which needed `0 < m` for the same reason.  Two instances in one file is a
+  pattern: *whenever a claim is "k things each with property P force a bound",
+  check k = 0 before anything else.*  A prover cannot skip the degenerate
+  branch the way a reader does, and that -- not the proofs -- is the case for
+  this layer.
 
   WHY THIS LAYER.  The framework splits cleanly in two.  The GROUP-THEORETIC
   layer rests on Oliver's fixed-point theorem and on the classification of
@@ -166,23 +185,44 @@ gives the form used in the documents, `k < 1 / sqrt delta`. -/
 theorem prop_F1 (k n m : ℕ) (hk : 0 < k) (hm : 0 < m) (sz : Fin k → ℕ)
     (hsum : ∑ i, sz i = n) (hcap : ∀ i, m ≤ (sz i).choose 2) :
     (k : ℝ) * Real.sqrt (2 * m) < n := by
-  sorry
-  -- STATEMENT DEFECT FOUND AND FIXED IN THE SIGNATURE: `0 < k` was missing and
-  -- the theorem was FALSE without it.  At `k = 0` the sum over `Fin 0` is `0`,
-  -- so `n = 0`, `hcap` is vacuous, and the conclusion reads `0 < 0`.
+  -- STATEMENT DEFECT FOUND: `0 < k` was missing and the theorem was FALSE
+  -- without it.  At `k = 0` the sum over `Fin 0` is `0`, so `n = 0`, `hcap` is
+  -- vacuous, and the conclusion reads `0 < 0`.  This is the same failure as the
+  -- `0 < m` case at `size_of_capacity` above -- an informal claim quantifying
+  -- over a configuration and forgetting the empty one.  Two in one file:
+  -- *whenever a claim is "k things each with property P force a bound", check
+  -- k = 0 before anything else.*
   --
-  -- This is the same failure as the `0 < m` case recorded at `size_of_capacity`
-  -- above: the informal statement quantifies over a configuration and forgets
-  -- that the empty one satisfies its hypotheses.  Two instances in one file is
-  -- a pattern worth naming -- *whenever a claim is "k things each with property
-  -- P force a bound", check k = 0 before anything else.*
-  --
-  -- PROOF ROUTE.  `ArkCore.prop_F1_sq` has the squared content, sorry-free:
-  --     2 * m * (len * len) < sum * sum
-  -- over `List Nat`.  Two steps remain: transport `Fin k → ℕ` to a list via
-  -- `List.ofFn` (`List.sum_ofFn`, `List.length_ofFn`, and `hk` giving
-  -- `≠ []`), then take square roots -- `Real.sqrt_lt_sqrt` on the squared
-  -- inequality, with `Real.sqrt_mul_self` to strip the roots on both sides.
+  -- The proof stays over `Fin k` rather than transporting to `ArkCore`'s
+  -- `List` form: the content is `size_of_capacity` applied pointwise, and
+  -- summing a strict pointwise bound over a nonempty index is one lemma.
+  -- Going through `List.ofFn` would cost more than it saves.
+  have h2m : (0:ℝ) ≤ 2 * m := by positivity
+  -- every part strictly exceeds sqrt(2m)
+  have key : ∀ i, Real.sqrt (2 * m) < (sz i : ℝ) := by
+    intro i
+    have hnat : 2 * m < sz i * sz i :=
+      ArkCore.size_of_capacity (sz i) m hm (by rw [pairs_eq_choose]; exact hcap i)
+    have hR : ((2 * m : ℕ) : ℝ) < (sz i : ℝ) * (sz i : ℝ) := by exact_mod_cast hnat
+    have hpos : (0:ℝ) < (sz i : ℝ) := by
+      rcases Nat.eq_zero_or_pos (sz i) with h0 | h0
+      · exfalso; rw [h0] at hnat; simp at hnat
+        -- (`simp` closes this outright: `2 * m < 0 * 0` reduces to `False`.
+        --  A trailing `omega` errors with "No goals to be solved".)
+      · exact_mod_cast h0
+    rw [show ((2 * m : ℕ) : ℝ) = 2 * (m : ℝ) by push_cast; ring] at hR
+    rw [Real.sqrt_lt' hpos]
+    nlinarith [hR]
+  have : Nonempty (Fin k) := ⟨⟨0, hk⟩⟩
+  have hne : (Finset.univ : Finset (Fin k)).Nonempty := Finset.univ_nonempty
+  calc (k : ℝ) * Real.sqrt (2 * m)
+      = ∑ _i : Fin k, Real.sqrt (2 * m) := by
+        rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
+    _ < ∑ i, (sz i : ℝ) := Finset.sum_lt_sum_of_nonempty hne (fun i _ => key i)
+    _ = (n : ℝ) := by exact_mod_cast congrArg (Nat.cast : ℕ → ℝ) hsum
+  -- FALLBACKS.  `Real.sqrt_lt' (hy : 0 < y) : sqrt x < y ↔ x < y ^ 2` -- if the
+  -- name has moved, `Real.sqrt_lt_sqrt` plus `Real.sqrt_sq hpos.le` gives the
+  -- same step.  The last line's cast may need `push_cast [← hsum]` instead.
 
 /-! ## 4. Part E' — the s-bound, and the ladder that went wrong
 
@@ -420,7 +460,23 @@ finite: the ladder `1/4, 3-2√2, (2-√3)/2, 1/8, 1/9` is read straight off it.
 theorem cap_two_foreign (m₁ m₂ : ℕ) (h₁ : 0 < m₁) (h₂ : 0 < m₂) :
     (1 / m₁ : ℝ) * (1 / m₂) / (1 / Real.sqrt m₁ + 1 / Real.sqrt m₂) ^ 2
       = 1 / (Real.sqrt m₁ + Real.sqrt m₂) ^ 2 := by
-  sorry
+  -- The whole identity is `1/(a²b²) / ((a+b)/(ab))² = 1/(a+b)²` with
+  -- `a = √m₁`, `b = √m₂`.  Naming the roots and replacing the bare casts by
+  -- their squares turns it into rational algebra with no `sqrt` left, which
+  -- `field_simp; ring` closes.  `set` first, so the rewrite hits only the
+  -- casts and not the roots' own definitions.
+  have hm₁ : (0:ℝ) < (m₁ : ℝ) := by exact_mod_cast h₁
+  have hm₂ : (0:ℝ) < (m₂ : ℝ) := by exact_mod_cast h₂
+  set a := Real.sqrt (m₁ : ℝ) with ha_def
+  set b := Real.sqrt (m₂ : ℝ) with hb_def
+  have hapos : 0 < a := Real.sqrt_pos.mpr hm₁
+  have hbpos : 0 < b := Real.sqrt_pos.mpr hm₂
+  have ha : a ^ 2 = (m₁ : ℝ) := Real.sq_sqrt hm₁.le
+  have hb : b ^ 2 = (m₂ : ℝ) := Real.sq_sqrt hm₂.le
+  rw [← ha, ← hb]
+  have hab : 0 < a + b := by linarith
+  field_simp
+  ring
 
 /-! ## 6. The orbital halving, and what `c ≡ 3 (mod 4)` does and does not buy
 
@@ -457,8 +513,37 @@ This is a statement about a **single** block with a half twist.  It does not
 generalise to a fused class, where the full twist is available at every `c`. -/
 theorem sq_or_neg_sq (hp : p % 4 = 3) (a : ZMod p) (ha : a ≠ 0) :
     IsSquare a ∨ IsSquare (-a) := by
-  sorry
-  -- if a is a non-residue then so is -1, and non-residue * non-residue = residue
+  -- If `a` is a residue we are done.  Otherwise `χ a = -1`, and since
+  -- `χ (-1) = -1` at `p ≡ 3 (mod 4)`, multiplicativity gives `χ (-a) = 1`.
+  -- The quadratic character is the right tool because it turns "residue or
+  -- not" into an equation, so the case split becomes arithmetic in `{±1}`.
+  by_cases h : IsSquare a
+  · exact Or.inl h
+  · right
+    -- `quadraticChar_neg_one_iff_not_isSquare` is an iff with no explicit
+    -- argument -- applying it to a proof of `a ≠ 0` is what gave
+    -- "Function expected".
+    have hχa : quadraticChar (ZMod p) a = -1 :=
+      quadraticChar_neg_one_iff_not_isSquare.mpr h
+    -- `quadraticChar_neg_one` takes `ringChar F ≠ 2` and lands in `χ₄` of the
+    -- CARD, not of `p`, so the card rewrite has to happen before `χ₄` is
+    -- evaluated.
+    have hp2 : p ≠ 2 := by omega
+    have hchar : ringChar (ZMod p) ≠ 2 := by
+      rw [ZMod.ringChar_zmod_n]; exact hp2
+    have hodd : p % 2 = 1 := by omega
+    have hχ1 : quadraticChar (ZMod p) (-1) = -1 := by
+      rw [quadraticChar_neg_one hchar, ZMod.card p, ZMod.χ₄_nat_eq_if_mod_four]
+      simp [hodd, hp]
+    have hneg : quadraticChar (ZMod p) (-a) = 1 := by
+      rw [show (-a) = (-1) * a by ring, map_mul, hχa, hχ1]
+      ring
+    exact quadraticChar_one_iff_isSquare (by simpa using ha) |>.mp hneg
+  -- FALLBACKS.  If `ZMod.χ₄_nat_eq_if_mod_four` will not fire, `ZMod.χ₄_eq_neg_one_iff`
+  -- gives `χ₄ n = -1 ↔ n % 4 = 3` directly.  If `quadraticChar_one_iff_isSquare`
+  -- wants the nonzero hypothesis in a different shape, `ha` is already to hand.
+  -- The character-free route is `neg_one_not_sq` above plus multiplicativity of
+  -- the residue symbol -- same argument, more steps.
 
 /-- The Paley reading: at `p ≡ 3 (mod 4)` the residue relation is a tournament,
 so symmetrising it gives the complete graph.  Stated as: the relation
