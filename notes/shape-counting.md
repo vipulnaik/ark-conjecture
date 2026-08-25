@@ -18,11 +18,11 @@ Enumerated directly by recursion over the multiset in nondecreasing order, with 
 |---|---|---|---|---|---|
 | 1/9 | 3.000 | 3 | 9 | 24 | 6 |
 | 1/16 | 4.000 | 4 | 16 | 65 | 10 |
-| 0.051813 (`19x61`, n = 1159) | 4.393 | 4 | 19 | 83 | — |
+| 0.051813 (`19x61`, an admissible fused class at n = 1159) | 4.393 | 4 | 19 | 83 | 10 |
 | 175813/3804661 = 0.046209… (the ladder floor to 10⁶) | 4.652 | 4 | 21 | 112 | 10 |
 | 0.04 = 1/25 (conjectured) | 5.000 | 5 | 25 | 164 | 15 |
 
-**The additive count is not enumerated but counted directly.** With every F_i = 1 a shape is determined by its part count k ≤ K = ⌊L⌋ and its number of foreign parts i ∈ {1,…,k}, so **N_add(δ₀) = Σ_{k≤K} k = K(K+1)/2**, quadratic in L and hence ≈ 1/(2δ₀). This is the count `aod` §6.6's covering statement actually quotes, the fusion shapes having dropped from the asymptotic statement (§6.5).
+**The additive count is not enumerated but counted directly.** With every F_i = 1 a shape is determined by its part count k ≤ K = ⌊L⌋ and its number of foreign parts i ∈ {1,…,k}, so **N_add(δ₀) = Σ_{k≤K} k = K(K+1)/2**, quadratic in L and hence ≈ 1/(2δ₀). *(The sum runs from k = 1, so it counts the one-part shape with its single part foreign — n = r itself, a prime, which is outside the domain. Every N_add figure here and in `aod` §6.4 is therefore one high; the convention is kept because the growth rate is what both documents use, but the two must keep it in step.)* This is the count `aod` §6.6's covering statement actually quotes, the fusion shapes having dropped from the asymptotic statement (§6.5).
 
 ## 2. Growth of the raw count
 
@@ -43,7 +43,7 @@ So the raw set grows like exp(2.53·δ₀^{−1/3}) — subexponential in 1/δ�
 
 ## 3. The floor rows, and what to recompute when the range moves
 
-> *The floor rows are keyed to the exactly-computed floor, so they move with it.* At the conjectured floor of 1/25, L = 5.000 and the part cap is **k ≤ 5** — a substantial narrowing of the search this table sizes, since the count grows steeply in L. **At the computed floor, now 0.048039 at n = 2183 over the complete range to 2600: L = 4.5625, k ≤ 4, F ≤ 20, N(δ₀) = 102.** (v4's 0.045742 at n = 1817 gave L = 4.676 and N(δ₀) = 112; the floor rose, so the count fell.) These rows want re-deriving after any discretionary extension that lowers the floor again. Recompute the affected rows rather than the whole table. (The 122 and 164 above, and the 112 here, are direct enumerations of the criterion, checked against the 24 / 65 / 83 rows by the same code.)
+> *The floor rows are keyed to the exactly-computed floor, so they move with it.* At the conjectured floor of 1/25, L = 5.000 and the part cap is **k ≤ 5** — a substantial narrowing of the search this table sizes, since the count grows steeply in L. **At the computed floor, now 0.048039 at n = 2183 over the complete range to 2600: L = 4.5625, k ≤ 4, F ≤ 20, N(δ₀) = 102.** (v4's 0.045742 at n = 1817 gave L = 4.676 and N(δ₀) = 112; the floor rose, so the count fell.) These rows want re-deriving after any discretionary extension that lowers the floor again. Recompute the affected rows rather than the whole table. (The 112 and 164 above, and the 102 here, are direct enumerations of the criterion, checked against the 24 / 65 / 83 rows by the same code.)
 
 
 ## 4. The partition factor: unequal matching sizes

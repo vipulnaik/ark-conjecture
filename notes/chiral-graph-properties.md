@@ -9,7 +9,7 @@
 | §1 the definition and why it is the right object | definitional |
 | §2 the halving theorem | **proved**, one line |
 | §3 the parity calculus | **proved**; each rule verified computationally, including the entangled-generator rule (F2) |
-| §4 prime powers: KSS survives at 3 mod 4 and fails at 1 mod 4 | **proved**, and verified at every odd prime ≤ 31 and at c = 4, 8, 16 |
+| §4 prime powers: KSS survives at 3 mod 4, at 2^a, and at four computed c ≡ 1 mod 4 | **proved** at primes; verified at every odd prime ≤ 31, at c = 4, 8, 16, and at c = 9, 25, 49, 81, 121, 169. **The proper-prime-power case ≡ 1 (mod 4) is partly open** — see Theorem 2 |
 | §5 the chirality efficiency, and the ported cap formula | **derived**; the conclusion ε = 1 at every fused class is verified on the groups |
 | §6 what is open | a to-do list |
 
@@ -24,7 +24,7 @@ The difference is exactly a chirality. A chiral property may evaluate two *isomo
 > **Two things follow immediately and are worth stating before any machinery.**
 >
 > - **Every graph property is a chiral graph property.** So evasiveness for all chiral properties is a *strictly stronger* statement than ARK: proving it is harder, and **finding a counterexample is easier**. That asymmetry is the reason to care — the chiral world is where a counterexample to something ARK-adjacent could plausibly live while ARK itself stays true.
-> - **The prime-power theorem is not inherited.** KSS proves evasiveness at n = p^a using AGL(1, p^a), which is 2-homogeneous and Oliver. §4 shows that group is *not* inside A_n at odd p, so the argument has to be redone, and it does not survive intact.
+> - **The prime-power theorem is not inherited, and has to be redone group by group.** KSS proves evasiveness at n = p^a using AGL(1, p^a), which is 2-homogeneous and Oliver. §4 shows that group is *not* inside A_n at odd p, so the argument has to be redone — and what replaces it is not AGL(1, c) minus a factor of two but, at some c, a *different* group of the same degree. It survives at every prime power except (so far as is known) the primes ≡ 1 (mod 4).
 
 Throughout, μ_chi(n) is the maximum over Oliver groups **Γ ≤ A_n** of the minimum Γ-orbital on pairs, and δ_chi = μ_chi(n)/C(n,2).
 
@@ -74,7 +74,7 @@ This is where the qualification bites hardest, and it is worth doing in full bec
 
 **The full affine group is excluded at odd characteristic.** For c odd and d = c − 1, rule (M) gives sign (−1)^{(c−2)·1} = −1, since c − 2 is odd. So **AGL(1, c) ⊄ A_c for every odd prime power c** — confirmed by direct computation at c = 5, 7, 11, 13. The translations are fine; it is the full-order twist that is odd.
 
-**So the largest admissible twist is d = (c−1)/2**, for which (c−1)/d = 2 is even and rule (M) gives an even permutation, for every odd c. What that twist buys depends on c mod 4, through whether −1 lies in the twist subgroup T of index 2:
+**So the largest admissible twist *inside AGL(1, c)* is d = (c−1)/2**, for which (c−1)/d = 2 is even and rule (M) gives an even permutation, for every odd c. What that twist buys depends on c mod 4, through whether −1 lies in the twist subgroup T of index 2. *(Read this as a statement about AGL(1, c) only. At a ≥ 2 the block also carries semilinear elements, and those can restore 2-transitivity inside A_c even when no linear subgroup does — see the box after Theorem 2, which is where the argument below stops being the whole story.)*
 
 > - **c ≡ 3 (mod 4).** (c−1)/2 is odd, so −1 ∉ T, and ±T has order c − 1. The orbital is c(c−1)/2 = **C(c,2)** — the group is 2-homogeneous and the whole pair set is one orbital.
 > - **c ≡ 1 (mod 4).** (c−1)/2 is even, so −1 ∈ T, and ±T = T of order (c−1)/2. The pair set splits into **two orbitals of C(c,2)/2 each**.
@@ -84,15 +84,26 @@ This is where the qualification bites hardest, and it is worth doing in full bec
 > **Theorem 2 (the qualified prime-power theorem).** For n a prime power,
 >
 > **δ_chi(n) = 1** if n = 2^a with a ≥ 2, or n = p^a ≡ 3 (mod 4);
-> **δ_chi(n) = 1/2** if n = p^a ≡ 1 (mod 4).
+> **δ_chi(n) = 1/2** if n = p ≡ 1 (mod 4) is **prime**;
+> and at n = p^a ≡ 1 (mod 4) with **a ≥ 2** the answer is not decided by AGL(1, n): computed, **δ_chi = 1 at n = 9, 49, 81, 121** and **δ_chi = 1/2 at n = 25, 169**.
 >
-> Consequently every nontrivial monotone chiral property is evasive at prime powers **n ≡ 3 (mod 4) and n = 2^a**, by the KSS argument verbatim; and at n ≡ 1 (mod 4) that argument gives only two orbitals and no contradiction.
+> Consequently every nontrivial monotone chiral property is evasive at prime powers **n ≡ 3 (mod 4)**, at **n = 2^a**, and at **n = 9, 49, 81, 121**, by the KSS argument verbatim; at n a prime ≡ 1 (mod 4) that argument gives only two orbitals and no contradiction.
 >
-> *Verified:* orbitals [21], [55], [171], [253], [465] at c = 7, 11, 19, 23, 31 (one orbital each), against [5,5], [39,39], [68,68], [203,203] at c = 5, 13, 17, 29 (two halves each).
+> *The prime case is proved*, since a solvable transitive group of prime degree p lies in AGL(1, p), whose only 2-transitive subgroup is the whole group — which §4's computation puts outside A_p. *At a ≥ 2 there is no such confinement*, and the box below exhibits what fills the gap.
+>
+> *Verified:* orbitals [21], [55], [171], [253], [465] at c = 7, 11, 19, 23, 31 (one orbital each), against [5,5], [39,39], [68,68], [203,203] at c = 5, 13, 17, 29 (two halves each) — all inside AGL(1, c).
 
-**This is exactly the halving of Theorem 1, realised.** The excluded residue class is where the factor of two is genuinely paid, and it is a clean congruence rather than a sporadic loss.
+> **The AGL(1, c) argument is not the whole story at a ≥ 2, and n = 9 is the counterexample.** §4 above rules out the *linear* groups, and at prime degree that is everything. At a ≥ 2 the block also carries **semilinear** elements, and a subgroup of ΓL(1, c) not contained in ΓL(1, c)'s linear part can be 2-transitive, even, and Oliver all at once.
+>
+> Concretely at **c = 9**: take **Γ = 𝔽₉ ⋊ ⟨ζ², ζ·Frob⟩**, where ζ generates 𝔽₉^×. The stabiliser is **Q₈** — it acts regularly on the eight nonzero elements, and Frob is not in it, Q₈ having a unique involution — so Γ is **sharply 2-transitive of order 72**, the classical 3²:Q₈. Every generator is even: a translation is three 3-cycles; ζ² is two 4-cycles; and ζ·Frob squares to −1, so it too is two 4-cycles. And Γ is Oliver, with Γ₂ = 𝔽₉ (a 3-group), Γ₁ = 𝔽₉ ⋊ C₄ for any of Q₈'s three cyclic subgroups of order 4, and Γ/Γ₁ = C₂. *Verified directly: all generators even, |Γ| = 72, and a **single orbital of size 36 = C(9,2)**.* So **δ_chi(9) = 1** and n = 9 is settled by the KSS argument after all.
+>
+> **Searched over ΓL(1, c) at the small prime powers ≡ 1 (mod 4)** — every subgroup transitive on 𝔽_c^×, with all elements even and admitting an Oliver chain — the rescue exists at **c = 9, 49, 81, 121** and does **not** at **c = 25, 169**. The apparent pattern is **p ≡ 3 (mod 4) with a even**, which is exactly when a semilinear element of the right order is available with an even cycle type; at c = 25 the natural candidate ζ·Frob has order 8 acting in three 8-cycles and is odd. *(The search covers ΓL(1, c)-type stabilisers only. The exceptional solvable 2-transitive affine groups at c = 9, 25, 49, 121 are not enumerated here, though the c = 9 group above is one of them; a full answer wants them, and none of them is likely to carry an Oliver chain at c = 25.)*
+>
+> **So the residue class 1 mod 4 is not uniformly the chiral world's hard case** — the primes in it are, and the proper prime powers in it are decided one at a time by an arithmetic condition that is not yet in closed form. §6 item 6 records what would settle it.
 
-> **And it predicts where the interesting examples live.** n = 5 is the smallest prime power ≡ 1 (mod 4), and it is precisely where the chiral analysis found a candidate: the down-closure of one A₅-orbit of Hamiltonian cycles is ℚ-acyclic with H̃₁ = ℤ/2, homotopy equivalent to ℝP² (see `pending-checks.md` R10). The next members are n = 9, 13, 17, 25, 29. **The residues 1 mod 4 are the chiral world's analogue of the non-prime-power n in the S_n world**, and for the same structural reason: they are where the natural group falls one orbital short. (§5: this is where the analogy stops — unlike the non-prime-power case, the shortfall does not propagate into the composite analysis, because a *fused* class recovers the full twist.)
+**Theorem 1's factor of two is realised, but on a thinner set than the residue class.** It is paid at the primes ≡ 1 (mod 4) and at c = 25, 169; everywhere else in range the chiral and S_n answers agree at prime powers.
+
+> **And it predicts where the interesting examples live.** n = 5 is the smallest prime power where the factor is paid, and it is precisely where the chiral analysis found a candidate: the down-closure of one A₅-orbit of Hamiltonian cycles is ℚ-acyclic with H̃₁ = ℤ/2, homotopy equivalent to ℝP² (see `pending-checks.md` R10). The next members are the primes **13, 17, 29** and the prime powers **25, 169** — **not n = 9**, which the box above settles. **The n where the natural group falls one orbital short are the chiral world's analogue of the non-prime-power n in the S_n world**, and for the same structural reason. (§5: this is where the analogy stops — unlike the non-prime-power case, the shortfall does not propagate into the composite analysis, because a *fused* class recovers the full twist.)
 
 ---
 
@@ -100,7 +111,7 @@ This is where the qualification bites hardest, and it is worth doing in full bec
 
 Define, for a block of size c, the **chirality efficiency**
 
-> **ε(c) = 1** if c = 2^a (a ≥ 2) or c ≡ 3 (mod 4);  **ε(c) = 1/2** if c ≡ 1 (mod 4),
+> **ε(c) = 1** if c = 2^a (a ≥ 2), or c ≡ 3 (mod 4), or c ∈ {9, 49, 81, 121};  **ε(c) = 1/2** if c ≡ 1 (mod 4) is prime, or c ∈ {25, 169},
 
 so that the largest A_c-admissible intra-orbital on the block is ε(c)·C(c,2) rather than C(c,2). Then the framework ports as follows.
 
@@ -124,7 +135,7 @@ That is a sharp and slightly surprising localisation: the shifted-prime supply q
 
 reducing to cap_F(η) at ε = 1 (checked). **And ε = 1 at every row the odd ceilings use**, since those all take F ≥ 2 and a fused class pays no penalty. So the six mod-12 ceilings of `aod` §3.3.5 survive **unscaled** at odd n, not merely in form:
 
-> **δ_chi(n) = δ(n) at every odd n, as far as the ceiling analysis sees.** The halving of Theorem 1 is a bound, and outside the prime powers ≡ 1 (mod 4) it is not paid. The remaining exposures are two, both narrow: an **unfused** matching block (F = 1, so the even classes' two-part S3 shape) pays ε = 1/2 at c ≡ 1 (mod 4), which is avoidable by choosing c ≡ 3 (mod 4) — a positive-density supply condition, not an obstruction; and the **q = 2 Fermat branch** halves η, which the odd ceilings do not use.
+> **δ_chi(n) = δ(n) at every odd n, as far as the ceiling analysis sees.** The halving of Theorem 1 is a bound, and outside the prime powers ≡ 1 (mod 4) it is not paid. The remaining exposures are two, both narrow: an **unfused** matching block (F = 1, so the even classes' two-part S3 shape) pays ε = 1/2 at c ≡ 1 (mod 4), which is avoidable by choosing c ≡ 3 (mod 4) — a positive-density supply condition, not an obstruction, and one the rescued prime powers of §4 relax further; and the **q = 2 Fermat branch** halves η, which the odd ceilings do not use.
 >
 > So the global asymptotic constant stays at **7 − 4√3** rather than dropping, and the chiral floor conjecture is δ_chi ≥ 1/25 as in the S_n world, with 1/50 the weaker statement Theorem 1 *proves* unconditionally.
 >
@@ -142,4 +153,5 @@ reducing to cap_F(η) at ε = 1 (checked). **And ε = 1 at every row the odd cei
 2. **Redo the framework's bounded-cofactor Goldbach hypothesis (BCG) with the parity conditions.** Less is needed than it appeared. At odd n — every fused row — **no parity condition on c is added at all**, so the hypothesis's clauses transfer verbatim, in either quantifier strength. Only the even, unfused rows want **c ≡ 3 (mod 4)**, a positive-density condition thinning supply by a constant factor and landing in the same Bateman–Horn class. **Gotcha for anyone redoing this: do not impose c ≡ 3 (mod 4) globally.** It is unnecessary at every odd class, and imposing it there would halve the supply for nothing — the same error in miniature as requiring a congruence on c in the S_n analysis (`aod` §3.5.3).
 3. **Verify the halving theorem is tight, and §5's claim that it is rarely paid.** Theorem 1 gives δ_chi ≥ δ/2 and Theorem 2 realises the factor exactly at prime powers ≡ 1 (mod 4); §5 argues it is paid **nowhere else** among the ceiling-setting configurations. A chiral analogue of `mu_enumerate_v3.py` — the same enumeration with a sign check per generator, using (F2) rather than (F1) for fused classes — would test that over the computed range, and the prediction is sharp: **δ_chi(n) = δ(n) at every odd non-prime-power n**. **The cheapest substantial item here**, since the enumerator already carries the layer data the parity rules need.
 4. **The chiral floor conjecture.** δ ≥ 1/25 becomes δ_chi ≥ 1/50 by Theorem 1, but §5 suggests the truth is δ_chi ≥ 1/25 unchanged; the ladder of `ladder_verify.py` would need the same sign check per family to confirm it, and by (F2) the fused rungs should pass unaltered.
-5. **R10** (`pending-checks.md`): the Mayer–Vietoris computation of the chiral halves' homology at n = 9, which is the question of whether a chiral candidate can be ℤ-acyclic.
+5. **R10** (`pending-checks.md`) is answered — no chiral half of the Hamiltonian-cycle complex is ℤ-acyclic at any n ≡ 1 (mod 4) — and **n = 9 is now closed twice over**: §4's box gives a 2-transitive Oliver group inside A₉, so every nontrivial monotone chiral property there is evasive and no candidate of any kind lives at n = 9. Where a chiral candidate could still live is the n at which the factor of two is genuinely paid: the primes ≡ 1 (mod 4) beyond 5, and c = 25.
+6. **Close the proper-prime-power case ≡ 1 (mod 4).** The computed answers are δ_chi = 1 at 9, 49, 81, 121 and 1/2 at 25, 169, suggesting **p ≡ 3 (mod 4) with a even**. Two things would settle it: a proof that the semilinear rescue exists exactly under that condition — the cycle type of ζ^i·Frob^j is computable in closed form, so this should be elementary rather than a search — and an enumeration of the exceptional solvable 2-transitive affine groups at these degrees, which the search above does not cover.
