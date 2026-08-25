@@ -135,7 +135,7 @@ again. This proves the Theorem with **δ₀ = 1/350**, i.e. roughly n²/700 edge
 
 ## 4. What is unconditional, and what the constant is
 
-One infinite family needs no hypothesis. For n = 2m with m an odd prime power, take two blocks of size m with the diagonal twist and a block swap; the resulting group is Oliver with q = 2, its orbitals are m(m−1) and m², and so
+One infinite family needs no hypothesis. For n = 2m with m a prime power, take two blocks of size m — each identified with the field 𝔽_m, not with ℤ/m, which differs from the blocks of §3 as soon as m is not prime — with C_(m−1) = 𝔽_m\* twisting both diagonally, together with a block swap; the resulting group is Oliver with q = 2, its orbitals are m(m−1) and m², and so
 
 > μ(2m) ≥ m(m−1), i.e. δ(n) = 1/2 − o(1).
 
@@ -145,11 +145,11 @@ The constant δ₀ above is deliberately crude. Optimising the block sizes and t
 
 A companion computation, which we do not reproduce here, scans four explicit families of such constructions — each written down directly as a permutation group, with its minimum orbital in closed form — and exhibits one at every composite non-prime-power n it covers, giving
 
-> δ(n) ≥ 0.0462 for every composite non-prime-power n ≤ 10⁵,
+> δ(n) ≥ 0.0462 for every composite non-prime-power n ≤ 10⁶,
 
 the scan's minimum over the range being attained at n = 2759. These are lower bounds, which is all the present argument needs; over that range the density therefore never falls below **16 times** the δ₀ = 1/350 proved above. *(A matching upper bound — and hence exact values of μ — is the object of a companion classification of the possible orbit structures together with a finite search over the resulting configurations. That is separate work, and nothing here depends on it.)*
 
-The comparison is worth making carefully, because the two statements have different quantifiers and the computation is the stronger of the two on that axis. The Theorem gives δ(n) ≥ 1/350 **for all sufficiently large n**, and says nothing about any particular n. The computation gives δ(n) ≥ 0.0462 for **every** composite non-prime-power n in [6, 10⁵] — a global statement over its range, with no exceptional set: the minimum is attained at n = 2759, well inside the range, and small n sit comfortably above it (δ = 0.400 at n = 6, 0.273 at n = 12). So 1/350 is conservative not merely as an eventual constant but as a global one, and no n is currently known at which δ is small.
+The comparison is worth making carefully, because the two statements have different quantifiers and the computation is the stronger of the two on that axis. The Theorem gives δ(n) ≥ 1/350 **for all sufficiently large n**, and says nothing about any particular n. The computation gives δ(n) ≥ 0.0462 for **every** composite non-prime-power n in [6, 10⁶] — a global statement over its range, with no exceptional set: the minimum is attained at n = 2759, well inside the range, and small n sit comfortably above it (δ = 0.400 at n = 6, 0.273 at n = 12). So 1/350 is conservative not merely as an eventual constant but as a global one, and no n is currently known at which δ is small.
 
 ## 5. Comparison with BBKN and Shparlinski
 
