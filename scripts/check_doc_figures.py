@@ -82,7 +82,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("table")
 ap.add_argument("docs", nargs="+")
 ap.add_argument("--pass", dest="only", default="all",
-                choices=["all", "figures", "scope", "prose", "hygiene", "census", "refs", "tables", "history", "s2"])
+                choices=["all", "figures", "scope", "prose", "hygiene", "census", "refs", "tables", "history", "s2", "witness"])
 ap.add_argument("--quiet", action="store_true", help="findings only")
 A = ap.parse_args()
 DOCS = [d for d in A.docs if d.endswith(".md")]
@@ -1369,6 +1369,110 @@ if A.only in ("all", "hygiene"):
                     print(f"{d} L{ln}  {what}: {m.group(1)[:90]}")
     if clean:
         print("none found.")
+
+# ------------------------------------------------------- PASS 10 witness-at-n
+#
+# WHY THIS PASS EXISTS.  Pass 1 checks numbers against the table's AGGREGATES,
+# and passes 5-7 check the documents against each other.  Neither reaches the
+# commonest kind of drift in these files: prose that names a particular n and
+# then says what wins there, or at what density.  A rebuild rewrites witnesses
+# row by row, so every such sentence silently becomes a claim about a superseded
+# table -- and it reads as perfectly current, because the n is real, the shape is
+# real, and only the pairing is stale.  Six such sentences survived four review
+# passes before this pass was written; each named an n whose winner had changed.
+#
+# WHAT IT MATCHES.  Two prose idioms, both anchored on an explicit n:
+#   * a backtick-quoted witness fragment near "n = N"  ->  compare against the
+#     row's own witness string, ignoring the p=/q= prefix and part order;
+#   * a density near "n = N" ("at n = 1817 to 0.0594", "n = 2183 at 0.048039")
+#     ->  compare against the row's density at the quoted precision.
+# Numbers appearing as part of a range, and n not in the table, are skipped.
+#
+# WHAT IT DELIBERATELY DOES NOT DO.  It does not judge: a sentence may name an n
+# and a shape that is admissible there without winning ("`19x61` is admissible at
+# n = 1159"), which is legitimate and common.  So a hit is reported with both
+# sides printed and the reader decides -- exactly like pass 1's old-checkpoint
+# matches.  Cheap: one regex sweep per document against a dict lookup.
+if A.only in ("all", "witness"):
+    print("\n" + "=" * 72); print("PASS 10  WITNESS AT N"); print("=" * 72)
+    BY_N = {r["n"]: r for r in rows}
+    def _shape(w):
+        # "p=251 q=13: 6x251 + 1x677*   (* foreign)" -> {"6x251", "1x677*"}
+        w = w.split(":")[-1].split("(")[0]
+        return {t.strip() for t in w.split("+") if "x" in t}
+    # The gap between the n and the claim must be SHORT and must not step over
+    # another n: "the floor is 0.048039 at n = 2183 (v4: 0.045742 at n = 1817)"
+    # pairs correctly only if the scan stops at the second "n =".  A generous
+    # window is what made the first version of this pass unusable, reporting a
+    # hit for every (n, number) pair in a sentence naming several of each.
+    GAP = r"(?:(?!n\s*=|n\s*[≤<])[^.\n])"
+    NW = re.compile(r"n\s*=\s*(\d{2,6})\b" + GAP + r"{0,60}?`([0-9]+x[0-9]+[^`]{0,40})`")
+    ND = re.compile(r"n\s*=\s*(\d{2,6})\b" + GAP + r"{0,50}?\b(0\.0\d{3,6})\b")
+    # An explicitly labelled historical or cross-artefact citation is exempt:
+    # "(v4: 0.045742 at n = 1817)" is a claim ABOUT a superseded table and is
+    # what the documents are supposed to say.  So is a LADDER or family-menu
+    # score, which is a lower bound and legitimately differs from B(n), and so
+    # is a class CEILING quoted beside an n.  The exemptions are deliberately
+    # keyword-based and visible: a pairing that wants one must say so in the
+    # sentence, which is the same discipline PASS 8 enforces on prose.
+    MARK = ("v2", "v3", "v4", "pre-repair", "pre-correction", "previous", "earlier",
+            "old", "superseded", "was ", "were ", "ladder", "worklist", "menu",
+            "mu_fast", "historic", "cap", "ceiling", "class", "descent", "b_lo",
+            "lower bound", "rises", "rose", "lifts", "lifted", "under the corrected")
+    RIGHT = ("cap", "ceiling", "class")     # "0.08579 for the classes they sit in"
+    def _exempt(line, lo, hi):
+        # The label must come BEFORE the figure, in the clause that introduces
+        # it -- looking rightwards for it lets an unrelated "(v4: ...)" later in
+        # the sentence exempt a current, wrong pairing, which is exactly the
+        # kind of near-miss this pass exists to catch.
+        left = line[max(0, lo - 70):lo].lower()
+        right = line[hi:hi + 25].lower()
+        return (any(k in left for k in MARK) or any(k in right for k in RIGHT)
+                or any(k in line.lower() for k in
+                       ("mu_fast", "ladder_verify", "worklist", "menu")))
+    hits = 0
+    for d in DOCS:
+        try: txt = open(d).read()
+        except OSError: continue
+        shown = False
+        for ln, line in enumerate(txt.split("\n"), 1):
+            for m in NW.finditer(line):
+                n = int(m.group(1)); frag = m.group(2)
+                if n not in BY_N or "x" not in frag: continue
+                claimed = _shape(frag)
+                if not claimed: continue
+                actual = _shape(BY_N[n]["witness"])
+                if claimed <= actual: continue
+                if _exempt(line, m.start(), m.end()): continue
+                if not shown: print(f"\n{d}:"); shown = True
+                hits += 1; findings += 1
+                print(f"   L{ln:<6} n = {n}: prose says `{frag}`,"
+                      f" table has `{BY_N[n]['witness'].split(':')[-1].split('(')[0].strip()}`")
+            for m in ND.finditer(line):
+                n = int(m.group(1)); dq = m.group(2)
+                if n not in BY_N: continue
+                act = BY_N[n]["density"]
+                if abs(act - float(dq)) < 0.5 * 10 ** -(len(dq) - 2): continue
+                # "0.0462099 at n = 2759" belongs to the n that FOLLOWS it, not
+                # to the one that preceded the sentence.  Lists of the form
+                # "0.041812 (n = 575) -> 0.041107 (n = 2183)" are entirely of
+                # this shape, and pairing leftwards there mis-reports every
+                # entry.  So a number carrying its own n on the right is skipped.
+                if re.match(r"[\s,)]*(?:at\s*)?\(?\s*n\s*[=≈]",
+                            line[m.end():m.end() + 25]): continue
+                if _exempt(line, m.start(), m.end()): continue
+                if not shown: print(f"\n{d}:"); shown = True
+                hits += 1; findings += 1
+                print(f"   L{ln:<6} n = {n}: prose says density {dq}, table has {act:.6f}")
+    if not hits:
+        print("no sentence names an n whose winner or density the table contradicts.")
+    else:
+        print(f"\n{hits} witness-at-n finding(s).")
+        print("Not all are errors: naming a shape that is ADMISSIBLE at an n without")
+        print("winning there is legitimate, and so is a deliberate historical citation.")
+        print("What the pass guarantees is that each such pairing was decided rather")
+        print("than inherited from a superseded table.")
+
 
 print("\n" + "=" * 72)
 print(f"{findings} finding(s) needing a decision.")

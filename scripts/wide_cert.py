@@ -340,7 +340,7 @@ if NO_THM:
     print("    and a theorem above it, not by condition (3);")
     print("  * condition (4)'s strip, licensed by Corollary C-prime, which inherits")
     print("    J0a at a >= 2 (automatic at a = 1).  Measured over v4 at n <= 1200:")
-    print("    24 strip decisions, all licensed, none at a >= 2.")
+    print("    42 strip decisions, all licensed, none at a >= 2.")
     print("Quote the result with those, not as the eight conditions alone.")
 else:
     print("Rerun with --no-theorems to establish that: it stubs the dispatch and")

@@ -1,0 +1,86 @@
+# Session log 12 — critical read of the notes, `ep` and `aod`, and the repairs it produced
+
+*Scope of the read: `orbital-evasiveness-notes.md` introductions and §§1–6 critically, §7 onward skimmed; `enumeration-proof.md` and `arithmetic-of-density.md` in full, with F.4 and §§6.7–6.8 deferred to the end; then `pending-checks.md` and `verification-lessons.md` against the findings. Scripts run: `validate_table_v3.py`, `converse_check.py` (prefix and `--all-rows`), `fallback_cert.py` (both modes), `wide_cert.py 10000`, `check_doc_figures.py`. Everything below is applied unless marked otherwise.*
+
+---
+
+## 1. The s-ladder, stated once (the A1 thread)
+
+**What the ladder is.** A fallback pair has c − 1 = s·r with the foreign block clearing B, so r(r−1) ≥ δ·n(n−1) and s ≤ (n−1)/r − 1, giving
+
+> **s < 1/√δ − 1, strictly** — hence **s ≤ K whenever δ > 1/(K+2)²**, and **branch s is reachable only when δ ≤ 1/(s+1)²**.
+
+So δ > 1/9 ⟹ s = 1 (which is what Theorem E.1 uses), δ > 1/16 ⟹ s ≤ 2, δ > 1/25 ⟹ s ≤ 3; and s = 3 opens at 1/16, s = 4 at 1/25, s = 5 at 1/36.
+
+**Why this kept moving.** E′'s Corollary contained three indexings of that one ladder at once: a first sentence one branch too generous at every rung (reading ≤ at the boundary), a "thresholds are 1/(s+2)²" clause that gave the *guarantee* threshold as the *opening* threshold, and a later parenthetical that was correct. Each editing pass repaired one of the three, read the paragraph as consistent because the correct clause was present, and left the other two. A sibling pass had already repaired the two "s = 4 and s = 5 open below 1/16" sentences in `ep` and corrected Basic.lean's header, which had substituted F.1's k-ladder for the s-ladder — that repair was right and stands; what remained was the Corollary itself and two downstream sentences.
+
+**Applied.** The Corollary now opens with the canonical sentence in bold and gives both indexings side by side with the strictness spelled out; the structural-bound box above it is restated as `s < 1/√δ − 1` with the ≥ forms (loose by one at the boundary) removed; notes Open Problem 8(b) now says s = 4 opens at 1/25 and s = 5 at 1/36, naming the offset against F.3's k-ladder; `aod` §7's "s ≤ 3.74" (computed from the stale 0.04453 floor) is now 3.65. **Nothing downstream else quotes a threshold independently — everything cites the Corollary.**
+
+## 2. Reasoning-level repairs
+
+**Theorem 3.1's "forced" clause (DUP block, both files).** The theorem claimed the per-part orbital sizes are *forced* for every Oliver group. Two of the three terms are not: a non-ΓL(1) stabiliser can exceed orb(c, d) (Part B's 3^{1+2} ≤ GL(3,7), ×9), and a 2-homogeneous block-permuter can exceed the cross coefficient (AGL(1,5) on five blocks, 10c² against 5c²). Both were already documented in boxes elsewhere and both exceed rather than fall short, so μ ≤ B_safe, Cor. 3.2 and F.4 are untouched. The theorem now states the terms as **upper bounds** in general and **exact for Part E's constructions**, with the scoping note attached.
+
+**The cyclic-layer budget is sufficient, not necessary.** Part 0 step 1, Part E's admissibility bullet and Part E's chain paragraph all presented "F_mid coprime to the foreign primes and to the other F_mid" as a condition on admissible configurations. It is not — the block-rotation image is a quotient, and the enumerator deliberately does not impose it, with three correct arguments in its `value()` comment (diagonal generator for F_mid-vs-twist, diagonal rotation for F_mid-vs-F_mid, counting for F_mid-vs-r). The prose was anti-permissive relative to the code. All three sites now say sufficient-for-building, with the code's arguments summarised and the divergence flagged as deliberate. *This is the same quotient-versus-subgroup error the documents warn about, surviving in the places that state the construction rather than the ones that state the cap.*
+
+**F.4's inequality (2) has no slack.** `converse_check.py` tested r ≥ δn and the documents read its measured minimum 2.003 as headroom pointing the same way as (1)'s cofactor slack. It is not headroom: orb(r,t) ≤ C(r,2) gives r ≥ √(δ·n(n−1)) outright, and any configuration with a foreign part has k ≥ 2 hence δ < 1/4, which turns that into r ≥ 2δn automatically. Both `ep` F.4's box and `aod` §6.7 now say so; **the sharpening question is one question about inequality (1)**. The script now tests the sharp form (tightest ratio 1.0004 at n = 2580).
+
+**The n/(n−1) fudge.** F.1 is k < √(n/((n−1)δ)), not k < 1/√δ, and the table exercises the difference: n = 1775 at δ = 0.062519 is above 1/16 yet permits k = 4. Recorded in Part F beside the search-size paragraph, with the note that E′'s s-bound and F.4's branch (a) carry the same fudge and should be quoted in the same form; the δ ≤ 1/16 tail is 7 rows, or 8 on the strict reading.
+
+**The class-11 runner-up is a tie, not a mod-24 split.** §3.3.5 and §6.6 gave the runner-up to F = 2 at η = 1/6 on the half n ≡ 11 (mod 24) and to F = 6 at η = 1/2 on the half n ≡ 23. With c mod 4 free (§3.2.3), r ≡ 5 (mod 8) is reachable at F = 2 in both halves, so both get both rungs, and cap₂(1/6) = cap₆(1/2) = (2 − √3)/4 identically. The row's own gotcha applies to it: a separation of a from a + 12 must come from a mod-8 condition, and every mod-8 condition here is constant on the class. The 0.0048 margin is unchanged, and this agrees with `sp-to-floor.md`'s "(6,4) and (2,12) → 0.066987".
+
+**Three smaller corrections.** S7 at F = 3 *ties* rather than loses at n ≡ 2, 8 (mod 12), where S3 is itself cut to 0.13397 and cap₃(1) = cap₁(1/3). The n = 531 row's cyclic rung *exists* at a worthless η (274) rather than not existing. `aod` §6.4's additive count included k = 1, i = 1 — n = r prime, outside the domain — so the tabulated counts are one high at every row; noted rather than re-tabulated, since the section uses the growth rate.
+
+## 3. Stale paragraphs that survived because nothing compared them
+
+Each of these contradicted a statement in its own document, which is `verification-lessons.md` §1's site 3 in its commonest form.
+
+- **`ep` Part I's three-part block.** "23 three-part winners, median B₃/B₂ 1.688, max 4.857" sat a few paragraphs below "there are now no three-part winners at all", and Part J item 1 still cited those margins. Replaced by the correct statement: the family is empty, and what closed the perturbation route is that a proof must *produce* a ≤3-part decomposition — which the empty family says more strongly.
+- **`ep` Part I's odd-n route table.** Recomputed from the table: of 897 odd values, 837 reach 1/12; routes are **348** with no even part, **55** with a 2-power block, **434** with an even fusion count at odd c; part counts 348 / 489 / 0. The corrected shape space moved the bulk of the table into the third row, which the old space could not express. The ω(n) ≥ 3 paragraph likewise: 217 values, all two-part, median density 0.1284 rather than 150 values with 97 three-part at 0.0957.
+- **`aod` §5's record-holder mechanism.** The paragraph under the confirmed floor described v4's n = 1817 — intra-bound, "the twist cut from 388 to 97 because F_mid = 2 strips the factor 4" — i.e. it asserted the F_mid strip the document forbids. n = 2183 is **foreign-bound** at orb(677, 169) = 114,413; rewritten, with 1817's full-twist value noted.
+- **`aod` §5.1's boxed proved statement** ended "with the minimum at n = 11183" and "B(2759) has not been computed", both contradicting §5 two paragraphs above. Now: minimum at n = 2759, next-lowest 0.04801 at 11183, and B(2759) = 175,813 is in the table and equals the ladder's score, which is what makes the minimum exact.
+- **n = 8927** was described as dropped from the worklist; it is in it at 0.0554.
+
+## 4. Figures contradicted by the shipped table or ladder
+
+All corrected, with the source of each in brackets: n = 1175's winner is `2x233 + 1x709*`, not `1x619* + 4x139` [3 sites]; n = 1159 is won by `4x173 + 1x467*` at 0.088683, so `19x61` is admissible there but not the winner [2 sites]; n = 2291 is 0.068522, not 0.066767 [3 sites]; one-part winners 743 with 738 at ω = 2 and five `6x p` exceptions (78, 222, 282, 894, 1434), not 777/773 with n = 1490 [4 sites]; F.4's counts 1,443 foreign primes and 743 all-matching rows, not 1,409/777; the `2×c + 257*` list is 16 rows with 459 and 783 removed (they are won by other shapes), not 18 or 20; r = 769 gives 5 winners, not 6; S5 has 21 winners, not 15; S7 at F = 2 has 396, not 395 [4 sites]; the worklist is 45,390 entries splitting 22,439 / 22,944, not 46,520 splitting 23,372 / 23,102; the ten lowest ladder entries are 2759, 11183, 2183, 6275, 1739, 10595, 5063, 3503, 2639, 15563; the sub-1/12 split is 6.7% odd / 0.08% even, not 12.2% / 0.2%; theorem-settled is 1,940 of 2,187 (88.7%) with residue 247, not 1,837 of 2,186 (84.0%) with 349; k ≤ 3 is free on 99.68% of the table, not 99.2%; the q-pinning census is 49,552 gate-passing parts at 90.4% e = 1, not 32,830 at 87.6%; and the four sites quoting the superseded ladder floor 0.04453 now carry 0.046210 with the derived D = 43 and margin 15.5%.
+
+*One figure I flagged and did not change:* the banners' "`validate_table_v3.py` 24 PASS / 0 FAIL". My run gives 23 PASS, but `pending-checks.md` R0/R1 already records 24 with `--baseline` supplied and 23 without, so the banner is correct as written and the discrepancy is the missing baseline file.
+
+## 5. Certificates, and the measurement T5 was owed
+
+`fallback_cert.py` on the completed table: **2,187 values, 0 candidates**; theorem-settled 1,940 (88.7%), s-branches 2,195 of 2,442 (89.9%), residue 247 all on E.3(ii)'s open promotion; largest permitted s = 3. `--no-theorems`: **still 0 candidates at 0 / 2,187 settled** — the two modes agree while the dispatch rate genuinely differs, so the comparison is evidence and not a tautology. `wide_cert.py 10000`: 8,719 / 8,719, 0 unresolved.
+
+**The condition-(4) strip trace, which `pending-checks.md` carried as ⟦PENDING-RERUN⟧, is now measured over the whole table.** Instrumenting `set_strip_trace()` under `--no-theorems`, so that no branch is dispatched away before the strip sees it: **42 decisions, 42 licensed, 0 at a ≥ 2** (v4 at n ≤ 1200 gave 24). So condition (4) never invokes the a ≥ 2 case anywhere in range, including at n = 2759, and the J0a exposure of the collapse is empty in fact. Updated in `pending-checks.md` (item 7 and T5) and in the three scripts that print the v4 figure from a stored string.
+
+**One thing J0a touches here that the header did not name.** Condition (4) caps a fallback part at F·orb(c, dmax). For that to be *necessary* the orb formula must bound the block's minimum intra-orbital once the share is dropped — true at ΓL(1) type, **false in general at a ≥ 2** by Part B's own extraspecial example. So the a ≥ 2 exposure is Corollary C′'s Frobenius step *and* the orb formula; at a = 1 neither bites. Same scope, same empirical discharge, and T5 now says both.
+
+## 6. Tooling
+
+**`converse_check.py`** — inequality (2) now tests the sharp, provable form r ≥ √(δ·n(n−1)) instead of r ≥ δn, with the docstring explaining why the old "factor 2" was arithmetic rather than headroom; and the maximum cofactor is now reported twice, once at the largest prime-power divisor of r − 1 and once at the row's **own** top prime, which is the quantity Lemma B′ actually confines. Both give 12 at n = 221, and the second is the one to quote if they ever diverge.
+
+**`check_doc_figures.py` — new PASS 10, "witness at n".** The gap the existing passes leave is prose that names a particular n and then says what wins there or at what density: pass 1 compares against aggregates, passes 5–7 compare documents against each other, and neither reaches a pairing. Six such sentences survived four review passes. The new pass matches two idioms anchored on an explicit n — a backtick-quoted `FxC` witness fragment, and a density — against that row in the CSV.
+
+Three design points, each found by the pass misfiring:
+- **The window must not step over another n.** A generous window reported every (n, number) pair in a sentence naming several of each; the gap pattern now refuses to cross `n =`.
+- **A number carrying its own n on the right belongs to that n.** "0.0462099 at n = 2759" and lists like "0.041812 (n = 575) → 0.041107 (n = 2183)" are entirely of this shape and were mis-paired leftwards; such matches are skipped.
+- **A historical label must come *before* the figure.** Looking rightwards for "v4" let an unrelated parenthetical later in the sentence exempt a current, wrong pairing — which is exactly the near-miss the pass exists for. Verified with a negative control: injecting a wrong witness at n = 2183 into a copy of `ep` is caught, and the same injection was *missed* under the rightward-looking version.
+
+The live run now reports **0 findings on this pass**, after three prose rewordings that put the label before the figure rather than after it (`ep` F.2's box, `aod` §5's CONFIRMED sentence, `aod` §5.1's n = 935 ladder note).
+
+## 6a. Post-hoc confirmation, once `ceiling_rederive.py` and the v4 baseline arrived
+
+**The class-11 runner-up correction is confirmed by scan, not only by congruences.** `ceiling_rederive.py` has no runner-up mode — its sup maximises over F, so a second-best at another F is invisible — so I added `--runners`, which takes the sup **per fusion count and per mod-24 half**. Over n ∈ [30000, 60000]: at n ≡ 11 (mod 24), F = 2 reaches 0.066981 at η = 1/6 and F = 6 reaches 0.066978 at η = 1/2; at n ≡ 23, the same two routes reach 0.066973 and 0.066972. All four sit within 2·10⁻⁵ of (2 − √3)/4, with F = 4 above them at 0.071791 / 0.071788 and F = 8 far below at 0.0481. **Both routes are live in both halves**, which is the tie the correction asserts and not the split the mod-24-era text had. Recorded in `aod` §3.3.5 and in `pending-checks.md` T6, where it also bears on T5a's live question.
+
+**The ceiling table itself re-derives cleanly** on the shipped script: all six classes at ratio 0.9996–0.9999 with the expected (F, η) at each, and `--mod12` reporting every pair {a, a+12} in agreement on cap, F and η.
+
+**With `mu_table_safe_v4.csv` as `--baseline`, `validate_table_v3.py` gives 24 PASS / 0 FAIL / 14 INFO / 2 SKIP**, confirming the banners' figure; the 23 I measured earlier was the baseline-only checks skipping, exactly as `pending-checks.md` R0/R1 records.
+
+## 7. Verified and found clean
+
+Theorems 2.1, 2.2, 2.3 and C.1's closed form; Lemma B′ including Step 0 and Case 2; Lemma C's conjugation argument; D1, D2 and D2q in full; E.1–E.4 including E.3(ii)'s chain and gcd argument; F.1, F.2; G.0's r | d ⟺ r | d′; the entangled-generator construction rebuilt abstractly (which is what makes the S2 identity unconditional); the worked terms at n = 308, 1460, 273, 253, 531, 2025, 2759; §7.2's single-prime attack lists; S6's cap formula; the ladder's 45,390 entries with floor 175813/3804661 uniquely at 2759 and next-lowest 0.04801; and on the CSV, F.1, feasibility, G.4, the S2 identity, cap_F(η), certified_K and part-count distributions, and the seven-row 1/16 tail.
+
+## 8. Left open
+
+Not run: the GAP scripts (`verify_witness.g`, `ark_shapes.g`), `ceiling_rederive.py`, `audit_fmid.py`, `ladder_verify.py` itself. Not checked: §3.8's counts, §4.3's measurements, §6.1/§6.4's shape counts, all of §6.9, and every literature citation, including the §6.8(iii)–(iv) constants, which rest on readings of Shparlinski and Balog–Sárközy. Not re-read individually: `fb_common.py`'s eight necessity arguments (T3) and `multi_part_ok`'s decomposition search, whose inconclusive path never fired in range.
+
+**One item worth adding to the work list.** `aod` §6.7's four named differences in the round trip should be five: branch (b) returns "r is a part of *some* admissible configuration", i.e. n − r decomposes into further parts, not the single prime power (BCG) demands. That is §6.6's disjunction, and it belongs in the list of what "equivalent up to constants" is glossing.

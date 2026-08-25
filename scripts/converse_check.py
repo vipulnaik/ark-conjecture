@@ -10,15 +10,17 @@ and yields three inequalities that any winner must satisfy:
   (1) foreign parts:  (r-1)/Q <= 2/delta,  Q the largest prime-power divisor
                       of r-1.  This is the statement's content: r-1 carries a
                       prime-power divisor of BOUNDED COFACTOR.
-  (2) foreign parts:  r >= delta*n.  The prime is linear in n.  NOTE this is a
-                      SHARPENING of what F.4 proves, not F.4's own inequality:
-                      the Proposition concludes r >= delta*(n-1)/2, and the
-                      factor-2 improvement comes from combining the foreign
-                      intra cap F*C(r,2) with F <= n/r rather than from F.4's
-                      proof.  So a violation here would contradict the sharper
-                      form, and F.4 as stated only if it exceeded 2x.  Kept in
-                      the sharp form because that is what the table satisfies
-                      and what a sharpening question would consume.
+  (2) foreign parts:  r >= n*sqrt(delta*(n-1)/n).  The prime is linear in n.
+                      This is the SHARP form, and it is a theorem rather than a
+                      slack observation: orb(r,t) <= C(r,2) forces
+                      r(r-1) >= delta*n(n-1) directly.  It is strictly stronger
+                      than F.4's own r >= delta*(n-1)/2 and stronger again than
+                      r >= 2*delta*n -- which is why the old "r/(delta*n) ~ 2"
+                      reading was NOT evidence of headroom: any configuration
+                      with a foreign part has k >= 2, hence delta < 1/4, hence
+                      sqrt(delta) > 2*delta automatically.  Only inequality (1)
+                      carries genuine slack, so the sharpening question is one
+                      question about one inequality.
   (3) all-matching:   n = M*p^b with M <= 1/delta, p^b a prime power.  This is
                       the branch that makes the exceptional set density zero
                       and so licenses the "almost all" in the statement.  It is
@@ -68,6 +70,7 @@ Exit status 1 if any inequality fails.
 
 import argparse
 import csv
+import math
 import re
 import sys
 
@@ -75,6 +78,8 @@ from fb_common import Arith
 
 # Foreign primes are starred in the witness column: "p=277 q=2: 1x619* + 4x139".
 FOREIGN = re.compile(r"(\d+)\*")
+# The configuration's own top prime, e.g. "p=277 q=2: ...".
+QTOP = re.compile(r"q=(\d+)")
 
 
 def load(path, nmax, contiguous_only=True, frontier=None, gap=10):
@@ -115,7 +120,7 @@ def load(path, nmax, contiguous_only=True, frontier=None, gap=10):
 def check(rows, ar, delta0=None, verbose=False):
     res = {"foreign": 0, "onepart": 0, "multimatch": 0, "unchecked": [],
            "v1": [], "v2": [], "v3": [],
-           "max_cofactor": (0, None),
+           "max_cofactor": (0, None), "max_cofactor_q": (0, None),
            "tight1": (0.0, None), "tight2": (9e9, None), "tight3": (0.0, None)}
 
     for row in rows:
@@ -137,6 +142,21 @@ def check(rows, ar, delta0=None, verbose=False):
             res["foreign"] += 1
             Q = ar.largest_pp_divisor(r - 1)
             cof = (r - 1) / Q
+            # The row's OWN top prime is the sharper measurement, and it is the
+            # one F.4 is about: Lemma B' confines the foreign twist to a power
+            # of q, so the largest prime-power divisor of r - 1 is an upper
+            # bound on what the configuration can actually use.  Both are
+            # reported; if they ever disagree on the maximum, the q-keyed one is
+            # the constant to quote.
+            mq = QTOP.search(row["witness"])
+            if mq:
+                q = int(mq.group(1))
+                tq = 1
+                while (r - 1) % (tq * q) == 0:
+                    tq *= q
+                cofq = (r - 1) / tq
+                if cofq > res["max_cofactor_q"][0]:
+                    res["max_cofactor_q"] = (cofq, (n, r, tq))
             bound1 = 2 / d
             if cof > bound1:
                 res["v1"].append((n, r, Q, round(cof, 2), round(bound1, 2)))
@@ -145,10 +165,14 @@ def check(rows, ar, delta0=None, verbose=False):
             if cof > res["max_cofactor"][0]:
                 res["max_cofactor"] = (cof, (n, r, Q))
 
-            if r < d * n:
-                res["v2"].append((n, r, round(d * n, 1)))
-            if r / (d * n) < res["tight2"][0]:
-                res["tight2"] = (r / (d * n), (n, r))
+            # (2) in its SHARP form: r >= sqrt(delta*n*(n-1)).  The old test
+            # was r >= delta*n, which is implied by this one at every delta
+            # below 1/4 and so could never fail first.
+            need2 = math.sqrt(d * n * (n - 1))
+            if r < need2 - 1e-9:
+                res["v2"].append((n, r, round(need2, 1)))
+            if r / need2 < res["tight2"][0]:
+                res["tight2"] = (r / need2, (n, r))
 
         # (3): the all-matching branch = branch (a) = NO foreign part at all.
         # Identified by the absence of a starred prime in the witness rather than
@@ -214,7 +238,7 @@ def main():
     print("-" * 72)
     print(rowsfmt.format("(1) (r-1)/Q <= 2/delta   [the statement's content]",
                          R["foreign"], len(R["v1"])))
-    print(rowsfmt.format("(2) r >= delta*n         [prime is linear in n]",
+    print(rowsfmt.format("(2) r >= sqrt(delta*n*(n-1))  [prime is linear in n]",
                          R["foreign"], len(R["v2"])))
     print(rowsfmt.format("(3) M <= 1/delta, n=M*p^b [licenses 'almost all']",
                          R["onepart"], len(R["v3"])))
@@ -233,7 +257,7 @@ def main():
         print(f"tightest (1): ratio/bound {R['tight1'][0]:.4f} at "
               f"n,r,Q = {R['tight1'][1]}")
     if R["tight2"][1]:
-        print(f"tightest (2): r/(delta*n) {R['tight2'][0]:.3f} at n,r = {R['tight2'][1]}")
+        print(f"tightest (2): r/sqrt(delta*n*(n-1)) {R['tight2'][0]:.4f} at n,r = {R['tight2'][1]}")
     if R["tight3"][1]:
         print(f"tightest (3): M/(1/delta) {R['tight3'][0]:.4f} at "
               f"n,p^b,M = {R['tight3'][1]}")
@@ -242,6 +266,10 @@ def main():
     mc, where = R["max_cofactor"]
     if where:
         print(f"MAX COFACTOR (r-1)/Q anywhere: {mc:.0f}  at n,r,Q = {where}")
+        mcq, whereq = R["max_cofactor_q"]
+        if whereq:
+            print(f"MAX COFACTOR (r-1)/q^e at the row's OWN top prime: {mcq:.0f}"
+                  f"  at n,r,q^e = {whereq}")
         print(f"   compare (H)'s own d <= 12.  Quoted in `ep` F.4 and `aod` 6.7;")
         print(f"   edit both if this moves.")
         bound = 2 / (A.delta0 if A.delta0 else floor)

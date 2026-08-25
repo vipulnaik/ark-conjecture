@@ -115,6 +115,9 @@ def main():
     ap.add_argument("--nmax", type=int, default=30000)
     ap.add_argument("--no-filter", action="store_true",
                     help="include section 3.3.8's escapes (expect exceedances)")
+    ap.add_argument("--runners", action="store_true",
+                    help="at n = 11 (mod 12), report the sup per fusion count "
+                         "and per mod-24 half -- the RUNNER-UP check")
     ap.add_argument("--mod12", action="store_true",
                     help="also check that each pair {a, a+12} agrees")
     args = ap.parse_args()
@@ -193,6 +196,46 @@ def main():
                 rc = 1
             print(f"  {a:>2} vs {a+12:>2}: {x[0]:.5f} / {y[0]:.5f}  "
                   f"F,eta {fx} / {fy}   {'agree' if ok else 'DISAGREE'}")
+
+    if args.runners:
+        # THE RUNNER-UP, WHICH IS A DIFFERENT QUESTION FROM THE CEILING.
+        # section 6.6's disjunction-collapse needs the gap from the winner to
+        # the NEXT shape down, so it needs the second-best (F, eta) and not just
+        # the best.  The sup above cannot supply it: it maximises over F, so a
+        # runner-up at another F is invisible.  Here the sup is taken per F and
+        # per mod-24 half, which is what distinguishes "both halves reach the
+        # runner-up by both routes" from "each half reaches it by one".
+        print("\nrunner-up at n = 11 (mod 12), per fusion count and per mod-24 half")
+        print(f"{'half':>5} {'F':>2} {'sup':>9} {'eta':>7}  witness")
+        per = {}
+        for n in range(N // 2 | 1, N + 1, 2):
+            if n % 24 not in (11, 23):
+                continue
+            for F in (2, 4, 6, 8):
+                hi = bisect.bisect_right(cand, n // F)
+                for c in cand[:hi]:
+                    r = n - F * c
+                    if r < 5 or not sieve[r]:
+                        continue
+                    t = twist(r - 1, generic)
+                    if t == 1:
+                        continue
+                    m = min(F * comb(c, 2), (F // 2) * c * c, orb(r, t), F * c * r)
+                    d = m / comb(n, 2)
+                    k = (n % 24, F)
+                    if k not in per or d > per[k][0]:
+                        per[k] = (d, 2 * t / (r - 1), n, c, r)
+        for h in (11, 23):
+            for F in (2, 4, 6, 8):
+                if (h, F) in per:
+                    d, eta, n, c, r = per[(h, F)]
+                    print(f"{h:>5} {F:>2} {d:9.6f} {eta:7.4f}  n={n} c={c} r={r}")
+        print("  expected: F = 4 at eta = 1/3 attains 7-4sqrt3 = 0.071797 in BOTH")
+        print("  halves, and the runner-up (2-sqrt3)/4 = 0.066987 is a TIE reached")
+        print("  in BOTH halves at F = 2 (eta = 1/6) and at F = 6 (eta = 1/2) --")
+        print("  cap_2(1/6) = cap_6(1/2) identically, by cap_F(eta) = cap_1(F eta)/F.")
+        print("  A split -- F = 2 in one half, F = 6 in the other -- is the mod-24-era")
+        print("  reading, and would need a mod-8 condition that is constant on the class.")
 
     if not generic:
         print("\nExceedances here are section 3.3.8's escapes, not counterexamples:"

@@ -156,8 +156,8 @@ if not bad:
         print("  * Condition (4)'s strip is licensed by Corollary C-prime, whose Lemma C")
         print("    step pins the multiplier by a Frobenius exponent -- automatic at")
         print("    a = 1, but assuming a semilinear stabiliser (J0a, open) at a >= 2.")
-        print("    Measured over v4 at n <= 1200: 24 strip decisions, all licensed,")
-        print("    NONE at a >= 2, so the J0a exposure is empty in fact over that range")
+        print("    Measured over the completed table: 42 strip decisions, all")
+        print("    licensed, NONE at a >= 2, so the J0a exposure is empty in fact there")
         print("    -- a measurement to repeat on the rebuild, not a theorem.")
     else:
         print()

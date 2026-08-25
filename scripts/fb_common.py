@@ -41,7 +41,7 @@ should be named wherever the slogan is quoted:
     a >= 2 it assumes the stabiliser is semilinear, which is open (J0a).  Set
     set_strip_trace() and count how many LICENSED strips fire at a >= 2 to
     measure the exposure rather than argue about it.  Measured on the v4 table
-    over n <= 1200: 24 strip decisions, all licensed, NONE at a >= 2 -- so the
+    over the completed table: 42 strip decisions, all licensed, NONE at a >= 2 -- so the
     a >= 2 case is not reached there and the exposure is empty in fact over that
     range.  Repeat the count on every extension; one licensed strip at a >= 2
     puts J0a back into the collapse's trusted base.
