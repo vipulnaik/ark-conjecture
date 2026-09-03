@@ -171,6 +171,26 @@ Both clear on the current documents, as do I1–I5.
 
 **Θ(n²) → Ω(n²) and O(n² log n)** in both k-notes: the Galois gain is the least prime divisor of a, which is unbounded, and §6's own c = 32 case realises a gain of 5. The lower bound is what the evasiveness statement uses and is clean; the log rides on the upper bound.
 
+## 3b. J0a: wrapped up at k = 2, reduced at k ≥ 3
+
+*A consolidation pass rather than a new finding — J0a was scattered across five documents in three different states, and the fixes of §1.2 had changed its status without anyone updating the entries.*
+
+**The disposition, stated once.** J0a asks whether a matching block's stabiliser lies in the field's multiplicative group, when in principle it can be any irreducible subgroup of GL(a, p). It splits three ways:
+
+1. **Neither direction of μ(n) = B(n) touches it.** The upper bound is the flat cap — F·C(c,2) within a class, sᵢsⱼ between orbits — and both are counting bounds on the pair set, not statements about the group, so μ ≤ B_safe holds whatever the stabiliser is. The lower bound is Part E's explicit construction, which uses field twists and which a richer stabiliser could only supplement. **So every computed value is J0a-free**, and after §1.2 so is the collapse over the certified range: flat caps plus `--no-theorems` gives an empty candidate list, so neither Lemma C, nor Corollary C′, nor J0a enters the per-n proof.
+2. **At a fixed twist order, a non-field stabiliser cannot beat the field one** — orbit–stabiliser bounds any orbit by |H|, and the field subgroup of that order is semiregular, attaining the bound everywhere at once. This is T2, and it is a proof.
+3. **A non-field stabiliser of *larger* order is the residue**, which (2) does not reach: 3^{1+2} ≤ GL(3, 7) has order 27, and 27 ∤ 342 = 7³ − 1. **It bears on exactly one clause in the k = 2 documents** — E.3(i)'s "worth at most c to any actual group", which reads Lemma C on a block at a ≥ 2. That clause is theorem-side; the certificates never invoke it, and the branch is base-3 repunit primes, three values of c below 4×10⁶.
+
+**So the honest one-line status is: closed for every computed value and for the certified collapse; open in one theorem-side clause governing statements about all n.** That is a stronger position than any of the five documents recorded — three said "largely discharged" on the strength of T2 alone, which is the weaker of the two arguments and does not reach case (3).
+
+**What changed in the files.** `enumeration-proof.md`'s gap-inventory entry rewritten around the flat cap with the three cases separated and (3) pinned to E.3(i); a caveat added at E.3(i) itself, which is now the only clause in that document assuming semilinearity. `pending-checks.md` item 5 and T2 updated the same way — and T2's strip measurement (42 decisions, none at a ≥ 2) is marked **historical**, since the cap it measured no longer exists: keeping it as a live discharge would protect a condition the code does not contain. The reason the old cap was doubly exposed — Corollary C′'s Frobenius step *and* the orb formula itself — is kept as the reason not to reinstate it.
+
+**At k ≥ 3 case (3) is load-bearing rather than incidental**, there being no flat cap: C(c, k) sits far above the truth and the whole content of m\*_k = O(n² log n) is that the block group is small. `general-k-note.md` §1 carries **(J0a′)** — a non-semilinear Oliver-admissible block group never wins the minimum k-orbit — with a component-argument reduction uniform in k. **Proving it closes case (3) at every arity at once, k = 2's E.3(i) included**, which makes it the one item worth doing here rather than five.
+
+**Not done, and it is the substance:** J0a′ itself. The reduction is a sketch, and its m = 1 branch (H = C·Q with Q primitive irreducible) needs the primitivity bound stated properly before it is cited.
+
+> **A process note.** An edit to `enumeration-proof.md` truncated the file to zero bytes — a Python string containing a surrogate pair raised `UnicodeEncodeError` *after* `open(P, 'w')` had already truncated it. Recovered intact from the outputs copy, and subsequent edits were written to a temporary file and renamed. Worth keeping the pattern: any edit helper that opens for writing before serialising can destroy the file it is editing, and the failure looks like an unrelated encoding error.
+
 ## 4. Not examined
 
 Left untouched by this pass, and unverified by it: `notes` §§7–11 and appendices; `aod` §§3.5–3.8, §4, §6.9; `ep` Parts G–J; `verification-lessons.md`; `literature-findings.md` beyond its headers; the GAP scripts. `wide_cert.py`'s B_lo families were partly examined — the missing fused rung was found and fixed (§1.2b) — but `two_part_lo`, `fused_lo`, the menu top-up and the **share-pair guard** were not. The guard is the one that matters: it exists because an over-credited B_lo is anti-permissive, feeding the s_max and foreign-cap filters and dropping candidates silently, and that half remains unexercised. It is the natural next item after T3. Nothing in the deferred material was needed for the findings above, but the B_lo families named above are now the least examined part of the certificate chain and are the natural next item after T3.
