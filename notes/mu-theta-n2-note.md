@@ -18,7 +18,7 @@ Throughout we measure μ against the number of pairs, writing
 
 for the *density*. All constants below are stated in this unit; since C(n,2) ~ n²/2, a density δ corresponds to about δn²/2 edges.
 
-The relevance is the standard orbital-annihilation argument, which we recall to fix conventions. Let P be a nontrivial monotone-decreasing graph property on n vertices, and Δ(P) its simplicial complex on the vertex set E(K_n). If P is nonevasive then Δ(P) is collapsible, hence ℤ-acyclic; Oliver's theorem then gives χ(Δ(P)^Γ) = 1 for any Oliver group Γ. But Δ(P)^Γ consists of the Γ-invariant graphs in P, and every such graph is a union of u-orbitals. So if every u-orbital of Γ exceeds the edge budget of P, the only invariant member is the empty graph, χ(Δ(P)^Γ) = 0, and we have a contradiction. Hence:
+The relevance is the standard orbital-annihilation argument, which we recall to fix conventions. Let P be a nontrivial monotone-decreasing graph property on n vertices, and Δ(P) its simplicial complex on the vertex set E(K_n). If P is nonevasive then Δ(P) is collapsible, hence ℤ-acyclic; Oliver's theorem then gives χ(Δ(P)^Γ) ≡ 1 (mod q) for any Oliver group Γ with top q-group. But Δ(P)^Γ consists of the Γ-invariant graphs in P, and every such graph is a union of u-orbitals. So if every u-orbital of Γ exceeds the edge budget of P, the only invariant member is the empty graph, χ(Δ(P)^Γ) = 0, and 0 ≡ 1 (mod q) is false for every prime q — a contradiction. (When the top is trivial the congruence is an equality χ = 1 and the same contradiction is immediate.) Hence:
 
 > **Proposition 1.** If every graph in P has fewer than μ(n) edges, then P is evasive.
 
@@ -109,11 +109,11 @@ where the first factor acts on A by all affine maps x ↦ λx + β, and the seco
 
 which is cyclic precisely because gcd(c−1, r) = 1 — this is what condition 4 of (BCG_{1/5}) secures.
 
-**Orbitals.** Within A: the translations make pairs equivalent to their differences, and (ℤ/c)\* acts transitively on those, so all C(c,2) pairs form one orbital. Within B: differences are scaled by C_t, giving orbitals of size rt/2 if t is even and rt if t is odd, capped at C(r,2). Across: all cr mixed pairs form one orbital. Hence
+**Orbitals.** Within A: the translations make pairs equivalent to their differences, and (ℤ/c)\* acts transitively on those, so all C(c,2) pairs form one orbital. Within B: differences are scaled by C_t, giving orbitals of size rt/2 if t is even and rt if t is odd, capped at C(r,2). **For every n covered by (BCG_{1/5}) the value is rt**, since t = q is an odd prime: t even would force q = 2 and hence r = 2d + 1 ≤ 25, excluded by r ≥ n/5. Across: all cr mixed pairs form one orbital. Hence
 
-> m\*(Γ) = min { C(c,2), rt/2, cr } ≥ min { C(c,2), r(r−1)/24, cr } ≥ C(n,2)/350
+> m\*(Γ) ≥ min { C(c,2), rt/2, cr } ≥ min { C(c,2), r(r−1)/24, cr } ≥ C(n,2)/350
 
-for n large, using c, r ≥ n/5.
+for n large, using c, r ≥ n/5. **The rt/2 is a deliberate under-count**: carrying the true rt would replace r(r−1)/24 by r(r−1)/12 and halve every constant below, giving 1/175 in place of 1/350. We keep the crude form throughout, since the Theorem needs only a positive constant and the halved bound is one fewer case to check.
 
 ### Odd n = 2c + r
 
@@ -127,9 +127,9 @@ with (ℤ/c)² translating A₁ and A₂ independently and C_(c−1) acting **di
 
 **Orbitals.** C(c,2) within each A_i; c² between A₁ and A₂; the B-orbitals as before; cr from each A_i to B. Hence
 
-> m\*(Γ) = min { C(c,2), c², rt/2, cr } ≥ C(n,2)/350
+> m\*(Γ) ≥ min { C(c,2), c², rt/2, cr } ≥ C(n,2)/350
 
-again. This proves the Theorem with **δ₀ = 1/350**, i.e. roughly n²/700 edges. Both bounds come from minimising 2·min{ x²/2, y²/24, xy } — respectively 2·min{ x²/2, x², y²/24, xy } — over the region cut out by condition 2 — x = c/n and y = r/n both at least 1/5, with x + y = 1 (even) or 2x + y = 1 (odd) — the factor 2 converting from n² to C(n,2). The worst density is **1/300** in each case, attained at the corner where the foreign block is smallest, so 1/350 is slack but not by much.
+again. This proves the Theorem with **δ₀ = 1/350**, i.e. roughly n²/700 edges. Both bounds come from minimising 2·min{ x²/2, y²/24, xy } — respectively 2·min{ x²/2, x², y²/24, xy } — over the region cut out by condition 2 — x = c/n and y = r/n both at least 1/5, with x + y = 1 (even) or 2x + y = 1 (odd) — the factor 2 converting from n² to C(n,2). The worst density is **1/300** in each case, attained at the **corner** where the foreign block is smallest — not at the balanced point, and not at equal blocks — so 1/350 is slack but not by much. (With the true rt the same minimisation gives 1/150, and δ₀ = 1/175 would serve.)
 
 **Verification.** Both constructions have been checked by direct computation of the permutation groups and their orbit decompositions on pairs. For n = 12 = 5 + 7 with t = 3: |Γ| = 420 and the orbitals are {10, 21, 35}. For n = 17 = 2·5 + 7: |Γ| = 2100 and the orbitals are {10, 10, 21, 25, 35, 35}.
 
@@ -139,7 +139,7 @@ One infinite family needs no hypothesis. For n = 2m with m a prime power, take t
 
 > μ(2m) ≥ m(m−1), i.e. δ(n) = 1/2 − o(1).
 
-This is best possible up to the o(1): for non-prime-power n an Oliver group has at least two u-orbitals, which partition the C(n,2) pairs, so m\*(Γ) ≤ ⌊C(n,2)/2⌋ and δ(n) ≤ 1/2. (Density 1 would force 2-homogeneity, hence primitivity, hence prime-power degree.)
+This is best possible up to the o(1): for non-prime-power n an Oliver group has at least two u-orbitals, which partition the C(n,2) pairs, so m\*(Γ) ≤ ⌊C(n,2)/2⌋ and δ(n) ≤ 1/2. (Density 1 would force 2-homogeneity, hence primitivity; an Oliver group is solvable, and a solvable primitive group has prime-power degree.)
 
 The constant δ₀ above is deliberately crude. Optimising the block sizes and the efficiency t/(r−1) gives materially better constants. The local conditions at the primes 2 and 3 depend on n modulo 12, but the optimised constants are keyed **modulo 12** as well, with the residue entering through the efficiency available to the foreign block; the optimisation is finer, the modulus the same.
 

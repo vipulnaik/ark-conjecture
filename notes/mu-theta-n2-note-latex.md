@@ -13,7 +13,7 @@ Throughout we measure $\mu$ against the number of pairs, writing
 $$\delta(n) \;=\; \mu(n)\big/\tbinom{n}{2}$$
 for the *density*. All constants below are stated in this unit; since $\binom{n}{2} \sim n^2/2$, a density $\delta$ corresponds to about $\delta n^2/2$ edges.
 
-The relevance is the standard orbital-annihilation argument, which we recall to fix conventions. Let $P$ be a nontrivial monotone-decreasing graph property on $n$ vertices, and $\Delta(P)$ its simplicial complex on the vertex set $E(K_n)$. If $P$ is nonevasive then $\Delta(P)$ is collapsible, hence $\mathbb{Z}$-acyclic; Oliver's theorem then gives $\chi(\Delta(P)^\Gamma) = 1$ for any Oliver group $\Gamma$. But $\Delta(P)^\Gamma$ consists of the $\Gamma$-invariant graphs in $P$, and every such graph is a union of u-orbitals. So if every u-orbital of $\Gamma$ exceeds the edge budget of $P$, the only invariant member is the empty graph, $\chi(\Delta(P)^\Gamma) = 0$, and we have a contradiction. Hence:
+The relevance is the standard orbital-annihilation argument, which we recall to fix conventions. Let $P$ be a nontrivial monotone-decreasing graph property on $n$ vertices, and $\Delta(P)$ its simplicial complex on the vertex set $E(K_n)$. If $P$ is nonevasive then $\Delta(P)$ is collapsible, hence $\mathbb{Z}$-acyclic; Oliver's theorem then gives $\chi(\Delta(P)^\Gamma) \equiv 1 \pmod q$ for any Oliver group $\Gamma$ with top $q$-group. But $\Delta(P)^\Gamma$ consists of the $\Gamma$-invariant graphs in $P$, and every such graph is a union of u-orbitals. So if every u-orbital of $\Gamma$ exceeds the edge budget of $P$, the only invariant member is the empty graph, $\chi(\Delta(P)^\Gamma) = 0$, and $0 \equiv 1 \pmod q$ is false for every prime $q$ --- a contradiction. (When the top is trivial the congruence is an equality $\chi = 1$ and the same contradiction is immediate.) Hence:
 
 > **Proposition 1.** If every graph in $P$ has fewer than $\mu(n)$ edges, then $P$ is evasive.
 
@@ -94,9 +94,9 @@ where the first factor acts on $A$ by all affine maps $x \mapsto \lambda x + \be
 
 *Oliver's condition.* Take $\Gamma_2 = \mathbb{Z}/c$ (translations of $A$), a $c$-group; $\Gamma_1 = \mathrm{AGL}(1,c) \times (\mathbb{Z}/r)$; and $\Gamma/\Gamma_1 = C_t$, a $q$-group. Then $\Gamma_1/\Gamma_2 \cong C_{c-1} \times C_r$, which is cyclic precisely because $\gcd(c-1, r) = 1$ — this is what condition 4 of (BCG$_{1/5}$) secures.
 
-*Orbitals.* Within $A$: the translations make pairs equivalent to their differences and $(\mathbb{Z}/c)^\times$ acts transitively on those, so all $\binom{c}{2}$ pairs form one orbital. Within $B$: differences are scaled by $C_t$, giving orbitals of size $rt/2$ if $t$ is even and $rt$ if odd, capped at $\binom{r}{2}$. Across: all $cr$ mixed pairs form one orbital. Hence
-$$m^*(\Gamma) \;=\; \min\Bigl\{\tbinom{c}{2},\; \tfrac{r t}{2},\; cr\Bigr\} \;\ge\; \min\Bigl\{\tbinom{c}{2},\; \tfrac{r(r-1)}{24},\; cr\Bigr\} \;\ge\; \tfrac{1}{350}\tbinom{n}{2}$$
-for $n$ large, using $c, r \ge n/5$.
+*Orbitals.* Within $A$: the translations make pairs equivalent to their differences and $(\mathbb{Z}/c)^\times$ acts transitively on those, so all $\binom{c}{2}$ pairs form one orbital. Within $B$: differences are scaled by $C_t$, giving orbitals of size $rt/2$ if $t$ is even and $rt$ if odd, capped at $\binom{r}{2}$. \textbf{For every $n$ covered by (BCG$_{1/5}$) the value is $rt$}, since $t = q$ is an odd prime: $t$ even would force $q = 2$ and hence $r = 2d+1 \le 25$, excluded by $r \ge n/5$. Across: all $cr$ mixed pairs form one orbital. Hence
+$$m^*(\Gamma) \;\ge\; \min\Bigl\{\tbinom{c}{2},\; \tfrac{r t}{2},\; cr\Bigr\} \;\ge\; \min\Bigl\{\tbinom{c}{2},\; \tfrac{r(r-1)}{24},\; cr\Bigr\} \;\ge\; \tfrac{1}{350}\tbinom{n}{2}$$
+for $n$ large, using $c, r \ge n/5$. \textbf{The $rt/2$ is a deliberate under-count}: carrying the true $rt$ would replace $r(r-1)/24$ by $r(r-1)/12$ and halve every constant below, giving $1/175$ in place of $1/350$. We keep the crude form throughout, since the Theorem needs only a positive constant and the halved bound is one fewer case to check.
 
 **Odd $n = 2c + r$.** Now take two blocks $A_1, A_2$ of size $c$ and one block $B$ of size $r$, and let
 $$\Gamma \;=\; \Bigl(\bigl(\mathbb{Z}/c\bigr)^2 \rtimes C_{c-1}\Bigr) \;\times\; \bigl(\mathbb{Z}/r \rtimes C_t\bigr),$$
@@ -105,8 +105,8 @@ with $(\mathbb{Z}/c)^2$ translating $A_1$ and $A_2$ independently and $C_{c-1}$ 
 *Oliver's condition.* As before, with $\Gamma_2 = (\mathbb{Z}/c)^2$ and $\Gamma_1/\Gamma_2 \cong C_{c-1} \times C_r$ cyclic. The diagonal action is essential: two independent copies of $C_{c-1}$ would make $\Gamma_1/\Gamma_2$ non-cyclic and destroy the chain.
 
 *Orbitals.* $\binom{c}{2}$ within each $A_i$; $c^2$ between $A_1$ and $A_2$; the $B$-orbitals as before; $cr$ from each $A_i$ to $B$. Hence
-$$m^*(\Gamma) \;=\; \min\Bigl\{\tbinom{c}{2},\; c^2,\; \tfrac{rt}{2},\; cr\Bigr\} \;\ge\; \tfrac{1}{350}\tbinom{n}{2}$$
-again. This proves the Theorem with $\delta_0 = 1/350$, i.e. roughly $n^2/700$ edges. Both bounds come from minimising $2\min\{x^2/2,\ y^2/24,\ xy\}$ (respectively $2\min\{x^2/2,\ x^2,\ y^2/24,\ xy\}$) over the region cut out by condition 2 — $x = c/n$ and $y = r/n$ both at least $1/5$, with $x+y=1$ (even) or $2x+y=1$ (odd) — the factor $2$ converting from $n^2$ to $\binom{n}{2}$. The worst density is $1/300$ in each case, attained at the corner where the foreign block is smallest, so $1/350$ is slack but not by much.
+$$m^*(\Gamma) \;\ge\; \min\Bigl\{\tbinom{c}{2},\; c^2,\; \tfrac{rt}{2},\; cr\Bigr\} \;\ge\; \tfrac{1}{350}\tbinom{n}{2}$$
+again. This proves the Theorem with $\delta_0 = 1/350$, i.e. roughly $n^2/700$ edges. Both bounds come from minimising $2\min\{x^2/2,\ y^2/24,\ xy\}$ (respectively $2\min\{x^2/2,\ x^2,\ y^2/24,\ xy\}$) over the region cut out by condition 2 — $x = c/n$ and $y = r/n$ both at least $1/5$, with $x+y=1$ (even) or $2x+y=1$ (odd) — the factor $2$ converting from $n^2$ to $\binom{n}{2}$. The worst density is $1/300$ in each case, attained at the \textbf{corner} where the foreign block is smallest --- not at the balanced point, and not at equal blocks --- so $1/350$ is slack but not by much. (With the true $rt$ the same minimisation gives $1/150$, and $\delta_0 = 1/175$ would serve.)
 
 *Verification.* Both constructions have been checked by direct computation of the permutation groups and their orbit decompositions on pairs — e.g. for $n = 12 = 5 + 7$ with $t = 3$, $|\Gamma| = 420$ and the orbitals are $\{10, 21, 35\}$; for $n = 17 = 2\cdot 5 + 7$, $|\Gamma| = 2100$ and the orbitals are $\{10, 10, 21, 25, 35, 35\}$.
 
@@ -114,7 +114,7 @@ again. This proves the Theorem with $\delta_0 = 1/350$, i.e. roughly $n^2/700$ e
 
 One infinite family needs no hypothesis. For $n = 2m$ with $m$ a prime power, take two blocks of size $m$ --- each identified with the field $\mathbb{F}_m$, not with $\mathbb{Z}/m$, which differs from the blocks of \S3 as soon as $m$ is not prime --- with $C_{m-1} = \mathbb{F}_m^\ast$ twisting both diagonally, together with a block swap; the resulting group is Oliver with $q = 2$, its orbitals are $m(m-1)$ and $m^2$, and so
 $$\mu(2m) \;\ge\; m(m-1), \qquad \text{i.e. } \delta(n) = \tfrac12 - o(1).$$
-This is best possible up to the $o(1)$: for non-prime-power $n$ an Oliver group has at least two u-orbitals, which partition the $\binom{n}{2}$ pairs, so $m^*(\Gamma) \le \lfloor \binom{n}{2}/2 \rfloor$ and $\delta(n) \le 1/2$. (Density $1$ would force $2$-homogeneity, hence primitive, hence of prime-power degree.)
+This is best possible up to the $o(1)$: for non-prime-power $n$ an Oliver group has at least two u-orbitals, which partition the $\binom{n}{2}$ pairs, so $m^*(\Gamma) \le \lfloor \binom{n}{2}/2 \rfloor$ and $\delta(n) \le 1/2$. (Density $1$ would force $2$-homogeneity, hence primitivity; an Oliver group is solvable, and a solvable primitive group has prime-power degree.)
 
 The constant $\delta_0$ above is deliberately crude. Optimising the block sizes and the efficiency $t/(r-1)$ gives materially better constants. The local conditions at the primes $2$ and $3$ depend on $n$ modulo $12$, but the optimised constants are keyed \emph{modulo $12$} as well, with the residue entering through the efficiency available to the foreign block; the optimisation is finer, the modulus the same.
 
