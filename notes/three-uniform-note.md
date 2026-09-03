@@ -651,6 +651,8 @@ The dimension-threshold reading survives even though the density does not:
 
 > **Any nontrivial monotone 3-uniform property all of whose members have fewer than m\*₃(n) edges is fully evasive**, and m\*₃(n) = Ω(n²).
 
+*The matching upper bound is O(n² log n), not O(n²)*: a block group inside AΓL(1, c) has order at most c² log c, and the Galois factor's gain is the least prime divisor of a, which is unbounded. Ω(n²) is the side the evasiveness statement uses and is clean; the log rides on the upper bound only. **And the upper bound assumes J0a′** — that a non-semilinear Oliver block group never wins — which at k = 2 was covered by the flat SAFE cap and at k ≥ 3 has nothing covering it (`general-k-note.md` §1).
+
 That rules out every sparse property — the same service BBKN's Ω(n log n) performs at k = 2, and the same reason it is worth having despite being o(C(n,k)). It is a different quantity from Black's weak evasiveness, which bounds queries without producing a threshold, so the two do not compete.
 
 > **The constant follows from §5's allocation formula, up to which shape n admits.** m\*₃ ≈ n²/(Σ 1/√eᵢ)², so
