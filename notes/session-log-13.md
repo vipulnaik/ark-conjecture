@@ -26,6 +26,19 @@ The strip is not wrong; it answers a different question. It bounds the minimum i
 
 **Fixed.** All three sites now use the flat F·C(c,2); the strip survives only as an unread diagnostic (`_record_strip_diagnostic`). **Measured: `fallback_cert.py --no-theorems` still returns 0 candidates at all 2,187 rows.** So the in-range collapse rests on neither Lemma C, nor Corollary C′, nor J0a — a strictly smaller trusted base than the strip-gated version had. The banners, `ep`'s certificate description, the leftover twist lemma box, the E″ headline and the two extreme instances (n = 50,817 and 89,697) were all rescoped accordingly: those two are settled for μ = B_refined by the lemma, and for B_refined = B_safe only by the search, which has not been measured at them.
 
+### 1.2a What the rescoping costs at scale: two named values, measured
+
+`wide_cert.py` at NMAX = 10⁵ was rerun under the flat-cap conditions, and the coverage moves from the reported **100.00%** to **90,297 of 90,299 (99.998%)**. The residue is two values:
+
+| n | (c, r) | s | leftover |
+|---|---|---|---|
+| 50,817 | (20327, 10163) | 2 | L = c |
+| 89,697 | (35879, 17939) | 2 | L = c |
+
+Both are the shape E″ names as the one that resists longest, and both were previously closed by the strip-based conditions — which is exactly the substitution §1.2 identifies: the strip bounds what a *group* of that shape realises, so the closure proved μ = B_refined there and not B_refined = B_safe. **The 100.00% was an artefact of testing the wrong quantity rather than a stronger result.** They are not counterexamples; a surviving candidate means the necessary conditions do not exclude the shape at B_lo, and settling them needs the true B(n), far past the computed table. E.3(ii) does not reach them by its own terms, the re-reading being unavailable at L = c, so this is the L > 0 case of the global promotion with two named instances rather than a description.
+
+Under `--no-theorems` the count is 90,292 — five more, all bare pairs (L = 0, c = 2r+1 a safe prime) at n = 32,398, 35,098, 62,368, 86,848 and 99,160. Verified directly by running `pair_candidates` at all seven values in both modes: the five vanish with theorems on and the two do not. **So the two modes do not agree at this NMAX, and the script should not claim they will.** That disagreement is E.3(ii) doing real work — the only place any Part E′ clause fires in `wide_cert.py`, since the foreign-cap filter removes the s = 1 and s = 3 branches before the s-branch dispatch sees them. Any difference beyond those five is a defect to chase. `wide_cert.py`'s banners, `ep`'s E″ result box and two-extreme-instances paragraph, `ep`'s two "the modes agree trivially" remarks, and `pending-checks.md`'s run table were all corrected accordingly.
+
 ### 1.3 Theorem 3.1's stated reason for its own soundness was backwards
 
 The DUP block in both `notes` and `ep` said the non-ΓL(1) stabiliser and the 2-homogeneous permuter "both exceed rather than fall short, so μ(n) ≤ B_safe(n) … untouched." Exceeding is the **dangerous** direction: a group whose orbital exceeds the scored term is one the score may under-count. What actually protects the bound is the flat cap — F·C(c,2) bounds any point stabiliser, s_i s_j bounds any pair of orbits — together with coeff·c² ≥ F·C(c,2), which is why the within-class cross term never binds. Part E's pitfall box already had the correct reason; the theorem statement now says the same thing.
@@ -87,6 +100,8 @@ Both clear on the current documents, as do I1–I5.
 | `audit_fmid.py` | 461 rows screened, 0 hits, 0 unscreened |
 | `ceiling_rederive.py --mod12 --runners` | six classes reproduce their constants from below (0.9994–0.9999); all mod-12 pairs agree; class-11 runner-up is the F = 2 / F = 6 tie in both halves |
 | `check_doc_figures.py` | I1–I7 clear; one EXPIRED finding, which is the prefix/tail scoping now stated in the prose |
+| `wide_cert.py 100000` | 90,297 of 90,299 under the flat caps; residue n = 50,817 and 89,697 |
+| `wide_cert.py 100000 --no-theorems` | 90,292 — five bare pairs more, the expected E.3(ii) difference |
 
 **Owed:** `ladder_verify.py 1000000` under the corrected scoring, which is what discharges every ⟦PENDING-LADDER-RERUN⟧ tag and restores the ladder-gap check to PASS.
 
@@ -94,4 +109,4 @@ Both clear on the current documents, as do I1–I5.
 
 ## 4. Not examined
 
-Left untouched by this pass, and unverified by it: `notes` §§7–11 and appendices; `aod` §§3.5–3.8, §4, §6.9; `ep` Parts G–J; `verification-lessons.md`; `literature-findings.md` beyond its headers; `wide_cert.py` and its B_lo construction (which inherits §1.2's scoping question and could not be checked without the file); the GAP scripts and `blo_100000` output. Nothing in the deferred material was needed for the findings above, but §1.2's rescoping of the E″ coverage figure is a claim about `wide_cert.py` made without reading it.
+Left untouched by this pass, and unverified by it: `notes` §§7–11 and appendices; `aod` §§3.5–3.8, §4, §6.9; `ep` Parts G–J; `verification-lessons.md`; `literature-findings.md` beyond its headers; the GAP scripts. `wide_cert.py` was read and rerun for §1.2a, but only its pass-2 conditions were scrutinised — its B_lo families (`three_part_lo`, `two_part_lo`, `fused_lo` and the share-pair guard) were taken as given, and an over-credited B_lo would be anti-permissive in the same silent way condition (4) was. Nothing in the deferred material was needed for the findings above, but the B_lo families named above are now the least examined part of the certificate chain and are the natural next item after T3.

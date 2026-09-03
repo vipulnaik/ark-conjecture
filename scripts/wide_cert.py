@@ -24,11 +24,16 @@ true B(n) to settle and is NOT a counterexample.
 --no-theorems disables every Part E-prime clause: `branch_settled` dispatches
 nothing, so all branches reach the search, and `e3ii_resolves` stops resolving.
 A run in that mode consults no Part E-prime theorem -- a much smaller trusted
-base -- so it is the mode to quote, and it should agree with the normal run
-exactly.  Quote it accurately: the base is the eight necessary conditions PLUS
-unfused-foreign scoring (Lemma D2, range-scoped below n = 1582) and condition
-(4)'s strip (Corollary C-prime, inheriting J0a at a >= 2); the banner says so.  If it ever stops agreeing while the
-normal run passes, the error is localised to E.1 / E.3 / E.4 or their tables.
+base -- so it is the mode to quote.  It does NOT agree with the normal run at
+this NMAX, and the disagreement is informative rather than a defect: the five
+extra unresolved values are bare pairs (leftover L = 0, c = 2r+1 a safe prime)
+that E.3(ii) resolves and this mode declines to, which is the one place the Part
+E-prime clauses do real work here.  A disagreement anywhere ELSE, or a normal run
+that fails while this one passes, localises an error to E.1 / E.3 / E.4 or their
+tables.  Quote the base accurately: the eight necessary conditions PLUS
+unfused-foreign scoring (Lemma D2, range-scoped below n = 1582).  Condition (4)
+is the flat SAFE cap F*C(c,2), so no twist strip is applied and neither Corollary
+C-prime nor J0a enters; the banner says so.
 
 Usage: python3 wide_cert.py NMAX [--no-theorems] [--menu] [--refresh]
 """
@@ -334,17 +339,23 @@ if NO_THM:
     print("including on the unresolved values.")
     print()
     print("WHAT THE TRUSTED BASE STILL IS.  The eight necessary conditions of")
-    print("fb_common.py, PLUS two dependencies underneath them, both scoped:")
+    print("fb_common.py, PLUS one dependency underneath them, scoped:")
     print("  * foreign parts scored UNFUSED -- fused foreign classes are excluded by")
     print("    Lemma D2's domination, a range check below n = 1582 (a18_verify.py)")
-    print("    and a theorem above it, not by condition (3);")
-    print("  * condition (4)'s strip, licensed by Corollary C-prime, which inherits")
-    print("    J0a at a >= 2 (automatic at a = 1).  Measured over v4 at n <= 1200:")
-    print("    42 strip decisions, all licensed, none at a >= 2.")
-    print("Quote the result with those, not as the eight conditions alone.")
+    print("    and a theorem above it, not by condition (3).")
+    print("Condition (4) is the FLAT cap F*C(c,2), which is what SAFE assigns, so no")
+    print("twist strip is applied and neither Corollary C-prime nor J0a is in the")
+    print("base.  Quote the result with the D2 scoping, not as the conditions alone.")
+    print()
+    print("EXPECT FIVE MORE UNRESOLVED VALUES THAN THE NORMAL RUN, not zero more.")
+    print("They are bare pairs (L = 0, c = 2r+1 a safe prime) that E.3(ii) resolves")
+    print("and this mode declines to.  That is the dispatch doing real work; a")
+    print("disagreement anywhere else is the thing to chase.")
 else:
     print("Rerun with --no-theorems to establish that: it stubs the dispatch and")
     print("drops the E.3(ii) resolution, so the run rests on the eight necessary")
-    print("conditions of fb_common.py plus their two scoped dependencies, which")
-    print("that run's banner spells out.  Doing this on each extension is cheap")
-    print("and localises any error in E.1 / E.3 / E.4 at once.")
+    print("conditions of fb_common.py plus the one scoped dependency (unfused-")
+    print("foreign via Lemma D2), which that run's banner spells out.  Expect it to")
+    print("report the bare pairs -- L = 0 with c = 2r+1 a safe prime -- as")
+    print("unresolved, since E.3(ii) is what settles those; any OTHER difference")
+    print("localises an error in E.1 / E.3 / E.4 at once.")
