@@ -39,6 +39,28 @@ Both are the shape E″ names as the one that resists longest, and both were pre
 
 Under `--no-theorems` the count is 90,292 — five more, all bare pairs (L = 0, c = 2r+1 a safe prime) at n = 32,398, 35,098, 62,368, 86,848 and 99,160. Verified directly by running `pair_candidates` at all seven values in both modes: the five vanish with theorems on and the two do not. **So the two modes do not agree at this NMAX, and the script should not claim they will.** That disagreement is E.3(ii) doing real work — the only place any Part E′ clause fires in `wide_cert.py`, since the foreign-cap filter removes the s = 1 and s = 3 branches before the s-branch dispatch sees them. Any difference beyond those five is a defect to chase. `wide_cert.py`'s banners, `ep`'s E″ result box and two-extreme-instances paragraph, `ep`'s two "the modes agree trivially" remarks, and `pending-checks.md`'s run table were all corrected accordingly.
 
+### 1.2b The two residual values were a missing family in B_lo, and both now close
+
+Neither needs the enumerator, and neither needs B(n). Each candidate dies on condition (3) as soon as B exceeds the foreign block's own cap — orb(10163, 5081) = 51,638,203 and orb(17939, 8969) = 160,894,891, i.e. densities **0.039994** and **0.039996**, a hair under 1/25. So the question was "does this n clear the conjectured floor", not "what is B(n)".
+
+It does, easily. `wide_cert.py`'s B_lo scored the three-part shape **unfused** only — census S4, which wins nowhere — omitting the fused F = 2 rung that is the odd-n carrier and worth a factor of two on the intra term. Adding it gives
+
+| n | B_lo before | δ | B_lo after | δ | witness |
+|---|---|---|---|---|---|
+| 50,817 | 50,567,357 | 0.0392 | 221,369,762 | **0.1715** | `2x14879 + 21059*` |
+| 89,697 | 148,031,501 | 0.0368 | 681,635,503 | **0.1694** | `2x26387 + 36923*` |
+
+At those bounds both candidate lists are empty and s_max drops from 2 to 1. This is the same missing shape, for the same reason, as the S7 branch `ladder_verify.py` used to cut (§1.1) — the third script found carrying it.
+
+**The trap inside the fix is the reusable part.** A first attempt added the family but anchored its scan at n/3, the *unfused* balance point. The fused rung balances at x\* = (2 − √2)/2 = 0.29289, and `near()` keeps only the 60 prime powers nearest the anchor, so at n = 50,817 the winning c = 14,879 sits 2,060 away from n/3 — far outside the window. The family was present in the code, contributed zero, and said nothing about it: B_lo came back byte-identical and the two values stayed open. Corrected anchor in `fused_three_part_lo`, with the reasoning in its docstring.
+
+**Verified on a subsample rather than by a full rerun** (the 10⁵ run is ~10 minutes of pass 1 plus ~2 of pass 2, and is left for a machine that can hold a background job):
+
+- the two values, full pass-2 scan at the corrected B_lo: **0 candidates each**;
+- **soundness join over all 2,187 table rows: B_lo ≤ B(n) everywhere, 0 violations**, with B_lo = B at 1,944 of them (88.9%). That join is the analogue of `validate_table_v3.py --ladder` and is what would catch an over-credited B_lo, which is the anti-permissive direction;
+- the five bare pairs are even n, so the odd-n rung leaves them unchanged, as expected — they are E.3(ii)'s business;
+- the previously weakest value n = 26,015 rises from δ_lo 0.0200 to 0.0306, so the "weakest B_lo density / permitted s ≤ 6" figures will move and are tagged for requoting.
+
 ### 1.3 Theorem 3.1's stated reason for its own soundness was backwards
 
 The DUP block in both `notes` and `ep` said the non-ΓL(1) stabiliser and the 2-homogeneous permuter "both exceed rather than fall short, so μ(n) ≤ B_safe(n) … untouched." Exceeding is the **dangerous** direction: a group whose orbital exceeds the scored term is one the score may under-count. What actually protects the bound is the flat cap — F·C(c,2) bounds any point stabiliser, s_i s_j bounds any pair of orbits — together with coeff·c² ≥ F·C(c,2), which is why the within-class cross term never binds. Part E's pitfall box already had the correct reason; the theorem statement now says the same thing.
@@ -100,8 +122,9 @@ Both clear on the current documents, as do I1–I5.
 | `audit_fmid.py` | 461 rows screened, 0 hits, 0 unscreened |
 | `ceiling_rederive.py --mod12 --runners` | six classes reproduce their constants from below (0.9994–0.9999); all mod-12 pairs agree; class-11 runner-up is the F = 2 / F = 6 tie in both halves |
 | `check_doc_figures.py` | I1–I7 clear; one EXPIRED finding, which is the prefix/tail scoping now stated in the prose |
-| `wide_cert.py 100000` | 90,297 of 90,299 under the flat caps; residue n = 50,817 and 89,697 |
+| `wide_cert.py 100000` | 90,297 of 90,299 under the flat caps and the shipped B_lo; both residues since closed by the fused rung. Full rerun owed |
 | `wide_cert.py 100000 --no-theorems` | 90,292 — five bare pairs more, the expected E.3(ii) difference |
+| B_lo join against the table | 0 of 2,187 rows have B_lo > B; equal at 1,944 |
 
 **Owed:** `ladder_verify.py 1000000` under the corrected scoring, which is what discharges every ⟦PENDING-LADDER-RERUN⟧ tag and restores the ladder-gap check to PASS.
 
@@ -109,4 +132,4 @@ Both clear on the current documents, as do I1–I5.
 
 ## 4. Not examined
 
-Left untouched by this pass, and unverified by it: `notes` §§7–11 and appendices; `aod` §§3.5–3.8, §4, §6.9; `ep` Parts G–J; `verification-lessons.md`; `literature-findings.md` beyond its headers; the GAP scripts. `wide_cert.py` was read and rerun for §1.2a, but only its pass-2 conditions were scrutinised — its B_lo families (`three_part_lo`, `two_part_lo`, `fused_lo` and the share-pair guard) were taken as given, and an over-credited B_lo would be anti-permissive in the same silent way condition (4) was. Nothing in the deferred material was needed for the findings above, but the B_lo families named above are now the least examined part of the certificate chain and are the natural next item after T3.
+Left untouched by this pass, and unverified by it: `notes` §§7–11 and appendices; `aod` §§3.5–3.8, §4, §6.9; `ep` Parts G–J; `verification-lessons.md`; `literature-findings.md` beyond its headers; the GAP scripts. `wide_cert.py`'s B_lo families were partly examined — the missing fused rung was found and fixed (§1.2b) — but `two_part_lo`, `fused_lo`, the menu top-up and the **share-pair guard** were not. The guard is the one that matters: it exists because an over-credited B_lo is anti-permissive, feeding the s_max and foreign-cap filters and dropping candidates silently, and that half remains unexercised. It is the natural next item after T3. Nothing in the deferred material was needed for the findings above, but the B_lo families named above are now the least examined part of the certificate chain and are the natural next item after T3.

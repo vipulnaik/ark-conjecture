@@ -13,8 +13,11 @@ against the table's n^2.9, which is what buys the range.
 B_lo(n) = max over two families of admissible configurations, each scored in
 SAFE mode, hence each a genuine lower bound on B_safe(n):
   * the family menu of `mu_enumerate.seed_value`;
-  * the dominant three-part shape (1,c) + (1,c) + (1,r*), maximised over
-    prime-power c with r* = n - 2c prime.
+  * the three-part shape (1,c) + (1,c) + (1,r*), maximised over prime-power c
+    with r* = n - 2c prime, in BOTH readings -- unfused, and with the two equal
+    c-blocks fused into one class of two (census S7 at F = 2, the odd-n carrier,
+    worth a factor of two on the intra term).  The fused reading is not optional:
+    without it two values below 10^5 stay unresolved that it settles at once.
 The second is essential: without it the certificate leaves a large fraction of
 odd n unresolved, and the multi-part leftover check closes most of what is left.
 
@@ -127,6 +130,57 @@ def three_part_lo(n, cap=None):
         best = max(best, min(comb(c, 2), c * rr, fcap(rr)))
     return best
 
+def fused_three_part_lo(n, cap=None):
+    """(F,c) + (1,r*) with F = 2: the odd-n FUSED rung, census S7 at F = 2.
+
+    WHY THIS FAMILY HAS TO BE HERE, AND WHAT ITS ABSENCE COST.  three_part_lo
+    scores the same n = 2c + r* UNFUSED, at min(C(c,2), c*r*, cap(r*)) -- census
+    S4, the reading that wins nowhere.  Fusing the two equal c-blocks is worth a
+    factor of two on the intra term, 2*C(c,2), and the fusion is free: it is
+    carried by an entangled cyclic-layer generator, so the twist stays full at
+    every c and no congruence is involved (aod section 3.2.3).  The cross term
+    is c^2 at F = 2 -- the coefficient is F/2 for even F -- which sits within a
+    factor c/(c-1) of the intra term and so does not bind.
+
+    Omitting it leaves B_lo a valid lower bound, hence permissive and sound, but
+    it understates the odd-n values by up to the full factor and that is not
+    free: a weak B_lo raises the permitted s and can leave a value UNRESOLVED
+    that a correct bound settles at once.  It did: n = 50817 and n = 89697 were
+    the only two values below 10^5 the certificate could not close, and both
+    close immediately once this family is scored -- 0.0392 -> 0.1715 and
+    0.0368 -> 0.1694, against a threshold of 0.0400 (the candidate's own foreign
+    cap).  This is the same missing shape, for the same reason, as the S7 branch
+    that ladder_verify.py used to cut.
+
+    THE SCAN ANCHOR IS NOT n/3, AND THAT IS THE WHOLE OF THE DIFFERENCE FROM
+    three_part_lo.  Each family's optimum sits at its own balance point, where
+    its growing term meets its shrinking one.  Unfused, that is x* = c/n = 1/3.
+    Fused, the intra term doubles, so the balance moves to
+    x* = (2 - sqrt 2)/2 = 0.29289 (aod section 3.3.3, rung B).  At n = 50817 that
+    is c ~ 14883 against n/3 ~ 16939 -- a gap of 2060, far outside the 60
+    nearest prime powers -- so anchoring this family at n/3 finds nothing and
+    the family silently contributes zero.  Scanning outward from the RIGHT point
+    is what makes a small SCAN_CAP sufficient; scanning outward from the wrong
+    one makes it useless, and it fails as a family that is present in the code
+    and absent from the answer.
+
+    Share pairs are skipped as in three_part_lo, and for the same reason."""
+    best = 0
+    # (2 - sqrt 2)/2, in integer arithmetic to keep the anchor reproducible.
+    anchor = (2 * n - int(n * 2 ** 0.5)) // 2
+    for c in near(PPs, anchor, cap or SCAN_CAP):
+        rr = n - 2 * c
+        if rr < 3 or not A.is_prime(rr):
+            continue
+        pc = A.prime_power(c)
+        if rr == pc[0]:
+            continue
+        if (c - 1) % rr == 0:
+            continue                          # share pair: see three_part_lo
+        best = max(best, min(2 * comb(c, 2), c * c, 2 * c * rr, fcap(rr)))
+    return best
+
+
 def two_part_lo(n, cap=None):
     """(1,c)+(1,r*).  Balances at c ~ r* ~ n/2.  Covers even n, where the
     three-part shape does not exist.  Share pairs (r* | c-1) are skipped for the
@@ -187,9 +241,11 @@ t1 = time.time()
 # failure this signature exists to prevent.
 _SIG = hashlib.sha1("|".join([
     str(SCAN_CAP), str(WEAK),
-    three_part_lo.__doc__ or "", two_part_lo.__doc__ or "", fused_lo.__doc__ or "",
+    three_part_lo.__doc__ or "", fused_three_part_lo.__doc__ or "",
+    two_part_lo.__doc__ or "", fused_lo.__doc__ or "",
     _MODE,
-    str(three_part_lo.__code__.co_code), str(two_part_lo.__code__.co_code),
+    str(three_part_lo.__code__.co_code),
+    str(fused_three_part_lo.__code__.co_code), str(two_part_lo.__code__.co_code),
     str(fused_lo.__code__.co_code), str(near.__code__.co_code),
     str(orb_full.__code__.co_code),
     str(fb.foreign_cap.__code__.co_code), str(fb.orb.__code__.co_code),
@@ -210,11 +266,12 @@ else:
   for n in range(6, NMAX + 1):
     if A.prime_power(n):
         continue
-    v = max(three_part_lo(n), two_part_lo(n), fused_lo(n))
+    v = max(three_part_lo(n), fused_three_part_lo(n), two_part_lo(n), fused_lo(n))
     if v == 0 or 2 * v / (n * (n - 1)) < WEAK:
         v = max(v, me.seed_value(n, spf)); topped += 1
         if 2 * v / (n * (n - 1)) < WEAK:      # still weak: escalate the scan
-            v = max(v, three_part_lo(n, 10**9), two_part_lo(n, 10**9))
+            v = max(v, three_part_lo(n, 10**9), fused_three_part_lo(n, 10**9),
+                    two_part_lo(n, 10**9))
             escal += 1
     Blo[n] = v
     ns.append(n)
