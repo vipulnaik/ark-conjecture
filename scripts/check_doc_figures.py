@@ -691,6 +691,69 @@ if A.only in ("all", "scope"):
     if not i5:
         print("[ok] I5: every (BCG) reference names its variant.")
 
+    # (I6) F.4'S COFACTOR CONSTANT IS D(delta_0), NOT 2/delta_0.  The crude form
+    #      follows from bounding r <= n; the sharp one uses the fact that a
+    #      configuration carrying a foreign part carries a second part too, of
+    #      support > sqrt(delta*n*(n-1)), so r <= n - sqrt(delta*n*(n-1)) and
+    #      (r-1)/Q <= 2(1-sqrt(delta_0))^2/delta_0.  Both are TRUE, which is why
+    #      this needs an invariant rather than a figure check: a sentence quoting
+    #      2/delta_0 as "the Proposition's bound" reads as correct and merely
+    #      understates the result by a factor of ~1.7 in the constant and ~1.7 in
+    #      the reported slack.  Sentences naming 2/delta_0 as the crude form it
+    #      implies are exempt, detected by a marker.
+    print()
+    CRUDE_OK = re.compile(r"\b(crude|implies|weaker|follows|window|earlier)\b", re.I)
+    i6 = 0
+    for d in DOCS:
+        try: txt = open(d).read()
+        except OSError: continue
+        for ln, line in enumerate(txt.split("\n"), 1):
+            if not re.search(r"2/(?:δ|delta)", line):
+                continue
+            # Restricted to sentences about F.4's OWN bound.  The same
+            # quantity 2/delta appears legitimately elsewhere -- q-pinning's
+            # u <= 2/delta is a per-configuration gate with its own derivation
+            # -- and firing there would train the reader to ignore this.
+            if not re.search(r"\(r ?[-−] ?1\)/Q|F\.4|D\(δ|D\(delta|D = |D ≤ ", line):
+                continue
+            if CRUDE_OK.search(line):
+                continue
+            findings += 1; i6 += 1
+            print(f"{d} L{ln}  *** INVARIANT I6 *** cofactor bound quoted as "
+                  f"2/delta_0; F.4 states D(delta_0) = 2(1-sqrt(delta_0))^2/delta_0")
+            print(f"   {line.strip()[:170]}\n")
+    if not i6:
+        print("[ok] I6: no sentence quotes the crude cofactor bound as F.4's own.")
+
+    # (I7) A DISTRIBUTIONAL FIGURE MUST NAME ITS SCOPE.  The table is a
+    #      contiguous prefix plus a worklist-driven tail, and the tail is
+    #      selected BY LOW LADDER SCORE, so a count taken over the whole CSV
+    #      misreports every share.  The failure is an off-by-a-few that looks
+    #      exactly like a stale figure -- the census read 396 where the prefix
+    #      holds 395, because one worklist row was included -- so it is invisible
+    #      to a figure check, which cannot tell which population was intended.
+    #      Trigger: a winner count or share with no scope word anywhere near it.
+    print()
+    SCOPED = re.compile(r"contiguous|prefix|\[6, ?\d+\]|over the range|to n = \d+|"
+                        r"worklist|whole (?:file|CSV)|all \d[\d,]* rows", re.I)
+    COUNTY = re.compile(r"\*\*(\d[\d,]{1,5})\*\* (?:winners|of them|rows)|"
+                        r"(?:winners|winner count)[^.]{0,20}\*\*\d")
+    i7 = 0
+    for d in DOCS:
+        try: txt = open(d).read()
+        except OSError: continue
+        for ln, line in enumerate(txt.split("\n"), 1):
+            if not COUNTY.search(line):
+                continue
+            if SCOPED.search(line):
+                continue
+            findings += 1; i7 += 1
+            print(f"{d} L{ln}  *** INVARIANT I7 *** winner count with no scope "
+                  f"named; say whether it is the contiguous prefix or the file")
+            print(f"   {line.strip()[:170]}\n")
+    if not i7:
+        print("[ok] I7: every winner count names the population it was taken over.")
+
 # --------------------------------------------------------------- PASS 7 tables
 #
 # A markdown table whose separator row has a different number of columns from

@@ -7,9 +7,16 @@ F.4 says a density floor FORCES a shifted-prime statement.  Its proof turns on
 each part of a winning configuration having to clear delta*C(n,2) on its own,
 and yields three inequalities that any winner must satisfy:
 
-  (1) foreign parts:  (r-1)/Q <= 2/delta,  Q the largest prime-power divisor
-                      of r-1.  This is the statement's content: r-1 carries a
-                      prime-power divisor of BOUNDED COFACTOR.
+  (1) foreign parts:  (r-1)/Q <= D(delta) := 2*(1-sqrt(delta))^2/delta, with Q
+                      the largest prime-power divisor of r-1.  This is the
+                      statement's content: r-1 carries a prime-power divisor of
+                      BOUNDED COFACTOR.  The crude form of the same inequality
+                      is 2/delta, from bounding r <= n; the sharper constant
+                      uses the fact that a configuration carrying a foreign part
+                      carries a second part too, of support > sqrt(delta*n*(n-1)),
+                      so r <= n - sqrt(delta*n*(n-1)).  Both are reported: the
+                      crude one because the documents quoted it, the sharp one
+                      because it is the constant F.4 now states.
   (2) foreign parts:  r >= n*sqrt(delta*(n-1)/n).  The prime is linear in n.
                       This is the SHARP form, and it is a theorem rather than a
                       slack observation: orb(r,t) <= C(r,2) forces
@@ -51,8 +58,11 @@ will move as the table extends:
     this is 12 -- (H)'s own d <= 12, recovered from the opposite direction.
     Quoted in `ep` F.4 and `aod` 6.7.  If it moves, both want editing, and a
     value above 12 would weaken the claim that (H)'s constant is the natural one.
-  * SLACK: max cofactor against the bound 2/floor.  Quoted as "loose by a
-    factor ~4"; it is the size of the sharpening question in the gap inventory.
+  * SLACK: max cofactor against the bound, reported against BOTH the crude
+    2/floor and the sharp D(floor).  The sharp figure is the one the gap
+    inventory's sharpening question is about; the crude one is kept so that a
+    document still quoting it can be checked against this run rather than
+    silently disagreeing with it.
 
 Usage:
     python3 converse_check.py mu_table_safe_v4.csv
@@ -119,7 +129,7 @@ def load(path, nmax, contiguous_only=True, frontier=None, gap=10):
 
 def check(rows, ar, delta0=None, verbose=False):
     res = {"foreign": 0, "onepart": 0, "multimatch": 0, "unchecked": [],
-           "v1": [], "v2": [], "v3": [],
+           "v1": [], "v1crude": [], "v2": [], "v3": [],
            "max_cofactor": (0, None), "max_cofactor_q": (0, None),
            "tight1": (0.0, None), "tight2": (9e9, None), "tight3": (0.0, None)}
 
@@ -157,7 +167,14 @@ def check(rows, ar, delta0=None, verbose=False):
                 cofq = (r - 1) / tq
                 if cofq > res["max_cofactor_q"][0]:
                     res["max_cofactor_q"] = (cofq, (n, r, tq))
-            bound1 = 2 / d
+            # The SHARP bound is what F.4 states; the crude 2/d is what it
+            # implies and what earlier drafts quoted.  Violations are counted
+            # against the sharp one, since a configuration violating it would
+            # contradict the Proposition as stated.
+            bound1 = 2 * (1 - d ** 0.5) ** 2 / d
+            bound1_crude = 2 / d
+            if cof > bound1_crude:
+                res["v1crude"].append((n, r, Q, round(cof, 2), round(bound1_crude, 2)))
             if cof > bound1:
                 res["v1"].append((n, r, Q, round(cof, 2), round(bound1, 2)))
             if cof / bound1 > res["tight1"][0]:
@@ -236,8 +253,10 @@ def main():
     rowsfmt = "{:<52} {:>7} {:>11}"
     print(rowsfmt.format("inequality (F.4)", "checked", "violations"))
     print("-" * 72)
-    print(rowsfmt.format("(1) (r-1)/Q <= 2/delta   [the statement's content]",
+    print(rowsfmt.format("(1) (r-1)/Q <= D(delta)   [the statement's content]",
                          R["foreign"], len(R["v1"])))
+    print(rowsfmt.format("(1') (r-1)/Q <= 2/delta   [the crude form it implies]",
+                         R["foreign"], len(R["v1crude"])))
     print(rowsfmt.format("(2) r >= sqrt(delta*n*(n-1))  [prime is linear in n]",
                          R["foreign"], len(R["v2"])))
     print(rowsfmt.format("(3) M <= 1/delta, n=M*p^b [licenses 'almost all']",
@@ -272,9 +291,13 @@ def main():
                   f"  at n,r,q^e = {whereq}")
         print(f"   compare (H)'s own d <= 12.  Quoted in `ep` F.4 and `aod` 6.7;")
         print(f"   edit both if this moves.")
-        bound = 2 / (A.delta0 if A.delta0 else floor)
-        print(f"SLACK: bound 2/floor = {bound:.0f} against {mc:.0f} used"
-              f"  ->  loose by a factor {bound / mc:.1f}")
+        d0 = A.delta0 if A.delta0 else floor
+        sharp = 2 * (1 - d0 ** 0.5) ** 2 / d0
+        crude = 2 / d0
+        print(f"SLACK (sharp): D(floor) = {sharp:.1f} against {mc:.0f} used"
+              f"  ->  loose by a factor {sharp / mc:.1f}")
+        print(f"SLACK (crude): 2/floor  = {crude:.0f} against {mc:.0f} used"
+              f"  ->  loose by a factor {crude / mc:.1f}")
         print(f"   this is the size of the sharpening question"
               f" (`pending-checks.md` gap inventory).")
 

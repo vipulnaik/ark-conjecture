@@ -14,6 +14,30 @@ the Part E construction reaches only F*orb(c, d).  If such a configuration
 attains B_safe(n), the sandwich B_refined <= mu <= B_safe fails to collapse at
 that n.  Certifying that none can attain it proves mu(n) = B(n).
 
+WHICH QUANTITY IS BEING BOUNDED, AND WHY IT DECIDES WHAT COUNTS AS NECESSARY.
+The collapse needs B_refined(n) = B_safe(n), which reduces to: no share-carrying
+configuration has its SAFE SCORE >= B_safe(n).  SAFE values a p-characteristic
+part at the flat F*C(c,2) -- that is what mu_enumerate_v3.py's value() computes
+and what the mu_bound column holds.  So a condition is necessary for this
+certificate's purpose exactly when SAFE(W) >= B implies it.
+
+That rules out capping the p-part by F*orb(c, dmax) with the foreign prime
+stripped.  orb(c, dmax) <= C(c,2), so such a cap tests a SMALLER number than
+SAFE assigns and can reject a configuration whose SAFE score does reach B --
+anti-permissive, the one direction this file cannot detect from its own output.
+The strip bounds a different quantity: the minimum intra-orbital of an actual
+GROUP of that shape, which is what the leftover twist cap of Part E-prime is
+about, and which is anyway only bounded by orb(c, dmax) for a GammaL(1)-type
+stabiliser (Part B's extraspecial counterexample).  Bounding that quantity
+proves mu(n) = B_refined(n), not B_refined(n) = B_safe(n).
+
+So condition (4) below is the FLAT cap F*C(c,2) >= B.  It is weaker, hence
+permissive, hence sound; the strip is retained only as an optional diagnostic
+(set_strip_diagnostic), never as a gate.  Measured consequence: with the flat
+cap and no theorems at all, the candidate list is still EMPTY at every row of
+the computed table -- so the collapse in range rests on neither Corollary C'
+nor J0a.
+
 SOUNDNESS RULE, obeyed everywhere below: every test is a NECESSARY condition on
 such a configuration, and every over-approximation errs permissive.  A candidate
 that survives may be spurious; a real one is never discarded.  In particular the
@@ -35,16 +59,9 @@ should be named wherever the slogan is quoted:
     needs only delta >> n^-1/2.  So the trusted base is: these conditions, PLUS
     D2/D2-prime over the range, PLUS Part 0's shape space.  Rerun a18_verify.py
     on every extension -- `pending-checks.md` R1 schedules it.
-  * SEMILINEARITY AT a >= 2.  Condition (4)'s strip licence is Corollary C',
-    and Lemma C's proof pins the multiplier via a Frobenius exponent, i.e.
-    inside AGammaL(1, c).  At a = 1 that is automatic (GL(1,p) is cyclic); at
-    a >= 2 it assumes the stabiliser is semilinear, which is open (J0a).  Set
-    set_strip_trace() and count how many LICENSED strips fire at a >= 2 to
-    measure the exposure rather than argue about it.  Measured on the v4 table
-    over the completed table: 42 strip decisions, all licensed, NONE at a >= 2 -- so the
-    a >= 2 case is not reached there and the exposure is empty in fact over that
-    range.  Repeat the count on every extension; one licensed strip at a >= 2
-    puts J0a back into the collapse's trusted base.
+  * NOTHING ELSE.  In particular the conditions below no longer include a
+    twist strip, and so no longer inherit Corollary C' or J0a -- see WHICH
+    QUANTITY IS BEING BOUNDED.
 """
 from math import comb, isqrt, gcd
 
@@ -74,6 +91,21 @@ _STRIP_TRACE = None
 def set_strip_trace(lst):
     global _STRIP_TRACE
     _STRIP_TRACE = lst
+
+
+def _record_strip_diagnostic(A, c, r, p, B):
+    """Records what the OLD strip-based cap would have decided at this (c, r).
+
+    Purely observational: nothing in the certificate reads it.  It exists so
+    that the weaker group-level statement (mu = B_refined, via Part E-prime's
+    leftover twist cap) can still be measured, and so that a run can report how
+    often the two questions would have parted company.  Entries are
+    (p, a, r, B, sharing_bound, licensed)."""
+    pp = A.prime_power(c)
+    if not pp or (c - 1) % r:
+        return
+    bd = sharing_bound(p, pp[1], r)
+    _STRIP_TRACE.append((p, pp[1], r, B, bd, bd < B))
 
 
 def set_use_theorems(flag):
@@ -312,16 +344,15 @@ def theorem_report(A, n, B, caps_m, caps_r):
 #                                         the '*' branch, gated on r >= B.
 #   (3) orb(r, qpart(r-1,q)) >= B         necessary: the twist divides the q-part
 #                                         and orb is monotone in it.
-#   (4) F * orb(c, dmax) >= B             necessary by the leftover twist cap: the
-#       dmax strip of the foreign prime r is licensed by Corollary C' whenever
-#       sharing_bound(p, a, r) < B, at every a for a SEMILINEAR stabiliser --
-#       automatic at a = 1, and at a >= 2 inheriting J0a, see the header -- see
-#       sharing_bound() for the argument and for why the gate is local.  ONLY
-#       the foreign prime is stripped.  Stripping the block count as well is
-#       unsound (the rotation's image is a quotient of the cyclic layer, not a
-#       subgroup) and anti-permissive, so it would discard real candidates;
-#       every strip site in this file is gated, asserted and traced for that
-#       reason.
+#   (4) F * C(c,2) >= B                   necessary: SAFE scores the part at
+#       exactly F*C(c,2), so a configuration attaining B_safe(n) satisfies this.
+#       It is the FLAT cap and no twist strip is applied -- see WHICH QUANTITY
+#       IS BEING BOUNDED in the header.  A strip of the foreign prime (Lemma C's
+#       coupling, licensed by Corollary C') would give the smaller
+#       F*orb(c, dmax) and is ANTI-permissive against B_safe, so it is available
+#       here only as a diagnostic.  Stripping the block count is unsound on top
+#       of that (the rotation's image is a quotient of the cyclic layer, not a
+#       subgroup) and is done nowhere.
 #   (5) F * c * r >= B                    necessary by counting: the cross class
 #                                         holds F*c*r pairs in total.
 #   (6) coeff(F) * c^2 >= B               NOT independently necessary -- see below.
@@ -372,54 +403,19 @@ def single_part_ok(A, L, B, p, q, r):
         if not pp:
             continue
         if pp[0] == p:
-            # The p-characteristic cap is NOT F * C(c2, 2).  The part's twist has
-            # order dividing c2 - 1 and coprime to p, so it embeds in
-            # (cyclic layer) x (top q-group); the cyclic layer already carries
-            # the foreign block's translations C_r (Lemma B-prime puts them
-            # there), and a cyclic group forces pairwise-coprime orders.  Hence
-            # the cyclic part of the twist is coprime to r, and only the q-part
-            # may hide in the top layer.  The largest admissible twist is
-            # therefore qpart(c2-1, q) * (largest divisor of the rest coprime to
-            # r) -- the same dmax logic as SAFE, applied to the leftover.
+            # The leftover p-characteristic cap is the FLAT F * C(c2, 2), for
+            # the same reason as condition (4): the question is whether a
+            # configuration's SAFE score can reach B, and SAFE credits this part
+            # every pair in every block regardless of twist.  An earlier form
+            # capped it by the twist stripped of the foreign prime, which is a
+            # bound on what a GROUP of this shape realises rather than on what
+            # SAFE assigns, and is therefore anti-permissive here.
             #
-            # This is what resolves the leftover L = c at c = 2r + 1: there
-            # c2 - 1 = 2r, the r is stripped by coprimality and (for odd q not
-            # dividing 2r) the q-part is 1, so dmax = 2 and the intra caps at
-            # orb(c2, 2) = c2, far below B.  Without this cap the full C(c2, 2)
-            # keeps the branch alive and the two n = 5r + 2 values below 10^5
-            # (50817, 89697) stay unresolved.
-            #
-            # Soundness: coprimality-to-r is a proven necessary condition (the
-            # cyclic layer is one cyclic group); exempting the whole q-part is
-            # permissive; ignoring OTHER leftover parts' contents is permissive.
-            # The '*' branch has no fixed q, so it keeps the full C(c2, 2) --
-            # permissive, and that branch is gated on r >= B anyway.
-            if q == '*':
-                cap_i = F * comb(c2, 2)
-            else:
-                dq2 = qpart(c2 - 1, q)
-                rest = (c2 - 1) // dq2
-                # Strip r from the cyclic part of the twist exactly when
-                # Corollary C' licenses it: a configuration that does NOT strip
-                # contains a share, and a share caps some class at
-                # sharing_bound(p, a, r), so if that is below B the configuration
-                # cannot attain B and discarding it is sound.  This is a
-                # NECESSARY-condition test, so getting it wrong in the permissive
-                # direction is safe and getting it wrong in the strict direction
-                # silently discards a real candidate -- hence the assertion.
-                if rest % r == 0:
-                    bound = sharing_bound(p, pp[1], r)
-                    licensed = bound < B
-                    if _STRIP_TRACE is not None:
-                        _STRIP_TRACE.append((p, pp[1], r, B, bound, licensed))
-                    if licensed:
-                        while rest % r == 0:
-                            rest //= r
-                        assert sharing_bound(p, pp[1], r) < B, (
-                            "condition (4): stripped the foreign prime %d from a "
-                            "p=%d^%d block's twist without Corollary C' licensing "
-                            "it (bound %d >= B %d)" % (r, p, pp[1], bound, B))
-                cap_i = F * orb(c2, dq2 * rest)
+            # What that costs is sharpness at one shape and nothing else: the
+            # leftover L = c with c = 2r + 1, where the strip left d | 2 and
+            # closed the branch immediately.  Under the flat cap that shape is
+            # closed by the search instead, which is where it belongs.
+            cap_i = F * comb(c2, 2)
             if cap_i >= B:
                 return True
         elif pp[1] == 1 and c2 != r:
@@ -453,33 +449,12 @@ def multi_part_ok(A, L, B, p, q, r, limit=60):
         # twist is qpart(cj-1, q) times the r-coprime remainder, since the
         # cyclic layer already holds C_r and is one cyclic group.  C(cj, 2) is
         # kept only in the '*' branch, which is gated on r >= B.
-        if q == '*':
-            capc = comb(cj, 2)
-        else:
-            dqj = qpart(cj - 1, q)
-            restj = (cj - 1) // dqj
-            # Same licensed foreign strip as the other two sites, and gated the
-            # same way.  Lemma C's coupling holds at every a, and Corollary C'
-            # licenses the strip exactly when a configuration KEEPING the share
-            # cannot reach B -- so the gate is sharing_bound(p, a, r) < B, local
-            # to (p, a, r).  Declining to strip is permissive and safe; stripping
-            # unlicensed discards a real candidate invisibly, hence the assert
-            # and the trace rather than a bare `if`.
-            if restj % r == 0:
-                _aj = A.prime_power(cj)[1]
-                _bdj = sharing_bound(p, _aj, r)
-                _licj = _bdj < B
-                if _STRIP_TRACE is not None:
-                    _STRIP_TRACE.append((p, _aj, r, B, _bdj, _licj))
-                if _licj:
-                    while restj % r == 0:
-                        restj //= r
-                    assert sharing_bound(p, _aj, r) < B, (
-                        "condition (8): stripped the foreign prime %d from a "
-                        "p=%d^%d leftover block's twist without Corollary C' "
-                        "licensing it (bound %d >= B %d)"
-                        % (r, p, _aj, _bdj, B))
-            capc = orb(cj, dqj * restj)
+        # FLAT, as in condition (4) and single_part_ok: SAFE credits a
+        # p-characteristic part F'*C(c_j,2) whatever its twist, so that is what
+        # a configuration attaining B_safe(n) must clear.  The twist-stripped
+        # form is a bound on a group's realised orbital, not on the SAFE score,
+        # and using it here would be anti-permissive.
+        capc = comb(cj, 2)
         for F in range(1, L // cj + 1):
             if F * capc >= B:
                 pcands.append(F * cj)
@@ -590,54 +565,24 @@ def pair_candidates(A, n, B, c, r, p, skip_settled=None):
             # is what resolves the F = 2 reading of n = 5r + 2 at c = 2r + 1:
             # there c - 1 = 2r, r goes, and what is left is d | 2, so the intra
             # collapses to O(c) at odd q.
-            if q == '*':
-                intra_cap = F * comb(c, 2)
-            else:
-                dqc = qpart(c - 1, q)
-                restc = (c - 1) // dqc
-                # The foreign-prime strip is licensed by Corollary C' (Part D),
-                # not by the old unconditional form of Lemma C, which is false:
-                # a cyclic-layer twist CAN share a prime with an outside block,
-                # at prime and prime-power blocks alike.  What holds is the
-                # coupling -- the shared prime forces every multiplier on the
-                # outside part into <p mod r>, so its twist order divides
-                # ord_r(p) | a -- and hence any configuration KEEPING the share
-                # carries a class of at most sharing_bound(p, a, r).  When that
-                # is below B such a configuration cannot attain B, so discarding
-                # it is sound and the strip is a NECESSARY condition.
-                #
-                # The licence is local to (p, a, r): no n, no density floor, no
-                # threshold on the table.  Getting it wrong in the permissive
-                # direction (declining to strip) is safe; getting it wrong the
-                # other way silently discards a real candidate, which is the one
-                # error class this file cannot detect from its own output --
-                # hence the assertion rather than a bare `if`.
-                if restc % r == 0:
-                    _a = A.prime_power(c)[1]
-                    _bd = sharing_bound(p, _a, r)
-                    _lic = _bd < B
-                    if _STRIP_TRACE is not None:
-                        _STRIP_TRACE.append((p, _a, r, B, _bd, _lic))
-                    if _lic:
-                        while restc % r == 0:
-                            restc //= r
-                        assert sharing_bound(p, _a, r) < B, (
-                            "condition (4): stripped foreign prime %d from a "
-                            "p=%d^%d block's twist unlicensed (bound %d >= B %d)"
-                            % (r, p, _a, _bd, B))
-                # NO F_mid STRIP.  It is tempting to also strip the block count
-                # from the twist, on the grounds that the block rotation
-                # C_{F_mid} and the twist's cyclic part sit in the one cyclic
-                # layer, which has a unique subgroup of each order.  That
-                # argument is invalid: the block-permutation image is a QUOTIENT
-                # of the cyclic layer, not a subgroup, and an entangled
-                # generator (a rotation whose step-multipliers have product a
-                # generator of F_c^*) realises the full twist at any F_mid.
-                # Stripping here is therefore ANTI-permissive -- it lowers
-                # intra_cap, fails the >= B test for a configuration that can in
-                # fact reach B, and discards a real candidate silently.  This is
-                # the one error class this file cannot detect from its output.
-                intra_cap = F * orb(c, dqc * restc)
+            # Condition (4), FLAT.  SAFE scores a p-characteristic class at
+            # F*C(c,2) whatever its twist, so that is what a configuration
+            # attaining B_safe(n) must clear, and it is the only cap here that
+            # is necessary for the question this file asks.  Capping by
+            # F*orb(c, dmax) instead -- the twist stripped of the foreign prime
+            # -- tests a smaller number and can reject a configuration whose
+            # SAFE score does reach B: anti-permissive, and invisible in the
+            # output, which is the one error class this file cannot detect.
+            #
+            # The strip is not wrong, it answers a different question: it bounds
+            # the minimum intra-orbital of an actual GROUP of this shape (Part
+            # E-prime's leftover twist cap), which yields mu = B_refined rather
+            # than B_refined = B_safe, and which is itself only valid for a
+            # GammaL(1)-type stabiliser.  Reported by strip_diagnostic() for
+            # anyone who wants that weaker statement; never used as a gate.
+            intra_cap = F * comb(c, 2)
+            if _STRIP_TRACE is not None and q != '*':
+                _record_strip_diagnostic(A, c, r, p, B)
             ok = (intra_cap >= B and F * c * r >= B and
                   (F == 1 or (F if F % 2 else F // 2) * c * c >= B))
             if ok:

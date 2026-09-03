@@ -590,7 +590,7 @@ def achieved(n, stop_at=None):
     # F = 4 and F = 6 are the winning shapes at the arithmetically weakest n,
     # where no multiplicative escape exists, and omitting them understates those
     # values by more than a factor of two.
-    for Fp, exclF, EFFx, STRIP in S7_BRANCHES:
+    for Fp, exclF, EFFx, _ in S7_BRANCHES:
         # The within-class cross term takes the coefficient F for odd F and F/2
         # for even F -- the minimum pair-orbital of a transitive group of degree
         # F.  Using F for even F would OVERSTATE the family and break the
@@ -610,34 +610,36 @@ def achieved(n, stop_at=None):
                 continue
             # Lemma C guard (same as the two- and three-part branches): the
             # c-blocks' cyclic-layer twist must be coprime to the foreign prime
-            # r.  STRIP removes the branch's F_mid primes but not r, so when
-            # r | c-1 the r-part must be stripped as well or the intra term
+            # r, so when r | c-1 the r-part is stripped or the intra term
             # credits a twist the cyclic layer cannot hold.
-            d_tw = STRIP[c]
+            d_tw = c - 1
             while d_tw % r == 0:
                 d_tw //= r
-            # WHY THE TWIST IS CUT HERE, AND WHY THAT IS A WEAKNESS AND NOT THE
-            # MATHEMATICS.  The tempting argument -- the fused class sits in the
-            # cyclic layer alongside the twist, a cyclic group has a unique
-            # subgroup of each order, so the twist must be coprime to F -- is
-            # REFUTED.  It treats the block-permutation image, a QUOTIENT of the
-            # layer, as a subgroup of it.  An entangled generator (a rotation
-            # whose step-multipliers have product a generator of F_c^*) supplies
-            # the rotation and the FULL twist from one cyclic subgroup at any
-            # F_mid, which is exactly what rung B thirty lines above says and
-            # what makes `6x13` the winner at n = 78.  So Fp*C(c,2) is realisable
-            # and cutting to Fp*orb(c, dmax) UNDERSTATES the family.
+            # WHY THE TWIST IS FULL HERE, AND WHY IT USED TO BE CUT.  The
+            # tempting argument -- the fused class sits in the cyclic layer
+            # alongside the twist, a cyclic group has a unique subgroup of each
+            # order, so the twist must be coprime to F -- is REFUTED.  It treats
+            # the block-permutation image, a QUOTIENT of the layer, as a
+            # subgroup of it.  An entangled generator (a rotation whose
+            # step-multipliers have product a generator of F_c^*) supplies the
+            # rotation and the FULL twist from one cyclic subgroup at any F_mid,
+            # which is what makes `6x13` the winner at n = 78.  So the class is
+            # worth Fp*C(c,2) and STRIP[c] would understate it.
             #
-            # The cut is retained only because it is SAFE in this file's
-            # direction: understating a family lowers a max over families, so
-            # every reported floor and worklist stays a valid lower bound.  It
-            # costs sharpness, not correctness.  Measured over v4's 154 fused
-            # (F >= 3) plus foreign winners, the branch structure's cut intra
-            # never falls below B once the eff_at(q) branches are considered, so
-            # nothing reported to date is affected -- but raising this to the
-            # full twist (and revisiting the EFF_EX exclusions, which the
-            # branch-per-q structure already works around) would tighten the
-            # ladder and shrink the worklists.
+            # Cutting it was safe in this file's direction -- understating a
+            # family lowers a max over families, so every reported floor stayed
+            # a valid lower bound -- but it is not free.  It cost sharpness
+            # exactly at the fused-plus-foreign shapes that win at the
+            # arithmetically weakest n, which are the values this script's
+            # worklist is made of: at even F the strip removes the 2 from c - 1
+            # whenever c = 1 (mod 4), so the intra term halves.  Measured
+            # against the computed table before this change, the ladder fell
+            # short of B(n) at 16 of the 37 joined values, by up to 1.81x, and
+            # every shortfall was of this shape.
+            #
+            # What is still stripped is the FOREIGN prime r, and only it: that
+            # is Lemma C's coupling, a genuine subgroup condition on the
+            # r-primary component of the cyclic layer.
             intra = Fp * orb_ld(c, d_tw, base[c] == 2)
             v = min(intra, cross_coeff * c * c, m * r, e * comb(r, 2))
             if v > best * C:

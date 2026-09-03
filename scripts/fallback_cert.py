@@ -19,9 +19,9 @@ all of them reach the search, and `e3ii_resolves` stops resolving.  A run in tha
 mode consults no Part E-prime theorem -- a much smaller trusted base than this
 file's structure suggests -- so it is the mode to quote.  Quote it accurately:
 the base is NOT the eight necessary conditions alone.  Unfused-foreign scoring
-rests on Lemma D2 (range-scoped below n = 1582, `a18_verify.py`), and condition
-(4)'s strip rests on Corollary C-prime, which inherits J0a at a >= 2; the run
-banner states both.  It should agree with the normal run exactly; if it
+rests on Lemma D2 (range-scoped below n = 1582, `a18_verify.py`).  Condition (4)
+is the flat SAFE cap F*C(c,2), so no twist strip is applied and neither Corollary
+C-prime nor J0a enters; the run banner states this.  It should agree with the normal run exactly; if it
 ever stops agreeing while the normal run passes, the error is localised at once
 to E.1 / E.3(ii) / E.3(iii) / E.4, Lemma E.2's bound, or the MERSENNE / REPUNIT3
 tables.
@@ -162,8 +162,7 @@ if not bad:
     else:
         print()
         print("Rerun with --no-theorems to shrink the trusted base to the eight")
-        print("necessary conditions plus their two scoped dependencies (unfused-")
-        print("foreign via Lemma D2, and condition (4)'s strip via Corollary C-prime),")
-        print("which that run's banner spells out.  Cheap, and worth redoing on every")
+        print("necessary conditions plus their one scoped dependency (unfused-")
+        print("foreign via Lemma D2), which that run's banner spells out.  Cheap, and worth redoing on every")
         print("table extension rather than citing a previous session for it.")
 sys.exit(1 if bad else 0)

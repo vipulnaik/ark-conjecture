@@ -1114,9 +1114,13 @@ def c_zero_share_trend(R, base):
               "sizes S1 and S2 are still large because omega(n)=2 has "
               "not thinned, and S4 still wins a few values where supply fails the winners above")
 def c_census(R, base):
-    d = Counter(r.shape for r in R)
+    P = contiguous_prefix(R)
+    d = Counter(r.shape for r in P)
     tot = sum(d.values())
-    return ("INFO", ", ".join(f"{k} {v} ({v/tot:.1%})" for k, v in sorted(d.items())), [])
+    tail = len(R) - len(P)
+    return ("INFO", ", ".join(f"{k} {v} ({v/tot:.1%})" for k, v in sorted(d.items()))
+            + f"   [contiguous prefix: {tot} rows to n = {max(r.n for r in P)}"
+            + (f"; {tail} worklist row(s) excluded]" if tail else "]"), [])
 
 
 @check("C", "odd-n shares among the three readings of n = 2c + r", "three-part-family-split.md",
@@ -1126,7 +1130,7 @@ def c_census(R, base):
               "measurement. Convergence is O(1/log n) and the model's own error is the same "
               "order, so a gap at computed sizes is expected, not evidence against the model")
 def c_oddshare(R, base):
-    rows = [r for r in R if r.n % 2 and r.shape in ("S4", "S5", "S7f2")]
+    rows = [r for r in contiguous_prefix(R) if r.n % 2 and r.shape in ("S4", "S5", "S7f2")]
     if not rows:
         return ("SKIP", "no odd three-reading winners in range", [])
     d = Counter(r.shape for r in rows)
@@ -1159,8 +1163,10 @@ def c_class(R, base):
               "because n/2 is often a prime power, which is S2 and not bounded by any of this. "
               "Read the comparison only at the residues where S1 and S2 are scarce. The caps are the joint optimum over (F, eta): 1/4 at "
               "0,4,6,10,12,16,18,22 - 0.13397 at 2,8,14,20 - 0.17157 at 1,9,13,21 - 0.125 at 3,19 - "
-              "0.10102 at 5,17 - 0.11111 at 7,15 - 0.07180 at 11 and 23. The last three take F = 4; "
-              "the rest take F = 2.")
+              "0.10102 at 5,17 - 0.125 at 7,15 - 0.07180 at 11 and 23. Only 11 and 23 take F = 4; "
+              "the rest take F = 2. (Classes 7 and 15 share the 1/8 cell with 3 and 19 under "
+              "the mod-12 keying; a table separating them is reading a mod-8 condition that is "
+              "constant on the class.)")
 def c_medbyclass(R, base):
     by = defaultdict(list)
     for r in R:
@@ -1274,11 +1280,18 @@ def a_ladder_sound(R, base):
 
 @check("C", "where the ladder under-explores relative to the enumeration",
        "aod section 5.1, section 5.2",
-       expect="the ladder should be TIGHT at most joined values -- it and the enumeration "
-              "then agree on delta(n) by two routes. A ratio well above 1 is a value where "
-              "the four families miss a configuration the enumeration finds, and the witness "
-              "column names the shape they are missing. Any decade minimum in aod section "
-              "5.2 that appears here is a LADDER bound and not delta at that n")
+       expect="the ladder should be TIGHT at EVERY joined value -- it and the enumeration "
+              "then agree on delta(n) by two routes. A ratio above 1 is a value where the "
+              "four families miss a configuration the enumeration finds, and the witness "
+              "column names the shape they are missing. This FAILS rather than reports, "
+              "because a ladder that understates is still a valid floor and so fails "
+              "silently: every downstream statement about the SHAPE of the low tail -- "
+              "worklist membership, decade minima, which n are worth an exact B -- is then "
+              "wrong in a way no other check sees. The known cause is a fused class's twist "
+              "being cut by its block count, which is not a necessary condition (entangled "
+              "generators); the shortfalls it produces are all fused-plus-foreign shapes. "
+              "Any decade minimum in aod section 5.2 that appears here is a LADDER bound "
+              "and not delta at that n")
 def c_ladder_gap(R, base):
     if not A.ladder:
         return ("SKIP", "no --ladder given", [])
@@ -1291,13 +1304,14 @@ def c_ladder_gap(R, base):
     if not g:
         return ("SKIP", "no n in both files", [])
     g.sort(reverse=True)
-    tight = sum(1 for x in g if x[0] < 1.01)
+    slack = [x for x in g if x[0] >= 1.01]
     lines = ["n=%-6d ladder %.5f  B %.5f  x%.2f  %s" % (n, lb, d, ratio, w)
-             for ratio, n, lb, d, w in g[:6] if ratio >= 1.01]
-    return ("INFO",
-            "%d joined; ladder tight (within 1%%) at %d of them; largest gap x%.2f at n = %d"
-            % (len(g), tight, g[0][0], g[0][1]),
-            lines)
+             for ratio, n, lb, d, w in slack[:8]]
+    if slack:
+        return ("FAIL",
+                "%d of %d joined values have ladder < B; largest gap x%.2f at n = %d"
+                % (len(slack), len(g), g[0][0], g[0][1]), lines)
+    return ("PASS", "%d joined; ladder equals B at every one" % len(g), [])
 
 
 @check("C", "share of values with omega(n) = 2, which is the multiplicative engine's reach",
@@ -1354,6 +1368,29 @@ def explain(R, n):
         print(f"  NOTE: exceeds its class ceiling by {r.delta / CAP24[r.n % 24]:.2f}x "
               f"-- an escape (aod section 4.3), not the balanced family")
     return 0
+
+
+PREFIX_GAP = 10
+
+
+def contiguous_prefix(R):
+    """The rows below the first gap wider than PREFIX_GAP.
+
+    The table is a contiguous prefix plus a worklist-driven tail, and the tail
+    is selected BY LOW LADDER SCORE, so it is a biased subsample: every share,
+    median and count taken over the whole file misreports the range.  Ten is the
+    right threshold and not an arbitrary one -- the table skips prime powers, so
+    consecutive entries inside the contiguous range are already a few apart,
+    while the jump to the worklist is much larger.  `converse_check.py` detects
+    the frontier the same way and must agree with this one; a distributional
+    figure quoted from one script and checked against the other is exactly where
+    a scope mismatch hides (it shows up as an off-by-one in a census count)."""
+    rows = sorted(R, key=lambda r: r.n)
+    for a, b in zip(rows, rows[1:]):
+        if b.n - a.n > PREFIX_GAP:
+            cut = a.n
+            return [r for r in rows if r.n <= cut]
+    return rows
 
 
 def main():

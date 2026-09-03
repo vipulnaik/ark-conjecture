@@ -6,8 +6,12 @@ a18_verify.py -- three verifications for Lemma D2 of enumeration-proof.md
   PASS 1  THE WITNESS.  Builds the n = 85 group -- five fused outside 17-blocks
           with a diagonal translation, a diagonal order-16 twist, and AGL(1,5)
           permuting the blocks -- and computes every pair-orbit exhaustively.
-          Expected: classes 170 / 680 / 2720, so m* = 170 = 2|O|, falsifying
-          Lemma D2's m* <= |O|/2.
+          Expected: classes 170 / 680 / 2720, so m* = 170 = 2|O|.  What that
+          falsifies is the SUPERSEDED linear form m* <= |O|/2, which assumed a
+          small block-permuter's pair-orbital; the lemma as it stands bounds the
+          same-position class by C(F,2)*r, which 170 attains exactly.  So this
+          pass exhibits the witness the current bound is tight on rather than a
+          counterexample to anything claimed.
 
   PASS 2  THE CHAIN.  Machine-checks that the witness satisfies Oliver's
           condition: Gamma_1 = <tau, c5> is cyclic of order 85 and normal, the
@@ -29,9 +33,12 @@ a18_verify.py -- three verifications for Lemma D2 of enumeration-proof.md
           B(n).  The bound is deliberately generous (it grants the largest
           class a 2-transitive permuter could produce), so a pass here means
           no fused-outside configuration can attain B(n) in range even under
-          worst-case structure.  Also prints the theorem threshold: with the
-          ladder's delta >= 0.02516 on n <= 1e6, exclusion is a theorem for
-          n >= 1582, overlapping the table's reach.
+          worst-case structure.  Also prints the theorem threshold, computed from a
+          deliberately weak delta: at delta >= 0.02516 the exclusion is a
+          theorem for n >= 1582, which overlaps the table's reach with room.
+          That is an UPPER bound on where the theorem starts -- a higher
+          verified floor lowers it -- and the pass does not depend on which
+          floor is fed in.
 
 Usage:  python3 a18_verify.py [path/to/mu_table_safe_v4.csv]
 Exits nonzero on any failure.
@@ -126,7 +133,8 @@ for k in range(len(pairs)):
     sizes.append(comp)
 sizes.sort()
 check("witness orbitals are [170, 680, 2720]", sizes == [170, 680, 2720])
-check("witness m* = 170 > |O|/2 = 42.5 (D2 falsified)", sizes[0] == 170 > n85 / 2)
+check("witness m* = 170 > |O|/2 = 42.5 (the superseded linear form fails here)",
+      sizes[0] == 170 > n85 / 2)
 check("offset-zero class = C(5,2)*17 (bound tight)", sizes[0] == comb(5, 2) * 17)
 
 G = closure(gens)
