@@ -26,6 +26,29 @@ The strip is not wrong; it answers a different question. It bounds the minimum i
 
 **Fixed.** All three sites now use the flat F·C(c,2); the strip survives only as an unread diagnostic (`_record_strip_diagnostic`). **Measured: `fallback_cert.py --no-theorems` still returns 0 candidates at all 2,187 rows.** So the in-range collapse rests on neither Lemma C, nor Corollary C′, nor J0a — a strictly smaller trusted base than the strip-gated version had. The banners, `ep`'s certificate description, the leftover twist lemma box, the E″ headline and the two extreme instances (n = 50,817 and 89,697) were all rescoped accordingly: those two are settled for μ = B_refined by the lemma, and for B_refined = B_safe only by the search, which has not been measured at them.
 
+### 1.1a The ladder rerun, and what it settled
+
+`ladder_verify.py` was rerun to 10⁶ under the corrected scoring (full twist on the S7 branch, foreign prime still stripped). The floor is untouched and the tail is materially different, which is exactly the split §1.1 predicted.
+
+| | pre-fix (v9) | corrected (v10) |
+|---|---|---|
+| worklist entries | 45,390 | **44,091** |
+| global minimum | 0.04621 at n = 2759 | **unchanged** |
+| joined against μ table | 37, short at 16 (worst ×1.81) | **28, tight at all 28** |
+| entries below 0.05 | 7 | **2** (2759, 2183) |
+| [10², 10³) | 0.05703 at 527 | 0.05703 at 527 |
+| [10³, 10⁴) | 0.04621 at 2759 | 0.04621 at 2759 |
+| [10⁴, 10⁵) | 0.04801 at 11183 | **0.05829 at 22139** |
+| [10⁵, 10⁶] | 0.05603 at 173627 | **0.06391 at 118703** |
+
+**"One decade wide" is now a statement about δ rather than about the scan.** The decade minima rise monotonically on both sides of the binding one, every non-binding decade clears 0.057, and at the binding value the ladder equals B(2759) = 175,813 — so that decade minimum *is* δ, not a bound on it. Under the cut, [10⁴, 10⁵) reported 0.04801 and the descent looked two decades wide; the difference was entirely the understated fused-plus-foreign families.
+
+**The low tail collapsed from seven entries below 0.05 to two**, both already in the μ table with B equal to the ladder's own score. So no further exact B below 10⁶ can move the floor — which retires the "ten lowest entries" worklist as a research target rather than requoting it. An independent adaptive `mu_enumerate_v3.py` run at threshold 0.05 returns the same two floor-lowering values and the same global minimum, so the two engines agree on the tail as well as the floor.
+
+**`validate_table_v3.py --ladder` now passes** (25 PASS / 0 FAIL), which is the check §1.1 converted from INFO to FAIL for exactly this purpose: it failed against v9 and passes against v10, so the conversion did the job it was made for.
+
+Figures updated across `aod` §3.5 (decade table, mod-24 split 21,711 / 22,378, per-class min-ratio spread 0.327–0.693 keyed mod 12, and the saturation claim now stated with its argmins), `aod` §5/§5.1/§5.2, `ep`'s status header, and `pending-checks.md` R7. All ⟦PENDING-LADDER-RERUN⟧ tags are retired; one ⟦PENDING-REBUILD⟧ in §3.5 was resolved by the run's own per-class state rather than deferred again.
+
 ### 1.2a What the rescoping costs at scale: two named values, measured
 
 `wide_cert.py` at NMAX = 10⁵ was rerun under the flat-cap conditions, and the coverage moves from the reported **100.00%** to **90,297 of 90,299 (99.998%)**. The residue is two values:
