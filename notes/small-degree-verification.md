@@ -305,6 +305,23 @@ By `small-degree-computation.md` §2.4 the χ constraint is decisive at t ≤ 3 
 
 **Carry the word "non-monotone" every time this is cited.** `small-degree-computation.md` §2.1 defines "property" to mean monotone graph property and never redefines it, so the unqualified sentence reads as claiming a nonevasive monotone property at the prime n = 5, which KSS forbids. It was not wrong as written — it says "property", not "monotone property" — but a careful reader applying the document's own convention hits the collision. Now qualified in both places it appears.
 
+## 13b. Verify an emission file before consuming it
+
+`verify_emission.py` checks the things that fail *silently* downstream: a file of the wrong degree (parses fine, produces a meaningless catalog), a truncated one (looks like a smaller battery), duplicate keys from an interrupted resume, non-dense orbital ids (`consume_gap.py` subtracts one and indexes by them, so a gap shifts every class above it), and malformed tags (read as a group name, not rejected). Degree is inferred from map length, that being the field that pins it — 45 at n = 10, 66 at n = 12.
+
+```bash
+python3 verify_emission.py groups_out_12_tom.txt
+python3 verify_emission.py groups_out_12_tom.txt --contains groups_out_12.txt
+```
+
+**Current status.** All three files here pass: `groups_out_10.txt` (967 rows), `groups_out_10_tom.txt` (1,111), `groups_out_12.txt` (7,115) — no wrong lengths, no gaps, no duplicate keys, no malformed tags.
+
+**`--contains` is the exhaustiveness check, and it is the reason to run this at n = 12.** It tests that every orbital partition of the second file appears in the first, up to relabelling, via an isomorphism-invariant per-orbital signature. At n = 10 it reproduces the §8.5 result exactly: TOM 186 partitions, hand-built 131, 55 new, **0 only in the hand-built file**. **Run the same command at n = 12 once the TOM emission finishes.** A non-empty "only in OTHER" list there would mean TOM is *not* exhaustive at that degree and wants investigating before the hand-built file is retired — the opposite of what n = 10 showed, and worth knowing before the GAP install goes away.
+
+*The signature is invariant but not complete*: two non-isomorphic partitions could collide, which would make containment look better than it is. It has not happened at n = 10, where the counts match a full comparison, but the risk runs in the flattering direction and should not be assumed away.
+
+**The tag column gets its own line of output**, because a stale file differs from a current one only there (item 6) and nothing comparing partitions can see it. A zero multi-prime count is reported with both readings — a real absence if the file is current, a sign of an archived file if not.
+
 ## 14. Artefacts still wanted
 
 > **Fixed at the source: `ark_gap.g` now suffixes all three output filenames by degree** — `groups_out_<N>.txt`, `done_keys_<N>.txt`, `ark_gap_<N>.log` — so runs at different degrees can no longer overwrite each other. **Existing files predate this and still collide**: rename the ones in hand to `groups_out_10.txt` and `groups_out_12.txt`, and until then check the orbital-map length before use, 45 entries at n = 10 and 66 at n = 12. The collision has cost this file two rounds, and it silently swaps a census rather than failing — which is why the fix is in the emitter and not in the reading discipline.
