@@ -66,9 +66,18 @@ foreign strip (SAFE deliberately does not).  Use --refined for v3's refined
 score if you want the strip; the default and the only mode the documents quote
 is SAFE.
 
+COST.  Measured: 4.6 s to n = 2,000; 46 s to 5,000; 158 s to 8,000 -- the whole
+run scales as ~n^2.5, so a single-threaded pass to 10^5 is ~20 h.  Use --chunks:
+the heaviest of 8 equal-work chunks took 281 s at nmax = 20,000, which puts an
+8-way parallel run to 10^5 at ~4.5 h wall.  Chunks are independent (each
+rebuilds the sieve to nmax), so this is `xargs -P8` and a `cat`, not a rewrite.
+
 Usage:
-    python3 mu_exact.py --nmax 100000                  # write mu_table_fast.csv
-    python3 mu_exact.py --nmax 2759 --out t.csv
+    # 8-way parallel to 10^5, ~4.5 h wall
+    seq 1 8 | xargs -P8 -I{} python3 mu_exact.py --nmax 100000 --chunks {}/8
+    cat mu_table_exact.csv.part{1..8} > mu_table_exact_1e5.csv
+
+    python3 mu_exact.py --nmax 10000                   # single-threaded
     python3 mu_exact.py --validate mu_table_safe_v5_code_v3.csv
     python3 mu_exact.py --cross 3000 12000 40          # spot-check vs v3
 """
@@ -379,14 +388,28 @@ def mu_bound(n, spf, FT):
 
 
 # ---------------------------------------------------------------- driver
-def run(nmax, out, start=2):
+HEADER = ["n", "C(n2)", "mu_bound", "density", "parts", "certified_K",
+          "partcap", "certified", "fallback", "witness"]
+
+
+def run(nmax, out, start=2, header=True):
+    """Rows for n in [start, nmax].
+
+    The sieve and the Foreign table are built to nmax regardless of start, so a
+    chunk is independent of every other chunk and chunks can be run in parallel
+    and concatenated.  That matters: the per-n cost grows as ~n^1.5 (the whole
+    run is ~n^2.5), so a single-threaded pass to 10^5 is ~20 h while eight
+    EQUAL-WORK chunks are ~2.5 h.  Equal work is not equal width -- the last
+    decade costs far more than the first -- so split on cumulative n^1.5, not on
+    n.  `--chunks i/N` does that for you.
+    """
     spf = sieve_spf(nmax + 2)
     FT = Foreign(nmax + 1, spf)
-    with open(out, "w", newline="") as fh:
+    mode = "w" if header else "a"
+    with open(out, mode, newline="") as fh:
         w = csv.writer(fh)
-        w.writerow(["n", "C(n2)", "mu_bound", "density", "parts",
-                    "certified_K", "partcap", "certified", "fallback",
-                    "witness"])
+        if header:
+            w.writerow(HEADER)
         for n in range(start, nmax + 1):
             if prime_power(n, spf):
                 continue
@@ -401,7 +424,13 @@ def main():
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--nmax", type=int, default=1000)
-    ap.add_argument("--out", default="mu_table_fast.csv")
+    ap.add_argument("--out", default="mu_table_exact.csv")
+    ap.add_argument("--chunks", metavar="i/N",
+                    help="run only chunk i of N, split for EQUAL WORK (on "
+                         "cumulative n^1.5, not equal width).  Writes "
+                         "<out>.part<i>; concatenate in order afterwards, "
+                         "keeping only the first header.  Chunks are "
+                         "independent -- each rebuilds the sieve to nmax.")
     ap.add_argument("--validate", metavar="CSV",
                     help="compare every row against a v3-produced table")
     ap.add_argument("--cross", nargs=3, type=int, metavar=("LO", "HI", "K"),
@@ -451,6 +480,21 @@ def main():
             print(f"  n={n:6d}  fast {v:12d}  v3 {ref:12d}  {flag}  [{wit}]")
         print(f"{K} cross-checks, {bad} mismatches")
         return 1 if bad else 0
+
+    if a.chunks:
+        i, N = (int(x) for x in a.chunks.split("/"))
+        if not 1 <= i <= N:
+            print("--chunks i/N needs 1 <= i <= N")
+            return 2
+        # equal work, not equal width: cost per n grows ~n^1.5, so split the
+        # range at equal increments of the integral, i.e. at nmax*(j/N)^(2/5).
+        edge = lambda j: max(2, int(a.nmax * (j / N) ** 0.4))
+        lo = edge(i - 1) + 1 if i > 1 else 2
+        hi = edge(i) if i < N else a.nmax
+        out = f"{a.out}.part{i}"
+        run(hi, out, start=lo, header=(i == 1))
+        print(f"wrote {out}  (n in [{lo}, {hi}])")
+        return 0
 
     run(a.nmax, a.out)
     print(f"wrote {a.out}")

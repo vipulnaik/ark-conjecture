@@ -98,10 +98,21 @@ def parse_q(tag):
         # a twist prime need not be a valid top prime -- and on a CSP whose useful
         # answer is UNSAT, an unjustified constraint is a spurious proof of ARK.
         #
-        # Logged because it has never fired across 8,082 groups at n = 10 and
-        # n = 12, so its first firing is either a new capability or a sign the
-        # tag is being produced by something other than IsOliverTop.  Either way
-        # it should not pass unnoticed.  (Same log as probe_backbone.py's.)
+        # IT NOW FIRES, AND THAT IS EXPECTED.  This comment used to say the
+        # path had never fired across 8,082 groups, so a first firing would be
+        # suspicious.  That was true only of the HAND-BUILT batteries as emitted
+        # by an older ark_gap.g.  The current emitter finds multi-prime tags at
+        # both degrees, by two independent generation paths:
+        #   n = 10: 3 groups, orders 36 / 36 / 72 -- TOM's T:658, T:659, T:990,
+        #           and the same three orders from stages A/B/B2/C.
+        #   n = 12: 15 rows / 12 distinct partitions, all of order divisible by
+        #           6 with a C_3-bearing factor; four at t <= 7 and one at t = 3.
+        # So a log line here on the n = 10 TOM battery (242 conditions, of which
+        # exactly 3 carry '2+3') is the strengthening working, not a warning.
+        # What WOULD still be suspicious is a multi-prime tag on a battery whose
+        # emission file predates the current ark_gap.g -- a stale file differs
+        # from a current one only in the tag column.  (Same log as
+        # probe_backbone.py's.)
         log(f"multi-prime tag {tag!r}: enforcing chi = 1 mod lcm = {m} "
             f"(verified top primes {qs})")
     return m

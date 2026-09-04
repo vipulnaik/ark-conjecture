@@ -14,7 +14,7 @@ Changes from v1:
 Usage:  python3 consume_gap.py [--maxgroups N] [--maxt T] [--procs P]
 Needs oliver_mu.py, ark_intersect.py, smith.py alongside; pip install networkx.
 """
-import sys, os, pickle, time, argparse, itertools, hashlib
+import sys, os, pickle, time, argparse, itertools, hashlib, math
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -425,11 +425,33 @@ def main():
     # per batch.  Random-graph proxies run 4-5x faster than the real catalog
     # and must not be used to size the job.
     BATCH = args.batch or max(2048, args.procs * 256)
-    vf2_s = 0.29 * len(todo) / max(1, args.procs)
-    clo_s = (len(todo) / BATCH) * 0.7 * (V / 1242.0) ** 2.6
-    log(f"stage 3: projected {vf2_s/3600:.1f} h VF2 on {args.procs} procs + "
-        f"{clo_s/3600:.1f} h closure at batch {BATCH} "
-        f"(model calibrated at n = 10; at n = 12 VF2 is ~200x slower per call)")
+    # TWO EFFECTS, PULLING OPPOSITE WAYS, so the projection is a RANGE.
+    #   * Closure resolves many pairs per VF2 call, so calls << pairs.  Measured
+    #     at n = 10: ~15 pairs/call at the start of a run, decaying roughly as
+    #     exp(-k*calls) with k ~ 4.3e-6, and approaching 1 as the easy pairs go.
+    #     Modelling that: calls ~ L until the rate hits 1, i.e. roughly
+    #     ln(k*L)/k + 1/k calls to clear L pairs.
+    #   * Cost per call RISES as the run proceeds, because the survivors are the
+    #     pairs neither invariants nor closure could decide -- 0.29 s early,
+    #     1.2-2.1 s late (8 procs, n = 10).
+    # The old single-number projection used calls = pairs at 0.29 s and was low
+    # by 3-6x on the completed n = 10 run.  Report the band instead, and say so.
+    L = len(todo)
+    k_res = 4.3e-6                      # measured decay of pairs-left per call
+    calls_lo = (math.log(max(k_res * L, 1.0)) / k_res + 1 / k_res) if L else 0
+    calls_hi = L                        # worst case: one pair per call
+    # 1.2 s/call is the RUN-AVERAGE measured over a completed n = 10 pass
+    # (0.29 s early, 1.2-2.1 s late); the band uses 0.6 and 2.1.
+    cen_h = calls_lo * 1.2 / max(1, args.procs) / 3600
+    lo_h = calls_lo * 0.6 / max(1, args.procs) / 3600
+    hi_h = calls_hi * 2.1 / max(1, args.procs) / 3600
+    clo_s = (calls_hi / BATCH) * 0.7 * (V / 1242.0) ** 2.6
+    log(f"stage 3: projected ~{cen_h:.0f} h VF2 on {args.procs} procs "
+        f"(band {lo_h:.0f}-{hi_h:.0f} h); ~{calls_lo/1000:.0f}k calls expected, "
+        f"{calls_hi/1000:.0f}k worst case; + <= {clo_s/3600:.1f} h closure "
+        f"at batch {BATCH}")
+    log("        closure resolves ~15 pairs/call early and ~1 late, so calls "
+        "<< pairs; read the per-batch lines for the live rate")
     if args.estimate_only:
         log("stage 3: --estimate-only set; stopping before any VF2 call")
         return
