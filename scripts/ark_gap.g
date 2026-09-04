@@ -22,7 +22,7 @@
 # Progress is logged to ark_gap_<N>.log with millisecond runtimes.
 #
 # Stages (edit STAGES below to select; each is independent):
-#   "A"    transitive groups of degree 10 (library; 45 groups)      ~minutes
+#   "A"    transitive groups of degree N (library; 45 at N = 10)     ~minutes
 #   "B"    direct products of transitive groups over partitions      ~minutes
 #   "B2"   imprimitive wreath products for 10 = 2*5 and 5*2          ~minutes
 #   "C"    p-subgroups: all subgroups of Sylow_p(S10), p=2,3,5,7     ~min-hours
@@ -112,12 +112,19 @@ LoadPackage("transgrp");   # transitive groups library; usually bundled
 
 PAIRS := Combinations([1..N], 2);;
 
-# pre-declare top-level loop variables that are referenced inside lambdas,
-# so GAP's parser does not emit "Unbound global variable" warnings (the
-# runtime semantics were already correct; this is warning hygiene only)
+# Pre-declare every top-level variable that a lambda closes over.  GAP parses
+# a function body when it READS it, so a global first assigned later in the
+# file is unbound at parse time and draws "Unbound global variable" -- a
+# read-time warning about a runtime-correct program, since the assignment has
+# happened by the time the lambda is called.  Harmless, but it prints once per
+# occurrence at every startup and trains the eye to skip GAP warnings, which is
+# the actual cost.  Anything used inside a `x -> ...` at top level belongs here.
 g := fail;;   # lexicographic, length C(N,2)
 tom := fail;;  nsub := 0;;  H := fail;;  i := 0;;   # stage TOM / FULL
 SUFFIX := "";;
+off := 0;;    # stage B: running point offset, closed over by the shift lambda
+d := 0;;      # stage B: current part size, same lambda
+part := [];;  ranges := [];;  combo := [];;  gens := [];;  T := fail;;
 
 CustomLog := function(msg)
   AppendTo(LOGFILE, String(Runtime()), "ms  ", msg, "\n");
@@ -232,7 +239,8 @@ end;;
 
 # ---------------------------------------------------------------- stage A
 if "A" in STAGES then
-  CustomLog("=== stage A: transitive groups of degree 10 ===");
+  CustomLog(Concatenation("=== stage A: transitive groups of degree ",
+                          String(N), " ==="));
   for k in [1..NrTransitiveGroups(N)] do
     EmitGroup(Concatenation("A:", String(k)),
               Concatenation("T(", String(N), ",", String(k), ") order ",
@@ -243,7 +251,7 @@ if "A" in STAGES then
 fi;
 
 # ---------------------------------------------------------------- stage B
-# direct products of transitive groups over partitions of 10 (parts >= 1);
+# direct products of transitive groups over partitions of N (parts >= 1);
 # part of size 1 contributes the trivial group.
 if "B" in STAGES then
   CustomLog("=== stage B: direct products over partitions ===");
@@ -337,7 +345,7 @@ if "C" in STAGES then
 fi;
 
 # ---------------------------------------------------------------- stage FULL
-# every subgroup class of S10, filtered to Oliver.  VERY heavy (hours, GB of
+# every subgroup class of S_N, filtered to Oliver.  VERY heavy (hours, GB of
 # RAM).  Run only on a machine you can leave alone; the single call
 # ConjugacyClassesSubgroups(S10) is not checkpointable -- if it completes,
 # per-group emission below is checkpointed as usual.
