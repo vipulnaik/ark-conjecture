@@ -31,9 +31,31 @@ would report NON-EVASIVE -- the counterexample-found verdict -- from a node
 nobody ever evaluated.  A run that ends in BUDGET therefore does not overwrite
 the memo file at all; resume from a file no exhausted run has touched.
 
+VALIDATION, AND WHAT EACH DEMO DOES AND DOES NOT TEST.
+  * --demo matching --n 6 : EVASIVE.  Correct by theorem (max-degree <= 1 is a
+    nontrivial monotone graph property, and ARK holds at n = 6 by KSS).
+  * --demo scorpion --n 6 : EVASIVE.  Also expected: the scorpion algorithm's
+    ~6n queries only beat C(n,2) once n is around 14, so at n = 6 this does NOT
+    exercise the NON-EVASIVE branch, despite reading like a positive control.
+  * The NON-EVASIVE branch has exactly one available positive control among
+    S_n-invariant properties below the first counterexample: a TRIVIAL one.
+    A skeleton whose generator is K_n makes P = all graphs, undetermined(0,0)
+    is False at the root, and the verdict is NON-EVASIVE -- which is correct
+    (a constant function has depth 0).  Confirmed at n = 6.
+  * Against a brute-force minimax with no symmetry reduction at n = 5 (all four
+    of matching, P3, K3, star3): agreement.  And the canonical key itself:
+    invariant under 3,000 random relabellings, and cert-equal <=> isomorphic on
+    14,820 pairs of small states checked against all 120 permutations.
+  * Budget exhaustion with --budget 300 on the matching demo: BUDGET verdict
+    and NO memo file written, as the MEMO SOUNDNESS note requires.
+  What none of this tests is a genuine non-trivial NON-EVASIVE return, since
+  no S_n-invariant monotone property is known to produce one at any n the
+  search can reach; the branch's correctness rests on the recursion's
+  soundness, which the brute-force comparison covers.
+
 Usage:
-  python3 adversary.py --demo scorpion --n 6        # validation, increasing
-  python3 adversary.py --demo matching --n 6        # validation, decreasing
+  python3 adversary.py --demo scorpion --n 6        # EVASIVE expected (see above)
+  python3 adversary.py --demo matching --n 6        # EVASIVE, by KSS
   python3 adversary.py --skeleton skeleton.pkl --n 10 --budget 50000000
 """
 import sys, os, time, pickle, argparse, itertools
