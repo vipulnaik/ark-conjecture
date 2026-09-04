@@ -175,6 +175,21 @@ def main():
     ap.add_argument("--limit", type=float, default=300)
     ap.add_argument("--exhaustive", action="store_true")
     ap.add_argument("--maxsols", type=int, default=50)
+    ap.add_argument("--small", type=int, default=99,
+                    help="in the DFS, try OUT before IN for sets larger than this, so "
+                         "leaves are SMALL complexes.  EXPERIMENTAL AND CURRENTLY "
+                         "UNPRODUCTIVE: with --small 7, 9 or 11 the search reaches "
+                         "no leaf in 110 s, where the default reaches one in seconds. "
+                         "Reason: the C_2 Smith condition spans 248 of the 254 touched "
+                         "orbits and fires only once all are decided, so OUT-first "
+                         "explores an exponential tree of small assignments that "
+                         "fail it at the leaf; IN-first lands on near-full complexes "
+                         "whose fixed complexes are acyclic almost by default.  A "
+                         "genuine small-side search needs an incremental acyclicity "
+                         "test on partial C_2 lattices, which this DFS does not have. "
+                         "Default 99 = off; homology is computed on whichever side is "
+                         "smaller regardless (Alexander duality), so the near-full "
+                         "leaves already ARE the small side, seen from the other end.")
     ap.add_argument("--homology", action="store_true",
                     help="compute the actual homology (Q and F_2,F_3,F_5, plus "
                          "Smith normal form torsion) of each tuned candidate -- "
@@ -391,7 +406,14 @@ def main():
                 sols.append(dict(x))
             return
         o = order_vars[k]
-        for v in (1, 0):
+        # THE FLIP.  Try OUT first for sets larger than --small, so the leaves
+        # reached first are SMALL complexes (few faces) rather than near-full
+        # ones.  By Alexander self-duality (D(f) = D(f*), and every fixed-complex
+        # condition transfers) the two sides carry the same information, but
+        # small complexes admit direct integer homology and a fast minimality
+        # check, and the near-full ones found earlier were their duals anyway.
+        order = (0, 1) if size[o] > a.small else (1, 0)
+        for v in order:
             ch = []
             if assign(o, v, ch): dfs(k + 1)
             undo(ch)
@@ -493,6 +515,61 @@ def main():
         return out
     def add_orbit(mem, o):
         for m in orbits[o]: mem[m] = 1
+    def is_minimal(mem):
+        """Barmak-Minian minimality: no vertex v is dominated, i.e. there is no
+        w != v such that every maximal face containing v also contains w.  By
+        their Cor. 6.13 a vertex-homogeneous non-evasive complex has a
+        vertex-homogeneous non-evasive core, and on 15 vertices the core has
+        15/m vertices with m in {1,3,5,15}; 3 and 5 are prime powers where the
+        conjecture is a theorem, so a counterexample here must be minimal.
+        Vertex-transitivity means checking v = 0 suffices."""
+        maxf = [m for m in range(1, 1 << N) if mem[m] and
+                not any(mem[m | (1 << i)] for i in range(N) if not (m >> i & 1))]
+        cont0 = [m for m in maxf if m & 1]
+        if not cont0:
+            return False
+        common = cont0[0]
+        for m in cont0[1:]:
+            common &= m
+        return common == 1          # only v = 0 itself lies in every maximal face containing it
+
+    def smith_torsion(M):
+        """Torsion coefficients (>1) of the integer matrix M via Smith normal
+        form; small dense matrices only."""
+        import numpy as np
+        A = [list(map(int, r)) for r in M]
+        if not A or not A[0]:
+            return []
+        rows, cols = len(A), len(A[0])
+        diag = []
+        r = 0
+        for c in range(cols):
+            if r >= rows: break
+            piv = None
+            for i in range(r, rows):
+                if A[i][c]: piv = i; break
+            if piv is None: continue
+            A[r], A[piv] = A[piv], A[r]
+            # reduce column below and row to the right by gcd steps
+            changed = True
+            while changed:
+                changed = False
+                for i in range(r + 1, rows):
+                    if A[i][c]:
+                        q = A[i][c] // A[r][c]
+                        A[i] = [a - q * b for a, b in zip(A[i], A[r])]
+                        if A[i][c]:
+                            A[r], A[i] = A[i], A[r]; changed = True
+                for j in range(c + 1, cols):
+                    if A[r][j]:
+                        q = A[r][j] // A[r][c]
+                        for i in range(rows): A[i][j] -= q * A[i][c]
+                        if A[r][j]:
+                            for i in range(rows): A[i][c], A[i][j] = A[i][j], A[i][c]
+                            changed = True
+            diag.append(abs(A[r][c])); r += 1
+        return [d for d in diag if d > 1]
+
     def homology_report(mem):
         """Greedy elementary collapses (homotopy-preserving), then exact homology
         of the residual: Betti numbers over Q and over F_2, F_3, F_5, and integer
@@ -506,12 +583,16 @@ def main():
         missing = [m for m in range(1, 1 << N) if not mem[m]]
         dual = {FULL & ~m for m in missing}          # includes the empty face (from FULL)
         dual.discard(0)
+        direct = set(faces)
+        # work on whichever side is smaller; Betti numbers of the other side
+        # follow by Alexander duality (degree-reversed), acyclicity is shared
+        side, work = ("dual", dual) if len(dual) <= len(direct) else ("Delta", direct)
         by_dim = defaultdict(list)
-        for f in dual: by_dim[bin(f).count('1') - 1].append(f)
+        for f in work: by_dim[bin(f).count('1') - 1].append(f)
         sizes = {d: len(v) for d, v in sorted(by_dim.items())}
-        tag = f"dual complex on {len(dual)} nonempty faces"
-        if not dual:
-            return tag + ": dual is {empty}, so Delta is the full simplex boundary? (check)"
+        tag = f"{side} side, {len(work)} nonempty faces"
+        if not work:
+            return tag + ": empty"
         import numpy as np
         idx = {d: {f: i for i, f in enumerate(sorted(v))} for d, v in by_dim.items()}
         top = max(by_dim)
@@ -557,8 +638,15 @@ def main():
             n_d = len(by_dim.get(d, []))
             ker = n_d - rq.get(d, 0) if d >= 1 else n_d
             bq.append(ker - rq.get(d + 1, 0) - (1 if d == 0 else 0))
-        return (f"{tag}; f-vector {sizes}; reduced Betti of DUAL over Q {bq}; " + "; ".join(out)
-                + "  [Delta Z-acyclic iff all zero]")
+        tors = ""
+        if len(work) <= 4000:
+            t_all = {}
+            for d, M in mats.items():
+                t = smith_torsion(M.tolist())
+                if t: t_all[d] = t
+            tors = f"; integer torsion in boundary maps {t_all if t_all else 'none'}"
+        return (f"{tag}; f-vector {sizes}; reduced Betti over Q {bq}; " + "; ".join(out)
+                + tors + "  [Z-acyclic iff all Betti zero and no torsion]")
 
     tested = 0; found = 0; tuned = 0
     for s in sols[: (len(sols) if a.exhaustive else min(len(sols), 12))]:
@@ -600,7 +688,15 @@ def main():
             continue
         tuned += 1
         t1 = time.time(); ne = nonevasive(mem); dt = time.time() - t1
-        print(f"  candidate {tested}: {sum(mem)} sets, chi=1, chi(link)=1 -> "
+        minimal = is_minimal(mem)
+        # dual for the minimality cross-check: a counterexample and its dual are
+        # both counterexamples, so both must be minimal
+        dmem = bytearray(1 << N)
+        for m in range(1 << N):
+            if not mem[FULL & ~m]: dmem[m] = 1
+        dminimal = is_minimal(dmem)
+        print(f"  candidate {tested}: {sum(mem)} sets (dual {sum(dmem)}), chi=1, chi(link)=1, "
+              f"minimal={minimal}/{dminimal} -> "
               f"{'NONEVASIVE  <== COUNTEREXAMPLE' if ne else 'EVASIVE'}  ({dt:.1f}s)")
         found += ne
         if a.homology:
