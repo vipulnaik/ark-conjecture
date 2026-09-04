@@ -337,7 +337,18 @@ The inference *rate* transfers intact from n = 10 — the invariant filters are 
 
 *Benchmarked with the shipped `consume_gap.py`, `networkx` 3.6.1 and the real n = 10 `groups_out` file. Stages 1–2 and the stage-3 inference were run to completion on the full 167-condition battery (`--estimate-only`, 8 minutes, most of it stage-2 catalog canonicalisation), so **V and the VF2 pair count below are measured, not modelled.** The per-call VF2 cost is measured on 600 invariant-passing pairs drawn from that catalog; the closure cost on the shipped `close()`.*
 
-**The full battery, measured.** The 167 distinct conditions give **V = 2,902** union-graph classes (2.34× the published 1,242), complement-closed with a palindromic edge-count histogram peaking at 134 classes at 21 and 24 edges. Ordered pairs 8,418,702; free containments 170,572; invariant/size exclusions 6,259,977; **1,482,293 pairs (17.6%) need VF2 after closure** — the same fraction range §8.2 saw at n = 12, and below the 24.5% pre-closure figure of the published run.
+**Two batteries, both measured.** The hand-built stages (A/B/B2/C) give 167 distinct conditions; the **`TOM` stage — every conjugacy class of subgroups of S₁₀, read from the table of marks — gives 242**, and it **strictly contains** the hand-built set (below). Sizing figures, from `--estimate-only` runs on the real files:
+
+| battery | lines | conditions | V | ordered pairs | free | excluded | **need VF2** |
+|---|---|---|---|---|---|---|---|
+| A/B/B2/C | 967 | 167 | 2,902 | 8,418,702 | 170,572 | 6,259,977 | **1,482,293 (17.6%)** |
+| **TOM** | 1,111 | **242** | **3,782** | 14,299,742 | 228,473 | 10,693,130 | **2,565,218 (17.9%)** |
+
+Both catalogs are complement-closed with palindromic edge-count histograms. The 17.6–17.9% survival rate matches the range §8.2 saw at n = 12 and sits below the published run's 24.5% pre-closure figure.
+
+> **TOM subsumes the hand-built stages, checked rather than assumed.** Comparing at the level the CSP conditions actually depend on — the orbital partition up to relabelling, via an isomorphism-invariant signature per orbital (size, degree sequence, component count, triangle count) — the hand-built file carries **131** distinct partitions and TOM **186**, with **55 in TOM only and 0 in the hand-built file only**. Concatenating the two files and rerunning stage 1 yields the same 242 conditions and byte-identical stage-2 output as TOM alone. **So the subdirect-product hole of §8.5 is closed**, and the hand-built battery is formally redundant — though worth keeping, since two generation paths agreeing on 131 partitions is a check on `IsOliverTop` that nothing else provides.
+>
+> **TOM also shifts the battery toward the useful groups.** Trivial-top tags go 95 → 192 and `q = 2` tags 159 → 532, and the t-distribution moves down (t ≤ 6: 306 → 404 lines), small t being where a condition constrains most.
 
 **Two costs, and the second is the one nobody had priced.**
 
@@ -349,19 +360,21 @@ The inference *rate* transfers intact from n = 10 — the invariant filters are 
 
 > T_VF2 ≈ 0.29 s × N_VF2 / procs   T_closure ≈ (N_VF2 / B) × 0.7 s × (V/1242)^2.6
 
-**For the 167-condition battery, N_VF2 = 1,482,293 and V = 2,902:**
+| battery | cores | batch | VF2 | closure | **total** |
+|---|---|---|---|---|---|
+| 167-condition (V = 2,902) | 8 | 2048 | 14.9 h | 1.3 h | **~16 h** |
+| | 16 | 2048 | 7.5 h | 1.3 h | **~9 h** |
+| | 32 | 2048 | 3.7 h | 1.3 h | **~5 h** |
+| **TOM (V = 3,782)** | 8 | 2048 | 25.8 h | 4.4 h | **~30 h** |
+| | 8 | **8192** | 25.8 h | 1.1 h | **~27 h** |
+| | 16 | **8192** | 12.9 h | 1.1 h | **~14 h** |
+| | 32 | **8192** | 6.5 h | 1.1 h | **~7.6 h** |
 
-| cores | VF2 | closure @ 2048 | closure @ 128 (old default) | **total @ 2048** |
-|---|---|---|---|---|
-| 8 | 14.9 h | 1.3 h | 21 h | **~16 h** |
-| 16 | 7.5 h | 1.3 h | 21 h | **~9 h** |
-| 32 | 3.7 h | 1.3 h | 21 h | **~5 h** |
-
-Single-threaded it is 120 h of VF2, which is what the old row-based loop would have taken. The closure column is serial and does not shrink with cores, so past ~32 cores it is the floor. **At the old batch size the closure alone exceeds the VF2 work on 8 cores**, which is why `--batch` exists and defaults to 2048.
+Single-threaded the TOM battery is 207 h of VF2, which is what the old row-based loop would have taken. **The closure column is serial and does not shrink with cores**, so past ~32 cores it is the floor — and it grows as V^2.6, which is why the TOM run wants `--batch 8192` where the smaller battery is fine at the 2048 default. At the pre-`--batch` default of 128 the closure alone would be 21 h (167-condition) or 70 h (TOM), in both cases exceeding all the VF2 work on 8 cores.
 
 **Read the projection as a lower estimate by perhaps 1.5×.** The 290 ms is over invariant-passing pairs; the pairs that reach VF2 are those closure could not decide either, which selects toward the hard tail. The run's own per-batch log lines give the true rate in the first ten minutes and the instructions in `small-degree-verification.md` say to read them.
 
-**For other batteries** — the 189 conditions of the whole file at `--maxt 12`, or the TOM-enlarged set — V is not known but is minutes to compute: `consume_gap.py --estimate-only` runs stages 1–2 and the inference, prints V, N_VF2 and the projected hours from this model, and exits before any VF2 call.
+**For other batteries** — either file at `--maxt 12`, or a future degree — V is minutes to compute: `consume_gap.py --estimate-only` runs stages 1–2 and the inference, prints V, N_VF2 and the projected hours from this model, and exits before any VF2 call.
 
 **Stage 2 is no longer free at this size.** The catalog canonicalisation (`Catalog.classify`, linear scan with `nx.is_isomorphic` within an invariant bucket) took most of the 8-minute sizing run at V = 2,902 and grows roughly as V × (bucket size); it is minutes, not hours, but it is not the seconds the earlier draft of this section assumed, and it is checkpointed.
 
@@ -392,9 +405,11 @@ The four GAP stages are **not obviously exhaustive over intransitive imprimitive
 
 This is the concrete gap. By §1.2 it cannot corrupt the μ results; it can only mean the enumeration is not the exhaustive check it is advertised as.
 
-> **It is closable by construction rather than by argument, and cheaply.** Enumerating *every* conjugacy class of subgroups of S_N settles it outright — a subdirect product is a subgroup like any other — and the reason that was written off as heavy is that the `FULL` stage calls `ConjugacyClassesSubgroups(S_N)`, which is the expensive step and the one item 5b flags as never confirmed to have finished. **The table of marks is the way round it:** TomLib ships precomputed tables for the symmetric groups in this range, and `RepresentativeTom` returns a representative of each class with no subgroup computation at all. `ark_gap.g` now carries this as stage **`TOM`**, off by default, logging the class count rather than predicting it, and falling back with a message if no table exists for the degree.
+> **CLOSED.** The `TOM` stage was run at n = 10 (50 s, 1,593 subgroup classes from the table of marks, 1,111 emitted). Compared against the hand-built stages at the level the conditions depend on — orbital partition up to relabelling — it carries **186 partitions to their 131, with 55 new and none lost**, and the merged file yields the same 242 conditions as TOM alone. **So every conjugacy class of subgroups of S₁₀ is represented and the hole is closed at this degree.** The two batteries agreeing on 131 partitions by two unrelated generation paths is also the only independent check `IsOliverTop` has. n = 12 is untouched; `TomLib` has the table, so the same route applies.
 >
-> **What it would buy is the difference between the two readings of §1.2**, and it buys it at both degrees at once. Job (a) upgrades from "no enumerated group exceeds B(n)" to the exhaustive statement the framework's only external check is supposed to make — which matters because §4.1's μ(10) = 20 and μ(12) = 18 are the only two degrees where μ is known by construction rather than by classification. Job (c) gets the complete condition set in place of the union-of-stages battery, which is the direction that can only help, since dropping conditions is what turns a real UNSAT into a spurious SAT. **Run it before spending anything further on battery size** — it dominates the escalation of §5.1, which is a bigger subset of an unknown whole.
+> *The reasoning that made it cheap, retained for n = 12:* Enumerating *every* conjugacy class of subgroups of S_N settles it outright — a subdirect product is a subgroup like any other — and the reason that was written off as heavy is that the `FULL` stage calls `ConjugacyClassesSubgroups(S_N)`, which is the expensive step and the one item 5b flags as never confirmed to have finished. **The table of marks is the way round it:** TomLib ships precomputed tables for the symmetric groups in this range, and `RepresentativeTom` returns a representative of each class with no subgroup computation at all. `ark_gap.g` now carries this as stage **`TOM`**, off by default, logging the class count rather than predicting it, and falling back with a message if no table exists for the degree.
+>
+> **What it would buy is the difference between the two readings of §1.2**, and it buys it at both degrees at once. Job (a) upgrades from "no enumerated group exceeds B(n)" to the exhaustive statement the framework's only external check is supposed to make — which matters because §4.1's μ(10) = 20 and μ(12) = 18 are the only two degrees where μ is known by construction rather than by classification. Job (c) gets the complete condition set in place of the union-of-stages battery, which is the direction that can only help, since dropping conditions is what turns a real UNSAT into a spurious SAT. **Run it before spending anything further on battery size** — it dominates the escalation of §5.1, which is a bigger subset of an unknown whole. *(Done at n = 10; the escalation question there is now settled in TOM's favour, and §8.2a's table prices both.)*
 
 A second, smaller question: `ConjugacyClassesSubgroups` on the Sylow 2-subgroup is the expensive step and is not internally checkpointable, so any completeness claim for stage C depends on that call having finished. Mitigating for the headline: p-subgroups do not attain the optimum at either degree.
 
@@ -416,7 +431,7 @@ The connection to §5.3 is worth noting. K₁,₈ is forced IN while the spannin
 
 ## 10. Open questions
 
-**Settled and not at risk:** μ(10) = 20 and μ(12) = 18 over the enumerated groups, exceeded zero ways; the optima match the predicted constructions; the order matrix and the involution are verified. *These read off `groups_out.txt` or the catalog directly and are untouched by the battery truncation of §5.1 — the SAT verdict and everything derived from it are not on this list.*
+**Settled and not at risk:** μ(10) = 20 **over every conjugacy class of subgroups of S₁₀** (the `TOM` stage, §8.5 — so exhaustive, not merely over the enumerated groups) and μ(12) = 18 over the enumerated groups, exceeded zero ways; the optima match the predicted constructions; the order matrix and the involution are verified. *These read off `groups_out.txt` or the catalog directly and are untouched by the battery truncation of §5.1 — the SAT verdict and everything derived from it are not on this list.*
 
 **Open, in rough order of expected value:**
 
@@ -425,7 +440,7 @@ The connection to §5.3 is worth noting. K₁,₈ is forced IN while the spannin
 3. **Re-probe the 54 CAP classes** at a larger node budget, before any statement about the free band or any escalation decision that depends on its width (§5.5).
 4. **Probe the 15 unprobed involution partners** of the forced classes — `414, 434, 439, 457, 493` (predicted forced IN, 7–9 edges) and `541, 543, 548, 549, 555, 560, 561, 562, 565, 566` (predicted forced OUT, 37–43 edges). Each is a cheap two-sided test of the duality of §2.3 and would roughly double the known backbone if it confirms.
 5. **Run the n = 10 CSP against Angel–Borja's five surviving types** (§4.3). Non-circular validation if it reproduces their eliminations; a publishable increment if it kills more. *(The arithmetic programme deprioritises this: the exhaustive n = 10 and n = 12 m\* comparisons validate the machinery more strongly. Its standing is as an increment on Angel–Borja, not as validation the framework is waiting on.)*
-6. **Close the subdirect-product hole via the table of marks** (§8.5) — the only thing standing between "no enumerated group exceeds B(n)" and "the exhaustive optimum is the predicted construction", and now a run rather than a research question: stage `TOM` in `ark_gap.g`, which reads subgroup-class representatives out of TomLib instead of computing them. **Highest value per unit effort of anything on this list**, since it upgrades the framework's only external check at both degrees simultaneously.
+6. ~~Close the subdirect-product hole~~ **— DONE at n = 10** (§8.5): stage `TOM` in `ark_gap.g` emitted every conjugacy class of subgroups of S₁₀ from the table of marks in 50 s, strictly containing the hand-built stages. So job (a)'s μ(10) = 20 is now exhaustive rather than "no enumerated group exceeds B(n)", and job (c) has the complete 242-condition battery. **Still open at n = 12**, by the same route and at similar cost.
 7. **Decide how S is computed at n = 12** (§8.3): full down-closure versus the exponential-formula route.
 8. **Settle the multi-prime tag question** (§8.6) and either exercise or retire the lcm strengthening.
 9. **Climb the ladder, if a candidate ever warrants it** (§2.0). Nothing in the pipeline probes above ℤ-acyclicity, because no candidate has yet survived the χ = 1 rung to need it. If the n = 12 battery returns SAT and its skeleton passes the global χ test, the adversary game of §3.8 stops being a last resort and becomes the next tool — and `adversary.py` should be validated against Adamaszek's ℰ as a negative control before any EVASIVE verdict from it is trusted.

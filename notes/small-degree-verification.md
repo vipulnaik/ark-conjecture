@@ -41,53 +41,45 @@ python3 probe_backbone.py --nodecap 50000000     # retries every CAP, skips exac
 
 The published n = 10 SAT was computed on 75 of 167 available conditions, the old dedup key having merged the rest (item 7). Dropping conditions makes the system easier to satisfy, so the positive verdict does not transfer to the full battery. This is the cheapest of the three runs here and the only one whose outcome could settle a degree outright.
 
-**Sequence, with the sizing step first.** Costs are from the calibrated model of `small-degree-computation.md` §8.2a; the one number the model cannot supply is V, which step 2 prints in seconds.
+**Sequence.** Costs from the calibrated model of `small-degree-computation.md` §8.2a; V and the pair counts are measured, not projected.
 
 ```bash
-# 0. (once) rename the existing per-degree files so ark_gap.g's new suffixed
-#    names do not collide with them:  groups_out.txt (45-entry maps) ->
-#    groups_out_10.txt.  Check the map length; the two degrees' files were
-#    overwriting each other.
+# 1. THE BATTERY.  Use the TOM file: 242 conditions against the hand-built
+#    stages' 167, and it STRICTLY CONTAINS them (186 orbital partitions vs 131,
+#    55 new, 0 lost).  Already generated as groups_out_10_tom.txt; regenerate
+#    with STAGES := [ "TOM" ] in ark_gap.g if needed (~50 s).
+#      ARK_N=10 gap -q -o 4g ark_gap.g
 
-# 1. (optional, recommended) close the subdirect-product hole first, so the
-#    battery is the complete set rather than the union of stages A/B/B2/C.
-#    Edit STAGES in ark_gap.g to [ "TOM" ] and run; the log reports the class
-#    count.  Minutes.  If the log says no table of marks exists for N = 10,
-#    skip this and run the 167-condition battery as is.
-ARK_N=10 gap -q -o 4g ark_gap.g
+# 2. SIZE IT.  ALREADY RUN: V = 3,782, 2,565,218 of 14,299,742 ordered pairs
+#    need VF2 (17.9%).  Skip unless the battery changes.  Takes ~2 min; the
+#    stage-1/2 checkpoints it writes are reused by step 3 unchanged.
+python3 consume_gap.py --infile groups_out_10_tom.txt --maxgroups 1000 \
+        --maxt 10 --procs 8 --estimate-only
+#    To skip it: drop ckpt_groups_n10_tom242.pkl and ckpt_catalog_n10_tom242.pkl
+#    into the working directory, renamed to ckpt_groups.pkl / ckpt_catalog.pkl.
+#    Their selection signature is ca4657d90994e701; consume_gap.py rebuilds
+#    from scratch if the flags below produce a different one, so keep them.
 
-# 2. SIZE THE JOB.  Stages 1-2 and the stage-3 inference only; prints V, the
-#    number of ordered pairs needing VF2, and projected hours.  No VF2 calls.
-python3 consume_gap.py --infile groups_out_10.txt --maxgroups 1000 --maxt 10 \
-        --procs 8 --estimate-only
-#    Read V.  Expected: 0.8 h at V ~ 1,250; ~6 h at 3,000; ~15 h at 4,000;
-#    ~60 h at 6,000 -- all on 8 cores at the default --batch.  If V comes out
-#    above ~5,000, consider --maxt 8 for a first pass (123 conditions at the
-#    old cap; see the item-7 table) and read the verdict with section 1.2's
-#    asymmetry in mind: UNSAT transfers upward, SAT does not.
+# 3. THE RUN.  NOTE --batch 8192: at V = 3,782 the 2048 default costs 4.4 h of
+#    serial closure against 1.1 h at 8192.  Projected ~27 h on 8 cores, ~14 h
+#    on 16, ~7.6 h on 32; read as a lower estimate by ~1.5x.
+#    Watch the first two "stage 3: N VF2 calls done ... (Ts)" lines: T times
+#    procs/8192 is the real per-call cost on the pairs that reach VF2.  The
+#    model uses 290 ms, measured on invariant-passing pairs of the 167-condition
+#    catalog; post-closure survivors skew harder, so expect more.
+#    Resumable: ckpt_order.pkl is rewritten after every batch, so this can run
+#    in pieces across sessions.
+python3 consume_gap.py --infile groups_out_10_tom.txt --maxgroups 1000 \
+        --maxt 10 --procs 8 --batch 8192
 
-# 3. THE RUN.  Same flags without --estimate-only (the checkpoint signature
-#    depends on the flags, so keep them identical).  Watch the first two
-#    "stage 3: N VF2 calls done ... (Ts)" lines: T per batch of 2048 pairs,
-#    times procs/2048, is the real per-call cost on the pairs that actually
-#    reach VF2.  The model uses 290 ms, measured on invariant-passing pairs of
-#    this catalog; post-closure survivors skew harder, so expect somewhat more.
-#    Total = (pairs left) x (per-call) / procs, plus ~1.3 h of serial closure.
-#    Resumable: ckpt_order.pkl is rewritten after every batch, so this can be
-#    run in pieces across sessions.  The stage-1/2 checkpoints from the sizing
-#    run (ckpt_groups_n10_167.pkl, ckpt_catalog_n10_167.pkl in the outputs;
-#    rename back to ckpt_groups.pkl / ckpt_catalog.pkl) save the 8-minute
-#    stage 2 if placed in the working directory.
-python3 consume_gap.py --infile groups_out_10.txt --maxgroups 1000 --maxt 10 \
-        --procs 8
-
-# 4. THE VERDICT.  Seconds to minutes at any plausible V.
+# 4. THE VERDICT.  Seconds to minutes.
 python3 stage4_fast.py --first
 ```
 
-**Do not** run step 3 with the old batch size (`--batch 128`): at V ≥ 3,000 the pure-Python closure between batches costs more than all the VF2 work put together (§8.2a).
+**The 167-condition battery remains runnable** (`--infile groups_out_10.txt`, no `--batch` needed, ~16 h on 8 cores, V = 2,902) and is the cheaper first pass if the machine is small. Its UNSAT would settle n = 10 outright; its SAT says nothing TOM's would not.
 
-UNSAT settles n = 10. SAT puts the framework's only satisfiability claim on an untruncated battery, and hands `chi_test.py` a solution whose skeleton is worth killing again — and, per `small-degree-computation.md` §5.2's box, is the point at which effort should move from battery size to a χ = 1 search.
+UNSAT settles n = 10. SAT puts the framework's only satisfiability claim on an untruncated *and* exhaustive battery, and hands `chi_test.py` a solution whose skeleton is worth killing again — and, per `small-degree-computation.md` §5.2's box, is the point at which effort should move from battery size to a χ = 1 search.
+
 
 ### Rebuild the n = 12 battery, and decide the battery size first
 
@@ -213,7 +205,9 @@ A CAP class is *not* free. Exactly one pinning capped per CAP class (0 classes h
 
 So this needs one GAP re-emission from a known-current `ark_gap.g`. **If that also yields no `+` tag, retire the strengthening rather than leaving it as dead code**, because it carries a live hazard: the same lcm enforcement fed from `ark_intersect`'s twist primes would be unsound, and dead code invites exactly that reuse. (`probe_backbone.py` now logs when a multi-prime tag fires, so the re-emission answers this for free.)
 
-> **There is likely a proof that no group ever carries a multi-prime tag, which would settle this without the re-emission deciding it.** Suppose Γ admits chains with tops q₁ ≠ q₂ over the same bottom prime p, and write H = Γ/O_p(Γ), Cᵢ = Γᵢ/O_p(Γ) for the two cyclic middles. Then H/C₁ is a q₁-group and H/C₂ a q₂-group with C₁, C₂ normal cyclic; H = C₁C₂, and H/(C₁ ∩ C₂) embeds in the product of the two quotients. For the two chains to differ in top prime while neither admits a trivial top, both cyclic parts must centralise the intersection, which makes H a product of two normal cyclic subgroups of coprime index — hence cyclic, hence **trivial top**, hence tag `0` and not a multi-prime tag at all. **So "two usable top primes" should collapse to "trivial top" whenever the bottom prime is shared.** The different-bottom-prime case wants the same argument run through O_{p₁}(Γ)·O_{p₂}(Γ) and has not been done. If the argument holds in general the strengthening is provably worth nothing and should be retired on that basis rather than on a count of `+` tags — which would also explain the two independent zero counts below instead of leaving them as a coincidence. **Sketch only; not verified, and the second case is genuinely open.**
+> **RETRACTED — the re-emission decided it, and the answer is the opposite.** The `TOM` run at n = 10 emits **three groups tagged `2+3`**: T:658 (order 36, t = 8, orbital sizes [2,2,2,3,3,9,12,12]), T:659 (order 36, t = 10, [1,1,3,3,4,6,6,6,6,9]) and T:990 (order 72, t = 7, [2,3,3,4,9,12,12]). `IsOliverTop` verified each prime against an actual normal subgroup, so **the lcm strengthening is live**: χ ≡ 1 (mod 6) is justified at these three, strictly stronger than either prime alone, on a CSP whose useful answer is UNSAT. The two earlier zero counts were an artefact of the hand-built stages — which is exactly the ambiguity this item flagged, resolved in the direction nobody expected. **Check that `stage4_fast.py` takes the lcm over a `+`-separated tag.** `consume_gap.py` carries the tag through as an opaque string (it only tests `startswith('P')` for the p-group split), so the three conditions reach the solver intact; whether the solver imposes mod 6 or only mod 2 was not verifiable here, `stage4_fast.py` not being among the files reviewed. If it takes the first prime, the TOM battery is being run weaker than it is — and this is the one place where strengthening is *justified*, since `IsOliverTop` verified both primes, unlike the `twist_primes` path that `ark_intersect.py`'s docstring warns against.
+>
+> *The refuted sketch, kept because the refutation localises it.* The argument was: Suppose Γ admits chains with tops q₁ ≠ q₂ over the same bottom prime p, and write H = Γ/O_p(Γ), Cᵢ = Γᵢ/O_p(Γ) for the two cyclic middles. Then H/C₁ is a q₁-group and H/C₂ a q₂-group with C₁, C₂ normal cyclic; H = C₁C₂, and H/(C₁ ∩ C₂) embeds in the product of the two quotients. For the two chains to differ in top prime while neither admits a trivial top, both cyclic parts must centralise the intersection, which makes H a product of two normal cyclic subgroups of coprime index — hence cyclic, hence **trivial top**, hence tag `0` and not a multi-prime tag at all. **So "two usable top primes" should collapse to "trivial top" whenever the bottom prime is shared.** The different-bottom-prime case wants the same argument run through O_{p₁}(Γ)·O_{p₂}(Γ) and has not been done. If the argument holds in general the strengthening is provably worth nothing and should be retired on that basis rather than on a count of `+` tags — which would also explain the two independent zero counts below instead of leaving them as a coincidence. The error is in the step asserting both cyclic parts must centralise the intersection; the three witnesses above show it fails. **Do not reconstruct this argument without checking it against T:658 first.**
 
 *A datum from a known-current run of the same predicate* (`oliver_negative.g`): across all 160 transitive groups of degrees 6–11, **no group returns two usable top primes** — the verdict sets are exactly `0`, `[2]`, `[3]` and `fail`, the single `[3]` being AΓL(1,8). Different population (transitive only, degrees 6–11, no p-subgroup stage), so it does not settle the emitted files — but it is weight on the second reading: groups in this size range may genuinely admit at most one usable top prime, in which case the strengthening is worth nothing and should be retired on the re-emission's confirmation.
 
