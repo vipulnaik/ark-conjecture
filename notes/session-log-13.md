@@ -296,6 +296,33 @@ Both clear on the current documents, as do I1–I5.
 
 **Not benchmarked:** `stage4_fast.py` at larger V (30–90 s at V = 1,242; a CSP over V booleans, will grow but not to hours), and anything at n = 12.
 
+## 3g. `mu_exact.py`, and the rate of approach to 7 − 4√3
+
+**A fast SAFE enumerator with the same trusted base.** `mu_enumerate_v3.py` loops over every (bottom prime p, top prime q) pair and runs a generic multiset recursion per pair — n^2.9, and it exceeds 280 s per value by n ≈ 2,600. `mu_exact.py` enumerates the same shape space with the same SAFE score by arithmetic: p is read off each part, r = n − Fc is determined by subtraction, and the multi-part cases are bounded by score inequalities. **No new theorem enters.** F.1 is self-certified per n exactly as in v3 (1/√δ ≤ k checked against the value found), deliberately *not* imported from the ladder, which would add a dependency on Part E's realisability that v3 does not have.
+
+*The one real trap:* with a lone foreign part the best top prime is **not** the largest prime-power divisor of r − 1, because `orb` halves for even twists — at r = 41, Q = 8 gives 164 where Q = 5 gives 205. The code maximises over all prime-power divisors explicitly.
+
+**Validation, three independent kinds.**
+
+- **Reproduction:** all 2,187 rows of the v5 table, 0 mismatches, including n = 2759. The validator separates low mismatches (missing shape) from high (over-score); both zero.
+- **Cross-check against `v3.mu_bound` at n never computed** — 2602, 2604, 2607, 2680 — all exact, at 10³–10⁴× speedup.
+- **Independent spec-derived enumerator**, brute force over part multisets, written from the shape-space description rather than from either script: 139 values on 6 ≤ n ≤ 200, 0 mismatches. This is the check that would catch a case dropped by *both* existing scripts.
+
+**New results from the table to 10⁴** (8,622 rows, 158 s to 8,000; the run scales as ~n^2.5, so 10⁵ is ~20 h in plain Python — my earlier "couple of hours" was wrong and I should have measured first):
+
+- **0 uncertified rows** — F.1's self-certification holds everywhere in range.
+- **The ladder never exceeds B and is tight at all 185 joined values**, extending the previous 28-value join by 6.6×.
+- **No three-part winners anywhere to 10⁴** (2,191 one-part, 6,431 two-part).
+- **The minimum density over every n ≤ 10⁴ is 0.04621 at n = 2759** — previously known over the contiguous prefix to 2,600 plus a worklist; now exact across the whole range.
+
+**The o(1) in the ceiling.** Written up in the new `approach-rate-note.md`, with a pointer added at `aod` §3.3.5. The loss is linear in the distance from the balance point x\* = (2−√3)/2, so it is set by gaps between admissible c, which the singular series counts:
+
+> **E[δ\* − δ(n)] ≈ log³n / (1.7410 · S(n) · n) ≈ 0.30 log³n / n**, with S(n) = 3C₀·∏(ℓ−2)/(ℓ−3) — the same constant as `aod` §3.4, and the two calculations agree, which is the one available cross-check on that section's arithmetic.
+
+Tested against the ladder to 10⁶ (32,486 class-11 values in [3·10⁵, 10⁶]: quantiles match Exp(1) to 6–8% throughout, and the maximum 10.35 matches ln N = 10.39) and against exact B to 10⁴, which closes the concern that the first fit was against the family score rather than δ(n) — **exact B equals the ladder at every class-11 n ≤ 10⁴, with identical below-ceiling membership**.
+
+*Two honest caveats, both in the note.* The moderate-n fit is compressed (median ratio 0.30 at 10³ rising to 0.65 at 10⁶) because the observed loss is the minimum over *all* competing shapes, not the F = 4 deficit the model predicts — among class-11 n ≥ 5000 only 42% fall below the ceiling at all, and F = 2 or 6 wins 40 of the 113 that do. The convergence toward ln 2 is the evidence. And the distributional half is Cramér, not Bateman–Horn: the series gives the mean exactly and says nothing about gaps in a window of width log³n, so any "for all n" statement rides on the Poisson step. That is why the note sits outside `aod`.
+
 ## 4. Not examined
 
 Left untouched by this pass, and unverified by it: `notes` §§7–11 and appendices; `aod` §§3.5–3.8, §4, §6.9; `ep` Parts G–J; `verification-lessons.md`; `literature-findings.md` beyond its headers; the GAP scripts. `wide_cert.py`'s B_lo families were partly examined — the missing fused rung was found and fixed (§1.2b) — but `two_part_lo`, `fused_lo`, the menu top-up and the **share-pair guard** were not. The guard is the one that matters: it exists because an over-credited B_lo is anti-permissive, feeding the s_max and foreign-cap filters and dropping candidates silently, and that half remains unexercised. It is the natural next item after T3. Nothing in the deferred material was needed for the findings above, but the B_lo families named above are now the least examined part of the certificate chain and are the natural next item after T3.
