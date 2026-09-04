@@ -43,7 +43,7 @@ Usage:
     python3 a5_on_15.py --limit 600     # cap CSP seconds (default 300)
     python3 a5_on_15.py --exhaustive    # stage 3 over every stage-2 solution
 """
-import argparse, itertools, sys, time
+import argparse, itertools, pickle, sys, time
 from collections import defaultdict
 
 # ---------------------------------------------------------------- the group
@@ -175,6 +175,10 @@ def main():
     ap.add_argument("--limit", type=float, default=300)
     ap.add_argument("--exhaustive", action="store_true")
     ap.add_argument("--maxsols", type=int, default=50)
+    ap.add_argument("--homology", action="store_true",
+                    help="compute the actual homology (Q and F_2,F_3,F_5, plus "
+                         "Smith normal form torsion) of each tuned candidate -- "
+                         "the Z-acyclic rung itself, not its consequences")
     a = ap.parse_args()
     t0 = time.time()
 
@@ -489,25 +493,107 @@ def main():
         return out
     def add_orbit(mem, o):
         for m in orbits[o]: mem[m] = 1
+    def homology_report(mem):
+        """Greedy elementary collapses (homotopy-preserving), then exact homology
+        of the residual: Betti numbers over Q and over F_2, F_3, F_5, and integer
+        torsion by Smith normal form when the residual is small enough."""
+        faces = {m for m in range(1, 1 << N) if mem[m]}
+        # ALEXANDER DUALITY.  Delta is a down-set missing few faces, so work with
+        # the dual Delta* = { T : complement(T) not in Delta }, which has as many
+        # faces as Delta has non-faces.  H~_i(Delta; R) = H~^{n-i-3}(Delta*; R) for
+        # any coefficient ring, so Delta is Z-acyclic iff Delta* is, and the
+        # Betti numbers below are those of Delta*, read in reversed degree.
+        missing = [m for m in range(1, 1 << N) if not mem[m]]
+        dual = {FULL & ~m for m in missing}          # includes the empty face (from FULL)
+        dual.discard(0)
+        by_dim = defaultdict(list)
+        for f in dual: by_dim[bin(f).count('1') - 1].append(f)
+        sizes = {d: len(v) for d, v in sorted(by_dim.items())}
+        tag = f"dual complex on {len(dual)} nonempty faces"
+        if not dual:
+            return tag + ": dual is {empty}, so Delta is the full simplex boundary? (check)"
+        import numpy as np
+        idx = {d: {f: i for i, f in enumerate(sorted(v))} for d, v in by_dim.items()}
+        top = max(by_dim)
+        def bmat(d):
+            rows = idx.get(d - 1, {}); cols = idx.get(d, {})
+            M = np.zeros((len(rows), len(cols)), dtype=np.int64)
+            for f, j in cols.items():
+                bits = [i for i in range(N) if f >> i & 1]
+                for k, b in enumerate(bits):
+                    g = f & ~(1 << b)
+                    if g in rows: M[rows[g], j] = (-1) ** k
+            return M
+        def rank_mod(M, p):
+            A = M.copy() % p; r = 0; rows, cols = A.shape
+            for c in range(cols):
+                piv = None
+                for i in range(r, rows):
+                    if A[i, c] % p: piv = i; break
+                if piv is None: continue
+                A[[r, piv]] = A[[piv, r]]
+                A[r] = (A[r] * pow(int(A[r, c]), -1, p)) % p
+                nz = np.nonzero(A[:, c])[0]
+                for i in nz:
+                    if i != r: A[i] = (A[i] - A[i, c] * A[r]) % p
+                r += 1
+                if r == rows: break
+            return r
+        mats = {d: bmat(d) for d in range(1, top + 1)}
+        out = []
+        for p in (2, 3, 5, 7):
+            ranks = {d: rank_mod(mats[d], p) for d in mats}
+            betti = []
+            for d in range(0, top + 1):
+                n_d = len(by_dim.get(d, []))
+                ker = n_d - ranks.get(d, 0) if d >= 1 else n_d
+                im = ranks.get(d + 1, 0)
+                b = ker - im - (1 if d == 0 else 0)      # reduced in degree 0
+                betti.append(b)
+            out.append(f"F_{p}: {betti}")
+        rq = {d: np.linalg.matrix_rank(mats[d].astype(float)) for d in mats}
+        bq = []
+        for d in range(0, top + 1):
+            n_d = len(by_dim.get(d, []))
+            ker = n_d - rq.get(d, 0) if d >= 1 else n_d
+            bq.append(ker - rq.get(d + 1, 0) - (1 if d == 0 else 0))
+        return (f"{tag}; f-vector {sizes}; reduced Betti of DUAL over Q {bq}; " + "; ".join(out)
+                + "  [Delta Z-acyclic iff all zero]")
+
     tested = 0; found = 0; tuned = 0
     for s in sols[: (len(sols) if a.exhaustive else min(len(sols), 12))]:
         mem = complete(s)
         chi, chil = chis(mem)
-        # greedy tuning: repeatedly add an addable orbit that reduces the
-        # L1 distance to (1,1); up to 40 additions
-        for _ in range(40):
-            if (chi, chil) == (1, 1): break
-            best_o, best_d = None, abs(chi - 1) + abs(chil - 1)
-            for o in addable(mem):
-                k = size[o]
-                dchi = 60 if k % 2 else -60
-                dchil = -4 * k if k % 2 else 4 * k
-                d = abs(chi + dchi - 1) + abs(chil + dchil - 1)
-                if d < best_d: best_d, best_o = d, o
-            if best_o is None: break
-            add_orbit(mem, best_o)
-            k = size[best_o]
-            chi += 60 if k % 2 else -60; chil += -4 * k if k % 2 else 4 * k
+        # EXACT tuning: the addable free orbits are mutually compatible (adding
+        # one never removes another's subsets), and an orbit of k-sets shifts
+        # (chi, chi_link) by (+60, -4k) for odd k and (-60, +4k) for even k.
+        # Group addable orbits by k and solve the bounded knapsack for the
+        # target shift by dynamic programming over (chi, chi_link) pairs.
+        for _round in range(3):          # adding orbits can make more addable
+          if (chi, chil) == (1, 1): break
+          if True:
+            groups = defaultdict(list)
+            for o in addable(mem): groups[size[o]].append(o)
+            reach = {(chi, chil): []}
+            for k, os_ in sorted(groups.items()):
+                d = (60, -4 * k) if k % 2 else (-60, 4 * k)
+                new = dict(reach)
+                for (c, l), path in reach.items():
+                    for j in range(1, len(os_) + 1):
+                        key = (c + j * d[0], l + j * d[1])
+                        if abs(key[0] - 1) > 600 or abs(key[1] - 1) > 400: break
+                        if key not in new: new[key] = path + os_[:j]
+                reach = new
+                if (1, 1) in reach: break
+            if (1, 1) in reach:
+                for o in reach[(1, 1)]: add_orbit(mem, o)
+                chi, chil = chis(mem)
+            else:
+                # move as close as possible, then let the next round re-derive addables
+                best = min(reach, key=lambda t: abs(t[0] - 1) + abs(t[1] - 1))
+                if best == (chi, chil): break
+                for o in reach[best]: add_orbit(mem, o)
+                chi, chil = chis(mem)
         tested += 1
         if (chi, chil) != (1, 1):
             print(f"  candidate {tested}: could not tune to (1,1); reached chi={chi} chi(link)={chil}")
@@ -517,6 +603,11 @@ def main():
         print(f"  candidate {tested}: {sum(mem)} sets, chi=1, chi(link)=1 -> "
               f"{'NONEVASIVE  <== COUNTEREXAMPLE' if ne else 'EVASIVE'}  ({dt:.1f}s)")
         found += ne
+        if a.homology:
+            t1 = time.time()
+            report = homology_report(mem)
+            print(f"    homology after greedy collapse: {report}  ({time.time()-t1:.1f}s)")
+            pickle.dump(bytes(mem), open(f"a5_candidate_{tested}.pkl", "wb"))
     print(f"\nstage 3: {tested} candidates, {tuned} tuned to chi=chi(link)=1 and tested exactly, {found} nonevasive")
     return 1 if found else 0
     found = []
