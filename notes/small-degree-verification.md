@@ -37,15 +37,15 @@ python3 probe_backbone.py --nodecap 50000000     # retries every CAP, skips exac
 - Rows in the existing record predate the `nodecap` column, so all 54 are retried whatever budget is given. That is intended, but it means there is no partial credit from the previous run.
 - **Delete any `adversary_memo.pkl`** before any escalation that reaches the adversary search; a budget-limited run was the route to a spurious NON-EVASIVE.
 
-### Rerun the n = 10 CSP on the full 167-condition battery
+### Rerun the n = 10 CSP on the full battery
 
-The published n = 10 SAT was computed on 75 of 167 available conditions, the old dedup key having merged the rest (item 7). Dropping conditions makes the system easier to satisfy, so the positive verdict does not transfer to the full battery. This is the cheapest of the three runs here and the only one whose outcome could settle a degree outright.
+The published n = 10 SAT was computed on 75 of 170 available conditions, the old dedup key having merged the rest (item 7). Dropping conditions makes the system easier to satisfy, so the positive verdict does not transfer to the full battery. This is the cheapest of the three runs here and the only one whose outcome could settle a degree outright.
 
 **Sequence.** Costs from the calibrated model of `small-degree-computation.md` §8.2a; V and the pair counts are measured, not projected.
 
 ```bash
 # 1. THE BATTERY.  Use the TOM file: 242 conditions against the hand-built
-#    stages' 167, and it STRICTLY CONTAINS them (186 orbital partitions vs 131,
+#    stages' 170, and it STRICTLY CONTAINS them (186 orbital partitions vs 131,
 #    55 new, 0 lost).  Already generated as groups_out_10_tom.txt; regenerate
 #    with (~50 s):
 #      ARK_STAGES=TOM ARK_N=10 gap -q -o 4g ark_gap.g
@@ -71,7 +71,7 @@ python3 consume_gap.py --infile groups_out_10_tom.txt --maxgroups 1000 \
 #    on 16, ~7.6 h on 32; read as a lower estimate by ~1.5x.
 #    Watch the first two "stage 3: N VF2 calls done ... (Ts)" lines: T times
 #    procs/8192 is the real per-call cost on the pairs that reach VF2.  The
-#    model uses 290 ms, measured on invariant-passing pairs of the 167-condition
+#    model uses 290 ms, measured on invariant-passing pairs of the 170-condition
 #    catalog; post-closure survivors skew harder, so expect more.
 #    Resumable: ckpt_order.pkl is rewritten after every batch, so this can run
 #    in pieces across sessions.
@@ -82,7 +82,7 @@ python3 consume_gap.py --infile groups_out_10_tom.txt --maxgroups 1000 \
 python3 stage4_fast.py --first
 ```
 
-**The 167-condition battery remains runnable** (`--infile groups_out_10.txt`, no `--batch` needed, ~16 h on 8 cores, V = 2,902) and is the cheaper first pass if the machine is small. Its UNSAT would settle n = 10 outright; its SAT says nothing TOM's would not.
+**The 170-condition battery remains runnable** (`--infile groups_out_10.txt`, no `--batch` needed, ~16 h on 8 cores, V = 2,902) and is the cheaper first pass if the machine is small. Its UNSAT would settle n = 10 outright; its SAT says nothing TOM's would not.
 
 UNSAT settles n = 10. SAT puts the framework's only satisfiability claim on an untruncated *and* exhaustive battery, and hands `chi_test.py` a solution whose skeleton is worth killing again — and, per `small-degree-computation.md` §5.2's box, is the point at which effort should move from battery size to a χ = 1 search.
 
@@ -211,7 +211,15 @@ A CAP class is *not* free. Exactly one pinning capped per CAP class (0 classes h
 
 So this needs one GAP re-emission from a known-current `ark_gap.g`. **If that also yields no `+` tag, retire the strengthening rather than leaving it as dead code**, because it carries a live hazard: the same lcm enforcement fed from `ark_intersect`'s twist primes would be unsound, and dead code invites exactly that reuse. (`probe_backbone.py` now logs when a multi-prime tag fires, so the re-emission answers this for free.)
 
-> **RETRACTED — the re-emission decided it, and the answer is the opposite.** The `TOM` run at n = 10 emits **three groups tagged `2+3`**: T:658 (order 36, t = 8, orbital sizes [2,2,2,3,3,9,12,12]), T:659 (order 36, t = 10, [1,1,3,3,4,6,6,6,6,9]) and T:990 (order 72, t = 7, [2,3,3,4,9,12,12]). `IsOliverTop` verified each prime against an actual normal subgroup, so **the lcm strengthening is live**: χ ≡ 1 (mod 6) is justified at these three, strictly stronger than either prime alone, on a CSP whose useful answer is UNSAT. The two earlier zero counts were an artefact of the hand-built stages — which is exactly the ambiguity this item flagged, resolved in the direction nobody expected. **Check that `stage4_fast.py` takes the lcm over a `+`-separated tag.** `consume_gap.py` carries the tag through as an opaque string (it only tests `startswith('P')` for the p-group split), so the three conditions reach the solver intact; whether the solver imposes mod 6 or only mod 2 was not verifiable here, `stage4_fast.py` not being among the files reviewed. If it takes the first prime, the TOM battery is being run weaker than it is — and this is the one place where strengthening is *justified*, since `IsOliverTop` verified both primes, unlike the `twist_primes` path that `ark_intersect.py`'s docstring warns against.
+> **RETRACTED — the re-emission decided it, and the answer is the opposite.** Multi-prime tags exist, at both degrees, and this item's own diagnosis of why the counts were zero was wrong.
+>
+> **n = 10, three groups tagged `2+3`**, found independently by both batteries. `TOM`: T:658 (order 36, t = 8), T:659 (order 36, t = 10), T:990 (order 72, t = 7). The hand-built stages, rerun with the current script: `B:3+3+2+2:1.1.1.1` (C₃×C₃×C₂×C₂, order 36), `B:4+3+3:2.1.1` (C₂²×C₃×C₃, order 36), `B:4+3+3:3.1.1` (D₄×C₃×C₃, order 72). **Same three orders, 36/36/72, by two unrelated generation paths** — which is the cross-check the hand-built battery exists to provide, arriving on the one question where it mattered.
+>
+> **n = 12, twelve groups**, every one of order divisible by 6 carrying a C₃-bearing factor (C₃, or F₂₁ = C₇:C₃ via T(7,3)). Four sit at **t ≤ 7** and one at **t = 3** (`B:7+5:3.3`, F₂₁ × T(5,3)), which is among the strongest conditions in that battery — only 10 rows there have t = 2 and 127 have t = 3 — so the strengthening lands where it constrains most, not on a fringe.
+>
+> `IsOliverTop` verified each prime against an actual normal subgroup, so **the lcm strengthening is live**: χ ≡ 1 (mod 6) is justified at these, strictly stronger than either prime alone, on a CSP whose useful answer is UNSAT.
+>
+> **Why the counts were zero, corrected.** Not "an artefact of the hand-built stages", which is what this note said when only TOM had been rerun. The hand-built stages find them too. It was an artefact of an **older `ark_gap.g`**: the zero-count files predate the current tag collection, and a stale emission file differs from a current one **only in the tag column, the orbital maps being byte-identical**. That is invisible to any check comparing partitions — including the TOM-vs-hand-built comparison in §8.5 of the computation note, which was run against the stale file and was unaffected precisely because it compared maps. **Regenerate emission files rather than reusing archived ones**, and if a diff shows tag-only changes, that is this, not corruption. **Check that `stage4_fast.py` takes the lcm over a `+`-separated tag.** `consume_gap.py` carries the tag through as an opaque string (it only tests `startswith('P')` for the p-group split), so the three conditions reach the solver intact; whether the solver imposes mod 6 or only mod 2 was not verifiable here, `stage4_fast.py` not being among the files reviewed. If it takes the first prime, the TOM battery is being run weaker than it is — and this is the one place where strengthening is *justified*, since `IsOliverTop` verified both primes, unlike the `twist_primes` path that `ark_intersect.py`'s docstring warns against.
 >
 > *The refuted sketch, kept because the refutation localises it.* The argument was: Suppose Γ admits chains with tops q₁ ≠ q₂ over the same bottom prime p, and write H = Γ/O_p(Γ), Cᵢ = Γᵢ/O_p(Γ) for the two cyclic middles. Then H/C₁ is a q₁-group and H/C₂ a q₂-group with C₁, C₂ normal cyclic; H = C₁C₂, and H/(C₁ ∩ C₂) embeds in the product of the two quotients. For the two chains to differ in top prime while neither admits a trivial top, both cyclic parts must centralise the intersection, which makes H a product of two normal cyclic subgroups of coprime index — hence cyclic, hence **trivial top**, hence tag `0` and not a multi-prime tag at all. **So "two usable top primes" should collapse to "trivial top" whenever the bottom prime is shared.** The different-bottom-prime case wants the same argument run through O_{p₁}(Γ)·O_{p₂}(Γ) and has not been done. If the argument holds in general the strengthening is provably worth nothing and should be retired on that basis rather than on a count of `+` tags — which would also explain the two independent zero counts below instead of leaving them as a coincidence. The error is in the step asserting both cyclic parts must centralise the intersection; the three witnesses above show it fails. **Do not reconstruct this argument without checking it against T:658 first.**
 
@@ -228,10 +236,10 @@ Distinct (partition, prime) conditions in the n = 10 file, by orbital cap:
 | 4 | 74 | 31 | 30 | 1 |
 | 6 | 306 | 77 | 67 | 10 |
 | **8** | 517 | **123** | 101 | 22 |
-| **10** | 756 | **167** | 125 | 42 |
+| **10** | 756 | **170** | 128 | 42 |
 | 12 (whole file) | 967 | **189** | 128 | 61 |
 
-**Now compare the batteries the published n = 10 runs actually used.** The log records `517 raw -> 57 kept (40 Oliver, 17 p-groups)` and then `756 raw -> 75 kept (40 Oliver, 35 p-groups)`. Against the corrected key those same cuts hold **123** and **167** distinct conditions. So the old invariant key merged conditions roughly three to one on the Oliver side — **40 kept where 125 exist** — and the published battery carried **75 of 167 available conditions, 45%**.
+**Now compare the batteries the published n = 10 runs actually used.** The log records `517 raw -> 57 kept (40 Oliver, 17 p-groups)` and then `756 raw -> 75 kept (40 Oliver, 35 p-groups)`. Against the corrected key those same cuts hold **123** and **170** distinct conditions. So the old invariant key merged conditions roughly three to one on the Oliver side — **40 kept where 125 exist** — and the published battery carried **75 of 170 available conditions, 44%**.
 
 **Which results this touches, and which it does not.**
 
@@ -239,7 +247,7 @@ Distinct (partition, prime) conditions in the n = 10 file, by orbital cap:
 - **The n = 10 SAT is weakened, in the direction that matters.** Dropping conditions makes the system easier to satisfy, so "the CSP is satisfiable at n = 10" was established against 45% of the constraints available. A negative verdict would have survived the truncation; a positive one does not transfer. Anywhere the SAT is described, it should read *"satisfiable on the 75-condition battery"* rather than as a property of n = 10.
 - **The χ kill is unaffected.** `chi_test.py` evaluates a specific property's down-closure and never consults the battery, so the χ kill recorded in `small-degree-computation.md` stands as stated. That is also the reason the kill matters more than the SAT: it is the one result the truncation cannot reach.
 
-**Rerunning the n = 10 CSP on the full 167-condition battery is therefore worth more than it looks** — it is cheap by n = 12 standards (V grows but stage 3 at n = 10 has completed before at 1,242 classes), and either outcome is informative: UNSAT would settle n = 10 outright, and SAT would put the framework's only satisfiability claim on a battery that is not silently truncated.
+**Rerunning the n = 10 CSP on the full battery is therefore worth more than it looks** — it is cheap by n = 12 standards (V grows but stage 3 at n = 10 has completed before at 1,242 classes), and either outcome is informative: UNSAT would settle n = 10 outright, and SAT would put the framework's only satisfiability claim on a battery that is not silently truncated.
 
 **A parallel to n = 12 worth recording**, since the same three quantities get conflated at both degrees. m\* = 20 is attained by **8 groups** — `A:17`, `A:18`, `A:19`, `A:20`, `A:27`, `A:28`, `A:33` and `B2:5x2:3.1` = T(5,3) ≀ T(2,1) — all with orbital sizes **[20, 25]**, forming **1 orbital partition** and **2 distinct conditions** (seven at tag `2`, one at tag `0`). As at n = 12, the wreath is among the attainers, confirming AGL(1,5)≀C₂ rather than assuming it, and one attainer (`A:18`, order 200) has a **trivial top**, so the optimum is again witnessed by χ = 1 exactly. Stage census: A 24, B 319, B2 6, C 618.
 

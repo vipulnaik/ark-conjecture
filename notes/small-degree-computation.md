@@ -144,7 +144,7 @@ By §2.1 a group's condition depends only on (orbital partition, prime). Dedupli
 
 **The key must be a complete invariant of the partition, and the first one shipped was not.** `consume_gap.py` originally keyed on (orbital count, sorted sizes, tag, per-vertex valency signature) — strong but incomplete — and used it to *discard*. Measured at n = 12: **41 of 278 collision buckets merged inequivalent partitions**, and the retained representatives covered 381 of the 425 conditions — 44 dropped, 10.4% overall and **22.4% of the Smith conditions**. The failure direction is the dangerous one (§1.2): a dropped condition turns a real UNSAT into SAT. The corrected key canonicalises the partition itself, via a layered graph with a node per point, per pair and per orbital, so a colour-preserving isomorphism must carry orbitals onto orbitals.
 
-**The loss is worse at n = 10, and that is where the published results are.** The same measurement against the n = 10 file gives **40 Oliver conditions kept where 125 exist**, so the published battery carried **75 of 167 available conditions, 45%** — a three-to-one merge rather than n = 12's ten percent. Everything in §5 was computed on that battery; §5.1 states the consequence and §10 carries the rerun.
+**The loss is worse at n = 10, and that is where the published results are.** The same measurement against the n = 10 file gives **40 Oliver conditions kept where 128 exist**, so the published battery carried **75 of 170 available conditions, 44%** — a three-to-one merge rather than n = 12's ten percent. Everything in §5 was computed on that battery; §5.1 states the consequence and §10 carries the rerun.
 
 *A trap for anyone re-measuring this.* Ordering tied orbitals by their GAP index makes the canonical form index-dependent, over-splits equivalent partitions, and inflates the apparent loss roughly sevenfold. Tied orbitals must share a colour class.
 
@@ -231,7 +231,7 @@ At n = 10 the enumeration's structural lemmas were checked against the actual or
 
 967 groups → 75 selected: tags {trivial-top 18, q = 2 17, q = 3 5, P2 29, P3 3, P5 2, P7 1}, orbital counts 2 through 10, V = 1,242 classes.
 
-> **This is 75 of 167 available conditions, and the shortfall is the old dedup key's, not the orbital cap's.** The `--maxt 10` cut leaves 167 distinct (partition, prime) conditions in the n = 10 file; the key that produced the 75 was the incomplete invariant of §3.2, which merged Oliver conditions roughly three to one — 40 kept where 125 exist (`small-degree-verification.md` item 7). By §1.2's asymmetry this is safe for §4.1's μ(10) = 20, which is read off `groups_out.txt` and never touches the battery, and unsafe in exactly one direction for everything in §§5.2–5.5: **dropping conditions can only turn a real UNSAT into a SAT.**
+> **This is 75 of 170 available conditions, and the shortfall is the old dedup key's, not the orbital cap's.** The `--maxt 10` cut leaves 167 distinct (partition, prime) conditions in the n = 10 file; the key that produced the 75 was the incomplete invariant of §3.2, which merged Oliver conditions roughly three to one — 40 kept where 125 exist (`small-degree-verification.md` item 7). By §1.2's asymmetry this is safe for §4.1's μ(10) = 20, which is read off `groups_out.txt` and never touches the battery, and unsafe in exactly one direction for everything in §§5.2–5.5: **dropping conditions can only turn a real UNSAT into a SAT.**
 
 ### 5.2 SAT, and the surviving skeleton
 
@@ -337,14 +337,14 @@ The inference *rate* transfers intact from n = 10 — the invariant filters are 
 
 *Benchmarked with the shipped `consume_gap.py`, `networkx` 3.6.1 and the real n = 10 `groups_out` file. Stages 1–2 and the stage-3 inference were run to completion on the full 167-condition battery (`--estimate-only`, 8 minutes, most of it stage-2 catalog canonicalisation), so **V and the VF2 pair count below are measured, not modelled.** The per-call VF2 cost is measured on 600 invariant-passing pairs drawn from that catalog; the closure cost on the shipped `close()`.*
 
-**Two batteries, both measured.** The hand-built stages (A/B/B2/C) give 167 distinct conditions; the **`TOM` stage — every conjugacy class of subgroups of S₁₀, read from the table of marks — gives 242**, and it **strictly contains** the hand-built set (below). Sizing figures, from `--estimate-only` runs on the real files:
+**Two batteries, both measured.** The hand-built stages (A/B/B2/C) give 170 distinct conditions; the **`TOM` stage — every conjugacy class of subgroups of S₁₀, read from the table of marks — gives 242**, and it **strictly contains** the hand-built set (below). Sizing figures, from `--estimate-only` runs on the real files:
 
 | battery | lines | conditions | V | ordered pairs | free | excluded | **need VF2** |
 |---|---|---|---|---|---|---|---|
-| A/B/B2/C | 967 | 167 | 2,902 | 8,418,702 | 170,572 | 6,259,977 | **1,482,293 (17.6%)** |
+| A/B/B2/C | 967 | **170** | 2,902 | 8,418,702 | 170,572 | 6,259,977 | **1,482,293 (17.6%)** |
 | **TOM** | 1,111 | **242** | **3,782** | 14,299,742 | 228,473 | 10,693,130 | **2,565,218 (17.9%)** |
 
-Both catalogs are complement-closed with palindromic edge-count histograms. The 17.6–17.9% survival rate matches the range §8.2 saw at n = 12 and sits below the published run's 24.5% pre-closure figure.
+Both catalogs are complement-closed with palindromic edge-count histograms. *(The hand-built count is 170, not the 167 quoted before: three rows carry the tag `2+3` rather than `2` once the emission file is regenerated with the current `ark_gap.g`, and a distinct tag makes a distinct condition. V and every pair count are unchanged — the orbital maps are identical, only the tags moved. See `small-degree-verification.md` item 6.)* The 17.6–17.9% survival rate matches the range §8.2 saw at n = 12 and sits below the published run's 24.5% pre-closure figure.
 
 > **TOM subsumes the hand-built stages, checked rather than assumed.** Comparing at the level the CSP conditions actually depend on — the orbital partition up to relabelling, via an isomorphism-invariant signature per orbital (size, degree sequence, component count, triangle count) — the hand-built file carries **131** distinct partitions and TOM **186**, with **55 in TOM only and 0 in the hand-built file only**. Concatenating the two files and rerunning stage 1 yields the same 242 conditions and byte-identical stage-2 output as TOM alone. **So the subdirect-product hole of §8.5 is closed**, and the hand-built battery is formally redundant — though worth keeping, since two generation paths agreeing on 131 partitions is a check on `IsOliverTop` that nothing else provides.
 >
@@ -362,7 +362,7 @@ Both catalogs are complement-closed with palindromic edge-count histograms. The 
 
 | battery | cores | batch | VF2 | closure | **total** |
 |---|---|---|---|---|---|
-| 167-condition (V = 2,902) | 8 | 2048 | 14.9 h | 1.3 h | **~16 h** |
+| 170-condition (V = 2,902) | 8 | 2048 | 14.9 h | 1.3 h | **~16 h** |
 | | 16 | 2048 | 7.5 h | 1.3 h | **~9 h** |
 | | 32 | 2048 | 3.7 h | 1.3 h | **~5 h** |
 | **TOM (V = 3,782)** | 8 | 2048 | 25.8 h | 4.4 h | **~30 h** |
@@ -435,7 +435,7 @@ The connection to §5.3 is worth noting. K₁,₈ is forced IN while the spannin
 
 **Open, in rough order of expected value:**
 
-1. **Rerun the n = 10 CSP on the full 167-condition battery.** The published SAT was computed on 75 of 167 available conditions (§5.1), the old dedup key having merged the rest, and dropping conditions can only turn a real UNSAT into a SAT — so the positive verdict does not transfer. This is the cheapest run on the list (stage 3 has completed at n = 10 before) and **the only one whose outcome could settle a degree outright**: UNSAT settles n = 10, and SAT puts the framework's only satisfiability claim on an untruncated battery and hands `chi_test.py` a fresh skeleton worth killing.
+1. **Rerun the n = 10 CSP on the full battery.** The published SAT was computed on 75 of 170 available conditions (§5.1), the old dedup key having merged the rest, and dropping conditions can only turn a real UNSAT into a SAT — so the positive verdict does not transfer. This is the cheapest run on the list (stage 3 has completed at n = 10 before) and **the only one whose outcome could settle a degree outright**: UNSAT settles n = 10, and SAT puts the framework's only satisfiability claim on an untruncated battery and hands `chi_test.py` a fresh skeleton worth killing.
 2. **Run a cheap n = 12 battery.** A `--maxt 6` cut is 125 conditions with a much smaller catalog, and stage 3 scales with V², so plausibly hours rather than weeks. If it returns UNSAT, n = 12 is settled and neither the 22-day stage 3 nor the closure machinery of §8.3 is needed. If SAT, the result is a solution to χ-test and the §8.3 question becomes concrete. **This ordering inverts the current dependency and should be checked first.**
 3. **Re-probe the 54 CAP classes** at a larger node budget, before any statement about the free band or any escalation decision that depends on its width (§5.5).
 4. **Probe the 15 unprobed involution partners** of the forced classes — `414, 434, 439, 457, 493` (predicted forced IN, 7–9 edges) and `541, 543, 548, 549, 555, 560, 561, 562, 565, 566` (predicted forced OUT, 37–43 edges). Each is a cheap two-sided test of the duality of §2.3 and would roughly double the known backbone if it confirms.
