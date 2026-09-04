@@ -397,3 +397,23 @@
 10:44:28  stage 3: 319488 VF2 calls done, 533402 pairs left (47392s)
 11:09:06  stage 3: 327680 VF2 calls done, 519439 pairs left (48870s)
 11:24:34  stage 3: 335872 VF2 calls done, 509284 pairs left (49798s)
+11:33:00  detected n = 10 (45 pairs)
+11:33:00  stage 1: dedup by pynauty canonical orbital partition; 725 groups impose a condition already present, 242 distinct (partition, prime) conditions
+11:33:00  stage 1: checkpoint matches selection (242 groups)
+11:33:00  stage 2: resumed at group 242, catalog 3782 classes
+11:33:00  stage 2 complete: 3782 classes
+11:33:17  stage 3: seeds -- 228473 free containments; 10693130 invariant/size exclusions
+11:33:17  stage 3: resumed inference checkpoint
+11:33:33  stage 3: after inference, 509284 of 14299742 ordered pairs need VF2 (3.6%)
+11:33:33  stage 3: projected 5.1 h VF2 on 8 procs + 0.2 h closure at batch 8192 (model calibrated at n = 10; at n = 12 VF2 is ~200x slower per call)
+11:40:30  stage 3: 8192 VF2 calls done, 499279 pairs left (417s)
+11:44:12  stage 3: 16384 VF2 calls done, 490736 pairs left (639s)
+11:49:48  stage 3: 24576 VF2 calls done, 480770 pairs left (975s)
+11:59:23  stage 3: 32768 VF2 calls done, 467580 pairs left (1549s)
+12:04:29  stage 3: 40960 VF2 calls done, 457185 pairs left (1855s)
+12:09:17  stage 3: 49152 VF2 calls done, 447274 pairs left (2143s)
+12:10:40  stage 3: 57344 VF2 calls done, 438634 pairs left (2226s)
+12:20:42  stage 3: 65536 VF2 calls done, 425465 pairs left (2829s)
+12:26:14  stage 3: 73728 VF2 calls done, 409107 pairs left (3161s)
+12:29:09  stage 3: 81920 VF2 calls done, 397924 pairs left (3336s)
+12:33:01  stage 3: 90112 VF2 calls done, 388257 pairs left (3568s)
