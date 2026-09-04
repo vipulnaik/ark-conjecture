@@ -348,3 +348,14 @@
 22:20:05  stage 3: complete checkpoint found
 22:20:05  stage 3 complete
 22:20:05  now run:  python3 stage4_fast.py --first
+21:33:56  detected n = 10 (45 pairs)
+21:33:56  stage 1: dedup by pynauty canonical orbital partition; 725 groups impose a condition already present, 242 distinct (partition, prime) conditions
+21:33:56  stage 1: checkpoint matches selection (242 groups)
+21:33:56  stage 2: resumed at group 242, catalog 3782 classes
+21:33:56  stage 2 complete: 3782 classes
+21:34:13  stage 3: seeds -- 228473 free containments; 10693130 invariant/size exclusions
+21:34:35  stage 3: after inference, 2565218 of 14299742 ordered pairs need VF2 (17.9%)
+21:34:35  stage 3: projected 25.8 h VF2 on 8 procs + 1.1 h closure at batch 8192 (model calibrated at n = 10; at n = 12 VF2 is ~200x slower per call)
+21:43:10  stage 3: 8192 VF2 calls done, 2253032 pairs left (514s)
+21:55:14  stage 3: 16384 VF2 calls done, 2130339 pairs left (1238s)
+22:07:15  stage 3: 24576 VF2 calls done, 2092632 pairs left (1959s)
