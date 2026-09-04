@@ -55,6 +55,22 @@ def main():
                     help='number of random ordered pairs to re-decide by VF2 '
                          'after stage 3, as a check on the inference layers '
                          '(0 to skip)')
+    ap.add_argument('--batch', type=int, default=None,
+                    help='VF2 pairs per batch between closure passes (default '
+                         'max(2048, 256*procs)).  The closure is pure Python '
+                         'and O(V^2.6): 0.7 s at V=1242, 4 s at 2500, 15 s at '
+                         '4000.  It runs once per batch, so at the old default '
+                         'of 16*procs it dominates the wall time as soon as V '
+                         'passes ~2000.  A larger batch trades a little lost '
+                         'closure propagation (a few percent more VF2 calls) '
+                         'for removing that term.  See small-degree-computation.md '
+                         'section 8.2a for the cost model.')
+    ap.add_argument('--estimate-only', action='store_true',
+                    help='run stages 1-2 and the stage-3 inference (seeds and '
+                         'closure) only, print V, the pairs needing VF2 and the '
+                         'projected wall time from the section 8.2a model, then '
+                         'exit without any VF2 call.  Seconds to a few minutes; '
+                         'run this first to size the job.')
     args = ap.parse_args()
 
     import networkx as nx  # noqa
@@ -393,9 +409,23 @@ def main():
     log(f"stage 3: after inference, {len(todo)} of {total_pairs} ordered pairs "
         f"need VF2 ({100*len(todo)/max(1,total_pairs):.1f}%)")
 
+    # Projected cost, from the calibration in small-degree-computation.md 8.2a:
+    # 290 ms mean per VF2 call on the REAL n = 10 catalog (heavy tail: median
+    # 13 ms, p90 0.7 s, p99 6 s), and a closure pass of ~0.7 s * (V/1242)^2.6
+    # per batch.  Random-graph proxies run 4-5x faster than the real catalog
+    # and must not be used to size the job.
+    BATCH = args.batch or max(2048, args.procs * 256)
+    vf2_s = 0.29 * len(todo) / max(1, args.procs)
+    clo_s = (len(todo) / BATCH) * 0.7 * (V / 1242.0) ** 2.6
+    log(f"stage 3: projected {vf2_s/3600:.1f} h VF2 on {args.procs} procs + "
+        f"{clo_s/3600:.1f} h closure at batch {BATCH} "
+        f"(model calibrated at n = 10; at n = 12 VF2 is ~200x slower per call)")
+    if args.estimate_only:
+        log("stage 3: --estimate-only set; stopping before any VF2 call")
+        return
+
     import multiprocessing as mp
     reps_pickle = pickle.dumps(cat.reps)
-    BATCH = max(64, args.procs * 16)
     t0 = time.time()
     with mp.get_context('spawn').Pool(args.procs, _init_worker,
                                       (reps_pickle,)) as pool:
