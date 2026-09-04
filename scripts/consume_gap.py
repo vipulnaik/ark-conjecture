@@ -50,7 +50,17 @@ def main():
     ap.add_argument('--maxt', type=int, default=None,
                     help='default 10, or the value stored in ckpt_groups.pkl')
     ap.add_argument('--procs', type=int, default=os.cpu_count())
-    ap.add_argument('--infile', default='groups_out.txt')
+    ap.add_argument('--infile', required=True,
+                    help="ark_gap.g's emission file.  REQUIRED: the old default "
+                         "'groups_out.txt' is a name ark_gap.g no longer writes "
+                         "(files now carry the degree and the battery, e.g. "
+                         "groups_out_10.txt for the hand-built stages and "
+                         "groups_out_10_tom.txt for the exhaustive TOM one), so "
+                         "a default would either error or, worse, silently pick "
+                         "up a stale file from an earlier convention.  Use the "
+                         "_tom file for the CSP: it is exhaustive over conjugacy "
+                         "classes of subgroups of S_n at n <= 13 and strictly "
+                         "contains the other.")
     ap.add_argument('--verify', type=int, default=3000,
                     help='number of random ordered pairs to re-decide by VF2 '
                          'after stage 3, as a check on the inference layers '

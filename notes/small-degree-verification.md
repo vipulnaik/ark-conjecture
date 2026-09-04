@@ -47,8 +47,14 @@ The published n = 10 SAT was computed on 75 of 167 available conditions, the old
 # 1. THE BATTERY.  Use the TOM file: 242 conditions against the hand-built
 #    stages' 167, and it STRICTLY CONTAINS them (186 orbital partitions vs 131,
 #    55 new, 0 lost).  Already generated as groups_out_10_tom.txt; regenerate
-#    with STAGES := [ "TOM" ] in ark_gap.g if needed (~50 s).
-#      ARK_N=10 gap -q -o 4g ark_gap.g
+#    with (~50 s):
+#      ARK_STAGES=TOM ARK_N=10 gap -q -o 4g ark_gap.g
+#    The battery is part of the filename, so this cannot overwrite the
+#    hand-built groups_out_10.txt.  Keep both: the TOM file because it is
+#    exhaustive, the other because the two agreeing on all 131 of its orbital
+#    partitions is the only independent check IsOliverTop has.  ark_gap.g's
+#    default STAGES stays A,B,B2,C -- TOM needs a table of marks (TomLib has
+#    S_N only to N = 13) and would silently emit nothing past that.
 
 # 2. SIZE IT.  ALREADY RUN: V = 3,782, 2,565,218 of 14,299,742 ordered pairs
 #    need VF2 (17.9%).  Skip unless the battery changes.  Takes ~2 min; the

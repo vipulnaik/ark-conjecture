@@ -1,7 +1,8 @@
 # ark_gap.g -- enumerate permutation groups on [1..N] for the ARK CSP
 # (N set below; tested at 10, designed for 12).
 #
-# Output: one line per group in groups_out_<N>.txt, format
+# Output: one line per group in groups_out_<N><suffix>.txt, where <suffix> is
+# "" for the hand-built stages and "_tom" for the exhaustive one, format
 #     KEY|DESC|OLIVERQ|ORBMAP
 #   KEY     unique checkpoint key (also written to done_keys_<N>.txt)
 #   DESC    human-readable description
@@ -11,10 +12,12 @@
 #           lexicographic order ((1,2),(1,3),...,(9,10)), the orbital index
 #           (1-based) of that pair under the group.
 #
-# Anytime-stoppable: each completed item appends its KEY to done_keys_<N>.txt
-# and its data line to groups_out_<N>.txt; on restart, completed KEYs are
-# skipped.  All three output filenames carry the degree, so runs at different
-# N cannot overwrite each other.
+# Anytime-stoppable: each completed item appends its KEY to its done_keys file
+# and its data line to its groups_out file; on restart, completed KEYs are
+# skipped.  All three output filenames carry BOTH the degree and the battery,
+# so runs at different N, or the two batteries at one N, cannot overwrite each
+# other -- which matters because both batteries are worth keeping (the TOM one
+# is exhaustive, the hand-built one has readable keys and cross-checks it).
 # Safe to Ctrl-C between items (worst case: one item recomputed).
 # Progress is logged to ark_gap_<N>.log with millisecond runtimes.
 #
@@ -23,8 +26,9 @@
 #   "B"    direct products of transitive groups over partitions      ~minutes
 #   "B2"   imprimitive wreath products for 10 = 2*5 and 5*2          ~minutes
 #   "C"    p-subgroups: all subgroups of Sylow_p(S10), p=2,3,5,7     ~min-hours
-#   "TOM"  ALL subgroup classes of S_N from the table of marks       cheap; off
-#          -- closes the subdirect-product hole (verification item 5a)
+#   "TOM"  ALL subgroup classes of S_N from the table of marks       ~50s; off
+#          -- exhaustive at N <= 13; closes the subdirect-product hole
+#          -- (verification item 5a).  RUN THIS ONE FOR THE CSP.
 #   "FULL" ALL subgroup classes of S_N by direct computation         HEAVY; off
 #          -- same content as TOM; use only if no table of marks exists
 #
@@ -38,7 +42,33 @@ else
   N := 10;;
 fi;;
 Print("ark_gap.g running with degree N = ", N, "\n");
-STAGES  := [ "A", "B", "B2", "C" ];;
+# STAGE SELECTION.  Default is the four hand-built stages, NOT "TOM", and that
+# is deliberate:
+#   * TOM needs a table of marks for this degree.  TomLib has S_N for N <= 13;
+#     past that the stage prints a message and emits nothing, so a TOM default
+#     would silently write an empty file at N = 14 rather than fail.
+#   * The two batteries agreeing is the only independent check IsOliverTop has.
+#     At N = 10 they agree on all 131 orbital partitions the hand-built stages
+#     produce, by two unrelated generation paths.  If TOM became the default
+#     that comparison stops being made.
+#   * A/B/B2/C emit MEANINGFUL KEYS -- "B2:5x2:3.1" is T(5,3) wr T(2,1), the
+#     wreath product attaining mu(10) = 20 -- where TOM emits "T:1468", an index
+#     into a table.  The attainer discussions in small-degree-computation.md are
+#     written against those names.
+#
+# BUT RUN TOM FOR THE CSP.  At N <= 13 it is exhaustive over conjugacy classes
+# of subgroups of S_N and strictly contains the hand-built stages (at N = 10:
+# 186 orbital partitions to 131, 55 new, 0 lost; 242 conditions to 167), so it
+# is the battery that makes an UNSAT verdict a theorem rather than a statement
+# about which groups someone thought to enumerate.  ~50 s at N = 10.
+#
+# Override without editing:  ARK_STAGES=TOM ark_gap.g
+#                            ARK_STAGES=A,B,B2,C  (the default)
+if IsBound(GAPInfo.SystemEnvironment.ARK_STAGES) then
+  STAGES := SplitString(GAPInfo.SystemEnvironment.ARK_STAGES, ",");;
+else
+  STAGES := [ "A", "B", "B2", "C" ];;
+fi;;
 MAXT    := 12;;   # skip groups with more than MAXT u-orbitals (CSP cost 2^t)
 MAXPARTS:= 4;;    # stage B: max number of parts in the partition
 # Output filenames are SUFFIXED BY DEGREE.  Both degrees previously wrote
@@ -47,9 +77,35 @@ MAXPARTS:= 4;;    # stage B: max number of parts in the partition
 # verification note before anyone noticed.  A consumer given the wrong file
 # sees a well-formed file whose orbital maps have the wrong length (45 at
 # N = 10, 66 at N = 12), which is the only cheap check available downstream.
-OUTFILE := Concatenation("groups_out_", String(N), ".txt");;
-DONEFILE:= Concatenation("done_keys_", String(N), ".txt");;
-LOGFILE := Concatenation("ark_gap_", String(N), ".log");;
+# ...AND BY BATTERY, because the batteries are different objects and both are
+# worth keeping: TOM is the exhaustive one, A/B/B2/C is the readable one and the
+# cross-check.  Writing both to one name would make the second run silently
+# replace the first, which is the same failure the degree suffix fixes.
+#   A/B/B2/C -> groups_out_10.txt        TOM -> groups_out_10_tom.txt
+# ARK_SUFFIX overrides, e.g. for a partial or experimental battery.
+if IsBound(GAPInfo.SystemEnvironment.ARK_SUFFIX) then
+  SUFFIX := Concatenation("_", GAPInfo.SystemEnvironment.ARK_SUFFIX);;
+elif "TOM" in STAGES then
+  SUFFIX := "_tom";;
+elif "FULL" in STAGES then
+  SUFFIX := "_full";;
+else
+  SUFFIX := "";;
+fi;;
+# Mixing an exhaustive stage with the hand-built ones gives a file that is
+# neither battery cleanly: the exhaustive stage already contains the others, so
+# the extra lines are duplicates that stage 1 of consume_gap.py will dedup away
+# anyway.  Harmless, but say so rather than let it look intentional.
+if ("TOM" in STAGES or "FULL" in STAGES) and
+   ForAny(["A","B","B2","C"], s -> s in STAGES) then
+  Print("### NOTE: exhaustive stage combined with hand-built stages; the ",
+        "hand-built\n###       lines are redundant (consume_gap.py stage 1 ",
+        "will dedup them).\n");
+fi;;
+Print("stages ", STAGES, " -> writing groups_out_", N, SUFFIX, ".txt\n");
+OUTFILE := Concatenation("groups_out_", String(N), SUFFIX, ".txt");;
+DONEFILE:= Concatenation("done_keys_", String(N), SUFFIX, ".txt");;
+LOGFILE := Concatenation("ark_gap_", String(N), SUFFIX, ".log");;
 
 # ---------------------------------------------------------------- utilities
 LoadPackage("transgrp");   # transitive groups library; usually bundled
@@ -61,6 +117,7 @@ PAIRS := Combinations([1..N], 2);;
 # runtime semantics were already correct; this is warning hygiene only)
 g := fail;;   # lexicographic, length C(N,2)
 tom := fail;;  nsub := 0;;  H := fail;;  i := 0;;   # stage TOM / FULL
+SUFFIX := "";;
 
 CustomLog := function(msg)
   AppendTo(LOGFILE, String(Runtime()), "ms  ", msg, "\n");
