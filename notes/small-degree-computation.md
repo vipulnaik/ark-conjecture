@@ -405,7 +405,18 @@ The four GAP stages are **not obviously exhaustive over intransitive imprimitive
 
 This is the concrete gap. By §1.2 it cannot corrupt the μ results; it can only mean the enumeration is not the exhaustive check it is advertised as.
 
-> **CLOSED.** The `TOM` stage was run at n = 10 (50 s, 1,593 subgroup classes from the table of marks, 1,111 emitted). Compared against the hand-built stages at the level the conditions depend on — orbital partition up to relabelling — it carries **186 partitions to their 131, with 55 new and none lost**, and the merged file yields the same 242 conditions as TOM alone. **So every conjugacy class of subgroups of S₁₀ is represented and the hole is closed at this degree.** The two batteries agreeing on 131 partitions by two unrelated generation paths is also the only independent check `IsOliverTop` has. n = 12 is untouched; `TomLib` has the table, so the same route applies.
+> **CLOSED AT BOTH DEGREES.** The `TOM` stage — `ARK_STAGES=TOM ARK_N=<n> gap -q -o 4g ark_gap.g` — was run at n = 10 (50 s, 1,593 subgroup classes from the table of marks, 1,111 rows) and at n = 12 (6,211 rows). Compared against the hand-built stages at the level the conditions depend on — orbital partition up to relabelling, via `verify_emission.py --contains`:
+>
+> | | rows | orbital partitions | (partition, tag) conditions |
+> |---|---|---|---|
+> | **n = 10** hand-built | 967 | 131 | 170 |
+> | **n = 10** TOM | 1,111 | **186** (55 new, **0 lost**) | **242** |
+> | **n = 12** hand-built | 7,115 | 296 | 427 |
+> | **n = 12** TOM | 6,211 | **441** (145 new, **0 lost**) | **711** |
+>
+> **So every conjugacy class of subgroups of Sₙ is represented and the hole is closed at both degrees.** The two batteries agreeing — on all 131 and all 296 partitions the hand-built stages produce, and on all 11 of the hand-built multi-prime partitions — is also the only independent check `IsOliverTop` has, and it now spans 427 conditions rather than 170.
+>
+> *TOM emits **fewer rows** at n = 12 while carrying half again as many partitions.* The hand-built file spends 5,924 of its 7,115 rows on stage C's p-subgroups, which collapse to a few hundred distinct partitions; TOM pays once per conjugacy class. **Row count is not a measure of battery strength** and should not be quoted as one — the condition count is.
 >
 > *The reasoning that made it cheap, retained for n = 12:* Enumerating *every* conjugacy class of subgroups of S_N settles it outright — a subdirect product is a subgroup like any other — and the reason that was written off as heavy is that the `FULL` stage calls `ConjugacyClassesSubgroups(S_N)`, which is the expensive step and the one item 5b flags as never confirmed to have finished. **The table of marks is the way round it:** TomLib ships precomputed tables for the symmetric groups in this range, and `RepresentativeTom` returns a representative of each class with no subgroup computation at all. `ark_gap.g` now carries this as stage **`TOM`**, off by default, logging the class count rather than predicting it, and falling back with a message if no table exists for the degree.
 >
@@ -431,7 +442,7 @@ The connection to §5.3 is worth noting. K₁,₈ is forced IN while the spannin
 
 ## 10. Open questions
 
-**Settled and not at risk:** μ(10) = 20 **over every conjugacy class of subgroups of S₁₀** (the `TOM` stage, §8.5 — so exhaustive, not merely over the enumerated groups) and μ(12) = 18 over the enumerated groups, exceeded zero ways; the optima match the predicted constructions; the order matrix and the involution are verified. *These read off `groups_out.txt` or the catalog directly and are untouched by the battery truncation of §5.1 — the SAT verdict and everything derived from it are not on this list.*
+**Settled and not at risk:** μ(10) = 20 and μ(12) = 18 **over every conjugacy class of subgroups of S₁₀ and S₁₂ respectively** (the `TOM` stage, §8.5 — so exhaustive, not merely over the enumerated groups), exceeded zero ways; the optima match the predicted constructions; the order matrix and the involution are verified. *These read off `groups_out.txt` or the catalog directly and are untouched by the battery truncation of §5.1 — the SAT verdict and everything derived from it are not on this list.*
 
 **Open, in rough order of expected value:**
 
@@ -440,7 +451,7 @@ The connection to §5.3 is worth noting. K₁,₈ is forced IN while the spannin
 3. **Re-probe the 54 CAP classes** at a larger node budget, before any statement about the free band or any escalation decision that depends on its width (§5.5).
 4. **Probe the 15 unprobed involution partners** of the forced classes — `414, 434, 439, 457, 493` (predicted forced IN, 7–9 edges) and `541, 543, 548, 549, 555, 560, 561, 562, 565, 566` (predicted forced OUT, 37–43 edges). Each is a cheap two-sided test of the duality of §2.3 and would roughly double the known backbone if it confirms.
 5. **Run the n = 10 CSP against Angel–Borja's five surviving types** (§4.3). Non-circular validation if it reproduces their eliminations; a publishable increment if it kills more. *(The arithmetic programme deprioritises this: the exhaustive n = 10 and n = 12 m\* comparisons validate the machinery more strongly. Its standing is as an increment on Angel–Borja, not as validation the framework is waiting on.)*
-6. ~~Close the subdirect-product hole~~ **— DONE at n = 10** (§8.5): stage `TOM` in `ark_gap.g` emitted every conjugacy class of subgroups of S₁₀ from the table of marks in 50 s, strictly containing the hand-built stages. So job (a)'s μ(10) = 20 is now exhaustive rather than "no enumerated group exceeds B(n)", and job (c) has the complete 242-condition battery. **Still open at n = 12**, by the same route and at similar cost.
+6. ~~Close the subdirect-product hole~~ **— DONE at both degrees** (§8.5): stage `TOM` emitted every conjugacy class of subgroups of S₁₀ and of S₁₂ from the table of marks, strictly containing the hand-built stages in each case. So job (a)'s μ(10) = 20 **and** μ(12) = 18 are exhaustive rather than "no enumerated group exceeds B(n)", and job (c) has complete batteries of 242 and 711 conditions.
 7. **Decide how S is computed at n = 12** (§8.3): full down-closure versus the exponential-formula route.
 8. **Settle the multi-prime tag question** (§8.6) and either exercise or retire the lcm strengthening.
 9. **Climb the ladder, if a candidate ever warrants it** (§2.0). Nothing in the pipeline probes above ℤ-acyclicity, because no candidate has yet survived the χ = 1 rung to need it. If the n = 12 battery returns SAT and its skeleton passes the global χ test, the adversary game of §3.8 stops being a last resort and becomes the next tool — and `adversary.py` should be validated against Adamaszek's ℰ as a negative control before any EVASIVE verdict from it is trusted.
