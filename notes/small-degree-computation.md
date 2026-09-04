@@ -14,7 +14,7 @@ The computations serve three purposes that are easy to run together and should b
 
 **(a) Cross-validating the framework and the search against each other.** μ(n) is defined as a maximum over Oliver groups, and `enumeration-proof.md` computes a bound B(n) by a *classification* argument — it enumerates configuration shapes and scores them, never touching an actual group. An exhaustive group search computes the same quantity by construction rather than by classification, so agreement is evidence in **both directions at once**: it is the only non-circular check that the classification has not missed a shape, and it is simultaneously the only check that the GAP enumeration, the orbital-map extraction and the Oliver test are computing what they claim to. A disagreement would not say which side was wrong, only that one of them was — which is why §4 records both readings.
 
-**(b) Cross-validating against the literature.** KSS settle n = 6; Adamaszek settles n ≤ 5 and identifies the unique nonevasive property at 5 vertices up to duality (it and its set-complement are the only two — §4.3); Angel–Borja reduce n = 10 to five candidate types by a wholly different method. Reproducing these is cheap, and again it cuts both ways: a reproduction is evidence that the pipeline is correct, and it is also evidence that *our reading of the literature* is correct — that we have the right statement of Oliver's condition, the right notion of the fixed complex, and the right convention for χ. Several of the sign and normalisation conventions in §2 are only pinned down by these reproductions.
+**(b) Cross-validating against the literature.** KSS settle n = 6; Adamaszek settles n ≤ 5 and identifies the unique nonevasive property at 5 vertices up to duality (it and its set-complement are the only two — §4.3) — **that one is not monotone**, and the word is worth carrying every time it is cited, since everywhere else in this document "property" means "monotone graph property" per §2.1 and a reader who applies that convention here collides with KSS at the prime 5; Angel–Borja reduce n = 10 to five candidate types by a wholly different method. Reproducing these is cheap, and again it cuts both ways: a reproduction is evidence that the pipeline is correct, and it is also evidence that *our reading of the literature* is correct — that we have the right statement of Oliver's condition, the right notion of the fixed complex, and the right convention for χ. Several of the sign and normalisation conventions in §2 are only pinned down by these reproductions.
 
 *Neither (a) nor (b) is a one-way audit of the code.* Treating them as such is the natural mistake, and it discards half their value: the framework's own statements are what the code is tested against, so the code passing is a statement about the framework too.
 
@@ -32,7 +32,7 @@ Job (c) has the opposite sensitivity. There, **dropping a group drops a constrai
 
 ### 1.3 Why 10 and 12
 
-The smallest open cases of the right kind. n = 6 is settled by KSS; 7, 8, 9 are prime powers, where the conjecture is a theorem. **n = 10 = 2·5** is the first composite non-prime-power beyond 6, and it is *arithmetically strong*: 5 is a Fermat-adjacent prime, 5 − 1 = 4 is a 2-power, and the wreath construction AGL(1,5)≀C₂ achieves density 20/45 = 0.444, close to the ceiling of 1/2 — which holds for *all solvable* transitive groups at non-prime-power n, not merely Oliver ones (`solvable-relaxation.md` Proposition 1), so the headroom above 0.444 is genuinely small rather than an artefact of the chain condition.
+The smallest open cases of the right kind. n = 6 is settled by KSS; 7, 8, 9 are prime powers, where the conjecture is a theorem. **n = 10 = 2·5** is the first composite non-prime-power beyond 6, and it is *arithmetically strong*: 5 is a Fermat-adjacent prime, 5 − 1 = 4 is a 2-power, and the wreath construction AGL(1,5)≀C₂ achieves density 20/45 = 0.444, close to the ceiling of 1/2 — which holds for *all solvable* groups at non-prime-power n, not merely Oliver ones (`solvable-relaxation.md` Proposition 1 — stated there over all solvable groups of degree n, transitivity not imposed, matching this framework's own shape space), so the headroom above 0.444 is genuinely small rather than an artefact of the chain condition.
 
 **n = 12 = 2²·3** is the first *arithmetically weak* composite — the density available is 18/66 = 0.273, so the topological obstruction is much weaker relative to n². That makes it the higher-information target: at n = 10 the machinery has enough room that SAT is unsurprising, while at n = 12 both outcomes are genuinely live.
 
@@ -209,9 +209,12 @@ At n = 10 the enumeration's structural lemmas were checked against the actual or
 
 ### 4.3 Reproduction of known results
 
-- **n ≤ 5, n = 6** (Adamaszek; KSS) reproduce, including the eleven-graph nonevasive property at 5 vertices and its set-complement being the only two.
+- **n = 6** (KSS) reproduces.
+- **n ≤ 5** (Adamaszek) reproduces, including the eleven-graph nonevasive property at 5 vertices and its set-complement being the only two. **That property is not monotone** — up to negation, complementation and the other obvious symmetries it is the unique nontrivial nonevasive property at 5 vertices — and the qualifier is load-bearing here rather than pedantic: n = 5 is prime, so among *monotone* properties KSS already gives evasiveness outright, and a reader carrying §2.1's convention will read this line as contradicting that.
+
+  **It is also a different kind of check from the other two, which is the reason to keep it.** KSS at n = 6 and Angel–Borja at n = 10 exercise the Oliver machinery — the fixed-complex conditions and the CSP that consumes them. Adamaszek's property is outside that machinery entirely, monotonicity being what the group conditions are stated for. What reproducing it tests is the **decision-tree side**: the evasiveness computation of `adversary.py` (§3.8), on an input where the CSP has nothing to say. So it is the only entry in this list that validates the one tool capable of settling a candidate outright, and the only one whose success is consistent with ARK rather than an instance of it.
 - **The 10-vertex isomorphism-class count** comes out at 12,005,168, matching the known value — a check on the enumeration streams used for the χ computations.
-- **Angel–Borja's n = 10 reduction** is a genuinely independent method: isomorphism-class counting mod p, with Oliver groups used to force *named* members rather than to extract a size. Their five surviving types (I₂, I₄, I₅, I₆, I₈ of a 10-element poset) are stated as sets of isomorphism classes, so they are directly testable against this CSP — reproducing their four eliminations would be non-circular validation, and killing more would be an increment. **Not yet run.**
+- **Angel–Borja's n = 10 reduction** is a genuinely independent method: isomorphism-class counting mod p, with Oliver groups used to force *named* members rather than to extract a size. Their five surviving types (I₂, I₄, I₅, I₆, I₈ of a 10-element poset) are stated as sets of isomorphism classes, so they are directly testable against this CSP — reproducing their four eliminations would be non-circular validation, and killing more would be an increment. **Not yet run**, and **the paper is not yet in `literature-findings.md`**: the five types are quoted here at second hand, so the run needs the primary source first or it validates against a possibly mis-transcribed target.
 
 ### 4.4 Internal cross-checks
 
@@ -232,7 +235,9 @@ At n = 10 the enumeration's structural lemmas were checked against the actual or
 
 ### 5.2 SAT, and the surviving skeleton
 
-The CSP is **satisfiable on the 75-condition battery**, and has remained so across every escalation of that battery — every one of which was taken under the same truncation (§5.1), so the run on the full 167 conditions is untried rather than confirmatory. The found solution has 214 IN classes, IN edge counts running 0–25 and OUT 8–45. Its skeleton — the maximal IN classes, which generate the minimal monotone extension — has **10 generators at 12, 13, 15, 15, 15, 15, 18, 18, 20, 25 edges**.
+The CSP is **satisfiable on the 75-condition battery**, and has remained so across every escalation of that battery — every one of which was taken under the same truncation (§5.1), so the run on the full 167 conditions is untried rather than confirmatory.
+
+> **What the SAT/UNSAT question is now worth, given §5.4.** Every solution the CSP has produced, including this one's canonical extension, has died to the global χ test. So the operative question is not "is the CSP satisfiable" but "does any solution survive χ = 1" — and those are different searches, because χ is not expressible on the CSP's variables (§3.7: the variables are memberships of orbital unions, χ is a sum over all 12,005,168 iso classes). Running the full 167 conditions answers the first question and leaves the second untouched; a battery that returns UNSAT settles the degree outright, but a battery that returns SAT has, on the evidence so far, produced another χ kill rather than a candidate. **That argues for spending the next effort on a χ-magnitude screen inside the probe loop rather than on battery size** — which is the same conclusion §8.4 reaches from the constraint-strength side, and it makes item 12's cost/strength measurement less informative than it looks, since it measures the wrong one of the two questions. The found solution has 214 IN classes, IN edge counts running 0–25 and OUT 8–45. Its skeleton — the maximal IN classes, which generate the minimal monotone extension — has **10 generators at 12, 13, 15, 15, 15, 15, 18, 18, 20, 25 edges**.
 
 Consistent with §2.4: the solution has 2K₅ **in** and K₅,₅ **out**, which is exactly the one-of-two the two-orbital criterion demands, satisfied legitimately. That is why n = 10 remained SAT and why the global χ test was needed.
 
@@ -328,6 +333,42 @@ Measured throughput from the n = 12 logs: 2,176 VF2 calls resolving 16,061 pairs
 
 The inference *rate* transfers intact from n = 10 — the invariant filters are degree-generic — but 13.6× the classes means 13.7× the work. One mitigating fact the projection ignores: the pairs-needing-VF2 count **falls on resume** as closure propagates (20.6% → 17.8% → 16.8% across three sessions), so these are upper bounds.
 
+### 8.2a A cost model for stage 3 at n = 10, calibrated, and what the full battery will take
+
+*Benchmarked with the shipped `consume_gap.py`, `networkx` 3.6.1 and the real n = 10 `groups_out` file. Stages 1–2 and the stage-3 inference were run to completion on the full 167-condition battery (`--estimate-only`, 8 minutes, most of it stage-2 catalog canonicalisation), so **V and the VF2 pair count below are measured, not modelled.** The per-call VF2 cost is measured on 600 invariant-passing pairs drawn from that catalog; the closure cost on the shipped `close()`.*
+
+**The full battery, measured.** The 167 distinct conditions give **V = 2,902** union-graph classes (2.34× the published 1,242), complement-closed with a palindromic edge-count histogram peaking at 134 classes at 21 and 24 edges. Ordered pairs 8,418,702; free containments 170,572; invariant/size exclusions 6,259,977; **1,482,293 pairs (17.6%) need VF2 after closure** — the same fraction range §8.2 saw at n = 12, and below the 24.5% pre-closure figure of the published run.
+
+**Two costs, and the second is the one nobody had priced.**
+
+1. **VF2.** Mean **290 ms per call on the real catalog** (600 sampled pairs: median 13 ms, p90 0.70 s, p99 6.0 s, worst 9.5 s; 57% embed). A random-graph proxy at the same degree gives 64 ms — **4.5× too optimistic** — and the published V = 1,242 wall time of 6.5 h happens to match the proxy figure rather than the real one, which is a warning about calibrating from a single wall-clock datum. The mechanism is the one §8.2 identified at n = 12: orbital unions are near-regular, and near-regular non-embeddings are VF2's worst case. **Use 290 ms**, and expect the post-closure survivors to skew harder still, since closure removes the easy pairs first.
+
+2. **Closure.** `close()` is pure Python over V-bit integers and scales as roughly **V^2.6**: 0.7 s at V = 1,242, 4.1 s at 2,500, 15 s at 4,000 (steady-state pass, measured). It runs **once per batch**, and the batch was `max(64, 16·procs)` = 128 pairs at 8 procs. That is invisible at V = 1,242 (0.5 h total) and dominant past V ≈ 2,000: at V = 3,000 it is **30 h against 4.4 h of VF2**, at 4,000 it is **112 h against 7.8 h**. `consume_gap.py` now takes `--batch`, defaulting to `max(2048, 256·procs)`, which removes the term at a cost of a few percent more VF2 calls from lost propagation. **Do not run the full battery at the old batch size.**
+
+**The model.** With N_VF2 pairs surviving inference, on `procs` cores with batch B:
+
+> T_VF2 ≈ 0.29 s × N_VF2 / procs   T_closure ≈ (N_VF2 / B) × 0.7 s × (V/1242)^2.6
+
+**For the 167-condition battery, N_VF2 = 1,482,293 and V = 2,902:**
+
+| cores | VF2 | closure @ 2048 | closure @ 128 (old default) | **total @ 2048** |
+|---|---|---|---|---|
+| 8 | 14.9 h | 1.3 h | 21 h | **~16 h** |
+| 16 | 7.5 h | 1.3 h | 21 h | **~9 h** |
+| 32 | 3.7 h | 1.3 h | 21 h | **~5 h** |
+
+Single-threaded it is 120 h of VF2, which is what the old row-based loop would have taken. The closure column is serial and does not shrink with cores, so past ~32 cores it is the floor. **At the old batch size the closure alone exceeds the VF2 work on 8 cores**, which is why `--batch` exists and defaults to 2048.
+
+**Read the projection as a lower estimate by perhaps 1.5×.** The 290 ms is over invariant-passing pairs; the pairs that reach VF2 are those closure could not decide either, which selects toward the hard tail. The run's own per-batch log lines give the true rate in the first ten minutes and the instructions in `small-degree-verification.md` say to read them.
+
+**For other batteries** — the 189 conditions of the whole file at `--maxt 12`, or the TOM-enlarged set — V is not known but is minutes to compute: `consume_gap.py --estimate-only` runs stages 1–2 and the inference, prints V, N_VF2 and the projected hours from this model, and exits before any VF2 call.
+
+**Stage 2 is no longer free at this size.** The catalog canonicalisation (`Catalog.classify`, linear scan with `nx.is_isomorphic` within an invariant bucket) took most of the 8-minute sizing run at V = 2,902 and grows roughly as V × (bucket size); it is minutes, not hours, but it is not the seconds the earlier draft of this section assumed, and it is checkpointed.
+
+**The remaining stages are cheap at any plausible V.** Stage 4 (`stage4_fast.py --first`) found its first verified solution in 30–90 s at V = 1,242 across five logged runs, 5,500–7,200 nodes/s; it is a CSP over V booleans and will grow, but not to hours. The `--verify 3000` sample is 3,000 VF2 calls, minutes. The TOM stage in `ark_gap.g` reads class representatives from a precomputed table and then costs one `Orbits` and one `NormalSubgroups` call per group; minutes, not hours, though `NormalSubgroups` on the largest non-Oliver groups (A₁₀, S₁₀ itself) is the step to watch.
+
+**What this model does not cover.** n = 12: nothing here transfers except the closure term, since the per-call VF2 cost there is 13.8 s (§8.2), fifty times the n = 10 figure.
+
 ### 8.3 The down-closure at n = 12
 
 The global χ test enumerates the full down-closure with a canonicalisation per node: 64,333 classes and about 60 s at n = 10. At n = 12 the ambient count is 1.65×10¹¹ isomorphism classes, and the closure of an 18-edge-or-larger generator set may exceed any practical cap. Since **the χ test is the only test that has actually killed anything**, losing it at n = 12 would be a real loss. The alternative is the exponential-formula route of §5.4, which computes S without enumerating the closure.
@@ -350,6 +391,10 @@ By §1.2 this only endangers a positive verdict, so both truncations are safe fo
 The four GAP stages are **not obviously exhaustive over intransitive imprimitive groups.** Stage B builds *direct* products of transitive constituents. An intransitive group whose projections onto its orbits are transitive but which is a **proper subdirect product** — a fibre product over a common quotient — is generated by neither B nor B2, and C reaches it only if it happens to be a p-group.
 
 This is the concrete gap. By §1.2 it cannot corrupt the μ results; it can only mean the enumeration is not the exhaustive check it is advertised as.
+
+> **It is closable by construction rather than by argument, and cheaply.** Enumerating *every* conjugacy class of subgroups of S_N settles it outright — a subdirect product is a subgroup like any other — and the reason that was written off as heavy is that the `FULL` stage calls `ConjugacyClassesSubgroups(S_N)`, which is the expensive step and the one item 5b flags as never confirmed to have finished. **The table of marks is the way round it:** TomLib ships precomputed tables for the symmetric groups in this range, and `RepresentativeTom` returns a representative of each class with no subgroup computation at all. `ark_gap.g` now carries this as stage **`TOM`**, off by default, logging the class count rather than predicting it, and falling back with a message if no table exists for the degree.
+>
+> **What it would buy is the difference between the two readings of §1.2**, and it buys it at both degrees at once. Job (a) upgrades from "no enumerated group exceeds B(n)" to the exhaustive statement the framework's only external check is supposed to make — which matters because §4.1's μ(10) = 20 and μ(12) = 18 are the only two degrees where μ is known by construction rather than by classification. Job (c) gets the complete condition set in place of the union-of-stages battery, which is the direction that can only help, since dropping conditions is what turns a real UNSAT into a spurious SAT. **Run it before spending anything further on battery size** — it dominates the escalation of §5.1, which is a bigger subset of an unknown whole.
 
 A second, smaller question: `ConjugacyClassesSubgroups` on the Sylow 2-subgroup is the expensive step and is not internally checkpointable, so any completeness claim for stage C depends on that call having finished. Mitigating for the headline: p-subgroups do not attain the optimum at either degree.
 
@@ -380,7 +425,7 @@ The connection to §5.3 is worth noting. K₁,₈ is forced IN while the spannin
 3. **Re-probe the 54 CAP classes** at a larger node budget, before any statement about the free band or any escalation decision that depends on its width (§5.5).
 4. **Probe the 15 unprobed involution partners** of the forced classes — `414, 434, 439, 457, 493` (predicted forced IN, 7–9 edges) and `541, 543, 548, 549, 555, 560, 561, 562, 565, 566` (predicted forced OUT, 37–43 edges). Each is a cheap two-sided test of the duality of §2.3 and would roughly double the known backbone if it confirms.
 5. **Run the n = 10 CSP against Angel–Borja's five surviving types** (§4.3). Non-circular validation if it reproduces their eliminations; a publishable increment if it kills more. *(The arithmetic programme deprioritises this: the exhaustive n = 10 and n = 12 m\* comparisons validate the machinery more strongly. Its standing is as an increment on Angel–Borja, not as validation the framework is waiting on.)*
-6. **Close or refute the subdirect-product hole** (§8.5) — the only thing standing between "no enumerated group exceeds B(n)" and "the exhaustive optimum is the predicted construction".
+6. **Close the subdirect-product hole via the table of marks** (§8.5) — the only thing standing between "no enumerated group exceeds B(n)" and "the exhaustive optimum is the predicted construction", and now a run rather than a research question: stage `TOM` in `ark_gap.g`, which reads subgroup-class representatives out of TomLib instead of computing them. **Highest value per unit effort of anything on this list**, since it upgrades the framework's only external check at both degrees simultaneously.
 7. **Decide how S is computed at n = 12** (§8.3): full down-closure versus the exponential-formula route.
 8. **Settle the multi-prime tag question** (§8.6) and either exercise or retire the lcm strengthening.
 9. **Climb the ladder, if a candidate ever warrants it** (§2.0). Nothing in the pipeline probes above ℤ-acyclicity, because no candidate has yet survived the χ = 1 rung to need it. If the n = 12 battery returns SAT and its skeleton passes the global χ test, the adversary game of §3.8 stops being a last resort and becomes the next tool — and `adversary.py` should be validated against Adamaszek's ℰ as a negative control before any EVASIVE verdict from it is trusted.
