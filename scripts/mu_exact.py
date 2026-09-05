@@ -60,17 +60,32 @@ PRUNES THAT ARE SCORE INEQUALITIES, NOT THEOREMS.
   * A part pool is filtered by cap >= running best, non-strictly, so a
     configuration that ties still records a witness (as in v3).
 
-WHAT THIS IS NOT.  Not a lower-bound engine: it makes no realisability claim, so
-it is not a replacement for `ladder_verify.py` and it does not apply Lemma C's
-foreign strip (SAFE deliberately does not).  Use --refined for v3's refined
-score if you want the strip; the default and the only mode the documents quote
-is SAFE.
+WHAT THIS IS NOT, AND WHERE IT SITS IN THE SANDWICH.  The chain is
 
-COST.  Measured: 4.6 s to n = 2,000; 46 s to 5,000; 158 s to 8,000 -- the whole
-run scales as ~n^2.5, so a single-threaded pass to 10^5 is ~20 h.  Use --chunks:
-the heaviest of 8 equal-work chunks took 281 s at nmax = 20,000, which puts an
-8-way parallel run to 10^5 at ~4.5 h wall.  Chunks are independent (each
-rebuilds the sieve to nmax), so this is `xargs -P8` and a `cat`, not a rewrite.
+    delta_lo(n)  <=  B_refined(n)  <=  mu(n)  <=  B_safe(n)
+
+B_refined scores a shape by what a group of that shape PROVABLY REALISES (the
+twist actually available, with Lemma C's strips), so it is a LOWER bound on the
+maximum -- any shape attaining it exhibits a group.  B_safe scores by the flat
+cap F*C(c,2), which bounds ANY point stabiliser, so it is an UPPER bound.  This
+file computes B_safe, and only that.
+
+So it is NOT a lower-bound engine and NOT a replacement for `ladder_verify.py`:
+it makes no realisability claim and does not apply Lemma C's foreign strip
+(SAFE deliberately does not).  Where B_refined < B_safe, mu(n) is genuinely
+uncertain in between -- the flat cap says no group does better, but nothing
+exhibits a group doing that well -- which is why the collapse certificates
+(`fallback_cert.py --no-theorems`, `wide_cert.py`) are load-bearing rather than
+a formality.  There is no --refined mode here; use `mu_enumerate_v3.py` for the
+refined score.
+
+COST.  Measured: 26 s to n = 5,000; 128 s to 10,000 -- the whole run scales as
+~n^2.3, so a single-threaded pass to 10^5 is ~7 h and needs no chunking.  (An
+earlier version of this note said ~n^2.5 and ~20 h, fitted below n = 8,000; the
+real tail exponent was ~n^2.9 per row until the pool scan was made breakable --
+see the comment on the cap-descending sort in `best_for_n`.)  --chunks still
+works and divides the time further; chunks are independent, each rebuilding the
+sieve to nmax.
 
 PROGRESS.  Every --progress rows (default 1000), and in any case at least every
 30 s, the output file is FLUSHED and a timestamped line goes to stderr with the
