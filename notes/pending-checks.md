@@ -297,6 +297,10 @@ python3 ceiling_rederive.py --nmax 16000 --no-filter # control: expect exceedanc
 
 **Why no published figure is wrong, and why that is the uncomfortable part.** A clipped window under-scores, and the script maxes over families, so every floor it reported stayed a valid lower bound and Corollary E.6 (which consumes only ladder > 1/25) is untouched — a rerun can only raise the floor. But `validate_table_v3.py --ladder` joins on **worklist** values, and the worklist is selected by *low* score, so the shortfalls sat almost entirely outside the joined set and the tightness check passed throughout. **A lower bound loose in a way no check can see** is the same failure mode the file's own header records for the S7 branch, one axis over.
 
+**A second correction, found while writing `ladder-completeness.md`:** the S7 fusion set skipped F ∈ {13, 14, 15}, whose caps cap_F(1) = 0.0472, 0.0447, 0.0425 sit above the floor — cap_F(1) crosses 1/25 between F = 16 and 17, so a menu complete above the floor needs every F ≤ 16. Now `FSET = 3..16 ∪ {25}`. No tabulated winner used the missing three, so nothing moved; the ladder was complete by luck.
+
+**What the rerun's values MEAN, beyond the table.** `ladder-completeness.md` proves (Proposition 1, counting on SAFE terms) that above δ = 1/25 a B-optimal configuration is in the ladder's menu **or** is a two-foreign shape r₁\* + r₂\* / c + r₁\* + r₂\* at a common top prime — the one family the menu lacks — and (Proposition 2) that those shapes cap at 1/9 (even n) and 1/16 (odd n), below every class ceiling, so under (BCG-AL) at ε ≤ 0.129 (`aod` §3.5.3) they never win for large n. On the table they never win (`offmenu_scan.py`: closest 0.842 of B at n = 56, 0.834 at n = 4376 — the S6 pair (1459, 2917) at exactly 1/9). So a ladder value at n > 36,848 may be read as B(n) — hence μ(n) by E.6 — *unless* an off-menu shape beats it there, which `offmenu_scan.py` extended to that range would detect. The extrapolation is a named, checkable exception, not a presumption.
+
 **On rerun, expect:** the same floor 0.04621 at n = 2759 (where the ladder was already tight) or higher, a **shorter** worklist than 44,091, and possibly a different set of decade minima. Requote the worklist length wherever it appears — `check_doc_figures.py` invariant I10a checks the three banners agree — and rerun `validate_table_v3.py --ladder`, whose join set moves with the worklist.
 
 **The run, and the check that found this.**
@@ -309,6 +313,10 @@ python3 ladder_verify.py 1000000 --floor 0.04
 #    is NOT validate_table_v3.py --ladder, which joins on the worklist only
 python3 ladder_vs_B.py mu_table_exact.csv           # expect: 0 short, 0 OVER
 python3 ladder_vs_B.py mu_table_exact.csv --hi-x 0.55   # reproduces the defect
+
+# 3. the off-menu shapes (two foreign primes at a common q) against B -- the only
+#    way ladder < B can happen above 1/25; expect 'off-menu >= B: 0'
+python3 offmenu_scan.py mu_table_exact.csv
 ```
 
 `ladder_vs_B.py` takes the table as its argument, finds `ladder_verify.py` beside itself or in the working directory (`--ladder PATH` to override), and imports it as a library with its range set from the table and its report suppressed. It reports **short** and **OVER** separately: a shortfall costs sharpness only, while an over-score would break ladder ≤ B_refined and hence Corollary E.6, so a nonzero over count exits nonzero unconditionally and a shortfall does so only under `--strict`. It also prints where each shortfall's winning c sits relative to the window, which is the line that identified the cause — at `--hi-x 0.55` it reads *274 of 274 lie OUTSIDE the scan window*, i.e. a window clip and not a missing family. Cost is one full scan per row with no early return, a few minutes over 30,000 rows, so it belongs after a scoring or window change rather than in the routine battery.

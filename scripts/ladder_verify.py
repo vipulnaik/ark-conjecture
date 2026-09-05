@@ -357,7 +357,17 @@ def prime_divisors_of(m):
 # The ceiling is set by Part G.4's F <= 1/delta: at the floors this ladder is
 # used to establish (delta around 1/25) F cannot exceed 25, and in practice the
 # intra term Fp*orb(c, dmax) falls off fast enough that large F never wins.
-FSET = tuple(range(3, 13)) + (16, 25)
+#
+# WHY THE SET IS 3..16 AND NOT 3..12 PLUS TWO.  cap_F(1) = 1/(1 + sqrt F)^2 is the
+# most a fused-plus-foreign class can reach at fusion count F, and it crosses
+# the 1/25 floor between F = 16 (0.0400) and F = 17 (0.0382).  So a menu meant
+# to be COMPLETE above 1/25 must hold every F <= 16: the earlier set skipped
+# 13, 14 and 15, whose caps are 0.0472, 0.0447 and 0.0425 -- above the floor.
+# No tabulated winner uses them, so no reported figure moved, but a ladder that
+# is complete only by luck is not what Corollary E.6 should rest on.  F = 25 is
+# kept as a tripwire (its cap 0.0278 is below the floor; if it ever wins,
+# something upstream is wrong).
+FSET = tuple(range(3, 17)) + (25,)
 
 # Best foreign efficiency over ODD top primes only -- what rung B may use, since
 # its cyclic-layer C_2 rules out q = 2 sharing the layer with an even twist.

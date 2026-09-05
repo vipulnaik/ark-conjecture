@@ -111,6 +111,20 @@ Item 4 above read `ladder_verify.py` as a lower bound and passed it. Asking the 
 
 `ladder_verify.py` is fixed, with the derivation of 0.85 written at the constant. `ladder_vs_B.py` is the check: table as a positional argument, `--ladder PATH` to locate the script, `--hi-x` to drive the window (so `--hi-x 0.55` reproduces the defect rather than needing an edit), short and over reported separately since only an over-score threatens validity, and a line reporting where each shortfall's winning c sits relative to the window — which is what distinguishes "loose here" from "loose here *for this reason*". The 10⁶ rerun is filed as **R7a** with both commands and their expected output, and the worklist length is tagged for requoting.
 
+## 4d. Why ladder = B: the completeness note
+
+Asked for a conditional argument that the corrected ladder equals B — enough to read ladder values at n > 36,848 as μ(n) where `mu_exact.py` cannot go. `ladder-completeness.md` gives it in three propositions.
+
+**Proposition 1 (unconditional, counting on SAFE terms as in E.5):** above δ = 1/25 a B-optimal configuration is in the menu — fused class; c + r\* with c/n ∈ (1/5, 4/5); 2c + r\*; F·c + r\* with F ≤ 16 — **or** is a two-foreign shape at a common top prime, the one family the menu does not contain. Two matching classes always merge into a dominating fused one (admissible above 1/25 since a foreign prime > n/5 cannot divide F); three foreign primes at a common q have ratios ≥ 2 and cannot all exceed share 1/5; F ≥ 17 has cap below 1/25.
+
+**Proposition 2 (arithmetic of efficient primes, checked by scan):** the two-foreign shapes cap at **1/9** (n even, attained only by the pair (2q^e+1, 4q^e+1)) and **1/16** (the hybrid; hence all odd n), Fermat-prime instances aside, which exist only at n = 12. `offmenu_scan.py` confirms on the table: 729 n where such a shape scores, max density exactly 0.1111 at n = 4376 = 1459 + 2917, **never ≥ B**, closest 0.842 (n = 56) and 0.834 (n = 4376).
+
+**Proposition 3 (conditional on (BCG-AL), `aod` §3.5.3, with ε ≤ 0.129 — no new hypothesis; a first draft named it (H), which was mine and is gone):** the menu's class ceilings exceed the off-menu caps at every class — by 0.023 at classes 2, 8 against S6's 1/9, by ≥ 0.0093 at odd classes — so for large n the menu wins and ladder = B. At the approach rate of `approach-rate-note.md` the binding margin 0.023 is cleared around n ≈ 10⁴, which is where n = 4376 sits; the table's verdict and the asymptotic one overlap with no gap between them.
+
+**What this licenses:** a ladder value at n > 36,848 is B(n) — hence μ(n) by E.6 — *unless* a two-foreign configuration at a common q beats it, a specific event `offmenu_scan.py` detects. **A counterexample would have to be** an even n in class 2 or 8 (mod 12) carrying a prime pair (r, 2r − 1) with r − 1 = 2q^e, at which no c + r′\* lands within 17% of its balance point — two Bateman–Horn systems conspiring at one n, one to exist and one to fail. The chain pairs are prime together at e = 1, 2, 6 only for q = 3 and never for q ∈ {5, 7, 11, 13} below the table, so the search space is small.
+
+**Second ladder correction.** Writing Proposition 1 showed `FSET = 3..12 ∪ {16, 25}` skipped F = 13, 14, 15, whose caps 0.0472, 0.0447, 0.0425 exceed the floor. Now 3..16 ∪ {25}. No tabulated winner used them — the menu was complete by luck, which is the same finding as the window in a different place.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
