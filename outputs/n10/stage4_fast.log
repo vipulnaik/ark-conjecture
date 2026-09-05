@@ -500,3 +500,5 @@
 22:00:24  heartbeat: nodes 4599508 sols 0 depth<= 304 (258 nodes/s, memo 1220)
 22:00:54  heartbeat: nodes 4611305 sols 0 depth<= 304 (259 nodes/s, memo 1220)
 22:01:24  heartbeat: nodes 4620459 sols 0 depth<= 304 (259 nodes/s, memo 1220)
+22:01:54  heartbeat: nodes 4629900 sols 0 depth<= 304 (259 nodes/s, memo 1220)
+22:02:24  heartbeat: nodes 4641746 sols 0 depth<= 304 (259 nodes/s, memo 1223)
