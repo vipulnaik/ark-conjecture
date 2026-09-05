@@ -123,6 +123,23 @@ python3 mu_enumerate_v3.py --nmax <N> --fill-gaps --out mu_table_safe_v5_code_v3
 - **Extending re-arms three things**, and they are easy to miss because none of them errors: the prefix/tail discipline (a worklist-driven extension selects by low score, so aggregates must be requoted over the contiguous part); every range-scoped claim of the form "at every row of the table", which is a *different statement* after the table grows; and `shape-counting.md` §3's floor rows, which are keyed to the computed floor.
 - **Append the old maximum to `check_doc_figures.py`'s `CHECKPOINTS`** on every extension. Two minutes, and skipping it turns every correctly-scoped historical figure into noise in PASS 1.
 
+## R0b. When the 10⁵ run lands: retire ⟦PENDING-1E5-EXACT-RUN⟧
+
+*The tag is defined in the status banner of all three core documents. It marks a figure whose **scope** is stale, not one whose value is wrong — each tagged figure names the range it was taken over and is correct on it.*
+
+**What the tag covers.** Winner counts and shares, per-shape medians, census columns, the low-density tail, the part-count distribution, and any "over the table" aggregate — 23 sites at last count, most scoped to the old contiguous range [6, 2600] and a few to 36,848. **What it does not cover:** every theorem, closed form, ceiling and threshold, none of which a table extension can touch, and the floor and its argmin, which are extremal rather than distributional and stay valid on any superset until a lower value appears.
+
+**The procedure, and it is deliberately all-or-nothing.**
+
+1. `python3 validate_table_v3.py <new table> --baseline mu_table_exact.csv --ladder ladder_weak.txt` — gates everything; a group-A FAIL means the run or the parser is broken and nothing downstream is readable.
+2. `python3 check_doc_figures.py <new table> *.md --pass pending` — lists every tagged site with the quantity recomputed at the new frontier where the CSV can supply it, and names the ones it cannot (the orbital count t is not a column, so the t-distribution figure needs its own run).
+3. Requote **every** site, then delete the tag from all of them and from the banner definition.
+4. Rerun the R1 battery and `fallback_sup.py`, and requote the certificate coverage counts, which are run outputs rather than table figures.
+
+*Do not retire the tag piecemeal.* A half-requoted document is worse than a fully stale one: the range words stop being a reliable guide to which population a figure came from, and that is exactly the confusion the prefix/tail discipline exists to prevent.
+
+**One thing to watch on arrival.** The floor is 0.04621 at n = 2759 and the conjecture's threshold is 1/25. If the extension produces any value below 0.04, Corollary E.6's hypothesis fails there and the collapse at that n reverts to the certificates — so the *first* thing to compute on the new table is the minimum, before anything else is requoted.
+
 ## R0a. `mu_exact.py` — the same table, ~10⁴× faster, and how to run it to 10⁵
 
 **`mu_enumerate_v3.py` is the reference implementation and stays the arbiter; `mu_exact.py` is the one to actually run for extensions.** It enumerates the same shape space with the same SAFE score by arithmetic instead of by generic search: no (p, q) loop (p is read off each part; q is free in SAFE mode except for the foreign twist, so it is maximised per part rather than looped), r = n − Fc determined by subtraction, multi-part cases bounded by inequalities on the score. **The trusted base is identical** — Part 0's shape space, the flat cap F·C(c,2), Lemma B′, D2 domination, distinct foreign primes at a common top prime — and Proposition F.1 is **self-certified per n** as in v3's `mu_bound` (1/√δ ≤ k checked against the value found), deliberately *not* imported from the ladder, which would add a dependency on Part E realisability that v3 does not carry.

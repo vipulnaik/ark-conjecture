@@ -82,7 +82,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("table")
 ap.add_argument("docs", nargs="+")
 ap.add_argument("--pass", dest="only", default="all",
-                choices=["all", "figures", "scope", "prose", "hygiene", "census", "refs", "tables", "history", "s2", "witness"])
+                choices=["all", "figures", "scope", "prose", "hygiene", "census", "refs", "tables", "history", "s2", "witness", "pending"])
 ap.add_argument("--quiet", action="store_true", help="findings only")
 A = ap.parse_args()
 DOCS = [d for d in A.docs if d.endswith(".md")]
@@ -1666,6 +1666,108 @@ if A.only in ("all", "witness"):
         print("winning there is legitimate, and so is a deliberate historical citation.")
         print("What the pass guarantees is that each such pairing was decided rather")
         print("than inherited from a superseded table.")
+
+# ------------------------------------------------------------- PASS 11 pending
+#
+# THE 1E5 TAG IS A SCOPE MARKER, NOT A CORRECTNESS MARKER, and the difference
+# decides what this pass does.  A tagged figure is CORRECT on the range it names
+# and will MOVE when `mu_exact.py` reaches n = 100,000.  So the pass does not
+# try to decide whether a tagged number is right -- it cannot, and the number is
+# right.  It does three things instead:
+#
+#   (a) inventories every tagged site, so the retirement is all-or-nothing
+#       rather than piecemeal.  A half-requoted document is worse than a fully
+#       stale one: the range words stop being a reliable guide to which
+#       population a figure came from, which is the confusion the prefix/tail
+#       discipline exists to prevent;
+#   (b) recomputes, at the CURRENT table, the handful of quantities the CSV can
+#       supply, and prints them beside the frontier -- so that when the run
+#       lands the requote is a transcription rather than a re-derivation;
+#   (c) flags the OPPOSITE failure, which is the one that actually bites: a
+#       range-scoped aggregate that is NOT tagged.  Those are the sites that go
+#       stale silently on the next extension, because nothing then points at
+#       them.  Tag coverage is the thing worth checking mechanically; tag
+#       accuracy is not checkable at all.
+#
+# It also reports whether the tag is due for retirement, by comparing the
+# table's frontier against the target.
+
+TAG_1E5 = "\u27e6PENDING-1E5-EXACT-RUN\u27e7"
+TAG_TARGET = 100000
+
+if A.only in ("all", "pending"):
+    print("\n" + "=" * 72); print("PASS 11  PENDING 1E5 EXACT RUN"); print("=" * 72)
+    tagged, defined = [], set()
+    for d in DOCS:
+        try: txt = open(d).read()
+        except OSError: continue
+        for ln, line in enumerate(txt.split("\n"), 1):
+            if TAG_1E5 not in line:
+                continue
+            # the banner definition explains the tag; every other site uses it
+            if "the one tag that is about" in line:
+                defined.add(d); continue
+            tagged.append((d, ln, line.strip()))
+    print(f"tag defined in: {', '.join(sorted(defined)) or 'NOWHERE -- define it in the status banner'}")
+    # A work list may name the tag without carrying a tagged figure, and does:
+    # pending-checks.md's R0b item is the retirement procedure.  Only documents
+    # that DEFINE the tag hold sites the requote has to visit.
+    tagged = [t for t in tagged if t[0] in defined]
+    print(f"tagged sites: {len(tagged)}")
+    for d, ln, line in tagged:
+        body = re.sub(r"^(?:> |\- |\d+\. |\| )*", "", line).replace(TAG_1E5, "").strip()
+        print(f"   {d} L{ln}  {body[:110]}")
+    if not defined and tagged:
+        findings += 1
+        print("   *** the tag is used but never defined; a reader meeting it has nowhere to go")
+
+    # (b) what the CSV can supply now, for the requote
+    print(f"\ncurrent frontier n = {NMAX} (contiguous to {CONTIG}); target for retirement {TAG_TARGET}")
+    print("quantities the CSV can supply at the current frontier, for transcription:")
+    for k in ("row count", "n max", "density floor", "density floor at n", "median density",
+              "one-part winners", "two-part winners", "three-part winners",
+              "count delta <= 1/16", "count delta > 1/9", "omega(n) = 2"):
+        if k in CUR:
+            print(f"   {k:<24} {CUR[k]}")
+    print("   NOT supplied by the CSV: the orbital-count distribution (t is not a column),")
+    print("   and every certificate coverage figure, which is a run output.")
+
+    # (c) untagged range-scoped aggregates -- the silent-staleness class
+    print()
+    RANGEY = re.compile(r"contiguous range|\[6, ?2600\]|over the (?:completed|current) table|"
+                        r"over the table\b|in range\b", re.I)
+    AGG = re.compile(r"\*\*[\d][\d,]{1,6}\*\*|\d+\.\d{3,}|\d{1,3}(?:\.\d)?%")
+    # A theorem, a closed form or a threshold is not an aggregate however many
+    # digits it carries, and tagging one would be noise.
+    STRUCTURAL = re.compile(r"cap_?[F1-9]|ceiling|closed form|Theorem|Lemma|Corollary|"
+                            r"Proposition|√|conjectur|threshold|1/\d+\b", re.I)
+    miss = 0
+    for d in DOCS:
+        if d not in defined:
+            continue                      # a document that does not use the tag
+        try: txt = open(d).read()
+        except OSError: continue
+        for ln, line in enumerate(txt.split("\n"), 1):
+            if TAG_1E5 in line or not RANGEY.search(line) or not AGG.search(line):
+                continue
+            if "PENDING-" in line:
+                continue                  # already carries a tag of its own
+            if STRUCTURAL.search(line):
+                continue
+            findings += 1; miss += 1
+            print(f"{d} L{ln}  *** UNTAGGED RANGE-SCOPED AGGREGATE *** will move on the "
+                  f"10\u2075 run and nothing points at it")
+            print(f"   {line.strip()[:150]}\n")
+    if not miss:
+        print("[ok] every range-scoped aggregate in a tag-using document carries the tag.")
+
+    if NMAX >= TAG_TARGET:
+        findings += 1
+        print(f"\n*** THE TAG IS DUE FOR RETIREMENT: the table reaches {NMAX} >= {TAG_TARGET}.")
+        print("    Requote every site above, then delete the tag from all of them AND from")
+        print("    the banner definition in each document.  See pending-checks.md R0b.")
+    else:
+        print(f"\n[ok] tag still live: {TAG_TARGET - NMAX} short of the retirement frontier.")
 
 
 print("\n" + "=" * 72)

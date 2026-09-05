@@ -74,6 +74,16 @@ The other seven: S5 vanishes in **bursts** not monotonically (one r serves a win
 - **New: A28** (B_refined⁺, score the Galois layer) and **A29** (second reading of the J0a-free t ≤ a).
 - **Unchanged and still the top risk**: Part E's realisability, and Part 0's completeness — which E.5 does *not* touch, since it bounds configurations inside the shape space and a missing shape is invisible to it exactly as it is to everything else.
 
+## 4a. The ⟦PENDING-1E5-EXACT-RUN⟧ tag
+
+`mu_exact.py` is running on to n = 100,000, so every distributional figure in the three core documents will move again. Rather than requote them twice, the range-scoped ones now carry **⟦PENDING-1E5-EXACT-RUN⟧** — 24 sites, defined in the status banner of each document and with the retirement procedure at `pending-checks` **R0b**.
+
+**The tag means something different from ⟦PENDING-REBUILD⟧, and the distinction is the point.** A rebuild figure was *possibly wrong*: it was read off a table computed under a superseded cap. A 1E5 figure is *correct on the range it names* — the scope is what is stale, not the number. Conflating the two would either make the documents look more provisional than they are, or make a genuinely provisional figure look scoped.
+
+`check_doc_figures.py --pass pending` supports the retirement: it inventories the tagged sites, recomputes at the current table the quantities the CSV can supply (and names the two it cannot — the orbital-count distribution, since t is not a column, and the certificate coverage counts, which are run outputs), flags **untagged** range-scoped aggregates, which is the class that goes stale silently, and reports when the frontier has passed 100,000. Currently: 24 sites, 0 untagged, tag live with 63,152 to go. The retirement branch is exercised against a synthetic table.
+
+**One instruction inside R0b worth repeating here**: on arrival, compute the *minimum* first. The floor is 0.04621 against a threshold of 1/25, and if the extension turns up anything below 0.04 then Corollary E.6's hypothesis fails at that n and the collapse there reverts to the certificates — which would be the session's result partly unwinding, and is the one outcome worth knowing before anything else is requoted.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
