@@ -72,6 +72,16 @@ the heaviest of 8 equal-work chunks took 281 s at nmax = 20,000, which puts an
 8-way parallel run to 10^5 at ~4.5 h wall.  Chunks are independent (each
 rebuilds the sieve to nmax), so this is `xargs -P8` and a `cat`, not a rewrite.
 
+PROGRESS.  Every --progress rows (default 1000), and in any case at least every
+30 s, the output file is FLUSHED and a timestamped line goes to stderr with the
+current n, rows done, percent of *work* done (weighted by n^1.5, since a linear
+row count badly misreads progress through a range), rate, elapsed and ETA.  The
+flush is the point: without it rows sit in an 8 KB buffer, so a run killed at
+hour 4 loses its tail and shows nothing until it finishes.  With it the file is
+a valid resume point at every moment -- kill at any time and reissuing the same
+command picks up within --progress rows.  stderr keeps parallel parts readable
+and leaves stdout clean; each line is tagged with its part filename.
+
 RESUME follows `mu_enumerate_v3.py`: there is no --resume flag.  An existing
 --out is APPENDED TO, rows already in it are skipped, and the run restarts after
 its last row unless --nmin or --fill-gaps says otherwise -- so an interrupted run
@@ -93,7 +103,9 @@ Usage:
 """
 import argparse
 import csv
+import os
 import sys
+import time
 from math import comb, isqrt
 
 
@@ -447,7 +459,14 @@ def read_done(path):
     return done, True
 
 
-def run(nmax, out, start=6, done=frozenset(), append=False, quiet=False):
+def hms(sec):
+    """h:mm:ss / m:ss, so short runs do not all read as '0m'."""
+    sec = int(max(sec, 0)); h, r = divmod(sec, 3600); m, s = divmod(r, 60)
+    return f"{h}:{m:02d}:{s:02d}" if h else f"{m}:{s:02d}"
+
+
+def run(nmax, out, start=6, done=frozenset(), append=False, quiet=False,
+        every=1000):
     """Rows for n in [start, nmax].
 
     The sieve and the Foreign table are built to nmax regardless of start, so a
@@ -470,15 +489,46 @@ def run(nmax, out, start=6, done=frozenset(), append=False, quiet=False):
     # header, so a part is a valid CSV on its own and can be fed to
     # validate_table_v3.py or reopened for resume without special-casing.
     # Merge with head+tail (see --chunks help), not a bare cat.
+    # Every output file -- including every --chunks part -- carries its own
+    # header, so a part is a valid CSV on its own and can be fed to
+    # validate_table_v3.py or reopened for resume without special-casing.
+    # Merge with head+tail (see --chunks help), not a bare cat.
+    #
+    # PROGRESS AND DURABILITY.  Without an explicit flush, csv rows sit in
+    # Python's ~8 KB buffer, so a run killed at hour 4 can lose the last few
+    # hundred rows and, until then, prints nothing at all.  Both are fixed here:
+    # every `every` rows (and at least every 30 s) the file is flushed and a
+    # timestamped line is written to stderr.  The flush makes the file a valid
+    # resume point at all times -- kill the job at any moment and reissuing the
+    # same command picks up within `every` rows of where it stopped.
+    t0 = time.time(); last = t0; done_now = 0
+    tag = os.path.basename(out)
+    # Cost per n grows as ~n^1.5, so a linear "rows remaining x seconds per row"
+    # ETA is badly wrong early in a range.  Weight by n^1.5 instead.
+    def work(ns): return sum(float(x) ** 1.5 for x in ns)
+    total_work = work(todo); done_work = 0.0
     with open(out, "a" if append else "w", newline="") as fh:
         w = csv.writer(fh)
         if not append:
             w.writerow(HEADER.split(","))
+            fh.flush()
         for n in todo:
             v, wit, k, cert = mu_bound(n, spf, FT)
             N2 = comb(n, 2)
             w.writerow([n, N2, v, f"{v / N2:.6f}", k, k, k,
                         int(cert), 0, wit])
+            done_now += 1; done_work += float(n) ** 1.5
+            now = time.time()
+            if not quiet and every and (done_now % every == 0 or now - last >= 30):
+                fh.flush()
+                last = now
+                el = now - t0
+                frac = done_work / total_work if total_work else 1.0
+                eta = el * (1 - frac) / frac if frac > 0 else 0
+                print(f"{time.strftime('%H:%M:%S')}  {tag}: n = {n}, "
+                      f"{done_now}/{len(todo)} rows ({100 * frac:.1f}% of work), "
+                      f"{done_now / el:.0f} rows/s, elapsed {hms(el)}, "
+                      f"eta {hms(eta)}", file=sys.stderr, flush=True)
     if not quiet:
         print(f"{out}: wrote {len(todo)} rows, n in [{todo[0]}, {todo[-1]}]")
     return out
@@ -502,7 +552,17 @@ def main():
                     help="ignore the resume point and rescan from nmin, "
                          "computing only n absent from --out; use after a "
                          "chunked or targeted run that left holes")
-    ap.add_argument("--quiet", action="store_true", help="only the final summary")
+    ap.add_argument("--quiet", action="store_true",
+                    help="suppress the progress heartbeat (the file is still "
+                         "flushed on the same schedule)")
+    ap.add_argument("--progress", type=int, default=1000, metavar="ROWS",
+                    help="flush the output file and print a timestamped "
+                         "progress line every ROWS rows, and in any case at "
+                         "least every 30 s (default 1000; 0 disables the "
+                         "heartbeat but keeps the periodic flush).  Progress "
+                         "goes to STDERR, so piping stdout is unaffected and "
+                         "parallel parts interleave readably -- each line is "
+                         "tagged with its part filename.")
     ap.add_argument("--chunks", metavar="i/N",
                     help="run only chunk i of N, split for EQUAL WORK (on "
                          "cumulative n^1.5, not equal width).  Writes "
@@ -593,7 +653,8 @@ def main():
         print(f"{out}: {len(done)} rows present; "
               + (f"rescanning from {start} for gaps" if a.fill_gaps
                  else f"resuming at n = {start}"))
-    run(hi, out, start=start, done=done, append=bool(done), quiet=a.quiet)
+    run(hi, out, start=start, done=done, append=bool(done), quiet=a.quiet,
+        every=a.progress)
     if a.chunks and not a.quiet:
         print(f"  (chunk covers n in [{lo}, {hi}])")
     return 0
