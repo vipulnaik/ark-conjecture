@@ -308,12 +308,12 @@ Both clear on the current documents, as do I1–I5.
 - **Cross-check against `v3.mu_bound` at n never computed** — 2602, 2604, 2607, 2680 — all exact, at 10³–10⁴× speedup.
 - **Independent spec-derived enumerator**, brute force over part multisets, written from the shape-space description rather than from either script: 139 values on 6 ≤ n ≤ 200, 0 mismatches. This is the check that would catch a case dropped by *both* existing scripts.
 
-**New results from the table to 10⁴** (8,622 rows, 158 s to 8,000; the run scales as ~n^2.5, so 10⁵ is ~20 h in plain Python — my earlier "couple of hours" was wrong and I should have measured first):
+**New results from the table (nominally to 10⁴, in fact to n = 9894 — see the correction below)** (8,622 rows, 158 s to 8,000; the run scales as ~n^2.5, so 10⁵ is ~20 h in plain Python — my earlier "couple of hours" was wrong and I should have measured first):
 
 - **0 uncertified rows** — F.1's self-certification holds everywhere in range.
 - **The ladder never exceeds B and is tight at all 185 joined values**, extending the previous 28-value join by 6.6×.
 - **No three-part winners anywhere to 10⁴** (2,191 one-part, 6,431 two-part).
-- **The minimum density over every n ≤ 10⁴ is 0.04621 at n = 2759** — previously known over the contiguous prefix to 2,600 plus a worklist; now exact across the whole range.
+- **The minimum density over every n in range is 0.04621 at n = 2759** — previously known over the contiguous prefix to 2,600 plus a worklist; now exact across the whole range.
 
 **The o(1) in the ceiling.** Written up in the new `approach-rate-note.md`, with a pointer added at `aod` §3.3.5. The loss is linear in the distance from the balance point x\* = (2−√3)/2, so it is set by gaps between admissible c, which the singular series counts:
 
@@ -380,6 +380,14 @@ Two lessons recorded in the note: the join *hides* the obstruction (χ̃ multipl
 **Orbit complexes enumerated** (`orbitcx.py`): face-orbit types = G-orbits of H-orbits on G/K, for every subgroup H and every transitive A₅-set. 57 types at 60 points, 28 at 30, 19 at 20, 13 at 15, 10 at 12, 9 at 10. **Searched** (`orbitsearch.py`) unions of ≤ 3 types at 60 (30,913), ≤ 3 at 30 (3,682), partial ≤ 4 at 20 and full ≤ 4 at 15, with filters χ = 1 → χ(link) = 1 → 𝔽₂/𝔽₃/𝔽₅-acyclic → exact recursion. **Nothing survives 𝔽₂-acyclicity.** At 30 points 16 unions clear both χ tests and all carry 2-torsion; at 20 points every χ = 1 union also has χ(link) = 1 and all 23 carry 2-torsion; at 60 and 15 nothing clears the link test. Lutz's A itself is among the χ = 1 unions at 30 and fails at the link.
 
 **Reading.** 2-torsion is the universal obstruction across every structured family tried this session — the 15-point CSP completions, the orbit complexes at 20 and 30 — and it is the one thing no counting condition sees. The Sylow argument (non-solvable ⟹ C₂×C₂ ⟹ rank-2 Borel spectral sequence) says why it is 2 and why it is cheap. **Not run for budget:** k = 4 at 30 points, k = 3–4 at 60, and the two-subgroup face family H₁x ∪ H₂y; the scripts are parameterised for it.
+
+## 3m. Fusion, tested on PSL(2,7)
+
+The user asked whether the involution-quotient construction fails on A₅ *because* its Sylow-2's are TI, and whether non-trivial 2-fusion would help. On PSL(2,7): faces = cosets of the 14 Klein groups, each involution in exactly two of them, so **every edge lies in exactly two tetrahedra** — no free faces, not collapsible, χ = 168 = |G|, 𝔽₂-Betti (0, 34, 201, 0). Fusion glued the tetrahedra along edges and manufactured a 201-dimensional H₂ where A₅ had a graph's worth of H₁. **Worse, not better.** The underlying fact is arithmetic: a one-class coset complex has χ = |G|·(1 − i/2 + 3k/4), which cannot be 1; acyclicity needs several orbit types with balancing sizes on a non-regular set — Lutz's recipe. Orbit-complex searches on PSL(2,7)/D₈ and /S₃ (≤ 4 and ≤ 3 types) found no χ = 1 at 21 points and 8 at 28 with none passing the link test. The richer lattice gives *fewer* balanced complexes at small k.
+
+**Where the session leaves the transitive question.** Four independent families — the 15-point CSP completions, the orbit complexes on every A₅-set, Lutz's 60-vertex join and its 30-vertex factor, and the involution complexes on A₅ and PSL(2,7) — fail at four different rungs, and the two that get past counting fail at 2-torsion or at the link. The inclusion and minimality reductions (Barmak–Minian) and the orbit-complex enumeration are the durable products; the unrun searches are parameterised and cheap.
+
+**Correction, found later: that table lost its last 97 rows.** It ends at n = 9894, not 10000. The last written row is complete and 97 rows at ~70 bytes is almost exactly one 8 KB buffer — the output was never flushed, so the tail died with the backgrounded process. Every "to 10⁴" claim above is really **to 9894**: the floor at 2759, the ladder tight at 185 joined values, zero uncertified rows, no three-part winners. The user diagnosed this from the missing rows; `mu_exact.py` now flushes every `--progress` rows and at least every 30 s, so the file is a valid resume point at all times, and the run to 10⁵ re-covers the range.
 
 ## 4. Not examined
 

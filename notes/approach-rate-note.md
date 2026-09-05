@@ -70,9 +70,28 @@ The uniform ~7% deficit is the size of the known second-order Bateman–Horn cor
 
 **The n at or above the ceiling are a selected set.** They are S2-rescued (n with a large prime-power divisor, where the multiplicative engine wins outright) or §3.3.8 escapes. Both are density-zero families, so they disappear asymptotically, but at 10⁴ they are the majority of the class. Among class-11 n ≥ 5000 at or above the ceiling the winning shapes are F = 2 (57), F = 5 (32), F = 7 (26) — a different population, and correctly outside the model.
 
+## 4a. Which half of the formula the data actually confirms
+
+*Added after the exact table reached n = 25,620. The two factors of the prediction — the arithmetic 1/S(n) and the logarithmic log³n — are testable separately, and only one of them has been tested.*
+
+**The 1/S(n) dependence: confirmed.** Split the class-11 values with n ≥ 8000 into quartiles by S(n) — which ranges over a factor of 1.8 — and normalise each loss by log³n/n so that only the S-dependence remains:
+
+| median S(n) | observed loss·n/log³n | model 1/(k·S) | ratio |
+|---|---|---|---|
+| 1.98 | 0.0839 | 0.2905 | 0.289 |
+| 2.28 | 0.0750 | 0.2524 | 0.297 |
+| 2.93 | 0.0555 | 0.1959 | 0.283 |
+| 3.58 | 0.0434 | 0.1604 | 0.270 |
+
+The ratio is constant to ±5% across the range, so the loss really does vary inversely with the local density, **including the dependence on the factorisations of n and n−1** through ∏(ℓ−2)/(ℓ−3). This is the singular series' own arithmetic content and it could not come from anywhere else. The constant offset of ≈0.28 is the competing-shape suppression of §4, which should rise toward 1 as those shapes thin out.
+
+**The log³ factor: not tested, and not testable over this range.** Over n ∈ [8000, 25620], log³n changes by a factor of only **1.29**. Distinguishing log³ from log² or log⁴ requires the normalised ratio to drift by about 1.2 across the range, and the by-n quartile split gives 0.265, 0.299, 0.244, 0.393 — noise of exactly that size. A naive fit of the exponent over the whole table returns 5.7 rather than 3, but that is dominated by the low-n bins where competing shapes suppress the loss, so it is confounded rather than contradictory.
+
+**So the honest statement of what is established** is that the loss scales as 1/(S(n)·n) times a slowly varying factor, with the arithmetic confirmed and the logarithmic power untested. **Extending the table will not fix this**: even at 10⁶ the log³ signal is a factor ~1.2 per decade against comparable noise. What extending *does* test is the ≈0.28 offset, which the competing-shape account predicts should climb — that is the falsifiable part, and it is falsifiable at 10⁵.
+
 ## 5. What the singular series does and does not give
 
-**Does:** the mean, exactly, including the arithmetic dependence on n through S(n). Every leading-order number above is Bateman–Horn and nothing else.
+**Does:** the mean, exactly, including the arithmetic dependence on n through S(n). Every leading-order number above is Bateman–Horn and nothing else — and §4a confirms the S(n) dependence directly against exact B(n), which is the strongest support anything here has.
 
 **Does not:** the distribution. "The gaps near x\*n are Poisson" is a Cramér-model statement about a window of width ~log³n, and Bateman–Horn — which counts solutions up to x — says nothing about it. Anything of the form "δ(n) ≥ δ\* − C·log⁴n/n for **all** n in the class" comes from the extreme-value tail of that model, not from the series. The data in §3(a) supports the Poisson step about as directly as data can, and it remains a rabbit.
 
