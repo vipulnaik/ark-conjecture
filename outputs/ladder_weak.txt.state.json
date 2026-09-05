@@ -6,7 +6,7 @@
   0.04621,
   2759
  ],
- "n_max": 48905,
+ "n_max": 50062,
  "per_class": {
   "0": [
    0.471049,
@@ -70,5 +70,5 @@
   ]
  },
  "worklist_file": "ladder_weak.txt",
- "worklist_len": 1429
+ "worklist_len": 1473
 }
