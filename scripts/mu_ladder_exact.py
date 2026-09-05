@@ -27,9 +27,27 @@ k*q^e with small k -- which groups them by q into lists of bounded length.
 
 WHAT IS CERTIFIED, AND WHAT IS NOT.  If the maximum found exceeds C(n,2)/25 the
 result is B(n) exactly, by the two theorems, with a witness -- no conjecture is
-consulted.  If it does not, the theorems' hypothesis fails and this file returns
-its value as a LOWER BOUND only, flagged `certified = 0`; run `mu_exact.py` at
-such n.  On the current table no n falls in that case (the floor is 0.04621).
+consulted.  If it does not, EVERY pruning step above was unjustified: the
+fallback skip (E.5), the share > 1/5 cuts, F <= 16, the efficient-prime cut and
+the S12 / three-foreign exclusions all assume delta > 1/25.  The value is still
+a valid lower bound -- each scored configuration is admissible -- but it may sit
+strictly below B(n), and the true optimum may be a FALLBACK configuration, which
+is the one regime where B_safe and B_refined can differ and Corollary E.6 does
+not apply.  Such an n would also be the first counterexample to the 1/25 floor
+conjecture.  So the script does not merely flag it:
+
+  * per-n output marks the row `certified = 0` and writes `LOWER-BOUND-ONLY` in
+    the witness column ahead of the best menu witness;
+  * with `--on-uncertified exact` (the default when `mu_exact.py` is importable
+    from the same directory) it hands the n to `mu_exact.best_for_n`, reports
+    both values, and says whether mu_exact's optimum is a fallback
+    configuration -- in which case `fallback_cert.py` is the next step, since
+    mu(n) = B(n) is then not established at that n by any theorem;
+  * `--check` counts uncertified rows separately and lists every one, whatever
+    the comparison says, because a clean value comparison at such a row is a
+    coincidence and not a certification.
+
+On the current table no n is uncertified (the floor is 0.04621 at n = 2759).
 Two small-n caveats, both inside the certified table: Theorem E.5 has fifteen
 listed exceptions at n <= 63, so the `certified` flag there rests on the table
 rather than on the theorem; and the S11 fusion count is bounded by FMAX like
@@ -71,6 +89,8 @@ from collections import defaultdict
 from math import comb, isqrt
 
 KMAX_EFF = 40      # r-1 = k*q^e with k <= KMAX_EFF; k < 32 suffices (see note)
+CERT_DELTA = 1 / 25   # certification threshold; --cert-threshold RAISES it for testing the
+                      # uncertified path (raising is safe: the pruning assumes 1/25 regardless)
 FMAX = 16          # cap_F(1) = 1/(1+sqrt F)^2 < 1/25 for F >= 17
 
 
@@ -228,7 +248,60 @@ def best_for_n(n, A):
                             v = min(v, coeff(F) * c * c)
                         if v > best:
                             upd(v, f"p={pc[0]} q={q}: {F}x{c} + 1x{r1}* + 1x{r2}*   (* foreign)")
-    return best, wit, 25 * best > C2
+    return best, wit, best > CERT_DELTA * C2
+
+
+def load_mu_exact():
+    """Import mu_exact.py from this file's directory, or return None."""
+    import importlib.util, os
+    here = os.path.dirname(os.path.abspath(__file__))
+    for cand in (os.path.join(here, "mu_exact.py"), "mu_exact.py"):
+        if os.path.exists(cand):
+            spec = importlib.util.spec_from_file_location("mu_exact", cand)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            return mod
+    return None
+
+
+_EXACT_CACHE = {}
+
+
+def exhaustive(n, exact):
+    """mu_exact's B(n) at this n: (value, witness, is_fallback).  Its Foreign
+    table is built once per size class and cached."""
+    N = 1 << (n.bit_length())
+    if N not in _EXACT_CACHE:
+        spf = exact.sieve_spf(N + 1)
+        _EXACT_CACHE[N] = (spf, exact.Foreign(N + 1, spf))
+    spf, FT = _EXACT_CACHE[N]
+    v, wit, k, cert = exact.mu_bound(n, spf, FT)
+    # a fallback configuration is one whose foreign prime divides c - 1 for a
+    # matching class; read it off the witness
+    import re
+    parts = re.findall(r"(\d+)x(\d+)(\*?)", wit)
+    cs = [int(c) for F, c, s in parts if not s]
+    rs = [int(c) for F, c, s in parts if s]
+    fb = any((c - 1) % r == 0 for c in cs for r in rs)
+    return v, wit, fb
+
+
+def report_uncertified(n, v, w, exact):
+    C2 = comb(n, 2)
+    thr = "1/25" if abs(CERT_DELTA - 1 / 25) < 1e-12 else f"the test threshold {CERT_DELTA}"
+    print(f"# n={n}: menu+S6/S11 maximum {v} = {v/C2:.6f} C(n,2) does NOT clear {thr} -- "
+          f"LOWER BOUND ONLY; the pruning theorems do not apply here", file=sys.stderr)
+    if exact is None:
+        print(f"#        run mu_exact.py at n={n} (and fallback_cert.py if its optimum is a "
+              f"fallback configuration)", file=sys.stderr)
+        return None
+    ev, ew, fb = exhaustive(n, exact)
+    tag = "FALLBACK configuration -- B_safe may exceed B_refined here; run fallback_cert.py" \
+          if fb else "fallback-free -- mu(n) = B(n) still holds at this n by Part E"
+    print(f"#        mu_exact.py: B({n}) = {ev} = {ev/C2:.6f} C(n,2)  [{ew.split('(')[0].strip()}]  "
+          f"{'(menu value was exact)' if ev == v else f'(menu value short by {ev - v})'}; {tag}",
+          file=sys.stderr)
+    return ev, ew, fb
 
 
 def main():
@@ -237,18 +310,36 @@ def main():
     ap.add_argument("hi", type=int, nargs="?", default=1000)
     ap.add_argument("--check", metavar="TABLE", help="compare against a mu_table CSV")
     ap.add_argument("--time", action="store_true")
+    ap.add_argument("--on-uncertified", choices=["exact", "flag"], default=None,
+                    help="at an n whose maximum does not clear C(n,2)/25: 'exact' hands "
+                         "it to mu_exact.py's exhaustive search (default if importable), "
+                         "'flag' only marks it")
+    ap.add_argument("--cert-threshold", type=float, default=None,
+                    help="TEST ONLY: certify only above this density instead of 1/25 -- exercises "
+                         "the uncertified path on real rows (e.g. 0.05 makes n = 2759 uncertified). "
+                         "Lowering it below 1/25 is refused, since the pruning assumes 1/25.")
     a = ap.parse_args()
+    global CERT_DELTA
+    if a.cert_threshold is not None:
+        if a.cert_threshold < 1 / 25:
+            sys.exit("--cert-threshold below 1/25 would certify what the theorems do not cover")
+        CERT_DELTA = a.cert_threshold
+    exact = load_mu_exact() if a.on_uncertified != "flag" else None
+    if a.on_uncertified == "exact" and exact is None:
+        sys.exit("--on-uncertified exact: mu_exact.py not importable from this directory")
     if a.check:
         rows = list(csv.DictReader(open(a.check)))
         N = max(int(r["n"]) for r in rows)
         t0 = time.perf_counter(); A = Arith(N + 1); t1 = time.perf_counter()
         eq = low = high = uncert = 0
         bad = []
+        unc_rows = []
         for r in rows:
             n, B = int(r["n"]), int(r["mu_bound"])
             v, w, cert = best_for_n(n, A)
             if not cert:
                 uncert += 1
+                unc_rows.append((n, v, B))
             if v == B:
                 eq += 1
             elif v < B:
@@ -260,6 +351,12 @@ def main():
         print(f"equal {eq}, LOW {low}, HIGH {high}; uncertified (B <= C(n,2)/25) {uncert}")
         for b in bad[:12]:
             print("  ", b)
+        if unc_rows:
+            print(f"UNCERTIFIED rows (value comparison at these is NOT a certification):")
+            for n, v, B in unc_rows[:20]:
+                print(f"   n={n}: menu {v}, table {B}, table density {B/comb(n,2):.6f}")
+                if exact is not None:
+                    report_uncertified(n, v, "", exact)
         if a.time:
             print(f"sieve {t1-t0:.1f}s; per-n {1000*(t2-t1)/len(rows):.3f} ms average over the table")
         sys.exit(1 if bad else 0)
@@ -269,7 +366,16 @@ def main():
         if A.pp[n]:
             continue
         v, w, cert = best_for_n(n, A)
-        print(f"{n},{comb(n,2)},{v},{v/comb(n,2):.6f},{int(cert)},{w}")
+        if not cert:
+            res = report_uncertified(n, v, w, exact)
+            if res is not None:
+                ev, ew, fb = res
+                print(f"{n},{comb(n,2)},{ev},{ev/comb(n,2):.6f},0,"
+                      f"EXHAUSTIVE{'-FALLBACK' if fb else ''}: {ew}")
+                continue
+            print(f"{n},{comb(n,2)},{v},{v/comb(n,2):.6f},0,LOWER-BOUND-ONLY: {w}")
+            continue
+        print(f"{n},{comb(n,2)},{v},{v/comb(n,2):.6f},1,{w}")
 
 
 if __name__ == "__main__":
