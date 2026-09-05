@@ -299,6 +299,20 @@ python3 ceiling_rederive.py --nmax 16000 --no-filter # control: expect exceedanc
 
 **On rerun, expect:** the same floor 0.04621 at n = 2759 (where the ladder was already tight) or higher, a **shorter** worklist than 44,091, and possibly a different set of decade minima. Requote the worklist length wherever it appears — `check_doc_figures.py` invariant I10a checks the three banners agree — and rerun `validate_table_v3.py --ladder`, whose join set moves with the worklist.
 
+**The run, and the check that found this.**
+
+```bash
+# 1. the ladder itself, at the corrected window (overnight; ~80 ms/value at 10^6)
+python3 ladder_verify.py 1000000 --floor 0.04
+
+# 2. the every-row comparison against B -- this is what caught the clip, and it
+#    is NOT validate_table_v3.py --ladder, which joins on the worklist only
+python3 ladder_vs_B.py mu_table_exact.csv           # expect: 0 short, 0 OVER
+python3 ladder_vs_B.py mu_table_exact.csv --hi-x 0.55   # reproduces the defect
+```
+
+`ladder_vs_B.py` takes the table as its argument, finds `ladder_verify.py` beside itself or in the working directory (`--ladder PATH` to override), and imports it as a library with its range set from the table and its report suppressed. It reports **short** and **OVER** separately: a shortfall costs sharpness only, while an over-score would break ladder ≤ B_refined and hence Corollary E.6, so a nonzero over count exits nonzero unconditionally and a shortfall does so only under `--strict`. It also prints where each shortfall's winning c sits relative to the window, which is the line that identified the cause — at `--hi-x 0.55` it reads *274 of 274 lie OUTSIDE the scan window*, i.e. a window clip and not a missing family. Cost is one full scan per row with no early return, a few minutes over 30,000 rows, so it belongs after a scoring or window change rather than in the routine battery.
+
 ## R7. Consume the ladder worklist with the adaptive branch-and-bound
 
 > **R7 IS DONE at the corrected scoring, and the rerun changed the tail without touching the floor.** Run to 10⁶ against a floor of 0.04: **44,091** worklist entries (down 1,299), minimum **0.04621 at n = 2759**, nothing below 0.04, and the ladder tight against B at all **28** joined values where the pre-fix run was short at 16 of 37. Decade minima 0.05703 / **0.04621** / 0.05829 / 0.06391, so the descent is one decade wide as a statement about δ rather than about the scan. Exactly two entries fall below 0.05 — 2759 and 2183 — both already in the μ table, so no further exact B below 10⁶ can move the floor; the independent adaptive `mu_enumerate_v3.py` run at threshold 0.05 returns the same two values and the same global minimum. `validate_table_v3.py --ladder` now passes.
