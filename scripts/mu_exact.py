@@ -288,8 +288,15 @@ def best_for_n(n, spf, FT, kmax=6):
             cap = F * Cc2
             cb = coeff(F) * c * c if F > 1 else None
             pools.setdefault(p, []).append((F, c, size, cap, cb))
+    # Sort each pool by CAP descending, not by size.  The pool has ~n*loglog n
+    # entries (every prime power c and every F with F*c <= n), but a class can
+    # only matter if F*C(c,2) exceeds the running best, which at the densities
+    # in range means c > ~0.2n -- a few hundred entries, not ~10^5.  With the
+    # pool in cap order the scan in `fill` can BREAK at the first entry whose
+    # cap is already too small instead of testing all of them, which is the
+    # difference between per-n cost ~n^2.9 and ~n^1.9.
     for p in pools:
-        pools[p].sort(key=lambda t: -t[2])
+        pools[p].sort(key=lambda t: -t[3])
 
     def consider(mparts, fsizes, fval, tag):
         nonlocal best, wit, bestk
@@ -318,10 +325,10 @@ def best_for_n(n, spf, FT, kmax=6):
             return
         for i in range(idx, len(pool)):
             F, c, size, cap, cb = pool[i]
-            if size > rem:
-                continue
-            # score inequality: this class caps the whole configuration
+            # pool is cap-descending, so everything from here on is too small
             if cap <= best:
+                break
+            if size > rem:
                 continue
             if cb is not None and cb <= best:
                 continue
@@ -459,6 +466,13 @@ def read_done(path):
     return done, True
 
 
+def _rate(done, el):
+    """rows/s, switching to rows/min below 1 -- the tail of a large run reports
+    well under one row per second and "0 rows/s" is no use to anyone."""
+    r = done / el if el else 0.0
+    return f"{r:.1f} rows/s" if r >= 1 else f"{r * 60:.1f} rows/min"
+
+
 def hms(sec):
     """h:mm:ss / m:ss, so short runs do not all read as '0m'."""
     sec = int(max(sec, 0)); h, r = divmod(sec, 3600); m, s = divmod(r, 60)
@@ -527,7 +541,7 @@ def run(nmax, out, start=6, done=frozenset(), append=False, quiet=False,
                 eta = el * (1 - frac) / frac if frac > 0 else 0
                 print(f"{time.strftime('%H:%M:%S')}  {tag}: n = {n}, "
                       f"{done_now}/{len(todo)} rows ({100 * frac:.1f}% of work), "
-                      f"{done_now / el:.0f} rows/s, elapsed {hms(el)}, "
+                      f"{_rate(done_now, el)}, elapsed {hms(el)}, "
                       f"eta {hms(eta)}", file=sys.stderr, flush=True)
     if not quiet:
         print(f"{out}: wrote {len(todo)} rows, n in [{todo[0]}, {todo[-1]}]")
