@@ -111,18 +111,34 @@ python3 mu_enumerate_v3.py --nmax <N> --fill-gaps --out mu_table_safe_v5_code_v3
 - direct cross-checks against `v3.mu_bound` at n never previously computed — 2602, 2604, 2607, 2680 — all exact, at 10³–10⁴× speedup (v3 exceeds 280 s per value by n ≈ 2,600 and times out at n = 3,003 where `mu_exact` takes 0.02 s);
 - an **independent spec-derived enumerator** (brute force over part multisets, written from the shape-space description rather than from either script) agreeing on 139 values for 6 ≤ n ≤ 200 — the only check that would catch a case dropped by *both*.
 
-```bash
-# sizing: ~n^2.5 overall.  Measured: 4.6 s to 2,000; 46 s to 5,000; 158 s to 8,000.
-# Single-threaded to 10^5 is ~20 h; chunked 8 ways it is ~4.5 h wall.
-seq 1 8 | xargs -P8 -I{} python3 mu_exact.py --nmax 100000 --chunks {}/8
-cat mu_table_exact.csv.part{1..8} > mu_table_exact_1e5.csv
+**Cost, measured:** 4.6 s to n = 2,000; 46 s to 5,000; 158 s to 8,000 — the whole run scales as ~n^2.5. So **to 10⁵ it is ~20 h single-threaded and ~4.5 h wall chunked 8 ways**; to 10⁴ it is a few minutes single-threaded and needs no chunking.
 
-python3 mu_exact.py --nmax 10000                                  # single-threaded
-python3 mu_exact.py --validate mu_table_safe_v5_code_v3.csv       # regression, ~2 min
-python3 mu_exact.py --cross 2600 2700 4                           # vs v3 directly (slow: v3 is ~4 min/value here)
+**Resume is automatic and follows `mu_enumerate_v3.py`'s convention — there is no `--resume` flag.** An existing `--out` is *appended to*, not overwritten: rows already in it are skipped, and unless `--nmin` or `--fill-gaps` says otherwise the run restarts after its last row. **So an interrupted run is continued by reissuing the same command.** `--nmin` forces a start; `--fill-gaps` ignores the resume point and rescans for holes; a file whose first line is not this version's header is refused rather than appended to. A partial final row from a hard kill is truncated from the file and recomputed, so a resumed run is byte-identical to an uninterrupted one (tested).
+
+*The extension run, to 10⁵, on 8 cores.* Step 1 writes `mu_table_exact.csv.part1` … `.part8` in parallel; each part carries its own header, so step 2 merges with head+tail rather than a bare `cat`:
+
+```bash
+# 1. generate the eight parts in parallel  (~4.5 h wall; parts are independent).
+#    Reissue this same line after any interruption -- each part resumes itself.
+seq 1 8 | xargs -P8 -I{} python3 mu_exact.py --nmax 100000 --chunks {}/8
+
+# 2. merge, in order, once all eight have finished
+head -1 mu_table_exact.csv.part1 > mu_table_exact_1e5.csv
+for i in $(seq 1 8); do tail -n +2 mu_table_exact.csv.part$i; done >> mu_table_exact_1e5.csv
 ```
 
-- **`--chunks i/N` splits for EQUAL WORK, not equal width** — per-n cost grows as ~n^1.5, so the boundaries sit at nmax·(j/N)^0.4. Equal-width chunks would leave one worker doing most of the run. Concatenated chunk output is byte-identical to an unchunked run (verified).
+*Other invocations, none of which produce parts or need merging:*
+
+```bash
+python3 mu_exact.py --nmax 10000                                  # whole table to 10^4, single-threaded, minutes
+python3 mu_exact.py --nmax 100000                                 # same job single-threaded: ~20 h
+python3 mu_exact.py --nmax 100000 --nmin 50000                    # force a start, ignoring the resume point
+python3 mu_exact.py --nmax 100000 --fill-gaps                     # rescan for holes left by a targeted run
+python3 mu_exact.py --validate mu_table_safe_v5_code_v3.csv       # regression against the v3 table, ~2 min
+python3 mu_exact.py --cross 2600 2700 4                           # 4 random n checked against v3 directly (v3 is ~4 min/value here)
+```
+
+- **`--chunks i/N` splits for EQUAL WORK, not equal width** — per-n cost grows as ~n^1.5, so the boundaries sit at nmax·(j/N)^0.4. Equal-width chunks would leave one worker doing most of the run. Merged chunk output is row-identical to an unchunked run (verified). **Every part carries its own header**, so a part is a valid CSV on its own — it can be fed to `validate_table_v3.py`, or reopened for resume, without special-casing; merge with head+tail, not `cat`. **Every chunk needs the same `--nmax`**, since each rebuilds the sieve and the foreign table to nmax and derives its own range from `i/N`; mismatched `--nmax` across parts silently produces overlapping or missing rows.
 - **Run `--validate` after any edit.** It is the regression suite; the foreign-twist maximisation is the part that invites bugs (the best q is *not* the largest prime-power divisor of r − 1, because `orb` halves for even twists — at r = 41, Q = 8 gives 164 where Q = 5 gives 205).
 - **Everything under R1 still applies to the output**, including `validate_table_v3.py --baseline` for the never-lower-a-value check; `mu_exact.py` writes the same CSV columns as v3 so the downstream scripts take it unchanged.
 - **`--refined` is not implemented.** SAFE is the mode the documents quote; a refined-mode extension would need the strip logic and is out of scope for this script.

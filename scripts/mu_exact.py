@@ -72,10 +72,20 @@ the heaviest of 8 equal-work chunks took 281 s at nmax = 20,000, which puts an
 8-way parallel run to 10^5 at ~4.5 h wall.  Chunks are independent (each
 rebuilds the sieve to nmax), so this is `xargs -P8` and a `cat`, not a rewrite.
 
+RESUME follows `mu_enumerate_v3.py`: there is no --resume flag.  An existing
+--out is APPENDED TO, rows already in it are skipped, and the run restarts after
+its last row unless --nmin or --fill-gaps says otherwise -- so an interrupted run
+is continued by REISSUING THE SAME COMMAND.  A partial final row from a hard kill
+is truncated from the file and recomputed, so a resumed run is byte-identical to
+an uninterrupted one.  A file whose first line is not this version's header is
+refused rather than appended to.
+
 Usage:
-    # 8-way parallel to 10^5, ~4.5 h wall
+    # 8-way parallel to 10^5, ~4.5 h wall; reissue after any interruption
     seq 1 8 | xargs -P8 -I{} python3 mu_exact.py --nmax 100000 --chunks {}/8
-    cat mu_table_exact.csv.part{1..8} > mu_table_exact_1e5.csv
+    # each part has its own header, so merge with head+tail, not cat
+    head -1 mu_table_exact.csv.part1 > mu_table_exact_1e5.csv
+    for i in $(seq 1 8); do tail -n +2 mu_table_exact.csv.part$i; done >> mu_table_exact_1e5.csv
 
     python3 mu_exact.py --nmax 10000                   # single-threaded
     python3 mu_exact.py --validate mu_table_safe_v5_code_v3.csv
@@ -388,11 +398,56 @@ def mu_bound(n, spf, FT):
 
 
 # ---------------------------------------------------------------- driver
-HEADER = ["n", "C(n2)", "mu_bound", "density", "parts", "certified_K",
-          "partcap", "certified", "fallback", "witness"]
+# Same column names and order as `mu_enumerate_v3.py`, so the two tables are
+# interchangeable downstream and either can resume from the other's output.
+HEADER = ("n,C(n2),mu_bound,density,parts,certified_K,partcap,certified,"
+          "fallback,witness")
 
 
-def run(nmax, out, start=2, header=True):
+def read_done(path):
+    """(set of n already written, header-ok) for an existing output file.
+
+    Mirrors `mu_enumerate_v3.py`'s resume semantics: rows already present are
+    skipped and the run appends.  Returns (set(), True) when the file does not
+    exist, and (set(), False) when the first line is not this version's header.
+
+    A partial final line, left by a hard kill mid-write, is TRUNCATED FROM THE
+    FILE rather than merely skipped.  Ignoring it and appending after it would
+    splice a dead fragment into the middle of the table: the result still parses
+    (the fragment fails the column-count test on the next read) but is not
+    byte-equal to an uninterrupted run's output, and any consumer that does not
+    re-validate column counts would read it as a row.
+    """
+    import os
+    if not (os.path.exists(path) and os.path.getsize(path) > 0):
+        return set(), True
+    ncol = len(HEADER.split(","))
+    with open(path, "rb") as fh:
+        raw = fh.read()
+    text = raw.decode("utf-8", "replace")
+    done = set()
+    good_end = 0                 # byte offset just past the last complete row
+    pos = 0
+    for i, line in enumerate(text.splitlines(keepends=True)):
+        nbytes = len(line.encode("utf-8", "replace"))
+        stripped = line.rstrip("\r\n")   # csv.writer emits CRLF
+        if i == 0:
+            if stripped.lstrip("\ufeff") != HEADER:
+                return set(), False
+            good_end = pos + nbytes
+        elif line.endswith("\n"):
+            f = stripped.split(",")
+            if len(f) >= ncol and f[0].isdigit():
+                done.add(int(f[0]))
+                good_end = pos + nbytes
+        pos += nbytes
+    if good_end < len(raw):
+        with open(path, "r+b") as fh:
+            fh.truncate(good_end)
+    return done, True
+
+
+def run(nmax, out, start=6, done=frozenset(), append=False, quiet=False):
     """Rows for n in [start, nmax].
 
     The sieve and the Foreign table are built to nmax regardless of start, so a
@@ -405,32 +460,58 @@ def run(nmax, out, start=2, header=True):
     """
     spf = sieve_spf(nmax + 2)
     FT = Foreign(nmax + 1, spf)
-    mode = "w" if header else "a"
-    with open(out, mode, newline="") as fh:
+    todo = [n for n in range(start, nmax + 1)
+            if not prime_power(n, spf) and n not in done]
+    if not todo:
+        if not quiet:
+            print(f"{out}: nothing to do in [{start}, {nmax}]")
+        return out
+    # Every output file -- including every --chunks part -- carries its own
+    # header, so a part is a valid CSV on its own and can be fed to
+    # validate_table_v3.py or reopened for resume without special-casing.
+    # Merge with head+tail (see --chunks help), not a bare cat.
+    with open(out, "a" if append else "w", newline="") as fh:
         w = csv.writer(fh)
-        if header:
-            w.writerow(HEADER)
-        for n in range(start, nmax + 1):
-            if prime_power(n, spf):
-                continue
+        if not append:
+            w.writerow(HEADER.split(","))
+        for n in todo:
             v, wit, k, cert = mu_bound(n, spf, FT)
             N2 = comb(n, 2)
             w.writerow([n, N2, v, f"{v / N2:.6f}", k, k, k,
                         int(cert), 0, wit])
+    if not quiet:
+        print(f"{out}: wrote {len(todo)} rows, n in [{todo[0]}, {todo[-1]}]")
     return out
 
 
 def main():
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    # Flags mirror `mu_enumerate_v3.py` so the two are interchangeable at the
+    # command line: --nmin/--nmax/--out/--fill-gaps/--quiet mean the same thing,
+    # and resume is likewise automatic (append to --out, restart after its last
+    # row) rather than a separate flag.
+    ap.add_argument("--nmin", type=int, help="start of range (default: 6, or "
+                    "resume after the last row of --out if that file exists)")
     ap.add_argument("--nmax", type=int, default=1000)
-    ap.add_argument("--out", default="mu_table_exact.csv")
+    ap.add_argument("--out", default="mu_table_exact.csv",
+                    help="results CSV, same schema as mu_enumerate_v3.py's. "
+                         "Written with a header, APPENDED TO on re-runs, and "
+                         "used to resume when --nmin is omitted.")
+    ap.add_argument("--fill-gaps", action="store_true",
+                    help="ignore the resume point and rescan from nmin, "
+                         "computing only n absent from --out; use after a "
+                         "chunked or targeted run that left holes")
+    ap.add_argument("--quiet", action="store_true", help="only the final summary")
     ap.add_argument("--chunks", metavar="i/N",
                     help="run only chunk i of N, split for EQUAL WORK (on "
                          "cumulative n^1.5, not equal width).  Writes "
-                         "<out>.part<i>; concatenate in order afterwards, "
-                         "keeping only the first header.  Chunks are "
-                         "independent -- each rebuilds the sieve to nmax.")
+                         "<out>.part<i>, each with its own header.  Merge with "
+                         "  head -1 <out>.part1 > table.csv && "
+                         "for i in $(seq 1 N); do tail -n +2 <out>.part$i; done "
+                         ">> table.csv  "
+                         "Chunks are independent (each rebuilds the sieve to "
+                         "nmax) and each resumes on its own if reissued.")
     ap.add_argument("--validate", metavar="CSV",
                     help="compare every row against a v3-produced table")
     ap.add_argument("--cross", nargs=3, type=int, metavar=("LO", "HI", "K"),
@@ -481,6 +562,13 @@ def main():
         print(f"{K} cross-checks, {bad} mismatches")
         return 1 if bad else 0
 
+    # ---- resume, as in mu_enumerate_v3.py -------------------------------
+    # An existing --out is APPENDED TO, not overwritten: rows already in it are
+    # skipped and, unless --nmin or --fill-gaps says otherwise, the run restarts
+    # after its last row.  So an interrupted run is continued by reissuing the
+    # SAME command.
+    out = a.out
+    lo, hi = None, a.nmax
     if a.chunks:
         i, N = (int(x) for x in a.chunks.split("/"))
         if not 1 <= i <= N:
@@ -489,15 +577,25 @@ def main():
         # equal work, not equal width: cost per n grows ~n^1.5, so split the
         # range at equal increments of the integral, i.e. at nmax*(j/N)^(2/5).
         edge = lambda j: max(2, int(a.nmax * (j / N) ** 0.4))
-        lo = edge(i - 1) + 1 if i > 1 else 2
+        lo = edge(i - 1) + 1 if i > 1 else 6
         hi = edge(i) if i < N else a.nmax
         out = f"{a.out}.part{i}"
-        run(hi, out, start=lo, header=(i == 1))
-        print(f"wrote {out}  (n in [{lo}, {hi}])")
-        return 0
 
-    run(a.nmax, a.out)
-    print(f"wrote {a.out}")
+    done, ok = read_done(out)
+    if not ok:
+        print(f"refusing to append to {out}: its first line is not this "
+              f"version's header\n    {HEADER}\nMove it aside or pass a "
+              f"different --out.")
+        return 2
+    resume_from = (max(done) + 1) if (done and not a.fill_gaps) else None
+    start = a.nmin if a.nmin is not None else (resume_from or lo or 6)
+    if done and not a.quiet:
+        print(f"{out}: {len(done)} rows present; "
+              + (f"rescanning from {start} for gaps" if a.fill_gaps
+                 else f"resuming at n = {start}"))
+    run(hi, out, start=start, done=done, append=bool(done), quiet=a.quiet)
+    if a.chunks and not a.quiet:
+        print(f"  (chunk covers n in [{lo}, {hi}])")
     return 0
 
 
