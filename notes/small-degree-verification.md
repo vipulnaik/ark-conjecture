@@ -329,72 +329,34 @@ python3 verify_emission.py groups_out_12_tom.txt --contains groups_out_12.txt
 - ~~**`stage4_fast.py`.** Unreviewed, and now the only remaining place the lcm hazard could land~~ — **read in full; the lcm hazard is absent.** Its `parse_q` is the same tag-fed path as `probe_backbone.py`'s: the lcm is taken only over primes emitted by `IsOliverTop`, never over `ark_intersect`'s twist primes, and the lcm arithmetic is correct. The pend/undo discipline, the post-decrement check ordering, the greedy group-completion ordering and the leaf hard abort are all sound. Two sync fixes were applied rather than left as findings: the three UNSAT verdict strings hardcoded `n=10` while `NVERT` was computed (an n = 12 UNSAT would have printed the wrong degree in the one string that would be quoted as a theorem), and the multi-prime firing log from `probe_backbone.py` was missing.
 - **`smith.py`, `oliver_mu.py`, `ark_intersect.py`.** Still unreviewed and not in the working set. `fp_acyclic` has been checked *behaviourally* — all 75 group conditions re-verified on `solution1.pkl` against an independent from-scratch 𝔽_p-homology implementation, 0 failures — but the shipped implementation itself has not been read, and `ark_intersect.mono` (item 9) has not either.
 
-## 15. Orbit-complex searches for the transitive conjecture — what to run
+## 15. Orbit-complex searches for the transitive conjecture — operating notes
 
-*Context: `monotone-transitive-note.md` §6 items 0–3a. The family is vertex-homogeneous complexes on a transitive G-set G/K whose facets are G-orbits of H-orbits for subgroups H ("orbit complexes"); Lutz's 30-vertex ℤ-acyclic example is one, built from the three maximal-subgroup classes of A₅. The scripts enumerate face-orbit types and test unions of ≤ k of them through χ = 1 → χ(link) = 1 → 𝔽_p-acyclicity → exact non-evasiveness. Everything run so far fails, mostly at 𝔽₂; these are the runs that did not fit in the session.*
+*Results and their interpretation live in `monotone-transitive-note.md` §6 item 3a; this section is only what a future run needs. The family: vertex-homogeneous complexes on a transitive G-set G/K whose facets are G-orbits of H-orbits ("orbit complexes"), Lutz's 30-vertex ℤ-acyclic example being one.*
 
-**Files** (all in the outputs): `lutzA.py` (A₅ on 30 points, from Lutz's facets), `orbitcx.py` (face-orbit types for every A₅-set; imports `lutzA`), `orbitsearch.py` (the search; imports `orbitcx`), `psl27.py` (PSL(2,7) built as GL(3,2)), `psl27_orbit.py` (its search; imports `orbitsearch` for the filters). Put them in one directory. **Dependencies:** `pynauty` (used by `lutzA.py` to recover Aut(A)), `numpy`. Python 3.10+.
+**Files** (all in outputs): `lutzA.py` (Lutz's A, and Aut(A) via nauty), `orbitcx.py` (face-orbit types for every A₅-set; imports `lutzA`), `orbitsearch.py` (the search; imports `orbitcx`), `psl27.py` (PSL(2,7) as GL(3,2)), `psl27_orbit.py` (its search; imports `orbitsearch` for the filters). One directory, `pynauty` + `numpy`, Python 3.10+.
 
-**Interface.** `python3 orbitsearch.py <K-order> <max-k> <seconds>` for A₅; `python3 psl27_orbit.py <K-order> <max-k> <seconds> [max-face-size]` for PSL(2,7). `K-order` selects the transitive set G/K by the order of K (first subgroup of that order; all subgroups of a given order are conjugate in A₅; in PSL(2,7) orders 4, 12, 24 have two classes and the script takes the first found — see the note at the end). Progress is silent until a candidate clears 𝔽₂; then each survivor prints one line and goes to the exact recursion with a 20–30 s cap. The final line is a dict of counts: `tried`, `chi1`, `link1`, `F2fail`, `F35fail`/`F37fail`, `acyclic_mod235`/`acyclic237`, and then `evasive` / `NE` / `NE_timeout`. **A line ending `NE recursion TIMEOUT` is the interesting outcome** — a complex acyclic mod 2, 3, 5 (or 2, 3, 7) whose non-evasiveness the recursion could not settle in the cap; save the printed type list and rerun the recursion on it with a longer cap. `NONEVASIVE <== COUNTEREXAMPLE` would be that.
+**Interface.** `python3 orbitsearch.py <K-order> <max-k> <seconds>` for A₅; `python3 psl27_orbit.py <K-order> <max-k> <seconds> [max-face-size]` for PSL(2,7). `K-order` picks the transitive set G/K by the order of K. Silent until a complex clears 𝔽₂; then one line per survivor, then a final dict of stage counts.
 
-**A₅ — DONE at k ≤ 4 on every transitive set, nothing left to run.** Total wall time about 40 min.
+**Coverage, so that nothing is rerun by accident.** A₅ is **complete at k ≤ 4 on all six transitive sets** (456,847 unions, ~40 min total). PSL(2,7) is complete at k ≤ 4 on the 21- and 28-point sets, k ≤ 3 on 42, 56 and 84, and k ≤ 2 on the regular set (129,758 unions). **Zero survivors anywhere.** Unrun: k = 4 on PSL(2,7)'s 42-, 56- and 84-point sets, k ≥ 3 on its regular set, and raised face-size caps — all low-value, since the link test annihilated every χ = 1 complex that group produced.
 
-| G/K | command | unions tried | χ = 1 | χ(link) = 1 | fail 𝔽₂ | **survive** | time |
-|---|---|---|---|---|---|---|---|
-| 60 (regular) | `orbitsearch.py 1 4 7200` | 425,923 | 3,420 | **0** | — | 0 | 1,555 s |
-| 30 (A₅/C₂) | `orbitsearch.py 2 4 900` | 24,157 | 736 | 58 | 58 | 0 | 259 s |
-| 20 (A₅/C₃) | `orbitsearch.py 3 4 900` | 5,035 | 132 | 128 | 128 | 0 | 467 s |
-| 15 (A₅/V) | `orbitsearch.py 4 4 120` | 1,092 | 27 | 0 | — | 0 | 2 s |
-| 12 (A₅/C₅) | `orbitsearch.py 5 4 300` | 385 | 52 | 52 | 52 | 0 | 1 s |
-| 10 (A₅/S₃) | `orbitsearch.py 6 4 300` | 255 | 10 | 0 | — | 0 | 0 s |
-| **total** | | **456,847** | **4,377** | **238** | **238** | **0** | |
+**Reading the output.**
+- `NONEVASIVE <== COUNTEREXAMPLE` is the result the programme exists to find.
+- `NE recursion TIMEOUT` is the line to stop on: a complex acyclic mod every relevant prime whose non-evasiveness the recursion could not settle. Save the printed type list and rerun with a longer cap.
+- `acyclic_mod...` > 0 with all survivors `evasive` is still news — it would be the first orbit complex past Lutz's rung.
+- **`chi1 = 0` means nothing homological was tested.** It is a fact about orbit-size arithmetic on that set, not evidence the family is ruled out. Four of PSL(2,7)'s six sets report this.
 
-**Result: no orbit complex on any transitive A₅-set, from at most four face-orbit types, is ℤ-acyclic.** All 238 complexes clearing both Euler tests carry 2-torsion — no exceptions. Lutz's A is among the 736 at 30 points and fails at χ(link).
+**Guidance for a new group or family**, from what the completed runs showed.
+1. **Do not prioritise the regular set.** At |G| points, 3,420 A₅ complexes reach χ = 1 and *none* has an acyclic link. The inflation argument makes the regular action the universal *target*, but orbit complexes there are too coarse to hit it; the useful examples live on smaller sets, as Lutz's does.
+2. **Keep both Euler tests.** Which one bites depends on the set — the link test is informative at 30 points (58 of 736), nearly vacuous at 20 and 12, and total at 60, 15 and 10.
+3. **Try 𝔽₂-acyclicity early.** On A₅ it eliminated all 238 complexes that counting left standing. On a non-solvable group expect failure at p = 2 specifically: every such group contains C₂ × C₂, and rank-2 elementary abelian actions are where 𝔽₂-homology escapes the fixed-point conditions.
 
-*Three things worth carrying into the next search.* (i) **The regular set is the worst place to look**, not the best: 3,420 complexes reach χ = 1 at 60 points and none has an acyclic link. The inflation argument makes the regular action the universal *target*, but orbit complexes there are too coarse to hit it — the useful examples live on smaller sets, as Lutz's does. Do not prioritise |G| points on a new group. (ii) **The link test is informative only at 30 points** (58 of 736); at 20 and 12 it is nearly vacuous once χ = 1 (128/132, 52/52) and at 60, 15 and 10 it kills everything. Which of the two Euler tests bites depends on the set, so neither can be dropped. (iii) **𝔽₂-acyclicity does 100% of the work beyond counting.** Without it, 238 candidates would still be standing. It should be the *first* filter tried on any new family, not the last — and on a non-solvable group expect the failure at p = 2 specifically (the Sylow argument: every non-solvable group contains C₂ × C₂, and rank-2 elementary abelian actions are where 𝔽₂-homology escapes the fixed-point conditions).
+**Two caveats.** (i) In PSL(2,7), `K-order 4` takes whichever order-4 subgroup the closure loop finds first, which may be a C₄ (21 of them) rather than a Klein group (14); to target the Klein classes, filter `subs` by `all(order(h) <= 2 for h in H)` before choosing K. The face-type enumeration ranges over all subgroups regardless, so this affects only the vertex set. (ii) The exact recursion in `orbitsearch.py` memoises on face sets with no symmetry reduction, so on 84 or 168 points it may time out on complexes that are in fact evasive. A timeout is a prompt to look, not a verdict.
 
-**PSL(2,7) — DONE at the depths shown; nothing reached the 𝔽₂ filter.**
+## 15a. The two-subgroup family (`twosub.py`) — what to run
 
-| G/K | k | face cap | unions tried | χ = 1 | χ(link) = 1 | **survive** | time |
-|---|---|---|---|---|---|---|---|
-| 21 (G/D₈) | ≤ 4 | 12 | 5,035 | **0** | — | 0 | 19 s |
-| 28 (G/S₃) | ≤ 4 | 12 | 24,157 | 105 | **0** | 0 | 102 s |
-| 42 (G/order-4) | ≤ 3 | 12 | 8,473 | **0** | — | 0 | 43 s |
-| 56 (G/C₃) | ≤ 3 | 12 | 24,857 | 16 | **0** | 0 | 137 s |
-| 84 (G/C₂) | ≤ 3 | 8 | 57,225 | **0** | — | 0 | 79 s |
-| 168 (regular) | ≤ 2 | 8 | 10,011 | **0** | — | 0 | 15 s |
-| **total** | | | **129,758** | **121** | **0** | **0** | |
+*Facets are G-orbits of sets H₁·x ∪ H₂·y; orbit complexes are the case H₂ = H₁, y = x, so this strictly contains §15's family. Same filters in the same order, plus a per-stage counter. Results and what they mean: `monotone-transitive-note.md` §6 item 3a.*
 
-**The failure mode inverts between the two groups, and that is the most informative thing here.**
-
-| | complexes tried | χ = 1 | of those, χ(link) = 1 | of those, 𝔽₂-acyclic |
-|---|---|---|---|---|
-| A₅ (order 60) | 456,847 | 4,377 (0.96%) | 238 (5.4%) | **0** |
-| PSL(2,7) (order 168) | 129,758 | 121 (**0.093%**) | **0** | — |
-
-On A₅ the counting conditions leave 238 candidates and 𝔽₂-acyclicity does 100% of the remaining work. **On PSL(2,7) counting alone suffices** — the χ = 1 rate is ten times lower, and the link test kills all 121 survivors, so no complex ever reached the homological filter. The larger group has more subgroup classes, hence more distinct orbit sizes, hence a harder balance problem: **richer structure makes the Diophantine coincidence rarer, not commoner.** Same conclusion as the involution-complex comparison (`monotone-transitive-note.md` §6 3a), reached independently.
-
-**An empirical pattern, and a warning about the obvious explanation.** On PSL(2,7), χ = 1 occurs **only when 3 divides |K|** — i.e. on G/S₃ and G/C₃, never on the four sets where K is a 2-group (D₈, order-4, C₂, trivial). The tempting explanation is Smith: if no conjugate of K contains C₃ then C₃ has no fixed vertices, the fixed complex is empty, χ ≡ 0 (mod 3), and χ = 1 is impossible. **That argument is wrong**, and A₅ disproves the rule: its 15-, 30- and 60-point sets all have 2-group stabilisers and all produce χ = 1 complexes in quantity (27, 736, 3,420). The error is that the fixed *space* |Δ|^{C₃} consists of faces invariant **setwise**, not pointwise — it is the fixed subcomplex of the barycentric subdivision. Checked directly on an A₅ 15-point example: no C₃-fixed vertices, but exactly one setwise-invariant face, so χ(|Δ|^{C₃}) = 1 and the congruence is satisfied with χ(Δ) = 1. So the PSL(2,7) pattern is group-specific arithmetic, not a general obstruction.
-
-**Still unrun on PSL(2,7):** k = 4 on the 42-, 56- and 84-point sets, k ≥ 3 on the regular set, and the face-size caps could be raised. Given that the link test annihilated every χ = 1 complex found so far, deeper runs on this group look low-value relative to the two-subgroup family below.
-
-**Original commands, for reference:**
-```bash
-python3 psl27_orbit.py 6 4 1800 12   # G/S3, 28 points, k=4 (hit the limit at 120 s; 8 unions had chi=1 at k<=3)
-python3 psl27_orbit.py 4 3 900 12    # G/V4, 42 points -- first class of order 4 found; see note
-python3 psl27_orbit.py 3 3 900 12    # G/C3, 56 points
-python3 psl27_orbit.py 2 3 1800 8    # G/C2, 84 points
-python3 psl27_orbit.py 1 2 1800 8    # regular, 168 points, k<=2 only (faces capped at size 8 = D8 cosets)
-```
-Already complete: G/D₈ (21 points) k ≤ 4 — **no union with χ = 1 at all**; G/S₃ k ≤ 3 — 8 with χ = 1, none passing the link.
-
-**Reading the results.** The pattern, now across 456,847 A₅ complexes and every PSL(2,7) set tried, is that everything clearing both Euler-characteristic tests carries 2-torsion; a run whose final dict shows `acyclic_mod235 > 0` with all survivors `evasive` is still informative (first orbit complexes to reach the ℤ-acyclic rung beyond Lutz's), and one with `NE_timeout` is the one to look at. A run with `chi1 = 0` says the orbit sizes on that set admit no balance at that k, which is a Diophantine fact about the group, not a computational limitation.
-
-**Two caveats.** (i) In PSL(2,7), `K-order` 4 picks up whichever order-4 subgroup the closure loop finds first, which may be a C₄ (21 of them) rather than a Klein group (14, in two classes); to target the Klein classes, filter `subs` in `psl27_orbit.py` by `all(order(h) <= 2 for h in H)` before choosing K. The face-type enumeration itself already ranges over all subgroups, so this affects only which vertex set is used. (ii) The exact recursion (`nonevasive` in `orbitsearch.py`) memoises on face sets without symmetry reduction; on 84 or 168 points it may time out on complexes that are in fact evasive. A timeout is a prompt to look, not a verdict.
-
-## 15a. The two-subgroup family (`twosub.py`) — first results
-
-*Facets are G-orbits of sets H₁·x ∪ H₂·y. Orbit complexes are the special case H₂ = H₁, y = x, so this strictly contains the family exhausted in §15. Same filters, same order, with a per-stage counter so a `chi1: 0` run cannot be misread.*
+`python3 twosub.py --group {a5,psl27} --korder K --maxk k --limit SECONDS [--maxface M] [--maxtypes T] [--netimeout S]`. Type enumeration is the slow part (33 s at 15 points, 49 s at 20 with `--maxface 10`) and happens before any search, so give short runs a generous `--limit`. `--maxtypes` truncates the type list to a **prefix**, so a capped run is not exhaustive and says so in its output.
 
 ```bash
 python3 twosub.py --group a5 --korder 4 --maxk 2 --limit 600      # 15 points
@@ -405,19 +367,14 @@ python3 twosub.py --group a5 --korder 2 --maxk 2 --limit 3600 --maxface 10   # 3
 python3 twosub.py --group psl27 --korder 6 --maxk 2 --limit 3600             # 28 points, UNRUN
 ```
 
-| G/K | k | tried | χ = 1 | χ(link) = 1 | fail 𝔽₂ | **survive** |
-|---|---|---|---|---|---|---|
-| 15 (A₅/V) | ≤ 2 | 19,900 | 153 | **15** | 15 | 0 |
-| 12 (A₅/C₅) | ≤ 3, partial | 20,188 | 2,241 | 464 | 464 | 0 |
-| 10 (A₅/S₃) | ≤ 3 | 8,473 | 198 | 68 | 68 | 0 |
-| 20 (A₅/C₃) | ≤ 2, partial | 20,579 | 45 | 45 | 45 | 0 |
-| **total** | | **69,140** | **2,637** | **592** | **592** | **0** |
+**Covered so far** (69,140 unions; 2,637 reached χ = 1, 592 also passed the link test, all 592 failed 𝔽₂, zero survivors): 15 points at k ≤ 2; 10 points at k ≤ 3; 12 points at k ≤ 3 **partial**; 20 points at k ≤ 2 **partial**.
 
-**The decoupling hypothesis is confirmed, and it did not help.** The family reaches the homological filter far more often than orbit complexes do — χ = 1 at 3.8% against 0.96%, and of those, 22.4% pass the link test against 5.4%. Most tellingly, **at 15 and 10 points the orbit-complex family produced zero link-test survivors and this one produces 15 and 68.** So the extra degrees of freedom do what they were predicted to do: they let balance and an acyclic link hold simultaneously. **And then all 592 fail 𝔽₂-acyclicity, without exception.**
+**Unrun, in order of value:**
+- **30 points** (`--korder 2`), where Lutz's example lives — the one set of A₅ at which the link test was informative rather than vacuous or total.
+- **PSL(2,7)/S₃ at 28 points** (`--group psl27 --korder 6`), the only set of that group producing χ = 1 complexes in quantity.
+- k = 3 to completion at 12 and 20 points.
 
-That is the substantive result. Across both families, both groups and every transitive set tried — **655,745 complexes, 830 clearing both Euler tests, zero 𝔽₂-acyclic.** Widening the family multiplies the number of candidates reaching the homological test by four and changes nothing about the outcome: 2-torsion is not an artefact of the narrowness of orbit complexes.
-
-**Unrun and worth running:** the 30-point set (where Lutz's example lives) and PSL(2,7)/S₃ at 28, both at k ≤ 2; and k = 3 to completion at 12 and 20 points. `--maxtypes` truncates the type list to a *prefix*, so a capped run is explicitly not exhaustive and says so.
+Expect the 30-point run to need `--maxface 10` or lower and a long `--limit`; the type count grows quickly with the size of the set.
 
 **Next family, not yet coded, and now the main thing left.** Faces of the form H₁x ∪ H₂y — unions of orbits of two subgroups — one step less structured than orbit complexes and still enumerable on the small sets. The A₅ result above is the argument for it: within orbit complexes the facet sizes are subgroup-orbit sizes, so "balance" (χ = 1) and "an acyclic link" compete for the same few degrees of freedom and 456,847 tries produce neither together. Two-subgroup faces decouple them. Build it on the 30- and 20-point sets first, put 𝔽₂-acyclicity immediately after χ = 1 rather than last, and skip the regular set.
 

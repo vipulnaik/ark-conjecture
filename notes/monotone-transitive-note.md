@@ -230,7 +230,19 @@ If the object of the exercise is to sharpen what distinguishes graph properties,
 
    *On PSL(2,7) the recipe fails, for a structural reason* (`psl27.py`, `psl27_orbit.py` on G/C₂, 84 points). Only involution-bearing maximal classes can contribute own-involution orbits; C₇:C₃ has none and drops out. The two S₄ classes each give 7 facets of size 12 that **partition** the 84 points, and a facet of one class meets a facet of the other iff the corresponding point and line of the Fano plane are incident — so the nerve is the **Heawood graph**, χ = 14 − 21 = −7, b₁ = 8. Not acyclic, and no choice within the recipe changes it. So the construction is not generic: it needs every maximal class to carry involutions *and* the Möbius-type sum over their incidences to come out to 1, which is a Diophantine coincidence A₅ happens to satisfy. Whether Lutz 2002's "further higher-dimensional examples" realise it for other groups could not be checked (paywalled). **Where it does generalise, evasiveness reduces to the local nerve at a point — the incidence structure of the maximal subgroups containing one involution — and non-evasiveness would need that to be acyclic at some vertex and recursively below**; for A₅ it is a circle.
 
-   **Orbit complexes on PSL(2,7), all six transitive sets** (`psl27_orbit.py`; full table in `small-degree-verification.md` §15): **129,758 unions, 121 with χ = 1, and not one with χ(link) = 1** — so on this group nothing ever reached the homological filter. **The failure mode inverts between the two groups.** On A₅, counting leaves 238 candidates and 𝔽₂-acyclicity kills all of them; on PSL(2,7) the χ = 1 rate is ten times lower (0.093% against 0.96%) and the link test alone finishes the job. The larger group has more subgroup classes, hence more distinct orbit sizes, hence a harder balance problem: **richer structure makes the coincidence rarer, not commoner** — the same conclusion the involution-complex comparison reached independently.
+   **Orbit complexes on PSL(2,7), all six transitive sets** (`psl27_orbit.py`):
+
+   | G/K | k | tried | χ = 1 | χ(link) = 1 | **survive** |
+   |---|---|---|---|---|---|
+   | 21 (G/D₈) | ≤ 4 | 5,035 | **0** | — | 0 |
+   | 28 (G/S₃) | ≤ 4 | 24,157 | 105 | **0** | 0 |
+   | 42 (G/order-4) | ≤ 3 | 8,473 | **0** | — | 0 |
+   | 56 (G/C₃) | ≤ 3 | 24,857 | 16 | **0** | 0 |
+   | 84 (G/C₂) | ≤ 3 | 57,225 | **0** | — | 0 |
+   | 168 (regular) | ≤ 2 | 10,011 | **0** | — | 0 |
+   | **total** | | **129,758** | **121** | **0** | **0** |
+
+   **121 with χ = 1 and not one with χ(link) = 1** — so on this group nothing ever reached the homological filter. **The failure mode inverts between the two groups.** On A₅, counting leaves 238 candidates and 𝔽₂-acyclicity kills all of them; on PSL(2,7) the χ = 1 rate is ten times lower (0.093% against 0.96%) and the link test alone finishes the job. The larger group has more subgroup classes, hence more distinct orbit sizes, hence a harder balance problem: **richer structure makes the coincidence rarer, not commoner** — the same conclusion the involution-complex comparison reached independently.
 
    *One near-theorem, and why it is not one.* On PSL(2,7), χ = 1 occurs only when 3 divides |K| — never on the four sets with 2-group stabilisers. The natural explanation is Smith: no conjugate of a 2-group contains C₃, so C₃ has no fixed vertices, the fixed complex is empty, and χ ≡ 0 (mod 3). **That is wrong**, and A₅ refutes the rule — its 15-, 30- and 60-point sets have 2-group stabilisers and yield 27, 736 and 3,420 complexes with χ = 1. The fixed *space* |Δ|^{C₃} is built from **setwise**-invariant faces, being the fixed subcomplex of the barycentric subdivision, not from fixed vertices: checked on an A₅ 15-point example, there are no C₃-fixed vertices but exactly one setwise-invariant face, giving χ(|Δ|^{C₃}) = 1 in agreement with χ(Δ) = 1. A useful trap to have walked into, since the pointwise reading would have "proved" several of these sets vacuous.
 
