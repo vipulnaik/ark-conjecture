@@ -33,14 +33,14 @@ a18_verify.py -- three verifications for Lemma D2 of enumeration-proof.md
           B(n).  The bound is deliberately generous (it grants the largest
           class a 2-transitive permuter could produce), so a pass here means
           no fused-outside configuration can attain B(n) in range even under
-          worst-case structure.  Also prints the theorem threshold, computed from a
-          deliberately weak delta: at delta >= 0.02516 the exclusion is a
-          theorem for n >= 1582, which overlaps the table's reach with room.
-          That is an UPPER bound on where the theorem starts -- a higher
-          verified floor lowers it -- and the pass does not depend on which
-          floor is fed in.
+          worst-case structure.  Also prints the theorem threshold for each
+          floor in FLOORS below.  The threshold is a function of the floor and
+          NOTHING else, so it moves whenever the ladder does: the pre-repair
+          0.02516 gives n >= 1582, and the current corrected ladder floor
+          0.04621 gives n >= 470.  Quote the line this run prints rather than a
+          remembered number, and update `ep` Corollary D2-prime with it.
 
-Usage:  python3 a18_verify.py [path/to/mu_table_safe_v4.csv]
+Usage:  python3 a18_verify.py [path/to/mu_table.csv]
 Exits nonzero on any failure.
 """
 import csv, sys
@@ -297,11 +297,20 @@ viol = [(n, ub(n), rows[n]) for n in sorted(rows) if ub(n) >= rows[n]]
 worst = max((ub(n) / rows[n], n) for n in rows)
 check("no fused-outside bound reaches B(n) over %d rows" % len(rows), not viol)
 print("      worst UB/B ratio %.4f at n = %d" % worst)
-d = 0.02516
-t = 2
-while not (t ** 0.5 < d * (t - 1)):
-    t += 1
-print("      theorem threshold at delta >= 0.02516: n >= %d (table reaches %d)" % (t, N))
-check("theorem threshold overlaps table range", t <= N)
+# The theorem form of D2-prime holds once sqrt(n) < delta*(n-1).  That is a
+# function of the floor alone, so both the superseded and the current ladder
+# floors are printed: a document quoting one of them is quoting a floor, not a
+# fact about D2, and the pass below does not depend on which is used.
+FLOORS = [(0.02516, "superseded pre-repair ladder"),
+          (0.04621, "current corrected ladder, n <= 10^6")]
+thresholds = []
+for d, label in FLOORS:
+    t = 2
+    while not (t ** 0.5 < d * (t - 1)):
+        t += 1
+    thresholds.append(t)
+    print("      theorem threshold at delta >= %.5f: n >= %d   (%s)" % (d, t, label))
+print("      table reaches %d" % N)
+check("theorem threshold overlaps table range", min(thresholds) <= N)
 
 sys.exit(0 if ok else 1)

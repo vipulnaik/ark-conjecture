@@ -557,15 +557,11 @@ def pair_candidates(A, n, B, c, r, p, skip_settled=None):
             # permissive, hence sound, but wrong, and it would silently become
             # anti-permissive if this expression were ever reused with the
             # inequality the other way round.
-            # The intra cap is F * orb(c, dmax), NOT F * C(c, 2).  dmax is the
-            # twist's q-part (which may sit in the top layer) times the rest of
-            # c - 1 with the FOREIGN PRIME stripped where Corollary C' licenses
-            # it -- and nothing else stripped; see the note at the strip below
-            # for why the block count must not join it.  The foreign strip alone
-            # is what resolves the F = 2 reading of n = 5r + 2 at c = 2r + 1:
-            # there c - 1 = 2r, r goes, and what is left is d | 2, so the intra
-            # collapses to O(c) at odd q.
-            # Condition (4), FLAT.  SAFE scores a p-characteristic class at
+            # Condition (4), FLAT.  (A superseded comment stood here saying the
+            # intra cap is F*orb(c, dmax) with the foreign prime stripped.  It
+            # described the OLD gate and contradicted the code below it; the
+            # strip is now a diagnostic only, and the paragraph that explains
+            # why follows.)  SAFE scores a p-characteristic class at
             # F*C(c,2) whatever its twist, so that is what a configuration
             # attaining B_safe(n) must clear, and it is the only cap here that
             # is necessary for the question this file asks.  Capping by

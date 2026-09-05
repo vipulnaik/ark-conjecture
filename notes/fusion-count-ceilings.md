@@ -1,5 +1,11 @@
 # The mod-24 ceilings as a joint optimisation over (F, η)
 
+> # ⚠ PARTLY SUPERSEDED — read §§1–3 for the mechanism, not §§4–7 for the numbers
+>
+> **⟦ARCHIVED-NUMBERS⟧** This note was written before the ceiling table was rekeyed from **mod 24 to mod 12** and its constant count reduced from seven to six, so every mod-24 residue list, the "classes 7 and 15 attain cap₄(1) = 1/9" claim, the "attained at n ≡ 23 (mod 24) alone" phrasing and the `mu_enumerate_v2.py` references below are pre-rebuild. `arithmetic-of-density.md` §3.3.5 is the sole ceiling table; this note's closing edit list has been carried out and should not be re-actioned.
+>
+> **One correction the note itself needs, and it is the note's own failure mode reappearing.** §6 diagnoses "a case analysis whose proof covers one part of a partition while its statement quantifies over the whole", identifies the partition as F odd versus F even, and then works the whole document under "F even is forced at odd n" — leaving **odd F at even n** unanalysed. That branch is not an escape: c is an ordinary odd prime, the supply is a full Hardy–Littlewood system, and at **n ≡ 2, 8 (mod 12)** the ℓ = 3 obstruction cuts S3 to η = 1/3 while cap₃(1) = cap₁(1/3) exactly, so **F = 3 ties for the class ceiling and co-wins those two classes**. §7's "the F-search is complete" is therefore complete for odd n only. The even-n F-search closes the same way: cap₅(1) = 0.09549 < 0.13397 excludes odd F ≥ 5, so F ∈ {1, 3} is the whole even-n competition. Third instance of the same pattern, and the reason to check *both* parities of *both* quantities before reading a supply clause as a bound.
+
 > # ⚠ ARCHIVED — superseded snapshot, retained for its derivation only
 >
 > **⟦ARCHIVED⟧ This note's conclusion was accepted and is now the framework's ceiling table; the note itself has not been maintained since, and two things in it are stale.**

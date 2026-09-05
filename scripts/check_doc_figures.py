@@ -754,6 +754,137 @@ if A.only in ("all", "scope"):
     if not i7:
         print("[ok] I7: every winner count names the population it was taken over.")
 
+    # (I8) AN ODD-F ESCAPE CLAUSE MUST NAME THE PARITY OF n.  "F*c even forces
+    #      c = 2^a" is true only for ODD F at ODD n.  At even n an odd F leaves
+    #      c an ordinary odd prime, the supply is a full Hardy-Littlewood
+    #      system, and at n = 2, 8 (mod 12) -- where the ell = 3 obstruction
+    #      cuts S3 to eta = 1/3 -- cap_3(1) = cap_1(1/3) exactly, so F = 3 TIES
+    #      for the class ceiling and co-wins the class.  A sentence that draws
+    #      the O(log n)/O(n/log n) escape conclusion while quantifying over all
+    #      F >= 3, or over all n, is the third instance of this project's
+    #      recurring failure: a case analysis whose proof covers one half of a
+    #      partition and whose statement covers both.  It is prose, not a
+    #      figure, so nothing else here can see it.
+    print()
+    ESCAPE = re.compile(
+        r"(?:F\s*[·*x]\s*c|Fc)\s+even[^.]{0,80}?(?:forces?|hence|so)\s*"
+        r"[^.]{0,40}?(?:c\s*=\s*)?2\^?a"
+        r"|odd F[^.]{0,120}?(?:escape|O\(log n\)|O\(n/log n\)|wins nowhere)"
+        r"|(?:S7 )?at F (?:>=|\u2265) 3[^.]{0,80}?(?:is an escape|wins nowhere|does vanish)",
+        re.I)
+    # A clause that says which parity of n it is talking about, or that names
+    # the tie, is the corrected form rather than a regression.
+    ESCAPE_OK = re.compile(r"odd n|at odd|even n|co-?win|ties?\b|tie for|2, ?8 \(mod 12\)"
+                           r"|parity of \*?\*?n|both parities", re.I)
+    i8 = 0
+    for d in DOCS:
+        try: txt = open(d).read()
+        except OSError: continue
+        flat = re.sub(r"\n\s*(?:[#>*]\s*)?", " ", txt)
+        for m in ESCAPE.finditer(flat):
+            ctx = flat[max(0, m.start() - 200):m.end() + 200]
+            if ESCAPE_OK.search(ctx):
+                continue
+            ln = txt.count("\n", 0, m.start()) + 1
+            findings += 1; i8 += 1
+            print(f"{d} L~{ln}  *** INVARIANT I8 *** odd-F escape clause with no "
+                  f"parity of n named; at even n odd F is a co-winner at "
+                  f"2, 8 (mod 12), not an escape")
+            print(f"   {ctx[180:-180].strip()[:170]}\n")
+    if not i8:
+        print("[ok] I8: every odd-F escape clause names the parity of n it covers.")
+
+    # (I9) CONDITION (4) CARRIES NO TWIST STRIP.  The certificates ask whether a
+    #      configuration's SAFE score can reach B_safe(n), and SAFE credits a
+    #      p-characteristic part the flat F*C(c,2).  A cap of F*orb(c, dmax)
+    #      tests a smaller number: anti-permissive, and invisible in the output.
+    #      The strip was removed from all three sites in fb_common.py, but the
+    #      prose describing it survived in four places across two documents and
+    #      in the script's own closing banner -- each one reading as a live
+    #      description of the gate.  The consequence is not cosmetic: it inflates
+    #      the stated trusted base, since a strip-gated condition (4) would drag
+    #      Lemma C, Corollary C-prime and J0a into the per-n proof.
+    print()
+    STRIP = re.compile(
+        r"condition \(4\)[^.]{0,80}?(?:strip|stripping|orb\(c,\s*dmax\))"
+        r"|(?:strip|stripping)[^.]{0,80}?condition \(4\)",
+        re.I)
+    STRIP_OK = re.compile(r"flat|no twist strip|diagnostic|no longer|not\b[^.]{0,20}strip"
+                          r"|would|anti-?permissive|unread|supersed|used to|historical"
+                          r"|no gate|is gone|survives only|former", re.I)
+    i9 = 0
+    for d in DOCS:
+        try: txt = open(d).read()
+        except OSError: continue
+        flat = re.sub(r"\n\s*(?:[#>*]\s*)?", " ", txt)
+        for m in STRIP.finditer(flat):
+            ctx = flat[max(0, m.start() - 200):m.end() + 200]
+            if STRIP_OK.search(ctx):
+                continue
+            ln = txt.count("\n", 0, m.start()) + 1
+            findings += 1; i9 += 1
+            print(f"{d} L~{ln}  *** INVARIANT I9 *** describes condition (4) as "
+                  f"applying a twist strip; it is the flat F*C(c,2), and the "
+                  f"strip is an unread diagnostic")
+            print(f"   {ctx[180:-180].strip()[:170]}\n")
+    if not i9:
+        print("[ok] I9: no live description of a twist strip inside condition (4).")
+
+    # (I10) TWO RUN OUTPUTS THAT NO OTHER PASS OWNS, both of which have gone
+    #       stale in exactly one document at a time.
+    #
+    #   (a) THE LADDER WORKLIST LENGTH.  It is not derivable from the CSV, so
+    #       PASS 1 cannot see it; it is quoted in the identical status banner at
+    #       the head of three documents, and a rerun updated two of them
+    #       (44,091 against a surviving 45,390).  The check is agreement, not a
+    #       value: the majority reading is taken as current and the minority
+    #       reported, which is the right shape for a figure whose true value
+    #       lives in a file this script does not read.
+    #
+    #   (b) A THRESHOLD DERIVED FROM A DENSITY FLOOR.  Corollary C-prime's
+    #       "n >= 371" and D2-prime's "n >= 471" are functions of the ladder
+    #       floor and of nothing else, so they move whenever it does and the
+    #       sentence around them stays true-looking.  Any threshold quoted
+    #       beside the superseded floor 0.02516 is stale by construction.
+    print()
+    WL = re.compile(r"\*\*([\d,]{5,7}) worklist entries")
+    seen_wl = {}
+    for d in DOCS:
+        try: txt = open(d).read()
+        except OSError: continue
+        for ln, line in enumerate(txt.split("\n"), 1):
+            m = WL.search(line)
+            if m:
+                seen_wl.setdefault(m.group(1), []).append((d, ln))
+    i10 = 0
+    if len(seen_wl) > 1:
+        cur = max(seen_wl, key=lambda k: len(seen_wl[k]))
+        for val, where in sorted(seen_wl.items(), key=lambda kv: -len(kv[1])):
+            if val == cur:
+                continue
+            for d, ln in where:
+                findings += 1; i10 += 1
+                print(f"{d} L{ln}  *** INVARIANT I10a *** worklist length {val} "
+                      f"against {cur} in {len(seen_wl[cur])} other place(s); "
+                      f"the banner is duplicated verbatim, so requote all of them")
+    STALE_FLOOR = re.compile(r"0\.02516")
+    for d in DOCS:
+        try: txt = open(d).read()
+        except OSError: continue
+        for ln, line in enumerate(txt.split("\n"), 1):
+            if not STALE_FLOOR.search(line):
+                continue
+            if re.search(r"supersed|pre-repair|older|was |former|recompute", line, re.I):
+                continue
+            findings += 1; i10 += 1
+            print(f"{d} L{ln}  *** INVARIANT I10b *** quotes the superseded ladder "
+                  f"floor 0.02516; any threshold derived from it (C-prime, D2-prime) "
+                  f"is stale -- recompute from the current floor")
+            print(f"   {line.strip()[:170]}\n")
+    if not i10:
+        print("[ok] I10: worklist length agrees across documents; no threshold "
+              "rests on the superseded floor.")
+
 # --------------------------------------------------------------- PASS 7 tables
 #
 # A markdown table whose separator row has a different number of columns from

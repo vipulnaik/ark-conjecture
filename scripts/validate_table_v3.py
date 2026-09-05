@@ -1076,7 +1076,25 @@ def c_partdist(R, base):
 # in aggregate can sit inside Poisson noise once divided five ways.  So the
 # historical lumped claim is kept as an explicit aggregate entry, which is the
 # form in which the S7 error is detectable.
-ZERO_SHARE = ["S1", "S2", "S5", "S6", "S7f3", "S7f5"]
+# Shapes whose census verdict is "wins -> 0", and which therefore owe a
+# DECLINING share.  Two entries that look like they belong here do not:
+#
+#   S7f3 is NOT a vanishing shape.  At ODD n an odd fusion count forces
+#   c = 2^a and the shape is an escape; at EVEN n c is an ordinary odd prime,
+#   the supply is a full Hardy-Littlewood system, and at n = 2, 8 (mod 12) --
+#   where the ell = 3 obstruction cuts S3 to eta = 1/3 -- cap_3(1) = cap_1(1/3)
+#   exactly, so F = 3 TIES S3 for the class ceiling and co-wins the class.  Its
+#   winning share is a positive constant.  The odd-n half alone is the escape,
+#   and it is measured separately below (c_s7f3_parity).
+#
+#   S5 vanishes, but NOT monotonically.  One usable r = 2^a*u + 1 serves a
+#   window of n proportional to r, so the winners arrive in bursts (64 of them
+#   at the single prime 12289) and the share sits flat and then jumps.  The
+#   verdict is a liminf/Cesaro statement; a third-vs-third comparison measures
+#   the spacing of the family instead.  Kept out of the trend test and reported
+#   as INFO by c_burst_shapes below.
+ZERO_SHARE = ["S1", "S2", "S6", "S7f5"]
+BURST_SHAPES = ["S5"]          # vanishing, but in bursts -- trend test invalid
 
 
 @check("B", "shapes claimed to win with vanishing share have a declining share",
@@ -1105,11 +1123,58 @@ def c_zero_share_trend(R, base):
             f"{len(bad)} of {len(seen)} rising: " + "; ".join(seen), bad)
 
 
+@check("C", "shapes that vanish in bursts rather than monotonically",
+       "aod section 2.0 census (S5 row)",
+       expect="S5's winners cluster on a single foreign prime at a time, so its share is "
+              "flat-then-jumping rather than declining; report the top foreign primes and "
+              "the run lengths instead of a trend.  A rise here is not evidence against "
+              "'wins -> 0'.")
+def c_burst_shapes(R, base):
+    from collections import Counter
+    out = []
+    for sh in BURST_SHAPES:
+        rows = [r for r in R if r.shape == sh]
+        if not rows:
+            continue
+        fp = Counter(c for r in rows for (F, c, fo) in r.cls if fo)
+        top = ", ".join(f"r={c} x{k}" for c, k in fp.most_common(3))
+        out.append(f"{sh}: {len(rows)} winners over {len(fp)} distinct foreign primes ({top})")
+    return "INFO", "; ".join(out) or "no burst-shape winners", None
+
+
+@check("B", "S7 at F = 3 is an escape at odd n and a co-winner at even n",
+       "aod section 3.3.5, section 4.3",
+       expect="every odd-n F=3 winner must have c a power of 2 (the escape branch); every "
+              "even-n one must sit at n = 2 or 8 (mod 12), where cap_3(1) = cap_1(1/3) ties "
+              "S3.  An even-n F=3 winner at an unobstructed class, or an odd-n one at an odd "
+              "c, contradicts the parity split the census now states.")
+def c_s7f3_parity(R, base):
+    bad = []
+    for r in R:
+        if r.shape != "S7f3":
+            continue
+        mat = [c for (F, c, fo) in r.cls if not fo]
+        if len(mat) != 1:
+            continue
+        c = mat[0]
+        if r.n % 2:
+            if c & (c - 1):
+                bad.append((r.n, "odd n, c not a power of 2", c))
+        elif r.n % 12 not in (2, 8):
+            bad.append((r.n, "even n outside 2,8 mod 12", r.n % 12))
+    odd = sum(1 for r in R if r.shape == "S7f3" and r.n % 2)
+    ev = sum(1 for r in R if r.shape == "S7f3" and not r.n % 2)
+    return ("FAIL" if bad else "PASS",
+            f"{ev} even-n (co-winners at 2,8 mod 12), {odd} odd-n (escape, c = 2^a); "
+            f"{len(bad)} violations", bad[:6])
+
+
 @check("C", "census winner counts by shape", "aod section 2.0, ep census",
        expect="asymptotic WINNING shares over all n: S3 12/24 (50%) at even n, S7f2 10/24 "
               "(41.7%) at the odd residues 1,3,5,7,9,13,15,17,19,21, S7f4 2/24 (8.3%) at 11 and 23 "
-              "where F = 4 sets the class ceiling; S1, S2, S4, S5, S6, ties and the odd-F S7fk "
-              "all -> 0.  (Classes 7 and 15 belong to S7f2 under the mod-12 keying: their "
+              "where F = 4 sets the class ceiling, and S7f3 co-winning 2 and 8 (mod 12) with S3, "
+              "where cap_3(1) = cap_1(1/3); S1, S2, S4, S5, S6, ties and the odd-n odd-F "
+              "S7fk all -> 0.  (Classes 7 and 15 belong to S7f2 under the mod-12 keying: their "
               "ceiling cell is F = 2 at eta = 1/2, shared with 3 and 19 at 1/8.)  At computed "
               "sizes S1 and S2 are still large because omega(n)=2 has "
               "not thinned, and S4 still wins a few values where supply fails the winners above")

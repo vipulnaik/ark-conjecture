@@ -19,7 +19,9 @@ all of them reach the search, and `e3ii_resolves` stops resolving.  A run in tha
 mode consults no Part E-prime theorem -- a much smaller trusted base than this
 file's structure suggests -- so it is the mode to quote.  Quote it accurately:
 the base is NOT the eight necessary conditions alone.  Unfused-foreign scoring
-rests on Lemma D2 (range-scoped below n = 1582, `a18_verify.py`).  Condition (4)
+rests on Lemma D2, whose range-scoped half is `a18_verify.py` (its theorem form
+starts wherever the current floor puts it -- 0.02516 gave n >= 1582 and 0.04621
+gives n >= 471, so recompute rather than quoting).  Condition (4)
 is the flat SAFE cap F*C(c,2), so no twist strip is applied and neither Corollary
 C-prime nor J0a enters; the run banner states this.  It should agree with the normal run exactly; if it
 ever stops agreeing while the normal run passes, the error is localised at once
@@ -147,18 +149,21 @@ if not bad:
         print("carry no weight in the per-n proof above.")
         print()
         print("WHAT THE TRUSTED BASE STILL IS.  Not the eight necessary conditions")
-        print("alone -- two dependencies sit underneath them and are scoped:")
+        print("alone -- ONE dependency sits underneath them, and it is scoped:")
         print("  * Foreign parts are scored UNFUSED.  pair_candidates applies condition")
         print("    (3) as a single block, which is not necessary for a fused foreign")
         print("    class; what excludes those is Lemma D2's domination, whose in-range")
-        print("    half is a18_verify.py and whose theorem form (D2-prime) starts at")
-        print("    n = 1582.  Below that the exclusion is the range check, not a proof.")
-        print("  * Condition (4)'s strip is licensed by Corollary C-prime, whose Lemma C")
-        print("    step pins the multiplier by a Frobenius exponent -- automatic at")
-        print("    a = 1, but assuming a semilinear stabiliser (J0a, open) at a >= 2.")
-        print("    Measured over the completed table: 42 strip decisions, all")
-        print("    licensed, NONE at a >= 2, so the J0a exposure is empty in fact there")
-        print("    -- a measurement to repeat on the rebuild, not a theorem.")
+        print("    half is a18_verify.py.  Its theorem form (D2-prime) starts wherever")
+        print("    the current floor puts it -- 0.02516 gave n >= 1582 and 0.04621")
+        print("    gives n >= 471 -- so recompute it and rerun a18_verify.py on every")
+        print("    extension; below the threshold the exclusion is the range check.")
+        print("")
+        print("  NOT in the base, though an older version of this banner said so:")
+        print("  condition (4) applies NO twist strip -- it is the flat F*C(c,2) --")
+        print("  so Lemma C, Corollary C-prime and J0a are absent from the per-n")
+        print("  proof entirely.  The strip survives only as an unread diagnostic")
+        print("  (set_strip_trace); what it would bound is a GROUP's realised")
+        print("  orbital, which yields mu = B_refined and not B_refined = B_safe."),
     else:
         print()
         print("Rerun with --no-theorems to shrink the trusted base to the eight")
