@@ -392,6 +392,33 @@ Already complete: G/D₈ (21 points) k ≤ 4 — **no union with χ = 1 at all**
 
 **Two caveats.** (i) In PSL(2,7), `K-order` 4 picks up whichever order-4 subgroup the closure loop finds first, which may be a C₄ (21 of them) rather than a Klein group (14, in two classes); to target the Klein classes, filter `subs` in `psl27_orbit.py` by `all(order(h) <= 2 for h in H)` before choosing K. The face-type enumeration itself already ranges over all subgroups, so this affects only which vertex set is used. (ii) The exact recursion (`nonevasive` in `orbitsearch.py`) memoises on face sets without symmetry reduction; on 84 or 168 points it may time out on complexes that are in fact evasive. A timeout is a prompt to look, not a verdict.
 
+## 15a. The two-subgroup family (`twosub.py`) — first results
+
+*Facets are G-orbits of sets H₁·x ∪ H₂·y. Orbit complexes are the special case H₂ = H₁, y = x, so this strictly contains the family exhausted in §15. Same filters, same order, with a per-stage counter so a `chi1: 0` run cannot be misread.*
+
+```bash
+python3 twosub.py --group a5 --korder 4 --maxk 2 --limit 600      # 15 points
+python3 twosub.py --group a5 --korder 5 --maxk 3 --limit 1800     # 12 points
+python3 twosub.py --group a5 --korder 6 --maxk 3 --limit 600      # 10 points
+python3 twosub.py --group a5 --korder 3 --maxk 2 --limit 1800 --maxface 10   # 20 points
+python3 twosub.py --group a5 --korder 2 --maxk 2 --limit 3600 --maxface 10   # 30 points, UNRUN
+python3 twosub.py --group psl27 --korder 6 --maxk 2 --limit 3600             # 28 points, UNRUN
+```
+
+| G/K | k | tried | χ = 1 | χ(link) = 1 | fail 𝔽₂ | **survive** |
+|---|---|---|---|---|---|---|
+| 15 (A₅/V) | ≤ 2 | 19,900 | 153 | **15** | 15 | 0 |
+| 12 (A₅/C₅) | ≤ 3, partial | 20,188 | 2,241 | 464 | 464 | 0 |
+| 10 (A₅/S₃) | ≤ 3 | 8,473 | 198 | 68 | 68 | 0 |
+| 20 (A₅/C₃) | ≤ 2, partial | 20,579 | 45 | 45 | 45 | 0 |
+| **total** | | **69,140** | **2,637** | **592** | **592** | **0** |
+
+**The decoupling hypothesis is confirmed, and it did not help.** The family reaches the homological filter far more often than orbit complexes do — χ = 1 at 3.8% against 0.96%, and of those, 22.4% pass the link test against 5.4%. Most tellingly, **at 15 and 10 points the orbit-complex family produced zero link-test survivors and this one produces 15 and 68.** So the extra degrees of freedom do what they were predicted to do: they let balance and an acyclic link hold simultaneously. **And then all 592 fail 𝔽₂-acyclicity, without exception.**
+
+That is the substantive result. Across both families, both groups and every transitive set tried — **655,745 complexes, 830 clearing both Euler tests, zero 𝔽₂-acyclic.** Widening the family multiplies the number of candidates reaching the homological test by four and changes nothing about the outcome: 2-torsion is not an artefact of the narrowness of orbit complexes.
+
+**Unrun and worth running:** the 30-point set (where Lutz's example lives) and PSL(2,7)/S₃ at 28, both at k ≤ 2; and k = 3 to completion at 12 and 20 points. `--maxtypes` truncates the type list to a *prefix*, so a capped run is explicitly not exhaustive and says so.
+
 **Next family, not yet coded, and now the main thing left.** Faces of the form H₁x ∪ H₂y — unions of orbits of two subgroups — one step less structured than orbit complexes and still enumerable on the small sets. The A₅ result above is the argument for it: within orbit complexes the facet sizes are subgroup-orbit sizes, so "balance" (χ = 1) and "an acyclic link" compete for the same few degrees of freedom and 456,847 tries produce neither together. Two-subgroup faces decouple them. Build it on the 30- and 20-point sets first, put 𝔽₂-acyclicity immediately after χ = 1 rather than last, and skip the regular set.
 
 **A guardrail for whatever comes next.** The filters as ordered (χ → χ(link) → 𝔽_p → exact) are cheap-first, which is right for throughput but means a run reporting `chi1 = 0` has tested nothing homological at all. When a new family reports no χ = 1 at some k, that is a statement about orbit-size arithmetic on that set — not evidence about acyclicity — and should not be quoted as if the family had been ruled out.
