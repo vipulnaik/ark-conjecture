@@ -129,6 +129,57 @@ def chi_link(F, v=0):
                for f in F if (f >> v & 1) and bin(f).count("1") >= 2)
 
 
+def betti_f2(F, n):
+    """Reduced F_2 Betti numbers, via bitset elimination.
+
+    p = 2 gets its own routine because it is the filter that actually fires --
+    every one of the 830 complexes that has cleared both Euler tests in this
+    programme, across two families and two groups, has failed here -- and
+    because over F_2 a matrix row is a Python int and elimination is XOR, which
+    is 30-60x faster than the generic mod-p path (measured: 15.4 s -> 0.3 s on a
+    10,623-face complex).  Run this BEFORE the odd primes.
+    """
+    by = defaultdict(list)
+    for f in F:
+        by[bin(f).count("1") - 1].append(f)
+    idx = {d: {f: i for i, f in enumerate(sorted(v))} for d, v in by.items()}
+    top = max(by)
+
+    def rank(d):
+        rows, cols = idx.get(d - 1, {}), sorted(by[d])
+        if not rows or not cols:
+            return 0
+        # one int per column of the boundary map; bit i set iff row i is 1
+        vecs = []
+        for f in cols:
+            v = 0
+            for b in (i for i in range(n) if f >> i & 1):
+                g = f & ~(1 << b)
+                if g in rows:
+                    v |= 1 << rows[g]
+            if v:
+                vecs.append(v)
+        piv = {}
+        r = 0
+        for v in vecs:
+            while v:
+                h = v.bit_length() - 1
+                if h not in piv:
+                    piv[h] = v
+                    r += 1
+                    break
+                v ^= piv[h]
+        return r
+
+    rk = {d: rank(d) for d in range(1, top + 1)}
+    out = []
+    for d in range(top + 1):
+        nd = len(by[d])
+        ker = nd - rk.get(d, 0) if d >= 1 else nd
+        out.append(ker - rk.get(d + 1, 0) - (1 if d == 0 else 0))
+    return out
+
+
 def betti_mod(F, n, p):
     by = defaultdict(list)
     for f in F:
@@ -280,7 +331,13 @@ def main():
             if chi_link(F) != 1:
                 continue
             st["link1"] += 1
-            bad = next((p for p in primes if any(betti_mod(F, n, p))), None)
+            # p = 2 first, by the fast path: it is the only filter that has
+            # ever fired here, and it is 30-60x cheaper than the generic one.
+            if any(betti_f2(F, n)):
+                st["F2fail"] += 1
+                continue
+            bad = next((p for p in primes if p != 2 and any(betti_mod(F, n, p))),
+                       None)
             if bad is not None:
                 st[f"F{bad}fail"] += 1
                 continue

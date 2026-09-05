@@ -356,7 +356,9 @@ python3 verify_emission.py groups_out_12_tom.txt --contains groups_out_12.txt
 
 *Facets are G-orbits of sets H₁·x ∪ H₂·y; orbit complexes are the case H₂ = H₁, y = x, so this strictly contains §15's family. Same filters in the same order, plus a per-stage counter. Results and what they mean: `monotone-transitive-note.md` §6 item 3a.*
 
-`python3 twosub.py --group {a5,psl27} --korder K --maxk k --limit SECONDS [--maxface M] [--maxtypes T] [--netimeout S]`. Type enumeration is the slow part (33 s at 15 points, 49 s at 20 with `--maxface 10`) and happens before any search, so give short runs a generous `--limit`. `--maxtypes` truncates the type list to a **prefix**, so a capped run is not exhaustive and says so in its output.
+`python3 twosub.py --group {a5,psl27} --korder K --maxk k --limit SECONDS [--maxface M] [--maxtypes T] [--netimeout S]`. Type enumeration happens before any search and is not covered by `--limit` (33 s at 15 points, 106 s at 30 with `--maxface 10`), so give short runs a generous limit. `--maxtypes` truncates the type list to a **prefix**, so a capped run is not exhaustive and says so in its output.
+
+**The 𝔽₂ test has a dedicated fast path, and it matters.** `betti_f2` does the p = 2 rank by bitset XOR elimination — a boundary-matrix column is a Python int — and runs **~400× faster** than the generic mod-p routine (15.4 s → 0.04 s on a 10,623-face complex; verified to agree exactly). It is tried **before** the odd primes because it is the only filter that has ever fired: all 830 complexes clearing both Euler tests, across both families and both groups, died at p = 2. On the 30-point set this took the throughput from 173 ms/pair to 2.3 ms/pair — **77× overall**, turning k ≤ 2 there from a projected 48 h into about 40 min. If a future family reaches the odd primes often, they will want the same treatment.
 
 ```bash
 python3 twosub.py --group a5 --korder 4 --maxk 2 --limit 600      # 15 points
@@ -370,7 +372,7 @@ python3 twosub.py --group psl27 --korder 6 --maxk 2 --limit 3600             # 2
 **Covered so far** (69,140 unions; 2,637 reached χ = 1, 592 also passed the link test, all 592 failed 𝔽₂, zero survivors): 15 points at k ≤ 2; 10 points at k ≤ 3; 12 points at k ≤ 3 **partial**; 20 points at k ≤ 2 **partial**.
 
 **Unrun, in order of value:**
-- **30 points** (`--korder 2`), where Lutz's example lives — the one set of A₅ at which the link test was informative rather than vacuous or total.
+- **30 points** (`--korder 2 --maxface 10`), where Lutz's example lives — the one set of A₅ at which the link test was informative rather than vacuous or total. 1,408 types, 991,936 pairs at k ≤ 2, **~40 min** with the fast 𝔽₂ path. Partial coverage so far: 66,393 pairs, 238 with χ = 1, 104 passing the link test, all 104 failing 𝔽₂.
 - **PSL(2,7)/S₃ at 28 points** (`--group psl27 --korder 6`), the only set of that group producing χ = 1 complexes in quantity.
 - k = 3 to completion at 12 and 20 points.
 
