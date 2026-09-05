@@ -291,6 +291,22 @@ python3 ceiling_rederive.py --nmax 16000 --no-filter # control: expect exceedanc
 
 **`--no-filter` must exceed, and its witnesses must be prime powers.** A composite c in that column means the candidate list is admitting block sizes no Oliver group has, and the escapes it reports are partly phantom.
 
+## R7b. `mu_ladder_exact.py` — exact B(n) at ladder cost, certified above 1/25
+
+**New 2026-09.** Theorem E.5 plus `ladder-completeness.md` Proposition 1 say that above δ = 1/25 a B-optimal configuration is a menu shape (S2, S3, S4/S5/S7@F=2, S7 with F ≤ 16) or an S6/S11 — and nothing else. So B(n) there is the maximum over exactly those shapes, each enumerable in O(n/log n): the menu scans one prime power per configuration, and S6/S11 need both foreign primes *efficient* (r − 1 = k·q^e, k ≤ 40), which groups them by q into short lists. `mu_ladder_exact.py` does that and nothing more, and returns `certified = 1` iff its maximum exceeds C(n,2)/25 — in which case the value is B(n) exactly, by theorem, with a witness. Below that line it is a lower bound and `mu_exact.py` is still needed.
+
+| check | result |
+|---|---|
+| `--check mu_table_exact.csv` | **equal at all 32,861 rows**, 0 low, 0 high, 0 uncertified; 2.3 ms/n |
+| timing at n ≈ 10⁵ / 10⁶ | 10 ms/n / 89 ms/n — the ladder's cost, against ~3 h/value for `mu_exact.py` at 10⁶ |
+
+```bash
+python3 mu_ladder_exact.py --check mu_table_exact.csv --time    # must print 0 low, 0 high
+python3 mu_ladder_exact.py 100000 100500                        # B(n) with witness and flag
+```
+
+**What it does and does not replace.** It replaces nothing: `mu_exact.py` is the exhaustive route whose agreement is what shows the theorems were *applied* correctly, and the two must agree wherever both run. What it adds is reach — B(n), and hence μ(n) by E.6, at any single n up to 10⁶ in under a tenth of a second, with the trusted base being Part 0, Lemma B′, D2, E.5 and Proposition 1, all theorems. Rerun `--check` after any change to `orb`, to the SAFE cap, or to the shape space. **Not to be confused with `mu_fast.py` (2026-07)**, a pre-shape-space family menu that is superseded and should not be run.
+
 ## R7a. Rerun `ladder_verify.py` to 10⁶ at the corrected window ⟦PENDING-1E5-EXACT-RUN⟧
 
 **Owed as a run.** `LO_X, HI_X` was `0.10, 0.55`; the right end clipped the **two-part** family, whose balance point exceeds 1/2 whenever the foreign block is the smaller part — at η = 1 that family is still worth (1−x)², above 1/25 out to x = 0.8. Measured against B(n) at **every** tabulated n (`ladder_vs_B.py`, not only at worklist values): the ladder fell short at **274 of 32,861**, by up to **1.835×** (n = 1122, `1x619 + 1x503*`, c/n = 0.5517), every one the two-part shape with its winning c in (0.55, 0.75]·n. At `HI_X = 0.85` the ladder equals B at **all 32,861**.
