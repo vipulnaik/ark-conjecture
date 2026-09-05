@@ -95,6 +95,18 @@ The question was how far the framework is from carrying **no group theory per n*
 
 **Where that leaves the reduction.** Above 1/25 — which is every n the ladder reaches and, conditionally on (BH-SW), almost every n — the group theory is *en route only*: it justifies the shape space once and is not consulted again. Below 1/25, μ is sandwiched between two arithmetic functions and the group theory decides which; that regime is conjecturally empty, and A28 would shrink even its interior possibility to J0a proper. J0a itself bears on nothing above the line.
 
+## 4c. ladder versus B_refined: a clipped window, found by asking the question the checks could not
+
+Item 4 above read `ladder_verify.py` as a lower bound and passed it. Asking the *sharpness* question — how close is ladder(n) to B_refined(n), and is the gap understood? — found something the read did not.
+
+**In theory** the ladder is a fixed menu of four families scanned over a window, so ladder ≤ B_refined with no reason for equality: B ranges over every configuration, including ≥ 3 parts and multiple foreign primes, which the menu has no member for. Nothing rules out a shortfall.
+
+**In practice**, measured against B(n) at **every** tabulated n rather than at the worklist values (`ladder_vs_B.py`): 274 of 32,861 short, up to **1.835×**. Every single one the two-part shape `1xc + 1xr*`, and every winning c in (0.55, 0.75]·n — i.e. just outside `HI_X = 0.55`. The window was set to hold "every class's balance point", which is right for the three-part and S7 families (they need Fc < n, so x ≤ 1/2) and wrong for the two-part one: when the foreign block is the *smaller* part the balance point exceeds 1/2, and at η = 1 the family is still worth (1−x)², above 1/25 out to x = 0.8. The largest matching share among two-part winners on the table is 0.7486 (n = 8207, `3x2048 + 2063*`). At `HI_X = 0.85` the ladder equals B at **all 32,861** values.
+
+**No figure was wrong, and that is the part worth keeping.** Under-scoring is the safe direction for a max over families, so every reported floor stayed valid and E.6 — which consumes only ladder > 1/25 — is untouched; a rerun can only raise the floor. But `validate_table_v3.py --ladder` joins on **worklist** values, and the worklist is selected by *low* score, so the shortfalls sat almost entirely outside the join and the tightness check passed at 619 of 619 throughout. **A lower bound that is loose in a way no check can see** is precisely the failure the file's own header records for the S7 branch; this is the same failure on the other axis, and the check that would have caught it is the one written today, joining on *every* row rather than on the worklist.
+
+`ladder_verify.py` is fixed; the 10⁶ rerun is filed as **R7a**, with the worklist length tagged for requoting.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

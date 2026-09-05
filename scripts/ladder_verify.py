@@ -462,7 +462,33 @@ def strip_map(excl):
 S7_BRANCHES = [(F_, ex_, ef_, strip_map(ex_)) for F_, ex_, ef_ in S7_BRANCHES]
 print(f"sieve and efficiencies to {N:,} in {time.time()-t:.1f}s")
 
-LO_X, HI_X = 0.10, 0.55        # contains every class's balance point
+LO_X, HI_X = 0.10, 0.85        # see below -- 0.55 was too tight on the RIGHT
+#
+# WHY THE RIGHT END IS 0.85 AND NOT 0.55.  The window has to hold every family's
+# balance point, and for the THREE-part and S7 families 0.55 does: they need
+# F*c < n, so x <= 1/2 automatically.  The TWO-part family is different and the
+# old bound clipped it.  At n = c + r with the foreign block at efficiency eta,
+# the density is min(x^2, eta*(1-x)^2, x(1-x)); for x > 1/2 the foreign term
+# binds and the family is still worth (1-x)^2, which stays above the 1/25 floor
+# all the way to x = 0.8.  Those are the ASYMMETRIC splits -- a large matching
+# block beside a smaller foreign prime at full efficiency -- and they are real
+# winners: the largest matching share among two-part winners on the exact table
+# is x = 0.7486, at n = 8207 = 3*2048 + 2063*.
+#
+# Measured cost of the old window, against B(n) at every tabulated n (not only
+# at worklist values, which is what hid it): the ladder fell short of B at
+# 274 of 32,861 values, by up to 1.835x (n = 1122, `1x619 + 1x503*`, where
+# c/n = 0.5517 -- just outside).  EVERY shortfall was the two-part shape and
+# every one had its winning c in (0.55, 0.75]*n.  At HI_X = 0.85 the ladder
+# equals B at ALL 32,861 tabulated values.
+#
+# The direction was safe -- a clipped window under-scores, and this script is a
+# max over families, so every floor it ever reported stayed a valid lower bound
+# -- but it was not free: `validate_table_v3.py --ladder` joins only on worklist
+# values, and the worklist is selected by LOW score, so the shortfalls sat
+# almost entirely outside the joined set and the tightness check kept passing.
+# A lower bound that is loose in a way no check can see is exactly the failure
+# mode this file's own header warns about for the S7 branch.
 
 def achieved(n, stop_at=None):
     """Best density over the three families.  With stop_at set, returns as soon
