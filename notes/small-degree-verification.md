@@ -353,7 +353,32 @@ python3 verify_emission.py groups_out_12_tom.txt --contains groups_out_12.txt
 
 *Three things worth carrying into the next search.* (i) **The regular set is the worst place to look**, not the best: 3,420 complexes reach χ = 1 at 60 points and none has an acyclic link. The inflation argument makes the regular action the universal *target*, but orbit complexes there are too coarse to hit it — the useful examples live on smaller sets, as Lutz's does. Do not prioritise |G| points on a new group. (ii) **The link test is informative only at 30 points** (58 of 736); at 20 and 12 it is nearly vacuous once χ = 1 (128/132, 52/52) and at 60, 15 and 10 it kills everything. Which of the two Euler tests bites depends on the set, so neither can be dropped. (iii) **𝔽₂-acyclicity does 100% of the work beyond counting.** Without it, 238 candidates would still be standing. It should be the *first* filter tried on any new family, not the last — and on a non-solvable group expect the failure at p = 2 specifically (the Sylow argument: every non-solvable group contains C₂ × C₂, and rank-2 elementary abelian actions are where 𝔽₂-homology escapes the fixed-point conditions).
 
-**PSL(2,7), unrun:**
+**PSL(2,7) — DONE at the depths shown; nothing reached the 𝔽₂ filter.**
+
+| G/K | k | face cap | unions tried | χ = 1 | χ(link) = 1 | **survive** | time |
+|---|---|---|---|---|---|---|---|
+| 21 (G/D₈) | ≤ 4 | 12 | 5,035 | **0** | — | 0 | 19 s |
+| 28 (G/S₃) | ≤ 4 | 12 | 24,157 | 105 | **0** | 0 | 102 s |
+| 42 (G/order-4) | ≤ 3 | 12 | 8,473 | **0** | — | 0 | 43 s |
+| 56 (G/C₃) | ≤ 3 | 12 | 24,857 | 16 | **0** | 0 | 137 s |
+| 84 (G/C₂) | ≤ 3 | 8 | 57,225 | **0** | — | 0 | 79 s |
+| 168 (regular) | ≤ 2 | 8 | 10,011 | **0** | — | 0 | 15 s |
+| **total** | | | **129,758** | **121** | **0** | **0** | |
+
+**The failure mode inverts between the two groups, and that is the most informative thing here.**
+
+| | complexes tried | χ = 1 | of those, χ(link) = 1 | of those, 𝔽₂-acyclic |
+|---|---|---|---|---|
+| A₅ (order 60) | 456,847 | 4,377 (0.96%) | 238 (5.4%) | **0** |
+| PSL(2,7) (order 168) | 129,758 | 121 (**0.093%**) | **0** | — |
+
+On A₅ the counting conditions leave 238 candidates and 𝔽₂-acyclicity does 100% of the remaining work. **On PSL(2,7) counting alone suffices** — the χ = 1 rate is ten times lower, and the link test kills all 121 survivors, so no complex ever reached the homological filter. The larger group has more subgroup classes, hence more distinct orbit sizes, hence a harder balance problem: **richer structure makes the Diophantine coincidence rarer, not commoner.** Same conclusion as the involution-complex comparison (`monotone-transitive-note.md` §6 3a), reached independently.
+
+**An empirical pattern, and a warning about the obvious explanation.** On PSL(2,7), χ = 1 occurs **only when 3 divides |K|** — i.e. on G/S₃ and G/C₃, never on the four sets where K is a 2-group (D₈, order-4, C₂, trivial). The tempting explanation is Smith: if no conjugate of K contains C₃ then C₃ has no fixed vertices, the fixed complex is empty, χ ≡ 0 (mod 3), and χ = 1 is impossible. **That argument is wrong**, and A₅ disproves the rule: its 15-, 30- and 60-point sets all have 2-group stabilisers and all produce χ = 1 complexes in quantity (27, 736, 3,420). The error is that the fixed *space* |Δ|^{C₃} consists of faces invariant **setwise**, not pointwise — it is the fixed subcomplex of the barycentric subdivision. Checked directly on an A₅ 15-point example: no C₃-fixed vertices, but exactly one setwise-invariant face, so χ(|Δ|^{C₃}) = 1 and the congruence is satisfied with χ(Δ) = 1. So the PSL(2,7) pattern is group-specific arithmetic, not a general obstruction.
+
+**Still unrun on PSL(2,7):** k = 4 on the 42-, 56- and 84-point sets, k ≥ 3 on the regular set, and the face-size caps could be raised. Given that the link test annihilated every χ = 1 complex found so far, deeper runs on this group look low-value relative to the two-subgroup family below.
+
+**Original commands, for reference:**
 ```bash
 python3 psl27_orbit.py 6 4 1800 12   # G/S3, 28 points, k=4 (hit the limit at 120 s; 8 unions had chi=1 at k<=3)
 python3 psl27_orbit.py 4 3 900 12    # G/V4, 42 points -- first class of order 4 found; see note
