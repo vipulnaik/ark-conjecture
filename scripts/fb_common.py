@@ -514,8 +514,9 @@ def e3ii_resolves(A, n, c, r, F, L):
     This does NOT extend to L > 0.  With a leftover the re-reading must also
     re-type the leftover parts, and the commonest case L = c fails outright: two
     blocks of the same prime c would be two equal foreign parts, which Part E
-    forbids (they would place C_c x C_c in the cyclic layer), and fusing them is
-    forbidden too.  Those cases stay open -- Part J item 2.
+    excludes as DOMINATED -- they share one diagonal C_c and carry a same-position
+    class of size c (Lemma D2, non-permuted form); an older comment here said
+    they cannot exist, which is false -- and fusing them is dominated the same way.  Those cases stay open -- Part J item 2.
 
     Under --no-theorems this returns False, so the pair is kept as a candidate
     rather than resolved.  That is the anti-permissive direction on purpose: the
