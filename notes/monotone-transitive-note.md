@@ -192,7 +192,28 @@ If the object of the exercise is to sharpen what distinguishes graph properties,
 
    *An attempted "small-side" search did not work, and the reason is recorded in `a5_on_15.py --small`'s help text*: the C₂ Smith condition spans 248 of 254 touched orbits and fires only at the leaf, so trying OUT first on large sets explores an exponential tree of small assignments that all fail it, while IN-first lands on near-full complexes almost immediately. A genuine small-side search needs an incremental acyclicity test on partial C₂ lattices. Meanwhile homology is computed on whichever side is smaller, so the near-full leaves already *are* the small side seen from the other end.
 
-   **Degree 20 (A₅ on cosets of C₃) would hit the same wall and is not worth running.** The experiment worth running instead is the 60-vertex Lutz complex through Engström's Fourier–Morse heuristic and then `adversary.py`'s recursion — a concrete test of the strongest known candidate, on a published object, that appears not to have been done.
+   **The 60-vertex Lutz complex was then tested, and it is EVASIVE — by a two-line argument, not a search** (`lutz30.py`). Its 441 published facets are exactly {a ∪ (b+30)} for a, b over one family of 21 sets on {1..30}: **it is a join K = A ∗ A′**, A being Lutz's 5-dimensional ℤ-acyclic example on 30 vertices (the A₅ action on cosets of C₂; f = (30, 195, 340, 255, 96, 15), χ = 1, 𝔽₂-acyclic, every vertex in 4 facets). By Welker (1999) a join is non-evasive iff a factor is, so K is non-evasive iff A is. And **every vertex link of A has χ = 0**, where a non-evasive complex needs a vertex with a non-evasive, hence ℤ-acyclic, hence χ = 1 link. The exact recursion confirms in 31 nodes.
+
+   *Two lessons.* (i) **The join hides the obstruction**: for v on the A-side, lk_K(v) = lk_A(v) ∗ A′ and reduced Euler characteristics multiply under join, so χ(lk_K v) = 1 and the link test on K itself passes — one must factor first. **Check any candidate's facet set for a product structure before running anything expensive.** (ii) The real object was **30 vertices** — the third of the 15/20/30 A₅ targets — and it is the first complex in the programme to clear *every* counting condition (being ℤ-acyclic) and fail at the first non-counting one. A non-evasive vertex-homogeneous complex must have a vertex whose link is itself ℤ-acyclic; A's are not.
+
+   **What A is, group-theoretically** (`lutzA.py`; Lutz 2002 is paywalled, so this was recovered from the facets): Aut(A) = A₅ acting on A₅/C₂ — the 30 edges of the icosahedron — and the 21 facets are **orbits of the three classes of maximal subgroups**: the 6 D₁₀'s each give a 5-set (stabiliser order 10), the 5 A₄'s each give a 6-set (stabiliser order 12), the 10 S₃'s each give a regular 6-set (stabiliser order 6). So A is an **orbit complex**: vertex set G/K, facets = G-orbits of H-orbits for subgroups H. This is exactly the shape of the Klein-group proposal above, with the maximal subgroups in place of the Sylow-2's — and it is what makes the difference between χ = −165 and ℤ-acyclic.
+
+   **The orbit-complex search space** (`orbitcx.py`, `orbitsearch.py`). For each transitive A₅-set G/K and each subgroup H, the G-orbit of an H-orbit is a *face-orbit type*; there are 57 types on the regular set, 28 on A₅/C₂, 19 on A₅/C₃, 13 on A₅/V, 10 on A₅/C₅, 9 on A₅/S₃. An orbit complex is the closure of a union of types; A uses three. Every such complex is vertex-homogeneous by construction and its faces all have large stabilisers, which is where the fixed-complex conditions are most constraining — so this is the natural place a group-theoretic counterexample would live. Filters in order: χ = 1, χ(link) = 1, 𝔽₂-, 𝔽₃-, 𝔽₅-acyclicity, then the exact recursion.
+
+   **Results so far** (unions of ≤ k types):
+
+   | G/K | k | unions tried | χ = 1 | χ(link) = 1 | survive 𝔽₂ | 
+   |---|---|---|---|---|---|
+   | 60 (regular) | ≤ 3 | 30,913 | 240 | **0** | — |
+   | 30 (A₅/C₂) | ≤ 3 | 3,682 | 166 | 16 | **0** (all 2-torsion) |
+   | 20 (A₅/C₃) | ≤ 4, partial | 250 | 23 | 23 | **0** (all 2-torsion) |
+   | 15 (A₅/V) | ≤ 4 | 1,092 | 27 | 0 | — |
+
+   Lutz's A is among the 166 at 30 points and fails at χ(link). **Every orbit complex that clears both Euler-characteristic tests fails 𝔽₂-acyclicity** — the same 2-torsion that killed the A₅-on-15 completions, now in a structured family with large stabilisers. At 20 points the link test is vacuous once χ = 1 (23 of 23), which says the χ tests are weak there and torsion is the whole story.
+
+   **Not yet run:** k = 4 on the 30-point set (20,475 unions, ~6 min), k = 3 to completion and k = 4 on the regular set (~30k and ~400k unions), and the remaining sets. The scripts take `K-order max-k seconds` and print survivors as they appear. Beyond orbit complexes the next family is *unions of orbits of subgroup pairs*, i.e. faces H₁x ∪ H₂y — one step less structured, still enumerable.
+
+   **Degree 20 as a bare CSP would hit the same wall and is not worth running**; the orbit-complex search above is the version of it that is.
 
    *Two bugs on the way, both predicted by existing text.* An early return inside the pend-decrement loop produced 36 spurious "solutions" (the false-SAT bug `stage4_fast.py`'s comment describes); and the exact recursion first returned True on a fully-queried subcube, declaring a "counterexample" in 0.0 s (the base-case trap of item 3's box). Both times impossible speed was the tell. Both fixed, controls passing.
 
