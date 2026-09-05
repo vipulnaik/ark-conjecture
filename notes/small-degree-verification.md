@@ -363,3 +363,38 @@ Already complete: G/D₈ (21 points) k ≤ 4 — **no union with χ = 1 at all**
 **Two caveats.** (i) In PSL(2,7), `K-order` 4 picks up whichever order-4 subgroup the closure loop finds first, which may be a C₄ (21 of them) rather than a Klein group (14, in two classes); to target the Klein classes, filter `subs` in `psl27_orbit.py` by `all(order(h) <= 2 for h in H)` before choosing K. The face-type enumeration itself already ranges over all subgroups, so this affects only which vertex set is used. (ii) The exact recursion (`nonevasive` in `orbitsearch.py`) memoises on face sets without symmetry reduction; on 84 or 168 points it may time out on complexes that are in fact evasive. A timeout is a prompt to look, not a verdict.
 
 **Next family, not yet coded.** Faces of the form H₁x ∪ H₂y — unions of orbits of two subgroups — one step less structured than orbit complexes, still enumerable on the small sets. This is where "balance" (several orbit sizes) and "an acyclic link" could both be arranged, and nothing in the current scripts reaches it.
+
+## 16. Stage 4 at V = 3,782: it is refuting, not descending — what to run
+
+*Observed 2026-09-04. `stage4_fast.py --first` on the TOM battery (242 conditions, V = 3,782, 3,780 free) ran 2 h and 1.16M nodes with `depth<=` pinned at **304** across all 124 heartbeats. `depth<=` is a running maximum, so the search hit 304 in the first 30 s and never got deeper — out of 3,780. For contrast, the 75-condition run at V = 1,242 reached depth 148 and printed a verified solution inside 20 s at 214k nodes.*
+
+**Read this as: the DFS is exhaustively refuting a subtree near depth 304, not descending toward a leaf.** Two corroborating signals. The memo holds 769 entries after 1.16M nodes (0.32 per thousand) against 1,337 after 214k nodes at V = 1,242 — group lattices are rarely completing, so what prunes is monotone propagation through the order matrix, not the χ or Smith checks. And the node rate is ~160/s against ~7,000/s, because `assign` scans all V classes per propagated assignment and V tripled.
+
+**No completion estimate is possible, and none should be quoted.** Stage 3 had a decaying measurable (pairs left) to extrapolate from; stage 4 has none — the size of the tree below depth 304 is not observable from the outside. Do not infer "nearly done" from a stable node rate.
+
+### What to run
+
+**1. Sample the variable ordering with seeds, in parallel.** `--seed` shuffles within equal-edge-count blocks, preserving the greedy group-completion benefit while changing which leaf is approached first. At V = 1,242 the default ordering found a solution instantly; at 3,782 it may have placed a hard cluster early.
+
+```bash
+# one directory per seed, each with its own copy of the three checkpoints
+for s in 1 2 3 4; do
+  mkdir -p seed$s && cp ckpt_groups.pkl ckpt_catalog.pkl ckpt_order.pkl \
+      stage4_fast.py smith.py oliver_mu.py ark_intersect.py seed$s/
+  ( cd seed$s && nohup python3 stage4_fast.py --first --seed $s > run.log 2>&1 & )
+done
+```
+One core each. Watch `depth<=` in each `run.log`, not the node count: **the number that matters is whether any seed exceeds 304.**
+
+**2. Read the outcome either way — both directions are informative.**
+- *A seed finds a solution in minutes* → the stall was variable ordering, not structure. Take its `solution_seed<N>.pkl` to `chi_test.py`, and expect the χ test to kill the canonical extension as it has every previous one.
+- *All seeds stall at comparable depth* → real evidence that the exhaustive 242-condition battery constrains where the truncated 75-condition one did not. That is the interesting direction: a completed UNSAT at n = 10 is the theorem this pipeline exists to produce. It does not prove UNSAT, but it is the first sign the battery is biting.
+- *Seeds stall at widely differing depths* → ordering-sensitive, and the deepest seed is the one to let run.
+
+**3. Do not delete the default run.** It is the only one that has invested 2 h; if a seed finds nothing either, the default is still the incumbent. `stage4_fast.py` writes nothing until it succeeds, so it is safe to leave running alongside the seeds.
+
+**4. If everything stalls and you want a verdict rather than a search**, the honest fallback is to weaken the battery deliberately — `--maxt 8` in `consume_gap.py` (a smaller V, hence a shallower tree) and read §1.2's asymmetry: **UNSAT on a weaker battery still settles the degree**, SAT on it says nothing. That converts an unbounded search into a bounded one at the cost of the strongest possible negative.
+
+**Also confirmed at startup of this run:** the three `2+3` groups fired (`multi-prime tag '2+3': enforcing chi = 1 mod lcm = 6`), so the lcm strengthening of item 6 is live at T:658, T:659 and T:990. That is the first time the path has ever executed.
+
+**Method note, recorded because it caught the author twice in one session.** The final `stage 3: ... (Ts)` line reports elapsed time *for the current segment*, not the whole job; a run resumed after interruption shows a small figure that is not the total. Check for intervening `resumed`/`detected n =` banners before reading any final timing line as a job total, and prefer summing segments.
