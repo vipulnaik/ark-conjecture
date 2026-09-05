@@ -117,7 +117,10 @@ def classify(r):
     if len(r.cls) == 1 and mm:
         return "S1" if mm[0][0] == 1 else "S2"
     if len(fg) > 1:
-        return "S6"
+        # two foreign primes: S6 alone, S11 with one matching class.  These are
+        # the two shapes the ladder's menu does not contain, so telling them
+        # apart from everything else is what c_menu_shapes below needs.
+        return "S6" if not mm else ("S11" if len(mm) == 1 else "?")
     if len(fg) == 1 and len(mm) == 1:
         F = mm[0][0]
         if F == 1:
@@ -126,7 +129,12 @@ def classify(r):
             return "S5" if r.q == 2 else "S7f2"
         return "S7f%d" % F
     if len(fg) == 1 and len(mm) == 2:
-        return "S4"
+        # two matching classes: equal block size is S4 (the unfused three-part
+        # reading); distinct block sizes is S12, which is dominated by the merged
+        # fused class and should never win above 1/25.
+        return "S4" if mm[0][1] == mm[1][1] else "S12"
+    if not fg and len(mm) >= 2:
+        return "S12"
     return "?"
 
 
@@ -1140,6 +1148,30 @@ def c_burst_shapes(R, base):
         top = ", ".join(f"r={c} x{k}" for c, k in fp.most_common(3))
         out.append(f"{sh}: {len(rows)} winners over {len(fp)} distinct foreign primes ({top})")
     return "INFO", "; ".join(out) or "no burst-shape winners", None
+
+
+MENU = {"S1", "S2", "S3", "S4", "S5"} | {"S7f%d" % F for F in range(2, 17)}
+
+
+@check("B", "every winner above delta = 1/25 is a shape the ladder's menu contains",
+       "ladder-completeness.md, Proposition 1",
+       expect="above 1/25 a B-optimal configuration is S2, S3, S4, S5 or S7 with F <= 16 -- "
+              "all in ladder_verify.py's menu -- or an S6/S11 (two foreign primes at a "
+              "common q), which cap at 1/9 and 1/16 and are not in the menu.  A menu "
+              "witness here means the ladder equals B at that row IF its implementation "
+              "is complete (window, fusion set); an S6/S11 witness means the ladder may "
+              "fall short.  This certifies the shape space, not the script: the 274 "
+              "window-clip shortfalls of 2026-09 all had S3 witnesses.  ladder_vs_B.py "
+              "tests the script.")
+def c_menu_shapes(R, base):
+    off = [(r.n, r.shape, round(r.delta, 4)) for r in R
+           if 25 * r.B > r.C and r.shape not in MENU and r.shape != "S1"]
+    hi = [(r.n, r.shape) for r in R if r.shape.startswith("S7f") and int(r.shape[3:]) > 16]
+    n_above = sum(1 for r in R if 25 * r.B > r.C)
+    bad = off + [(n, s, "F > 16") for n, s in hi]
+    return ("FAIL" if bad else "PASS",
+            f"{n_above} rows above 1/25, {n_above - len(off)} with a menu-shape witness; "
+            f"off-menu (S6/S11/S12/?) winners above 1/25: {len(off)}", bad[:8])
 
 
 @check("B", "S7 at F = 3 is an escape at odd n and a co-winner at even n",
