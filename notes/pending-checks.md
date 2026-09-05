@@ -102,6 +102,35 @@ python3 mu_enumerate_v3.py --nmax <N> --fill-gaps --out mu_table_safe_v5_code_v3
 - **Extending re-arms three things**, and they are easy to miss because none of them errors: the prefix/tail discipline (a worklist-driven extension selects by low score, so aggregates must be requoted over the contiguous part); every range-scoped claim of the form "at every row of the table", which is a *different statement* after the table grows; and `shape-counting.md` §3's floor rows, which are keyed to the computed floor.
 - **Append the old maximum to `check_doc_figures.py`'s `CHECKPOINTS`** on every extension. Two minutes, and skipping it turns every correctly-scoped historical figure into noise in PASS 1.
 
+## R0a. `mu_exact.py` — the same table, ~10⁴× faster, and how to run it to 10⁵
+
+**`mu_enumerate_v3.py` is the reference implementation and stays the arbiter; `mu_exact.py` is the one to actually run for extensions.** It enumerates the same shape space with the same SAFE score by arithmetic instead of by generic search: no (p, q) loop (p is read off each part; q is free in SAFE mode except for the foreign twist, so it is maximised per part rather than looped), r = n − Fc determined by subtraction, multi-part cases bounded by inequalities on the score. **The trusted base is identical** — Part 0's shape space, the flat cap F·C(c,2), Lemma B′, D2 domination, distinct foreign primes at a common top prime — and Proposition F.1 is **self-certified per n** as in v3's `mu_bound` (1/√δ ≤ k checked against the value found), deliberately *not* imported from the ladder, which would add a dependency on Part E realisability that v3 does not carry.
+
+**Validation already done, and the standard any replacement must meet:**
+- all **2,187** rows of `mu_table_safe_v5_code_v3.csv` reproduced exactly, n = 2759 included, with low mismatches (missing shape) and high (over-score) reported separately — both zero;
+- direct cross-checks against `v3.mu_bound` at n never previously computed — 2602, 2604, 2607, 2680 — all exact, at 10³–10⁴× speedup (v3 exceeds 280 s per value by n ≈ 2,600 and times out at n = 3,003 where `mu_exact` takes 0.02 s);
+- an **independent spec-derived enumerator** (brute force over part multisets, written from the shape-space description rather than from either script) agreeing on 139 values for 6 ≤ n ≤ 200 — the only check that would catch a case dropped by *both*.
+
+```bash
+# sizing: ~n^2.5 overall.  Measured: 4.6 s to 2,000; 46 s to 5,000; 158 s to 8,000.
+# Single-threaded to 10^5 is ~20 h; chunked 8 ways it is ~4.5 h wall.
+seq 1 8 | xargs -P8 -I{} python3 mu_exact.py --nmax 100000 --chunks {}/8
+cat mu_table_exact.csv.part{1..8} > mu_table_exact_1e5.csv
+
+python3 mu_exact.py --nmax 10000                                  # single-threaded
+python3 mu_exact.py --validate mu_table_safe_v5_code_v3.csv       # regression, ~2 min
+python3 mu_exact.py --cross 2600 2700 4                           # vs v3 directly (slow: v3 is ~4 min/value here)
+```
+
+- **`--chunks i/N` splits for EQUAL WORK, not equal width** — per-n cost grows as ~n^1.5, so the boundaries sit at nmax·(j/N)^0.4. Equal-width chunks would leave one worker doing most of the run. Concatenated chunk output is byte-identical to an unchunked run (verified).
+- **Run `--validate` after any edit.** It is the regression suite; the foreign-twist maximisation is the part that invites bugs (the best q is *not* the largest prime-power divisor of r − 1, because `orb` halves for even twists — at r = 41, Q = 8 gives 164 where Q = 5 gives 205).
+- **Everything under R1 still applies to the output**, including `validate_table_v3.py --baseline` for the never-lower-a-value check; `mu_exact.py` writes the same CSV columns as v3 so the downstream scripts take it unchanged.
+- **`--refined` is not implemented.** SAFE is the mode the documents quote; a refined-mode extension would need the strip logic and is out of scope for this script.
+
+**What a run to 10⁵ buys** (nothing currently depends on it, so this is reach, not repair): it extends the exact floor claim — the minimum over *all* n ≤ 10⁴ is 0.04621 at n = 2759, currently proved to 10⁴ — by a decade; it puts `approach-rate-note.md`'s Θ(log³n/n) fit against exact B(n) in the [10⁴, 10⁵) decade, where the competing-shape compression that flattens the fit at 10³–10⁴ has thinned out; and it lets `fallback_cert.py` run against true B rather than B_lo to 10⁵, which would make the closure of n = 50,817 and 89,697 independent of the B_lo fused-rung patch.
+
+**Already established by the run to 10⁴**, and not needing repetition: zero uncertified rows (F.1 self-certification holds throughout); the ladder never exceeds B and is **tight at all 185 joined values**; and no three-part winners anywhere (2,191 one-part, 6,431 two-part).
+
 ## R1. Routine, after any new batch of table values
 
 > **R0/R1 are DONE over [6, 2600], and expectations are live again.** The rebuild is complete over **all 2,186 eligible n** — composite, non-prime-power — with no gaps, plus a single worklist row at n = 2759 from R7, and the full R1 battery passes: `validate_table_v3.py` **24 PASS / 0 FAIL / 14 INFO / 2 SKIP** with `--baseline` supplied (23 PASS without it, the baseline-only checks skipping), `converse_check.py` 0 violations with max cofactor 12 at (221, 157, 13), the S2 identity clear at every row, and per-n monotonicity showing **0 rows lowered and exactly 289 raised** — the exceedance list, row for row. Further extension is **discretionary**: nothing in the framework is waiting on it, and a decision to extend should be made on what a specific question needs rather than as owed work.
