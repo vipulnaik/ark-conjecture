@@ -75,13 +75,29 @@ COMMON to both foreign blocks.  A configuration with r | c-1 is skipped (it is
 a fallback and cannot be optimal above 1/25); a foreign prime equal to p is
 skipped (r != p).
 
-USAGE
-    python3 mu_ladder_exact.py 5000 8000            # print B(n) for n in range
-    python3 mu_ladder_exact.py --check mu_table_exact.csv
+USAGE.  The flags mirror `mu_exact.py`'s, so the two are interchangeable and
+either can resume from or validate the other's output.
+
+    # a table, with resume, periodic flush and a timestamped heartbeat
+    python3 mu_ladder_exact.py --nmax 1000000 --out mu_table_ladder.csv
+    # ... reissue the SAME command after an interruption; it resumes
+    # eight parallel chunks, split for equal work
+    for i in $(seq 1 8); do
+        python3 mu_ladder_exact.py --nmax 1000000 --out mu.csv --chunks $i/8 &
+    done
+    head -1 mu.csv.part1 > mu.csv && \
+        for i in $(seq 1 8); do tail -n +2 mu.csv.part$i; done >> mu.csv
+
+    python3 mu_ladder_exact.py 5000 5100            # quick lookup to stdout
     python3 mu_ladder_exact.py --check mu_table_exact.csv --time
+
+MEASURED THROUGHPUT.  ~10.8 rows/s at n near 10^6 (92 ms/row), so a full run to
+10^6 is about 15 h single-threaded and under 2 h on eight chunks -- against
+`mu_exact.py`'s ~3 h PER VALUE at that size.
 """
 import argparse
 import csv
+import os
 import sys
 import time
 from bisect import bisect_left, bisect_right
@@ -304,20 +320,173 @@ def report_uncertified(n, v, w, exact):
     return ev, ew, fb
 
 
+# ---------------------------------------------------------------- driver
+#
+# The flags, the output schema and the resume semantics deliberately MIRROR
+# `mu_exact.py`, so the two are interchangeable at the command line and either
+# can resume from or validate the other's output.  Same columns in the same
+# order, same header check, same --nmin/--nmax/--out/--fill-gaps/--progress/
+# --chunks meanings.  Two columns are filled differently and the difference is
+# the point of this file:
+#
+#   certified  1 iff the value is B(n) BY THEOREM -- the maximum cleared
+#              C(n,2)/25, so Theorem E.5 and Proposition 1 apply.  In mu_exact.py
+#              the same column reports Proposition F.1's k self-certification,
+#              which is a different guarantee; a row with certified = 0 here is
+#              one to hand to mu_exact.py, not one to distrust arithmetically.
+#   fallback   1 iff the value came from the exhaustive handoff AND its optimum
+#              is a fallback configuration -- the only rows where mu(n) = B(n)
+#              is not established by any theorem.  Always 0 on a certified row,
+#              since above 1/25 the optimum is fallback-free by E.5.
+#
+# CHUNKING.  Cost per n grows roughly LINEARLY here (the menu scan is O(n/log n)
+# per value), not as n^1.5 as in mu_exact.py, so equal work is split at
+# nmax*(j/N)^(1/2) rather than ^(2/5).  Chunks are independent -- each builds
+# its own Arith to nmax -- so they run in parallel and concatenate.
+
+HEADER = ("n,C(n2),mu_bound,density,parts,certified_K,partcap,certified,"
+          "fallback,witness")
+
+
+def read_done(path):
+    """(set of n already written, header-ok), with the same semantics as
+    mu_exact.py's: rows present are skipped, a partial final line left by a hard
+    kill is TRUNCATED rather than skipped, and a foreign header is refused."""
+    if not (os.path.exists(path) and os.path.getsize(path) > 0):
+        return set(), True
+    ncol = len(HEADER.split(","))
+    with open(path, "rb") as fh:
+        raw = fh.read()
+    text = raw.decode("utf-8", "replace")
+    done, good_end, pos = set(), 0, 0
+    for i, line in enumerate(text.splitlines(keepends=True)):
+        nbytes = len(line.encode("utf-8", "replace"))
+        stripped = line.rstrip("\r\n")
+        if i == 0:
+            if stripped.lstrip("\ufeff") != HEADER:
+                return set(), False
+            good_end = pos + nbytes
+        elif line.endswith("\n"):
+            f = stripped.split(",")
+            if len(f) >= ncol and f[0].isdigit():
+                done.add(int(f[0]))
+                good_end = pos + nbytes
+        pos += nbytes
+    if good_end < len(raw):
+        with open(path, "r+b") as fh:
+            fh.truncate(good_end)
+    return done, True
+
+
+def _rate(done, el):
+    r = done / el if el else 0.0
+    return f"{r:.1f} rows/s" if r >= 1 else f"{r * 60:.1f} rows/min"
+
+
+def hms(sec):
+    sec = int(max(sec, 0)); h, r = divmod(sec, 3600); m, s = divmod(r, 60)
+    return f"{h}:{m:02d}:{s:02d}" if h else f"{m}:{s:02d}"
+
+
+def run(nmax, out, start=6, done=frozenset(), append=False, quiet=False,
+        every=1000, exact=None):
+    """Rows for n in [start, nmax].  Arith is built to nmax regardless of start,
+    so a chunk is independent of every other chunk."""
+    A = Arith(nmax + 1)
+    todo = [n for n in range(start, nmax + 1) if not A.pp[n] and n not in done]
+    if not todo:
+        if not quiet:
+            print(f"{out}: nothing to do in [{start}, {nmax}]")
+        return out
+    t0 = time.time(); last = t0; done_now = 0; unc = 0
+    tag = os.path.basename(out)
+    def work(ns): return float(sum(ns))          # ~linear per n, unlike mu_exact
+    total_work = work(todo); done_work = 0.0
+    with open(out, "a" if append else "w", newline="") as fh:
+        w = csv.writer(fh)
+        if not append:
+            w.writerow(HEADER.split(","))
+            fh.flush()
+        for n in todo:
+            v, wit, cert = best_for_n(n, A)
+            fb = 0
+            if not cert:
+                unc += 1
+                res = report_uncertified(n, v, wit, exact)
+                if res is not None:
+                    v, wit, isfb = res
+                    fb = int(isfb)
+                    wit = ("EXHAUSTIVE-FALLBACK: " if isfb else "EXHAUSTIVE: ") + wit
+                else:
+                    wit = "LOWER-BOUND-ONLY: " + wit
+            N2 = comb(n, 2)
+            k = wit.count("x")                   # parts, read off the witness
+            w.writerow([n, N2, v, f"{v / N2:.6f}", k, k, k, int(cert), fb, wit])
+            done_now += 1; done_work += float(n)
+            now = time.time()
+            if not quiet and every and (done_now % every == 0 or now - last >= 30):
+                fh.flush()
+                last = now
+                el = now - t0
+                frac = done_work / total_work if total_work else 1.0
+                eta = el * (1 - frac) / frac if frac > 0 else 0
+                print(f"{time.strftime('%H:%M:%S')}  {tag}: n = {n}, "
+                      f"{done_now}/{len(todo)} rows ({100 * frac:.1f}% of work), "
+                      f"{_rate(done_now, el)}, elapsed {hms(el)}, "
+                      f"eta {hms(eta)}"
+                      + (f", UNCERTIFIED {unc}" if unc else ""),
+                      file=sys.stderr, flush=True)
+    if not quiet:
+        print(f"{out}: wrote {len(todo)} rows, n in [{todo[0]}, {todo[-1]}]"
+              + (f"; {unc} UNCERTIFIED (below 1/25 -- see the rows flagged "
+                 f"certified = 0)" if unc else ""))
+    return out
+
+
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("lo", type=int, nargs="?", default=6)
-    ap.add_argument("hi", type=int, nargs="?", default=1000)
-    ap.add_argument("--check", metavar="TABLE", help="compare against a mu_table CSV")
-    ap.add_argument("--time", action="store_true")
+    ap = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    # Flags mirror mu_exact.py so the two are interchangeable at the command line.
+    ap.add_argument("--nmin", type=int, help="start of range (default: 6, or "
+                    "resume after the last row of --out if that file exists)")
+    ap.add_argument("--nmax", type=int, default=1000)
+    ap.add_argument("--out", default="mu_table_ladder.csv",
+                    help="results CSV, same schema as mu_exact.py's. Written "
+                         "with a header, APPENDED TO on re-runs, and used to "
+                         "resume when --nmin is omitted.")
+    ap.add_argument("--fill-gaps", action="store_true",
+                    help="ignore the resume point and rescan from nmin, "
+                         "computing only n absent from --out")
+    ap.add_argument("--quiet", action="store_true",
+                    help="suppress the progress heartbeat (the file is still "
+                         "flushed on the same schedule)")
+    ap.add_argument("--progress", type=int, default=1000, metavar="ROWS",
+                    help="flush the output file and print a timestamped progress "
+                         "line every ROWS rows, and in any case at least every "
+                         "30 s (default 1000; 0 disables the heartbeat but keeps "
+                         "the periodic flush).  Progress goes to STDERR.")
+    ap.add_argument("--chunks", metavar="i/N",
+                    help="run only chunk i of N, split for EQUAL WORK (cost per "
+                         "n is ~linear here, so the split is at nmax*(j/N)^(1/2), "
+                         "NOT mu_exact.py's ^(2/5)).  Writes <out>.part<i>, each "
+                         "with its own header.  Merge with "
+                         "  head -1 <out>.part1 > table.csv && "
+                         "for i in $(seq 1 N); do tail -n +2 <out>.part$i; done "
+                         ">> table.csv")
+    ap.add_argument("--check", metavar="TABLE",
+                    help="compare every row against an existing mu_table CSV")
+    ap.add_argument("--time", action="store_true", help="with --check, report per-n cost")
     ap.add_argument("--on-uncertified", choices=["exact", "flag"], default=None,
                     help="at an n whose maximum does not clear C(n,2)/25: 'exact' hands "
                          "it to mu_exact.py's exhaustive search (default if importable), "
                          "'flag' only marks it")
     ap.add_argument("--cert-threshold", type=float, default=None,
-                    help="TEST ONLY: certify only above this density instead of 1/25 -- exercises "
-                         "the uncertified path on real rows (e.g. 0.05 makes n = 2759 uncertified). "
-                         "Lowering it below 1/25 is refused, since the pruning assumes 1/25.")
+                    help="TEST ONLY: certify only above this density instead of 1/25 -- "
+                         "exercises the uncertified path on real rows (e.g. 0.05 makes "
+                         "n = 2759 uncertified).  Lowering it below 1/25 is refused.")
+    ap.add_argument("lo", type=int, nargs="?", help="with HI, print rows to stdout "
+                    "instead of writing a CSV (quick lookup, no resume)")
+    ap.add_argument("hi", type=int, nargs="?")
     a = ap.parse_args()
     global CERT_DELTA
     if a.cert_threshold is not None:
@@ -327,18 +496,17 @@ def main():
     exact = load_mu_exact() if a.on_uncertified != "flag" else None
     if a.on_uncertified == "exact" and exact is None:
         sys.exit("--on-uncertified exact: mu_exact.py not importable from this directory")
+
     if a.check:
         rows = list(csv.DictReader(open(a.check)))
         N = max(int(r["n"]) for r in rows)
         t0 = time.perf_counter(); A = Arith(N + 1); t1 = time.perf_counter()
-        eq = low = high = uncert = 0
-        bad = []
-        unc_rows = []
+        eq = low = high = 0
+        bad, unc_rows = [], []
         for r in rows:
             n, B = int(r["n"]), int(r["mu_bound"])
             v, w, cert = best_for_n(n, A)
             if not cert:
-                uncert += 1
                 unc_rows.append((n, v, B))
             if v == B:
                 eq += 1
@@ -348,35 +516,71 @@ def main():
                 high += 1; bad.append((n, v, B, "HIGH", w, r["witness"].split("(")[0].strip()))
         t2 = time.perf_counter()
         print(f"{a.check}: {len(rows)} rows to n = {N}")
-        print(f"equal {eq}, LOW {low}, HIGH {high}; uncertified (B <= C(n,2)/25) {uncert}")
+        print(f"equal {eq}, LOW {low}, HIGH {high}; "
+              f"uncertified (B <= C(n,2)/25) {len(unc_rows)}")
         for b in bad[:12]:
             print("  ", b)
         if unc_rows:
-            print(f"UNCERTIFIED rows (value comparison at these is NOT a certification):")
+            print("UNCERTIFIED rows (a value comparison at these is NOT a certification):")
             for n, v, B in unc_rows[:20]:
                 print(f"   n={n}: menu {v}, table {B}, table density {B/comb(n,2):.6f}")
                 if exact is not None:
                     report_uncertified(n, v, "", exact)
         if a.time:
-            print(f"sieve {t1-t0:.1f}s; per-n {1000*(t2-t1)/len(rows):.3f} ms average over the table")
-        sys.exit(1 if bad else 0)
-    A = Arith(a.hi + 1)
-    print("n,C(n2),mu_bound,density,certified,witness")
-    for n in range(a.lo, a.hi + 1):
-        if A.pp[n]:
-            continue
-        v, w, cert = best_for_n(n, A)
-        if not cert:
-            res = report_uncertified(n, v, w, exact)
-            if res is not None:
-                ev, ew, fb = res
-                print(f"{n},{comb(n,2)},{ev},{ev/comb(n,2):.6f},0,"
-                      f"EXHAUSTIVE{'-FALLBACK' if fb else ''}: {ew}")
+            print(f"sieve {t1-t0:.1f}s; per-n {1000*(t2-t1)/len(rows):.3f} ms "
+                  f"average over the table")
+        return 1 if bad else 0
+
+    if a.lo is not None and a.hi is not None:
+        A = Arith(a.hi + 1)
+        print("n,C(n2),mu_bound,density,certified,witness")
+        for n in range(a.lo, a.hi + 1):
+            if A.pp[n]:
                 continue
-            print(f"{n},{comb(n,2)},{v},{v/comb(n,2):.6f},0,LOWER-BOUND-ONLY: {w}")
-            continue
-        print(f"{n},{comb(n,2)},{v},{v/comb(n,2):.6f},1,{w}")
+            v, w, cert = best_for_n(n, A)
+            if not cert:
+                res = report_uncertified(n, v, w, exact)
+                if res is not None:
+                    ev, ew, fb = res
+                    print(f"{n},{comb(n,2)},{ev},{ev/comb(n,2):.6f},0,"
+                          f"EXHAUSTIVE{'-FALLBACK' if fb else ''}: {ew}")
+                else:
+                    print(f"{n},{comb(n,2)},{v},{v/comb(n,2):.6f},0,LOWER-BOUND-ONLY: {w}")
+                continue
+            print(f"{n},{comb(n,2)},{v},{v/comb(n,2):.6f},1,{w}")
+        return 0
+
+    # ---- resume, as in mu_exact.py --------------------------------------
+    out = a.out
+    lo, hi = None, a.nmax
+    if a.chunks:
+        i, N = (int(x) for x in a.chunks.split("/"))
+        if not 1 <= i <= N:
+            print("--chunks i/N needs 1 <= i <= N")
+            return 2
+        edge = lambda j: max(2, int(a.nmax * (j / N) ** 0.5))
+        lo = edge(i - 1) + 1 if i > 1 else 6
+        hi = edge(i) if i < N else a.nmax
+        out = f"{a.out}.part{i}"
+
+    done, ok = read_done(out)
+    if not ok:
+        print(f"refusing to append to {out}: its first line is not this "
+              f"version's header\n    {HEADER}\nMove it aside or pass a "
+              f"different --out.")
+        return 2
+    resume_from = (max(done) + 1) if (done and not a.fill_gaps) else None
+    start = a.nmin if a.nmin is not None else (resume_from or lo or 6)
+    if done and not a.quiet:
+        print(f"{out}: {len(done)} rows present; "
+              + (f"rescanning from {start} for gaps" if a.fill_gaps
+                 else f"resuming at n = {start}"))
+    run(hi, out, start=start, done=done, append=bool(done), quiet=a.quiet,
+        every=a.progress, exact=exact)
+    if a.chunks and not a.quiet:
+        print(f"  (chunk covers n in [{lo}, {hi}])")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

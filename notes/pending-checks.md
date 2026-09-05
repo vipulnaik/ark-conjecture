@@ -302,9 +302,15 @@ python3 ceiling_rederive.py --nmax 16000 --no-filter # control: expect exceedanc
 
 ```bash
 python3 mu_ladder_exact.py --check mu_table_exact.csv --time    # must print 0 low, 0 high
-python3 mu_ladder_exact.py 100000 100500                        # B(n) with witness and flag
+python3 mu_ladder_exact.py 100000 100500                        # quick lookup to stdout
 python3 mu_ladder_exact.py 2755 2762 --cert-threshold 0.05      # exercises the uncertified path on n = 2759
+
+# the table itself: flags, schema and resume all mirror mu_exact.py
+python3 mu_ladder_exact.py --nmax 1000000 --out mu_table_ladder.csv
+for i in $(seq 1 8); do python3 mu_ladder_exact.py --nmax 1000000 --out mu.csv --chunks $i/8 & done
 ```
+
+**Run to 10⁶ — feasible now, and the numbers to expect.** Measured **10.8 rows/s at n ≈ 10⁶** (92 ms/row), so a full contiguous table to 10⁶ is ~15 h single-threaded, under 2 h on eight chunks. Same CSV schema as `mu_exact.py` (so `validate_table_v3.py`, `check_doc_figures.py` and `ladder_vs_B.py` all read it), same resume semantics including truncation of a partial final row, same `--progress` heartbeat with ETA. Two columns differ in meaning and the difference is the point: **`certified` = 1 iff the value is B(n) by theorem** (E.5 + Proposition 1, i.e. it cleared 1/25) rather than `mu_exact.py`'s F.1 self-certification, and **`fallback` = 1** only on a row that went through the exhaustive handoff and whose optimum is a fallback — the only rows where μ(n) = B(n) is not established. The heartbeat carries a running `UNCERTIFIED` count, so a run that starts producing them is visible without waiting for the file. *Chunking splits at nmax·(j/N)^{1/2}, not `mu_exact.py`'s ^{2/5}, because cost per n here is ~linear rather than ~n^{1.5}.*
 
 **What it does when nothing clears 1/25 — the case that matters most.** Below the line every pruning step is unjustified (the fallback skip, the share cuts, F ≤ 16, the efficient-prime cut, the S12 exclusion), so the value is a lower bound and nothing more — and the true optimum may be a *fallback* configuration, the one regime where B_safe and B_refined can differ and E.6 gives nothing. Such an n would also be the first counterexample to the floor conjecture. So the script does not just flag it: it hands the n to `mu_exact.py`'s exhaustive `best_for_n` (imported from the same directory; `--on-uncertified flag` to suppress), prints both values and whether the exhaustive optimum is a fallback configuration — in which case `fallback_cert.py` is the next step, since μ(n) = B(n) is then not established at that n by any theorem — and writes `EXHAUSTIVE` or `EXHAUSTIVE-FALLBACK` into the witness column. `--check` lists uncertified rows separately whatever the value comparison says, because agreement at such a row is a coincidence, not a certification. `--cert-threshold` raises the certification bar for testing (lowering it is refused); at 0.05 it makes n = 2759 uncertified and the handoff reproduces B(2759) = 175813, fallback-free.
 
