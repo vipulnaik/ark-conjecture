@@ -73,6 +73,8 @@ folder structure is described below:
   is generic-n, and there are subfolders for individual n values (n10
   for n = 10, n12 for n = 12).
 
+* [lean](lean) covers efforts at Lean formalization.
+
 * [meta](meta) is the only folder comprising purely human-written
   content, including [documentation of the research process and
   learnings](meta/research-process-and-learnings.md).
