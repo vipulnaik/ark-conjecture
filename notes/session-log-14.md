@@ -479,6 +479,18 @@ So `mu3_menu.py` scores every census shape at every n in a range and writes `b3_
 
 *Two lessons, and the second is the one to keep.* The error is §4.3's own warning made concrete — "spending the top prime on the Galois gain cripples every foreign block" — which the note states and the script ignored, so a documented hazard was reimplemented as a bug. And the direction mattered: §5.8 records that a k = 3 scoring which **under**-credits the Galois part is not a loose upper bound but not an upper bound at all; the mirror is that an **over**-credit is not a loose lower bound either, so this was not a conservative error in either direction. **A question about which way an inequality points is a cheap way to find out whether the code respects it** — asking it found in one step something no cross-check in the script would have.
 
+## 5h. `ceiling_rederive3.py`: the k = 3 ceiling table, measured
+
+Written, and it does what the previous turn's analysis said was blocking any use of larger n: without a generic-family filter a sup measures §6's escapes, not the ceiling.
+
+**Result, n ∈ [7000, 14000]: no cell exceeded, and every one of the twelve classes attains its tabulated ceiling to within 0.1% in exactly one κ_c column** (2 and 8 in both) — 15 of 24 cells at ratio ≥ 0.999. §5's table is now measured rather than derived-and-asserted, which is what §5.7's open item needed.
+
+**Two k = 3-specific design points.** **κ_c is a split, not a nuisance**: for a prime block at full twist κ_c = θ = 3 when 3 | c − 1 and 2 otherwise, which is exactly why §5's table has two columns — a scan that pools them compares against neither, so the sup is taken per (class, κ_c) cell. And **the no-foreign-block cut is structural rather than part of the filter**, staying on under `--no-filter`, because §5's table is about the two-part additive family; I had written it into the docstring as a filter cut and corrected that, since a reader comparing the two scripts' `--no-filter` modes would otherwise think they scan the same shape set. They do not.
+
+**The control behaves**: unfiltered gives exactly one exceedance, class 11 at κ_c = 2 via t = 256 — the q = 2 rung-B escape, which is the cut that removes it.
+
+**And the open question sharpened rather than closed.** Nine of twenty-four cells fall short, and they are precisely the *other* column at each class — class 0 reaches 0.10100/0.10102 at κ_c = 3 but only 0.06697/0.12500 at κ_c = 2, the κ_c = 2 sup landing on the η = 1/3 value instead of η = 1. So the live question is no longer "is the table right" but **whether each class's unreachable column is arithmetically obstructed or merely thin in supply**: at class 0, κ_c = 2 the η = 1 entry needs r − 1 = 2·q^e with q ≥ 5, which is a safe-prime-family supply condition, not an evident obstruction. That is the concrete form of §5.7's "a k = 3 subtlety not visible at k = 2", and it is a better-posed question than the one it replaces.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

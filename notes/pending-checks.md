@@ -25,6 +25,21 @@ Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804
 
 *Do not restate the inequality as `B_safe ≤ μ`.* `B_safe` over-counts per configuration; what holds is B_refined ≤ μ ≤ B_safe, the endpoints collapsing where E.5 or the certificate applies.
 
+## R12a. `ceiling_rederive3.py` — the k = 3 ceiling table, measured
+
+The counterpart of `ceiling_rederive.py`, and the reason it was needed: **without a generic-family filter, a sup over any range measures §6's escapes rather than the ceiling** — on `b3_census_2000.csv` the unfiltered class sup exceeds the tabulated ceiling in 11 of 12 classes, by 18× at class 0, and **7 of the 12 sups are attained by a fused S2 shape with no foreign block**.
+
+```bash
+python3 ceiling_rederive3.py --nmax 14000        # generic family; exit 0 = no cell exceeded
+python3 ceiling_rederive3.py --nmax 2500 --no-filter   # the escapes, deliberately
+```
+
+**Result over n ∈ [7000, 14000]: no cell exceeded, and every one of the twelve classes attains its ceiling to within 0.1% in exactly one κ_c column** (2 and 8 in both). That is §5's table converted from derived-and-asserted into measured.
+
+**Two k = 3-specific things a reader should know before comparing it with the k = 2 script.** *κ_c is a split, not a nuisance*: for a prime block at full twist κ_c = 3 when 3 | c − 1 and 2 otherwise, so §5's table has two columns and a scan that pools them compares against neither — results are per (class, κ_c) cell. And *the no-foreign-block cut is structural, not part of the filter*: it stays on under `--no-filter`, because §5's table is about the two-part additive family and a fused-only shape is §6.3's question. The two scripts' `--no-filter` modes therefore scan different shape sets.
+
+**What the run leaves open**, and it is sharper than what it replaced: nine of twenty-four cells fall short, and they are exactly the *other* column at each class. Whether each unreachable column is arithmetically obstructed or merely thin in supply is the open question — at class 0, κ_c = 2 the η = 1 entry needs r − 1 = 2·q^e with q ≥ 5, a supply condition of the safe-prime family rather than an obvious obstruction. A k = 3 analogue of `aod` §3.3.8's escape analysis would settle it.
+
 ## R12. `mu3_menu.py` — B₃ over the k = 3 census
 
 **New 2026-09, and it closes half of `three-uniform-note.md` §10 item 1.** Scores every shape in that note's §4.2 census at every n in a range and writes `n, C(n3), b3_census, delta3, witness`. Table to n = 2000 in the working set as `b3_census_2000.csv` (1,666 rows, 7 s).
