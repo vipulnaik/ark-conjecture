@@ -361,6 +361,18 @@ Reviewing the plan for the human-written note, I said Rivest–Vuillemin had "se
 
 Folded into Appendix C's unification box, where rows 0 and 6 now say explicitly which number each prime power is: the vertex count (KSS) against the coordinate count (RV). *The two theorems sit one row apart in a table keyed on exactly this distinction, and I still ran them together in prose — the mechanism-of-action framing is the corrective, and it has to be applied to one's own sentences too.*
 
+## 4x. Two FAILs at 10⁶ — the checker, not the data
+
+The completed 10⁶ ladder run (921,265 rows) reported two FAILs, both at **n = 999685** and both from one cause: `Row.delta` was parsed from the CSV's `density` column, which carries six decimals. At that row the true density is **0.171572510776**, the column says **0.171573**, and cap₂(1) = 3 − 2√2 = **0.171572875254** — so the rounded value sits above the cap by 1.2·10⁻⁷ while the true value sits below it by 3.6·10⁻⁷. The cap_F check and the feasibility check (which reads 1/√δ) both fired on it.
+
+Confirmed in exact integers before touching anything: (3C − B)² − 8C² = 514799345346156900 > 0, hence δ < 3 − 2√2 with no floating point in the argument. **The data are right.**
+
+**Why exactly one row in a million, and why now.** The table approaches the caps to within **1.77·10⁻⁷** at n = 887990, with **96 rows inside 5·10⁻⁷** — the column's rounding error. Almost all of those cluster at δ ≈ 0.133974 and 0.101020, where the cap sits *below* the rounding boundary so the rounded value falls short and the check passes. Only at 999685 did the cap (0.1715728753) sit just above a boundary at 0.1715725, so a true density in that 3.7·10⁻⁷ window rounds *across* it. One row.
+
+Fixed: `Row.delta = B / C`, with `delta_str` retained solely for check A20, whose job is to verify the column against B/C. Three guards added — the cap_F check now reports its own margin (closest approach and how many rows sit inside the column's precision), a new group-A check fails if anyone reverts the parse, and both carry the reason at the point of use. **27 PASS / 0 FAIL** on the 10⁶ table with the exhaustive one as baseline.
+
+*The general form:* a derived column is a **lossy** copy, and a check that reads it is testing the printer rather than the value. The tell is that it only appeared once the table grew — the margins tighten with n while the rounding error is fixed. Six decimals were ample at n = 2600 and are not at 10⁶.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

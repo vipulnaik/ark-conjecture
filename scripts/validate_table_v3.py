@@ -103,7 +103,18 @@ class Row:
     def __init__(self, d):
         self.n = int(d["n"]); self.C = int(d["C(n2)"]); self.B = int(d["mu_bound"])
         self.delta_str = d["density"].strip()
-        self.delta = float(self.delta_str); self.parts = int(d["parts"])
+        # delta IS COMPUTED FROM THE INTEGERS, never parsed from the density
+        # column.  That column is rounded to six places, and at 10^6 six places
+        # is not enough: at n = 999685 the true density is 0.1715725108 and the
+        # column says 0.171573, which is ABOVE cap_2(1) = 3 - 2*sqrt2 =
+        # 0.1715728753 while the true value is below it.  Parsing the column
+        # therefore manufactured two FAILs -- the cap_F check and the
+        # feasibility check, both on that one row, both spurious.  The rounded
+        # string is still kept as delta_str, because check A20's whole job is to
+        # verify that the column agrees with B/C; that check must read the
+        # string and every other check must not.
+        self.delta = self.B / self.C
+        self.parts = int(d["parts"])
         self.certK = int(d["certified_K"]); self.certified = d["certified"] == "1"
         self.fallback = d["fallback"] != "0"; self.witness = d["witness"]
         # mu_ladder_exact.py prefixes the witness of a row the pruning theorems
@@ -437,6 +448,21 @@ def density_ok(r):
     return abs(2 * m * r.C - 2 * r.B * 10 ** places) <= r.C
 
 
+@check("A", "checks read delta as B/C, not as the rounded density column",
+       "pending-checks A20b",
+       expect="Row.delta must be computed from the integers.  Six decimals is not "
+              "enough at 10^6 -- the cap_F margins get within 2e-7 -- so a rounded "
+              "density can sit on the wrong side of a cap, as at n = 999685.  This "
+              "check fails if anyone reverts Row.delta to float(density).")
+def c_delta_provenance(R, base):
+    bad = [r.n for r in R if r.delta != r.B / r.C]
+    worst = max((abs(r.delta - float(r.delta_str)) for r in R), default=0.0)
+    return ("FAIL" if bad else "PASS",
+            f"{len(bad)} rows where delta is not B/C; largest gap between B/C and the "
+            f"printed column {worst:.2e} (the column is correct, merely rounded)",
+            bad[:5])
+
+
 @check("A", "density column agrees with mu_bound / C(n,2)", "table")
 def c_density(R, base):
     bad = [r.n for r in R if not density_ok(r)]
@@ -581,7 +607,17 @@ def c_f1(R, base):
 
 @check("B", "no winner exceeds cap_F(eta) for its own F and eta", "aod section 3.3.8")
 def c_capF(R, base):
-    bad, tested = [], 0
+    """THIS CHECK CANNOT BE RUN OFF THE DENSITY COLUMN, and the reported margin
+    says why in numbers.  The table approaches these caps to within 2e-7 at
+    n ~ 10^6 -- 96 rows sit within 5e-7 -- while the density column carries six
+    decimals, a rounding error of up to 5e-7.  So the column can land on the
+    wrong side of a cap, and at n = 999685 it does: true density 0.1715725108,
+    column 0.171573, cap_2(1) = 3 - 2*sqrt2 = 0.1715728753.  Exactly one row of
+    921,265 rounds across a cap, and it produced two spurious FAILs -- this
+    check and the feasibility one -- until Row.delta was changed to compute B/C.
+    If the reported closest approach ever nears the 1e-9 tolerance below, this
+    comparison needs exact arithmetic rather than floats."""
+    bad, tested, gaps = [], 0, []
     for r in R:
         mm = [x for x in r.cls if not x[2]]
         fg = [x for x in r.cls if x[2]]
@@ -592,8 +628,15 @@ def c_capF(R, base):
         eta = orb(rr, qpart(rr - 1, r.q), False) / comb(rr, 2)
         cap = eta / (1 + math.sqrt(F * eta)) ** 2
         if r.delta > cap + 1e-9:
-            bad.append((r.n, round(r.delta, 6), round(cap, 6)))
-    return ("FAIL" if bad else "PASS", f"{len(bad)} of {tested} one-foreign rows exceed", bad[:5])
+            bad.append((r.n, f"{r.delta:.9f}", f"{cap:.9f}"))
+        gaps.append((cap - r.delta, r.n))
+    gaps.sort()
+    near = sum(1 for g, _ in gaps if g < 5e-7)
+    margin = (f"; closest approach {gaps[0][0]:.2e} at n = {gaps[0][1]}, {near} row(s) "
+              f"within 5e-7 -- narrower than the density column's six decimals, "
+              f"which is why this check must use B/C" if gaps else "")
+    return ("FAIL" if bad else "PASS",
+            f"{len(bad)} of {tested} one-foreign rows exceed" + margin, bad[:5])
 
 
 @check("B", "the within-class cross coefficient is keyed on F's parity, not on q",

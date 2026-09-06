@@ -115,10 +115,10 @@
 
 | file | producer | reach at last look | finishes in | what it is |
 |---|---|---|---|---|
-| `mu_table_ladder.csv` | `mu_ladder_exact.py` | **777,613** (715,107 rows) | ~4 h | exact B(n), certified above C(n,2)/25 by Theorem E.5 + `ladder-completeness.md` Prop 1 |
-| `mu_table_exact.csv` | `mu_exact.py` | **71,288** (64,134 rows) | ~18 h | exhaustive search, the arbiter |
+| `mu_table_ladder.csv` | `mu_ladder_exact.py` | **1,000,000 — COMPLETE** (921,265 rows) | — | exact B(n), certified above C(n,2)/25 by Theorem E.5 + `ladder-completeness.md` Prop 1 |
+| `mu_table_exact.csv` | `mu_exact.py` | **76,752** (69,107 rows) | ongoing | exhaustive search, the arbiter |
 
-Both have **0 uncertified rows** and both put the minimum at **175813/3804661 = 0.046210 at n = 2759**, so Corollary E.6 makes every row μ(n) rather than a bound on it. `validate_table_v3.py mu_table_ladder.csv --baseline mu_table_exact.csv` passes with all μ values equal on the overlap.
+Both have **0 uncertified rows** and both put the minimum at **175813/3804661 = 0.046210 at n = 2759**, so Corollary E.6 makes every row μ(n) rather than a bound on it. **The ladder table is now complete to 10⁶**: 921,265 rows, no gaps, and the only two values below 0.05 anywhere in it are n = 2759 and n = 2183 (0.048039). So μ(n) is known exactly at every composite non-prime-power n ≤ 10⁶. `validate_table_v3.py mu_table_ladder.csv --baseline mu_table_exact.csv` passes with all μ values equal on the overlap.
 
 **The standing rules, which survive every extension:**
 - **A rebuild must never lower a value.** Group A's monotonicity check against `--baseline` is the signature to read on every batch; the value-agreement check beside it gives the equal/higher/lower breakdown and the tie count.
@@ -342,6 +342,18 @@ Plus three **entangled-generator regressions** whose orbital multisets are known
 *Script: `chiral_mv.py` (`--verify` runs the regression, `--table N` prints the closed forms). The question — whether any chiral half of the Hamiltonian-cycle complex is **ℤ-acyclic**, the lowest rung at which a counterexample could exist — is answered **no**, at every n ≡ 1 (mod 4); see the session log for the closed forms and the argument.*
 
 **What remains.** Only the n = 5 torsion, and only if one wants the Smith form rather than the answer: the connecting map is ℤ⁶ → ℤ⁶ with cokernel (ℤ/2)², elementary divisors (1,1,1,1,2,2). The regression at n = 5, 6, 7 should be re-run after any change to `chiral_mv.py`; it checks the closed forms against direct 𝔽₂ homology and asserts non-negative Betti numbers, which is what catches the boundary-orientation bug described in the script header.
+
+## A20b. delta must be computed from the integers, never parsed from the density column — DONE
+
+**The failure this exists to prevent, because it fired.** `validate_table_v3.py` parsed `Row.delta` from the CSV's `density` column, which carries **six decimals** — a rounding error up to 5·10⁻⁷. The cap_F margins at n ≈ 10⁶ are *narrower than that*: the closest approach on the completed 10⁶ table is **1.77·10⁻⁷** and **96 rows sit within 5·10⁻⁷**. So a rounded density can land on the wrong side of a cap, and at exactly one row in 921,265 it did:
+
+> **n = 999685**, witness `2x292801 + 1x414083*`: true density **0.171572510776**, column **0.171573**, cap₂(1) = 3 − 2√2 = **0.171572875254**. The true value is below the cap by 3.6·10⁻⁷; the rounded one is above it by 1.2·10⁻⁷.
+
+That produced **two spurious FAILs** — the cap_F check and the feasibility check, which reads 1/√δ — on the same row, from one cause. *Confirmed exactly in integers: (3C − B)² − 8C² = 514799345346156900 > 0, so δ < 3 − 2√2 with no floating point anywhere.* **The data were correct and the checker was wrong.**
+
+**Fixed and guarded.** `Row.delta` is now `B / C`; `delta_str` is kept because check A20's whole job is to verify the column against B/C, and that check must read the string while every other check must not. Three guards: the cap_F check now **reports its margin** (closest approach, and how many rows sit within the column's rounding error) so the next person sees immediately that the column is unusable here; a new group-A check **fails if anyone reverts** `Row.delta` to `float(density)`; and both are documented at the point of use.
+
+*The general form, which is why this is worth a section rather than a line in a log:* a derived column is a **lossy** copy of the data, and a check that reads it is testing the printer rather than the value. The tell is that the failure appeared only after the table grew — the margins tighten as n grows, so the rounding error stays fixed while the quantity being compared does not. **Six decimals were ample at n = 2600 and are not at 10⁶**, and no amount of care at the earlier scale would have surfaced it.
 
 ## R0c. The three pending tags, and what clears each
 
