@@ -353,6 +353,14 @@ That produced **two spurious FAILs** — the cap_F check and the feasibility che
 
 **Fixed and guarded.** `Row.delta` is now `B / C`; `delta_str` is kept because check A20's whole job is to verify the column against B/C, and that check must read the string while every other check must not. Three guards: the cap_F check now **reports its margin** (closest approach, and how many rows sit within the column's rounding error) so the next person sees immediately that the column is unusable here; a new group-A check **fails if anyone reverts** `Row.delta` to `float(density)`; and both are documented at the point of use.
 
+> **The failure is evidence for the bound.** A rounding error can only flip a comparison whose two sides are within the rounding error of each other, so this could not have happened against a loose ceiling. Measured on the completed 10⁶ table, the closest approach to cap_F(η) **in every one of the twelve residue classes**:
+>
+> | n mod 12 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
+> |---|---|---|---|---|---|---|---|---|---|---|---|---|
+> | closest gap (×10⁻⁶) | 1.25 | 0.36 | 0.18 | 1.40 | 3.25 | 0.23 | 2.25 | 1.14 | 0.19 | 0.40 | 6.26 | 0.41 |
+>
+> **Every class is approached to within 7·10⁻⁶, six of them to within 5·10⁻⁷**, and the approach tightens with the range: the closest gap in each decade runs 9.3·10⁻³ (n ≈ 70), 3.9·10⁻⁴, 3.7·10⁻⁵, 3.0·10⁻⁶, 1.8·10⁻⁷ — *gap × n roughly constant at 0.14–0.65*, which is the O(1/n) discretisation of the balance point and exactly the rate a tight ceiling should show. So the ceilings of `arithmetic-of-density.md` §3.3 are not merely upper bounds but **attained to the resolution the integers allow**, in every class, and the checker's one-in-a-million false positive is a symptom of that rather than of anything wrong.
+
 *The general form, which is why this is worth a section rather than a line in a log:* a derived column is a **lossy** copy of the data, and a check that reads it is testing the printer rather than the value. The tell is that the failure appeared only after the table grew — the margins tighten as n grows, so the rounding error stays fixed while the quantity being compared does not. **Six decimals were ample at n = 2600 and are not at 10⁶**, and no amount of care at the earlier scale would have surfaced it.
 
 ## R0c. The three pending tags, and what clears each

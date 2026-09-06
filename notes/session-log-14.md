@@ -371,6 +371,8 @@ Confirmed in exact integers before touching anything: (3C − B)² − 8C² = 51
 
 Fixed: `Row.delta = B / C`, with `delta_str` retained solely for check A20, whose job is to verify the column against B/C. Three guards added — the cap_F check now reports its own margin (closest approach and how many rows sit inside the column's precision), a new group-A check fails if anyone reverts the parse, and both carry the reason at the point of use. **27 PASS / 0 FAIL** on the 10⁶ table with the exhaustive one as baseline.
 
+**And the failure is itself evidence, as the user observed.** A rounding error can only flip a comparison whose sides are within the rounding error of each other, so this failure mode is unavailable to a loose bound. Measured across the 10⁶ table, the closest approach to cap_F(η) in each residue class ranges from **1.8·10⁻⁷** (class 2) to 6.3·10⁻⁶ (class 10), with six classes inside 5·10⁻⁷; and the approach tightens with range at the right rate — closest gap per decade 9.3·10⁻³, 3.9·10⁻⁴, 3.7·10⁻⁵, 3.0·10⁻⁶, 1.8·10⁻⁷, i.e. **gap × n roughly constant at 0.14–0.65**, the O(1/n) discretisation of the balance point. The `aod` §3.3 ceilings are therefore attained to the resolution the integers permit, in every class. A spurious FAIL that requires 10⁻⁷ agreement to occur is a certificate of tightness wearing the wrong hat.
+
 *The general form:* a derived column is a **lossy** copy, and a check that reads it is testing the printer rather than the value. The tell is that it only appeared once the table grew — the margins tighten with n while the rounding error is fixed. Six decimals were ample at n = 2600 and are not at 10⁶.
 
 ## 5. One methodological note
