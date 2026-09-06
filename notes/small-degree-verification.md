@@ -10,7 +10,7 @@
 
 **Those two comparisons read m\* off the group files directly, not off the CSP battery**, so the dedup truncation of item 7 does not touch them. Everything the battery affects — the SAT verdicts, the backbone, the free band — is internal to this file.
 
-**The direction of that dependence matters.** A group missed by the stages could only have *larger* m\*, which would be a counterexample to μ(n) ≤ B(n) rather than a silent corruption of it. So incomplete enumeration weakens the *evidence* without creating an error. If item 5 cannot be closed, the claim "the exhaustive optimum is the predicted construction" has to weaken to "no group in the enumerated set exceeds B(n)" — a real loss, since this is the only non-circular check in the framework, but not a retraction.
+**The direction of that dependence matters.** A group missed by the stages could only have *larger* m\*, which would be a counterexample to μ(n) ≤ B(n) rather than a silent corruption of it. So incomplete enumeration weakens the *evidence* without creating an error. **Item 5a is now closed at both degrees by the `TOM` stage** (every conjugacy class of subgroups of S₁₀ and S₁₂), so the weakening below is historical; it is kept as the reading for any degree where only the hand-built stages have run. Were it not closed, the claim "the exhaustive optimum is the predicted construction" has to weaken to "no group in the enumerated set exceeds B(n)" — a real loss, since this is the only non-circular check in the framework, but not a retraction.
 
 ---
 
@@ -365,11 +365,11 @@ python3 twosub.py --group a5 --korder 4 --maxk 2 --limit 600      # 15 points
 python3 twosub.py --group a5 --korder 5 --maxk 3 --limit 1800     # 12 points
 python3 twosub.py --group a5 --korder 6 --maxk 3 --limit 600      # 10 points
 python3 twosub.py --group a5 --korder 3 --maxk 2 --limit 1800 --maxface 10   # 20 points
-python3 twosub.py --group a5 --korder 2 --maxk 2 --limit 3600 --maxface 10   # 30 points, UNRUN
+python3 twosub.py --group a5 --korder 2 --maxk 2 --limit 3600 --maxface 10   # 30 points -- RUN 2026-09, see below
 python3 twosub.py --group psl27 --korder 6 --maxk 2 --limit 3600             # 28 points, UNRUN
 ```
 
-**Covered so far** (69,140 unions; 2,637 reached χ = 1, 592 also passed the link test, all 592 failed 𝔽₂, zero survivors): 15 points at k ≤ 2; 10 points at k ≤ 3; 12 points at k ≤ 3 **partial**; 20 points at k ≤ 2 **partial**.
+**Covered so far** (1,061,076 unions; 6,807 reached χ = 1, 2,392 also passed the link test, all 2,392 failed 𝔽₂, zero survivors): 15 points at k ≤ 2; 10 points at k ≤ 3; 12 points at k ≤ 3 **partial**; 20 points at k ≤ 2 **partial**; **30 points at k ≤ 2, faces ≤ 10, complete** — 1,408 types (52 s to enumerate), 991,936 unions in 2,768 s, χ = 1 at 4,170, link at 1,800, 𝔽₂ fails 1,800. The 30-point run's type census by (|H₁|, |H₂|, face, orbit) is in the run log; note 1,264 of the 1,408 types have orbit size 60 (regular) and only 30 have orbit size ≤ 15 — the small-stabiliser faces dominate the count, which is where Lutz's recipe says acyclicity does *not* come from. *Still UNRUN: PSL(2,7) at 28 points.*
 
 **Unrun, in order of value:**
 - **30 points** (`--korder 2 --maxface 10`), where Lutz's example lives — the one set of A₅ at which the link test was informative rather than vacuous or total. 1,408 types, 991,936 pairs at k ≤ 2, **~40 min** with the fast 𝔽₂ path. Partial coverage so far: 66,393 pairs, 238 with χ = 1, 104 passing the link test, all 104 failing 𝔽₂.
