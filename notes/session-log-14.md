@@ -305,6 +305,16 @@ The old banner asserted that only the last two kinds remained tagged, while nine
 
 *The general point, and it is the third time this session:* a marker that means "someone should do something" needs to name **which** thing, or it decays into "someone should look at this", which nobody can act on and everybody skips.
 
+## 4s. `notes` "Which hypothesis is doing which work", re-keyed on the mechanism of the group action
+
+The section was written when there were two variations and one axis (arity), and six more generalisations had since accumulated as prose around it. Re-keyed on **what the group acts on, how the induced action reaches the coordinates, and what constraint the property carries** — which absorbs all of them as rows: baseline, solvable, partial relaxations, k = 3, general k, chiral (A_n), digraphs, oriented/ternary, and general-transitive.
+
+**The organising invariant is now stated once and used everywhere: t, the number of orbits on coordinates.** At t = 1 the fixed complex is empty, χ = 0, and Oliver closes the case with no machinery — that is KSS at prime powers *and* the whole of the general-transitive theory. Every row is then the same question: how far is this setting from t = 1, and what is the fallback? The baseline's answer is μ(n), which is what row 6 makes precise — μ is what one falls back on when no transitive Oliver subgroup exists on the coordinate set.
+
+**Each row gained a free-form "what it teaches" entry**, which is the part that does not fit in a cell: the chain's price is 2.390 conditionally and *the loss of every ternary shape* unconditionally; the k = 3 row shows the optimisation survives while the constants do not, so the optimisation is the dividend of 2-homogeneity rather than the heart of the method; the directed row explains the factor 2 in η = 2t/(r−1) as self-pairing; the oriented row is the only one *stronger* than the baseline and hence the only place a counterexample can be sought; and two facts visible only reading down a column — the prime powers are the dividing line in every row for three different reasons, and self-duality is a hypothesis that only row 5 can switch off.
+
+**One stale figure found in the rewrite:** the section priced the chain at "a factor of 3.397", against `solvable-relaxation.md`'s 2.390 = (3 − 2√2)/(7 − 4√3). Fixed, along with "twelve of twenty-four residues" → six of twelve.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
