@@ -289,6 +289,22 @@ Asked whether the programme can say anything about digraphs. **The literature ch
 
 *The moral I had drawn — "constraining the property made the problem easier" — survives but means something duller than it looked:* the constraint disqualifies coordinate classes wholesale, which is a fact about the encoding rather than about oriented graphs.
 
+## 4r. `pending-checks.md` dehistoricised, and the PENDING-REBUILD tag split three ways
+
+**The tables.** Both current files are contiguous with no worklist tail: `mu_table_ladder.csv` at **777,613** (715,107 rows, ~4 h to finish) and `mu_table_exact.csv` at **71,288** (64,134 rows, ~18 h). Both have 0 uncertified rows, both put the minimum at 175813/3804661 at n = 2759, and `validate_table_v3.py` with the exhaustive one as baseline gives **26 PASS / 0 FAIL**, all μ equal on the overlap.
+
+**Cuts.** R7 (consume the ladder worklist by adaptive branch-and-bound) and R7a (rerun `ladder_verify.py` to 10⁶) are **retired**: the worklist existed to find candidate low n without computing B everywhere, and `mu_ladder_exact.py` now computes exact B at 15 ms/n, so the prune saves nothing. The user's framing is the right one — `ladder_verify.py` becomes useful again only far beyond 10⁶, where a lower-bound-only scan is meaningfully cheaper per value, and the two defects found in it (window [0.10, 0.85] not [0.10, 0.55]; fusion set 3..16 ∪ {25}) are recorded against that possibility. R0 and R0a rewritten around the two producers; R0b/R7c/R7d folded into a five-row **closed ledger** so references elsewhere still resolve. 830 → 718 lines with more current content in it.
+
+**The tag question, which was a real defect.** ⟦PENDING-REBUILD⟧ was doing three jobs and its banner claimed it did one. Split by what clears each:
+
+- **⟦REQUOTE-ON-EXTENSION⟧** — a table measurement (winner counts, shares, tails, first instances). **These, and only these, are pending on the two in-flight runs.** Nine sites.
+- **⟦PENDING-CERT-RUN⟧** — output of `wide_cert.py` / `fallback_cert.py` / `shape_realize.py`; coverage counts and shape-scan totals, not in the CSV at all. Extending the tables does nothing for them. Five sites.
+- **⟦NEEDS-ITS-OWN-RUN⟧** — the orbital-count distribution, which no script produces because t is not a CSV column. One site.
+
+The old banner asserted that only the last two kinds remained tagged, while nine sites were of the first kind — which is exactly why the tag had stopped being readable. New R0c states the scheme and the landing procedure; `CHECKPOINTS` primed with 36848 / 55814 / 71288 / 159027 so correctly-scoped historical figures report as old-checkpoint citations rather than staleness.
+
+*The general point, and it is the third time this session:* a marker that means "someone should do something" needs to name **which** thing, or it decays into "someone should look at this", which nobody can act on and everybody skips.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

@@ -149,7 +149,7 @@ TAIL_ROWS = [r for r in rows if r["n"] > CONTIG]
 # APPEND THE OLD MAXIMUM ON EVERY TABLE EXTENSION.  Two minutes, and skipping it
 # turns every historical figure in the documents into noise in PASS 1.
 CHECKPOINTS = sorted({c for c in [1306, 1428, 1540, 1572, 2000, 2007, 2212,
-                                  2298, 2376, 2600, CONTIG, NMAX] if c <= NMAX})
+                                  2298, 2376, 2600, CONTIG, NMAX, 36848, 55814, 71288, 159027] if c <= NMAX})
 
 def quantities(sub):
     if not sub:

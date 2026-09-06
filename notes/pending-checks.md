@@ -39,12 +39,11 @@
 > | `solvable_relaxation.py` | every batch; B ≤ B_solv on the current table | R1 |
 > | `a18_verify.py`, `t5_verify.py` | range-scoped dominations, which expire silently on extension | R1 |
 > | `mu_enumerate_v3.py` (extend) | only if a question needs it | R0 |
-> | `ladder_verify.py --resume` | only if the range moves, or if rung B / `CAP` change | R7 |
-> | `verify_witness.g` | any change to the construction; **run the `ARK_WITNESS_FTOP_SPLIT=1` control first** | R8 |
+> > | `verify_witness.g` | any change to the construction; **run the `ARK_WITNESS_FTOP_SPLIT=1` control first** | R8 |
 
 > **The table itself does not need recomputing.** The enumerator's scoring is unchanged from when the current rows were written, so rows already present are current values and a run in flight can continue. Everything owed above is downstream of the enumerator, or a script whose own scoring changed. The test for any artefact: does the script that produced it appear in the list?
 
-**Scope notes.** The table is a **contiguous prefix plus a worklist-driven tail**; quote distributional figures over the prefix only (R0). Single-degree work — the GAP battery, the CSP, the backbone probes, the template enumerator — is in `small-degree-verification.md` with its own run list, and touches this programme only through the exhaustiveness of its GAP stages, which licenses Part I's n = 10 and n = 12 comparisons.
+**Scope notes.** Both current tables are **fully contiguous, with no worklist tail**; quote distributional figures over the range only (R0). Single-degree work — the GAP battery, the CSP, the backbone probes, the template enumerator — is in `small-degree-verification.md` with its own run list, and touches this programme only through the exhaustiveness of its GAP stages, which licenses Part I's n = 10 and n = 12 comparisons.
 
 **Companion files.** `verification-lessons.md` — the failure-mode taxonomy and the reasoning behind the checks. `fusion-count-ceilings.md` — **⟦ARCHIVED⟧** the derivation of §3.3.5 as a joint optimum over (F, η); its conclusion is integrated, but it is keyed mod 24 and predates the entangled correction, so read it for the derivation and not for its constants. `shape-counting.md` — the enumeration, asymptotics and recomputation apparatus behind `aod` §6's counts; verified arithmetic, and in the canonical `check_doc_figures.py` invocation. `solvable-relaxation.md` — the same extremal problem with the chain relaxed to solvability; calibration only, nothing in the main line depends on it. `three-uniform-note.md`, `general-k-note.md` — the arity axis; `k3_galois.py` is the k = 3 Galois admissibility predicate, to be imported rather than re-derived. `chiral-graph-properties.md` — the A_n port. `monotone-transitive-note.md` — the general transitive setting. `literature-findings.md` — framing, deliberately not folded into the primary documents. `mu-theta-n2-note.md` and its LaTeX twin (identical in content) with `note-to-framework-bridge.md` — the standalone Θ(n²) note and its standing consistency check; **requote the bridge's §2 figures whenever a framework figure the note imports moves** (currently: the ladder floor with its range and argmin, and the mod-12 ceiling values). The **Lean formalisation** (`Basic.lean`, `Note.lean`, own `README.md`) tracks these documents and can fall out of step silently — see A9. `three-part-family-split.md` and the two resolution notes `a18-resolution.md` and `t5-resolution.md` are **⟦ARCHIVED⟧**, each carrying a banner saying what was integrated and what has moved; the resolution notes' *mathematics* is current and is the authority behind Lemma D2's replacement and Lemma C's coupling, and `a18-resolution.md` §4's r = q sub-case is still open. Session logs hold the review record, `session-log-11.md` current.
 
@@ -110,98 +109,45 @@
 
 *Can be launched in the background. Flags are checked against the scripts as they stand; where a run needs code that does not exist, that is said rather than papered over with a plausible-looking flag.*
 
-## R0. Extend the table, then rerun everything downstream
+## R0. The two tables, and what "current" means
 
-**DONE, and further extension is discretionary.** The rebuild is complete over the contiguous range **[6, 2600]** — all 2,186 eligible n, no gaps — plus one worklist row at **n = 2759** consumed under R7. `mu_table_safe_v4.csv` is the **baseline, not the current table**; its rows are lower bounds and 289 of them are known low. Extension costs roughly n^2.9 per value, so the next decade is expensive and nothing in the framework is waiting on it: decide to extend because a specific question needs it, not as owed work.
+**Two contiguous tables are in flight and neither is a worklist file** — no tail, no gaps, so every aggregate over either is a genuine range aggregate:
 
-```bash
-python3 mu_enumerate_v3.py --nmax <N> --fill-gaps --out mu_table_safe_v5_code_v3.csv
-```
+| file | producer | reach at last look | finishes in | what it is |
+|---|---|---|---|---|
+| `mu_table_ladder.csv` | `mu_ladder_exact.py` | **777,613** (715,107 rows) | ~4 h | exact B(n), certified above C(n,2)/25 by Theorem E.5 + `ladder-completeness.md` Prop 1 |
+| `mu_table_exact.csv` | `mu_exact.py` | **71,288** (64,134 rows) | ~18 h | exhaustive search, the arbiter |
 
-- **Use `mu_enumerate_v3.py`.** An enumerator whose SAFE cap cuts a fused class's twist by the block count produces lower bounds, not values — such a table may be a baseline, never an extension.
-- **Rows above the contiguous frontier are worklist rows, not range.** Values consumed under R7 are appended to the same CSV and are a low-density subsample. Quote distributional figures over the contiguous prefix; quote the floor and "nothing below X" over the whole file.
-- **A rebuild must never lower a value.** `validate_table_v3.py`'s group-A monotonicity check against `--baseline` is the signature to read on every batch.
-- **Rebuild the R7 worklist afterwards** — its pruning is keyed to a floor that has moved.
-- **Extending re-arms three things**, and they are easy to miss because none of them errors: the prefix/tail discipline (a worklist-driven extension selects by low score, so aggregates must be requoted over the contiguous part); every range-scoped claim of the form "at every row of the table", which is a *different statement* after the table grows; and `shape-counting.md` §3's floor rows, which are keyed to the computed floor.
-- **Append the old maximum to `check_doc_figures.py`'s `CHECKPOINTS`** on every extension. Two minutes, and skipping it turns every correctly-scoped historical figure into noise in PASS 1.
+Both have **0 uncertified rows** and both put the minimum at **175813/3804661 = 0.046210 at n = 2759**, so Corollary E.6 makes every row μ(n) rather than a bound on it. `validate_table_v3.py mu_table_ladder.csv --baseline mu_table_exact.csv` passes with all μ values equal on the overlap.
 
-## R0b. ~~When the 10⁵ run lands: retire the PENDING-1E5-EXACT-RUN tag~~ — DONE, against the 159,027-row ladder-exact table
+**The standing rules, which survive every extension:**
+- **A rebuild must never lower a value.** Group A's monotonicity check against `--baseline` is the signature to read on every batch; the value-agreement check beside it gives the equal/higher/lower breakdown and the tie count.
+- **`mu_enumerate_v3.py` remains the arbiter**, `mu_exact.py` the workhorse, `mu_ladder_exact.py` the one to run for reach. An enumerator whose SAFE cap cuts a fused class's twist by the block count produces lower bounds, not values — such a table may be a baseline, never an extension.
+- **Append the old maximum to `check_doc_figures.py`'s `CHECKPOINTS`** on every extension, or every correctly-scoped historical figure becomes noise in PASS 1.
+- **Requote what the extension moves.** Distributional figures move; the floor, its argmin and small-n first instances do not. See the tag scheme below.
 
-> **Retired 2026-09.** The run that landed was not `mu_exact.py` at 10⁵ but `mu_ladder_exact.py` at 159,027 — legitimate for the purpose because Corollary E.6 makes every certified value μ(n) exactly, and there is no uncertified row. Every one of the 27 tagged sites was recomputed against that table by one script (`/tmp/agg.py`'s logic, cross-checked against `validate_table_v3.py`'s INFO lines where both report the same quantity) and requoted in place with its range stated; the banner definition was replaced by a one-line note that the convention — **every measured figure names its range** — remains. Headline movements: one-part winners 743 → 23,743 (all still on the exact form (c−1)/(Fc−1)); S2's win share 34% → 16.5% with the bounded-cofactor share (n/Q(n) ≤ 25) at 35.2% — the multiplicative engine's reach is a bounded cofactor, not ω(n) = 2, which was the pre-entangled condition and was still framing §4.1 until this pass; the odd-n share below 1/12 **rose** 6.7% → 10.0% while the even share fell to a single value; class 11's median winner settled from 1.14× its ceiling to 0.99×; the fused-plus-foreign maximum reached cap₂(1) = 3 − 2√2 to five places at n = 157,221; S4 and S6 still empty; no sixth shape. Two stale non-tagged claims surfaced on the way — `ep` Part I's citation of n = 3059 as a two-foreign winner and the global minimum (pre-repair; it scores 0.0839 on a fused reading) and `aod` §5.1's 3239 at 0.043570 (0.055155) — both fixed. `solvable-relaxation.md`'s recount is the one figure set still scoped to its old table, since it needs `solvable_relaxation.py` rather than the CSV.
+> **The worklist discipline is dormant.** It applies again only if some future extension fills higher n from a worklist, since a worklist selects by low score and would re-create a biased tail.
 
-*What the tag marked, for the record: a figure whose **scope** was stale, not one whose value was wrong — each tagged figure named the range it was taken over and was correct on it.*
+## R0a. The two producers, and when to use which
 
-**What the tag covers.** Winner counts and shares, per-shape medians, census columns, the low-density tail, the part-count distribution, and any "over the table" aggregate — 23 sites at last count, most scoped to the old contiguous range [6, 2600] and a few to 36,848. **What it does not cover:** every theorem, closed form, ceiling and threshold, none of which a table extension can touch, and the floor and its argmin, which are extremal rather than distributional and stay valid on any superset until a lower value appears.
+`mu_enumerate_v3.py` is the reference implementation and stays the arbiter; **`mu_exact.py`** enumerates the same shape space with the same SAFE score by arithmetic instead of generic search; **`mu_ladder_exact.py`** scores the ladder menu plus S6/S11 exactly and is certified equal to B above 1/25.
 
-**The procedure, and it is deliberately all-or-nothing.**
+**Validation, done once and still the standard any replacement must meet:** every row of the then-current table reproduced exactly with low (missing shape) and high (over-score) mismatches reported separately, both zero; direct cross-checks against `v3.mu_bound` at n never previously computed; and an **independent spec-derived enumerator**, written from the shape-space description rather than from either script, agreeing on 139 values for 6 ≤ n ≤ 200 — the only check that would catch a case dropped by *both*.
 
-1. `python3 validate_table_v3.py <new table> --baseline mu_table_exact.csv --ladder ladder_weak.txt` — gates everything; a group-A FAIL means the run or the parser is broken and nothing downstream is readable.
-2. `python3 check_doc_figures.py <new table> *.md --pass pending` — lists every tagged site with the quantity recomputed at the new frontier where the CSV can supply it, and names the ones it cannot (the orbital count t is not a column, so the t-distribution figure needs its own run).
-3. Requote **every** site, then delete the tag from all of them and from the banner definition.
-4. Rerun the R1 battery and `fallback_sup.py`, and requote the certificate coverage counts, which are run outputs rather than table figures.
+**Cost, measured.** `mu_exact.py` scales as ~n^2.3 with a tail nearer n^2.9 per row. `mu_ladder_exact.py` is **4.3 ms/n at 2.5·10⁵ and 15 ms/n at 10⁶** after the interval-restricted scan, so a contiguous run to 10⁶ is ~3 h single-threaded and under half an hour on eight chunks. *Quote per-value cost by density band, not one aggregate rate: a δ < 0.10 value costs about twice a δ ≥ 0.22 one, so an n/s figure weights the hard values and understates any speedup.*
 
-*Do not retire the tag piecemeal.* A half-requoted document is worse than a fully stale one: the range words stop being a reliable guide to which population a figure came from, and that is exactly the confusion the prefix/tail discipline exists to prevent.
+> **A correction worth keeping.** An early estimate of `mu_exact.py`'s cost fitted only n ≤ 8,000 and was wrong by an order of magnitude in the tail. Re-time when the range changes rather than extrapolating a fitted exponent.
 
-**One thing to watch on arrival.** The floor is 0.04621 at n = 2759 and the conjecture's threshold is 1/25. If the extension produces any value below 0.04, Corollary E.6's hypothesis fails there and the collapse at that n reverts to the certificates — so the *first* thing to compute on the new table is the minimum, before anything else is requoted.
-
-## R0a. `mu_exact.py` — the same table, ~10⁴× faster, and how to run it to 10⁵
-
-**`mu_enumerate_v3.py` is the reference implementation and stays the arbiter; `mu_exact.py` is the one to actually run for extensions.** It enumerates the same shape space with the same SAFE score by arithmetic instead of by generic search: no (p, q) loop (p is read off each part; q is free in SAFE mode except for the foreign twist, so it is maximised per part rather than looped), r = n − Fc determined by subtraction, multi-part cases bounded by inequalities on the score. **The trusted base is identical** — Part 0's shape space, the flat cap F·C(c,2), Lemma B′, D2 domination, distinct foreign primes at a common top prime — and Proposition F.1 is **self-certified per n** as in v3's `mu_bound` (1/√δ ≤ k checked against the value found), deliberately *not* imported from the ladder, which would add a dependency on Part E realisability that v3 does not carry.
-
-**Validation already done, and the standard any replacement must meet:**
-- all **2,187** rows of the contiguous prefix in `mu_table_safe_v5_code_v3.csv` reproduced exactly, n = 2759 included, with low mismatches (missing shape) and high (over-score) reported separately — both zero;
-- direct cross-checks against `v3.mu_bound` at n never previously computed — 2602, 2604, 2607, 2680 — all exact, at 10³–10⁴× speedup (v3 exceeds 280 s per value by n ≈ 2,600 and times out at n = 3,003 where `mu_exact` takes 0.02 s);
-- an **independent spec-derived enumerator** (brute force over part multisets, written from the shape-space description rather than from either script) agreeing on 139 values for 6 ≤ n ≤ 200 — the only check that would catch a case dropped by *both*.
-
-**Cost, measured: 26 s to n = 5,000; 128 s to 10,000; the whole run scales as ~n^2.3.** So **to 10⁵ it is ~7 h single-threaded**, ~1.4 h to 50,000, ~40 min to 35,000. Chunking 8 ways divides that further but is no longer needed for a single overnight run.
-
-> **A correction worth reading before trusting any earlier estimate.** The first version of this section said ~n^2.5 and ~20 h to 10⁵. Both were wrong, from fitting only n ≤ 8,000. The real exponent in the tail was **n^2.9 per row** — a single-threaded run reached n = 35,000 in 14 h and was projecting **867 h** to 10⁵. The cause: `best_for_n` built a pool of every (F, c) with F·c ≤ n — about n·loglog n entries, ~10⁵ at n = 35,000 — sorted it by *size*, and tested `cap <= best` on each one. Sorting by **cap** instead makes that test a `break`, since a class can only matter if F·C(c,2) exceeds the running best, which at these densities means c ≳ 0.2n: a few hundred entries rather than 10⁵. Measured effect at n = 30,000: **5.9 s → 0.17 s per row, 34×**, with zero mismatches against both the 2,187-row reference table and 12 sampled rows of the earlier long run. The ETA weighting and the `--chunks` split points were both derived from the wrong exponent and are corrected too, and the heartbeat now reports rows/min when the rate drops below 1/s instead of printing "0 rows/s".
-
-**Progress is visible and the file is durable throughout.** Every `--progress` rows (default 1000), and at least every 30 s, the output is flushed and a timestamped line goes to **stderr**: current n, rows done, **percent of work** (weighted by n^1.5 — a linear row count reads 47% done when 16% of the work is done, because the last decade of a range costs far more than the first), rate, elapsed, ETA. Without the flush, rows sit in an 8 KB buffer and a run killed at hour 4 loses its tail; with it the file is a valid resume point at every moment. stderr keeps parallel parts readable and leaves stdout clean, and each line is tagged with its part filename. `--quiet` suppresses the heartbeat but keeps the flush; `--progress 0` does the same.
-
-**Resume is automatic and follows `mu_enumerate_v3.py`'s convention — there is no `--resume` flag.** An existing `--out` is *appended to*, not overwritten: rows already in it are skipped, and unless `--nmin` or `--fill-gaps` says otherwise the run restarts after its last row. **So an interrupted run is continued by reissuing the same command.** `--nmin` forces a start; `--fill-gaps` ignores the resume point and rescans for holes; a file whose first line is not this version's header is refused rather than appended to. A partial final row from a hard kill is truncated from the file and recomputed, so a resumed run is byte-identical to an uninterrupted one — tested by killing a run mid-range and reissuing (1,609 rows on disk at the kill; the completed file matches a clean run exactly).
-
-*The extension run, to 10⁵, on 8 cores.* Step 1 writes `mu_table_exact.csv.part1` … `.part8` in parallel; each part carries its own header, so step 2 merges with head+tail rather than a bare `cat`:
-
-```bash
-# 1. generate the eight parts in parallel  (~4.5 h wall; parts are independent).
-#    Reissue this same line after any interruption -- each part resumes itself.
-seq 1 8 | xargs -P8 -I{} python3 mu_exact.py --nmax 100000 --chunks {}/8
-
-# 2. merge, in order, once all eight have finished
-head -1 mu_table_exact.csv.part1 > mu_table_exact_1e5.csv
-for i in $(seq 1 8); do tail -n +2 mu_table_exact.csv.part$i; done >> mu_table_exact_1e5.csv
-```
-
-*Other invocations, none of which produce parts or need merging:*
-
-```bash
-python3 mu_exact.py --nmax 10000                                  # whole table to 10^4, single-threaded, minutes
-python3 mu_exact.py --nmax 100000                                 # same job single-threaded: ~20 h
-python3 mu_exact.py --nmax 100000 --nmin 50000                    # force a start, ignoring the resume point
-python3 mu_exact.py --nmax 100000 --fill-gaps                     # rescan for holes left by a targeted run
-python3 mu_exact.py --validate mu_table_safe_v5_code_v3.csv       # regression against the v3 table, ~2 min
-python3 mu_exact.py --cross 2600 2700 4                           # 4 random n checked against v3 directly (v3 is ~4 min/value here)
-```
-
-- **`--chunks i/N` splits for EQUAL WORK, not equal width** — per-n cost grows as ~n^1.5, so the boundaries sit at nmax·(j/N)^0.4. Equal-width chunks would leave one worker doing most of the run. Merged chunk output is row-identical to an unchunked run (verified). **Every part carries its own header**, so a part is a valid CSV on its own — it can be fed to `validate_table_v3.py`, or reopened for resume, without special-casing; merge with head+tail, not `cat`. **Every chunk needs the same `--nmax`**, since each rebuilds the sieve and the foreign table to nmax and derives its own range from `i/N`; mismatched `--nmax` across parts silently produces overlapping or missing rows.
-- **Run `--validate` after any edit.** It is the regression suite; the foreign-twist maximisation is the part that invites bugs (the best q is *not* the largest prime-power divisor of r − 1, because `orb` halves for even twists — at r = 41, Q = 8 gives 164 where Q = 5 gives 205).
-- **Everything under R1 still applies to the output**, including `validate_table_v3.py --baseline` for the never-lower-a-value check; `mu_exact.py` writes the same CSV columns as v3 so the downstream scripts take it unchanged.
-- **`--refined` is not implemented.** SAFE is the mode the documents quote; a refined-mode extension would need the strip logic and is out of scope for this script.
-
-**What a run to 10⁵ buys** (nothing currently depends on it, so this is mostly reach, not repair — except that it also re-establishes 9895–10000, lost to the buffering bug above): it extends the exact floor claim — the minimum over *all* n ≤ 10⁴ is 0.04621 at n = 2759, currently proved to 10⁴ — by a decade; it puts `approach-rate-note.md`'s Θ(log³n/n) fit against exact B(n) in the [10⁴, 10⁵) decade, where the competing-shape compression that flattens the fit at 10³–10⁴ has thinned out; and it lets `fallback_cert.py` run against true B rather than B_lo to 10⁵, which would make the closure of n = 50,817 and 89,697 independent of the B_lo fused-rung patch.
-
-**Already established, and not needing repetition** — but note the range: the run these came from lost its last 97 rows to the pre-flush buffering bug (it stops at n = 9894, not 10000; the last row is complete, and 97 rows × ~70 B is almost exactly one 8 KB buffer, which is how the bug was identified). So these hold **for 6 ≤ n ≤ 9894**: zero uncertified rows (F.1 self-certification throughout); the ladder never exceeds B and is **tight at all 185 joined values**; no three-part winners anywhere (2,191 one-part, 6,431 two-part); and the minimum density over every n in range is **0.04621 at n = 2759**. The current run to 10⁵ re-covers this range from scratch and will confirm or correct all four — check them against its output rather than re-quoting these.
+**Both writers share the same driver**: same CSV schema, resume by reissuing the identical command (a partial final row is truncated, not spliced over), `--progress` heartbeat flushed to stderr with rows, percent of work, rate and ETA, and `--chunks i/N` splitting for equal work.
 
 ## R1. Routine, after any new batch of table values
 
-> **R0/R1 are DONE over [6, 2600], and expectations are live again.** The rebuild is complete over **all 2,186 eligible n** — composite, non-prime-power — with no gaps, plus a single worklist row at n = 2759 from R7, and the full R1 battery passes: `validate_table_v3.py` **24 PASS / 0 FAIL / 14 INFO / 2 SKIP** with `--baseline` supplied (23 PASS without it, the baseline-only checks skipping), `converse_check.py` 0 violations with max cofactor 12 at (221, 157, 13), the S2 identity clear at every row, and per-n monotonicity showing **0 rows lowered and exactly 289 raised** — the exceedance list, row for row. Further extension is **discretionary**: nothing in the framework is waiting on it, and a decision to extend should be made on what a specific question needs rather than as owed work.
+> **R0/R1 are DONE, and expectations are live again.** Both tables are contiguous with no tail, and the full R1 battery passes on the ladder-exact table with the exhaustive one as baseline: **26 PASS / 0 FAIL / 16 INFO / 2 SKIP**, all μ values equal on the overlap, 0 higher, 0 lower.
 >
-> **If the range is extended, three things re-arm.** The prefix/tail discipline (a worklist-driven extension selects by low score, so aggregates must then be requoted over the contiguous part only); every range-scoped claim of the form "at every row of the table", which is a different statement after the table grows; and the floor rows of `shape-counting.md` §3, which are keyed to the computed floor.
+> **If the range is extended, two things re-arm.** Every range-scoped claim of the form "at every row of the table", which is a different statement afterwards; and the checkpoint list in `check_doc_figures.py`, which must gain the old maximum or PASS 1 fills with false staleness.
 >
-> Reference points so a deviation is recognisable: `validate_table_v3.py` gives **0 FAIL** on an enumerator output under the current scoring, but **not** when pointed at a *baseline*, where group A's re-derivation check fires on every row whose recorded winner is a cyclic-fused class scored under the superseded cut twist (18 rows on v4; see A22, which pairs that count with the 289). The S2-identity check in group B is deliberately *not* a second FAIL on a baseline: it returns INFO naming n = 78 and n = 222, which are the correct baseline answer, and FAILs only on some other set. `check_doc_figures.py` does not go to zero — most PASS 1 flags are coincidental numeric matches, so read it finding by finding. Certificate counts are requoted from their runs rather than carried forward; both certificates have been run against the completed table, returned 0 candidates, and their figures are now in `ep`'s certificate box and `aod` §5.1. The collapse coverage came back **unchanged at 90,299 of 90,299**, which is the outcome the entangled repair made uncertain — the repair removed an anti-permissive strip, so the candidate lists could have grown and did not. The ⟦PENDING-LADDER-REBUILD⟧ tags introduced to isolate the ladder are discharged with it: that run completed at floor **175813/3804661 = 0.046209898…**, n = 2759, nothing below 1/25 anywhere.
+> Reference points so a deviation is recognisable: **0 FAIL** on a current-scoring table, but **not** when pointed at a *baseline*, where group A's re-derivation check fires on every row whose recorded winner is a cyclic-fused class scored under the old cap. A FAIL there is the expected reading, not a defect.
 
-> **The adaptive follow-up at floor 0.05 is also complete, and it terminated after one value.** `mu_enumerate_v3.py` computed **B(2759) = 175813**, i.e. 175813/3804661 = 0.046209898…, equal to the ladder's own bound there. *(Quote the fraction, not the 5-place rounding: 0.04621 lies above the true value and cannot follow a ≥.)* M was then pinned below every remaining ladder value, so all other candidates were skipped and nothing further was written. **The skips are a result, not an omission:** every other n in range has a ladder lower bound strictly above 0.0462099 (next is 0.04801 at n = 11183), so none can be the minimiser and none needed computing. **Capture such skips from the log at the time**: the CSV shows a hole where the run proved a bound, and a gap between 2600 and the next row later reads as an unfinished job.
 >
 > **This makes the range minimum exact rather than bounded.** Ladder ≤ μ ≤ B pinches at 2759, so μ(2759)/C(2759,2) = 175813/3804661 exactly, granting the μ ≤ B_safe direction — and it is the unique global minimiser over n ≤ 10⁶. The table now carries **one row beyond its contiguous range**, n = 2759; `converse_check.py` and `validate_table_v3.py` both already scope their aggregates to the prefix and report it as tail, so no re-scoping was needed. A validator asserting a congruence on the matching block's residue would FAIL on any correct table.
 
@@ -212,7 +158,7 @@ TABLE=<current enumerator output>
 BASE=<previous table>
 
 # 1. gates everything: is the file a well-formed enumeration?
-python3 validate_table_v3.py $TABLE --baseline $BASE --ladder ladder_weak.txt
+python3 validate_table_v3.py $TABLE --baseline $BASE
 
 # 2. the per-n collapse certificate
 python3 fallback_cert.py $TABLE --verbose
@@ -255,7 +201,7 @@ python3 check_doc_figures.py $TABLE *.md
 
 **Static — one run per environment, not per batch.** `eta_derive.py` (the η column, derived and measured independently), `khomog_verify.py` (the k-homogeneity claims behind the `notes` §1 hypothesis table), `a18_rq_verify.py` (nine checks on Lemma D2q), `k3_galois.py` (the k = 3 Galois predicate, with its own self-test).
 
-**Deliberately absent.** `ladder_verify.py` never reads the table — it belongs to R7. `s7_scan.py` and `mu_fast.py` are not in the working set; group B covers what `s7_scan.py` would test.
+**Deliberately absent.** `ladder_verify.py` never reads the table, and is retired anyway (R7). `s7_scan.py` and `mu_fast.py` are not in the working set; group B covers what `s7_scan.py` would test.
 
 **Do not extend the table without rerunning this list in full.** `check_doc_figures.py --pass refs` and `validate_table_v3.py`'s coefficient assertion are what catch the omission mechanically. The Lean statements are read by no check here — see A9.
 
@@ -325,105 +271,17 @@ for i in $(seq 1 8); do python3 mu_ladder_exact.py --nmax 1000000 --out mu.csv -
 
 **What it does and does not replace.** It replaces nothing: `mu_exact.py` is the exhaustive route whose agreement is what shows the theorems were *applied* correctly, and the two must agree wherever both run. What it adds is reach — B(n), and hence μ(n) by E.6, at any single n up to 10⁶ in under a tenth of a second, with the trusted base being Part 0, Lemma B′, D2, E.5 and Proposition 1, all theorems. Rerun `--check` after any change to `orb`, to the SAFE cap, or to the shape space. **Not to be confused with `mu_fast.py` (2026-07)**, a pre-shape-space family menu that is superseded and should not be run.
 
-## R7d. `khomog_verify.py`: one vacuous check, and a finiteness claim resting on three points — DONE
+## R7. ~~Consume the ladder worklist with the adaptive branch-and-bound~~ — SUPERSEDED
 
-**A check that could not fail.** `check("AGL(1,8) is not 3-transitive (|G| = 56 < 336)", 8 * 7 < 8 * 7 * 6)` asserts an arithmetic tautology: no group computation enters it, so it passed by construction and tested nothing. Replaced by a computation that can fail — orbits on **ordered** triples, which come out as six orbits of 56 against one orbit on the 56 unordered ones, so the group is 3-homogeneous and not 3-transitive by the same data.
+**The worklist route is retired, and `ladder_verify.py` with it, at any range we intend to reach.** Its purpose was to find the n where B might fall below the floor without computing B everywhere; `mu_ladder_exact.py` now computes B **exactly** at 15 ms/n, so there is nothing for a lower-bound-and-prune loop to save. The 44,091-entry worklist, the `--floor … --adaptive` consumption, the `--resume` sidecar and the clamped-scan discipline are all history.
 
-**The finiteness of the 3-homogeneous list was spot-checked, not swept.** Pass 3 tested degrees 6, 7 and 16, then quoted an order bound at 64, 128, 256, and concluded "above degree 5 the list is exactly {8, 32}". That left **eighteen prime-power degrees in range untested** (9, 11, 13, 17, 19, 23, 25, 27, 29, 31, 37, 41, 43, 47, 49, 53, 59, 61). Since a solvable 3-homogeneous group is 2-homogeneous and hence of prime-power degree, and the maximal solvable candidate at a prime power is AΓL(1, c), sweeping every prime power in [6, 63] settles the range outright — now done: **22 degrees, only 8 and 32**, and the failures are not near-misses (orbit counts 2 to 11). The order bound is now asserted at **every prime power in [64, 4096]** (578 of them) with the O(log c / c) growth stated, rather than at three values under an "on" that means infinitely many. Whole run 2.5 s.
-
-**A bug found in writing the sweep, worth recording for its failure mode.** The general GF(p^m) needed for odd characteristic first used a hand-rolled long-division irreducibility test, which silently accepted a *reducible* modulus at q = 8 — `mul(2, 4)` returned 0 — after which the search for a multiplicative generator looped forever. The fix was to stop testing irreducibility and instead accept the first modulus under which x has order p^m − 1: primitivity is self-verifying, since a reducible modulus has zero divisors and x cannot then have full order, and it returns the generator for free. *A construction that fails loudly beats a clever test that fails silently.*
-
-## R7c. `solvable_relaxation.py` and `k3_galois.py`: audited, sped up, self-tests strengthened — DONE
-
-**`solvable_relaxation.py` had the O(N²) shape** `validate_table_v3.py`'s gap scan had: `best(n)` swept a ∈ [2, n/2] for every n, 126 s over the 50k table and ~20 min over the 144k one. The fix is the same *kind* of fix as `mu_ladder_exact.py`'s but with a different bound, and the arithmetic is worth keeping: a part only matters if SCORE[a] = a(P(a) − 1)/2 > best, and writing a = m·P(a) that is a²/m > 2·best, so with δ_solv ≥ 0.12 in range **m ≤ 2 or 3** — the admissible a are the prime powers and small multiples of them, not an interval. Enumerating a = m·c over prime powers with m ascending, stopping at the first m whose family is excluded, is an exact restatement of "SCORE[a] > best". **5× on the scan, 3× end to end** (126 s → 41 s at 50k), values identical at every n in [6, 4000) and on 400 values near 50,000. Pass 1 takes m = 1 first so `best` is near-optimal before pass 2 sizes its bound — the same ordering lesson as the ladder scan.
-
-It now also prints the **ratio distribution** (median, per-parity, max) that `solvable-relaxation.md` §4 quotes and no earlier version computed, so requoting the note no longer means recomputing by hand; and the multiplier census, labelled with its range. **22 checks pass over [6, 159,027]**, and the note is requoted against that run: equality share 41.9% → **23.5%**, median ratio 1.062 → **1.022** (1.010 even, **1.369** odd — the chain costs less at even n as n grows and more at odd n), maximum unchanged at 4.129 (n = 527), the m = 7 exceptional family still exactly three values, and the odd-n minimum still 0.12296 at n = 551 after a sixty-fold extension.
-
-**`k3_galois.py` was correct; its self-test was weaker than it looked.** Three additions, two of which found something:
-- The message "the affected block sizes are a in [35, 55, 65], all with gain lpf(a) = 5" was a **range-scoped claim stated as a law** — an accident of a < 70; a = 77 gains 7 and a = 143 gains 11. Now names its range and asserts the counterexample.
-- **The cyclicity clause gcd(d, a′) = 1 appeared dead** under a clause-by-clause ablation over a < 40: no verdict changed when it was dropped. It is not dead — its smallest witness is **a = 155, d = 31, a′ = 31** (and a = 253, d = 23), where conditions (i) and (iii) both hold and only cyclicity rejects the split. *A clause whose smallest counterexample sits outside the test range is indistinguishable from a dead one; the fix is to name the witness, not to widen the sweep.*
-- **gcd(d, 6) = 1 is genuinely redundant**, and provably: d | 2^a − 1 is odd, and for the odd a that gcd(a, 6) = 1 forces, 3 never divides 2^a − 1 since ord₃(2) = 2. Kept in the predicate as a guard for callers arriving by another route, but the self-test now asserts its redundancy rather than leaving a reader to expect it to bite.
-- A test now pins the docstring's gain-versus-top-prime distinction (41 admissible pairs below a = 46, one with gain ≠ q) instead of leaving it to prose.
-
-## R7a. Rerun `ladder_verify.py` to 10⁶ at the corrected window
-
-**Owed as a run.** `LO_X, HI_X` was `0.10, 0.55`; the right end clipped the **two-part** family, whose balance point exceeds 1/2 whenever the foreign block is the smaller part — at η = 1 that family is still worth (1−x)², above 1/25 out to x = 0.8. Measured against B(n) at **every** tabulated n (`ladder_vs_B.py`, not only at worklist values): the ladder fell short at **274 of 32,861**, by up to **1.835×** (n = 1122, `1x619 + 1x503*`, c/n = 0.5517), every one the two-part shape with its winning c in (0.55, 0.75]·n. At `HI_X = 0.85` the ladder equals B at **all 32,861**.
-
-**Why no published figure is wrong, and why that is the uncomfortable part.** A clipped window under-scores, and the script maxes over families, so every floor it reported stayed a valid lower bound and Corollary E.6 (which consumes only ladder > 1/25) is untouched — a rerun can only raise the floor. But `validate_table_v3.py --ladder` joins on **worklist** values, and the worklist is selected by *low* score, so the shortfalls sat almost entirely outside the joined set and the tightness check passed throughout. **A lower bound loose in a way no check can see** is the same failure mode the file's own header records for the S7 branch, one axis over.
-
-**A second correction, found while writing `ladder-completeness.md`:** the S7 fusion set skipped F ∈ {13, 14, 15}, whose caps cap_F(1) = 0.0472, 0.0447, 0.0425 sit above the floor — cap_F(1) crosses 1/25 between F = 16 and 17, so a menu complete above the floor needs every F ≤ 16. Now `FSET = 3..16 ∪ {25}`. No tabulated winner used the missing three, so nothing moved; the ladder was complete by luck.
-
-**What the rerun's values MEAN, beyond the table.** `ladder-completeness.md` proves (Proposition 1, counting on SAFE terms) that above δ = 1/25 a B-optimal configuration is in the ladder's menu **or** is a two-foreign shape r₁\* + r₂\* / c + r₁\* + r₂\* at a common top prime — the one family the menu lacks — and (Proposition 2) that those shapes cap at 1/9 (even n) and 1/16 (odd n), below every class ceiling, so under (BCG-AL) at ε ≤ 0.129 (`aod` §3.5.3) they never win for large n. On the table they never win (`offmenu_scan.py`: closest 0.842 of B at n = 56, 0.834 at n = 4376 — the S6 pair (1459, 2917) at exactly 1/9). So a ladder value at n > 36,848 may be read as B(n) — hence μ(n) by E.6 — *unless* an off-menu shape beats it there, which `offmenu_scan.py` extended to that range would detect. The extrapolation is a named, checkable exception, not a presumption.
-
-**On rerun, expect:** the same floor 0.04621 at n = 2759 (where the ladder was already tight) or higher, a **shorter** worklist than 44,091, and possibly a different set of decade minima. Requote the worklist length wherever it appears — `check_doc_figures.py` invariant I10a checks the three banners agree — and rerun `validate_table_v3.py --ladder`, whose join set moves with the worklist.
-
-**The run, and the check that found this.**
-
-```bash
-# 1. the ladder itself, at the corrected window (overnight; ~80 ms/value at 10^6)
-python3 ladder_verify.py 1000000 --floor 0.04
-
-# 2. the every-row comparison against B -- this is what caught the clip, and it
-#    is NOT validate_table_v3.py --ladder, which joins on the worklist only
-python3 ladder_vs_B.py mu_table_exact.csv           # expect: 0 short, 0 OVER
-python3 ladder_vs_B.py mu_table_exact.csv --hi-x 0.55   # reproduces the defect
-
-# 3. the off-menu shapes (two foreign primes at a common q) against B -- the only
-#    way ladder < B can happen above 1/25; expect 'off-menu >= B: 0'
-python3 offmenu_scan.py mu_table_exact.csv
-```
-
-`ladder_vs_B.py` takes the table as its argument, finds `ladder_verify.py` beside itself or in the working directory (`--ladder PATH` to override), and imports it as a library with its range set from the table and its report suppressed. It reports **short** and **OVER** separately: a shortfall costs sharpness only, while an over-score would break ladder ≤ B_refined and hence Corollary E.6, so a nonzero over count exits nonzero unconditionally and a shortfall does so only under `--strict`. It also prints where each shortfall's winning c sits relative to the window, which is the line that identified the cause — at `--hi-x 0.55` it reads *274 of 274 lie OUTSIDE the scan window*, i.e. a window clip and not a missing family. Cost is one full scan per row with no early return, a few minutes over 30,000 rows, so it belongs after a scoring or window change rather than in the routine battery.
-
-## R7. Consume the ladder worklist with the adaptive branch-and-bound
-
-> **R7 IS DONE at the corrected scoring, and the rerun changed the tail without touching the floor.** Run to 10⁶ against a floor of 0.04: **44,091** worklist entries (down 1,299), minimum **0.04621 at n = 2759**, nothing below 0.04, and the ladder tight against B at all **28** joined values where the pre-fix run was short at 16 of 37. Decade minima 0.05703 / **0.04621** / 0.05829 / 0.06391, so the descent is one decade wide as a statement about δ rather than about the scan. Exactly two entries fall below 0.05 — 2759 and 2183 — both already in the μ table, so no further exact B below 10⁶ can move the floor; the independent adaptive `mu_enumerate_v3.py` run at threshold 0.05 returns the same two values and the same global minimum. `validate_table_v3.py --ladder` now passes.
+> **What survives, and it is the result rather than the method:**
 >
-> **What the change was, and why it needed a rerun rather than a patch.** The cut valued a fused class at F·orb(c, dmax) with dmax stripped of F_mid's primes; that is not a necessary condition (entangled generators realise the full twist at any F_mid), and it understated the family at even F with c ≡ 1 (mod 4) — halving the intra term exactly at the fused-plus-foreign shapes that win at the arithmetically weakest n. An understating ladder is still a valid floor, so **the minimum 175813/3804661 at n = 2759 and its uniqueness are unaffected** (that value is tight against B). What is superseded is the *shape* of the low tail: worklist membership, the decade minima, and which n are worth an exact B. Against the computed table the corrected scoring is tight at all 37 joined values where the cut left 16 short by up to 1.81×. **`--resume` will refuse, correctly, since the source hash has changed; this needs a full rerun.**
+> > **min { μ(n)/C(n,2) : n ≤ 10⁶, composite, not a prime power } = 175813/3804661 = 0.046209898…, attained only at n = 2759**
 >
-> **What the run establishes.** `ladder_verify.py` to 10⁶ under the corrected scoring produces a **44,091-entry** worklist with minimum 0.04621 at n = 2759 and nothing below 1/25, so the 0.0400 run prunes everything and writes no rows. The 0.05 run computed **one** value — **B(2759) = 175813**, i.e. 175813/3804661 = 0.046209898… — which *equals the ladder bound there*, pinning M below every remaining entry and skipping the rest. **The skips are the result**: no other n can be the minimiser, because every other ladder bound is strictly above it.
->
-> **Run the ladder before consuming its worklist**, and rerun it on any change to a rung's scoring or to `CAP`. *(The v10 run is current; `--resume` correctly refused the v9 state, the source hash having changed.)* `ladder_verify.py` scores rung B **and the S7 branch** at the full twist and keys `CAP` mod 12, so a worklist or floor from any other scoring ranks against the wrong ceiling. **The check that catches a scoring regression here is `validate_table_v3.py --ladder`**, whose gap check FAILs when the ladder falls short of B at any joined value — which is how the cut was found, and the reason that check is a FAIL rather than an INFO: an understating ladder is sound, so it fails silently everywhere else.
+> — now with the stronger provenance that the contiguous exact table *contains* the argmin rather than reaching it by a worklist row, and no entry anywhere below 1/25. The ladder gives μ ≥ this unconditionally (it exhibits groups); B gives μ ≤ this granting μ ≤ B_safe; above 1/25 Corollary E.6 closes the gap outright.
 
-```bash
-python3 ladder_verify.py 1000000                      # regenerates ladder_weak.txt
-python3 ladder_verify.py 2000000 --resume             # extend, reusing the prior scan
-python3 mu_enumerate_v3.py --nlist ladder_weak.txt \
-        --floor 0.0400 --adaptive --out <current table>
-```
-
-> **`--resume` makes extension cheap, and it is exact rather than approximate.** The per-n scan is *clamped*: it stops as soon as a value clears the asymptotic bound, so for every n above that bound the run learns exactly one thing and records nothing finer. Every n it learns more about is by definition in the worklist. So a completed run's worklist plus its N already contains everything the scan produced, and a resumed run reproduces a from-scratch one **byte for byte** — verified by running 20,000 in one pass and as 8,000 + resume, with identical worklists and identical per-class statistics.
->
-> State lives in a sidecar `ladder_weak.txt.state.json` (override with `LADDER_STATE`), never in the worklist itself, whose format `mu_enumerate_v3.py --nlist` depends on. **It records N, not max(worklist)** — the point of resuming is knowing which n were examined and *cleared*, which is exactly what the worklist does not say.
->
-> **The resume refuses on any edit to the script**, comparing a hash of the whole source. That is deliberately conservative — there is no reliable way to distinguish a scoring change from a comment, and the asymmetry is stark: a spurious full rerun costs hours, a silently mixed worklist costs the credibility of every figure drawn from it. It also refuses if the worklist and state disagree on length, if a worklist line is malformed, or if the asymptotic bound has moved (which would invalidate "absent means cleared").
-
-**The result, stated as a fraction because a rounded figure cannot follow a ≥:**
-
-> **min { μ(n)/C(n,2) : n ≤ 10⁶, composite, not a prime power } = 175813/3804661 = 0.046209898…, attained only at n = 2759.**
-
-The ladder gives μ ≥ this unconditionally (it exhibits groups); B gives μ ≤ this at 2759 granting μ ≤ B_safe. The two pinch, so the range minimum is **exact**, not bounded — and the ~997,000 uncomputed n need no B(n), since the ladder already places each of them above it.
-
-**What `--floor … --adaptive` does that a plain `--nlist` run does not.** Prunes on the supplied lower bound (LB(n) ≥ floor already proves δ(n) ≥ floor); seeds unpruned n at floor·C(n,2) so it need only find *some* clearing configuration; appends exact rows to `--out` with the full schema and witness, never rewriting or reordering; and reads the table back as prior knowledge, so existing rows tighten the search.
-
-**Set the floor to the question.** It is an interrogation threshold, not the known answer — setting it to the current floor prunes everything.
-
-| `--floor` | what it settles |
-|---|---|
-| **0.0400** = 1/25 | whether any n leaves room for **s = 4**, the first fallback branch with no theorem |
-| the current table floor | whether anything undercuts it |
-| the ladder's global floor + ε | whether the argmin's B(n) exceeds the ladder bound there — **run; it does not, they are equal** |
-
-Run in that order; the cheap one may answer the expensive one's question. `--nmax` caps a `--nlist`, which is how to defer five-figure entries — at n^2.9, n ≈ 50,000 costs roughly 10⁴ times an n = 2,000 row.
-
-**Cautions.**
-
-- **Needs R0 finished** — pruning and the part-count cap are both keyed to a floor read off the table.
-- **A skipped n is a recorded result, not a gap.** Adaptive mode writes nothing for an n it prunes, so the CSV shows a hole where the run proved a bound. Capture the examined-and-cleared set from the log at the time; six months on, a gap between 2600 and the next row reads as an unfinished run rather than a finding.
-- **Never combine with `--refined`.** The script refuses it: adaptive mode appends rows, the schema records no mode, so a refined row in an unconditional table would be undetectable.
-- **Rerun R1 afterwards** — the job extends the table.
-- **Do not overwrite the worklist.** `LADDER_OUT` is honoured; each run's file is the evidence for §3.7 and §5.2.
-- **Probe before committing an expensive n.** A targeted scan over the two-part census shapes, scored with `mu_enumerate_v3.py`'s own `value()`, settles the floor question whenever the answer is "clears". It reproduced B(n) exactly at all eleven worklist values where B was independently known.
+**When `ladder_verify.py` would become useful again:** only far beyond 10⁶, where a lower-bound-only scan is meaningfully cheaper per value than computing B. At 15 ms/n for exact B that crossover is not near, and until it is, running the ladder alone buys a weaker statement for no saving. *If it is ever revived, the two defects found in it must be carried over: the block-size window must be `[0.10, 0.85]`, not `[0.10, 0.55]` (the narrow one clipped the two-part family at 274 tabulated n, understating by up to 1.8×), and the fusion set must be 3..16 ∪ {25}, not 3..12 ∪ {16, 25} (cap_F(1) crosses 1/25 between F = 16 and 17).*
 
 ## R8. Widen the Part E realisability battery
 
@@ -484,6 +342,36 @@ Plus three **entangled-generator regressions** whose orbital multisets are known
 *Script: `chiral_mv.py` (`--verify` runs the regression, `--table N` prints the closed forms). The question — whether any chiral half of the Hamiltonian-cycle complex is **ℤ-acyclic**, the lowest rung at which a counterexample could exist — is answered **no**, at every n ≡ 1 (mod 4); see the session log for the closed forms and the argument.*
 
 **What remains.** Only the n = 5 torsion, and only if one wants the Smith form rather than the answer: the connecting map is ℤ⁶ → ℤ⁶ with cokernel (ℤ/2)², elementary divisors (1,1,1,1,2,2). The regression at n = 5, 6, 7 should be re-run after any change to `chiral_mv.py`; it checks the closed forms against direct 𝔽₂ homology and asserts non-negative Betti numbers, which is what catches the boundary-orientation bug described in the script header.
+
+## R0c. The three pending tags, and what clears each
+
+*One tag for three different pending things was the confusion; they are now separate and each is named for the thing that clears it.*
+
+| tag | what it marks | cleared by | affected by the in-flight runs? |
+|---|---|---|---|
+| **⟦REQUOTE-ON-EXTENSION⟧** | a table measurement — winner counts, shares, low-density tails, first instances | requoting from the table; `check_doc_figures.py` recomputes most of them and `validate_table_v3.py`'s INFO lines print the rest | **yes** — these are exactly what the two runs move |
+| **⟦PENDING-CERT-RUN⟧** | an output of a certificate or shape script (`wide_cert.py`, `fallback_cert.py`, `shape_realize.py`) — coverage counts, shape-scan totals | rerunning that script | **no** — extending the tables does not touch these |
+| **⟦NEEDS-ITS-OWN-RUN⟧** | the orbital-count distribution, which no script produces because t is not a CSV column | a bespoke run (see `notes` §9.7 for the formula) | **no** |
+
+*A fourth tag, ⟦PENDING-1E5-EXACT-RUN⟧, was retired earlier and its notice has been folded away; the range convention it enforced is now invariant I7's job. Nothing should reintroduce it.*
+
+**So the answer to "what are these pending on" is: only the first kind is pending on the current runs.** Nine sites were of that kind while the banner claimed all of them were script outputs, which is what made the tag unreadable. Untagged measured figures are not exempt from range discipline — they name their range under invariant I7 — and structural claims, closed forms, ceilings and theorems were never in scope for any tag.
+
+**When the two runs land:** rerun `check_doc_figures.py <table> *.md`, requote every ⟦REQUOTE-ON-EXTENSION⟧ site, and rerun `solvable_relaxation.py <table>`. The certificate and own-run tags stay put.
+
+> **`CHECKPOINTS` is already primed.** 36848, 55814, 71288 and 159027 have been added, so a figure correctly scoped to any of those frontiers is reported as *matching an old checkpoint* — a historical citation to leave alone — rather than as unexplained staleness. Add the new maxima on the next extension too; it takes a minute and skipping it turns every correctly-scoped historical figure into noise in PASS 1. Expect the old-checkpoint counts to be large and mostly benign: 16 in `aod` on the current run, which is what a document with a long recorded history should look like.
+
+## Closed, kept as a one-line ledger
+
+*Items retired in place rather than deleted, so a reader meeting a reference to them elsewhere can tell what happened. Full accounts are in the session logs.*
+
+| item | what it was | outcome |
+|---|---|---|
+| **R0b** | retire the ⟦PENDING-1E5-EXACT-RUN⟧ tag once a run passed 10⁵ | **done** against the ladder-exact table; all 27 tagged sites requoted, banner replaced, the range convention now enforced by `check_doc_figures.py` invariant I7 |
+| **R7** | consume the ladder worklist by adaptive branch-and-bound | **superseded** — `mu_ladder_exact.py` computes exact B at 15 ms/n, so a lower-bound-and-prune loop saves nothing |
+| **R7a** | rerun `ladder_verify.py` to 10⁶ at the corrected window | **moot** with R7; the two window/fusion-set defects it found are recorded there in case the script is ever revived |
+| **R7c** | audit `solvable_relaxation.py` and `k3_galois.py` | **done** — the former had the same O(N²) sweep the validator had (5× on the scan, 3× end to end, 22 checks pass to n = 159,027); the latter's self-test had a range-scoped claim stated as a law and a clause whose only witness (a = 155) sat outside the test range |
+| **R7d** | audit `khomog_verify.py` | **done** — one vacuous check (an arithmetic tautology no computation could falsify) replaced, and the {8, 32} finiteness claim swept over every prime power in [6, 63] rather than three spot checks |
 
 ## §2a. Needs human thought
 
@@ -813,7 +701,7 @@ Promoting the note's findings into `aod` raises the value of a second reading ra
 
 ### A0b. `validate_table_v3.py` — the three groups
 
-`python3 validate_table_v3.py <current table> --baseline <previous table> --ladder ladder_weak.txt`
+`python3 validate_table_v3.py <current table> --baseline <previous table>`
 
 - **A. Table integrity** — well-formedness, Lemmas B′ and D2 on each witness, re-derivation of `mu_bound` from the witness by the G.3 formulas, the density column (A20), certification, monotonicity against the baseline, **value agreement against the baseline**, and the **Part E preconditions** (T2). *The monotonicity check is the FAIL gate — a value going down is a defect under every reading — and the value-agreement check beside it is INFO carrying the equal/higher/lower breakdown, the coverage either way, and the count of **ties** (equal value, different recorded witness). It sits immediately above the shape-migration check because that check is read against it: a migration with zero value differences is a tie, not a disagreement. Compared on the integer `mu_bound`, and reported as `ALL equal` or raw counts — never a percentage, since a negative control corrupting one value in each direction printed `100.00%`.* A FAIL means the run or parser is broken.
 - **B. Exact claims, holding at every n** — Prop F.1, cap_F(η), S2's 1/F, layer-by-top-prime, S6 emptiness, Lemma C exposure, the cyclic layer's pairwise coprimality, the feasibility criterion, Part G.4's per-axis bounds, the within-class cross coefficient, and the foreign-side residue patterns. The matching block's residue prices nothing, so the exact checks live on r, not c; the retired c mod 8 patterns are kept as group-C INFO, where a population at the residues the old law forbade is positive evidence. A FAIL is a real contradiction between table and documents.
