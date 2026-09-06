@@ -76,7 +76,7 @@ Usage:
     python3 check_doc_figures.py mu_table_safe_v2.csv *.md --pass scope
     python3 check_doc_figures.py mu_table_safe_v2.csv *.md --quiet
 """
-import csv, sys, re, collections, statistics, argparse
+import csv, os, sys, re, collections, statistics, argparse
 
 ap = argparse.ArgumentParser()
 ap.add_argument("table")
@@ -1342,8 +1342,20 @@ if A.only in ("all", "census"):
             for d, r in cens.items():
                 print(f"   {d}: {len(r)} rows, {', '.join(sorted(r, key=lambda x: int(x[1:])))}")
     else:
-        files = list(cens)
-        allS = set().union(*(set(r) for r in cens.values()))
+        # THE TWO CANONICAL COPIES are arithmetic-of-density.md and
+        # enumeration-proof.md; they must agree row for row.  Any OTHER census --
+        # three-uniform-note.md re-asks the same shapes at k = 3 -- is keyed by the
+        # same S-numbers on purpose (append-only, so the join survives) but words
+        # each row for its own problem, so its DESCRIPTIONS are not compared.  What
+        # is checked there is the key: every S-number it uses must exist in the
+        # canon, and any canonical S-number it lacks is reported as INFO, since a
+        # new k = 2 row is a question the other document has not yet asked, not a
+        # drift.
+        CANON = [d for d in cens if os.path.basename(d) in
+                 ("arithmetic-of-density.md", "enumeration-proof.md")]
+        files = CANON if len(CANON) == 2 else list(cens)
+        others = [d for d in cens if d not in files]
+        allS = set().union(*(set(cens[d]) for d in files))
         for sid in sorted(allS, key=lambda x: int(x[1:])):
             have = [d for d in files if sid in cens[d]]
             if len(have) != len(files):
@@ -1357,7 +1369,17 @@ if A.only in ("all", "census"):
                 print(f"   {sid}: shape descriptions differ ->")
                 for d in files:
                     print(f"        {d}: {cens[d][sid][:70]}")
-        print(f"\nchecked {len(allS)} S-numbers across {len(files)} censuses.")
+        print(f"\nchecked {len(allS)} S-numbers across the {len(files)} canonical censuses.")
+        for d in others:
+            extra = sorted(set(cens[d]) - allS, key=lambda x: int(x[1:]))
+            lacking = sorted(allS - set(cens[d]), key=lambda x: int(x[1:]))
+            if extra:
+                findings += 1
+                print(f"   {d}: uses S-numbers NOT in the canon: {', '.join(extra)} -- "
+                      f"S-numbers are append-only and allocated in the canon first")
+            if lacking:
+                print(f"   [info] {d}: keyed by the canonical S-numbers; has not yet asked "
+                      f"its question for {', '.join(lacking)}")
 
         # MODULUS GUARD on the whole census row, not just the description.
         #
@@ -1611,6 +1633,7 @@ if A.only in ("all", "witness"):
     # sentence, which is the same discipline PASS 8 enforces on prose.
     MARK = ("v2", "v3", "v4", "pre-repair", "pre-correction", "previous", "earlier",
             "old", "superseded", "was ", "were ", "ladder", "worklist", "menu",
+            "tie", "both score", "score the same", "scores the same",
             "mu_fast", "historic", "cap", "ceiling", "class", "descent", "b_lo",
             "lower bound", "rises", "rose", "lifts", "lifted", "under the corrected")
     RIGHT = ("cap", "ceiling", "class")     # "0.08579 for the classes they sit in"
@@ -1624,10 +1647,24 @@ if A.only in ("all", "witness"):
         return (any(k in left for k in MARK) or any(k in right for k in RIGHT)
                 or any(k in line.lower() for k in
                        ("mu_fast", "ladder_verify", "worklist", "menu")))
+    # A document about a DIFFERENT PROBLEM quotes densities that are not mu(n)/C(n,2)
+    # at k = 2: delta_3 at k = 3, beta_k at general k.  Comparing those against the
+    # k = 2 table is a category error, not a finding -- three-uniform-note.md's
+    # "0.0027 at n = 36" is a k = 3 density and is right.  Such documents declare
+    # themselves in their first lines; the exemption is by declaration, not by
+    # filename, so a new note on another arity inherits it automatically.
+    OTHER_PROBLEM = re.compile(r"\bk\s*=\s*3\b|3-uniform|k-uniform|general k", re.I)
+    def _other_problem(txt):
+        head = txt[:1500]
+        return bool(OTHER_PROBLEM.search(head)) and "mu_table" not in head
     hits = 0
     for d in DOCS:
         try: txt = open(d).read()
         except OSError: continue
+        if _other_problem(txt):
+            print(f"   {d}: about another arity -- densities there are not k = 2 "
+                  f"table densities; not compared")
+            continue
         shown = False
         for ln, line in enumerate(txt.split("\n"), 1):
             for m in NW.finditer(line):
