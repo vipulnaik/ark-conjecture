@@ -173,6 +173,19 @@ Fixed, with two smaller costs the profile then exposed: `prime_power_base` memoi
 
 *Incidentally, on the two new tables:* they agree at all 50,062 common rows, the ladder-exact file reaches **n = 159,027** with **0 uncertified rows**, and the minimum density over both is still **0.04621 at n = 2759** — so Corollary E.6 applies at every row of both, and the floor has not moved at three times the previous frontier.
 
+## 4i. The backtrack ceiling, implemented
+
+The four-seed run (§4h's companion finding) showed the stall is neither the default ordering nor a barrier at 304, but a shelf at 11–12% of the depth that belongs to the 242-condition battery. What it could not show is whether any seed is *progressing*, because `depth<=` is a running maximum that saturates in seconds. `stage4_fast.py` now logs two numbers that do:
+
+- **`ceil`**, the backtrack ceiling — the shallowest decision level still holding an untried alternative; a ceiling of *d* means the whole tree under the first *d* − 1 decisions is refuted. Says *what* is settled.
+- **`done`**, the refuted fraction — each node carries its share of the tree and a branch banks its weight when it ends, whether at a leaf or killed by propagation. Reaches 100% exactly at completion. Says *how much*.
+
+**Two implementation traps, both hit, both of which produce a plausible wrong number.** The ceiling is not a running max of "entered the second branch at depth k" — deep levels do that immediately while level 0 is open, so it saturates as uselessly as `depth<=`; it has to be read off the decision stack. And the refuted fraction is not Σ2^−(k+1) over levels on their second value: that credits only subtrees the stack walked over, so a branch killed by propagation is never counted, and on a fully-refuted toy instance it read **50%**. Since propagation is what does the pruning here — the memo rate says lattices rarely complete — that undercount would have been the *normal* reading. Hence the weight accumulator.
+
+**Verified on synthetic checkpoints before shipping**, exercising all three exit paths: forced-UNSAT 100% refuted, full enumeration 100%, `--first` well below; both fields monotone across every heartbeat; solution pickles unchanged. No new flag and no change to the search, so the seed invocation is untouched.
+
+*The general lesson is the one this session keeps re-learning in different clothes:* a progress measure that saturates is not a progress measure, and the two natural implementations of the replacement both fail silently in the direction that flatters the run. Test a diagnostic against an instance whose answer you know before trusting it on one whose answer you want.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

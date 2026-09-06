@@ -402,12 +402,70 @@ for s in 1 2 3 4; do
   ( cd seed$s && nohup python3 stage4_fast.py --first --seed $s > run.log 2>&1 & )
 done
 ```
-One core each. Watch `depth<=` in each `run.log`, not the node count: **the number that matters is whether any seed exceeds 304.**
+One core each. Watch `depth<=` in each `run.log`, not the node count: **the number that matters is whether any seed exceeds 304.** *(Run; all four did — see the outcome table below. The follow-up question is no longer "does a seed get deeper" but "is any seed making progress", which needs the backtrack-ceiling counter proposed there.)*
 
 **2. Read the outcome either way — both directions are informative.**
 - *A seed finds a solution in minutes* → the stall was variable ordering, not structure. Take its `solution_seed<N>.pkl` to `chi_test.py`, and expect the χ test to kill the canonical extension as it has every previous one.
 - *All seeds stall at comparable depth* → real evidence that the exhaustive 242-condition battery constrains where the truncated 75-condition one did not. That is the interesting direction: a completed UNSAT at n = 10 is the theorem this pipeline exists to produce. It does not prove UNSAT, but it is the first sign the battery is biting.
 - *Seeds stall at widely differing depths* → ordering-sensitive, and the deepest seed is the one to let run.
+
+### Outcome of the seed run (2026-09)
+
+**Four seeds, ~5.5 minutes each, one core apiece.** Every one exceeded 304, and every one then pinned in the same way the default did:
+
+| seed | `depth<=` | share of 3,780 | nodes @ 5.5 min | rate first → last | memo | memo per 1k nodes |
+|---|---|---|---|---|---|---|
+| 1 | **451** | 11.9% | 359,583 | 1051 → 1090 | 44 | 0.12 |
+| 2 | **442** | 11.7% | 190,717 | 842 → 578 | 49 → 55 | 0.29 |
+| 3 | **446** | 11.8% | 280,741 | 801 → 851 | 41 → 42 | 0.15 |
+| 4 | **423** | 11.2% | 181,912 | 476 → 551 | 43 → 45 | 0.25 |
+| *default* | *304* | *8.0%* | *1.16M @ 2 h* | — | *769* | *0.32* |
+
+**Read it as the second bullet above, with one correction to §16's framing.** No seed found a solution, and none is descending: each hit its maximum within the first 30 s and has not moved since, exactly the default's behaviour at a different depth. So the stall is **not** an artefact of the default variable ordering — that was the hypothesis this run was designed to test, and it is refuted. But **304 was not a structural barrier either**: the reachable depth is ordering-dependent to the tune of 423–451 across seeds, a spread of 28 out of 3,780 (0.7% of the axis) that sits ~120 above the default. The right reading is that the tree has a shelf somewhere around 11–12% of the depth, that the default ordering hit a slightly worse spot on it, and that **the shelf itself is a property of the 242-condition battery** — which is the interesting direction: the exhaustive battery is constraining where the truncated 75-condition one was not, and at V = 1,242 a solution appeared at depth 148 in 20 seconds.
+
+**What the memo column says, and it corroborates.** All four seeds sit at 0.12–0.29 memo entries per thousand nodes, against the default's 0.32 and the V = 1,242 run's 6.2. Group lattices are almost never completing, so what prunes is monotone propagation through the order matrix rather than the χ or Smith checks — the same diagnosis §16 drew, now with four independent samples. Seed 2 is the one to watch: its node rate decayed 842 → 578 while its memo grew 49 → 55, the only seed doing either, which is what a search entering genuinely harder ground looks like rather than one grinding a uniform subtree.
+
+> **The measurable §16 says does not exist can be made to exist, and it is a small change.** `depth<=` is a running *maximum*, so it saturates in seconds and reports nothing thereafter — which is why no completion estimate is possible. What *is* monotone and observable is the **backtrack ceiling**: the shallowest depth at which an untried alternative still remains, i.e. the depth of the highest open choice point. It starts at 0, only ever increases as the DFS exhausts subtrees from the left, and reaching depth d means the entire tree under the first d−1 decisions has been refuted. **That is a genuine progress bar, and it extrapolates**, in a way `depth<=` and the node rate do not. Logging it costs one integer in the heartbeat — the smallest index in the decision stack still holding an unexplored branch. Two things it would settle at once: whether the four seeds are grinding the *same* shelf (their ceilings would sit at comparable depths) and whether any of them is making progress at all (a ceiling stuck at 3 after an hour means the first three decisions are still open, and no amount of node throughput matters).
+
+**What to do next, given this.** Let the seeds run — they cost one core each and the deepest, seed 1, is the incumbent if a verdict is ever wanted from this route. Add the backtrack-ceiling counter before starting any longer run, since without it a week of compute produces no more information than an hour — **the patch, the acceptance test and how to read the number are written out below**, so it is a copy-paste rather than a decision. And **item 4's bounded fallback is now the more attractive option**: `--maxt 8` gives a smaller V and a shallower tree, and §1.2's asymmetry means an **UNSAT there still settles n = 10** — a weaker battery cannot manufacture a refutation. The strongest-possible-battery run and the verdict-producing run are different jobs, and this evidence says they should be separated rather than hoped to coincide.
+
+### The backtrack ceiling and the refuted fraction — PATCHED, nothing to do
+
+*`stage4_fast.py` now logs both. No new flag, no change to the search, no change to any verdict: the two numbers are added to the heartbeat and to `csp_result.txt`. Run it exactly as before.*
+
+**Why these two and not `depth<=`.** `depth<=` is a running maximum, so it saturates within seconds and reports nothing afterwards — it pinned at 304 for two hours, and at 423–451 across the four seeds — and the node rate is flat by construction. Neither says whether the search is progressing, which is why §16 originally said no completion estimate was possible. Two numbers fix that:
+
+- **`ceil`** — the **backtrack ceiling**: the shallowest decision level that still has an untried alternative. A ceiling of *d* means *the whole tree under the first d − 1 decisions is refuted*. It says **what** has been settled.
+- **`done`** — the **refuted fraction**: each node carries its share of the tree, a node of weight *w* gives *w*/2 to each branch, and a branch that ends — pruned by propagation, or a leaf — banks its weight. Reaches 100% exactly when the search completes. It says **how much**.
+
+Both are monotone; the heartbeat now reads
+
+```
+heartbeat: nodes 359583 sols 0 depth<= 451 ceil 3 done 0.0004% (1090 nodes/s, memo 44)
+```
+
+> **Two implementation traps, recorded because both were hit and both would have produced a plausible wrong number.** *(i)* The ceiling is **not** a running max of "reached the second branch at depth k" — deep levels reach their second value almost at once while level 0 is still open, so that quantity saturates as uselessly as `depth<=`. It has to be read off the decision stack. *(ii)* The refuted fraction is **not** the sum of 2^−(k+1) over levels sitting on their second value: that credits only subtrees the stack walked over, and a branch killed outright by propagation is never counted. On a fully-refuted toy instance it read **50%**. Since propagation doing the work is exactly this solver's common case — the memo rate says lattices rarely complete — that undercount would have been the normal reading. Hence the weight accumulator.
+
+**Verified before shipping**, on synthetic checkpoints (an 11-class catalogue, two trivial-top groups) exercising all three exit paths: forced-UNSAT reports **100%** refuted, full enumeration **100%**, `--first` stops well below; both fields monotone across every heartbeat; solution pickles unchanged.
+
+### How to read them
+
+| what you see | what it means | what to do |
+|---|---|---|
+| `ceil` stuck at 0–3 after hours | the first few decisions are still open; the run has established essentially nothing however many nodes it has done | stop it; take the `--maxt 8` fallback (item 4) — a **bounded** search whose UNSAT still settles the degree |
+| `done` climbing steadily | genuine progress, and it extrapolates: 1% in an hour is ~100 hours | let it run, and quote the fraction rather than the node count |
+| `ceil` climbing but `done` flat | refuting a deep prefix cheaply while the bulk sits elsewhere | keep going, but the estimate lives in `done` |
+| seeds at comparable `ceil` | one shared obstruction; the seeds are redundant | keep the deepest, free the cores |
+| seeds at different `ceil` | the orderings really are exploring different parts of the tree | worth running several |
+
+**Invocation is unchanged:**
+
+```bash
+for s in 1 2 3 4; do ( cd seed$s && nohup python3 stage4_fast.py --first --seed $s > run.log 2>&1 & ); done
+watch -n 30 'tail -n1 seed*/run.log'
+```
+
+*One thing to expect: on this instance `done` will be a very small number with several leading zeros. That is the finding, not a display problem — it is what "no completion estimate is possible" looked like before there was a way to measure it.*
 
 **3. Do not delete the default run.** It is the only one that has invested 2 h; if a seed finds nothing either, the default is still the incumbent. `stage4_fast.py` writes nothing until it succeeds, so it is safe to leave running alongside the seeds.
 

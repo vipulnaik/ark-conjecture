@@ -10,7 +10,9 @@ Reads ckpt_groups.pkl / ckpt_catalog.pkl / ckpt_order.pkl produced by stages
     highest possible tree level instead of rescanning all groups per node;
   * memoization: chi and homology results cached by (group, bit-pattern of its
     lattice), so repeated subtree contexts are free;
-  * heartbeat logging every 30 seconds with nodes/sec, plus depth histogram;
+  * heartbeat logging every 30 seconds with nodes/sec, the depth high-water
+    mark, and the BACKTRACK CEILING -- the only monotone progress measure this
+    search has (see the block above `ceiling()`);
   * --first flag: stop at the first solution (fast SAT/UNSAT verdict);
   * graceful Ctrl-C: prints partial statistics before exiting.
 
@@ -230,6 +232,61 @@ log(f"stage4_fast: {len(oliver)} Oliver + {len(psub)} p-groups, V={V}, "
 sols = [0]; seen = [set() for _ in range(V)]
 nodes = [0]; t0 = time.time(); last = [t0]; maxdepth = [0]
 
+# THE BACKTRACK CEILING, AND WHY `depth<=` COULD NOT SERVE.
+#
+# `maxdepth` is a running MAXIMUM, so on a hard instance it saturates within
+# seconds and reports nothing for the rest of the run -- at V = 3,782 it pinned
+# at 304 for two hours and at 423-451 across four seeds, while the node rate
+# stayed flat by construction.  Neither says whether the search is making
+# progress, and the size of the tree below is not observable from outside, so
+# no completion estimate was possible at all.
+#
+# The ceiling is: the shallowest depth that still has an untried alternative.
+# BRANCH[k] holds the value currently being tried at level k, so the exhausted
+# prefix is the run of levels already on their SECOND value, and
+#
+#     ceiling = the first k with BRANCH[k] == 0   (or len(BRANCH) if none)
+#
+# It is monotone under the running max below, and a ceiling of d means THE
+# ENTIRE TREE UNDER THE FIRST d-1 DECISIONS HAS BEEN REFUTED.  That is a real
+# progress bar: it extrapolates, and comparing it across seeds says whether they
+# are grinding one shared obstruction or exploring different parts of the tree.
+#
+# NOT a running max of "reached the second branch at depth k", which is the
+# natural first guess and is wrong: deep levels reach their second value almost
+# immediately while level 0 is still open, so that quantity saturates as
+# uselessly as `depth<=` does.  The ceiling has to be read off the stack.
+BRANCH = []          # BRANCH[k] = value currently being tried at decision level k
+ceil_hi = [0]        # running max of the exhausted-prefix length
+
+def ceiling():
+    for k, v in enumerate(BRANCH):
+        if v == 0:
+            return k
+    return len(BRANCH)
+
+# REFUTED FRACTION, and why it is an accumulator rather than a stack read.
+#
+# The ceiling is a DEPTH, and progress is not linear in it: a ceiling of 1 means
+# "half done" or "entirely done" depending on where the run stopped.  So the
+# ceiling says WHAT has been refuted (a prefix of decisions) and this says HOW
+# MUCH.
+#
+# The natural implementation -- sum 2^-(k+1) over levels sitting on their second
+# value -- is WRONG, and the toy that exposed it is worth recording: it credits
+# only the subtrees the stack has walked over, so a branch that `assign` refutes
+# outright by propagation is never counted.  On a fully-refuted instance it
+# reported 50%, because the root's second branch died in propagation and the
+# search never descended into it.  Since propagation doing the work IS the
+# common case here -- the memo rate says lattices rarely complete, so pruning is
+# monotone propagation -- that undercount would have been the normal reading.
+#
+# Instead each node carries its share of the tree: a node of weight w gives w/2
+# to each branch, and a branch that ends -- pruned by propagation, or a leaf --
+# banks its weight.  The total is 1 exactly when the whole tree is resolved, and
+# it is monotone by construction, needing no running max.
+refuted = [0.0]
+
 def assign(i, val, changed):
     """set x[i]=val, propagate one step of monotonicity, update pend;
     record touched indices in changed.  Returns False on contradiction."""
@@ -266,11 +323,12 @@ def undo(changed):
         x[j] = None
         for gi in touch[j]: pend[gi] += 1
 
-def dfs(k):
+def dfs(k, w=1.0):
     nodes[0] += 1
     if time.time() - last[0] > 30:
         last[0] = time.time()
         log(f"heartbeat: nodes {nodes[0]} sols {sols[0]} depth<= {maxdepth[0]} "
+            f"ceil {ceil_hi[0]} done {100*refuted[0]:.4f}% "
             f"({nodes[0]/(time.time()-t0):.0f} nodes/s, memo {len(memo)})")
     if sols[0] >= args.cap or (args.first and sols[0] > 0): return
     while k < len(unknowns) and x[unknowns[k]] is not None: k += 1
@@ -289,6 +347,7 @@ def dfs(k):
             raise AssertionError(
                 "bookkeeping bug: leaf violates group conditions; "
                 "no SAT/UNSAT verdict from this run may be trusted")
+        refuted[0] += w          # a leaf resolves its whole share
         sols[0] += 1
         for i in range(V): seen[i].add(x[i])
         if sols[0] == 1:
@@ -298,12 +357,23 @@ def dfs(k):
         if args.first: log("first VERIFIED solution found (SAT)")
         return
     i = unknowns[k]
-    for val in (0, 1):
-        changed = []
-        if assign(i, val, changed):
-            dfs(k + 1)
-        undo(changed)
-        if sols[0] >= args.cap or (args.first and sols[0] > 0): return
+    BRANCH.append(0)
+    try:
+        for val in (0, 1):
+            BRANCH[-1] = val
+            ceil_hi[0] = max(ceil_hi[0], ceiling())
+            changed = []
+            if assign(i, val, changed):
+                dfs(k + 1, w / 2)
+            else:
+                refuted[0] += w / 2      # killed by propagation, never descended
+            undo(changed)
+            if sols[0] >= args.cap or (args.first and sols[0] > 0): return
+    finally:
+        # popped on every exit path, including the early returns above and a
+        # KeyboardInterrupt -- otherwise the stack and hence the ceiling drift.
+        BRANCH.pop()
+        ceil_hi[0] = max(ceil_hi[0], ceiling())
 
 try:
     sys.setrecursionlimit(10000)
@@ -317,7 +387,17 @@ with open('csp_result.txt', 'w') as f:
     def out(s):
         print(s); f.write(s + '\n')
     out(f"stage4_fast: nodes={nodes[0]} time={time.time()-t0:.0f}s "
-        f"memo={len(memo)}" + (" [INTERRUPTED: results partial]" if interrupted else ""))
+        f"memo={len(memo)} ceiling={ceil_hi[0]} refuted={100*refuted[0]:.4f}%"
+        + (" [INTERRUPTED: results partial]" if interrupted else ""))
+    if interrupted or sols[0] == 0:
+        # The ceiling is what an interrupted run has to report: it is the only
+        # figure that says how much of the tree is REFUTED rather than merely
+        # visited, and it is what a resumed or longer run should be compared
+        # against.  A ceiling still in single digits after hours means the first
+        # few decisions are open and the run has established nothing.
+        out(f"backtrack ceiling {ceil_hi[0]} of {len(unknowns)} free variables: "
+            f"the whole tree under the first {max(0,ceil_hi[0]-1)} decisions is "
+            f"refuted; {100*refuted[0]:.4f}% of the tree refuted overall")
     if sols[0] == 0 and not interrupted:
         # NVERT, not a literal.  This is the string an UNSAT run gets quoted
         # from, and it is the only outcome here that would be a theorem, so a
