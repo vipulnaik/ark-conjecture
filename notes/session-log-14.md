@@ -161,6 +161,18 @@ Read `small-degree-computation.md` and `small-degree-verification.md`, and re-re
 
 The 30-point two-subgroup search (A₅/C₂, k ≤ 2, faces ≤ 10) — the one UNRUN A₅ line in `small-degree-verification.md` — completed: 1,408 types, **991,936 unions, 4,170 at χ = 1, 1,800 through the link test, all 1,800 fail 𝔽₂-acyclicity.** Running total across both families and both groups: **1,647,681 complexes, 2,630 clearing every counting condition, zero 𝔽₂-acyclic.** The link-pass rate (43%) is the highest measured anywhere, so the decoupling works best on exactly the set Lutz's A lives on and still yields nothing; and the χ = 1 rate is the lowest (0.42%), in PSL(2,7)'s direction — more types, rarer coincidence. One reading of the type census worth keeping: 1,264 of 1,408 types have regular (size-60) orbits and only 30 have orbits ≤ 15, so the family is dominated by small-stabiliser faces, which is the opposite of where the recipe behind Lutz's A finds acyclicity. The remaining UNRUN line is PSL(2,7) at 28 points.
 
+## 4h. `validate_table_v3.py` got slow, and it was not the data
+
+The suite took ~1 minute on the 50k-row exact table and minutes on the 144k-row ladder-exact one, against a stated budget of 0.1 s at 1,700 rows. Profiling put **47 of 51 seconds in `main()`**, not in any check: the gap scan read `n not in set(ns)`, rebuilding the set on every iteration — quadratic in the row count. Invisible at 2,186 rows; the dominant cost by two orders of magnitude at 50,062.
+
+Fixed, with two smaller costs the profile then exposed: `prime_power_base` memoised (409k calls resolving to a few thousand distinct block sizes), and `density_ok` doing integer arithmetic in place of `Fraction`, whose normalisation alone was 1.4 s of a 13 s run. The gap scan also now skips itself, with a note, on a file that is not a contiguous range — where its "gaps" are the un-computed n and listing them means nothing.
+
+**51 s → 0.96 s on the exact table; minutes → 3.5 s on the ladder-exact one.** Output is bit-identical before and after, and the density fast path was checked against the `Fraction` reference on every row of both tables (0 disagreements) — the identity being |m·C·2 − 2·B·10^places| ≤ C for the stored string m/10^places.
+
+**Two lessons, both now in the script's header and in `pending-checks`.** The cost model governs `main()` as well as the checks, and `main()` is where nobody looks because it contains no checks. And a quadratic term is invisible until the data grows an order of magnitude, so "it was fast before" is not evidence: **re-time when the table's scale changes.** So the answer to "is this the price of more data?" is no — the price of more data was the 3.5 s.
+
+*Incidentally, on the two new tables:* they agree at all 50,062 common rows, the ladder-exact file reaches **n = 159,027** with **0 uncertified rows**, and the minimum density over both is still **0.04621 at n = 2759** — so Corollary E.6 applies at every row of both, and the floor has not moved at three times the previous frontier.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

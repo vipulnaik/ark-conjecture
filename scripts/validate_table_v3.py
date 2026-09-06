@@ -25,11 +25,26 @@ table grows -- those are printed so they can be copied back, not judged here.
     SKIP   nothing in range exercises the check
 
 KEEP IT FAST -- THIS IS A DESIGN CONSTRAINT, NOT A NICETY.  The whole suite runs
-in about 0.1 s on 1,700 rows, which is what makes it something to run reflexively:
-before every certificate, after every batch, on any hunch.  A suite that costs
-seconds gets skipped, and a skipped check is worth nothing.  So every check
-should stay O(rows) or O(rows * parts), doing arithmetic on numbers already
-parsed out of the witness string.
+in about 0.1 s on 1,700 rows, 1 s on 50,000 and 3.5 s on 144,000, which is what
+makes it something to run reflexively: before every certificate, after every
+batch, on any hunch.  A suite that costs minutes gets skipped, and a skipped
+check is worth nothing.  So every check should stay O(rows) or O(rows * parts),
+doing arithmetic on numbers already parsed out of the witness string.
+
+THE CONSTRAINT HAS BEEN VIOLATED ONCE, AND THE WAY IT HAPPENED IS THE THING TO
+GUARD AGAINST.  Not by a check: by one line of setup code outside every check,
+the gap scan in main(), which read `n not in set(ns)` and so rebuilt the set on
+every iteration -- quadratic in the row count.  At 2,186 rows that is 0.02 s and
+invisible; at 50,062 rows it was 47 of the run's 51 seconds, and at 144,299 rows
+it was minutes.  Two lessons worth keeping.  (i) The cost model above governs
+main() too, and main() is where nobody looks because it contains no checks.
+(ii) A quadratic term is invisible until the data grows an order of magnitude,
+so "it was fast yesterday" is not evidence -- when the table's scale changes, RE-
+TIME rather than assume.  The three costs that mattered, all now fixed and each
+verified to leave the output bit-identical: the gap scan (hoist the set, sieve
+the prime-power test), prime_power_base (memoised -- 409k calls, a few thousand
+distinct block sizes), and density_ok (integer arithmetic instead of Fraction,
+whose normalisation was 1.4 s of a 13 s run).
 
 What does NOT belong here: enumerating configurations, VF2 or isomorphism work,
 re-deriving B(n), sieving past NMAX, or anything whose cost grows with n rather
@@ -199,8 +214,56 @@ def is_prime(x):
     return True
 
 
+_PP_CACHE = {}
+
+
+def _pp_sieve(lo, hi):
+    """Bit-vector: is n a prime power, for n in [lo, hi].  One sieve of least
+    prime factors over the range, against O(sqrt n) trial division per value --
+    the difference between linear and n^1.5 on the gap scan at 10^6."""
+    key = (lo, hi)
+    if key in _PP_CACHE:
+        return _PP_CACHE[key]
+    spf = list(range(hi + 1))
+    i = 2
+    while i * i <= hi:
+        if spf[i] == i:
+            for j in range(i * i, hi + 1, i):
+                if spf[j] == j:
+                    spf[j] = i
+        i += 1
+    out = bytearray(hi - lo + 1)
+    for n in range(max(2, lo), hi + 1):
+        x, p = n, spf[n]
+        while x % p == 0:
+            x //= p
+        out[n - lo] = 1 if x == 1 else 0
+    _PP_CACHE.clear()          # one range per run; do not accumulate
+    _PP_CACHE[key] = out
+    return out
+
+
+_PPB = {}
+
+
 def prime_power_base(x):
-    """base prime if x is a prime power, else None."""
+    """base prime if x is a prime power, else None.
+
+    MEMOISED, because the call pattern is not what the signature suggests: it is
+    called once per PART per row, and block sizes repeat heavily across rows --
+    409,154 calls resolve to a few thousand distinct c on a 144k-row table.  The
+    trial division itself is O(sqrt c) and fine; doing it 400,000 times is not,
+    and at the ladder table's scale it was the largest remaining cost after the
+    gap scan.  A plain dict is right here rather than a sieve: the arguments are
+    BLOCK sizes, which are sparse and bounded by n, not a dense range."""
+    hit = _PPB.get(x, 0)
+    if hit != 0:
+        return hit
+    _PPB[x] = r = _prime_power_base(x)
+    return r
+
+
+def _prime_power_base(x):
     if x < 2:
         return None
     d = 2
@@ -364,8 +427,14 @@ def density_ok(r):
     """
     s = r.delta_str
     places = len(s.split(".")[1]) if "." in s else 0
-    stored = Fraction(s)
-    return abs(stored - Fraction(r.B, r.C)) * 2 * 10 ** places <= 1
+    # Integer fast path, exact and equivalent: with u = 10^places, the stored
+    # string is m/u for the integer m, and the test |m/u - B/C|*2u <= 1 is
+    # |2*m*C - 2*B*u| <= C.  No Fraction, no gcd -- Fraction.__new__ and its
+    # normalisation were 1.4 s of a 13 s run at 144k rows, on a check whose
+    # whole content is one comparison.  The Fraction form is kept below as the
+    # reference the fast path was checked against, row for row.
+    m = int(s.replace(".", "").lstrip("-") or "0")
+    return abs(2 * m * r.C - 2 * r.B * 10 ** places) <= r.C
 
 
 @check("A", "density column agrees with mu_bound / C(n,2)", "table")
@@ -1539,8 +1608,27 @@ def main():
     ns = [r.n for r in R]
     print(f"{A.table}: {len(R)} rows, n = {min(ns)} .. {max(ns)}"
           + (f"   baseline {A.baseline}" if base else ""))
-    gaps = [n for n in range(min(ns), max(ns) + 1)
-            if n not in set(ns) and prime_power_base(n) is None]
+    # THE GAP SCAN IS THE ONE PLACE THIS SUITE IS NOT O(rows), and it was
+    # quadratic by accident: `n not in set(ns)` rebuilt the set on every
+    # iteration, so the cost was |range| x |rows|.  Invisible at 2,186 rows over
+    # [6, 2600]; at 50,062 rows over [6, 55814] it was 47 of the run's 51
+    # seconds, i.e. the whole of the slowdown people noticed when the table
+    # grew.  Hoisting the set makes it linear, and the trial-division
+    # prime-power test is then the only per-n cost -- replaced by a sieve below,
+    # since at n ~ 10^6 trial division would become the next quadratic-looking
+    # term (O(sqrt n) per value).
+    have = set(ns)
+    lo, hi = min(ns), max(ns)
+    span = hi - lo + 1
+    if span > 4 * len(ns) + 1000:
+        # A sparse or worklist-driven file: the "gaps" are the un-computed n and
+        # listing them is meaningless.  Report the shape instead of scanning it.
+        gaps = []
+        print(f"  NOTE: {len(ns)} rows spread over [{lo}, {hi}] -- not a "
+              f"contiguous range, so the gap scan is skipped")
+    else:
+        gaps = [n for n in range(lo, hi + 1)
+                if n not in have and not _pp_sieve(lo, hi)[n - lo]]
     if gaps:
         print(f"  NOTE: {len(gaps)} non-prime-power values missing in range "
               f"(run --fill-gaps): {gaps[:8]}{' ...' if len(gaps) > 8 else ''}")
