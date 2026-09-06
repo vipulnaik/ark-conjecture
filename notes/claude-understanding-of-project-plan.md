@@ -103,3 +103,45 @@ The outline mentions naming choices. Decisions already made in the documents tha
 With E.5/E.6 in hand, the spine of the exactness result is small: **Part 0, Lemma B′, Lemma D2, Theorem E.5, Proposition 1, then the computation.** Most of the Claude corpus — the per-n certificates, the worklist and branch-and-bound, the ladder scan, the fallback certificate — was scaffolding for the regime E.5 later closed wholesale, and the fuller document can say so in a paragraph rather than reproduce it. Deciding with Raghav which documents are load-bearing and which are history is what sets the size of the 2027 job, by a factor of several.
 
 The generalisations belong in that document as instances of one pattern, not as separate chapters. `johnson-presentations.md` supplies the frame — arity, base size, containment as the three inputs to one criterion — and Appendix C of `orbital-evasiveness-notes.md` is the table keyed on it. The one that does not fit is the oriented case, which is stronger than ARK and belongs in an "open" section.
+
+---
+
+## 9. Lean integration
+
+*Vipul's plan, as stated, then the scoping agreed after critique. The technical detail — what to state, in what order, with what Mathlib is missing — is in the Lean project's `README.md` under "The plan for October and 2027"; this section is the version for planning meetings.*
+
+### 9.1 The plan, as stated
+
+- **October (Max 5x, alongside the human write-up of the short note):** expand `Note.lean` from the pure arithmetic to **all the conditional inferences** — assuming enough of the established literature (KSS and Oliver) but **not assuming BBKN itself**.
+- **Separately, time permitting:** the **mathcheck** framework being built in another chat (LLM-written deterministic scripts for the tedious parts of verbal math checking, so that LLM/human effort at the margin goes to what needs judgement rather than to finding undeclared variables) already has GAP components; extend it to the Lean side of group theory. The Groupprops connection is: **scripts that take a Groupprops page and extract what a Lean formalisation needs as input**, applicable across Groupprops generally. The ARK work supplies a first subset of pages to try it on, after which the LLM does the formalisation steps deterministic scripts cannot. Groupprops may not yet have the specific content needed, but adding it is easy and needs no subscription. **This is general infrastructure worth building regardless; the ARK connection is an application, not the motivation, and it may or may not happen.**
+- **2027 (Max 5x for one to two months):** a final push on the fuller document, seeing how much of it can be captured in Lean, using the insights developed.
+
+### 9.2 What "the conditional inferences" are, and why they are cheaper than they sound
+
+The note takes exactly one thing from KSS + Oliver: **a congruence.** For every Oliver group Γ ≤ S_n and every non-evasive nontrivial monotone graph property P, χ(Δ_P^Γ) ≡ 1 (mod q), where Δ_P^Γ is the complex of Γ-invariant graphs lying in P. That Euler characteristic is a **finite combinatorial sum** — over nonempty unions of orbitals lying in P, of (−1)^(#orbitals − 1) — so the hypothesis can be *stated* in Lean with `Finset` arithmetic alone: no homology, no simplicial complexes, nothing outside current Mathlib. The sparse-evasiveness theorem then follows in one line: if every graph in P has fewer than μ(n) edges, no nonempty union of orbitals lies in P, the complex is {∅}, χ = 0 ≢ 1.
+
+So the October target decomposes into: (a) definitions — monotone graph property on `Fin n`, non-evasive (decision-tree depth), Oliver group (the p-by-cyclic-by-q chain), orbitals, χ of the fixed complex; (b) **the KSS–Oliver congruence as a named hypothesis**, a structure parameter in the style of `HypBCG` and never the `axiom` keyword, so the "three standard axioms" claim survives; (c) the constructions as permutation groups, with their Oliver chains and pair-orbitals proved; (d) the theorem assembling them. "Not assuming BBKN" is free: the Ω(n log n) bound is replaced by μ(n) ≥ n·(Q(n) − 1)/2, three lines from `orb_full`.
+
+### 9.3 The scoping agreed
+
+1. **E.5 and Proposition 1 first.** Arithmetic, Mathlib-only, days, and the highest-value undone piece in the whole project: one human reading, and it carries the "μ known exactly to 10⁶" claim. If October produces only this, it was worth it.
+2. **The constructions are where the month goes**, and they are ordered by friction: the **unconditional n = 2m family** (F = 2 fused, no foreign block — the note's Theorem 2.2 analogue) before the two-part construction; **c prime (`ZMod p`) before c = p^a (`GaloisField`)**; general (c, r, q) last.
+3. **Definitions are the payoff, not the proofs.** This session's evasiveness checker had its recursion inverted for two turns; a `def NonEvasive` cannot be inverted silently. `OliverGroup` written out forces the transitive-versus-transitive-Oliver-subgroup distinction that tripped Appendix C last week.
+4. **Lean follows the note, not the reverse.** October's priority is the human write-up; the formalisation tracks the vetted text's names and statement order.
+5. **Pin the toolchain and the Mathlib commit at the start of October and do not bump mid-month.** Two of the project's three Lean failures were name drift; the FLT run reports 26% of files changing on one bump.
+
+### 9.4 The 2027 ceiling, stated now so the ambition is honest
+
+The exactness result μ = B rests on Part 0's completeness of the shape space, which rests on Huppert's classification of solvable 2-transitive groups. **That is not going into Lean by one person in two months**, and the plan should not be read as aiming at it. What is reachable, and would be a complete honest artefact: E.5 and Proposition 1 (done by then); Part E realisability in general — μ ≥ B for the whole shape space, the October constructions generalised; **B(n) as a computable function** with `native_decide` on individual rows (the README's Phase 3); and **Part 0 stated as a named hypothesis**, so that μ = B is a Lean theorem conditional on exactly one classification input. *"Everything except the classification is checked"* is a strong statement and is available. *"Everything is checked"* is not.
+
+### 9.5 What the FLT formalisation does and does not change
+
+The Anthropic FLT run (eleven days, parallel agents on a bespoke platform, 29,511 theorems, 13 M lines, building Néron models and Taylor–Wiles patching that Mathlib lacked) shows the obstacle to formalising a result like this one is **coverage, and coverage is effort rather than possibility** — Oliver's theorem is a short 1975 paper and is "weeks of agent time", not "never". It also shows two things that bear on wanting it: the output is "not readable as mathematics", duplicated, and fragile across toolchain bumps, so for a note whose point is a short human-checkable argument the value would be the *checked statement*, not the proof text; and the run was not a chat window. What a Max subscription in a chat buys is what the project already has — one file at a time, compile-repair loops — which is why §9.3's scoping is by friction and why E.5 comes first.
+
+### 9.6 What the meetings need to decide about Lean
+
+Little. Two items, both small:
+
+- **Whether the note's arXiv version mentions `Note.lean`.** One sentence — "the arithmetic between the hypothesis and the conclusion is machine-checked; the group-theoretic inputs are named as hypotheses" — is accurate now and stays accurate whatever October adds.
+- **Whether the KSS–Oliver hypothesis, once stated, becomes the note's official statement of what it assumes.** A Lean structure is the most precise possible form of "assuming Oliver's theorem in the form KSS use it", and the note could cite it.
+

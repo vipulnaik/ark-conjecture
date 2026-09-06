@@ -1,6 +1,6 @@
 # Formalising the ARK framework: what is worth doing, and in what order
 
-*Compile status, per file and per environment — kept explicit because "compiles" and "proves" have come apart here, and only the checker's sorry count separates them.*
+*Compile status, per file and per environment — kept explicit because "compiles" and "proves" have come apart here, and only the checker's sorry count separates them. **The plan for October 2026 and 2027 is its own section below**, agreed and vetted at the end of session 14.*
 
 | file | laptop (Mathlib) | container (core 4.15.0) | sorries |
 |---|---|---|---|
@@ -11,7 +11,7 @@
 
 **All three files are now sorry-free.** `Basic.lean` went 18 → 0 in one pass; what that pass actually bought is set out under *Phase 1* below, and it was not the proofs.
 
-*So **phase 0 is done**: `Note.lean` and `ArkCore.lean` are both fully proved, and between them they cover the note's entire arithmetic layer — the construction inequality, the admissible-`d` table, the density and ceiling statements, `orb`, Lemma D1, the capacity bound, F.1. `Basic.lean` remains the sketch, and its sorry count is the expected state rather than a defect (`leancheck.sh` reports it separately for exactly this reason — a count that DROPS unexpectedly is the thing to notice).*
+*So **phase 0 is done**: `Note.lean` and `ArkCore.lean` are both fully proved, and between them they cover the note's entire arithmetic layer — the construction inequality, the admissible-`d` table, the density and ceiling statements, `orb`, Lemma D1, the capacity bound, F.1. `Basic.lean` was the sketch until its 18 → 0 pass and is now proved too; `leancheck.sh` still reports the sorry count separately, and the thing to notice is now a count that RISES — a proof that has been reopened.* *(An earlier form of this sentence still called `Basic.lean` the sketch after the table above had recorded it sorry-free; the header contradicted itself for one paragraph.)*
 
 *What this does and does not establish is worth restating, because a green checker invites over-reading: it verifies that **the arithmetic between the hypotheses and the conclusion is correct, and that the units are consistent**. The note's theorem remains conditional on (H) and on Oliver's theorem, neither of which is formalised or formalisable here. That is the check that was worth having before arXiv, and it is now had.* **`ArkCore.lean` is different: it is compiled and fully proved** — zero sorries against core Lean 4.15.0 — and covers the ℕ half of both files: the central inequality (`central_even`, `central_odd`), Lemma D1, the capacity bound, Proposition F.1 in squared form, `orb` with the full-twist collapse, and every `decide` table. All three were reviewed after the entangled-generator correction.*
 
@@ -44,6 +44,77 @@ Three gotchas, all found the hard way: `leancheck.sh` already calls `lake env le
 *(A drift note, since this header has now been wrong in both directions: it said "neither has been compiled" after `Note.lean` had compiled on the laptop — the header described the drafting container and was read as describing the project. Compile status is per-machine here, because the container and the laptop have different reach; this header now says which.)*
 
 **What compiling immediately paid for.** The draft of the central inequality's block case split the region at `r ≥ 13`; the slack chain fails there — `r² − 7r − 84 < 0` at 13 — and the compiler refused it, forcing the split to 14 with the finite side `n ≤ 65` discharged by `decide`. The region's true numerical worst (`350·m*/pairs n = 1.0096`, at `n = 65, r = 13`) sits **on the finite side**, which is precisely why no uniform slack argument covers it and the `decide` is not decoration. One compile session caught exactly the class of error this project exists to catch, in its own draft.
+
+## The plan for October 2026 and 2027
+
+*Agreed between Vipul and Claude at the end of session 14, and vetted by both. The planning-level version is `claude-understanding-of-project-plan.md` §9; this is the technical one — what to state, in what order, and what Mathlib does and does not supply.*
+
+### October: `Note.lean` from the arithmetic to the whole conditional argument
+
+**The target.** The note's Theorem is: (BCG_{1/5}-AL), plus Oliver's theorem in the form KSS use it, implies μ(n) ≥ δ₀·C(n,2) for all large n. `Note.lean` currently proves the arithmetic half — from a configuration's parameters to its density. October adds everything between the literature and that: the graph-theoretic definitions, the constructions as actual permutation groups with their Oliver chains and pair-orbitals, and the assembly. **Assumed as a named hypothesis: the KSS–Oliver congruence. Not assumed: BBKN**, whose only contribution to the note is the Ω(n log n) bound, replaced by a three-line theorem.
+
+**The assumed theorem is statable with no topology, and that is what makes this a one-month project rather than a research programme.** KSS + Oliver give, for every Oliver Γ ≤ S_n and every non-evasive nontrivial monotone P:
+
+> χ(Δ_P^Γ) ≡ 1 (mod q), with equality χ = 1 when the top is trivial,
+
+where Δ_P^Γ is the complex of Γ-invariant graphs lying in P. Its Euler characteristic is Σ over nonempty unions U of orbitals with U ∈ P of (−1)^(#orbitals in U − 1) — a `Finset` sum. So:
+
+```lean
+/-- The KSS–Oliver input, as one hypothesis.  A `structure`, never `axiom`:
+    the project's claim that its files rest on Lean's three standard axioms
+    must survive October.  Stated for the trivial-top case `χ = 1` and the
+    general case `χ ≡ 1 [MOD q]` separately, because the note uses the first. -/
+structure HypKSSOliver (n : ℕ) where
+  congruence : ∀ (P : GraphProperty n), P.Monotone → P.Nontrivial → NonEvasive P →
+    ∀ (Γ : Subgroup (Equiv.Perm (Fin n))), OliverGroup Γ →
+      fixedComplexEuler P Γ ≡ 1 [MOD topPrime Γ]
+```
+
+The sparse-evasiveness theorem is then one line: if every graph in P has fewer than the minimum orbital's size, no nonempty union of orbitals lies in P, `fixedComplexEuler P Γ = 0`, and 0 ≢ 1.
+
+**Definitions to write, and the ones Lean will police.**
+
+| definition | Mathlib supplies | what stating it precisely buys |
+|---|---|---|
+| `GraphProperty n` — a set of graphs on `Fin n` invariant under `Equiv.Perm (Fin n)` | `SimpleGraph`, `Finset` | — |
+| `Monotone`, `Nontrivial` | — | nontriviality is `∅ ∈ P ∧ ⊤ ∉ P`; the oriented case (`directed-graph-properties.md` §5b) showed this has no analogue without a unique top — irrelevant here, but the definition should not be written to generalise |
+| `NonEvasive P` — decision-tree depth < C(n,2) | — | **the recursion**: non-evasive iff constant, or *some* variable has *both* restrictions non-evasive. A checker in session 14 had this inverted for two turns; a `def` cannot be |
+| `OliverGroup Γ` — ∃ Γ₂ ◁ Γ₁ ◁ Γ, Γ₂ a p-group, Γ₁/Γ₂ cyclic, Γ/Γ₁ a q-group | `IsPGroup`, `IsCyclic`, `Subgroup.Normal`, quotients | forces "transitive Oliver *subgroup*" wherever the criterion is applied; "transitive" alone does not typecheck |
+| `orbitals Γ` — orbits on unordered pairs | `MulAction.orbit`, `Sym2` | — |
+| `fixedComplexEuler P Γ` | `Finset.sum`, `Finset.powerset` | — |
+| `muLower n` — the constructions' minimum orbital | — | this is `mStarEven`/`mStarOdd`, already in `ArkCore` |
+
+**Order of work, by friction, agreed:**
+
+1. **Theorem E.5 and `ladder-completeness.md` Proposition 1 first**, in `Basic.lean`. Arithmetic, Mathlib-only, days. E.5 has had one human reading and carries the "μ known exactly to 10⁶" claim; it is the highest-value undone piece in the project independently of the rest of this plan (Phase 1b below).
+2. **The definitions above and `HypKSSOliver`.** No proofs yet; the point is that they typecheck against each other and against the theorem statement.
+3. **The unconditional family** n = 2m, m a prime power — two blocks of 𝔽_m with the entangled generator, orbitals {m(m−1), m²}, Oliver with trivial top. Smallest group, no foreign block, the note's Theorem 2.2 analogue.
+4. **The two-part construction** n = F·c + r, **with c prime first** (`ZMod p`, a field with no ceremony), the block group `AGL(1,c)` as a subgroup of `Equiv.Perm (ZMod p)`, the foreign block `ZMod r` with twist of order t, the chain, and the pair-orbitals. Then **c = p^a** via `GaloisField`, which costs more at every lemma.
+5. **`theorem_conditional`**: `HypBCG → HypKSSOliver → ∀ n ≥ N, ∀ P, (∀ G ∈ P, |E(G)| < δ₀·C(n,2)) → Evasive P`.
+6. **The BBKN replacement**: `μ(n) ≥ n·(Q(n) − 1)/2` from `orb_full` and the fused construction at c = Q(n). Three lines; it is the note's §1 commentary made formal.
+
+**What Mathlib is missing for step 4, and what to do about it.** Affine groups exist as `AffineGroup`-style structures but not as *permutation groups on the field*; the fused/entangled product and wreath-type products are absent; `IsMultiplyPretransitive` exists, k-*homogeneity* (transitivity on k-sets) does not. Each is a self-contained definition with a handful of lemmas, and each should be written **as a general Mathlib-style definition in its own file**, not inlined into the construction — that is what makes it a candidate contribution rather than project debris. **Keep a list of every definition wished for**, written against the proofs that needed it; the list is the output of the month for the Groupprops thread below.
+
+**Operational rules.** Pin `lean-toolchain` and the Mathlib commit on 1 October and **do not bump mid-month** — two of this project's three Lean failures were name drift, and the FLT run reports 26% of files changing on one bump. Route around Mathlib's ordering-and-division iff-lemmas as `Basic.lean` already does. **Lean follows the note, not the reverse**: names and statement order track the vetted human text, and a formalisation that wants to rename something files a note rather than doing it.
+
+### The Groupprops / mathcheck thread — independent infrastructure, with ARK as a first application
+
+This is **not** part of the ARK Lean plan and does not gate it. Vipul's mathcheck framework (LLM-written *deterministic* scripts for the tedious parts of verbal math checking — undeclared variables, unit consistency — so that LLM and human effort goes to what needs judgement) already has GAP components. The Lean extension would be **scripts that take a Groupprops page and extract what a Lean formalisation needs as input**, applicable across Groupprops generally, with the LLM doing the steps deterministic scripts cannot. The ARK constructions give a first set of pages to try — the affine group `AGL(1,q)`, 2-homogeneity, the Oliver class, wreath and entangled products — and Groupprops may need those pages written or extended first, which needs no subscription. The "definitions wished for" list from October is the handoff between the two threads. **Neither depends on the other; this may or may not happen.**
+
+### 2027: the fuller document, and the ceiling stated now
+
+**What is reachable in one to two months of Max**, and would be a complete honest artefact:
+
+- E.5 and Proposition 1 — done in October.
+- **Part E realisability in general**: μ ≥ B for the whole shape space — the October constructions generalised to any F, any foreign block, S6/S11.
+- **Phase 3**: `B n` as a computable function — configurations, the Part G.3 score, the max — with `native_decide` on individual rows. Not the whole CSV.
+- **Part 0 stated as a named hypothesis** `HypShapeComplete`, so that `μ = B` is a Lean theorem conditional on exactly one classification input.
+
+**What is not reachable, and the plan must not be read as aiming at it.** Part 0's completeness rests on Huppert's classification of solvable 2-transitive groups, and that is not going into Lean by one person in two months — nor should the corpus be built as if it were. **"Everything except the classification is machine-checked" is a strong statement and is available. "Everything is machine-checked" is not.** The FLT run shows the second is a matter of effort rather than possibility — Oliver's theorem is a short 1975 paper, "weeks of agent time" on that evidence — but that run was eleven days of parallel agents on a bespoke platform, not a chat window, and its output was by its own assessment not readable as mathematics. For a document whose purpose is exposition, the checked *statement* is the artefact worth having, and that is what the hypothesis-parameterised form delivers.
+
+### Phase 1b — Theorem E.5, added here because it postdates the phasing above
+
+Theorem E.5 did not exist when this list was drawn up and is now the most valuable target in it. `enumeration-proof.md` Part E‴'s Theorem E.5 caps the SAFE score of every fallback configuration below `C(n,2)/25`, and Corollary E.6 then gives `μ(n) = B(n)` wherever `B(n) > C(n,2)/25` — which is what turned the per-n collapse certificate into a single theorem covering every `n ≤ 10⁶`. Three things make it the right next target. **It is arithmetic on stated quantities**: four counting sub-cases on SAFE terms, no Lemma C, no J0a — exactly the layer the table above says Lean catches. **It has had one human reading**, against three for Lemma B′, and it now carries more weight than anything else in the framework. **And its two boundary constants are the kind that drift**: the fifteen exceptions all at `n ≤ 63`, and the `1/25` line coinciding with the floor conjecture's — a Lean statement fixes both by type. Proposition 1 of `ladder-completeness.md` (above `1/25` the optimum is a menu shape or S6/S11; `cap_F(1) > 1/25 ⟺ F ≤ 16`) is the companion and is the same kind of argument. Together they are perhaps the size of phase 1 again.
 
 ## The split that makes this tractable
 

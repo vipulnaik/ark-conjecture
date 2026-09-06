@@ -403,7 +403,7 @@ Fixed: `Row.delta = B / C`, with `delta_str` retained solely for check A20, whos
 
 ## 5b. (SP) renamed to (BCP), and the identity made visible
 
-**The rename.** (SP) → **(BCP)**, *bounded-cofactor primes*, alongside **(BCG)**, *bounded-cofactor Goldbach*; `sp-to-floor.md` → `bcp-to-floor.md`. 57 label sites across eight documents plus eleven filename citations, done in one pass — all subscripted forms (`SP_{D,c,ρ}` and the two inline variants) included, 0 leftovers, 0 dangling references.
+**The rename.** The label formerly written (SP) → **(BCP)**, *bounded-cofactor primes*, alongside **(BCG)**, *bounded-cofactor Goldbach*; `sp-to-floor.md` → `bcp-to-floor.md`. 57 label sites across eight documents plus eleven filename citations, done in one pass — all subscripted forms (`SP_{D,c,ρ}` and the two inline variants) included, 0 leftovers, 0 dangling references.
 
 **What the rename earns, which is why it was worth doing.** §6.8 now opens with the identity the prose had only ever asserted:
 
@@ -416,6 +416,20 @@ Clause 3's bounded cofactor is common to both and defines S_D; clause 1's decomp
 **Invariant I11, and a correction to it in the same sitting.** The first version also checked that any sentence comparing the two hypotheses names both. It fired on **six sentences that legitimately compare (BCG) to a fixed Bateman–Horn system** and have no business naming (BCP) — a check wrong six times out of eight, which is precisely the failure mode I4's own comment warns about. Narrowed to the half that is exact: the retired label and the old filename must not reappear, with an exemption for lines describing the rename itself. *A naming convention is enforced by being useful in prose, not by a checker guessing which comparisons are about it.*
 
 **Also extended `check_doc_figures.py`'s witness-pass exemptions** for realisability-battery citations: a battery deliberately scores configurations that do not win at their n, so a witness naming one is correct, and R8's regression list was firing on that.
+
+## 5c. Lean: state assessed, plan agreed and written into two documents
+
+**State.** All three files genuinely sorry-free (the word appears only in comments); `ArkCore.lean` compiles on core Lean with no Mathlib; `theorem_arithmetic_half` correctly scoped, its unused primality/coprimality hypotheses bound with underscores as the signal that they belong to the Oliver half. One stale README paragraph (calling `Basic.lean` the sketch after the table recorded it sorry-free) fixed.
+
+**The FLT paper, read for what it says about barriers.** Eleven days, parallel agents on a bespoke platform, 29,511 theorems, 13 M lines, building what Mathlib lacked. So the obstacle to formalising this project is coverage, and coverage is effort rather than possibility — but the run was not a chat window, and its output is by its own assessment not readable as mathematics. Both points shaped the plan.
+
+**The plan, after critique.** October: expand `Note.lean` to the whole conditional argument. The key observation that makes it a month rather than a programme: **the KSS–Oliver input is a congruence on a `Finset` sum** — χ(Δ_P^Γ) = Σ over unions of orbitals in P of (−1)^(#−1) — so it is statable with no homology, as a structure `HypKSSOliver` (never `axiom`). Order by friction: **E.5 and Proposition 1 first** (arithmetic, one human reading, carries the 10⁶ claim); definitions; the unconditional n = 2m family; the two-part construction with c prime before c = p^a; assembly; the BBKN replacement μ ≥ n(Q(n)−1)/2. Definitions are the payoff — this session's inverted evasiveness recursion is the example a `def` cannot commit. Pin the toolchain; Lean follows the note.
+
+**Groupprops/mathcheck** clarified as independent infrastructure — deterministic extraction from Groupprops pages into Lean-ready inputs, general across the wiki — with ARK pages a first application and the October "definitions wished for" list the handoff. May or may not happen; gates nothing.
+
+**2027's ceiling stated now.** Part 0 rests on Huppert and is not going into Lean by one person in two months. Reachable and honest: E.5/Prop 1, Part E realisability in general, `B n` computable with `native_decide` on rows, and **Part 0 as a named hypothesis** so μ = B is conditional on exactly one classification input. "Everything except the classification is checked" is available; "everything is checked" is not.
+
+Written into `claude-understanding-of-project-plan.md` §9 (planning level) and the Lean `README.md` (technical level, with the definition table, the `HypKSSOliver` sketch, the six-step order and the Mathlib gaps).
 
 ## 5. One methodological note
 
