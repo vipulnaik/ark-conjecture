@@ -83,7 +83,7 @@ PART = re.compile(r"(\d+)x(\d+)(\*?)")
 
 class Row:
     __slots__ = ("n", "C", "B", "delta", "delta_str", "parts", "certK", "certified",
-                 "fallback", "witness", "p", "q", "cls", "shape")
+                 "fallback", "witness", "prefix", "p", "q", "cls", "shape")
 
     def __init__(self, d):
         self.n = int(d["n"]); self.C = int(d["C(n2)"]); self.B = int(d["mu_bound"])
@@ -91,6 +91,19 @@ class Row:
         self.delta = float(self.delta_str); self.parts = int(d["parts"])
         self.certK = int(d["certified_K"]); self.certified = d["certified"] == "1"
         self.fallback = d["fallback"] != "0"; self.witness = d["witness"]
+        # mu_ladder_exact.py prefixes the witness of a row the pruning theorems
+        # do not cover -- "EXHAUSTIVE: ", "EXHAUSTIVE-FALLBACK: " or
+        # "LOWER-BOUND-ONLY: ".  The configuration behind it is an ordinary
+        # witness and every check below should read it, so the prefix is split
+        # off here rather than special-cased at each check.  Without this the
+        # witness fails WIT.match, p and q come back None, and half of group A
+        # fails on a row that is perfectly well formed.
+        self.prefix = ""
+        for pre in ("EXHAUSTIVE-FALLBACK: ", "EXHAUSTIVE: ", "LOWER-BOUND-ONLY: "):
+            if self.witness.startswith(pre):
+                self.prefix = pre.rstrip(": ")
+                self.witness = self.witness[len(pre):]
+                break
         m = WIT.match(self.witness)
         self.p, self.q = (int(m.group(1)), int(m.group(2))) if m else (None, None)
         # cls: list of (F, c, is_foreign)
@@ -361,12 +374,35 @@ def c_density(R, base):
     return ("FAIL" if bad else "PASS", f"{len(bad)} mismatches", bad[:5])
 
 
-@check("A", "every row is certified, and no optimum invokes the fallback", "ep Part E-prime")
+@check("A", "every row is certified, and no optimum invokes the fallback", "ep Part E-prime",
+       expect="the `certified` column means DIFFERENT THINGS by producer, and both are "
+              "failures here.  From mu_exact.py / mu_enumerate_v3.py it is Proposition F.1's "
+              "k self-certification: 0 means the search was cut off before the part-count "
+              "bound was met, so the value may be short.  From mu_ladder_exact.py it is "
+              "Theorem E.5 + ladder-completeness Proposition 1: 0 means the row fell below "
+              "C(n,2)/25, where the pruning theorems do not apply -- the value is then a "
+              "LOWER BOUND unless the witness says EXHAUSTIVE, and if it says "
+              "EXHAUSTIVE-FALLBACK then mu(n) = B(n) is not established at that n by any "
+              "theorem.  A `fallback` row from either producer is the same warning.")
 def c_certified(R, base):
     unc = [r.n for r in R if not r.certified]
     fb = [r.n for r in R if r.fallback]
+    # A ladder-exact row that fell below 1/25 and was handed to the exhaustive
+    # search carries the exact value with certified = 0; it is not a broken row,
+    # but it IS one where the theorems stop, so it is reported rather than
+    # silently passed.
+    handed = [r.n for r in R if not r.certified and r.prefix.startswith("EXHAUSTIVE")]
+    lbo = [r.n for r in R if r.prefix == "LOWER-BOUND-ONLY"]
     st = "FAIL" if unc else ("INFO" if fb else "PASS")
-    return (st, f"{len(unc)} uncertified, {len(fb)} fallback optima", (unc + fb)[:5])
+    extra = ""
+    if handed:
+        extra = (f"; {len(handed)} of the uncertified went to the exhaustive "
+                 f"search (value exact, theorems inapplicable)")
+    if lbo:
+        extra += (f"; {len(lbo)} are LOWER-BOUND-ONLY -- mu_ladder_exact.py ran "
+                  f"without mu_exact.py, so these rows are NOT B(n)")
+    return (st, f"{len(unc)} uncertified, {len(fb)} fallback optima" + extra,
+            (unc + fb)[:5])
 
 
 @check("A", "the rebuild never lowers a value against the baseline", "pending-checks R0")
@@ -1147,7 +1183,7 @@ def c_burst_shapes(R, base):
         fp = Counter(c for r in rows for (F, c, fo) in r.cls if fo)
         top = ", ".join(f"r={c} x{k}" for c, k in fp.most_common(3))
         out.append(f"{sh}: {len(rows)} winners over {len(fp)} distinct foreign primes ({top})")
-    return "INFO", "; ".join(out) or "no burst-shape winners", None
+    return "INFO", "; ".join(out) or "no burst-shape winners", []
 
 
 MENU = {"S1", "S2", "S3", "S4", "S5"} | {"S7f%d" % F for F in range(2, 17)}
@@ -1525,7 +1561,7 @@ def main():
             if expect:
                 for i, line in enumerate(textwrap.wrap(expect, 86)):
                     print(f"        {'expected: ' if i == 0 else '          '}{line}")
-            for e in ex:
+            for e in ex or []:
                 print(f"          {e}")
     print()
     print("  " + "  ".join(f"{k}: {tally[k]}" for k in ("PASS", "FAIL", "INFO", "SKIP")))

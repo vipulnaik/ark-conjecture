@@ -91,6 +91,15 @@ either can resume from or validate the other's output.
     python3 mu_ladder_exact.py 5000 5100            # quick lookup to stdout
     python3 mu_ladder_exact.py --check mu_table_exact.csv --time
 
+DOWNSTREAM.  `validate_table_v3.py` reads this file's output directly -- same
+schema, and it strips the witness prefixes below -- as do `check_doc_figures.py`,
+`ladder_vs_B.py` and `converse_check.py`.  Two things to know when comparing
+against a `mu_exact.py` table: the VALUES agree everywhere (checked at all 32,861
+rows), but the WITNESS may differ on a TIE, where two configurations score the
+same and each file records whichever it reached first -- e.g. n = 423, where
+`2x128 + 1x167*` and `1x256 + 1x167*` both score 13861 because the foreign block
+binds.  A witness diff is therefore not a discrepancy; a value diff is.
+
 MEASURED THROUGHPUT.  ~10.8 rows/s at n near 10^6 (92 ms/row), so a full run to
 10^6 is about 15 h single-threaded and under 2 h on eight chunks -- against
 `mu_exact.py`'s ~3 h PER VALUE at that size.
