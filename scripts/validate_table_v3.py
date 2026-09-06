@@ -476,26 +476,31 @@ def c_certified(R, base):
 
 @check("A", "the rebuild never lowers a value against the baseline", "pending-checks R0")
 def c_monotone(R, base):
+    """The FAIL gate only: a value that went DOWN is a defect under every
+    reading, since B(n) is a maximum and a corrected shape space can only add
+    configurations.  The full equal/higher/lower breakdown is the INFO check
+    immediately below -- kept separate so this one has a single job and the
+    counts are not stated twice."""
     if not base:
         return ("SKIP", "no --baseline given", [])
     com = [r for r in R if r.n in base]
     lower = [(r.n, r.B, base[r.n][0]) for r in com if r.B < base[r.n][0]]
-    higher = sum(1 for r in com if r.B > base[r.n][0])
     return ("FAIL" if lower else "PASS",
-            f"{len(com)} common values: {higher} higher, {len(lower)} lower", lower[:5])
+            f"{len(lower)} of {len(com)} common values lower than the baseline"
+            + ("" if lower else "  (breakdown in the next check)"), lower[:5])
 
 
-@check("C", "value agreement against the baseline, on mu_bound itself",
+@check("A", "value agreement against the baseline, on mu_bound itself",
        "pending-checks R0, R7b",
-       expect="when the two tables are two ROUTES to the same quantity -- mu_exact.py's "
-              "exhaustive search against mu_ladder_exact.py's menu, or either against a "
-              "rerun -- the expected reading is 100% equal, 0 higher, 0 lower.  When the "
-              "baseline is a superseded table it is not: a corrected shape space RAISES "
-              "values, so 'higher' is the repair working and only 'lower' is a defect "
-              "(which group A fails on separately).  Compared on the INTEGER mu_bound, "
-              "never the density column, which rounds.  Note the two routes may disagree "
-              "on the WITNESS at a tie -- see the shape-migration check below -- so a "
-              "shape difference here with zero value differences is a tie, not a defect.")
+       expect="two ROUTES to the same quantity -- mu_exact.py's exhaustive search against "
+              "mu_ladder_exact.py's menu, or either against a rerun -- should read ALL "
+              "equal.  A SUPERSEDED baseline should not: a corrected shape space RAISES "
+              "values, so 'higher' is the repair working.  Hence INFO; the one direction "
+              "that is always a defect, a value going DOWN, is the check above.  Compared "
+              "on the INTEGER mu_bound, never the density column, which rounds.  Read the "
+              "shape-migration check below against this one: a migration with zero value "
+              "differences is a TIE -- equal score, different recorded witness -- and the "
+              "tie count here is how many.")
 def c_value_agreement(R, base):
     if not base:
         return ("SKIP", "no --baseline given", [])
