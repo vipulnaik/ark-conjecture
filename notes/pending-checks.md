@@ -25,46 +25,6 @@ Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804
 
 *Do not restate the inequality as `B_safe ≤ μ`.* `B_safe` over-counts per configuration; what holds is B_refined ≤ μ ≤ B_safe, the endpoints collapsing where E.5 or the certificate applies.
 
-## R12a. `ceiling_rederive3.py` — the k = 3 ceiling table, measured
-
-The counterpart of `ceiling_rederive.py`, and the reason it was needed: **without a generic-family filter, a sup over any range measures §6's escapes rather than the ceiling** — on `b3_census_2000.csv` the unfiltered class sup exceeds the tabulated ceiling in 11 of 12 classes, by 18× at class 0, and **7 of the 12 sups are attained by a fused S2 shape with no foreign block**.
-
-```bash
-python3 ceiling_rederive3.py --nmax 14000        # generic family; exit 0 = no cell exceeded
-python3 ceiling_rederive3.py --nmax 2500 --no-filter   # the escapes, deliberately
-```
-
-**Result over n ∈ [7000, 14000]: no cell exceeded, and every one of the twelve classes attains its ceiling to within 0.1% in exactly one κ_c column** (2 and 8 in both). That is §5's table converted from derived-and-asserted into measured.
-
-**Two k = 3-specific things a reader should know before comparing it with the k = 2 script.** *κ_c is a split, not a nuisance*: for a prime block at full twist κ_c = 3 when 3 | c − 1 and 2 otherwise, so §5's table has two columns and a scan that pools them compares against neither — results are per (class, κ_c) cell. And *the no-foreign-block cut is structural, not part of the filter*: it stays on under `--no-filter`, because §5's table is about the two-part additive family and a fused-only shape is §6.3's question. The two scripts' `--no-filter` modes therefore scan different shape sets.
-
-**What the run leaves open**, and it is sharper than what it replaced: nine of twenty-four cells fall short, and they are exactly the *other* column at each class. Whether each unreachable column is arithmetically obstructed or merely thin in supply is the open question — at class 0, κ_c = 2 the η = 1 entry needs r − 1 = 2·q^e with q ≥ 5, a supply condition of the safe-prime family rather than an obvious obstruction. A k = 3 analogue of `aod` §3.3.8's escape analysis would settle it.
-
-## R12. `mu3_menu.py` — B₃ over the k = 3 census
-
-**New 2026-09, and it closes half of `three-uniform-note.md` §10 item 1.** Scores every shape in that note's §4.2 census at every n in a range and writes `n, C(n3), b3_census, delta3, witness`. Table to n = 2000 in the working set as `b3_census_2000.csv` (1,666 rows, 7 s).
-
-**Read the column name, and know which way the inequality runs.** `b3_census` is the max over the *census* shapes. Two directions, two hypotheses, neither established at k = 3:
-
-- **μ₃ ≥ B₃^census** if every census shape is realisable by an Oliver group (the Part E analogue — no GAP battery exists at k = 3);
-- **μ₃ ≤ B₃^census** if the census is complete (§10 item 1, open).
-
-So the useful reading is a **lower** bound on μ₃ modulo realisability. Nothing should read the column as μ₃. What it legitimately replaces is the *hand* searches: §6.2's "optimal" at one n, §6's escape counts, §5's class ceilings.
-
-> **A defect caught on the first run, worth recording because the check that caught it was a question about direction.** The script credited a Galois part of order m without requiring m to be a power of the top prime q — the Frobenius lives in the top layer, which is a q-group. **295 of 306 rows crediting m > 1 had the top prime ≠ 5 while crediting m = 5 on a 32-block.** Fixed; 266 rows fell, all downward, and n = 133 did not move because there q = 5 = m is the coincidence §6.2 exists to display. This is §4.3's warning — "spending the top prime on the Galois gain cripples every foreign block" — made concrete.
-
-**Why it is short where `mu_enumerate_v3.py` is long.** At k = 3 only intra terms bind — proved in three lines by a degree count, cross terms being cubic in n against quadratic intra terms (§4.1) — so a configuration's score is min over classes of F·orb₃(c, d, m) with no term-type comparison. The scoring itself is the proved orbit law with κ₃ = τ·θ·γ, verified on 104 triples.
-
-```bash
-python3 mu3_menu.py --check-133          # reproduces §6.2's worked example
-python3 mu3_menu.py --nmax 2000 --out b3_census_2000.csv
-python3 mu3_menu.py 130 136              # lookup
-```
-
-**Verified on writing:** every value in §6.2's table including all seven r-rows; the full-density degrees of §3.1 (5, 8, 32 attain C(c,3), 16 does not — Kantor's classification appearing in the arithmetic); and the n = 133 row reproduces the note's witness `1x32 + 1x101*` at δ₃ = 0.006587.
-
-**What is still owed here** is §10 item 1 proper: a completeness argument for the k = 3 census, whose concrete first step the note names — locating the crossover between the quadratic intra term and the cubic cross terms, which §4.1's degree count makes unlikely to bind but does not exclude at small n.
-
 ## Before the pause: the landing checklist
 
 *Everything in this list is small, and each item names the exact edit it produces, so none of it needs a fresh decision. When all four are done the documents are current to 10⁶ on every measured figure and nothing is pending on a run.*
@@ -125,6 +85,8 @@ python3 mu3_menu.py 130 136              # lookup
 
 *Can be launched in the background. Flags are checked against the scripts as they stand; where a run needs code that does not exist, that is said rather than papered over with a plausible-looking flag.*
 
+> **Numbered in order, and not every entry is a live run.** **R0, R0c, R1, R6, R6a, R8, R10** are things to do; **R1b, R7, R11, R12, R12a** are retained because a reader meeting a reference to them elsewhere needs to find out what happened — R7 superseded, R11 and R12a done with their results recorded, R1b and R12 explaining a scope that is easy to get wrong. Items retired without residue are one-line rows in the ledger below instead.
+
 ## R0. The two producers: how to run them, and what they cost
 
 `mu_enumerate_v3.py` is the reference implementation and stays the arbiter. **`mu_exact.py`** enumerates the same shape space with the same SAFE score by arithmetic rather than generic search. **`mu_ladder_exact.py`** scores the ladder menu plus S6/S11 exactly and, above C(n,2)/25, equals B(n) *by theorem* (E.5 + `ladder-completeness.md` Prop 1) with a witness; below that line it is a lower bound and `mu_exact.py` is still needed.
@@ -162,6 +124,24 @@ python3 mu_ladder_exact.py 2755 2762 --cert-threshold 0.05     # exercises the u
 > **The validation any replacement must meet**, done once for `mu_exact.py`: every row of the then-current table reproduced exactly with low (missing shape) and high (over-score) mismatches reported separately, both zero; cross-checks against `v3.mu_bound` at n never previously computed; and an **independent spec-derived enumerator**, written from the shape-space description rather than from either script, agreeing on 139 values for 6 ≤ n ≤ 200 — the only check that would catch a case dropped by *both*.
 
 > **A cost correction worth keeping.** An early estimate of `mu_exact.py` fitted only n ≤ 8,000 and was wrong by an order of magnitude in the tail. Re-time when the range changes rather than extrapolating a fitted exponent. **Not to be confused with `mu_fast.py`**, a pre-shape-space family menu that is superseded and should not be run.
+
+## R0c. The three pending tags, and what clears each
+
+*One tag for three different pending things was the confusion; they are now separate and each is named for the thing that clears it.*
+
+| tag | what it marks | cleared by | affected by the in-flight runs? |
+|---|---|---|---|
+| **⟦REQUOTE-ON-EXTENSION⟧** | a table measurement — winner counts, shares, low-density tails, first instances | requoting from the table; `check_doc_figures.py` recomputes most of them and `validate_table_v3.py`'s INFO lines print the rest | **yes** — these are exactly what the two runs move |
+| **⟦PENDING-CERT-RUN⟧** | an output of a certificate or shape script (`wide_cert.py`, `fallback_cert.py`, `shape_realize.py`) — coverage counts, shape-scan totals | rerunning that script | **no** — extending the tables does not touch these |
+| **⟦NEEDS-ITS-OWN-RUN⟧** | the orbital-count distribution, which no script produces because t is not a CSV column | a bespoke run (see `notes` §9.7 for the formula) | **no** |
+
+*A fourth tag, ⟦PENDING-1E5-EXACT-RUN⟧, was retired earlier and its notice has been folded away; the range convention it enforced is now invariant I7's job. Nothing should reintroduce it.*
+
+**So the answer to "what are these pending on" is: only the first kind is pending on the current runs.** Nine sites were of that kind while the banner claimed all of them were script outputs, which is what made the tag unreadable. Untagged measured figures are not exempt from range discipline — they name their range under invariant I7 — and structural claims, closed forms, ceilings and theorems were never in scope for any tag.
+
+**When the two runs land:** rerun `check_doc_figures.py <table> *.md`, requote every ⟦REQUOTE-ON-EXTENSION⟧ site, and rerun `solvable_relaxation.py <table>`. The certificate and own-run tags stay put.
+
+> **`CHECKPOINTS` is already primed.** 36848, 55814, 71288 and 159027 have been added, so a figure correctly scoped to any of those frontiers is reported as *matching an old checkpoint* — a historical citation to leave alone — rather than as unexplained staleness. Add the new maxima on the next extension too; it takes a minute and skipping it turns every correctly-scoped historical figure into noise in PASS 1. Expect the old-checkpoint counts to be large and mostly benign: 16 in `aod` on the current run, which is what a document with a long recorded history should look like.
 
 ## R1. Routine, after any new batch of table values
 
@@ -295,70 +275,53 @@ WITNESS="p=5 q=2: 2x5" MUBOUND=20 gap -q -A verify_witness.g   # a single row
 
 **And the limit is ln 2, not 1, which §4a had wrong.** The comparison is a *median* observed loss against a *mean* model, and the ratio is Exp(1); median(Exp(1)) = 0.6931. Like-for-like on the F = 4 population at [10⁵, 10⁶]: median 0.651 vs 0.693, mean 0.919 vs 1 — both 6–8% short, the same uniform deficit §3(a) already attributes to the second-order Bateman–Horn correction, and flat across every quantile (0.91–0.97). New §4b records all of it; §6's second-order item is now the sharpest thing left in that note, since it is the only constant still loose and it has been isolated.
 
-### A20c. A screen must derive its range from the table, never from a constant — DONE
+## R12. `mu3_menu.py` — B₃ over the k = 3 census
 
-**Two scripts silently under-screened the completed table while printing a pass.** `t5_verify.py`'s pass 4 built its event list to a hardcoded `N = 2484`, so on the 10⁶ table the running maximum froze there and the check passed vacuously at **918,781 of the 921,265 rows it reported**. `audit_fmid.py` had `--nmax` defaulting to 2600 against a hardcoded sieve bound of 2700, so it screened **2,186 of 921,265 rows** — and its coverage line, "0 non-prime-power values in that range absent from the table", reads exactly like a clean pass because it is one, over the range it chose.
+**New 2026-09, and it closes half of `three-uniform-note.md` §10 item 1.** Scores every shape in that note's §4.2 census at every n in a range and writes `n, C(n3), b3_census, delta3, witness`. Table to n = 2000 in the working set as `b3_census_2000.csv` (1,666 rows, 7 s).
 
-Both now derive the range from the table's own maximum, and `t5_verify.py` also reads the **floor** from the table rather than quoting 0.02516 (its threshold accordingly moves from n ≥ 763 to n ≥ 371). Its r-loop was rewritten to run over the prime *divisors* of p^a − 1 rather than every prime below it, without which the corrected range is not reachable.
+**Read the column name, and know which way the inequality runs.** `b3_census` is the max over the *census* shapes. Two directions, two hypotheses, neither established at k = 3:
 
-**Coverage measured, and one scaling limit found.** With the range derived, `audit_fmid.py` screens a **20,000-row slice to n = 22,591 clean** — 4,945 rows at δ ≤ 0.13, 0 configurations above B(n) — but its candidate loop scans the prime-power list per row without bisecting, so the full 10⁶ run does not finish in reasonable time. **That is a scope note, not a defect**: the screen is about low-density rows and those are dense at small n. Bisect the `parts` loop on c before claiming the whole range.
+- **μ₃ ≥ B₃^census** if every census shape is realisable by an Oliver group (the Part E analogue — no GAP battery exists at k = 3);
+- **μ₃ ≤ B₃^census** if the census is complete (§10 item 1, open).
 
-*The general form is the one A20b's lesson does not cover:* a check can be wrong about **what it looked at** as easily as about **what it concluded**, and the first failure is quieter, because the output still says PASS and still names a large number of rows. **A screen must state its coverage before its verdict, and the coverage must be derived from the input.**
+So the useful reading is a **lower** bound on μ₃ modulo realisability. Nothing should read the column as μ₃. What it legitimately replaces is the *hand* searches: §6.2's "optimal" at one n, §6's escape counts, §5's class ceilings.
 
-## A20b. delta must be computed from the integers, never parsed from the density column — DONE
+> **A defect caught on the first run, worth recording because the check that caught it was a question about direction.** The script credited a Galois part of order m without requiring m to be a power of the top prime q — the Frobenius lives in the top layer, which is a q-group. **295 of 306 rows crediting m > 1 had the top prime ≠ 5 while crediting m = 5 on a 32-block.** Fixed; 266 rows fell, all downward, and n = 133 did not move because there q = 5 = m is the coincidence §6.2 exists to display. This is §4.3's warning — "spending the top prime on the Galois gain cripples every foreign block" — made concrete.
 
-**The failure this exists to prevent, because it fired.** `validate_table_v3.py` parsed `Row.delta` from the CSV's `density` column, which carries **six decimals** — a rounding error up to 5·10⁻⁷. The cap_F margins at n ≈ 10⁶ are *narrower than that*: the closest approach on the completed 10⁶ table is **1.77·10⁻⁷** and **96 rows sit within 5·10⁻⁷**. So a rounded density can land on the wrong side of a cap, and at exactly one row in 921,265 it did:
+**Why it is short where `mu_enumerate_v3.py` is long.** At k = 3 only intra terms bind — proved in three lines by a degree count, cross terms being cubic in n against quadratic intra terms (§4.1) — so a configuration's score is min over classes of F·orb₃(c, d, m) with no term-type comparison. The scoring itself is the proved orbit law with κ₃ = τ·θ·γ, verified on 104 triples.
 
-> **n = 999685**, witness `2x292801 + 1x414083*`: true density **0.171572510776**, column **0.171573**, cap₂(1) = 3 − 2√2 = **0.171572875254**. The true value is below the cap by 3.6·10⁻⁷; the rounded one is above it by 1.2·10⁻⁷.
+```bash
+python3 mu3_menu.py --check-133          # reproduces §6.2's worked example
+python3 mu3_menu.py --nmax 2000 --out b3_census_2000.csv
+python3 mu3_menu.py 130 136              # lookup
+```
 
-That produced **two spurious FAILs** — the cap_F check and the feasibility check, which reads 1/√δ — on the same row, from one cause. *Confirmed exactly in integers: (3C − B)² − 8C² = 514799345346156900 > 0, so δ < 3 − 2√2 with no floating point anywhere.* **The data were correct and the checker was wrong.**
+**Verified on writing:** every value in §6.2's table including all seven r-rows; the full-density degrees of §3.1 (5, 8, 32 attain C(c,3), 16 does not — Kantor's classification appearing in the arithmetic); and the n = 133 row reproduces the note's witness `1x32 + 1x101*` at δ₃ = 0.006587.
 
-**The same defect was in a second script, and there it was far louder.** `converse_check.py` also parsed the density column, and inequality (2) of Proposition F.4 — r ≥ √(δ·n(n−1)) — is *tight*, its closest ratio on the 10⁶ table being 1.0000. The inflated δ therefore broke it on **991 rows**, and the script printed *"991 violation(s) — F.4 is contradicted by the table"*. Checked exactly in integers, r(r−1) ≥ 2B holds at **every one of the 796,763 one-foreign rows**; with δ computed from the integers the script reports **all four inequalities clean**. *A script whose failure message is "the Proposition is contradicted" is exactly the one that must not read a rounded column* — and the two scripts failed the same way in the same week, which is why the guard below is a check rather than a comment.
+**What is still owed here** is §10 item 1 proper: a completeness argument for the k = 3 census, whose concrete first step the note names — locating the crossover between the quadratic intra term and the cubic cross terms, which §4.1's degree count makes unlikely to bind but does not exclude at small n.
 
-**Fixed and guarded.** `Row.delta` is now `B / C`; `delta_str` is kept because check A20's whole job is to verify the column against B/C, and that check must read the string while every other check must not. Three guards: the cap_F check now **reports its margin** (closest approach, and how many rows sit within the column's rounding error) so the next person sees immediately that the column is unusable here; a new group-A check **fails if anyone reverts** `Row.delta` to `float(density)`; and both are documented at the point of use.
+## R12a. `ceiling_rederive3.py` — the k = 3 ceiling table, measured
 
-> **The failure is evidence for the bound.** A rounding error can only flip a comparison whose two sides are within the rounding error of each other, so this could not have happened against a loose ceiling. Measured on the completed 10⁶ table, the closest approach to cap_F(η) **in every one of the twelve residue classes**:
->
-> | n mod 12 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
-> |---|---|---|---|---|---|---|---|---|---|---|---|---|
-> | closest gap (×10⁻⁶) | 1.25 | 0.36 | 0.18 | 1.40 | 3.25 | 0.23 | 2.25 | 1.14 | 0.19 | 0.40 | 6.26 | 0.41 |
->
-> **Every class is approached to within 7·10⁻⁶, six of them to within 5·10⁻⁷**, and the approach tightens with the range: the closest gap in each decade runs 9.3·10⁻³ (n ≈ 70), 3.9·10⁻⁴, 3.7·10⁻⁵, 3.0·10⁻⁶, 1.8·10⁻⁷ — *gap × n roughly constant at 0.14–0.65*, which is the O(1/n) discretisation of the balance point and exactly the rate a tight ceiling should show. So the ceilings of `arithmetic-of-density.md` §3.3 are not merely upper bounds but **attained to the resolution the integers allow**, in every class, and the checker's one-in-a-million false positive is a symptom of that rather than of anything wrong.
+The counterpart of `ceiling_rederive.py`, and the reason it was needed: **without a generic-family filter, a sup over any range measures §6's escapes rather than the ceiling** — on `b3_census_2000.csv` the unfiltered class sup exceeds the tabulated ceiling in 11 of 12 classes, by 18× at class 0, and **7 of the 12 sups are attained by a fused S2 shape with no foreign block**.
 
-*The general form, which is why this is worth a section rather than a line in a log:* a derived column is a **lossy** copy of the data, and a check that reads it is testing the printer rather than the value. The tell is that the failure appeared only after the table grew — the margins tighten as n grows, so the rounding error stays fixed while the quantity being compared does not. **Six decimals were ample at n = 2600 and are not at 10⁶**, and no amount of care at the earlier scale would have surfaced it.
+```bash
+python3 ceiling_rederive3.py --nmax 14000        # generic family; exit 0 = no cell exceeded
+python3 ceiling_rederive3.py --nmax 2500 --no-filter   # the escapes, deliberately
+```
 
-## R0c. The three pending tags, and what clears each
+**Result over n ∈ [7000, 14000]: no cell exceeded, and every one of the twelve classes attains its ceiling to within 0.1% in exactly one κ_c column** (2 and 8 in both). That is §5's table converted from derived-and-asserted into measured.
 
-*One tag for three different pending things was the confusion; they are now separate and each is named for the thing that clears it.*
+**Two k = 3-specific things a reader should know before comparing it with the k = 2 script.** *κ_c is a split, not a nuisance*: for a prime block at full twist κ_c = 3 when 3 | c − 1 and 2 otherwise, so §5's table has two columns and a scan that pools them compares against neither — results are per (class, κ_c) cell. And *the no-foreign-block cut is structural, not part of the filter*: it stays on under `--no-filter`, because §5's table is about the two-part additive family and a fused-only shape is §6.3's question. The two scripts' `--no-filter` modes therefore scan different shape sets.
 
-| tag | what it marks | cleared by | affected by the in-flight runs? |
-|---|---|---|---|
-| **⟦REQUOTE-ON-EXTENSION⟧** | a table measurement — winner counts, shares, low-density tails, first instances | requoting from the table; `check_doc_figures.py` recomputes most of them and `validate_table_v3.py`'s INFO lines print the rest | **yes** — these are exactly what the two runs move |
-| **⟦PENDING-CERT-RUN⟧** | an output of a certificate or shape script (`wide_cert.py`, `fallback_cert.py`, `shape_realize.py`) — coverage counts, shape-scan totals | rerunning that script | **no** — extending the tables does not touch these |
-| **⟦NEEDS-ITS-OWN-RUN⟧** | the orbital-count distribution, which no script produces because t is not a CSV column | a bespoke run (see `notes` §9.7 for the formula) | **no** |
-
-*A fourth tag, ⟦PENDING-1E5-EXACT-RUN⟧, was retired earlier and its notice has been folded away; the range convention it enforced is now invariant I7's job. Nothing should reintroduce it.*
-
-**So the answer to "what are these pending on" is: only the first kind is pending on the current runs.** Nine sites were of that kind while the banner claimed all of them were script outputs, which is what made the tag unreadable. Untagged measured figures are not exempt from range discipline — they name their range under invariant I7 — and structural claims, closed forms, ceilings and theorems were never in scope for any tag.
-
-**When the two runs land:** rerun `check_doc_figures.py <table> *.md`, requote every ⟦REQUOTE-ON-EXTENSION⟧ site, and rerun `solvable_relaxation.py <table>`. The certificate and own-run tags stay put.
-
-> **`CHECKPOINTS` is already primed.** 36848, 55814, 71288 and 159027 have been added, so a figure correctly scoped to any of those frontiers is reported as *matching an old checkpoint* — a historical citation to leave alone — rather than as unexplained staleness. Add the new maxima on the next extension too; it takes a minute and skipping it turns every correctly-scoped historical figure into noise in PASS 1. Expect the old-checkpoint counts to be large and mostly benign: 16 in `aod` on the current run, which is what a document with a long recorded history should look like.
-
-### A30. ~~`johnson-presentations.md` is cited and not in the working set~~ — RESOLVED
-
-The file exists and is now in the set. Its Proposition 1 is the unification the citation promised — a transitive action whose coordinates are the k-subsets of a base X (a **k-Johnson presentation**) has a transitive Oliver subgroup **iff** G contains a subgroup that is Oliver and k-homogeneous on X — so the §1 citation is restored, and Appendix C's prime-powers box now states one criterion with three inputs (arity, base size, containment) instead of listing three coincidences. *Spot-checked on reading: AGL(1,5) ⊄ A₅ (the twist x ↦ 2x is an odd 4-cycle), D₁₀'s pair-orbitals are [5, 5] against A₅'s [10], and T(m) has degree 2(m−2) at m = 5, 6, 7 — all as the note states.*
-
-**One live item it leaves behind**, worth carrying separately since it is not about the presentation at all: §5's open question, **what is the minimum order of an Oliver group on m points whose minimum orbital is ≥ δ·C(m,2), for m not a prime power?** The necessary bound is Ω(m²) and is tight at prime powers (AGL(1, m) has order 2·C(m,2)), but the multi-block constructions use groups polynomially larger — the bottom layer alone is c^F — and nothing in the framework explains the excess. Either much smaller Oliver groups achieve constant δ at composite m, which would widen the class of G the argument reaches, or Ω(m²) is far from achievable off prime powers and a better lower bound exists. `mu_exact.py` could settle it over the computed range by recording each winning configuration's group order beside its density — a small change to a script that already enumerates the configurations.
+**What the run leaves open**, and it is sharper than what it replaced: nine of twenty-four cells fall short, and they are exactly the *other* column at each class. Whether each unreachable column is arithmetically obstructed or merely thin in supply is the open question — at class 0, κ_c = 2 the η = 1 entry needs r − 1 = 2·q^e with q ≥ 5, a supply condition of the safe-prime family rather than an obvious obstruction. A k = 3 analogue of `aod` §3.3.8's escape analysis would settle it.
 
 ## Closed, kept as a one-line ledger
 
-*Items retired in place rather than deleted, so a reader meeting a reference to them elsewhere can tell what happened. Full accounts are in the session logs.*
+*Items retired without residue, so a reader meeting a reference to them elsewhere can tell what happened. Full accounts are in the session logs. Items retired **with** residue keep their section in §1 — R7 and R11 — rather than appearing here twice.*
 
 | item | what it was | outcome |
 |---|---|---|
 | **R0b** | retire the ⟦PENDING-1E5-EXACT-RUN⟧ tag once a run passed 10⁵ | **done** against the ladder-exact table; all 27 tagged sites requoted, banner replaced, the range convention now enforced by `check_doc_figures.py` invariant I7 |
-| **R7** | consume the ladder worklist by adaptive branch-and-bound | **superseded** — `mu_ladder_exact.py` computes exact B at 15 ms/n, so a lower-bound-and-prune loop saves nothing |
 | **R7a** | rerun `ladder_verify.py` to 10⁶ at the corrected window | **moot** with R7; the two window/fusion-set defects it found are recorded there in case the script is ever revived |
 | **R7c** | audit `solvable_relaxation.py` and `k3_galois.py` | **done** — the former had the same O(N²) sweep the validator had (5× on the scan, 3× end to end, 22 checks pass to n = 159,027); the latter's self-test had a range-scoped claim stated as a law and a clause whose only witness (a = 155) sat outside the test range |
 | **R7d** | audit `khomog_verify.py` | **done** — one vacuous check (an arithmetic tautology no computation could falsify) replaced, and the {8, 32} finiteness claim swept over every prime power in [6, 63] rather than three spot checks |
@@ -485,6 +448,21 @@ At a = 1 the coupling forces ord_r(p) = 1, so the bound is r and the licence rea
 
 **Tripwire.** `validate_table_v3.py` asserts per row that no winner has a proper prime power c with a foreign prime dividing c − 1 — currently 0 of 2,202 p-characteristic winner parts. It flags the first n where Corollary C′ would have to be checked directly.
 
+### T5a. The runner-up ordering inside the three-part family
+
+**The 1 : 1 : 2 prediction is refuted, not open.** `three-part-family-split.md` §1.2 predicts odd-n win shares of 1 : 1 : 2 among S4 (unfused), S5 (top-layer fused) and S7 at F = 2 (cyclic-layer fused); that document is archived and the prediction does not survive the corrected shape space. The whole three-way competition rested on the **c mod 8 law** — S4 winning at c ≡ 1, a tie at c ≡ 5, the fused rung at c ≡ 3, 7 — and the entangled-generator correction removes its mechanism: a cyclic-layer fusion does not cut the twist, so the fused rung scores 2·C(c,2) against the unfused C(c,2) **at every c** with no congruence in play. S4 is dominated everywhere, and S5's only remaining advantage over S7 was a twist cut neither now pays, leaving S7 ahead on its free choice of top prime. So the asymptotic split is not 1 : 1 : 2; **S7 takes the family**, and the shares of the other two tend to zero. `enumeration-proof.md`'s S4 census row and `aod` §3.2.5 both already say this.
+
+**What is genuinely still open, and it is what `aod` §7 needs.** The disjunction-collapse argument wants the **gap to the next shape down**, so the live question is the *runner-up* ordering, not the winner:
+
+> **At each odd residue class, is S5 or S4 second — and by how much?**
+
+Two specific things a human pass should settle, in this order:
+
+1. **Where Lemma C's coupling bites.** S7's advantage over S5 is its free top prime; the coupling (`enumeration-proof.md` Part D) is what can take that away, by stripping S7's layer where the matching twist shares a prime with the foreign block. Wherever it bites, S5 is second; elsewhere S4 is. **This is a congruence condition, not an extreme-value argument**, which is why it is tractable: the fragility of the discarded 1 : 1 : 2 route lay entirely in its extreme-value step.
+2. **Whether the gap is bounded below by a constant.** §7 needs a gap, not an ordering. The candidates are cap-level quantities at each class, so this is arithmetic on the §3.3.5 table plus the coupling's density, and it should not need a search.
+
+**What not to reuse.** The archived note's tables are keyed **mod 24**, predate the entangled correction, and quote 0.050510 at class 11 as a *within-family* cap at η = 1/6 — which is not the class ceiling, that being 7 − 4√3 from the two-part F = 4 shape outside this family. Take the question from here and the constants from `aod` §3.3.5.
+
 ### T6. The residual conditionality in §3.3.5's ceilings
 
 Both coordinates of the joint optimum are settled without a search. The **F side** closes on cap_F(1) = 1/(1 + √F)² together with η ≤ 1, which bounds each F-slice with no arithmetic input and excludes F ≥ 8; the parity constraint at odd n leaves F ∈ {2, 4, 6}. The **η side** is derived from congruences in §3.3.4a — a 2-adic factor 2^(1−v) with v fixed by r mod 8, and a 3-adic cut by 3 when 3 | r − 1 is forced — and `eta_derive.py` checks that derivation against an independent measurement at every (class, F) cell. *Gotcha the F side invites: cap₄(1) = 1/9 bounds the F = 4 slice and is not any class's ceiling, since a class that could take F = 4 at full efficiency reaches 1/8 through F = 2 at η = 1/2 instead.*
@@ -500,6 +478,14 @@ Both coordinates of the joint optimum are settled without a search. The **F side
   - *(Every closed-form constant in §3.3.5 and the cap_F(η) = cap₁(Fη)/F identity independently re-verified. The exposure that remains here is the supply hypothesis and the margin, not the arithmetic and not the argmax.)*
 
 *The ceiling table's independent re-derivation is `ceiling_rederive.py` (R6-adjacent); the working is recorded in the session log.*
+
+### T7. The k = 3 κ parameters
+
+*The F = 4 transfer is settled as a derivation and the tables are in `three-uniform-note.md` §5.7; this entry records only what is still open.*
+
+**Open:** whether κ_c and κ_r can be steered independently of the congruences fixing F and η. The tables hold κ_r = 1 throughout and treat κ_c as a free parameter with two values; if the κ's are coupled to n the way η is, the κ_c = 3 column is not reachable at every residue and the class-11 F = 2 / F = 4 tie may be unrealisable. **No risk to k = 2.**
+
+**What the transfer rests on**, unchanged from k = 2: the ceilings are family guarantees, and that primes of the required form occur near the balance point in the needed density is Bateman–Horn. Two narrower gaps also persist from k = 2 — only F ≤ 6 has been worked, and mixed three-part shapes lie outside both families.
 
 ### T8. Proposition F.4 (the converse) — two readings; one step carries the whole statement
 
@@ -527,32 +513,62 @@ Both coordinates of the joint optimum are settled without a search. The **F side
 
 **What the measurements do and do not support.** All three inequalities hold at every contiguous row with zero violations, and two independent constraints bind simultaneously at n = 2594 — genuine corroboration that the bounds are tight rather than merely true. But the measurements test the *inequalities*, not the *derivation*: a wrong constant or an unjustified layer assignment would produce inequalities that still hold on the table, since the table's winners satisfy the true statement whatever the proof says. **The measured maximum cofactor of 12 is the strongest single datum here** — it matches (BCG)'s own constant from the opposite direction — and it is also the reason to suspect F.4's D(δ₀) = 25.4 is loose by ~2.1, which is the sharpening question the gap inventory records.
 
-### T5a. The runner-up ordering inside the three-part family
-
-**The 1 : 1 : 2 prediction is refuted, not open.** `three-part-family-split.md` §1.2 predicts odd-n win shares of 1 : 1 : 2 among S4 (unfused), S5 (top-layer fused) and S7 at F = 2 (cyclic-layer fused); that document is archived and the prediction does not survive the corrected shape space. The whole three-way competition rested on the **c mod 8 law** — S4 winning at c ≡ 1, a tie at c ≡ 5, the fused rung at c ≡ 3, 7 — and the entangled-generator correction removes its mechanism: a cyclic-layer fusion does not cut the twist, so the fused rung scores 2·C(c,2) against the unfused C(c,2) **at every c** with no congruence in play. S4 is dominated everywhere, and S5's only remaining advantage over S7 was a twist cut neither now pays, leaving S7 ahead on its free choice of top prime. So the asymptotic split is not 1 : 1 : 2; **S7 takes the family**, and the shares of the other two tend to zero. `enumeration-proof.md`'s S4 census row and `aod` §3.2.5 both already say this.
-
-**What is genuinely still open, and it is what `aod` §7 needs.** The disjunction-collapse argument wants the **gap to the next shape down**, so the live question is the *runner-up* ordering, not the winner:
-
-> **At each odd residue class, is S5 or S4 second — and by how much?**
-
-Two specific things a human pass should settle, in this order:
-
-1. **Where Lemma C's coupling bites.** S7's advantage over S5 is its free top prime; the coupling (`enumeration-proof.md` Part D) is what can take that away, by stripping S7's layer where the matching twist shares a prime with the foreign block. Wherever it bites, S5 is second; elsewhere S4 is. **This is a congruence condition, not an extreme-value argument**, which is why it is tractable: the fragility of the discarded 1 : 1 : 2 route lay entirely in its extreme-value step.
-2. **Whether the gap is bounded below by a constant.** §7 needs a gap, not an ordering. The candidates are cap-level quantities at each class, so this is arithmetic on the §3.3.5 table plus the coupling's density, and it should not need a search.
-
-**What not to reuse.** The archived note's tables are keyed **mod 24**, predate the entangled correction, and quote 0.050510 at class 11 as a *within-family* cap at η = 1/6 — which is not the class ceiling, that being 7 − 4√3 from the two-part F = 4 shape outside this family. Take the question from here and the constants from `aod` §3.3.5.
-
-### T7. The k = 3 κ parameters
-
-*The F = 4 transfer is settled as a derivation and the tables are in `three-uniform-note.md` §5.7; this entry records only what is still open.*
-
-**Open:** whether κ_c and κ_r can be steered independently of the congruences fixing F and η. The tables hold κ_r = 1 throughout and treat κ_c as a free parameter with two values; if the κ's are coupled to n the way η is, the κ_c = 3 column is not reachable at every residue and the class-11 F = 2 / F = 4 tie may be unrealisable. **No risk to k = 2.**
-
-**What the transfer rests on**, unchanged from k = 2: the ceilings are family guarantees, and that primes of the required form occur near the balance point in the needed density is Bateman–Horn. Two narrower gaps also persist from k = 2 — only F ≤ 6 has been worked, and mixed three-part shapes lie outside both families.
-
 ## §2b. Self-contained items
 
 *Analysis against the existing files, needing no new materials.*
+
+### A0b. `validate_table_v3.py` — the three groups
+
+`python3 validate_table_v3.py <current table> --baseline <previous table>`
+
+- **A. Table integrity** — well-formedness, Lemmas B′ and D2 on each witness, re-derivation of `mu_bound` from the witness by the G.3 formulas, the density column (A20), certification, monotonicity against the baseline, **value agreement against the baseline**, and the **Part E preconditions** (T2). *The monotonicity check is the FAIL gate — a value going down is a defect under every reading — and the value-agreement check beside it is INFO carrying the equal/higher/lower breakdown, the coverage either way, and the count of **ties** (equal value, different recorded witness). It sits immediately above the shape-migration check because that check is read against it: a migration with zero value differences is a tie, not a disagreement. Compared on the integer `mu_bound`, and reported as `ALL equal` or raw counts — never a percentage, since a negative control corrupting one value in each direction printed `100.00%`.* A FAIL means the run or parser is broken.
+- **B. Exact claims, holding at every n** — Prop F.1, cap_F(η), S2's 1/F, layer-by-top-prime, S6 emptiness, Lemma C exposure, the cyclic layer's pairwise coprimality, the feasibility criterion, Part G.4's per-axis bounds, the within-class cross coefficient, and the foreign-side residue patterns. The matching block's residue prices nothing, so the exact checks live on r, not c; the retired c mod 8 patterns are kept as group-C INFO, where a population at the residues the old law forbade is positive evidence. A FAIL is a real contradiction between table and documents.
+- **C. Density and distribution** — floor and the s/k bounds it implies, low-density tail, part-count distribution, census shares, odd-n shares, class-ceiling exceedance, median density by residue class, foreign-block efficiency, ω(n) = 2 share. All INFO, each printing the expected asymptotic beside the measurement.
+
+**Four group-B checks have no independent counterpart elsewhere:** the cyclic layer's global pairwise-coprimality condition (the only check that would catch the enumerator *over*-correcting), the feasibility criterion Σ√Fᵢ ≤ 1/√δ, Part G.4's per-axis bounds, and the within-class cross **coefficient**, which is invisible to output since the term never binds. Each has a negative control: breaking it makes the check FAIL.
+
+**Group-B trend check, for census rows claiming `wins → 0`.** The verdicts are asymptotic limits, so a count tests nothing; what is required is a *declining share*, clearing both a proportional bar and Poisson noise. `ZERO_SHARE` entries may be a tuple treated as one aggregate — needed because splitting S7 by fusion count costs sensitivity. To exercise it, replace the `S7f3`/`S7f5` entries with `("S7f3","S7f4","S7f5","S7f6","S7f8")`: it fails with `S7f3+…+S7f8 4.1%→7.6%` against `S2 45.2%→29.3%`.
+
+**Amend it in the same pass whenever the model changes** — each check names the document section it comes from, so a stale check is findable from either end. It checks the table against the documents' model, not against mathematics; for independent evidence use `brute_compare.py`.
+
+> **Keep it fast — a design constraint, not a nicety.** The suite runs in about **0.1 s on 1,700 rows, 1 s on 50,000, 3.5 s on 144,000**, which is what makes it reflexive rather than scheduled. Keep each check O(rows) or O(rows × parts) on numbers already parsed from the witness. Enumerating configurations, isomorphism work, re-deriving B(n), or sieving past `NMAX` belong in a certificate. If a new check must compare a row against alternatives, budget it against the per-row cost and say so at the check.
+>
+> **It was violated once, and not by a check.** The gap scan in `main()` read `n not in set(ns)`, rebuilding the set every iteration — quadratic in the row count, 0.02 s at 2,186 rows and **47 of 51 seconds at 50,062**, minutes on the 144k ladder-exact table. Fixed (hoist the set; sieve the prime-power test; skip the scan entirely on a non-contiguous file and say so), together with two smaller costs the fix exposed: `prime_power_base` is now memoised (409k calls, a few thousand distinct block sizes) and `density_ok` uses integer arithmetic instead of `Fraction`, whose normalisation was 1.4 s of a 13 s run. **Output is bit-identical before and after on the exact table, and the density fast path was checked against the `Fraction` reference on every row of both tables — 0 disagreements.** *The lesson to carry: `main()` is subject to the cost model too and is where nobody looks, and a quadratic term is invisible until the data grows an order of magnitude — so re-time when the table's scale changes rather than trusting that it was fast last month.*
+
+### A9. The Lean formalisation — keep it in step, and keep it moving
+
+*Home: the Lean project's own `README.md`, which carries the phasing, the case for and against, and the failure-mode analysis. **This item exists so the work resurfaces even when nobody thinks to mention it**; do not restate the reasoning here.*
+
+> **State, 2026-09.** All three files sorry-free (the word appears only in comments); `ArkCore.lean` compiles against core 4.15.0 with no Mathlib; `Note.lean`'s main theorem `theorem_arithmetic_half` is correctly scoped — its primality and coprimality hypotheses are bound with underscores because the arithmetic half does not use them, which is the honest signal that they belong to the Oliver half. **The README predates Theorem E.5**, and E.5 is now the highest-value formalisation target in the project: arithmetic on SAFE terms, one human reading, load-bearing for the whole "μ known exactly to 10⁶" claim. Recorded there as Phase 1b. Also reachable and cheap: the BBKN-replacement inequality `μ(n) ≥ n·(Q(n) − 1)/2` (three lines from `orb_full`, if the note's §1 commentary keeps it), and the self-pairing lemma `orb c d = c·d/2 ⟺ d even` behind `directed-graph-properties.md` §2.
+
+**Two obligations, and the first is the one that rots silently.**
+
+1. **Sync.** The Lean statements encode claims from these documents — ceiling values, coefficient rules, threshold ladders, the `orb` definition. *Most recent sync found one drift and fixed it:* `Note.lean`'s hypothesis structure was `HypH`, which both invited conflation with the framework's class-keyed hypothesis and carried the Schinzel collision the (BCG) rename existed to remove; it is now `HypBCG`, with the non-nesting recorded at its docstring. When a document changes, the Lean can quietly stop matching it, and nothing in this repository's checks looks at `.lean` files. Any revision to §3.3.5's table, to the cap algebra, to `orb`, or to the E′ s-bound should be followed by a pass over `ArkCore.lean`, `Note.lean` and `Basic.lean`. The ceiling table is the sharpest case: the entries are enumerated one per constant, so a table that gains or loses a constant leaves a list of the wrong length — which is useful only if someone looks.
+
+2. **Progress. Phase 0 is complete.** Status is per file, and the distinction that matters is the sorry count rather than the compile — a sketch full of sorries compiles perfectly happily:
+
+   | file | compiles | sorries |
+   |---|---|---|
+   | `ArkCore.lean` | laptop **and** container (core 4.15.0, no Mathlib) | **0 — every proof complete** |
+   | `Note.lean` | laptop | **0 — every proof complete**, six by import from `ArkCore` |
+   | `Basic.lean` | laptop | nonzero — the remaining sketch, phase 1 |
+
+   Between the first two the note's whole arithmetic layer is proved; what stays conditional is **(BCG_{1/5}-AL)** — the *note's* fixed-window hypothesis, formalised as `HypBCG`, not the framework's class-keyed (BCG-AL), the two being non-nested — and Oliver, neither formalisable. `ArkCore.lean`'s clean compile against core 4.15.0 with no `sorry` warning has been **independently reproduced** in a container built from the GitHub-releases tarball, so the zero-sorry claim rests on a rerun rather than on a remembered result. **Phase 1 is DONE: all three Lean files are sorry-free.** `Basic.lean` went **18 → 0** in one pass. Proved: `orb_full`, Lemma D1, the capacity bound, Prop F.1, the E′ s-bound and both threshold ladders, the `capF` algebra, **all six §3.3.5 ceiling entries as algebraic numbers** including the global constant `capF 4 (1/3) = 7 − 4√3` at the extremal class, the two-foreign closed form, and the quadratic-residue collapse.
+
+> **Three signature corrections came out of it, which is the better argument for this layer than the proofs are.** `orb_full`'s `2 ≤ c` and `capF_eq_k_sqrt`'s `0 ≤ η` turn out unnecessary — Lean reports them unreferenced, and both are now underscored. **`prop_F1` was false as stated**: at `k = 0` the sum over `Fin 0` is 0, so `n = 0`, the capacity hypothesis is vacuous, and the conclusion reads `0 < 0`. `0 < k` added. That is the *same* failure the file already recorded at `size_of_capacity` — an informal claim quantifying over a configuration and forgetting the empty one. **Two instances in one file is a pattern worth carrying: whenever a claim is "k things each with property P force a bound", check k = 0 first.** A prover cannot skip the degenerate branch the way a reader does.
+
+> **Two techniques worth reusing.** *Write δ = m/N and square* — both ladders are claims about `1/√δ`, and squaring clears the real and the root together, leaving `Nat` arithmetic core Lean proves outright. Where a real-valued claim is an inequality between two squares, the `Nat` form is the same statement with the coercion removed, not an approximation of it. And *supply the surd once*: `capF_of_sqrt` takes the root and its defining equation as arguments, so six ceiling entries became six instances of one identity.
+
+**The remaining Lean work is phases 2 and 3, and neither is owed.** Phase 2 is the balance-point maxima — partly pre-empted, since its cleanest named target (the two-foreign closed form) is already proved and `capF_of_sqrt` is likely the lever for the rest. Phase 3 would make `B n` a Lean-checkable function; the Lean README's own judgement that *this is where I would stop* still stands, `validate_table_v3.py` already covering the rows.
+
+**What the sync obligation now guards** is drift in the other direction: the Lean statements are checked, so a document changing a constant, a coefficient rule or a threshold now contradicts a *proved theorem* rather than a sketch. `Basic.lean`'s ceiling entries are the mod-12 table; if §3.3.5 ever gains or loses a constant, the list of six no longer matches.
+
+**Two environment lessons, both earned by a failed run, and both about names rather than mathematics.**
+
+- **Imports.** Lean resolves `import ArkCore` through `LEAN_PATH` and lake's build dirs and loads the compiled `.olean`, so co-locating sources does nothing and `PATH` is irrelevant. Either `lake env lean -o ArkCore.olean ArkCore.lean` then `LEAN_PATH=$PWD ./leancheck.sh Note.lean` — **on one line** (exporting `LEAN_PATH` first does not take) and **without** `:$LEAN_PATH` (unset variable ⟹ empty path entry ⟹ rejected) — or move the files under the lake library's source dir and import `Ark.ArkCore`. The README carries both recipes and all three gotchas, plus the container recipe for a bare toolchain (direct GitHub tarball; elan's release server is off the allowlist; **Mathlib stays unreachable there**, so Mathlib-side work is laptop work).
+- **Lemma names are the version-dependent part.** Two of the three failures so far were name drift, neither a false statement: `List.mem_cons_self`'s arguments are explicit in core 4.15.0 and implicit on the laptop; `div_le_div_iff` no longer exists under that name. **The convention: prefer a tactic, or a decomposition into long-stable lemmas, over a named iff-lemma wherever the goal is routine** — the division inequalities now go by difference-is-nonneg (`div_nonneg`, `field_simp`, `linarith`) rather than by whatever `div_le_div_*` is currently called. Ordering-and-division iff-lemmas are the highest-churn corner of Mathlib. Likeliest next offenders: the `Nat.mul_le_mul_left` / `mul_le_mul_right` / `mul_lt_mul_left` family, used at a dozen sites in `ArkCore`.
+
+**What it is not for.** Formalising the arithmetic layer does not check the group theory, and reaches no layer-assignment claim — which is where this framework's defects have been. Re-read the README's closing caveat before spending time here.
 
 ### A20. The density check must compare in exact arithmetic
 
@@ -580,6 +596,38 @@ Needs `Fraction` imported and the raw string kept on the `Row` as `delta_str` �
 The range minimum is **175813/3804661 = 0.04620989885…**, so the natural 5-place rounding **0.04621 lies above the true value** and "δ ≥ 0.04621" is false at the one n that attains it. Every quotation of a floor as a lower bound must use the exact rational, or truncate toward the bound; 0.04621 is fine as a *label* for the minimum and wrong after a `≥`. Fixed across five documents; the standing rule is in `verification-lessons.md` §5.
 
 **The same applies one level up, to any rounded scan output.** `ladder_verify.py` prints five places, so the file alone supports only "≥ printed − 5·10⁻⁶" at each entry. That is enough here — the next-lowest entry is 0.04801, hence at worst 0.048005, clear of the minimum by 0.0017 — but it is a margin to check, not a formality: had the two lowest entries been within 10⁻⁵ of each other, the printed file could not have established which was the minimiser. **On any ladder rerun whose two lowest values are close, print more digits before drawing a uniqueness conclusion.**
+
+### A20b. delta must be computed from the integers, never parsed from the density column — DONE
+
+**The failure this exists to prevent, because it fired.** `validate_table_v3.py` parsed `Row.delta` from the CSV's `density` column, which carries **six decimals** — a rounding error up to 5·10⁻⁷. The cap_F margins at n ≈ 10⁶ are *narrower than that*: the closest approach on the completed 10⁶ table is **1.77·10⁻⁷** and **96 rows sit within 5·10⁻⁷**. So a rounded density can land on the wrong side of a cap, and at exactly one row in 921,265 it did:
+
+> **n = 999685**, witness `2x292801 + 1x414083*`: true density **0.171572510776**, column **0.171573**, cap₂(1) = 3 − 2√2 = **0.171572875254**. The true value is below the cap by 3.6·10⁻⁷; the rounded one is above it by 1.2·10⁻⁷.
+
+That produced **two spurious FAILs** — the cap_F check and the feasibility check, which reads 1/√δ — on the same row, from one cause. *Confirmed exactly in integers: (3C − B)² − 8C² = 514799345346156900 > 0, so δ < 3 − 2√2 with no floating point anywhere.* **The data were correct and the checker was wrong.**
+
+**The same defect was in a second script, and there it was far louder.** `converse_check.py` also parsed the density column, and inequality (2) of Proposition F.4 — r ≥ √(δ·n(n−1)) — is *tight*, its closest ratio on the 10⁶ table being 1.0000. The inflated δ therefore broke it on **991 rows**, and the script printed *"991 violation(s) — F.4 is contradicted by the table"*. Checked exactly in integers, r(r−1) ≥ 2B holds at **every one of the 796,763 one-foreign rows**; with δ computed from the integers the script reports **all four inequalities clean**. *A script whose failure message is "the Proposition is contradicted" is exactly the one that must not read a rounded column* — and the two scripts failed the same way in the same week, which is why the guard below is a check rather than a comment.
+
+**Fixed and guarded.** `Row.delta` is now `B / C`; `delta_str` is kept because check A20's whole job is to verify the column against B/C, and that check must read the string while every other check must not. Three guards: the cap_F check now **reports its margin** (closest approach, and how many rows sit within the column's rounding error) so the next person sees immediately that the column is unusable here; a new group-A check **fails if anyone reverts** `Row.delta` to `float(density)`; and both are documented at the point of use.
+
+> **The failure is evidence for the bound.** A rounding error can only flip a comparison whose two sides are within the rounding error of each other, so this could not have happened against a loose ceiling. Measured on the completed 10⁶ table, the closest approach to cap_F(η) **in every one of the twelve residue classes**:
+>
+> | n mod 12 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
+> |---|---|---|---|---|---|---|---|---|---|---|---|---|
+> | closest gap (×10⁻⁶) | 1.25 | 0.36 | 0.18 | 1.40 | 3.25 | 0.23 | 2.25 | 1.14 | 0.19 | 0.40 | 6.26 | 0.41 |
+>
+> **Every class is approached to within 7·10⁻⁶, six of them to within 5·10⁻⁷**, and the approach tightens with the range: the closest gap in each decade runs 9.3·10⁻³ (n ≈ 70), 3.9·10⁻⁴, 3.7·10⁻⁵, 3.0·10⁻⁶, 1.8·10⁻⁷ — *gap × n roughly constant at 0.14–0.65*, which is the O(1/n) discretisation of the balance point and exactly the rate a tight ceiling should show. So the ceilings of `arithmetic-of-density.md` §3.3 are not merely upper bounds but **attained to the resolution the integers allow**, in every class, and the checker's one-in-a-million false positive is a symptom of that rather than of anything wrong.
+
+*The general form, which is why this is worth a section rather than a line in a log:* a derived column is a **lossy** copy of the data, and a check that reads it is testing the printer rather than the value. The tell is that the failure appeared only after the table grew — the margins tighten as n grows, so the rounding error stays fixed while the quantity being compared does not. **Six decimals were ample at n = 2600 and are not at 10⁶**, and no amount of care at the earlier scale would have surfaced it.
+
+### A20c. A screen must derive its range from the table, never from a constant — DONE
+
+**Two scripts silently under-screened the completed table while printing a pass.** `t5_verify.py`'s pass 4 built its event list to a hardcoded `N = 2484`, so on the 10⁶ table the running maximum froze there and the check passed vacuously at **918,781 of the 921,265 rows it reported**. `audit_fmid.py` had `--nmax` defaulting to 2600 against a hardcoded sieve bound of 2700, so it screened **2,186 of 921,265 rows** — and its coverage line, "0 non-prime-power values in that range absent from the table", reads exactly like a clean pass because it is one, over the range it chose.
+
+Both now derive the range from the table's own maximum, and `t5_verify.py` also reads the **floor** from the table rather than quoting 0.02516 (its threshold accordingly moves from n ≥ 763 to n ≥ 371). Its r-loop was rewritten to run over the prime *divisors* of p^a − 1 rather than every prime below it, without which the corrected range is not reachable.
+
+**Coverage measured, and one scaling limit found.** With the range derived, `audit_fmid.py` screens a **20,000-row slice to n = 22,591 clean** — 4,945 rows at δ ≤ 0.13, 0 configurations above B(n) — but its candidate loop scans the prime-power list per row without bisecting, so the full 10⁶ run does not finish in reasonable time. **That is a scope note, not a defect**: the screen is about low-density rows and those are dense at small n. Bisect the `parts` loop on c before claiming the whole range.
+
+*The general form is the one A20b's lesson does not cover:* a check can be wrong about **what it looked at** as easily as about **what it concluded**, and the first failure is quieter, because the output still says PASS and still names a large number of rows. **A screen must state its coverage before its verdict, and the coverage must be derived from the input.**
 
 ### A21. A fusion-aware penalty for the partition-factor table
 
@@ -618,20 +666,6 @@ Adding n = 2759 above the contiguous frontier made the pass report 22 extra find
 
 The ceiling table is a theorem about the Oliver-admissible family **as currently characterized**, and the entangled-generator correction showed that characterization can be wrong in the permissive direction — a whole family was excluded by an argument that confused a quotient for a subgroup. **Nobody has searched for the optimal admissible family**, in this project or in the literature: BBKN had no reason to, since below the endpoint any admissible family gives the same order (`literature-findings.md` §15b). So the literature's silence is evidence neither for nor against the entangled construction's optimality, and this is the one place a further constant factor could still be hiding. No cheap test is known; the honest status is that the ceiling is a ceiling *over what we have enumerated*.
 
-### A28. Score the Galois layer: B_refined⁺
-
-*Small, well-posed, and the last structural source of an interior μ(n) apart from J0a itself.*
-
-`mu_enumerate`'s `orb(c, d)` takes a matching block's twist to be **cyclic** of order d, which is exact for a stabiliser inside the Singer cycle and *under*-states one inside ΓL(1, c) proper. At c = 343 with foreign prime 19, C₁₈ ⋊ Frob₃ sits in an Oliver chain at q = 3 and realises minimum intra-orbital 3087 against the stripped cyclic reading's 1029. So B_refined as implemented is not the sharpest construction-side lower bound available; **B_refined⁺**, taking the twist inside ΓL(1, c), is.
-
-**Why it is worth doing even though nothing currently depends on it.** Part E‴'s trichotomy leaves exactly one way for μ(n) to sit *strictly between* the endpoints: a proper prime power c, a stripped twist, and a density below the E.1/E.3(iii) caps. Scoring the Galois layer removes the middle of those three, after which an interior μ requires a stabiliser outside ΓL(1, c) altogether — i.e. J0a proper, which is a much sharper thing to be left with than "the refined scoring is not tight".
-
-**What it costs.** One clause in `orb` (multiply by the Frobenius orbit count where the twist order divides a subfield's), a re-run of the shape sweeps at c = 4, 8, 9, 16, 25, 27, 32, 49, 64, 81, and a check that `B_refined⁺ ≤ B_safe` still holds at every row. It cannot move B_safe, and it can only *raise* a lower bound, so the direction is safe. **Do not let it touch the certificates**, which score SAFE and must stay flat.
-
-### A29. Second reading: the J0a-free bound t ≤ a
-
-Lemma C's coupling conclusion t \| ord_r(p) is proved via a Frobenius exponent and assumes a semilinear stabiliser at a ≥ 2. The **bound** it is consumed for — orb(r, t) ≤ r·a, which is all Corollary C′ and E.3(i) use — appears to need no such assumption: the r-element of the cyclic layer has r-th-root-of-unity eigenvalues on V = 𝔽_p^a, closed under Frobenius, hence at most a/ord_r(p) Frobenius orbits; conjugation is a power map whose reduction mod r is the induced multiplier, so the multiplier group permutes those orbits and M⟨p⟩/⟨p⟩ acts freely on cosets, giving \|M\| ≤ a. **One reading only, and nothing currently rests on it** — E.3(i) is theorem-side and `--no-theorems` closes every n without it, and Part E‴ does not use Lemma C at all. If it holds it removes J0a from Corollary C′ and weakens E.3(i)'s "worth at most c" only to "at most max(c, r·a)", still linear. → T1's queue, after Part 0.
-
 ### A25. The transference route from (BCP) to a floor
 
 `bcp-to-floor.md` §6.2 files it: S_D under (BCP) has positive relative density inside the Selberg majorant for the pair `{Q, dQ+1}`, whose pseudorandomness is sieve-provable, and a restriction/transference estimate for `n = kp + r` against that majorant would give the representation for almost all n with **no distributional hypothesis on S_D at all**. §6.1's counterexample marks the boundary any such argument must respect — the count alone is provably insufficient — so a successful transference must consume the unconditional sieve upper bounds. A research question, not an afternoon; filed here because it is otherwise homeless outside a one-pass working note.
@@ -656,55 +690,22 @@ Promoting the note's findings into `aod` raises the value of a second reading ra
 
 **What a disagreement would cost.** (a)–(d) are quoted in `aod` §§3.5.3, 6.8 and 6.9 and would survive; (e) is cited rather than restated, so a failure there retracts a citation and the strengthened reading of the asymptotic half, not any unconditional claim. That asymmetry is deliberate and should be preserved if §6.9 is ever expanded.
 
-### A9. The Lean formalisation — keep it in step, and keep it moving
+### A28. Score the Galois layer: B_refined⁺
 
-*Home: the Lean project's own `README.md`, which carries the phasing, the case for and against, and the failure-mode analysis. **This item exists so the work resurfaces even when nobody thinks to mention it**; do not restate the reasoning here.*
+*Small, well-posed, and the last structural source of an interior μ(n) apart from J0a itself.*
 
-> **State, 2026-09.** All three files sorry-free (the word appears only in comments); `ArkCore.lean` compiles against core 4.15.0 with no Mathlib; `Note.lean`'s main theorem `theorem_arithmetic_half` is correctly scoped — its primality and coprimality hypotheses are bound with underscores because the arithmetic half does not use them, which is the honest signal that they belong to the Oliver half. **The README predates Theorem E.5**, and E.5 is now the highest-value formalisation target in the project: arithmetic on SAFE terms, one human reading, load-bearing for the whole "μ known exactly to 10⁶" claim. Recorded there as Phase 1b. Also reachable and cheap: the BBKN-replacement inequality `μ(n) ≥ n·(Q(n) − 1)/2` (three lines from `orb_full`, if the note's §1 commentary keeps it), and the self-pairing lemma `orb c d = c·d/2 ⟺ d even` behind `directed-graph-properties.md` §2.
+`mu_enumerate`'s `orb(c, d)` takes a matching block's twist to be **cyclic** of order d, which is exact for a stabiliser inside the Singer cycle and *under*-states one inside ΓL(1, c) proper. At c = 343 with foreign prime 19, C₁₈ ⋊ Frob₃ sits in an Oliver chain at q = 3 and realises minimum intra-orbital 3087 against the stripped cyclic reading's 1029. So B_refined as implemented is not the sharpest construction-side lower bound available; **B_refined⁺**, taking the twist inside ΓL(1, c), is.
 
-**Two obligations, and the first is the one that rots silently.**
+**Why it is worth doing even though nothing currently depends on it.** Part E‴'s trichotomy leaves exactly one way for μ(n) to sit *strictly between* the endpoints: a proper prime power c, a stripped twist, and a density below the E.1/E.3(iii) caps. Scoring the Galois layer removes the middle of those three, after which an interior μ requires a stabiliser outside ΓL(1, c) altogether — i.e. J0a proper, which is a much sharper thing to be left with than "the refined scoring is not tight".
 
-1. **Sync.** The Lean statements encode claims from these documents — ceiling values, coefficient rules, threshold ladders, the `orb` definition. *Most recent sync found one drift and fixed it:* `Note.lean`'s hypothesis structure was `HypH`, which both invited conflation with the framework's class-keyed hypothesis and carried the Schinzel collision the (BCG) rename existed to remove; it is now `HypBCG`, with the non-nesting recorded at its docstring. When a document changes, the Lean can quietly stop matching it, and nothing in this repository's checks looks at `.lean` files. Any revision to §3.3.5's table, to the cap algebra, to `orb`, or to the E′ s-bound should be followed by a pass over `ArkCore.lean`, `Note.lean` and `Basic.lean`. The ceiling table is the sharpest case: the entries are enumerated one per constant, so a table that gains or loses a constant leaves a list of the wrong length — which is useful only if someone looks.
+**What it costs.** One clause in `orb` (multiply by the Frobenius orbit count where the twist order divides a subfield's), a re-run of the shape sweeps at c = 4, 8, 9, 16, 25, 27, 32, 49, 64, 81, and a check that `B_refined⁺ ≤ B_safe` still holds at every row. It cannot move B_safe, and it can only *raise* a lower bound, so the direction is safe. **Do not let it touch the certificates**, which score SAFE and must stay flat.
 
-2. **Progress. Phase 0 is complete.** Status is per file, and the distinction that matters is the sorry count rather than the compile — a sketch full of sorries compiles perfectly happily:
+### A29. Second reading: the J0a-free bound t ≤ a
 
-   | file | compiles | sorries |
-   |---|---|---|
-   | `ArkCore.lean` | laptop **and** container (core 4.15.0, no Mathlib) | **0 — every proof complete** |
-   | `Note.lean` | laptop | **0 — every proof complete**, six by import from `ArkCore` |
-   | `Basic.lean` | laptop | nonzero — the remaining sketch, phase 1 |
+Lemma C's coupling conclusion t \| ord_r(p) is proved via a Frobenius exponent and assumes a semilinear stabiliser at a ≥ 2. The **bound** it is consumed for — orb(r, t) ≤ r·a, which is all Corollary C′ and E.3(i) use — appears to need no such assumption: the r-element of the cyclic layer has r-th-root-of-unity eigenvalues on V = 𝔽_p^a, closed under Frobenius, hence at most a/ord_r(p) Frobenius orbits; conjugation is a power map whose reduction mod r is the induced multiplier, so the multiplier group permutes those orbits and M⟨p⟩/⟨p⟩ acts freely on cosets, giving \|M\| ≤ a. **One reading only, and nothing currently rests on it** — E.3(i) is theorem-side and `--no-theorems` closes every n without it, and Part E‴ does not use Lemma C at all. If it holds it removes J0a from Corollary C′ and weakens E.3(i)'s "worth at most c" only to "at most max(c, r·a)", still linear. → T1's queue, after Part 0.
 
-   Between the first two the note's whole arithmetic layer is proved; what stays conditional is **(BCG_{1/5}-AL)** — the *note's* fixed-window hypothesis, formalised as `HypBCG`, not the framework's class-keyed (BCG-AL), the two being non-nested — and Oliver, neither formalisable. `ArkCore.lean`'s clean compile against core 4.15.0 with no `sorry` warning has been **independently reproduced** in a container built from the GitHub-releases tarball, so the zero-sorry claim rests on a rerun rather than on a remembered result. **Phase 1 is DONE: all three Lean files are sorry-free.** `Basic.lean` went **18 → 0** in one pass. Proved: `orb_full`, Lemma D1, the capacity bound, Prop F.1, the E′ s-bound and both threshold ladders, the `capF` algebra, **all six §3.3.5 ceiling entries as algebraic numbers** including the global constant `capF 4 (1/3) = 7 − 4√3` at the extremal class, the two-foreign closed form, and the quadratic-residue collapse.
+### A30. ~~`johnson-presentations.md` is cited and not in the working set~~ — RESOLVED
 
-> **Three signature corrections came out of it, which is the better argument for this layer than the proofs are.** `orb_full`'s `2 ≤ c` and `capF_eq_k_sqrt`'s `0 ≤ η` turn out unnecessary — Lean reports them unreferenced, and both are now underscored. **`prop_F1` was false as stated**: at `k = 0` the sum over `Fin 0` is 0, so `n = 0`, the capacity hypothesis is vacuous, and the conclusion reads `0 < 0`. `0 < k` added. That is the *same* failure the file already recorded at `size_of_capacity` — an informal claim quantifying over a configuration and forgetting the empty one. **Two instances in one file is a pattern worth carrying: whenever a claim is "k things each with property P force a bound", check k = 0 first.** A prover cannot skip the degenerate branch the way a reader does.
+The file exists and is now in the set. Its Proposition 1 is the unification the citation promised — a transitive action whose coordinates are the k-subsets of a base X (a **k-Johnson presentation**) has a transitive Oliver subgroup **iff** G contains a subgroup that is Oliver and k-homogeneous on X — so the §1 citation is restored, and Appendix C's prime-powers box now states one criterion with three inputs (arity, base size, containment) instead of listing three coincidences. *Spot-checked on reading: AGL(1,5) ⊄ A₅ (the twist x ↦ 2x is an odd 4-cycle), D₁₀'s pair-orbitals are [5, 5] against A₅'s [10], and T(m) has degree 2(m−2) at m = 5, 6, 7 — all as the note states.*
 
-> **Two techniques worth reusing.** *Write δ = m/N and square* — both ladders are claims about `1/√δ`, and squaring clears the real and the root together, leaving `Nat` arithmetic core Lean proves outright. Where a real-valued claim is an inequality between two squares, the `Nat` form is the same statement with the coercion removed, not an approximation of it. And *supply the surd once*: `capF_of_sqrt` takes the root and its defining equation as arguments, so six ceiling entries became six instances of one identity.
-
-**The remaining Lean work is phases 2 and 3, and neither is owed.** Phase 2 is the balance-point maxima — partly pre-empted, since its cleanest named target (the two-foreign closed form) is already proved and `capF_of_sqrt` is likely the lever for the rest. Phase 3 would make `B n` a Lean-checkable function; the Lean README's own judgement that *this is where I would stop* still stands, `validate_table_v3.py` already covering the rows.
-
-**What the sync obligation now guards** is drift in the other direction: the Lean statements are checked, so a document changing a constant, a coefficient rule or a threshold now contradicts a *proved theorem* rather than a sketch. `Basic.lean`'s ceiling entries are the mod-12 table; if §3.3.5 ever gains or loses a constant, the list of six no longer matches.
-
-**Two environment lessons, both earned by a failed run, and both about names rather than mathematics.**
-
-- **Imports.** Lean resolves `import ArkCore` through `LEAN_PATH` and lake's build dirs and loads the compiled `.olean`, so co-locating sources does nothing and `PATH` is irrelevant. Either `lake env lean -o ArkCore.olean ArkCore.lean` then `LEAN_PATH=$PWD ./leancheck.sh Note.lean` — **on one line** (exporting `LEAN_PATH` first does not take) and **without** `:$LEAN_PATH` (unset variable ⟹ empty path entry ⟹ rejected) — or move the files under the lake library's source dir and import `Ark.ArkCore`. The README carries both recipes and all three gotchas, plus the container recipe for a bare toolchain (direct GitHub tarball; elan's release server is off the allowlist; **Mathlib stays unreachable there**, so Mathlib-side work is laptop work).
-- **Lemma names are the version-dependent part.** Two of the three failures so far were name drift, neither a false statement: `List.mem_cons_self`'s arguments are explicit in core 4.15.0 and implicit on the laptop; `div_le_div_iff` no longer exists under that name. **The convention: prefer a tactic, or a decomposition into long-stable lemmas, over a named iff-lemma wherever the goal is routine** — the division inequalities now go by difference-is-nonneg (`div_nonneg`, `field_simp`, `linarith`) rather than by whatever `div_le_div_*` is currently called. Ordering-and-division iff-lemmas are the highest-churn corner of Mathlib. Likeliest next offenders: the `Nat.mul_le_mul_left` / `mul_le_mul_right` / `mul_lt_mul_left` family, used at a dozen sites in `ArkCore`.
-
-**What it is not for.** Formalising the arithmetic layer does not check the group theory, and reaches no layer-assignment claim — which is where this framework's defects have been. Re-read the README's closing caveat before spending time here.
-
-### A0b. `validate_table_v3.py` — the three groups
-
-`python3 validate_table_v3.py <current table> --baseline <previous table>`
-
-- **A. Table integrity** — well-formedness, Lemmas B′ and D2 on each witness, re-derivation of `mu_bound` from the witness by the G.3 formulas, the density column (A20), certification, monotonicity against the baseline, **value agreement against the baseline**, and the **Part E preconditions** (T2). *The monotonicity check is the FAIL gate — a value going down is a defect under every reading — and the value-agreement check beside it is INFO carrying the equal/higher/lower breakdown, the coverage either way, and the count of **ties** (equal value, different recorded witness). It sits immediately above the shape-migration check because that check is read against it: a migration with zero value differences is a tie, not a disagreement. Compared on the integer `mu_bound`, and reported as `ALL equal` or raw counts — never a percentage, since a negative control corrupting one value in each direction printed `100.00%`.* A FAIL means the run or parser is broken.
-- **B. Exact claims, holding at every n** — Prop F.1, cap_F(η), S2's 1/F, layer-by-top-prime, S6 emptiness, Lemma C exposure, the cyclic layer's pairwise coprimality, the feasibility criterion, Part G.4's per-axis bounds, the within-class cross coefficient, and the foreign-side residue patterns. The matching block's residue prices nothing, so the exact checks live on r, not c; the retired c mod 8 patterns are kept as group-C INFO, where a population at the residues the old law forbade is positive evidence. A FAIL is a real contradiction between table and documents.
-- **C. Density and distribution** — floor and the s/k bounds it implies, low-density tail, part-count distribution, census shares, odd-n shares, class-ceiling exceedance, median density by residue class, foreign-block efficiency, ω(n) = 2 share. All INFO, each printing the expected asymptotic beside the measurement.
-
-**Four group-B checks have no independent counterpart elsewhere:** the cyclic layer's global pairwise-coprimality condition (the only check that would catch the enumerator *over*-correcting), the feasibility criterion Σ√Fᵢ ≤ 1/√δ, Part G.4's per-axis bounds, and the within-class cross **coefficient**, which is invisible to output since the term never binds. Each has a negative control: breaking it makes the check FAIL.
-
-**Group-B trend check, for census rows claiming `wins → 0`.** The verdicts are asymptotic limits, so a count tests nothing; what is required is a *declining share*, clearing both a proportional bar and Poisson noise. `ZERO_SHARE` entries may be a tuple treated as one aggregate — needed because splitting S7 by fusion count costs sensitivity. To exercise it, replace the `S7f3`/`S7f5` entries with `("S7f3","S7f4","S7f5","S7f6","S7f8")`: it fails with `S7f3+…+S7f8 4.1%→7.6%` against `S2 45.2%→29.3%`.
-
-**Amend it in the same pass whenever the model changes** — each check names the document section it comes from, so a stale check is findable from either end. It checks the table against the documents' model, not against mathematics; for independent evidence use `brute_compare.py`.
-
-> **Keep it fast — a design constraint, not a nicety.** The suite runs in about **0.1 s on 1,700 rows, 1 s on 50,000, 3.5 s on 144,000**, which is what makes it reflexive rather than scheduled. Keep each check O(rows) or O(rows × parts) on numbers already parsed from the witness. Enumerating configurations, isomorphism work, re-deriving B(n), or sieving past `NMAX` belong in a certificate. If a new check must compare a row against alternatives, budget it against the per-row cost and say so at the check.
->
-> **It was violated once, and not by a check.** The gap scan in `main()` read `n not in set(ns)`, rebuilding the set every iteration — quadratic in the row count, 0.02 s at 2,186 rows and **47 of 51 seconds at 50,062**, minutes on the 144k ladder-exact table. Fixed (hoist the set; sieve the prime-power test; skip the scan entirely on a non-contiguous file and say so), together with two smaller costs the fix exposed: `prime_power_base` is now memoised (409k calls, a few thousand distinct block sizes) and `density_ok` uses integer arithmetic instead of `Fraction`, whose normalisation was 1.4 s of a 13 s run. **Output is bit-identical before and after on the exact table, and the density fast path was checked against the `Fraction` reference on every row of both tables — 0 disagreements.** *The lesson to carry: `main()` is subject to the cost model too and is where nobody looks, and a quadratic term is invisible until the data grows an order of magnitude — so re-time when the table's scale changes rather than trusting that it was fast last month.*
+**One live item it leaves behind**, worth carrying separately since it is not about the presentation at all: §5's open question, **what is the minimum order of an Oliver group on m points whose minimum orbital is ≥ δ·C(m,2), for m not a prime power?** The necessary bound is Ω(m²) and is tight at prime powers (AGL(1, m) has order 2·C(m,2)), but the multi-block constructions use groups polynomially larger — the bottom layer alone is c^F — and nothing in the framework explains the excess. Either much smaller Oliver groups achieve constant δ at composite m, which would widen the class of G the argument reaches, or Ω(m²) is far from achievable off prime powers and a better lower bound exists. `mu_exact.py` could settle it over the computed range by recording each winning configuration's group order beside its density — a small change to a script that already enumerates the configurations.

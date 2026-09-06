@@ -491,6 +491,18 @@ Written, and it does what the previous turn's analysis said was blocking any use
 
 **And the open question sharpened rather than closed.** Nine of twenty-four cells fall short, and they are precisely the *other* column at each class — class 0 reaches 0.10100/0.10102 at κ_c = 3 but only 0.06697/0.12500 at κ_c = 2, the κ_c = 2 sup landing on the η = 1/3 value instead of η = 1. So the live question is no longer "is the table right" but **whether each class's unreachable column is arithmetically obstructed or merely thin in supply**: at class 0, κ_c = 2 the η = 1 entry needs r − 1 = 2·q^e with q ≥ 5, which is a safe-prime-family supply condition, not an evident obstruction. That is the concrete form of §5.7's "a k = 3 subtlety not visible at k = 2", and it is a better-posed question than the one it replaces.
 
+## 5i. `pending-checks.md` reordered
+
+The file had drifted out of order as items were added at whatever point the conversation reached them. **R12 and R12a had landed in the front matter, before §1 began**; A20c was a `###` nested under R11 while A20b beside it was a `##`; R0c sat between A20b and the closed ledger; A30 was orphaned after R0c. Reordered mechanically — parse the headings (skipping those inside code fences, which the first attempt at this counted as sections), then re-emit under a fixed scheme:
+
+- front matter, then **§1 in numeric order** — R0, R0c, R1, R1b, R6, R6a, R7, R8, R10, R11, R12, R12a — all at `##`;
+- the closed ledger;
+- **§2a** T1–T8 and **§2b** A0b, A9, A20…A30, all at `###`, both in numeric order (A25–A27 had been sitting after A28–A29).
+
+Two things the pass exposed rather than just moved. **R7 had both a full section and a ledger row**, so it was listed twice with different summaries; the row is gone and the ledger intro now says items with residue keep their section rather than appearing in both. And **§1 mixes live runs with retained-closed entries** — R7 superseded, R11 and R12a done, R1b and R12 explaining a scope — which is fine but was invisible, so §1's intro now names which is which.
+
+Verified: 40 headings, every block placed, **0 unresolved cross-references** (R0b, R7a, R7c, R7d resolve to ledger rows, which is intended), no duplicates between sections and ledger, and a line-level diff shows exactly three lines changed — the two intended rewordings and the deleted duplicate row.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
