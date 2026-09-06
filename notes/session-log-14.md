@@ -245,6 +245,14 @@ Asked whether §6 — the section built on `shape-counting.md` — was also curr
 
 *The generalisable pair:* a clause whose smallest counterexample lies outside the test range is indistinguishable from a dead one — name the witness rather than widening the sweep; and the range discipline the documents follow applies to assertion messages, which are prose that nobody proofreads.
 
+## 4p. `khomog_verify.py` audited
+
+**A vacuous check.** `check("AGL(1,8) is not 3-transitive", 8 * 7 < 8 * 7 * 6)` is an arithmetic tautology — no group computation enters it, so it could never fail. Replaced by orbits on **ordered** triples: six orbits of 56, against one orbit on the 56 unordered ones, which exhibits both halves of the claim from one computation.
+
+**A finiteness claim resting on three points.** Pass 3 tested degrees 6, 7, 16 and an order bound at 64, 128, 256, concluding "above degree 5 the list is exactly {8, 32}" — leaving eighteen prime-power degrees in range untested. A solvable 3-homogeneous group is 2-homogeneous, hence of prime-power degree, and the maximal solvable candidate there is AΓL(1, c); so sweeping every prime power in [6, 63] settles the range. Done: **22 degrees, only 8 and 32**, failures not near-misses (2 to 11 orbits). The order bound now runs over **578 prime powers in [64, 4096]** with its growth rate stated. Run time 2.5 s.
+
+**And a bug in my own sweep, kept because the failure mode is the interesting part.** The general GF(p^m) first used a hand-rolled irreducibility test that silently accepted a reducible modulus at q = 8 (`mul(2, 4) = 0`), after which the generator search looped forever. Replaced by choosing the first modulus under which x has order p^m − 1: primitivity is self-verifying — a reducible modulus has zero divisors, so x cannot have full order — and yields the generator for free. *A construction that fails loudly beats a test that fails silently*, which is the same lesson as the base-case trap in `monotone-transitive-note.md` §6 and the false-SAT bug in `stage4_fast.py`.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

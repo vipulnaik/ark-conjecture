@@ -15,7 +15,7 @@
 | §2.2.1 the 3 \| c failure | measured, with the mechanism identified |
 | §2.2.2 the semilinear criterion | **proved**, necessity included; two clauses out of computational reach. The Oliver-constrained corollary rests on a layer split, whose branches are enumerated |
 | §2.2.3 the Mersenne family | **proved**, and verified at both computable cases |
-| §3.1 full density at k = 3 | **classified** — Kantor 1972; the list is c ∈ {5, 8, 32} and is complete |
+| §3.1 full density at k = 3 | **classified** — Kantor 1972; the list is c ∈ {5, 8, 32} and is complete. *The consequence the framework uses is independently swept in `khomog_verify.py`: every prime power in [6, 63] tested, only 8 and 32 are 3-homogeneous, and the order bound closes [64, 4096]* |
 | §3.2–3.3 why density → 0 | **proved**, from an order bound plus that classification |
 | §4 the shape ranking | **measured only, no systematic search** — the least reliable section |
 | §5 the additive engine | the allocation formula is **derived**; the ceiling is a bound, and the table is a search |
