@@ -355,6 +355,12 @@ Read `mu-theta-n2-note.md` (the arXiv-bound simplification: μ = Θ(n²) under a
 
 *The bridge's own §0 predicted this class of drift — "framework figures move in one direction, and the note must be re-read whenever they do" — and it was right about the direction every time: every stale figure was too small.*
 
+## 4w. A conflation of mine, caught by the user: Rivest–Vuillemin's prime power is the coordinate count
+
+Reviewing the plan for the human-written note, I said Rivest–Vuillemin had "settled prime powers combinatorially in 1976, before KSS", so that KSS's prime-power result was a topological re-proof. Wrong: RV's theorem is about a monotone function on N = p^a **variables** with a transitive invariance group (Sylow subgroup transitive — `monotone-transitive-note.md` Prop. 2, Appendix C row 6), and for graph properties N = C(n,2) = n(n−1)/2 is never a prime power at n ≥ 4. KSS's result is about prime-power **vertex** count, where the edge count carries no Sylow argument and Oliver's theorem is the only route. So KSS is genuinely new at prime powers, and the topological chain is load-bearing there in the same way it is at composite n — which makes the note's historical section stronger, not weaker.
+
+Folded into Appendix C's unification box, where rows 0 and 6 now say explicitly which number each prime power is: the vertex count (KSS) against the coordinate count (RV). *The two theorems sit one row apart in a table keyed on exactly this distinction, and I still ran them together in prose — the mechanism-of-action framing is the corrective, and it has to be applied to one's own sentences too.*
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
