@@ -100,9 +100,12 @@ same and each file records whichever it reached first -- e.g. n = 423, where
 `2x128 + 1x167*` and `1x256 + 1x167*` both score 13861 because the foreign block
 binds.  A witness diff is therefore not a discrepancy; a value diff is.
 
-MEASURED THROUGHPUT.  ~10.8 rows/s at n near 10^6 (92 ms/row), so a full run to
-10^6 is about 15 h single-threaded and under 2 h on eight chunks -- against
-`mu_exact.py`'s ~3 h PER VALUE at that size.
+MEASURED THROUGHPUT.  ~37 ms/row at n near 10^6 (was 92 before the menu scan was
+interval-restricted), ~4 ms at 10^5, 0.76 ms averaged over the 50k-row table and
+2.2 ms over the 144k-row one.  A full run to 10^6 is about 6 h single-threaded
+and under an hour on eight chunks -- against `mu_exact.py`'s ~3 h PER VALUE at
+that size.  Checked against both tables after the change: equal at all 50,062
+and all 144,299 rows, 0 low, 0 high.
 """
 import argparse
 import csv
@@ -143,6 +146,11 @@ class Arith:
                 x //= p; a += 1
             self.pp[c] = (p, a) if x == 1 else None
         self.primes = [x for x in range(2, N + 1) if self.spf[x] == x]
+        # Prime powers in increasing order.  The menu scan walks THIS, not
+        # range(n): at n = 2*10^5 the window holds ~18,000 prime powers against
+        # ~197,000 integers, so testing prime-power-ness inside the loop was
+        # doing an order of magnitude more work than the loop needed.
+        self.pplist = [c for c in range(2, N + 1) if self.pp[c]]
         # best single-q foreign value, and the q attaining it
         self.best_orb = [0] * (N + 1)
         self.best_q = [0] * (N + 1)
@@ -178,6 +186,21 @@ def coeff(F):
     return F if F % 2 else F // 2
 
 
+def intra_floor_scaled(v, F):
+    """Least c with F*C(c,2) >= v.  Closed form via isqrt, then corrected --
+    the same shape as fb_common.intra_floor, which this generalises to a fused
+    class.  Called once per F per n, so the correction loop costs nothing."""
+    if v <= 0:
+        return 2
+    t = -(-v // F)                       # ceil(v / F): need C(c,2) >= t
+    c = (1 + isqrt(1 + 8 * t)) // 2
+    while c * (c - 1) // 2 < t:
+        c += 1
+    while c > 2 and (c - 1) * (c - 2) // 2 >= t:
+        c -= 1
+    return c
+
+
 def qpart(x, q):
     t = 1
     while x % (t * q) == 0:
@@ -208,29 +231,82 @@ def best_for_n(n, A):
             if PP[c]:
                 upd(min(FF * comb(c, 2), coeff(FF) * c * c), f"p={PP[c][0]} q=2: {FF}x{c}")
     # ---- S3, S7 (F = 1..16): F*c + r*, one foreign at its best q ------------
-    lo_c = n // (5 * FMAX)             # every part has share > 1/5
-    for c in range(max(2, lo_c), n):
-        pc = PP[c]
-        if not pc:
+    #
+    # THE SCAN IS INTERVAL-RESTRICTED AND WALKS OUTWARD FROM THE BALANCE POINT,
+    # and both halves of that matter for different reasons.
+    #
+    # *Interval.*  A candidate can only beat the running best if BOTH its crude
+    # caps clear it: F*C(c,2) >= best bounds c below, and C(n-F*c,2) >= best
+    # bounds it above.  Those are closed-form, so each F contributes one
+    # contiguous slice of the prime-power list rather than a scan of the whole
+    # window.  In share terms the slice is x in [sqrt(delta*F), 1 - sqrt(delta)]
+    # -- a CONSTANT FRACTION of the window, set by delta and not by n.  Measured
+    # against the true B(n): 8 of 490 (F,c) pairs survive at n ~ 10^3, 280 of
+    # 2,938 at 10^4, 1,920 of 21,548 at 10^5, matching the predicted interval
+    # width to a few percent at every scale.
+    #
+    # *Outward from the balance point.*  The interval prune is only as strong as
+    # `best`, so the order matters: starting at the bottom of the window leaves
+    # `best` small through the most expensive stretch.  The optimum sits within
+    # O(log^3 n) of x* n (`approach-rate-note.md`), so walking outward from x*
+    # finds a near-optimal value in the first few candidates and the interval is
+    # then tight for the rest of the scan.
+    #
+    # WHAT THIS DOES NOT BUY, since the tempting reading is that it should.  The
+    # concentration of the optimum near x* makes FINDING fast and gets better
+    # with n; PROVING optimality does not, because the objective is flat at its
+    # maximum, so the certificate needs a sqrt(gap)-wide interval and the gap
+    # available before evaluating a candidate is the whole delta, not the
+    # O(log^3 n / n) approach loss.  So this is a constant factor (measured
+    # 4.8x at n ~ 2*10^5), not an asymptotic gain, and the saving is LARGEST at
+    # arithmetically strong n where delta is high and the interval narrow -- the
+    # expensive values are the low-delta ones, as everywhere else here.
+    PPL = A.pplist
+    for F in range(1, FMAX + 1):
+        # c >= cmin: least c with F*C(c,2) >= best   (best may be 0 at F = 1)
+        cmin = max(2, intra_floor_scaled(best, F))
+        # r >= rmin: least r with C(r,2) >= best, hence c <= (n - rmin)/F
+        rmin = max(3, intra_floor_scaled(best, 1))
+        cmax = (n - rmin) // F
+        # the share > 1/5 cuts of the old loop, kept explicit
+        cmin = max(cmin, n // (5 * F) + 1)
+        cmax = min(cmax, (4 * n) // (5 * F))
+        if cmax < cmin:
             continue
-        p = pc[0]
-        for F in range(1, FMAX + 1):
-            r = n - F * c
-            if r < 3:
-                break
-            if 5 * r <= n:              # foreign part must have share > 1/5
-                continue
-            if 5 * F * c <= n:          # so must the class
-                continue
-            if not A.is_prime(r) or r == p or (c - 1) % r == 0:
-                continue
-            fo = A.best_orb[r]
-            if fo <= best:
-                continue
-            intra = F * comb(c, 2)
-            v = min(intra, fo, F * c * r) if F == 1 else min(intra, coeff(F) * c * c, fo, F * c * r)
-            if v > best:
-                upd(v, f"p={p} q={A.best_q[r]}: {F}x{c} + 1x{r}*   (* foreign)")
+        i0 = bisect_left(PPL, cmin)
+        i1 = bisect_right(PPL, cmax)
+        if i1 <= i0:
+            continue
+        # x* for this F at eta = 1 is 1/(1 + sqrt F), so c* = n/(F(1 + sqrt F))
+        mid = bisect_left(PPL, int(n / (F * (1 + F ** 0.5))), i0, i1)
+        up, down = mid, mid - 1
+        while up < i1 or down >= i0:
+            for j in (up, down):
+                if j is up:
+                    if up >= i1:
+                        continue
+                    up += 1
+                else:
+                    if down < i0:
+                        continue
+                    down -= 1
+                c = PPL[j]
+                intra = F * comb(c, 2)
+                if intra <= best:            # below the interval for this F now
+                    continue
+                r = n - F * c
+                if r < 3:
+                    continue
+                fo = A.best_orb[r]
+                if fo <= best:               # includes C(r,2) <= best
+                    continue
+                p = PP[c][0]
+                if not A.is_prime(r) or r == p or (c - 1) % r == 0:
+                    continue
+                v = min(intra, fo, F * c * r) if F == 1 else \
+                    min(intra, coeff(F) * c * c, fo, F * c * r)
+                if v > best:
+                    upd(v, f"p={p} q={A.best_q[r]}: {F}x{c} + 1x{r}*   (* foreign)")
     # ---- S6 and S11: two foreign primes at a common q ----------------------
     if best > 0:
         for q, lst in A.eff.items():

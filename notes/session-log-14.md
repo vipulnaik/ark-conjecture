@@ -194,6 +194,17 @@ INFO rather than PASS/FAIL deliberately: against a *superseded* baseline the exp
 
 **A negative control paid for itself immediately.** Corrupting one value up and one down, the check printed *"50,060 equal (100.00%)"* — two discrepancies rounding away in the headline figure, which is precisely the failure the check exists to prevent. The percentage is gone; it now prints `ALL equal` or the raw counts. *Any completeness figure rendered as a rounded percentage can round to completeness: state the count.*
 
+## 4k. Does the window search exploit concentration near the balance point?
+
+Asked whether `mu_ladder_exact.py`'s scan benefits from the optimum sitting ever closer to the balance point as n grows. It did not — the loop walked `range(n//80, n)` testing prime-power-ness inline, ascending, so `best` stayed small through the most expensive stretch. And the effect turns out to be **half real**, in a way worth recording:
+
+- **Finding** the optimum is fast and improves with n: the loss is Θ(log³n/n) (`approach-rate-note.md`), so the best candidate is within O(log³n) of x\*·n.
+- **Proving** it does not improve at all, because the objective is **flat at its maximum**. A candidate survives the crude caps whenever min(x²/F, (1−x)²) ≥ δ, so the certificate interval is x ∈ [√(δF), 1 − √δ] — **a constant fraction of the window fixed by δ, not shrinking with n**. Measured against the true B(n), the survivor fraction tracks the predicted interval width to a few percent at 10³, 10⁴, 10⁵ and 2·10⁵, and varies with δ rather than with n.
+
+So: a constant factor, not an asymptotic gain. Folded in anyway — iterate the prime-power list (built once in `Arith`), restrict each F to its closed-form slice, and walk **outward from the balance point** so the prune is tight from the first candidate. **0.76 ms/n over the 50k table (was 2.3), 2.2 ms/n over the 144k one, 3.9 ms at 10⁵ (was 10), 37 ms at 10⁶ (was 89)** — so a full 10⁶ run drops from ~15 h to ~6 h single-threaded. Values equal at **all 50,062 and all 144,299 rows**, 0 low, 0 high; witnesses differ at 43 of 3,410 rows on a fresh build, all ties (equal value, different recorded configuration), which the value-agreement check now counts as such.
+
+*The generalisable point:* the saving is largest at arithmetically strong n where δ is high and the interval narrow, and smallest at the low-δ values — which are the ones the framework actually cares about. Optimisation effort here buys least exactly where the work is.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
