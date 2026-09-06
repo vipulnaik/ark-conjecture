@@ -401,6 +401,22 @@ Fixed: `Row.delta = B / C`, with `delta_str` retained solely for check A20, whos
 
 **`build_shapes.py` removed.** It was written in-session as a cross-validation and never handed over, so R8's coverage claim rested on two rows nobody could reproduce; the risk item now reads 7 of 10 rows to n = 308, with n = 2759 and even F ≥ 4 unbuilt. The session-log entry that cited it is marked rather than deleted, since deleting it would hide that the claim was once made.
 
+## 5b. (SP) renamed to (BCP), and the identity made visible
+
+**The rename.** (SP) → **(BCP)**, *bounded-cofactor primes*, alongside **(BCG)**, *bounded-cofactor Goldbach*; `sp-to-floor.md` → `bcp-to-floor.md`. 57 label sites across eight documents plus eleven filename citations, done in one pass — all subscripted forms (`SP_{D,c,ρ}` and the two inline variants) included, 0 leftovers, 0 dangling references.
+
+**What the rename earns, which is why it was worth doing.** §6.8 now opens with the identity the prose had only ever asserted:
+
+> **(BCG) = (BCP) + the additive clause, per n.**
+
+Clause 3's bounded cofactor is common to both and defines S_D; clause 1's decomposition is what (BCG) has and (BCP) lacks — so (BCP) is strictly weaker, and §6.9's sentence about what "comes back" from the circle-method route now reads as *(BCP) together with a per-n additive clause, which is to say (BCG)*. **And (BCP) takes no -AL/-AA suffix, which is informative rather than an omission**: (BCG) needs one because it quantifies over n and the uniformity trap lives in that quantifier, so the missing suffix marks exactly where the difficulty sits — the additive clause, not the cofactor condition.
+
+**The literature pointer is kept in words.** S_D is still described as the shifted-prime set throughout, so the Erdős–Pomerance–Shparlinski hook survives; what changed is that the *label* now carries the structural relation rather than the provenance.
+
+**Invariant I11, and a correction to it in the same sitting.** The first version also checked that any sentence comparing the two hypotheses names both. It fired on **six sentences that legitimately compare (BCG) to a fixed Bateman–Horn system** and have no business naming (BCP) — a check wrong six times out of eight, which is precisely the failure mode I4's own comment warns about. Narrowed to the half that is exact: the retired label and the old filename must not reappear, with an exemption for lines describing the rename itself. *A naming convention is enforced by being useful in prose, not by a checker guessing which comparisons are about it.*
+
+**Also extended `check_doc_figures.py`'s witness-pass exemptions** for realisability-battery citations: a battery deliberately scores configurations that do not win at their n, so a witness naming one is correct, and R8's regression list was firing on that.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
