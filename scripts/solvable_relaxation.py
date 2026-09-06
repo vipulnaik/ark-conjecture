@@ -61,12 +61,13 @@ s_i, s_j every cross pair is one class of exactly s_i*s_j.  Hence
 Usage: python3 solvable_relaxation.py [path/to/current_mu_table.csv]
 Exits nonzero on any failure.
 """
+import bisect
 import csv
 import sys
 from math import comb, isqrt, log, sqrt
 from statistics import median
 
-TABLE = sys.argv[1] if len(sys.argv) > 1 else "mu_table_safe_v5_code_v3.csv"
+TABLE = sys.argv[1] if len(sys.argv) > 1 else "mu_table_ladder.csv"
 # The frontier is read from the table rather than hardcoded, so this script does
 # not silently compare a stale range against a freshly extended one.
 with open(TABLE) as _f:
@@ -102,9 +103,68 @@ for s in range(2, N + 1):
     SCORE[s] = s * (max(P[s], 1) - 1) // 2
 
 
+PPL = sorted(pps)
+
+
 def best(n, allow_three=False):
-    """B_solv(n) and an optimal partition."""
+    """B_solv(n) and an optimal partition.
+
+    THE TWO-PART SCAN IS CANDIDATE-ENUMERATED, NOT A SWEEP, and the reason is
+    arithmetic rather than engineering.  The old form looped a over 2..n/2, so
+    the whole run was O(N^2): 126 s over a 50k-row table and ~20 min over a 144k
+    one -- the same quadratic shape `validate_table_v3.py`'s gap scan had.
+
+    A part only matters if SCORE[a] = a*(P(a)-1)/2 exceeds the running best, and
+    writing a = m*P(a) that is a*a/m > 2*bv up to O(a).  With bv near its true
+    value -- delta_solv >= 0.12 in range -- this forces m <= 2 or 3: **the
+    admissible a are the prime powers and small multiples of them**, not an
+    interval.  So we enumerate a = m*c over prime powers c, m ascending, and
+    stop at the first m whose whole family is excluded by a*a <= 2*m*bv.  That
+    is an exact restatement of "SCORE[a] > bv", not a heuristic: every a the
+    sweep would have accepted is generated.
+
+    Pass 1 takes m = 1 first precisely so bv is near-optimal before pass 2 sizes
+    its own bound -- the same ordering lesson as `mu_ladder_exact.py`'s scan,
+    where the prune is only as strong as the best-so-far.
+
+    Measured 5x, and verified equal to the sweep at every n in [6, 4000) and on
+    400 values near 50,000."""
     bv, bp = SCORE[n], (n,)
+
+    def try_a(a):
+        nonlocal bv, bp
+        sa = SCORE[a]
+        if sa <= bv:
+            return
+        sb = SCORE[n - a]
+        if sb <= bv:
+            return
+        v = sa if sa < sb else sb
+        p = a * (n - a)
+        if p < v:
+            v = p
+        if v > bv:
+            bv, bp = v, (a, n - a)
+
+    if not allow_three:
+        lo = 2
+        while lo * (lo - 1) // 2 <= bv:      # SCORE[a] <= C(a,2) bounds a below
+            lo += 1
+        for i in range(bisect.bisect_left(PPL, lo),
+                       bisect.bisect_right(PPL, n // 2)):
+            try_a(PPL[i])
+        m = 2
+        while True:
+            amax = n // 2
+            if amax * amax <= 2 * m * bv:    # the whole m-family is excluded
+                break
+            amin = isqrt(2 * m * bv) + 1
+            i0 = bisect.bisect_left(PPL, max(2, -(-amin // m)))
+            i1 = bisect.bisect_right(PPL, amax // m)
+            for i in range(i0, i1):
+                try_a(m * PPL[i])
+            m += 1
+        return bv, bp
     for a in range(2, n // 2 + 1):
         v = min(SCORE[a], SCORE[n - a], a * (n - a))
         if v > bv:
@@ -171,8 +231,13 @@ check("odd small-part share %.4f vs 1/(1+sqrt2) = %.4f"
 # ---- pass 4: the exceptional family ----------------------------------------
 sing = [n for n in npp if len(D[n][1]) == 1]
 mults = sorted({n // P[n] for n in sing})
-check("single-orbit winners all have n = m*P(n) with m small: m in %s" % mults,
-      max(mults) <= 8)
+check("single-orbit winners over [6, %d] all have n = m*P(n) with m small: "
+      "m in %s" % (N, mults), max(mults) <= 8)
+# The multiplier set is a RANGE-SCOPED fact and the note quotes it, so it is
+# printed with its range rather than asserted as a constant: the m = 7 entries
+# were three named n at the 2,600 frontier and are a family at 10^5.
+print("      multiplier census over [6, %d]: %s"
+      % (N, {m: sum(1 for n in sing if n // P[n] == m) for m in mults}))
 shares = []
 for lo, hi in [(100, 500), (500, 1200), (1200, 2484)]:
     s = [n for n in sing if lo <= n <= hi]
@@ -258,8 +323,18 @@ check("B_solv >= B_safe at all %d shared n (Oliver groups are solvable)" % len(s
 # on any rebuild -- a violation would mean the Oliver side is crediting a class
 # no solvable group can carry.
 att = [n for n in shared if D[n][0] == tab[n]]
-print("      B_solv = B_safe at %d of %d shared n (matching-class coincidence)"
-      % (len(att), len(shared)))
+print("      B_solv = B_safe at %d of %d shared n (%.1f%%, matching-class "
+      "coincidence)" % (len(att), len(shared), 100 * len(att) / len(shared)))
+# THE RATIO DISTRIBUTION, which solvable-relaxation.md section 4 quotes and which
+# no earlier version of this script printed -- so requoting the note meant
+# recomputing it by hand.  Printed with its range, per the same discipline the
+# main documents follow.
+rat = sorted((D[n][0] / tab[n], n) for n in shared)
+rodd = [r for r, n in rat if n % 2]
+rev = [r for r, n in rat if n % 2 == 0]
+print("      ratio B_solv/B_safe over [6, %d]: median %.3f (%.3f even, %.3f odd), "
+      "max %.3f at n = %d" % (N, median([r for r, _ in rat]), median(rev),
+                              median(rodd), rat[-1][0], rat[-1][1]))
 # The share of class-11 values exceeding their own class ceiling, which the
 # note quotes and the rebuild moves.  Printed rather than asserted.
 c11 = [n for n in shared if n % 12 == 11]

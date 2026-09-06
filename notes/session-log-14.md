@@ -237,6 +237,14 @@ Asked whether §6 — the section built on `shape-counting.md` — was also curr
 
 *What let it survive:* the three counts (raw, with-foreign, purely additive) were 24 / 9 / 6 at 1/9, all small, and the density-zero argument is correct for the one family anyone had in mind when writing it. The table's fused-plus-foreign share is the measurement that contradicts it, and that share was 27% until the range grew.
 
+## 4o. `solvable_relaxation.py` and `k3_galois.py` audited
+
+**The same quadratic shape, a third time.** `solvable_relaxation.py`'s `best(n)` swept a ∈ [2, n/2] for every n — 126 s at 50k, ~20 min at 144k. The bound that replaces the sweep is arithmetic rather than geometric: SCORE[a] = a(P(a) − 1)/2 > best means a²/m > 2·best for a = m·P(a), so at δ_solv ≥ 0.12 the cofactor m is at most 2 or 3 and **the candidates are prime powers and small multiples, not an interval**. Enumerating a = m·c and stopping at the first excluded m is exact, not heuristic. 5× on the scan, 3× end to end, values identical on [6, 4000) and near 50,000; 22 checks pass over [6, 159,027]. It now prints the ratio distribution the note quotes, which no version had computed.
+
+**`k3_galois.py` was correct; its self-test was not as strong as it read.** Two findings. Its "the affected block sizes are a in [35, 55, 65], all with gain lpf(a) = 5" was a range-scoped claim phrased as a law — false at a = 77 (gain 7). And a clause-by-clause ablation showed the cyclicity clause gcd(d, a′) = 1 changing no verdict below a = 40, which reads as a dead clause; **its smallest witness is a = 155, d = 31**, where (i) and (iii) hold and only cyclicity rejects. Separately, gcd(d, 6) = 1 *is* redundant and provably so (d | 2^a − 1 is odd, and 3 ∤ 2^a − 1 for odd a), so the test now asserts the redundancy rather than expecting it to bite.
+
+*The generalisable pair:* a clause whose smallest counterexample lies outside the test range is indistinguishable from a dead one — name the witness rather than widening the sweep; and the range discipline the documents follow applies to assertion messages, which are prose that nobody proofreads.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

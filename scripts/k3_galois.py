@@ -155,12 +155,95 @@ def _selftest():
     check("strictly larger, and the smallest witness is a = 35 (i.e. n = 2^35)",
           extra and min(a for a, _ in extra) == 35)
 
-    # where the correction bites: composite a coprime to 6 (35, 55, 65, ...)
-    comp = [a for a in range(2, 70)
+    # WHERE THE CORRECTION BITES, and the claim is RANGE-SCOPED -- it names its
+    # range because the obvious reading of it is false.  Below 70 every
+    # composite a coprime to 6 has lpf 5 (35, 55, 65), which invites "the gain
+    # is always 5 at composite a"; a = 77 = 7*11 has gain 7 and a = 143 = 11*13
+    # has gain 11.  The scope discipline the main documents follow (every
+    # measured figure names the range it was taken over) applies to a self-test
+    # message just as much as to prose.
+    LIM = 70
+    comp = [a for a in range(2, LIM)
             if gcd(a, 6) == 1 and not _is_prime_power(a) and a > 1]
-    check("the affected block sizes are a in %s, all with gain lpf(a)=5" % comp,
+    check("the affected block sizes below %d are a in %s, all with gain "
+          "lpf(a) = 5 -- an accident of the range, not a law (a = 77 gains 7)"
+          % (LIM, comp),
           comp == [35, 55, 65]
-          and all(primefactors(a)[0] == 5 for a in comp))
+          and all(primefactors(a)[0] == 5 for a in comp)
+          and primefactors(77)[0] == 7
+          and galois_admissible(77, 127)["gain"] == 7)
+
+    # THE TWO QUANTITIES THE DOCSTRING SEPARATES, pinned by a test rather than
+    # left to the prose.  At a = 35 the gain is lpf(a) = 5 at both admissible
+    # twists while the top prime is 5 or 7 according to d, so a scoring that
+    # reads q off the gain (or the reverse) is wrong at the first composite a
+    # in range -- and section 4.3 couples q to every foreign block, so the
+    # error would propagate out of the block.
+    gq = [(a, d, r["gain"], r["q"])
+          for a in range(2, 46) if gcd(a, 6) == 1
+          for d in divisors(2 ** a - 1)
+          for r in [galois_admissible(a, d)] if r]
+    check("gain and top prime are separately reported, and differ somewhere "
+          "(%d admissible pairs, %d with gain != q)"
+          % (len(gq), sum(1 for _, _, g, q in gq if g != q)),
+          any(g != q for _, _, g, q in gq))
+
+    # THE PREDICATE IS EXACT IN BOTH DIRECTIONS ON ITS OWN CLAUSES, which the
+    # superset test above does not establish: it shows the split accepts what
+    # the naive reading does, not that each clause is load-bearing.  Dropping
+    # any one of the four must change the verdict somewhere in range.
+    def _drop(clause, a, d):
+        if a <= 1 or d <= 1 or (2 ** a - 1) % d != 0:
+            return False
+        if clause != "a6" and gcd(a, 6) != 1:
+            return False
+        if clause != "d6" and gcd(d, 6) != 1:
+            return False
+        m = _ord2(d)
+        return any((a // ap) % m == 0
+                   and (clause == "cyc" or gcd(d, ap) == 1)
+                   and (clause == "pp" or _is_prime_power(a // ap))
+                   for ap in divisors(a))
+
+    # Two of the four are load-bearing at small a; the other two are not, and
+    # the reasons differ -- which is worth a test each rather than one blanket
+    # assertion, since they call for different treatment.
+    live = {}
+    for clause in ("a6", "d6", "cyc", "pp"):
+        live[clause] = sum(
+            1 for a in range(2, 40) for d in divisors(2 ** a - 1)
+            if _drop(clause, a, d) != bool(galois_admissible(a, d)))
+    check("gcd(a,6) = 1 and the prime-power top are load-bearing below a = 40 "
+          "(%d and %d verdicts change when dropped)" % (live["a6"], live["pp"]),
+          live["a6"] > 0 and live["pp"] > 0)
+
+    # gcd(d, 6) = 1 IS REDUNDANT, provably: d | 2^a - 1 is odd, and for odd a
+    # (which gcd(a,6) = 1 forces) 3 never divides 2^a - 1, since ord_3(2) = 2.
+    # So the clause can never fire once the others hold.  Kept in the predicate
+    # as a guard for callers who reach it by another route, but a self-test
+    # asserting it bites would fail forever.
+    check("gcd(d,6) = 1 is redundant given gcd(a,6) = 1 and d | 2^a - 1 "
+          "(0 verdicts change; 3 divides 2^a - 1 only at even a)",
+          live["d6"] == 0
+          and not any((2 ** a - 1) % 3 == 0 for a in range(1, 40, 2))),
+
+    # THE CYCLICITY CLAUSE IS LOAD-BEARING, but its first witness is a = 155 --
+    # far outside the a < 40 the other clauses are exercised at, which is why an
+    # earlier form of this test read it as redundant.  A clause whose smallest
+    # counterexample sits outside the test range is indistinguishable from a
+    # dead one, and the fix is to name the witness, not to widen the sweep:
+    # a = 155, d = 31, a' = 31, top = 5.  Here 31 | gcd(d, a'), so C_d x C_{a'}
+    # is not cyclic and the split is inadmissible -- yet conditions (i) and
+    # (iii) both hold, so dropping the clause would admit it.
+    def _nocyc(a, d):
+        m = _ord2(d)
+        return any((a // ap) % m == 0 and _is_prime_power(a // ap)
+                   for ap in divisors(a))
+
+    check("the cyclicity clause gcd(d, a') = 1 is load-bearing, first at "
+          "a = 155, d = 31 (admitted without it, rejected with it)",
+          galois_admissible(155, 31) is None and _nocyc(155, 31)
+          and galois_admissible(253, 23) is None and _nocyc(253, 23))
 
     print("\n      admissible (a, d) with a <= 45, by branch:")
     for a in range(2, 46):
