@@ -43,7 +43,7 @@ So the raw set grows like exp(2.53·δ₀^{−1/3}) — subexponential in 1/δ�
 
 ## 3. The floor rows, and what to recompute when the range moves
 
-> *The floor rows are keyed to the exactly-computed floor, so they move with it.* At the conjectured floor of 1/25, L = 5.000 and the part cap is **k ≤ 5** — a substantial narrowing of the search this table sizes, since the count grows steeply in L. **At the computed floor, now 0.048039 at n = 2183 over the complete range to 2600: L = 4.5625, k ≤ 4, F ≤ 20, N(δ₀) = 102.** (v4's 0.045742 at n = 1817 gave L = 4.676 and N(δ₀) = 112; the floor rose, so the count fell.) These rows want re-deriving after any discretionary extension that lowers the floor again. Recompute the affected rows rather than the whole table. (The 112 and 164 above, and the 102 here, are direct enumerations of the criterion, checked against the 24 / 65 / 83 rows by the same code.)
+> *The floor rows are keyed to the exactly-computed floor, so they move with it.* At the conjectured floor of 1/25, L = 5.000 and the part cap is **k ≤ 5** — a substantial narrowing of the search this table sizes, since the count grows steeply in L. **At the computed floor — 175813/3804661 = 0.046210 at n = 2759, which is now both the exact table's minimum over its contiguous range [6, 159,027] and the ladder's global minimum to 10⁶ — L = 4.652, k ≤ 4, F ≤ 21, N(δ₀) = 112**: the row already in §1's table. Two earlier frontiers are worth keeping for the record of how the row moved: the 2,600-frontier table's floor of 0.048039 at n = 2183 gave L = 4.5625, F ≤ 20, N = 102, and v4's 0.045742 at n = 1817 gave L = 4.676 and N = 112 — the floor rose on the repair and fell back to the ladder's value on extension, and the count went 112 → 102 → 112 with it. **The row can no longer move on extension below 10⁶**, since the exact range contains the ladder's argmin and the ladder bounds every remaining n from below; it moves only if a scoring correction moves n = 2759 itself. (The 24 / 65 / 83 / 112 / 164 figures are direct enumerations of the criterion by one code path.)
 
 
 ## 4. The partition factor: unequal matching sizes
@@ -78,7 +78,7 @@ So the raw set grows like exp(2.53·δ₀^{−1/3}) — subexponential in 1/δ�
 
 ## 5. Superseded measurements, retained for audit
 
-**The unequal-shape admitting count.** Scoring every unequal odd-p configuration at full diagonal twist over the n ≤ 2000 run: **654 of 1,666 values admit one**, best ratio **0.236·B at n = 1007**. Superseded by the qualitative finding that survives at the current frontier — 0 of 2,186 winners have matching classes of two different block sizes, at any p — and not worth re-measuring, the ceiling argument of `aod` §6.2 being what explains the qualitative fact. Retained because it is the only quantitative evidence on how *close* unequal shapes come.
+**The unequal-shape admitting count.** Scoring every unequal odd-p configuration at full diagonal twist over the n ≤ 2000 run: **654 of 1,666 values admit one**, best ratio **0.236·B at n = 1007**. Superseded by the qualitative finding that survives at the current frontier — 0 of 144,299 winners over [6, 159,027] have matching classes of two different block sizes, at any p (`validate_table_v3.py`'s S12 check; the shape is dominated above 1/25 by the merged fused class, `ladder-completeness.md` Proposition 1) — and not worth re-measuring, the ceiling argument of `aod` §6.2 being what explains the qualitative fact. Retained because it is the only quantitative evidence on how *close* unequal shapes come.
 
 ## 6. Reproducing these
 

@@ -734,7 +734,10 @@ if A.only in ("all", "scope"):
     #      to a figure check, which cannot tell which population was intended.
     #      Trigger: a winner count or share with no scope word anywhere near it.
     print()
-    SCOPED = re.compile(r"contiguous|prefix|\[6, ?\d+\]|over the range|to n = \d+|"
+    # A range with a thousands separator -- "[6, 159,027]" -- is a scope too;
+    # the first form of this pattern accepted only "[6, 2600]" and flagged every
+    # figure requoted at the 159k frontier as unscoped.
+    SCOPED = re.compile(r"contiguous|prefix|\[6, ?[\d,]+\]|over the range|to n = [\d,]+|"
                         r"worklist|whole (?:file|CSV)|all \d[\d,]* rows", re.I)
     COUNTY = re.compile(r"\*\*(\d[\d,]{1,5})\*\* (?:winners|of them|rows)|"
                         r"(?:winners|winner count)[^.]{0,20}\*\*\d")
@@ -1745,7 +1748,16 @@ if A.only in ("all", "pending"):
             if "the one tag that is about" in line:
                 defined.add(d); continue
             tagged.append((d, ln, line.strip()))
-    print(f"tag defined in: {', '.join(sorted(defined)) or 'NOWHERE -- define it in the status banner'}")
+    if not defined:
+        # RETIRED (pending-checks R0b): the sites were requoted against the
+        # 159,027-row table and the definition removed.  Remaining mentions are
+        # the retirement notice itself and the work list's record of it.  The
+        # convention the tag enforced -- every measured figure names its range --
+        # is now carried by invariant I7 in PASS 2.
+        print("tag retired -- no document defines it; the range convention is enforced by I7.")
+        print(f"   {len(tagged)} historical mention(s) remain (notices and the work list), which is fine.")
+    else:
+        print(f"tag defined in: {', '.join(sorted(defined))}")
     # A work list may name the tag without carrying a tagged figure, and does:
     # pending-checks.md's R0b item is the retirement procedure.  Only documents
     # that DEFINE the tag hold sites the requote has to visit.
@@ -1798,7 +1810,7 @@ if A.only in ("all", "pending"):
     if not miss:
         print("[ok] every range-scoped aggregate in a tag-using document carries the tag.")
 
-    if NMAX >= TAG_TARGET:
+    if NMAX >= TAG_TARGET and defined:
         findings += 1
         print(f"\n*** THE TAG IS DUE FOR RETIREMENT: the table reaches {NMAX} >= {TAG_TARGET}.")
         print("    Requote every site above, then delete the tag from all of them AND from")
