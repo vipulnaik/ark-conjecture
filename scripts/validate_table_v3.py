@@ -1558,13 +1558,31 @@ def c_ladder_gap(R, base):
     return ("PASS", "%d joined; ladder equals B at every one" % len(g), [])
 
 
-@check("C", "share of values with omega(n) = 2, which is the multiplicative engine's reach",
-       "aod section 1, consequence 5",
-       expect="thins like log log n / log n: measured about 52% below 2000 and 29% near 10^6. "
-              "The observed density floor should drift down as this population recedes")
+@check("C", "the multiplicative engine's reach: S2 wins, and the bounded-cofactor share",
+       "aod section 4.1",
+       expect="S2 = one fused class, n = F*c with c a prime power and F ANY integer "
+              "(entangled construction) -- NOT omega(n) = 2, which was the pre-entangled "
+              "condition and is neither necessary (F = 6 winners have omega = 3) nor "
+              "sufficient.  The engine clears a floor d0 iff n/Q(n) <= 1/d0, a density-zero "
+              "set thinning like 1/log n: share with n/Q(n) <= 25 measured 66% on "
+              "[10^3, 2*10^3), 34% near 10^5, 25% near 10^6.  S2 should win a falling "
+              "share, below the bounded-cofactor share since a split often beats 1/F.")
 def c_omega2(R, base):
-    hits = sum(1 for r in R if r.shape in ("S1", "S2"))
-    return ("INFO", f"{hits} of {len(R)} winners are S1 or S2 ({hits/len(R):.1%})", [])
+    s2 = sum(1 for r in R if r.shape in ("S1", "S2"))
+    def Q(n):
+        best = 1
+        x = n; d = 2
+        while d * d <= x:
+            if x % d == 0:
+                pe = 1
+                while x % d == 0:
+                    x //= d; pe *= d
+                best = max(best, pe)
+            d += 1
+        return max(best, x)
+    bounded = sum(1 for r in R if r.n // Q(r.n) <= 25)
+    return ("INFO", f"S1/S2 win {s2} of {len(R)} ({s2/len(R):.1%}); n/Q(n) <= 25 at "
+                    f"{bounded} ({bounded/len(R):.1%})", [])
 
 
 # --------------------------------------------------------------------------
