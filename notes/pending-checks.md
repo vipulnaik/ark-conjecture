@@ -361,6 +361,10 @@ Plus three **entangled-generator regressions** whose orbital multisets are known
 
 > **`CHECKPOINTS` is already primed.** 36848, 55814, 71288 and 159027 have been added, so a figure correctly scoped to any of those frontiers is reported as *matching an old checkpoint* — a historical citation to leave alone — rather than as unexplained staleness. Add the new maxima on the next extension too; it takes a minute and skipping it turns every correctly-scoped historical figure into noise in PASS 1. Expect the old-checkpoint counts to be large and mostly benign: 16 in `aod` on the current run, which is what a document with a long recorded history should look like.
 
+### A30. `johnson-presentations.md` is cited twice and is not in the working set
+
+`orbital-evasiveness-notes.md` cites it in the Overview (as "the abstraction that unifies those last two axes") and cited it again in §1 until this pass, where the claim it carried — that the prime-power line in the baseline, the general-transitive and the chiral settings is *one* condition, "does G contain a group that is both Oliver and k-homogeneous on the base set", with the arithmetic entering at the **base size** — was replaced by a pointer to Appendix C. **Either the file exists outside this set and should be added, or the claim needs a home.** It is a good claim and Appendix C's "prime powers are the dividing line, never for the same reason twice" box is the natural place for it, but stating it there without the document behind it would be asserting a unification nobody has written down. Decide which, then either restore the citation or drop it from the Overview.
+
 ## Closed, kept as a one-line ledger
 
 *Items retired in place rather than deleted, so a reader meeting a reference to them elsewhere can tell what happened. Full accounts are in the session logs.*

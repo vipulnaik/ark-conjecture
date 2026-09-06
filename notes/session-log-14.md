@@ -315,6 +315,32 @@ The section was written when there were two variations and one axis (arity), and
 
 **One stale figure found in the rewrite:** the section priced the chain at "a factor of 3.397", against `solvable-relaxation.md`'s 2.390 = (3 − 2√2)/(7 − 4√3). Fixed, along with "twelve of twenty-four residues" → six of twelve.
 
+## 4t. Row 6 of the hypothesis table conflated transitivity with containing a transitive Oliver subgroup
+
+Caught on review: the new table's row 6 read "t = 1 *is* the hypothesis / none needed / **evasive outright**", which contradicts its own last column (T(10,7) and T(12,162) are transitive and *not* settled). Oliver's theorem needs an Oliver **group**, so t = 1 is only half the criterion — what closes a case is a transitive Oliver **subgroup** of the invariance group acting on the coordinates.
+
+Row 6 restated ("t = 1 for Γ by hypothesis — but that is not the criterion"; binding statistic "none, *when a transitive Oliver subgroup exists*"), and a box added after the table because the distinction has tripped this project before and a compressed table is where it will trip someone again:
+
+- **Row 0 is the instance that matters.** S_n *is* transitive on the C(n,2) pairs, so read carelessly row 6 proves ARK. It doesn't: S_n is insoluble for n ≥ 5, and a subgroup transitive on pairs is 2-homogeneous, which for solvable groups forces prime-power degree. **That gap is the whole subject.**
+- **Row 6's failures are transitive groups**, not t ≥ 2 groups — A₅ on 10 pairs has itself as its only transitive subgroup, and T(12,162) is minimal transitive and not Oliver. So the two columns answer different questions rather than contradicting each other.
+- **The population count that separates the two questions**: of the transitive groups of degrees 6–11, 108 are Oliver and 52 are not, with **eleven of the failures solvable** — all at prime-power degrees where a Sylow subgroup supplies the subgroup anyway. A group can fail the chain while a subgroup inside it satisfies it, and the subgroup is what decides.
+
+Also noted one column left: row 4's t = 1 needs 2-**transitivity**, row 0's 2-**homogeneity**, row 2's 3-homogeneity. Every t cell answers "is a single orbit possible", never "is that enough".
+
+**Then a top-to-bottom read of the section for duplication, which found more.** The box I had added restated the bullets below it, so it is cut to a single sentence — *the t column is about a single orbit, not about the criterion; row 4's needs 2-transitivity, row 0's 2-homogeneity, row 2's 3-homogeneity, and in every row a single orbit only helps if some Oliver subgroup realises it* — with its content moved into the bullets where it belongs. A **row 0 bullet** was missing entirely (the list began at row 1) and is now the head of it, carrying the S_n-is-transitive-on-pairs trap. The **row 6 bullet** was rewritten around the failures and the 108/52 population count. Three further fixes: the opening t paragraph made the same elision in its own second clause ("the whole theory in the general transitive setting"); the prime-powers box repeated the 2-transitivity/2-homogeneity split that the new one-sentence box now carries; and the row 6 bullet ended by restating row 0's μ-is-the-fallback sentence verbatim, which is cut.
+
+*The general hazard: consolidating prose into a table compresses away exactly the qualifications the prose existed to carry — and then the qualification, re-added as a box, duplicates the prose it was extracted from.* Add it at the point of compression, once.
+
+## 4u. The variation table moved to Appendix C, and §1 verified clean
+
+The boundary between the generalisations and §1's own setup was undemarcated — "Throughout, densities are relative to C(n,2)" was silently the switch back. Moved the whole subsection out to **Appendix C. The variation table: which hypothesis is doing which work**, which removes the transition problem rather than signposting it, and reframed its opening as an appendix ("§1 fixes one setting; this appendix is about changing one ingredient of it"). A pointer goes in the Overview beside the companion list, which also now names `directed-graph-properties.md` — it had been added to the corpus without being added there.
+
+**§1 now reads as one argument**: BBKN/KSS reduction → the μ definition → the meta-theorem → the box of three things easy to get wrong → normalisations and the density-1/2 ceiling → why prime powers are the dividing line → BBKN's bounds → the three questions the note answers. 1,067 words, six paragraphs, no detour.
+
+**One trim while verifying it.** §1's prime-powers paragraph had grown a cross-setting comparison (general-Boolean Sylow, chiral c mod 4) that now duplicates Appendix C's box; cut to the baseline fact with a pointer.
+
+**And one dangling reference found:** `johnson-presentations.md` is cited twice and is **not in the working set**. It carried a real claim — that the prime-power line in the baseline, general-transitive and chiral settings is one condition, "does G contain a group both Oliver and k-homogeneous on the base set", with the arithmetic entering at the base size one level below the object. I removed the §1 citation rather than assert an unwritten unification, and logged it as **A30**: either the file exists outside this set and should be added, or the claim needs a home — Appendix C's box being the natural one.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
