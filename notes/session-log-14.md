@@ -186,6 +186,14 @@ The four-seed run (§4h's companion finding) showed the stall is neither the def
 
 *The general lesson is the one this session keeps re-learning in different clothes:* a progress measure that saturates is not a progress measure, and the two natural implementations of the replacement both fail silently in the direction that flatters the run. Test a diagnostic against an instance whose answer you know before trusting it on one whose answer you want.
 
+## 4j. Value agreement between two tables, stated rather than inferred
+
+`validate_table_v3.py` reported "N higher, M lower" against a baseline but never said how many were **equal**, so the thing one actually wants when cross-checking two routes to the same quantity — `mu_exact.py`'s exhaustive search against `mu_ladder_exact.py`'s menu — had to be got by subtraction, from a group-A check whose framing is "did the rebuild lower anything". Added as a group-C INFO check on the integer `mu_bound` (never the density column, which rounds): **50,062 common n, ALL equal, 0 higher, 0 lower**, plus the coverage either way and a count of **95 equal-value rows whose recorded witness differs** — genuine ties, mostly `1x256 + 1x167*` against `2x128 + 1x167*` in characteristic 2 where the foreign block binds. Counting the ties is what stops the shape-migration check below it from being read as a disagreement.
+
+INFO rather than PASS/FAIL deliberately: against a *superseded* baseline the expected reading is not all-equal, since a corrected shape space raises values — "higher" is the repair working, and only "lower" is a defect, which group A already fails on.
+
+**A negative control paid for itself immediately.** Corrupting one value up and one down, the check printed *"50,060 equal (100.00%)"* — two discrepancies rounding away in the headline figure, which is precisely the failure the check exists to prevent. The percentage is gone; it now prints `ALL equal` or the raw counts. *Any completeness figure rendered as a rounded percentage can round to completeness: state the count.*
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

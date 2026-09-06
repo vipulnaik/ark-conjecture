@@ -485,6 +485,43 @@ def c_monotone(R, base):
             f"{len(com)} common values: {higher} higher, {len(lower)} lower", lower[:5])
 
 
+@check("C", "value agreement against the baseline, on mu_bound itself",
+       "pending-checks R0, R7b",
+       expect="when the two tables are two ROUTES to the same quantity -- mu_exact.py's "
+              "exhaustive search against mu_ladder_exact.py's menu, or either against a "
+              "rerun -- the expected reading is 100% equal, 0 higher, 0 lower.  When the "
+              "baseline is a superseded table it is not: a corrected shape space RAISES "
+              "values, so 'higher' is the repair working and only 'lower' is a defect "
+              "(which group A fails on separately).  Compared on the INTEGER mu_bound, "
+              "never the density column, which rounds.  Note the two routes may disagree "
+              "on the WITNESS at a tie -- see the shape-migration check below -- so a "
+              "shape difference here with zero value differences is a tie, not a defect.")
+def c_value_agreement(R, base):
+    if not base:
+        return ("SKIP", "no --baseline given", [])
+    com = [r for r in R if r.n in base]
+    eq = [r for r in com if r.B == base[r.n][0]]
+    hi = [(r.n, base[r.n][0], r.B) for r in com if r.B > base[r.n][0]]
+    lo = [(r.n, base[r.n][0], r.B) for r in com if r.B < base[r.n][0]]
+    only_cur = len(R) - len(com)
+    only_base = len(base) - len(com)
+    # NOT a rounded percentage.  At 50,062 rows two mismatches still print as
+    # "100.00%", which is the exact failure this check exists to make visible --
+    # caught by a negative control that corrupted one value in each direction.
+    # So the headline is "all N equal" or the raw counts, never a percentage
+    # that can round to completeness.
+    allsame = "ALL equal" if not hi and not lo else f"{len(eq)} of {len(com)} equal"
+    # A tie is a genuine and expected difference between two correct routes:
+    # equal value, different recorded witness.  Counting it here is what stops
+    # the shape-migration check below from being read as a disagreement.
+    ties = sum(1 for r in com if r.B == base[r.n][0] and r.shape != base[r.n][1])
+    msg = (f"{len(com)} common n: {allsame}, {len(hi)} higher, "
+           f"{len(lo)} lower; {only_cur} only in this table, {only_base} only in the "
+           f"baseline" + (f"; {ties} equal-value rows differ in recorded witness (ties)"
+                          if ties else ""))
+    return ("INFO", msg, (hi[:4] + lo[:4]) or [])
+
+
 @check("A", "shape migrations against the baseline", "pending-checks A0, A7",
        expect="the shape-space repair moves winners between census rows -- most often a "
               "3-part c+c+r* becoming the 2-part fused 2xc+r*, which is the head of the "
