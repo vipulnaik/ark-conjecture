@@ -439,6 +439,18 @@ Written into `claude-understanding-of-project-plan.md` §9 (planning level) and 
 
 **State at pause:** checker 0 hard findings; validator 27 PASS / 0 FAIL on the 10⁶ table against the exhaustive one; every measured figure in the core documents scoped to [6, 10⁶]; every script that reads the table derives its range and its δ from the table.
 
+## 5e. Progress reporting in `solvable_relaxation.py`
+
+The script printed nothing until every pass finished — 79 s at N = 85,000, growing quadratically — so there was no basis for deciding whether to run it at 10⁶ or optimise first. That decision is what the reporting now serves, which shaped three choices.
+
+**Stages are announced with their own timings**, because "which stage is slow" is the first thing an optimisation needs: measured, **78.3 s of 79 s is the B_solv loop** and every one of the six passes is ≤ 0.3 s. So the loop is the only thing worth touching, and everything else is noise.
+
+**The heartbeat measures work, not values.** `best(n)` scans a window that grows with n, so cost is ~O(n) per value; the instantaneous rate falls from 4,200 to 1,100 val/s across an 85k run, and a count-based ETA therefore drifts low *for the whole run*. Progress is Σn done against Σn total; at 50.3% of work the ETA read 0:32 against 0:32 actual. *An ETA that is wrong in the reassuring direction is worse than none in a tool whose whole purpose is "wait, or optimise?".*
+
+**An up-front estimate prints before the loop starts** — the O(N²) extrapolation from a measured reference point, giving **~3 h at N = 10⁶** — because that is the number the decision actually turns on, and waiting for the first heartbeat to infer it wastes the minutes it is meant to save.
+
+Two smaller choices: progress goes to **stderr**, so redirecting stdout keeps the PASS/FAIL lines clean; and it is **on by default rather than conditioned on a tty**, since the run it exists for is the long one, which is the one most likely to be under `nohup` with stderr in a file. `QUIET=1` suppresses. Verdict output unchanged — 22 PASS / 0 FAIL on the 85k table.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

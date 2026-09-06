@@ -59,13 +59,97 @@ s_i, s_j every cross pair is one class of exactly s_i*s_j.  Hence
           at eta = 1/2 with the rest of class 3 mod 12, not at eta = 1.
 
 Usage: python3 solvable_relaxation.py [path/to/current_mu_table.csv]
+       QUIET=1 python3 solvable_relaxation.py table.csv     # no heartbeat
 Exits nonzero on any failure.
+
+PROGRESS.  Stage announcements and a heartbeat go to STDERR, so redirecting
+stdout keeps the PASS/FAIL lines clean and still shows progress.  The heartbeat
+reports **work done, not values done**: `best(n)` scans a window that grows with
+n, so the cost is ~O(n) per value and ~O(N^2) overall, and a count-based ETA
+drifts low for the whole run.  An up-front estimate is printed before the loop
+starts, since that is the figure that decides whether to run this at all on a
+larger table: **64 s at N = 76,752, hence ~3 h at N = 10^6.**
 """
 import bisect
 import csv
+import os
 import sys
+import time
 from math import comb, isqrt, log, sqrt
 from statistics import median
+
+# ---- progress reporting ----------------------------------------------------
+#
+# WHY THIS EXISTS.  The script used to print nothing until every pass had
+# finished -- 79 s on an 85k-row table, and growing faster than linearly, so on
+# a 921k-row one there was no way to tell whether to wait or to go and optimise.
+# That is the decision the heartbeat exists to inform, so it reports a RATE and
+# an ETA rather than a spinner, and it names the stage, because the stages have
+# very different costs and "which stage is slow" is what an optimisation would
+# need to know first.
+#
+# Progress goes to STDERR so that `solvable_relaxation.py table.csv > log`
+# keeps the PASS/FAIL lines clean and still shows progress on a terminal.
+# ON BY DEFAULT, and not conditioned on stderr being a tty: the run this
+# exists for is the long one, which is the one most likely to be under nohup
+# with stderr redirected to a file.  `QUIET=1` turns it off.
+PROGRESS = os.environ.get("QUIET") is None
+_t0 = time.time()
+_stage_t = [time.time()]
+
+
+def hms(sec):
+    sec = int(max(sec, 0)); h, r = divmod(sec, 3600); m, s = divmod(r, 60)
+    return f"{h}:{m:02d}:{s:02d}" if h else f"{m}:{s:02d}"
+
+
+def stage(name):
+    """Announce a stage and report how long the previous one took."""
+    if not PROGRESS:
+        return
+    now = time.time()
+    print(f"  [{hms(now - _t0)}] {name}"
+          + (f"   (previous stage {now - _stage_t[0]:.1f}s)" if _stage_t[0] != _t0 else ""),
+          file=sys.stderr, flush=True)
+    _stage_t[0] = now
+
+
+def ticker(lo, hi, every=20000, label=""):
+    """Heartbeat for the B_solv loop, reporting progress by WORK rather than by
+    count, and an ETA that is not systematically optimistic.
+
+    `best(n)` scans the prime powers in a window that grows with n, so its cost
+    is roughly linear in n and the total is quadratic in the range.  A
+    count-based ETA therefore drifts low throughout: measured on a 76k-row
+    table the instantaneous rate falls from 4,249/s to about 1,200/s, so an ETA
+    computed from the running average promises a finish that keeps receding.
+    Since the point of this heartbeat is to inform "wait, or go and optimise?",
+    an ETA that is wrong in the reassuring direction is worse than none.
+
+    So progress is measured as Sum(n) done against Sum(n) total, which is the
+    O(n)-per-value model.  The printed rate stays in values/s because that is
+    the intelligible unit; the percentage and the ETA are work.
+    """
+    total_work = (hi * (hi + 1) - lo * (lo - 1)) / 2.0
+    state = {"n": 0, "work": 0.0, "last": time.time(), "t0": time.time()}
+
+    def tick(n):
+        if not PROGRESS:
+            return
+        state["n"] += 1
+        state["work"] += float(n)
+        now = time.time()
+        if state["n"] % every and now - state["last"] < 5.0:
+            return
+        state["last"] = now
+        el = now - state["t0"]
+        frac = state["work"] / total_work if total_work else 1.0
+        eta = el * (1 - frac) / frac if frac > 0 else 0.0
+        print(f"    {label} n = {n:,}  {state['n']:,} values, "
+              f"{100 * frac:.1f}% of work, {state['n'] / el if el else 0:,.0f} val/s, "
+              f"elapsed {hms(el)}, eta {hms(eta)}", file=sys.stderr, flush=True)
+    return tick
+
 
 TABLE = sys.argv[1] if len(sys.argv) > 1 else "mu_table_ladder.csv"
 # The frontier is read from the table rather than hardcoded, so this script does
@@ -82,6 +166,7 @@ def check(name, cond):
 
 
 # ---- prime powers, and P(s) = largest prime-power divisor -------------------
+stage(f"sieving to N = {N:,}")
 sieve = bytearray([1]) * (N + 1)
 sieve[0] = sieve[1] = 0
 for i in range(2, isqrt(N) + 1):
@@ -181,10 +266,24 @@ def best(n, allow_three=False):
     return bv, bp
 
 
-D = {n: best(n) for n in range(6, N + 1)}
+# The cost is ~quadratic in N, so an up-front estimate is worth printing: it is
+# the number that decides whether to run this at all on a larger table.
+if PROGRESS:
+    print(f"  [0:00] B_solv is O(N^2) overall (~O(n) per value).  Reference point: "
+          f"64 s of compute for N = 76,752, so N = 10^6 is about "
+          f"{64 * (10 ** 6 / 76752.0) ** 2 / 60:.0f} min. "
+          f"Here N = {N:,}, estimate {64 * (N / 76752.0) ** 2 / 60:.1f} min.",
+          file=sys.stderr, flush=True)
+stage(f"computing B_solv at every n in [6, {N:,}] -- the dominant cost")
+_tick = ticker(6, N, label="B_solv")
+D = {}
+for _n in range(6, N + 1):
+    D[_n] = best(_n)
+    _tick(_n)
 delta = {n: D[n][0] / comb(n, 2) for n in D}
 npp = [n for n in D if n not in pps]
 
+stage("pass 1: the 1/2 ceiling")
 # ---- pass 1: ceiling -------------------------------------------------------
 check("delta_solv < 1/2 at every non-prime-power n",
       all(delta[n] < 0.5 for n in npp))
@@ -195,10 +294,12 @@ check("along n = 2q (q a prime power) delta_solv -> 1/2 (max %.5f)"
 check("at prime-power n the density is 1 (2-transitive AGL(1,n))",
       all(SCORE[n] == comb(n, 2) for n in pps if n >= 6))
 
+stage("pass 2: three-part partitions (n < 400)")
 # ---- pass 2: at most two parts ---------------------------------------------
 three = [n for n in range(6, 400) if len(best(n, allow_three=True)[1]) >= 3]
 check("no partition with >= 3 parts ever wins (checked n < 400)", not three)
 
+stage("pass 3: the two generic constants")
 # ---- pass 3: the two generic constants -------------------------------------
 def generic(par):
     out = []
@@ -228,6 +329,7 @@ check("odd small-part share %.4f vs 1/(1+sqrt2) = %.4f"
       % (median(shares), 1 / (1 + sqrt(2))),
       abs(median(shares) - 1 / (1 + sqrt(2))) < 0.02)
 
+stage("pass 4: the exceptional single-orbit family")
 # ---- pass 4: the exceptional family ----------------------------------------
 sing = [n for n in npp if len(D[n][1]) == 1]
 mults = sorted({n // P[n] for n in sing})
@@ -246,6 +348,7 @@ for lo, hi in [(100, 500), (500, 1200), (1200, 2484)]:
 check("exceptional share decays (%.3f -> %.3f -> %.3f, cf log5/log n)" % tuple(shares),
       shares[0] > shares[1] > shares[2])
 
+stage("pass 6: unconditional floors, incl. the balanced-prime searches")
 # ---- pass 6: unconditional floors (section 3.5) -----------------------------
 # Odd n take three near-equal primes -> 1/9; even n are forced to four by parity
 # (three odd primes sum odd, and admitting the part 2 scores C(2,2)=1) -> 1/16.
@@ -312,6 +415,7 @@ check("the even unconditional floor 1/16 falls just BELOW it (%.5f < %.5f), "
       "so the comparison runs the other way at even n" % (1 / 16, WORST),
       1 / 16 < WORST)
 
+stage("pass 5: against the Oliver table")
 # ---- pass 5: against Oliver ------------------------------------------------
 tab = {int(r["n"]): int(r["mu_bound"]) for r in csv.DictReader(open(TABLE))}
 shared = [n for n in sorted(tab) if n in D and n not in pps]
@@ -373,4 +477,7 @@ print("\n      global constant: Oliver %.5f (n = 11 mod 12) vs solvable %.5f"
 print("      per-residue ceiling ratios:",
       " ".join("%d:%.3f" % (r, ratios[r]) for r in sorted(ratios)))
 
+stage("done")
+if PROGRESS:
+    print(f"  total {hms(time.time() - _t0)}", file=sys.stderr, flush=True)
 sys.exit(0 if ok else 1)
