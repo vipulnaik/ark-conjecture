@@ -451,6 +451,16 @@ The script printed nothing until every pass finished — 79 s at N = 85,000, gro
 
 Two smaller choices: progress goes to **stderr**, so redirecting stdout keeps the PASS/FAIL lines clean; and it is **on by default rather than conditioned on a tty**, since the run it exists for is the long one, which is the one most likely to be under `nohup` with stderr in a file. `QUIET=1` suppresses. Verdict output unchanged — 22 PASS / 0 FAIL on the 85k table.
 
+## 5f. The solvable side split into writer and validator
+
+Three hours per question was the wrong shape, and it is the same shape `mu_exact.py` / `validate_table_v3.py` already fixed on the Oliver side: **the values are expensive, the questions about them are cheap and asked far more often.** So `solvable_table.py` now computes B_solv(n) to a CSV, and `solvable_relaxation.py` takes `--solvable-table PATH` and skips the scan. **6.03 s → 0.45 s at N = 22,591, verdicts identical.** One 10⁶ run (~3 h, or ~25 min on eight chunks) then serves every later question in seconds.
+
+**The scoring core lives in exactly one file.** `solvable_relaxation.py` imports `build` from the writer rather than keeping its own copy — a second implementation of a score is precisely the arrangement that lets two artefacts disagree silently, which this project has already been bitten by, and the import makes it impossible.
+
+**A cache is not trusted.** Recomputing everything would defeat the point, so the loaded table is spot-checked against a fresh computation at the places a disagreement would matter most — the extremes, the lowest and highest densities, the single-orbit rows, and a random sample (210 values at 22k) — and the run refuses outright if the cache does not cover the mu table's range. Both guards were tested: truncating the cache at 20,000 against a mu table reaching 22,591 gives a named refusal with the regeneration command, and corrupting the n = 551 row (the odd minimiser) gives `FAIL … n=551: table 19632, recomputed 18632` and exit 1.
+
+The writer mirrors `mu_exact.py`'s driver — same resume semantics including truncation of a partial final row, `--chunks i/N` at the ^{1/2} exponent since cost per n is ~linear, work-weighted heartbeat, `lo hi` lookup mode. Verified against the original sweep at every n in [6, 6000): 0 mismatches.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

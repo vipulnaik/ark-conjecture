@@ -59,7 +59,17 @@ s_i, s_j every cross pair is one class of exactly s_i*s_j.  Hence
           at eta = 1/2 with the rest of class 3 mod 12, not at eta = 1.
 
 Usage: python3 solvable_relaxation.py [path/to/current_mu_table.csv]
+       python3 solvable_relaxation.py mu.csv --solvable-table solvable_table.csv
        QUIET=1 python3 solvable_relaxation.py table.csv     # no heartbeat
+
+**THE SPLIT.**  `solvable_table.py` computes B_solv(n) once and writes a CSV;
+this file asks the questions.  Pass `--solvable-table PATH` and the ~O(N^2)
+scan is skipped entirely, which is the difference between three hours and three
+seconds at N = 10^6 -- the same division as `mu_exact.py` / `validate_table_v3.py`
+on the Oliver side, and for the same reason: the values are expensive and the
+questions about them are asked far more often.  A loaded table is **spot-checked
+against a fresh recomputation** at the extremes, the single-orbit rows and a
+random sample, so a stale file cannot pass quietly.
 Exits nonzero on any failure.
 
 PROGRESS.  Stage announcements and a heartbeat go to STDERR, so redirecting
@@ -151,7 +161,20 @@ def ticker(lo, hi, every=20000, label=""):
     return tick
 
 
-TABLE = sys.argv[1] if len(sys.argv) > 1 else "mu_table_ladder.csv"
+# Two inputs, and they are different things: the mu table is what the
+# comparison pass reads, and --solvable-table is a cache of THIS script's own
+# expensive computation.
+_args = [a for a in sys.argv[1:] if not a.startswith("--")]
+TABLE = _args[0] if _args else "mu_table_ladder.csv"
+SOLV_IN = None
+for _i, _a in enumerate(sys.argv):
+    if _a == "--solvable-table" and _i + 1 < len(sys.argv):
+        SOLV_IN = sys.argv[_i + 1]
+    elif _a.startswith("--solvable-table="):
+        SOLV_IN = _a.split("=", 1)[1]
+if SOLV_IN and SOLV_IN in _args:
+    _args.remove(SOLV_IN)
+    TABLE = _args[0] if _args else "mu_table_ladder.csv"
 # The frontier is read from the table rather than hardcoded, so this script does
 # not silently compare a stale range against a freshly extended one.
 with open(TABLE) as _f:
@@ -165,121 +188,75 @@ def check(name, cond):
     ok = ok and cond
 
 
-# ---- prime powers, and P(s) = largest prime-power divisor -------------------
+# ---- the scoring core lives in solvable_table.py, not here ------------------
+#
+# ONE IMPLEMENTATION OF THE SCORE, IMPORTED.  A second copy here is exactly the
+# arrangement that lets two artefacts disagree silently, and this project has
+# had that happen (`verification-lessons.md`).  So `build` and `best` come from
+# the writer, and this file is the questions-about-the-values half.
+try:
+    from solvable_table import build as _build
+except ImportError:
+    sys.exit("solvable_relaxation.py needs solvable_table.py alongside it "
+             "(the scoring core lives there; this file only asks questions).")
+
 stage(f"sieving to N = {N:,}")
-sieve = bytearray([1]) * (N + 1)
-sieve[0] = sieve[1] = 0
-for i in range(2, isqrt(N) + 1):
-    if sieve[i]:
-        sieve[i * i::i] = bytearray(len(sieve[i * i::i]))
-pps = set()
-for p in [x for x in range(2, N + 1) if sieve[x]]:
-    v = p
-    while v <= N:
-        pps.add(v)
-        v *= p
-P = [0] * (N + 1)
-for c in sorted(pps):
-    for s in range(c, N + 1, c):
-        if c > P[s]:
-            P[s] = c
-SCORE = [0] * (N + 1)
-for s in range(2, N + 1):
-    SCORE[s] = s * (max(P[s], 1) - 1) // 2
+PPL, P, SCORE, pps, sieve, best = _build(N)
 
-
-PPL = sorted(pps)
-
-
-def best(n, allow_three=False):
-    """B_solv(n) and an optimal partition.
-
-    THE TWO-PART SCAN IS CANDIDATE-ENUMERATED, NOT A SWEEP, and the reason is
-    arithmetic rather than engineering.  The old form looped a over 2..n/2, so
-    the whole run was O(N^2): 126 s over a 50k-row table and ~20 min over a 144k
-    one -- the same quadratic shape `validate_table_v3.py`'s gap scan had.
-
-    A part only matters if SCORE[a] = a*(P(a)-1)/2 exceeds the running best, and
-    writing a = m*P(a) that is a*a/m > 2*bv up to O(a).  With bv near its true
-    value -- delta_solv >= 0.12 in range -- this forces m <= 2 or 3: **the
-    admissible a are the prime powers and small multiples of them**, not an
-    interval.  So we enumerate a = m*c over prime powers c, m ascending, and
-    stop at the first m whose whole family is excluded by a*a <= 2*m*bv.  That
-    is an exact restatement of "SCORE[a] > bv", not a heuristic: every a the
-    sweep would have accepted is generated.
-
-    Pass 1 takes m = 1 first precisely so bv is near-optimal before pass 2 sizes
-    its own bound -- the same ordering lesson as `mu_ladder_exact.py`'s scan,
-    where the prune is only as strong as the best-so-far.
-
-    Measured 5x, and verified equal to the sweep at every n in [6, 4000) and on
-    400 values near 50,000."""
-    bv, bp = SCORE[n], (n,)
-
-    def try_a(a):
-        nonlocal bv, bp
-        sa = SCORE[a]
-        if sa <= bv:
-            return
-        sb = SCORE[n - a]
-        if sb <= bv:
-            return
-        v = sa if sa < sb else sb
-        p = a * (n - a)
-        if p < v:
-            v = p
-        if v > bv:
-            bv, bp = v, (a, n - a)
-
-    if not allow_three:
-        lo = 2
-        while lo * (lo - 1) // 2 <= bv:      # SCORE[a] <= C(a,2) bounds a below
-            lo += 1
-        for i in range(bisect.bisect_left(PPL, lo),
-                       bisect.bisect_right(PPL, n // 2)):
-            try_a(PPL[i])
-        m = 2
-        while True:
-            amax = n // 2
-            if amax * amax <= 2 * m * bv:    # the whole m-family is excluded
-                break
-            amin = isqrt(2 * m * bv) + 1
-            i0 = bisect.bisect_left(PPL, max(2, -(-amin // m)))
-            i1 = bisect.bisect_right(PPL, amax // m)
-            for i in range(i0, i1):
-                try_a(m * PPL[i])
-            m += 1
-        return bv, bp
-    for a in range(2, n // 2 + 1):
-        v = min(SCORE[a], SCORE[n - a], a * (n - a))
-        if v > bv:
-            bv, bp = v, (a, n - a)
-    if allow_three:
-        for a in range(2, n // 3 + 1):
-            if SCORE[a] <= bv and a * (n - a) <= bv:
+stage("loading B_solv")
+if SOLV_IN:
+    # ---- READ A PRECOMPUTED TABLE, and do not trust it blindly ----------------
+    #
+    # The whole point of the split is not to pay the ~3 h again, so the check
+    # that the file matches this code cannot be "recompute everything".  It is a
+    # SAMPLE, taken at the places where a disagreement would matter most: the
+    # extremes, the exceptional single-orbit family, and a spread of ordinary
+    # rows.  A stale file that happens to agree on the sample and differ
+    # elsewhere is possible; a stale file that agrees on the extremes is not,
+    # because they are what every check below reads.
+    D = {}
+    with open(SOLV_IN) as fh:
+        for r in csv.DictReader(fh):
+            n = int(r["n"])
+            if n > N:
                 continue
-            for b in range(a, (n - a) // 2 + 1):
-                c = n - a - b
-                v = min(SCORE[a], SCORE[b], SCORE[c], a * b, a * c, b * c)
-                if v > bv:
-                    bv, bp = v, (a, b, c)
-    return bv, bp
+            D[n] = (int(r["b_solv"]),
+                    tuple(int(x) for x in r["partition"].split(" + ")))
+    missing = [n for n in range(6, N + 1) if n not in pps and n not in D]
+    if missing:
+        sys.exit(f"{SOLV_IN} is missing {len(missing)} non-prime-power n in "
+                 f"[6, {N}] (first: {missing[:5]}); regenerate it with "
+                 f"solvable_table.py --nmax {N}")
+    import random as _rnd
+    _rnd.seed(0)
+    sample = sorted(set(
+        [n for n in (min(D), max(D)) if n] +
+        sorted(D, key=lambda n: D[n][0] / comb(n, 2))[:3] +
+        sorted(D, key=lambda n: -D[n][0] / comb(n, 2))[:3] +
+        [n for n in D if len(D[n][1]) == 1][:3] +
+        _rnd.sample(sorted(D), min(200, len(D)))))
+    bad = [(n, D[n][0], best(n)[0]) for n in sample if best(n)[0] != D[n][0]]
+    check(f"the loaded table agrees with this code at {len(sample)} sampled n "
+          "(extremes, single-orbit rows, and a random spread)", not bad)
+    if bad:
+        for b in bad[:5]:
+            print("      n=%d: table %d, recomputed %d" % b)
+    stage(f"loaded {len(D):,} rows from {SOLV_IN} -- the O(N^2) scan was skipped")
+else:
+    if PROGRESS:
+        print(f"  [0:00] B_solv is O(N^2) overall (~O(n) per value).  Reference "
+              f"point: 64 s at N = 76,752, so N = 10^6 is about "
+              f"{64 * (10 ** 6 / 76752.0) ** 2 / 60:.0f} min. "
+              f"Here N = {N:,}, estimate {64 * (N / 76752.0) ** 2 / 60:.1f} min. "
+              f"**Pass --solvable-table to skip this entirely.**",
+              file=sys.stderr, flush=True)
+    stage(f"computing B_solv at every n in [6, {N:,}] -- the dominant cost")
+    _tick = ticker(6, N, label="B_solv")
+    D = {}
+    for _n in range(6, N + 1):
+        D[_n] = best(_n)
+        _tick(_n)
 
-
-# The cost is ~quadratic in N, so an up-front estimate is worth printing: it is
-# the number that decides whether to run this at all on a larger table.
-if PROGRESS:
-    print(f"  [0:00] B_solv is O(N^2) overall (~O(n) per value).  Reference point: "
-          f"64 s of compute for N = 76,752, so N = 10^6 is about "
-          f"{64 * (10 ** 6 / 76752.0) ** 2 / 60:.0f} min. "
-          f"Here N = {N:,}, estimate {64 * (N / 76752.0) ** 2 / 60:.1f} min.",
-          file=sys.stderr, flush=True)
-stage(f"computing B_solv at every n in [6, {N:,}] -- the dominant cost")
-_tick = ticker(6, N, label="B_solv")
-D = {}
-for _n in range(6, N + 1):
-    D[_n] = best(_n)
-    _tick(_n)
 delta = {n: D[n][0] / comb(n, 2) for n in D}
 npp = [n for n in D if n not in pps]
 
