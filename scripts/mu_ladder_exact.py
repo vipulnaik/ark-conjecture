@@ -100,12 +100,22 @@ same and each file records whichever it reached first -- e.g. n = 423, where
 `2x128 + 1x167*` and `1x256 + 1x167*` both score 13861 because the foreign block
 binds.  A witness diff is therefore not a discrepancy; a value diff is.
 
-MEASURED THROUGHPUT.  ~37 ms/row at n near 10^6 (was 92 before the menu scan was
-interval-restricted), ~4 ms at 10^5, 0.76 ms averaged over the 50k-row table and
-2.2 ms over the 144k-row one.  A full run to 10^6 is about 6 h single-threaded
-and under an hour on eight chunks -- against `mu_exact.py`'s ~3 h PER VALUE at
-that size.  Checked against both tables after the change: equal at all 50,062
-and all 144,299 rows, 0 low, 0 high.
+MEASURED THROUGHPUT.  ~15 ms/row at n near 10^6 (was 92), 4.3 ms at 2.5*10^5,
+0.70 ms averaged over the 50k-row table and 1.9 ms over the 144k-row one.  A full
+run to 10^6 is about 3 h single-threaded, under half an hour on eight chunks --
+against `mu_exact.py`'s ~3 h PER VALUE at that size.  Checked against both tables
+after every change: equal at all 50,062 and all 144,299 rows, 0 low, 0 high.
+
+QUOTE THE PER-n COST BY DENSITY, NOT THE AGGREGATE, and expect an n/s figure to
+show a SMALLER speedup than a per-value one.  The cost is strongly delta-
+dependent -- at n ~ 2.5*10^5 a delta < 0.10 value takes 6.2 ms against 3.3 ms
+above 0.22, and at 10^6 it is 23 vs 11 -- because the admissible interval is
+[sqrt(delta F), 1 - sqrt(delta)] and widens as delta falls.  So an aggregate
+rate weights the hard values most: measured on the same 564 values near
+2.5*10^5, the menu scan alone sped up 11.5x in the delta >= 0.22 bucket, 6.2x in
+[0.10, 0.15), and 4.3x below 0.10, for 7.7x in aggregate and 4.0x end to end.
+The optimisation buys least exactly where the work is, which is the same
+inversion the rest of this framework has.
 """
 import argparse
 import csv
@@ -156,6 +166,8 @@ class Arith:
         self.best_q = [0] * (N + 1)
         # efficient primes by q: q -> sorted list of (r, t)
         self.eff = defaultdict(list)
+        # rmax[q] = the largest efficient prime at this q, so a q whose whole
+        # list lies below n/5 can be skipped without slicing it.
         for r in self.primes:
             if r == 2:
                 continue
@@ -171,8 +183,12 @@ class Arith:
                 if v > bo:
                     bo, bq = v, q
                 if m // t <= KMAX_EFF:
-                    self.eff[q].append((r, t))
+                    # orb is stored, not recomputed: the pair loop below asked
+                    # for it ~5,400 times per n, all on the same few thousand
+                    # (r, t).  Sorted by r, so the slicing stays a bisect.
+                    self.eff[q].append((r, t, v))
             self.best_orb[r], self.best_q[r] = bo, bq
+        self.effmax = {q: lst[-1][0] for q, lst in self.eff.items() if lst}
 
     def is_prime(self, x):
         return 1 < x <= self.N and self.spf[x] == x
@@ -309,21 +325,25 @@ def best_for_n(n, A):
                     upd(v, f"p={p} q={A.best_q[r]}: {F}x{c} + 1x{r}*   (* foreign)")
     # ---- S6 and S11: two foreign primes at a common q ----------------------
     if best > 0:
+        lo5 = n // 5
         for q, lst in A.eff.items():
+            # A whole q is skippable when its largest efficient prime is below
+            # n/5: no member can be a foreign part at all, and there are many
+            # such q at large n.  Cheaper than slicing the list to find out.
+            if A.effmax[q] <= lo5:
+                continue
             # candidates in (n/5, n) -- both foreign parts have share > 1/5
-            i0 = bisect_right(lst, (n // 5, 10**9))
-            i1 = bisect_left(lst, (n, 0))
+            i0 = bisect_right(lst, (lo5, 10**9, 0))
+            i1 = bisect_left(lst, (n, 0, 0))
             cand = lst[i0:i1]
             for i in range(len(cand)):
-                r1, t1 = cand[i]
-                o1 = orb(r1, t1)
+                r1, t1, o1 = cand[i]
                 if o1 <= best:
                     continue
                 for j in range(i + 1, len(cand)):
-                    r2, t2 = cand[j]
+                    r2, t2, o2 = cand[j]
                     if r1 + r2 > n:
                         break
-                    o2 = orb(r2, t2)
                     if o2 <= best or r1 * r2 <= best:
                         continue
                     rest = n - r1 - r2
