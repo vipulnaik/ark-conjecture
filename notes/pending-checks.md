@@ -25,6 +25,31 @@ Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804
 
 *Do not restate the inequality as `B_safe ≤ μ`.* `B_safe` over-counts per configuration; what holds is B_refined ≤ μ ≤ B_safe, the endpoints collapsing where E.5 or the certificate applies.
 
+## R12. `mu3_menu.py` — B₃ over the k = 3 census
+
+**New 2026-09, and it closes half of `three-uniform-note.md` §10 item 1.** Scores every shape in that note's §4.2 census at every n in a range and writes `n, C(n3), b3_census, delta3, witness`. Table to n = 2000 in the working set as `b3_census_2000.csv` (1,666 rows, 7 s).
+
+**Read the column name, and know which way the inequality runs.** `b3_census` is the max over the *census* shapes. Two directions, two hypotheses, neither established at k = 3:
+
+- **μ₃ ≥ B₃^census** if every census shape is realisable by an Oliver group (the Part E analogue — no GAP battery exists at k = 3);
+- **μ₃ ≤ B₃^census** if the census is complete (§10 item 1, open).
+
+So the useful reading is a **lower** bound on μ₃ modulo realisability. Nothing should read the column as μ₃. What it legitimately replaces is the *hand* searches: §6.2's "optimal" at one n, §6's escape counts, §5's class ceilings.
+
+> **A defect caught on the first run, worth recording because the check that caught it was a question about direction.** The script credited a Galois part of order m without requiring m to be a power of the top prime q — the Frobenius lives in the top layer, which is a q-group. **295 of 306 rows crediting m > 1 had the top prime ≠ 5 while crediting m = 5 on a 32-block.** Fixed; 266 rows fell, all downward, and n = 133 did not move because there q = 5 = m is the coincidence §6.2 exists to display. This is §4.3's warning — "spending the top prime on the Galois gain cripples every foreign block" — made concrete.
+
+**Why it is short where `mu_enumerate_v3.py` is long.** At k = 3 only intra terms bind — proved in three lines by a degree count, cross terms being cubic in n against quadratic intra terms (§4.1) — so a configuration's score is min over classes of F·orb₃(c, d, m) with no term-type comparison. The scoring itself is the proved orbit law with κ₃ = τ·θ·γ, verified on 104 triples.
+
+```bash
+python3 mu3_menu.py --check-133          # reproduces §6.2's worked example
+python3 mu3_menu.py --nmax 2000 --out b3_census_2000.csv
+python3 mu3_menu.py 130 136              # lookup
+```
+
+**Verified on writing:** every value in §6.2's table including all seven r-rows; the full-density degrees of §3.1 (5, 8, 32 attain C(c,3), 16 does not — Kantor's classification appearing in the arithmetic); and the n = 133 row reproduces the note's witness `1x32 + 1x101*` at δ₃ = 0.006587.
+
+**What is still owed here** is §10 item 1 proper: a completeness argument for the k = 3 census, whose concrete first step the note names — locating the crossover between the quadratic intra term and the cubic cross terms, which §4.1's degree count makes unlikely to bind but does not exclude at small n.
+
 ## Before the pause: the landing checklist
 
 *Everything in this list is small, and each item names the exact edit it produces, so none of it needs a fresh decision. When all four are done the documents are current to 10⁶ on every measured figure and nothing is pending on a run.*
