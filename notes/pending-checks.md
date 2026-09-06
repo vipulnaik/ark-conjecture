@@ -343,6 +343,22 @@ Plus three **entangled-generator regressions** whose orbital multisets are known
 
 **What remains.** Only the n = 5 torsion, and only if one wants the Smith form rather than the answer: the connecting map is ℤ⁶ → ℤ⁶ with cokernel (ℤ/2)², elementary divisors (1,1,1,1,2,2). The regression at n = 5, 6, 7 should be re-run after any change to `chiral_mv.py`; it checks the closed forms against direct 𝔽₂ homology and asserts non-negative Betti numbers, which is what catches the boundary-orientation bug described in the script header.
 
+## R1b. The certificate steps of R1 do not scale to 10⁶ — and no longer need to
+
+**Measured:** `fallback_cert.py` runs in 3.2 s on 1,000 rows, 24.3 s on 3,000 and 196 s on 9,000 — about n^1.9 — which extrapolates to **roughly 15 days** on the 921,265-row table. It cannot be run there as written.
+
+**It also has nothing left to decide there.** The certificate answers, per n, "could any fallback configuration reach B(n)?" **Theorem E.5 answers it for every n at once above C(n,2)/25**, and **0 of the 921,265 rows are at or below that line** (the minimum is 0.046210). So the per-n certificate is redundant on the whole table, exactly as Corollary E.6 intends: the certificate was the tool for the regime the theorem now covers.
+
+> **So R1's certificate steps are rescoped rather than dropped.** Run `fallback_cert.py` and `wide_cert.py` on a **slice** — the first few thousand rows, where they are seconds and still exercise every branch — as a check on the *code*, not on the table; the table itself is covered by E.5. Verdict on the [6, 3531] slice, rerun now: **0 values where some fallback configuration could reach B(n)**, 88.8% settled by theorem alone, s ≤ 3 over the range, and the foreign-part regime split 91.7% e = 1 / 7.5% e ≥ 2 / 0.8% q = 2. *If a future extension ever produces a row below 1/25, that row — and only that row — needs the certificate, and it will be one n rather than a million.*
+
+**Still to run when convenient** (they are unaffected by this and were not reached): `a18_verify.py` on the full table (its own witness checks all pass; the table-scanning part is slow), `solvable_relaxation.py`, `t5_verify.py`, `audit_fmid.py`, `shape_realize.py`, `ceiling_rederive.py`. None of them gates anything the completed run establishes.
+
+## R11. Recheck `approach-rate-note.md` §4a against the completed run — DONE, prediction confirmed
+
+§4a made one falsifiable claim: the ≈0.28 offset between observed and predicted class-11 loss is competing-shape suppression, so it should **climb** as those shapes thin out, and this is testable at 10⁵. Tested on the completed 10⁶ table, over the contiguous range [6, 10⁶] (63,672 class-11 values in it, 44,089 below the ceiling): the offset runs **0.536 → 0.617 → 0.660 → 0.652** across [8·10³, 10⁴), [10⁴, 10⁵), [10⁵, 3·10⁵), [3·10⁵, 10⁶], and the mechanism is visible — the F = 4 share of below-ceiling winners rises **63% → 87% → 99.4%**. Confirmed.
+
+**And the limit is ln 2, not 1, which §4a had wrong.** The comparison is a *median* observed loss against a *mean* model, and the ratio is Exp(1); median(Exp(1)) = 0.6931. Like-for-like on the F = 4 population at [10⁵, 10⁶]: median 0.651 vs 0.693, mean 0.919 vs 1 — both 6–8% short, the same uniform deficit §3(a) already attributes to the second-order Bateman–Horn correction, and flat across every quantile (0.91–0.97). New §4b records all of it; §6's second-order item is now the sharpest thing left in that note, since it is the only constant still loose and it has been isolated.
+
 ## A20b. delta must be computed from the integers, never parsed from the density column — DONE
 
 **The failure this exists to prevent, because it fired.** `validate_table_v3.py` parsed `Row.delta` from the CSV's `density` column, which carries **six decimals** — a rounding error up to 5·10⁻⁷. The cap_F margins at n ≈ 10⁶ are *narrower than that*: the closest approach on the completed 10⁶ table is **1.77·10⁻⁷** and **96 rows sit within 5·10⁻⁷**. So a rounded density can land on the wrong side of a cap, and at exactly one row in 921,265 it did:
@@ -350,6 +366,8 @@ Plus three **entangled-generator regressions** whose orbital multisets are known
 > **n = 999685**, witness `2x292801 + 1x414083*`: true density **0.171572510776**, column **0.171573**, cap₂(1) = 3 − 2√2 = **0.171572875254**. The true value is below the cap by 3.6·10⁻⁷; the rounded one is above it by 1.2·10⁻⁷.
 
 That produced **two spurious FAILs** — the cap_F check and the feasibility check, which reads 1/√δ — on the same row, from one cause. *Confirmed exactly in integers: (3C − B)² − 8C² = 514799345346156900 > 0, so δ < 3 − 2√2 with no floating point anywhere.* **The data were correct and the checker was wrong.**
+
+**The same defect was in a second script, and there it was far louder.** `converse_check.py` also parsed the density column, and inequality (2) of Proposition F.4 — r ≥ √(δ·n(n−1)) — is *tight*, its closest ratio on the 10⁶ table being 1.0000. The inflated δ therefore broke it on **991 rows**, and the script printed *"991 violation(s) — F.4 is contradicted by the table"*. Checked exactly in integers, r(r−1) ≥ 2B holds at **every one of the 796,763 one-foreign rows**; with δ computed from the integers the script reports **all four inequalities clean**. *A script whose failure message is "the Proposition is contradicted" is exactly the one that must not read a rounded column* — and the two scripts failed the same way in the same week, which is why the guard below is a check rather than a comment.
 
 **Fixed and guarded.** `Row.delta` is now `B / C`; `delta_str` is kept because check A20's whole job is to verify the column against B/C, and that check must read the string while every other check must not. Three guards: the cap_F check now **reports its margin** (closest approach, and how many rows sit within the column's rounding error) so the next person sees immediately that the column is unusable here; a new group-A check **fails if anyone reverts** `Row.delta` to `float(density)`; and both are documented at the point of use.
 

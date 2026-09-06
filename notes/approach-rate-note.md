@@ -2,7 +2,7 @@
 
 *Auxiliary note. `arithmetic-of-density.md` states the class-11 ceiling as δ(n) ≤ 7 − 4√3 − o(1) and does not say what the o(1) is. This note works it out, tests it, and says which half of the answer the singular series supplies and which half is a Cramér-model assumption. It is kept out of `aod` deliberately: the leading term is Bateman–Horn arithmetic of the kind `aod` already uses, but the distributional half is a heuristic about a shrinking window, which is a class of assumption `aod` does not otherwise carry.*
 
-**Status: heuristic with an empirical fit. Not a theorem, and not a conjecture the framework depends on.** Nothing in `aod`, `enumeration-proof.md` or the short note uses any of this; the ceiling itself is unaffected.
+**Status: heuristic with an empirical fit, now tested against exact μ over the full 10⁶ range. Not a theorem, and not a conjecture the framework depends on.** Nothing in `aod`, `enumeration-proof.md` or the short note uses any of this; the ceiling itself is unaffected.
 
 ---
 
@@ -89,6 +89,27 @@ The ratio is constant to ±5% across the range, so the loss really does vary inv
 
 **So the honest statement of what is established** is that the loss scales as 1/(S(n)·n) times a slowly varying factor, with the arithmetic confirmed and the logarithmic power untested. **Extending the table will not fix this**: even at 10⁶ the log³ signal is a factor ~1.2 per decade against comparable noise. What extending *does* test is the ≈0.28 offset, which the competing-shape account predicts should climb — that is the falsifiable part, and it is falsifiable at 10⁵.
 
+## 4b. The falsifiable part, tested at 10⁶ — and the offset was never going to reach 1
+
+*Added when μ became known exactly at every composite non-prime-power n ≤ 10⁶ (921,265 rows), which is the first data that can settle §4a's prediction.*
+
+**The prediction holds. The offset climbs, and the competing-shape account is confirmed as its cause.** Over all 63,672 class-11 values to 10⁶, of which 44,089 (69.2%) fall below the ceiling:
+
+| decade | count below ceiling | median observed loss | median model | ratio |
+|---|---|---|---|---|
+| [8·10³, 10⁴) | 61 | 5.03·10⁻³ | 9.35·10⁻³ | **0.536** |
+| [10⁴, 10⁵) | 3,149 | 1.95·10⁻³ | 3.06·10⁻³ | **0.617** |
+| [10⁵, 3·10⁵) | 8,266 | 8.20·10⁻⁴ | 1.26·10⁻³ | **0.660** |
+| [3·10⁵, 10⁶] | 32,486 | 3.50·10⁻⁴ | 5.43·10⁻⁴ | **0.652** |
+
+against ≈0.28 measured at n ≤ 25,620. And the mechanism is visible directly: among class-11 values below the ceiling, the **F = 4 share of winners** runs 63% on [5·10³, 10⁴), 87% on [10⁴, 10⁵) and **99.4%** on [10⁵, 10⁶] (40,488 of 40,742), while the fraction of the class falling below the ceiling at all rises 43% → 58% → 71%. The competing shapes thin out exactly as §4 said they would, and the suppression they caused goes with them.
+
+> **But the offset converges to 0.65, not to 1 — and that is the correct limit, which §4a got wrong.** The ratio above is a **median** observed loss against a **mean** model, and §3(a) establishes the loss/model ratio is Exp(1); the median of Exp(1) is **ln 2 = 0.6931**, not 1. So the target was never 1. Comparing like with like on the F = 4 population over [10⁵, 10⁶]: **median ratio 0.651 against ln 2 = 0.693, mean ratio 0.919 against 1** — both short by 6–8%, which is the *same uniform deficit* §3(a) already reports as the second-order Bateman–Horn correction at log ≈ 12. The quantile-by-quantile comparison on that population is flat at 0.91–0.97 across the whole Exp(1) curve, against 0.52–0.85 and sharply sloped on [10⁴, 10⁵) where competing shapes still bite.
+>
+> So the three numbers that were loose in §4a all close at once: the offset climbs as predicted, its limit is ln 2 rather than 1 for a reason that has nothing to do with this framework, and the residual is the known second-order correction. **Nothing here is new arithmetic — it is the same singular series measured on 13× more data with the contaminating population removed.**
+
+**The log³ factor is still not tested and still not testable**, and the extension does not change that: over [10⁴, 10⁶] log³n moves by a factor 3.6 while the Exp(1) spread is a factor 10 between its 10th and 90th percentiles. That remains §6's open item.
+
 ## 5. What the singular series does and does not give
 
 **Does:** the mean, exactly, including the arithmetic dependence on n through S(n). Every leading-order number above is Bateman–Horn and nothing else — and §4a confirms the S(n) dependence directly against exact B(n), which is the strongest support anything here has.
@@ -100,6 +121,6 @@ The ratio is constant to ±5% across the range, so the loss really does vary inv
 ## 6. Not done
 
 - No attempt at a rigorous upper bound on the loss. The natural route — an admissible c must exist within O(log³n) of x\*n — is a shifted-prime-triple statement of exactly the kind §6 of `sp-to-floor.md` shows the sumset route cannot supply.
-- The second-order Bateman–Horn correction is quoted as "about the right size" for the 7% deficit; it has not been computed.
+- The second-order Bateman–Horn correction is quoted as "about the right size" for the deficit; it has not been computed. **This is now the sharpest open item here**, because §4b has isolated it: on the uncontaminated F = 4 population at [10⁵, 10⁶] the shortfall is 6–8% and *flat across every quantile of the Exp(1) curve* (0.91–0.97), which is what a multiplicative correction to the density looks like and not what a modelling error looks like. Computing it would turn the note's last loose constant into a prediction.
 - The classes other than 11 are untouched. The same analysis applies with different slopes and a different local system at each of the six ceilings; nothing suggests a different shape of answer.
-- The competing-shape effect of §4 is described, not modelled. A model would need the joint distribution of several shapes' deficits, which is more machinery than the question warrants.
+- The competing-shape effect of §4 is described, not modelled. A model would need the joint distribution of several shapes' deficits, which is more machinery than the question warrants — and §4b removes the need at large n, where the F = 4 share reaches 99.4% and the contamination is gone.

@@ -110,7 +110,16 @@ def load(path, nmax, contiguous_only=True, frontier=None, gap=10):
             n = int(r["n"])
             if nmax and n > nmax:
                 continue
-            rows.append({"n": n, "delta": float(r["density"]),
+            # DELTA IS COMPUTED FROM THE INTEGERS, never parsed from the
+            # density column.  That column carries six decimals -- a rounding
+            # error up to 5e-7 -- and inequality (2) is TIGHT: its tightest
+            # ratio on the 10^6 table is 1.0000.  Parsing the column therefore
+            # inflates delta on about half the rows and manufactures failures:
+            # it reported **991 violations of F.4** on the completed table, all
+            # of them spurious.  Checked exactly in integers, r(r-1) >= 2B holds
+            # at every one of the 796,763 one-foreign rows.  (Same defect, same
+            # week, as validate_table_v3.py's -- see pending-checks A20b.)
+            rows.append({"n": n, "delta": int(r["mu_bound"]) / int(r["C(n2)"]),
                          "parts": int(r["parts"]), "witness": r["witness"],
                          "B": int(r["mu_bound"])})
     rows.sort(key=lambda r: r["n"])
