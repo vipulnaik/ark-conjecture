@@ -300,6 +300,21 @@ python3 mu3_menu.py 130 136              # lookup
 
 **What is still owed here** is §10 item 1 proper: a completeness argument for the k = 3 census, whose concrete first step the note names — locating the crossover between the quadratic intra term and the cubic cross terms, which §4.1's degree count makes unlikely to bind but does not exclude at small n.
 
+## A31. `aod` §5's decade tables are ladder lower bounds where the section now says they are exact
+
+**Found in the 2026-09 read-through; a framing inconsistency, not a wrong number.** §5 carries two decade-minimum tables built from the **44,091-entry worklist** — "minimum *bound* over the 44,091-entry worklist, by decade" — and the section's later paragraph now says, correctly, that with the exact table contiguous to 10⁶ "every decade is *computed* rather than bounded … the decade minima are exact values". Both are true of their own object, but a reader meeting the tables first will take them for the current evidence when something stronger is now available: the exact per-decade minima of the 921,265-row table.
+
+**The fix is a requote, not a rewrite** — recompute the decade minima from `mu_table_ladder.csv` and say they are values rather than bounds, keeping the worklist tables only if the *comparison* is wanted (it shows the ladder was tight, which is worth one line). Left undone deliberately: it touches the section's argument structure, and the read-through's remit was to find rather than to restructure.
+
+## R12b. Rerun `ladder-completeness.md`'s two scans at 10⁶
+
+**Found in the 2026-09 read-through.** Every measured figure in `ladder-completeness.md` is scoped to the **36,848-row frontier** of its writing and neither scan has been rerun since the exact table completed to 10⁶:
+
+- **`offmenu_scan.py`** — the S6/S11 sweep, currently "over all efficient-prime pairs with a common q up to 36,848 … 729 tabulated n, above 1/25 at 352, maximum density 0.1111 at n = 4376, never reaches B(n)". This is **the empirical half of Proposition 2**, and it is the half that licenses reading a ladder value as B: Proposition 1 says the optimum is a menu shape *or* S6/S11, and the scan is what says the second disjunct is never taken.
+- **`ladder_vs_B.py`** — "ladder = B at all 32,861 tabulated values", now 921,265.
+
+**The propositions are unaffected** — they are theorems plus a conditional argument, not measurements — so this is a requote, not a correction. Cheap: both scans read the table. Do it with the other requotes when convenient.
+
 ## R12a. `ceiling_rederive3.py` — the k = 3 ceiling table, measured
 
 The counterpart of `ceiling_rederive.py`, and the reason it was needed: **without a generic-family filter, a sup over any range measures §6's escapes rather than the ceiling** — on `b3_census_2000.csv` the unfiltered class sup exceeds the tabulated ceiling in 11 of 12 classes, by 18× at class 0, and **7 of the 12 sups are attained by a fused S2 shape with no foreign block**.

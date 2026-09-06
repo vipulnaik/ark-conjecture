@@ -469,7 +469,7 @@ The writer mirrors `mu_exact.py`'s driver — same resume semantics including tr
 
 So `mu3_menu.py` scores every census shape at every n in a range and writes `b3_census`. Table to n = 2000 (1,666 rows, 7 s). **The column is named `b3_census`, never `mu3`**, because B₃^census ≥ μ₃ requires the census to be complete — the note's §10 item 1, untouched. What it legitimately replaces is the hand searches: §6.2's "optimal" at one n, §6's escape counts, §5's class ceilings.
 
-*Independently reproduced on writing it, which is what makes it worth having:* every value in §6.2's worked example — orb₃(32,31,5) = 4960, orb₃(32,31,1) = 992, orb₃(101,25,1) = 2525, and all seven rows of the r-table — and the full-density degrees of §3.1, where 5, 8 and 32 attain C(c,3) and **16 does not**, which is Kantor's classification appearing in the arithmetic rather than being assumed by it. The n = 133 row comes back with the note's own witness, `1x32 + 1x101*` at δ₃ = 0.006587.
+*Independently reproduced on writing it, which is what makes it worth having:* every value in §6.2's worked example — orb₃(32,31,5) = 4960, orb₃(32,31,1) = 992, orb₃(101,25,1) = 2525, and all seven rows of the r-table — and the full-density degrees of §3.1, where 5, 8 and 32 attain C(c,3) and **16 does not**, which is Kantor's classification appearing in the arithmetic rather than being assumed by it. The n = 133 row comes back with the note's own k = 3 witness, `1x32 + 1x101*`, at δ₃ = 0.006587.
 
 *The general shape of the finding:* the note's caveat was accurate but read as if the whole enumerator were missing, when in fact the **scoring** was complete and verified and only the **completeness of the shape list** was open. Those are separable, and separating them turned a §10 item into a short script plus a genuinely open question.
 
@@ -502,6 +502,21 @@ The file had drifted out of order as items were added at whatever point the conv
 Two things the pass exposed rather than just moved. **R7 had both a full section and a ledger row**, so it was listed twice with different summaries; the row is gone and the ledger intro now says items with residue keep their section rather than appearing in both. And **§1 mixes live runs with retained-closed entries** — R7 superseded, R11 and R12a done, R1b and R12 explaining a scope — which is fine but was invisible, so §1's intro now names which is which.
 
 Verified: 40 headings, every block placed, **0 unresolved cross-references** (R0b, R7a, R7c, R7d resolve to ledger rows, which is intended), no duplicates between sections and ledger, and a line-level diff shows exactly three lines changed — the two intended rewordings and the deleted duplicate row.
+
+## 5j. Read-through of all 27 documents, part 1
+
+*Remit: find, not restructure. Fixed on the spot only what was mechanical; anything touching an argument went to `pending-checks.md`.*
+
+**Checker first — all eleven invariants green** (I1–I11), the census S-number join clean, and the S2 identity holding at every row. Two defects in the checker itself, both fixed: a **k = 3 witness compared against the k = 2 table** (the "another arity" exemption is document-level and missed a session-log entry discussing k = 3, so a sentence-level marker was added), and the **retirement countdown still printing** after the tag was retired — `[ok] tag still live: -900000 short of the retirement frontier`, a negative number nobody would act on but which contradicts the line above it.
+
+**Mechanical fixes made.** `validate_table.py` cited in **four places** (three in `ep`, one in the Lean README) where the script is `validate_table_v3.py` — the kind of stale name that survives because it still reads as a description. And `ladder-completeness.md`'s opening sentence framed the whole note as answering "when `ladder_verify.py` reports a floor at an n where `mu_exact.py` is out of reach", which is the pre-`mu_ladder_exact.py` world; reworded to the past tense it belongs in.
+
+**Two findings recorded rather than fixed.**
+
+- **R12b:** every measured figure in `ladder-completeness.md` is scoped to the **36,848-row frontier**, and neither of its scans has been rerun since the table completed to 10⁶. The propositions are unaffected (theorems plus a conditional argument), but `offmenu_scan.py` is **the empirical half of Proposition 2** — Proposition 1 says the optimum is a menu shape *or* S6/S11, and that scan is what says the second disjunct is never taken. So it is the requote that carries the most weight.
+- **A31:** `aod` §5's two decade tables are ladder *lower bounds* over the worklist, while the section's later paragraph now says the decade minima are exact. Both true of their own object; a reader meeting the tables first will take them for current evidence when the exact table supplies something stronger.
+
+**Checked and clean:** cross-document agreement on the floor, its argmin, the row counts and the six ceiling constants; the census S-numbers (three-uniform still lacks S11/S12, which the checker reports as info and is a known to-do); cited-file names across all 27 documents, where every remaining unresolved name is a file in the repo but not in this working set.
 
 ## 5. One methodological note
 

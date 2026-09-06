@@ -737,8 +737,10 @@ if A.only in ("all", "scope"):
     # A range with a thousands separator -- "[6, 159,027]" -- is a scope too;
     # the first form of this pattern accepted only "[6, 2600]" and flagged every
     # figure requoted at the 159k frontier as unscoped.
-    SCOPED = re.compile(r"contiguous|prefix|\[6, ?[\d,]+\]|over the range|to n = [\d,]+|"
-                        r"worklist|whole (?:file|CSV)|all \d[\d,]* rows", re.I)
+    # "[6, 10⁶]" with a superscript exponent is a scope too, now that the table
+    # is written that way; the pattern accepted only digit strings before.
+    SCOPED = re.compile(r"contiguous|prefix|\[6, ?[\d,⁰¹²³⁴⁵⁶⁷⁸⁹\^]+\]|over the range|"
+                        r"to n = [\d,⁰¹²³⁴⁵⁶⁷⁸⁹\^]+|worklist|whole (?:file|CSV)|all \d[\d,]* rows", re.I)
     COUNTY = re.compile(r"\*\*(\d[\d,]{1,5})\*\* (?:winners|of them|rows)|"
                         r"(?:winners|winner count)[^.]{0,20}\*\*\d")
     i7 = 0
@@ -1671,6 +1673,11 @@ if A.only in ("all", "witness"):
             # not that it is optimal -- so a witness naming one is correct.
             "not the winner", "non-optimal", "realisability of the configuration",
             "regression", "battery",
+            # a k = 3 witness names blocks scored by orb_3, not orb_2, so it is
+            # not a row of the k = 2 table.  The document-level "another arity"
+            # exemption catches the k = 3 notes but not a session-log entry that
+            # discusses them, so the sentence-level marker is needed too.
+            "k = 3", "orb_3", "orb\u2083", "\u03b2\u2083", "b3_census",
             "mu_fast", "historic", "cap", "ceiling", "class", "descent", "b_lo",
             "lower bound", "rises", "rose", "lifts", "lifted", "under the corrected")
     RIGHT = ("cap", "ceiling", "class")     # "0.08579 for the classes they sit in"
@@ -1850,7 +1857,9 @@ if A.only in ("all", "pending"):
         print("    Requote every site above, then delete the tag from all of them AND from")
         print("    the banner definition in each document.  See pending-checks.md R0b.")
     else:
-        print(f"\n[ok] tag still live: {TAG_TARGET - NMAX} short of the retirement frontier.")
+        if defined:
+            print(f"\n[ok] tag still live: {TAG_TARGET - NMAX} short of the "
+                  f"retirement frontier.")
 
 
 print("\n" + "=" * 72)
