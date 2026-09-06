@@ -888,6 +888,35 @@ if A.only in ("all", "scope"):
         print("[ok] I10: worklist length agrees across documents; no threshold "
               "rests on the superseded floor.")
 
+    # (I11) THE RETIRED LABEL MUST NOT REAPPEAR.  (SP) became (BCP) in the
+    # 2026-09 rename, so that its relation to (BCG) is visible in the label:
+    # (BCG) = (BCP) + the additive clause.  A stray (SP) breaks that, and so
+    # does a citation of the old filename.
+    #
+    # AN EARLIER FORM OF THIS INVARIANT ALSO TRIED TO CHECK that any sentence
+    # comparing the two hypotheses names both.  It fired on six sentences that
+    # legitimately compare (BCG) to a FIXED Bateman-Horn system and have no
+    # business mentioning (BCP) -- and a check that is wrong six times out of
+    # eight trains the reader to skip it, which is the failure mode I4's own
+    # comment warns about.  Dropped; the naming does its own work in prose.
+    i11 = 0
+    OLDNAME = re.compile(r"\(SP[\)_]|\bsp-to-floor\b")
+    # A line that is ABOUT the rename may name the old label; it says so.
+    RENAME = re.compile(r"renamed|retired|formerly|was \(SP\)|until 2026", re.I)
+    for d in DOCS:
+        try: txt = open(d).read()
+        except OSError: continue
+        for ln, line in enumerate(txt.split("\n"), 1):
+            if OLDNAME.search(line) and not RENAME.search(line):
+                findings += 1; i11 += 1
+                print(f"{d} L{ln}  *** INVARIANT I11 *** uses the retired label "
+                      f"(SP) or the old filename; the hypothesis is (BCP) and "
+                      f"the file is bcp-to-floor.md")
+                print(f"   {line.strip()[:150]}\n")
+    if not i11:
+        print("[ok] I11: the retired (SP) label appears nowhere except where the "
+              "rename itself is described.")
+
 # --------------------------------------------------------------- PASS 7 tables
 #
 # A markdown table whose separator row has a different number of columns from
@@ -1637,6 +1666,11 @@ if A.only in ("all", "witness"):
     MARK = ("v2", "v3", "v4", "pre-repair", "pre-correction", "previous", "earlier",
             "old", "superseded", "was ", "were ", "ladder", "worklist", "menu",
             "tie", "both score", "score the same", "scores the same",
+            # A realisability battery deliberately scores configurations that
+            # do NOT win at their n -- the row tests that the score is attained,
+            # not that it is optimal -- so a witness naming one is correct.
+            "not the winner", "non-optimal", "realisability of the configuration",
+            "regression", "battery",
             "mu_fast", "historic", "cap", "ceiling", "class", "descent", "b_lo",
             "lower bound", "rises", "rose", "lifts", "lifted", "under the corrected")
     RIGHT = ("cap", "ceiling", "class")     # "0.08579 for the classes they sit in"

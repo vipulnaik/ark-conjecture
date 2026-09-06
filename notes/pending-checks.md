@@ -25,6 +25,17 @@ Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804
 
 *Do not restate the inequality as `B_safe ≤ μ`.* `B_safe` over-counts per configuration; what holds is B_refined ≤ μ ≤ B_safe, the endpoints collapsing where E.5 or the certificate applies.
 
+## Before the pause: the landing checklist
+
+*Everything in this list is small, and each item names the exact edit it produces, so none of it needs a fresh decision. When all four are done the documents are current to 10⁶ on every measured figure and nothing is pending on a run.*
+
+1. **When `mu_exact.py` reaches 10⁵:** run `validate_table_v3.py mu_table_exact.csv --baseline mu_table_ladder.csv`. Expected: 25 PASS / 0 FAIL, and the value-agreement line reading `ALL equal, 0 higher, 0 lower` over all ~90k common n. Then one edit, in three places — the status banner's second sentence in `aod`, `ep` and `notes` ("contiguous to n = 76,752 (69,107 rows) and still running toward 10⁵" → the final reach and row count, "confirmed by exhaustive search to 10⁵"), and the "two tables" row above. Nothing else moves: every measured figure keys on the ladder table, which is already complete, and every requoted site already reads [6, 10⁶].
+2. **When `solvable_relaxation.py` finishes at 10⁶:** requote the five figures its output prints — equality share, class-11 count, ratio distribution (median / even / odd / max), the multiplier census, the two extreme values — into `solvable-relaxation.md` §§1, 3.5, 4 and the header. The header already carries the tag and names the five. Expect the equality share to fall further from 23.5% (it tracks S2's win share, now 13.5%) and the odd/even ratio gap to widen.
+3. **The three unreached GAP battery rows** (n = 78, 33, 105): run the battery to completion once, or record that they were skipped. R8 says which they are and why they matter.
+4. **`wide_cert.py` is rescoped, not owed** (see R1b): B is known exactly to 10⁶, so a certificate "beyond the table" has no range to certify below 10⁶. It would matter again only for an extension past 10⁶.
+
+*Not on this list, deliberately:* `audit_fmid.py` at the full range (a scaling note, A20c; the 20k-row slice is clean and the screen is about low-density rows, which are dense at small n); `a18_verify.py`'s slow table scan (its witness checks pass; the scan is range-scoped domination that E.5 now covers above 1/25); the `stage4_fast.py` seeds (they produce no verdict without UNSAT, and the backtrack ceiling is what to read if they are left running). None of these gates anything, and none should be a nagging worry.
+
 ## What is still owed
 
 *Everything else in this file is a re-run triggered by an extension, or an item under §2. Nothing below is owed as a run today.*
@@ -600,6 +611,8 @@ Promoting the note's findings into `aod` raises the value of a second reading ra
 ### A9. The Lean formalisation — keep it in step, and keep it moving
 
 *Home: the Lean project's own `README.md`, which carries the phasing, the case for and against, and the failure-mode analysis. **This item exists so the work resurfaces even when nobody thinks to mention it**; do not restate the reasoning here.*
+
+> **State, 2026-09.** All three files sorry-free (the word appears only in comments); `ArkCore.lean` compiles against core 4.15.0 with no Mathlib; `Note.lean`'s main theorem `theorem_arithmetic_half` is correctly scoped — its primality and coprimality hypotheses are bound with underscores because the arithmetic half does not use them, which is the honest signal that they belong to the Oliver half. **The README predates Theorem E.5**, and E.5 is now the highest-value formalisation target in the project: arithmetic on SAFE terms, one human reading, load-bearing for the whole "μ known exactly to 10⁶" claim. Recorded there as Phase 1b. Also reachable and cheap: the BBKN-replacement inequality `μ(n) ≥ n·(Q(n) − 1)/2` (three lines from `orb_full`, if the note's §1 commentary keeps it), and the self-pairing lemma `orb c d = c·d/2 ⟺ d even` behind `directed-graph-properties.md` §2.
 
 **Two obligations, and the first is the one that rots silently.**
 
