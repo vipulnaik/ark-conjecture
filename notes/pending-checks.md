@@ -719,6 +719,14 @@ Promoting the note's findings into `aod` raises the value of a second reading ra
 
 Lemma C's coupling conclusion t \| ord_r(p) is proved via a Frobenius exponent and assumes a semilinear stabiliser at a ≥ 2. The **bound** it is consumed for — orb(r, t) ≤ r·a, which is all Corollary C′ and E.3(i) use — appears to need no such assumption: the r-element of the cyclic layer has r-th-root-of-unity eigenvalues on V = 𝔽_p^a, closed under Frobenius, hence at most a/ord_r(p) Frobenius orbits; conjugation is a power map whose reduction mod r is the induced multiplier, so the multiplier group permutes those orbits and M⟨p⟩/⟨p⟩ acts freely on cosets, giving \|M\| ≤ a. **One reading only, and nothing currently rests on it** — E.3(i) is theorem-side and `--no-theorems` closes every n without it, and Part E‴ does not use Lemma C at all. If it holds it removes J0a from Corollary C′ and weakens E.3(i)'s "worth at most c" only to "at most max(c, r·a)", still linear. → T1's queue, after Part 0.
 
+### A32. Does the conjecture yield a classification-free proof of Brown's question?
+
+**A question, not a task, from `hardness-of-evasiveness.md` §5.** The coset property (`monotone-transitive-note.md` §5a) is an instance of the general monotone-transitive conjecture, and its only known proof at **every** finite group goes through CFSG. So:
+
+> **Must a proof of the general conjecture yield, as a special case, a classification-free proof that χ̃(Δ(C(G))) ≠ 0 for every finite group** — i.e. a classification-free resolution of Brown's open question?
+
+If yes, that is a genuine relative-difficulty statement rather than an impression. It looks close to automatic since the coset property is a legitimate instance, **but the gap between "evasive" and "χ̃ ≠ 0" is exactly where it could fail**: non-evasive ⟹ contractible ⟹ χ̃ = 0, so the conjecture gives χ̃ ≠ 0 *only for the properties it is applied to*, and one would need the coset property's own complex to be the one whose χ̃ is at issue. It is — but writing that out carefully is the whole content. **A self-contained afternoon**, and the highest-value item in that document.
+
 ### A30. ~~`johnson-presentations.md` is cited and not in the working set~~ — RESOLVED
 
 The file exists and is now in the set. Its Proposition 1 is the unification the citation promised — a transitive action whose coordinates are the k-subsets of a base X (a **k-Johnson presentation**) has a transitive Oliver subgroup **iff** G contains a subgroup that is Oliver and k-homogeneous on X — so the §1 citation is restored, and Appendix C's prime-powers box now states one criterion with three inputs (arity, base size, containment) instead of listing three coincidences. *Spot-checked on reading: AGL(1,5) ⊄ A₅ (the twist x ↦ 2x is an odd 4-cycle), D₁₀'s pair-orbitals are [5, 5] against A₅'s [10], and T(m) has degree 2(m−2) at m = 5, 6, 7 — all as the note states.*

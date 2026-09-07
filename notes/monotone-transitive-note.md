@@ -180,6 +180,8 @@ Left quotients are invariant under left translation, since (gs)⁻¹(gt) = s⁻�
 
 > **The instructive part is why this note's own machinery is silent here.** A subgroup H ≤ G acting by left multiplication has orbits the right cosets Hg, so **H is transitive on G iff H = G**. Hence "G contains a transitive Oliver subgroup" collapses to "**G is Oliver**", and at A₅ there is not a weak criterion but *no smaller subgroup to fall back on at all*. The regular action is the extreme case of §5's transitive-versus-Oliver-subgroup gap: the subgroup lattice offers nothing, so the question has to be answered by the shape of Δ_P instead — which is what Brown and Shareshian–Woodroofe do.
 >
+> *The wider argument this example supports — that the conjecture's known corners each cost a different deep theorem, and that the hardness concentrates in the uniform quantifier — is in `hardness-of-evasiveness.md`, along with the nerve-lemma step spelled out.*
+>
 > **So this is a template for the cases §6 cares about.** Where the Oliver route is unavailable, the alternative is to recognise Δ_P as a complex whose homotopy type is already known, rather than to search for groups. The coset complex is one such; §6's orbit complexes are another, and the reason they have resisted may be that no comparable identification has been found for them.
 
 ## 6. The counterexample programme, which is where the value is
