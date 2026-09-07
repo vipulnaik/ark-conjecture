@@ -85,7 +85,7 @@ Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804
 
 *Can be launched in the background. Flags are checked against the scripts as they stand; where a run needs code that does not exist, that is said rather than papered over with a plausible-looking flag.*
 
-> **Numbered in order, and not every entry is a live run.** **R0, R0c, R1, R6, R6a, R8, R10** are things to do; **R1b, R7, R11, R12, R12a** are retained because a reader meeting a reference to them elsewhere needs to find out what happened — R7 superseded, R11 and R12a done with their results recorded, R1b and R12 explaining a scope that is easy to get wrong. Items retired without residue are one-line rows in the ledger below instead.
+> **Numbered in order, and not every entry is a live run.** **R0, R0c, R1, R6, R6a, R8, R10, R12b** are things to do; **R1b, R7, R12, R12a** are retained because a reader meeting a reference to them elsewhere needs to find out what happened — R7 superseded, R12a a tool with its result recorded, R1b and R12 explaining a scope that is easy to get wrong. **An item whose findings are fully written into the documents becomes a one-line row in the ledger below instead** — that is where R11 and A31 went once §4b of `approach-rate-note.md` and §5 of `aod` carried their content.
 
 ## R0. The two producers: how to run them, and what they cost
 
@@ -269,12 +269,6 @@ WITNESS="p=5 q=2: 2x5" MUBOUND=20 gap -q -A verify_witness.g   # a single row
 
 **What remains.** Only the n = 5 torsion, and only if one wants the Smith form rather than the answer: the connecting map is ℤ⁶ → ℤ⁶ with cokernel (ℤ/2)², elementary divisors (1,1,1,1,2,2). The regression at n = 5, 6, 7 should be re-run after any change to `chiral_mv.py`; it checks the closed forms against direct 𝔽₂ homology and asserts non-negative Betti numbers, which is what catches the boundary-orientation bug described in the script header.
 
-## R11. Recheck `approach-rate-note.md` §4a against the completed run — DONE, prediction confirmed
-
-§4a made one falsifiable claim: the ≈0.28 offset between observed and predicted class-11 loss is competing-shape suppression, so it should **climb** as those shapes thin out, and this is testable at 10⁵. Tested on the completed 10⁶ table, over the contiguous range [6, 10⁶] (63,672 class-11 values in it, 44,089 below the ceiling): the offset runs **0.536 → 0.617 → 0.660 → 0.652** across [8·10³, 10⁴), [10⁴, 10⁵), [10⁵, 3·10⁵), [3·10⁵, 10⁶], and the mechanism is visible — the F = 4 share of below-ceiling winners rises **63% → 87% → 99.4%**. Confirmed.
-
-**And the limit is ln 2, not 1, which §4a had wrong.** The comparison is a *median* observed loss against a *mean* model, and the ratio is Exp(1); median(Exp(1)) = 0.6931. Like-for-like on the F = 4 population at [10⁵, 10⁶]: median 0.651 vs 0.693, mean 0.919 vs 1 — both 6–8% short, the same uniform deficit §3(a) already attributes to the second-order Bateman–Horn correction, and flat across every quantile (0.91–0.97). New §4b records all of it; §6's second-order item is now the sharpest thing left in that note, since it is the only constant still loose and it has been isolated.
-
 ## R12. `mu3_menu.py` — B₃ over the k = 3 census
 
 **New 2026-09, and it closes half of `three-uniform-note.md` §10 item 1.** Scores every shape in that note's §4.2 census at every n in a range and writes `n, C(n3), b3_census, delta3, witness`. Table to n = 2000 in the working set as `b3_census_2000.csv` (1,666 rows, 7 s).
@@ -300,21 +294,6 @@ python3 mu3_menu.py 130 136              # lookup
 
 **What is still owed here** is §10 item 1 proper: a completeness argument for the k = 3 census, whose concrete first step the note names — locating the crossover between the quadratic intra term and the cubic cross terms, which §4.1's degree count makes unlikely to bind but does not exclude at small n.
 
-## A31. `aod` §5's decade tables are ladder lower bounds where the section now says they are exact
-
-**Found in the 2026-09 read-through; a framing inconsistency, not a wrong number.** §5 carries two decade-minimum tables built from the **44,091-entry worklist** — "minimum *bound* over the 44,091-entry worklist, by decade" — and the section's later paragraph now says, correctly, that with the exact table contiguous to 10⁶ "every decade is *computed* rather than bounded … the decade minima are exact values". Both are true of their own object, but a reader meeting the tables first will take them for the current evidence when something stronger is now available: the exact per-decade minima of the 921,265-row table.
-
-**The fix is a requote, not a rewrite** — recompute the decade minima from `mu_table_ladder.csv` and say they are values rather than bounds, keeping the worklist tables only if the *comparison* is wanted (it shows the ladder was tight, which is worth one line). Left undone deliberately: it touches the section's argument structure, and the read-through's remit was to find rather than to restructure.
-
-## R12b. Rerun `ladder-completeness.md`'s two scans at 10⁶
-
-**Found in the 2026-09 read-through.** Every measured figure in `ladder-completeness.md` is scoped to the **36,848-row frontier** of its writing and neither scan has been rerun since the exact table completed to 10⁶:
-
-- **`offmenu_scan.py`** — the S6/S11 sweep, currently "over all efficient-prime pairs with a common q up to 36,848 … 729 tabulated n, above 1/25 at 352, maximum density 0.1111 at n = 4376, never reaches B(n)". This is **the empirical half of Proposition 2**, and it is the half that licenses reading a ladder value as B: Proposition 1 says the optimum is a menu shape *or* S6/S11, and the scan is what says the second disjunct is never taken.
-- **`ladder_vs_B.py`** — "ladder = B at all 32,861 tabulated values", now 921,265.
-
-**The propositions are unaffected** — they are theorems plus a conditional argument, not measurements — so this is a requote, not a correction. Cheap: both scans read the table. Do it with the other requotes when convenient.
-
 ## R12a. `ceiling_rederive3.py` — the k = 3 ceiling table, measured
 
 The counterpart of `ceiling_rederive.py`, and the reason it was needed: **without a generic-family filter, a sup over any range measures §6's escapes rather than the ceiling** — on `b3_census_2000.csv` the unfiltered class sup exceeds the tabulated ceiling in 11 of 12 classes, by 18× at class 0, and **7 of the 12 sups are attained by a fused S2 shape with no foreign block**.
@@ -330,6 +309,23 @@ python3 ceiling_rederive3.py --nmax 2500 --no-filter   # the escapes, deliberate
 
 **What the run leaves open**, and it is sharper than what it replaced: nine of twenty-four cells fall short, and they are exactly the *other* column at each class. Whether each unreachable column is arithmetically obstructed or merely thin in supply is the open question — at class 0, κ_c = 2 the η = 1 entry needs r − 1 = 2·q^e with q ≥ 5, a supply condition of the safe-prime family rather than an obvious obstruction. A k = 3 analogue of `aod` §3.3.8's escape analysis would settle it.
 
+## R12b. ~~Rerun `ladder-completeness.md`'s two scans at 10⁶~~ — DONE for `offmenu_scan.py`; one half left
+
+**Found in the 2026-09 read-through.** Every measured figure in `ladder-completeness.md` is scoped to the **36,848-row frontier** of its writing and neither scan has been rerun since the exact table completed to 10⁶:
+
+- **`offmenu_scan.py`** — the S6/S11 sweep, currently "over all efficient-prime pairs with a common q up to 36,848 … 729 tabulated n, above 1/25 at 352, maximum density 0.1111 at n = 4376, never reaches B(n)". This is **the empirical half of Proposition 2**, and it is the half that licenses reading a ladder value as B: Proposition 1 says the optimum is a menu shape *or* S6/S11, and the scan is what says the second disjunct is never taken.
+- **`ladder_vs_B.py`** — "ladder = B at all 32,861 tabulated values", now 921,265.
+
+**Done 2026-09.** `offmenu_scan.py` at 10⁶: off-menu shapes score at **5,739** tabulated n (was 729), above 1/25 at **5,045** (was 352), **reach B at none**, maximum density **0.1111 still at n = 4376**. So Proposition 2's empirical half holds over twenty-seven times the range with the margin unchanged. Worth noting for a future extension: a near-approach family appears around n ≈ 2.95·10⁵ on the Fermat pair 65537\* + 163841\* at q = 2, reaching **0.70 of B** — the largest ratio anywhere above n = 5000.
+
+**One half left, and it is only a matter of time:** `ladder_vs_B.py` is **~n^1.5**, measured at 4 s / 5,000 rows and 35 s / 20,000, so the full table is about **3 hours**. Run to 120,000 rows here: **ladder = B at 120,000 of 120,000**, 0 short, 0 over (was 32,861).
+
+```bash
+python3 ladder_vs_B.py mu_table_ladder.csv        # ~3 h, expect 921,265 of 921,265
+```
+
+*Nothing depends on the remaining half* — `mu_ladder_exact.py --check` already agrees with `mu_exact.py` everywhere both run, and this scan checks the weaker four-family ladder rather than the menu. It is a cheap independent confirmation, not a gate.
+
 ## Closed, kept as a one-line ledger
 
 *Items retired without residue, so a reader meeting a reference to them elsewhere can tell what happened. Full accounts are in the session logs. Items retired **with** residue keep their section in §1 — R7 and R11 — rather than appearing here twice.*
@@ -339,6 +335,8 @@ python3 ceiling_rederive3.py --nmax 2500 --no-filter   # the escapes, deliberate
 | **R0b** | retire the ⟦PENDING-1E5-EXACT-RUN⟧ tag once a run passed 10⁵ | **done** against the ladder-exact table; all 27 tagged sites requoted, banner replaced, the range convention now enforced by `check_doc_figures.py` invariant I7 |
 | **R7a** | rerun `ladder_verify.py` to 10⁶ at the corrected window | **moot** with R7; the two window/fusion-set defects it found are recorded there in case the script is ever revived |
 | **R7c** | audit `solvable_relaxation.py` and `k3_galois.py` | **done** — the former had the same O(N²) sweep the validator had (5× on the scan, 3× end to end, 22 checks pass to n = 159,027); the latter's self-test had a range-scoped claim stated as a law and a clause whose only witness (a = 155) sat outside the test range |
+| **R11** | recheck `approach-rate-note.md` §4a's falsifiable claim against the completed run | **done** — the offset climbs 0.536 → 0.652 as predicted and the F = 4 share reaches 99.4%; its limit is **ln 2, not 1**, which §4a had wrong. All of it is in that note's new §4b, which is now the only place it needs to be |
+| **A31** | `aod` §5's decade tables labelled ladder *bounds* where the section says the minima are exact | **done** — recomputed exactly over the 921,265 rows; the ladder's bounds agree at every decade minimum, so the tables now show δ with the bound beside it and the point is recorded in §5 itself: the ladder is **tight at the decade minimisers** |
 | **R7d** | audit `khomog_verify.py` | **done** — one vacuous check (an arithmetic tautology no computation could falsify) replaced, and the {8, 32} finiteness claim swept over every prime power in [6, 63] rather than three spot checks |
 
 ## §2a. Needs human thought

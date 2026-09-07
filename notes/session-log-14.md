@@ -518,6 +518,26 @@ Verified: 40 headings, every block placed, **0 unresolved cross-references** (R0
 
 **Checked and clean:** cross-document agreement on the floor, its argmin, the row counts and the six ceiling constants; the census S-numbers (three-uniform still lacks S11/S12, which the checker reports as info and is a known to-do); cited-file names across all 27 documents, where every remaining unresolved name is a file in the repo but not in this working set.
 
+## 5k. A31 and R12b executed
+
+**A31 — and the fix was better than the plan.** `aod` §5's two decade tables were labelled "minimum *bound* over the 44,091-entry worklist" while the section's later text said the minima are now exact. Rather than replace them, I computed the exact decade minima from the 921,265-row table and put them side by side — **they agree at every decade, to every digit the ladder printed**: 0.057034 / 0.046210 / 0.058290 / 0.063906 at n = 527 / 2759 / 22139 / 118703 against 0.05703 / 0.04621 / 0.05829 / 0.06391. That is a stronger statement than either artefact makes alone: **the ladder is not merely a valid bound but is tight at exactly the n where tightness matters**, the decade minimisers — and the two are independent, one scoring four explicit families and the other enumerating the shape space, so it is a cross-check rather than a restatement. The tables now show δ with the ladder's bound as a fifth column.
+
+**R12b — one scan done, one timed and handed over.** `offmenu_scan.py` at 10⁶: off-menu shapes score at **5,739** tabulated n (was 729), are above 1/25 at **5,045** (was 352), and **reach B at none of them**; maximum off-menu density **0.1111, still at n = 4376**. Proposition 2's empirical half — the licence to read a ladder value as B — now holds over twenty-seven times the range with the margin unchanged. *One thing the extended range shows that the old one could not:* a near-approach family around **n ≈ 2.95·10⁵ on the Fermat prime pair 65537\* + 163841\* at q = 2, reaching 0.70 of B**, the largest ratio anywhere above n = 5000 and the shape to watch if the range is extended again.
+
+`ladder_vs_B.py` is ~n^1.5 (4 s at 5,000 rows, 35 s at 20,000), so the full table is ~3 h. Ran it to **120,000 of 120,000, 0 short, 0 over** — up from 32,861 — and left the rest as a one-command job, noting that nothing depends on it: `mu_ladder_exact.py --check` already agrees with `mu_exact.py` everywhere both run, and this scan tests the weaker four-family ladder.
+
+*Also fixed: A31 had been filed in §1 and R12a/R12b were out of order after the previous pass — the same ordering slip twice, which suggests appending new items at the point of the conversation rather than at their numeric home is the habit to break.*
+
+## 5l. A31 and R11 retired to the ledger
+
+With A31 executed, its finding lives where it belongs — `aod` §5 now carries the exact decade minima beside the ladder's bounds and states the point (**the ladder is tight at the decade minimisers**) in the section itself. So the work-list entry had no residue and is a one-line ledger row.
+
+**R11 is the same case and went with it:** its content — the offset climbing 0.536 → 0.652, the F = 4 share reaching 99.4%, and the limit being ln 2 rather than 1 — is entirely in `approach-rate-note.md` §4b, which is the only place it needs to be.
+
+*The rule this makes explicit, now written into §1's intro:* **an item whose findings are fully written into the documents becomes a ledger row; an item whose section still carries something the documents do not keeps its section.** By that test A20b and A20c stay — the standing rules cite them for detail that exists nowhere else (the n = 999685 row, the 991 F.4 violations, the coverage guard), and `validate_table_v3.py`'s own docstring points at A20b by name. R12b stays because half of it is open, R7 and R1b because they explain a scope that is easy to get wrong.
+
+**One left to judge, flagged rather than acted on.** **A30** is marked RESOLVED but carries a genuinely live question inside it — *what is the minimum order of an Oliver group on m points whose minimum orbital is ≥ δ·C(m,2), for m not a prime power?*, from `johnson-presentations.md` §5, with the observation that the constructions use groups polynomially larger than the Ω(m²) necessary bound and nothing explains the excess. That is an open item wearing a resolved item's heading, and it would be better as its own number.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

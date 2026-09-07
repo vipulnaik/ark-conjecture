@@ -645,16 +645,18 @@ So the picture is not "computed below, conjectural above" with an unreachable ba
 | global floor δ ≥ 1/25 (scan value **175813/3804661 = 0.046209898…**) | n ≤ 10⁶ | computed (§5), from the four-family ladder alone |
 | global floor δ ≥ 1/25 | n > 10⁶ | conjectural, ineffectively |
 
-**Where the verification is hardest is a middle range, and it is bounded.** The lower envelope of achievable density does not fall away as n grows — it dips and then recovers. Minimum bound over the **44,091-entry** worklist, by decade:
+**Where the verification is hardest is a middle range, and it is bounded.** The lower envelope of achievable density does not fall away as n grows — it dips and then recovers. Minimum of δ(n) by decade, **exactly**, over all 921,265 rows of the completed table:
 
-| n | entries | minimum bound | attained at |
-|---|---|---|---|
-| [10², 10³) | 4 | 0.05703 | 527 |
-| **[10³, 10⁴)** | 186 | **0.04621** | **2759** |
-| [10⁴, 10⁵) | 3,149 | 0.05829 | 22139 |
-| [10⁵, 10⁶] | 40,752 | 0.06391 | 118703 |
+| n | rows | minimum δ | attained at | ladder's bound |
+|---|---|---|---|---|
+| [10², 10³) | 742 | 0.057034 | 527 | 0.05703 |
+| **[10³, 10⁴)** | 7,913 | **0.046210** | **2759** | **0.04621** |
+| [10⁴, 10⁵) | 81,580 | 0.058290 | 22139 | 0.05829 |
+| [10⁵, 10⁶] | 830,967 | 0.063906 | 118703 | 0.06391 |
 
-*This table is the **worklist scan to 10⁶**, a different artifact from the μ table. The dip is one decade wide and the recovery is monotone on both sides. Its overlap with the μ table agrees exactly: over [10³, 2600] the minimum is 0.048039 at n = 2183, which is the worklist's own runner-up, and at the binding value the ladder score equals B(2759) = 175,813 — so the decade minimum there is δ itself and not a bound on it. (Both figures moved on the corrected scoring: the pre-correction scan reported 0.04574 at n = 1817, a row that now scores ≥ 0.0594 and is not in the worklist at all.)*
+> **The last column is the ladder's lower bound from the 44,091-entry worklist scan, and it agrees at every decade minimum, to every digit it printed.** That is a stronger statement than either artefact makes alone: the ladder is not merely a valid bound but is **tight at exactly the n where tightness matters**, the decade minimisers. The two are independent — one scores four explicit families and takes a maximum, the other enumerates the shape space — so the agreement is a cross-check and not a restatement. *(Both figures moved on the corrected scoring: the pre-correction scan reported 0.04574 at n = 1817, a row that now scores ≥ 0.0594.)*
+
+The dip is one decade wide and the recovery is monotone on both sides.
 
 > **The worklist is an even split between the two extremal classes, which is the mod-24 prediction landing hard.** Of the 44,091 entries, **21,711 (49.2%) are n ≡ 11 (mod 24) and 22,378 (50.8%) are n ≡ 23**, with 2 spread across the other residues. Those two classes share a ceiling (§3.3.5), and the split is as even as one could ask for. It is worth remembering what a worklist thresholded at a class ceiling can and cannot show: the earlier list, cut at 0.050510, was 99.92% class 23 — not because class 23 is worse but because that number *was* class 23's ceiling under the older unfused reading (it is cap₄(1/6), not cap₂(1/6)), so it appeared on merely falling short while class 11 had to fall 25% below a higher one. **A residue's prominence in a worklist is a fact about the threshold, not about the residue.**
 
@@ -1035,14 +1037,14 @@ is proved, the ladder alone supplying every value's lower bound: every one of th
 
 ### 5.2 The hard range is bounded on both sides, and it is small
 
-The worry motivating §3.5 — that between the computable range and the asymptotic one lies a middle where neither argument reaches — is answerable empirically, and the answer is favourable. Minimum lower bound over each decade of the 44,091-entry worklist:
+The worry motivating §3.5 — that between the computable range and the asymptotic one lies a middle where neither argument reaches — is answerable empirically, and the answer is favourable. Minimum of δ(n) over each decade, exactly (the table above, repeated here for the argument; the ladder's worklist bound agrees at every row of it):
 
-| n | values in worklist | minimum bound | attained at |
+| n | rows | minimum δ | attained at |
 |---|---|---|---|
-| [10², 10³) | 4 | 0.05703 | 527 |
-| **[10³, 10⁴)** | 186 | **0.04621** | **2759** |
-| [10⁴, 10⁵) | 3,149 | 0.05829 | 22139 |
-| [10⁵, 10⁶] | 40,752 | 0.06391 | 118703 |
+| [10², 10³) | 742 | 0.057034 | 527 |
+| **[10³, 10⁴)** | 7,913 | **0.046210** | **2759** |
+| [10⁴, 10⁵) | 81,580 | 0.058290 | 22139 |
+| [10⁵, 10⁶] | 830,967 | 0.063906 | 118703 |
 
 **The binding value is 0.04621 at n = 2759, in the [10³, 10⁴) decade, and the descent is now visibly one decade wide.** Every other decade clears **0.057**, and the minima rise monotonically on either side of the binding one — 0.05703 below it, 0.05829 and 0.06391 above. So the middle range where neither the computation nor the asymptotics reaches is a single decade, its worst value clears 1/25 by 15.5%, and that value is not merely a bound but an exact B — and, with the exact table now contiguous to 10⁶ and Corollary E.6 in hand, every decade is *computed* rather than bounded: there is no middle range left below 10⁶ at all, and the decade minima are exact values. *(The two upper decade minima moved substantially on the corrected scoring — [10⁴, 10⁵) from 0.04801 to 0.05829 — which is what turned "one decade wide" from a reading of understated values into a statement about δ.)*
 
