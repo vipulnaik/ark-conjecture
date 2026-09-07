@@ -604,6 +604,28 @@ Vipul pointed out that "every non-prime-power n is open" needs "other than 6". C
 
 **The corrected picture, which is also the answer to the conversation that produced it:** prime powers by KSS; **n = 6 by brute force**; **n = 10 and 12 open**, and every larger non-prime-power open too, with μ(n) settling only the sparse slice at each — a constant fraction of the edge budget, not a growing one. So growing n does not close the general conjecture anywhere, and n = 10 is distinguished only by being the smallest case where direct computation is conceivable.
 
+## 5r. `mu_exact.py` complete to 10⁵ — the last table item lands
+
+The exhaustive search finished: **[6, 10⁵] contiguous, 90,299 rows, no gaps, 0 uncertified**, minimum 0.046210 at n = 2759 — the same argmin the ladder table has, now confirmed by the arbiter rather than by the certified route.
+
+**Full battery against it:** `validate_table_v3.py mu_table_ladder.csv --baseline mu_table_exact.csv` gives **27 PASS / 0 FAIL / 16 INFO / 2 SKIP**, with value agreement **ALL equal, 0 higher, 0 lower over all 90,299 common n** and 104 rows differing only in recorded witness — ties, as the check is built to say. The two producers now agree over the whole overlap by two independent routes: exhaustive search against menu-plus-theorem.
+
+**Three things in that run worth noting beyond the verdict.** The **A20b guard fired correctly** — largest gap between B/C and the printed column 5.00·10⁻⁷, exactly the rounding bound, with the cap_F margin at 1.77·10⁻⁷ still narrower, so the reason for the guard is visible in its own output. **Proposition 1's shape check is total**: 921,265 rows above 1/25, 921,265 with a menu-shape witness, 0 off-menu — the empirical half of `ladder-completeness.md` at full range. And the **shape migrations against the baseline are 104 over four pairs**, all ties, dominated by S3 → S7f2 (83) — the fused reading winning where the three-part one was recorded.
+
+Landing checklist item 1 closed: the banner sentence updated in all three core documents, the two-tables row updated, and the checklist intro now reads **one live item** — the three unreached GAP battery rows. Every measured figure in the corpus is current: ladder-exact to 10⁶, exhaustive to 10⁵.
+
+## 5s. `ladder_vs_B.py` retired
+
+Vipul killed a full-range run after ~1.25 h with no terminal output and asked whether it can simply be dropped. It can, and the reason is better than "not needed": **what it tested is superseded twice over.**
+
+It checked the *implementation* of `ladder_verify.py` — whether that script's four families, at its window and fusion set, contain a B-optimal configuration at every tabulated n. But `ladder_verify.py` is retired (R7), computing a lower bound on μ where `mu_ladder_exact.py` computes B exactly; and the half of the coverage anything still depends on — that no winner above 1/25 is off-menu, which is `ladder-completeness.md` Proposition 1's empirical side — is `validate_table_v3.py`'s **menu-shape check**, reporting **921,265 of 921,265** at full range, with `offmenu_scan.py` covering the S6/S11 half. What is lost is a check on a script nobody runs.
+
+Last measurement kept for the record: ladder = B at **120,000 of 120,000**, 0 short, 0 over. R7 still carries the two defects it historically caught — the 0.55 window clip and the F = 12 fusion set — against any revival, which is the only thing that would resurrect either script.
+
+**On the hang, since the diagnosis is cheap and the lesson is one already paid for this session:** the state file shows `n_max = 1001000`, so the ladder was being regenerated over a range *wider than the table*, and the script has no heartbeat, so it reports nothing while doing so. *A long-running script with no progress output cannot be told apart from a hung one* — exactly what `solvable_relaxation.py` needed and got. Not worth fixing in a retired script, but worth recording as the reason rather than leaving it as "it seemed infinite".
+
+`validate_table_v3.py --ladder` is now marked vestigial in the source: its two checks SKIP when the flag is absent, which is the normal state, and they are kept only against a revival.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

@@ -7,7 +7,7 @@
 | file | producer | reach | rows | what it is |
 |---|---|---|---|---|
 | `mu_table_ladder.csv` | `mu_ladder_exact.py` | **10⁶ — complete** | 921,265 | exact B(n), certified above C(n,2)/25 by Theorem E.5 + `ladder-completeness.md` Prop 1 |
-| `mu_table_exact.csv` | `mu_exact.py` | 76,752 (ongoing) | 69,107 | exhaustive search — the arbiter |
+| `mu_table_exact.csv` | `mu_exact.py` | **10⁵ — COMPLETE** | 90,299 | exhaustive search — the arbiter |
 
 Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804661 = 0.046210 at n = 2759** (the only other value below 0.05 anywhere is 0.048039 at n = 2183). Since every row clears 1/25, **Corollary E.6 makes each value μ(n), not a bound on it** — so μ is known exactly at every composite non-prime-power n ≤ 10⁶.
 
@@ -27,9 +27,9 @@ Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804
 
 ## Before the pause: the landing checklist
 
-*Each item names the exact edit it produces, so none needs a fresh decision. **Two are live — 1 and 3.** Item 2 is done and kept for the recipe it leaves behind; item 4 is a non-obligation recorded so it is not mistaken for one. When 1 and 3 land, every measured figure in the documents is current to 10⁶ and nothing is pending on a run.*
+*Each item names the exact edit it produces, so none needs a fresh decision. **One is live: item 3.** Items 1 and 2 are done — 2 is kept for the recipe it leaves behind — and item 4 is a non-obligation recorded so it is not mistaken for one. **Every measured figure in the documents is now current**, the ladder-exact table to 10⁶ and the exhaustive one to 10⁵, and nothing but item 3 is pending on a run.*
 
-1. **When `mu_exact.py` reaches 10⁵:** run `validate_table_v3.py mu_table_exact.csv --baseline mu_table_ladder.csv`. Expected: 25 PASS / 0 FAIL, and the value-agreement line reading `ALL equal, 0 higher, 0 lower` over all ~90k common n. Then one edit, in three places — the status banner's second sentence in `aod`, `ep` and `notes` ("contiguous to n = 76,752 (69,107 rows) and still running toward 10⁵" → the final reach and row count, "confirmed by exhaustive search to 10⁵"), and the "two tables" row above. Nothing else moves: every measured figure keys on the ladder table, which is already complete, and every requoted site already reads [6, 10⁶].
+1. ~~**When `mu_exact.py` reaches 10⁵**~~ **DONE 2026-09.** Complete over [6, 10⁵], 90,299 rows, contiguous, 0 uncertified, minimum 0.046210 at n = 2759. `validate_table_v3.py mu_table_ladder.csv --baseline mu_table_exact.csv`: **27 PASS / 0 FAIL / 16 INFO**, value agreement **ALL equal, 0 higher, 0 lower over all 90,299 common n**, 104 tie-witness differences. The banner sentence is updated in all three core documents. *The original instruction follows.* When `mu_exact.py` reaches 10⁵: run the validate command. Expected: 0 FAIL and `ALL equal`. Then one edit, in three places — the status banner's second sentence in `aod`, `ep` and `notes` ("contiguous to n = 76,752 (69,107 rows) and still running toward 10⁵" → the final reach and row count, "confirmed by exhaustive search to 10⁵"), and the "two tables" row above. Nothing else moves: every measured figure keys on the ladder table, which is already complete, and every requoted site already reads [6, 10⁶].
 2. ~~**Requote `solvable-relaxation.md` at 10⁶.**~~ **DONE 2026-09.** `solvable_table.csv` built to 10⁶ and the battery run against it in **9 seconds** — 22 PASS / 0 FAIL over all 921,265 rows — with every figure requoted and the ⟦REQUOTE-ON-EXTENSION⟧ tag removed. Movements: equality share 23.5% → **19.7%** (tracking S2's 13.5% win share); ratio median 1.022 → **1.008**, the even median converging to **1.003** and the odd settling at **1.374** ≈ the class-3 ceiling ratio; maximum **4.129 at n = 527, unmoved across every frontier**; the m = 7 exceptional family **still exactly three values**. *The multiplier census cross-checks against `aod` §2.1's one-part winner counts — 41,706 / 28,814 / 22,173 identical at m = 2, 3, 4, differing only at m = 5 — two independent censuses of the same population, from different scripts with different scoring.*
 
    **For any future extension**, the split makes this a one-off cost: build the table once, then every question is seconds.
@@ -181,7 +181,7 @@ python3 check_doc_figures.py $TABLE *.md               # 8. documents against th
 
 **Static — one run per environment, not per batch.** `eta_derive.py`, `khomog_verify.py`, `a18_rq_verify.py`, `k3_galois.py`, `shape_realize.py` and `ceiling_rederive.py` — the last two read no table at all and are sized for small n by design (**R6**, **R6a**).
 
-**Deliberately absent.** `ladder_verify.py` never reads the table and is retired (R7). `s7_scan.py` and `mu_fast.py` are not in the working set; group B covers what `s7_scan.py` would test. The Lean statements are read by no check here — see **A9**.
+**Deliberately absent.** `ladder_verify.py` never reads the table and is retired (R7); **`ladder_vs_B.py` is retired with it** (R12b) — it tested that script's implementation, and the shape-space half of what it covered is group B's menu-shape check, which needs no ladder file. `validate_table_v3.py --ladder` is correspondingly vestigial, and its two checks SKIP, which is now the normal state. `s7_scan.py` and `mu_fast.py` are not in the working set; group B covers what `s7_scan.py` would test. The Lean statements are read by no check here — see **A9**.
 
 ## R1b. The certificate steps of R1 do not scale to 10⁶ — and no longer need to
 
@@ -311,7 +311,7 @@ python3 ceiling_rederive3.py --nmax 2500 --no-filter   # the escapes, deliberate
 
 **What the run leaves open**, and it is sharper than what it replaced: nine of twenty-four cells fall short, and they are exactly the *other* column at each class. Whether each unreachable column is arithmetically obstructed or merely thin in supply is the open question — at class 0, κ_c = 2 the η = 1 entry needs r − 1 = 2·q^e with q ≥ 5, a supply condition of the safe-prime family rather than an obvious obstruction. A k = 3 analogue of `aod` §3.3.8's escape analysis would settle it.
 
-## R12b. ~~Rerun `ladder-completeness.md`'s two scans at 10⁶~~ — DONE for `offmenu_scan.py`; one half left
+## R12b. ~~Rerun `ladder-completeness.md`'s two scans at 10⁶~~ — `offmenu_scan.py` DONE; `ladder_vs_B.py` RETIRED
 
 **Found in the 2026-09 read-through.** Every measured figure in `ladder-completeness.md` is scoped to the **36,848-row frontier** of its writing and neither scan has been rerun since the exact table completed to 10⁶:
 
@@ -320,13 +320,14 @@ python3 ceiling_rederive3.py --nmax 2500 --no-filter   # the escapes, deliberate
 
 **Done 2026-09.** `offmenu_scan.py` at 10⁶: off-menu shapes score at **5,739** tabulated n (was 729), above 1/25 at **5,045** (was 352), **reach B at none**, maximum density **0.1111 still at n = 4376**. So Proposition 2's empirical half holds over twenty-seven times the range with the margin unchanged. Worth noting for a future extension: a near-approach family appears around n ≈ 2.95·10⁵ on the Fermat pair 65537\* + 163841\* at q = 2, reaching **0.70 of B** — the largest ratio anywhere above n = 5000.
 
-**One half left, and it is only a matter of time:** `ladder_vs_B.py` is **~n^1.5**, measured at 4 s / 5,000 rows and 35 s / 20,000, so the full table is about **3 hours**. Run to 120,000 rows here: **ladder = B at 120,000 of 120,000**, 0 short, 0 over (was 32,861).
+**`ladder_vs_B.py` is retired, 2026-09**, and not because it is slow. What it tested was **the ladder script** — whether `ladder_verify.py`'s four families, at its particular window and fusion set, contain a B-optimal configuration at every tabulated n. That question is now moot twice over:
 
-```bash
-python3 ladder_vs_B.py mu_table_ladder.csv        # ~3 h, expect 921,265 of 921,265
-```
+- **`ladder_verify.py` itself is retired (R7)**: it computed a lower bound on μ, and `mu_ladder_exact.py` computes B exactly at 15 ms/n, so nothing downstream reads a ladder value any more.
+- **Its one live consumer is covered elsewhere.** `validate_table_v3.py`'s menu-shape check reports **921,265 of 921,265 rows above 1/25 with a menu-shape witness, 0 off-menu**, which certifies the *shape space* — the half that matters for `ladder-completeness.md` Proposition 1 — and `offmenu_scan.py` at 10⁶ covers the S6/S11 half. What is lost is only the check on the *implementation*, of a script no longer run.
 
-*Nothing depends on the remaining half* — `mu_ladder_exact.py --check` already agrees with `mu_exact.py` everywhere both run, and this scan checks the weaker four-family ladder rather than the menu. It is a cheap independent confirmation, not a gate.
+Last measurement before retirement: **ladder = B at 120,000 of 120,000 rows**, 0 short, 0 over (was 32,861). *The two defects it historically caught — the block-size window clipped at 0.55, and the fusion set stopping at F = 12 — are recorded in R7 against a revival, which is the only thing that would resurrect either script.*
+
+> **On the run that prompted this.** It produced no terminal output for over an hour and its `ladder_weak.txt.state.json` shows `n_max = 1001000`, past 10⁶ — the ladder was being regenerated over a range wider than the table, which is the cost the script never reports because it has no heartbeat. *A long-running script with no progress output is one nobody can tell apart from a hung one*, which is the same lesson `solvable_relaxation.py` needed and got (A20c's neighbour). Not worth fixing here, since the script is retired.
 
 ## Closed, kept as a one-line ledger
 

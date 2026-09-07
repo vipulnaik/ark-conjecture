@@ -7,7 +7,7 @@
 > **Both scans rerun 2026-09 against the completed 10⁶ table** (they were previously scoped to the 36,848-row frontier of writing):
 >
 > - **`offmenu_scan.py` at 10⁶** — off-menu shapes now score at **5,739** tabulated n (was 729), are above 1/25 at **5,045** (was 352), and **reach B(n) at none of them**. The maximum off-menu density is **0.1111, still at n = 4376**, and the closest approach is 0.8424 at n = 56. So the empirical half of Proposition 2 holds over a range twenty-seven times longer, with the margin unchanged. *New at this range: a family of near-approaches around n ≈ 2.95·10⁵ built on the Fermat prime pair 65537\* + 163841\* at q = 2, reaching 0.70 of B — the largest ratio anywhere above n = 5000, and the shape to watch if the range is extended again.*
-> - **`ladder_vs_B.py`** — ladder equals B at **120,000 of 120,000** rows to n = 132,485 (was 32,861), 0 short and 0 over. The full 10⁶ comparison is ~3 h and is `pending-checks.md` R12b's remaining half.
+> - **`ladder_vs_B.py`** — ladder equals B at **120,000 of 120,000** rows to n = 132,485 (was 32,861), 0 short and 0 over. *That script is now **retired** (R12b): it tested `ladder_verify.py`'s implementation, and `ladder_verify.py` is itself retired since `mu_ladder_exact.py` computes B exactly. The half of its coverage anything still depends on — that no winner above 1/25 is off-menu — is `validate_table_v3.py`'s menu-shape check, reporting **921,265 of 921,265** at full range.*
 >
 > The *propositions* were never at risk from this — they are theorems plus a conditional argument, not measurements — but Proposition 2's licence to read a ladder value as B rests on the first scan, which is why it was the one worth rerunning.
 
