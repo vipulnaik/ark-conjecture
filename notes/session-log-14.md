@@ -592,7 +592,7 @@ Asked whether BBKN is the only known route to eventual evasiveness of planarity.
 
 **One trap I nearly published.** The n = 30 group is only Oliver with the **entangled generator**: rotation and multiplier taken separately give Γ₁/Γ₂ = C₄ × C₆, *not cyclic*, so not Oliver. With one element z satisfying z⁶ = full twist, ⟨z⟩ = C₂₄ and the chain holds. The framework's own construction, load-bearing in a place it was not designed for — and a reminder that "an Oliver group of degree n with these orbitals" needs the chain checked, not assumed. *An earlier version of the scan also used a diagonal translation instead of independent per-block ones, which split the intra class and hid the 6K₅ orbital entirely.*
 
-**Conclusion: planarity is evasive at every n**, by four routes, three through Oliver. Which is the honest answer to the question — not "only BBKN", but the non-Oliver alternatives are a parity coincidence at two values and a hand computation at four.
+**Conclusion: planarity is evasive at every n.** *Corrected after Vipul pointed out that my "four routes" framing flattened the distinction that matters:* **only one route establishes *eventual* evasiveness** — sparseness against μ(n), i.e. BBKN refined by our table. KSS at prime powers covers infinitely many n but a density-zero set, so it leaves cofinitely many untouched; parity and orbital shape are finite patches with no uniform version even in principle. And the patches are *downstream* of the eventual route rather than alternatives to it: BBKN gives Ω(n log n) with no explicit threshold, and it is the μ table that turns this into "fails at exactly six n", which is what made the residue small enough to enumerate by hand. **One route, plus mopping up.**
 
 ## 5. One methodological note
 
