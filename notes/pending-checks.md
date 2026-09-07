@@ -27,18 +27,20 @@ Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804
 
 ## Before the pause: the landing checklist
 
-*Everything in this list is small, and each item names the exact edit it produces, so none of it needs a fresh decision. When all four are done the documents are current to 10⁶ on every measured figure and nothing is pending on a run.*
+*Each item names the exact edit it produces, so none needs a fresh decision. **Two are live — 1 and 3.** Item 2 is done and kept for the recipe it leaves behind; item 4 is a non-obligation recorded so it is not mistaken for one. When 1 and 3 land, every measured figure in the documents is current to 10⁶ and nothing is pending on a run.*
 
 1. **When `mu_exact.py` reaches 10⁵:** run `validate_table_v3.py mu_table_exact.csv --baseline mu_table_ladder.csv`. Expected: 25 PASS / 0 FAIL, and the value-agreement line reading `ALL equal, 0 higher, 0 lower` over all ~90k common n. Then one edit, in three places — the status banner's second sentence in `aod`, `ep` and `notes` ("contiguous to n = 76,752 (69,107 rows) and still running toward 10⁵" → the final reach and row count, "confirmed by exhaustive search to 10⁵"), and the "two tables" row above. Nothing else moves: every measured figure keys on the ladder table, which is already complete, and every requoted site already reads [6, 10⁶].
-2. **The solvable side is now split, so this is a one-off cost rather than a per-question one.** `solvable_table.py` computes B_solv(n) and writes a CSV; `solvable_relaxation.py` asks the twenty-two questions and takes `--solvable-table PATH` to skip the scan. **Measured at N = 22,591: 6.03 s → 0.45 s, identical verdicts.** So run the table once at 10⁶ (~3 h, resumable, chunkable eight ways to ~25 min) and every later question is seconds:
+2. ~~**Requote `solvable-relaxation.md` at 10⁶.**~~ **DONE 2026-09.** `solvable_table.csv` built to 10⁶ and the battery run against it in **9 seconds** — 22 PASS / 0 FAIL over all 921,265 rows — with every figure requoted and the ⟦REQUOTE-ON-EXTENSION⟧ tag removed. Movements: equality share 23.5% → **19.7%** (tracking S2's 13.5% win share); ratio median 1.022 → **1.008**, the even median converging to **1.003** and the odd settling at **1.374** ≈ the class-3 ceiling ratio; maximum **4.129 at n = 527, unmoved across every frontier**; the m = 7 exceptional family **still exactly three values**. *The multiplier census cross-checks against `aod` §2.1's one-part winner counts — 41,706 / 28,814 / 22,173 identical at m = 2, 3, 4, differing only at m = 5 — two independent censuses of the same population, from different scripts with different scoring.*
+
+   **For any future extension**, the split makes this a one-off cost: build the table once, then every question is seconds.
 
    ```bash
-   python3 solvable_table.py --nmax 1000000 --out solvable_table.csv
+   python3 solvable_table.py --nmax <N> --out solvable_table.csv   # ~3 h at 10⁶; --chunks i/8 for ~25 min
    python3 solvable_relaxation.py mu_table_ladder.csv --solvable-table solvable_table.csv
    ```
 
-   The writer mirrors `mu_exact.py`'s driver exactly — resume by reissuing the same command, `--chunks i/N`, work-weighted heartbeat and ETA — and the scoring core lives in `solvable_table.py` alone, imported by the validator, so the two cannot drift. **A loaded table is spot-checked against a fresh recomputation** at the extremes, the single-orbit rows and a random sample (210 values at 22k), and the run refuses outright if the cache does not cover the mu table's range. *Verified: corrupting the n = 551 row makes the check FAIL and name the row.*
-   **Then requote:** requote the five figures its output prints — equality share, class-11 count, ratio distribution (median / even / odd / max), the multiplier census, the two extreme values — into `solvable-relaxation.md` §§1, 3.5, 4 and the header. The header already carries the tag and names the five. Expect the equality share to fall further from 23.5% (it tracks S2's win share, now 13.5%) and the odd/even ratio gap to widen.
+   The writer mirrors `mu_exact.py`'s driver (resume by reissuing, `--chunks i/N`, work-weighted ETA); the scoring core lives in `solvable_table.py` alone and is imported by the validator, so the two cannot drift; and a loaded cache is spot-checked against a fresh recomputation at the extremes, the single-orbit rows and a random sample, refusing outright if it does not cover the μ table's range. *Verified: corrupting the n = 551 row makes the check FAIL and name it.*
+
 3. **The three unreached GAP battery rows** (n = 78, 33, 105): run the battery to completion once, or record that they were skipped. R8 says which they are and why they matter.
 4. **`wide_cert.py` is rescoped, not owed** (see R1b): B is known exactly to 10⁶, so a certificate "beyond the table" has no range to certify below 10⁶. It would matter again only for an extension past 10⁶.
 

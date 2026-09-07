@@ -538,6 +538,20 @@ With A31 executed, its finding lives where it belongs — `aod` §5 now carries 
 
 **One left to judge, flagged rather than acted on.** **A30** is marked RESOLVED but carries a genuinely live question inside it — *what is the minimum order of an Oliver group on m points whose minimum orbital is ≥ δ·C(m,2), for m not a prime power?*, from `johnson-presentations.md` §5, with the observation that the constructions use groups polynomially larger than the Ω(m²) necessary bound and nothing explains the excess. That is an open item wearing a resolved item's heading, and it would be better as its own number.
 
+## 5m. `solvable-relaxation.md` requoted at 10⁶ — and the split paid for itself immediately
+
+The table built once, the battery then ran in **9 seconds** — 22 PASS / 0 FAIL over all 921,265 rows, against ~3 hours before the split. The cache's spot-check passed at 210 sampled n, so the guard did its job on the first real use.
+
+**Every figure requoted, tag removed.** Equality share 41.9% → 23.5% → **19.7%** across the three frontiers; class-11 exceedances 19,583 of 63,672; multipliers 41,706 / 28,814 / 22,173 / 17,348; δ_solv maximum **0.50000 to five places** along n = 2q.
+
+**Three things the extended range says that the smaller ones could not**, and they are why the requote was worth more than a number swap:
+
+- **The even ratio median has converged to 1** — 1.040 → 1.010 → **1.003** — so at even n the chain is asymptotically free. That is the empirical form of §3.4's "ratio exactly 1 on six of the twelve residues", which until now was a statement about ceilings with no measured counterpart.
+- **The odd median settled at 1.374**, which is ≈ the class-3 ceiling ratio 1.3726. So the odd cost is not thinning with n; it is converging on the twist's own price.
+- **The maximum has not moved at all** — 4.129 at n = 527, identical across every frontier from 2,187 rows to 921,265 — confirming the extreme case is a small-n artefact rather than the head of a family.
+
+**And a cross-check fell out that neither document was looking for.** The solvable multiplier census over [6, 10⁶] is 41,706 / 28,814 / 22,173 / 17,348 at m = 2, 3, 4, 5; `aod` §2.1's one-part winner counts by F are 41,706 / 28,814 / 22,173 / 18,048. **Identical at m = 2, 3, 4**, differing only at m = 5 — where the Oliver side wins 700 more, because a fused class at F = 5 can beat a split that a solvable single orbit cannot. Two independently computed censuses of the same population, from different scripts with different scoring, agreeing exactly where they must and differing exactly where the theory says they should. *Verified before writing it down.*
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
