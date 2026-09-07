@@ -727,6 +727,12 @@ Lemma C's coupling conclusion t \| ord_r(p) is proved via a Frobenius exponent a
 
 If yes, that is a genuine relative-difficulty statement rather than an impression. It looks close to automatic since the coset property is a legitimate instance, **but the gap between "evasive" and "χ̃ ≠ 0" is exactly where it could fail**: non-evasive ⟹ contractible ⟹ χ̃ = 0, so the conjecture gives χ̃ ≠ 0 *only for the properties it is applied to*, and one would need the coset property's own complex to be the one whose χ̃ is at issue. It is — but writing that out carefully is the whole content. **A self-contained afternoon**, and the highest-value item in that document.
 
+### A33. Who settles n = 6, and by what argument
+
+**Small, and it has already been got wrong once.** `small-degree-computation.md` said three times that **KSS settle n = 6**. KSS's theorem is prime-power degree and 6 is not a prime power, so that attribution is wrong as stated — but the correction "settled by exhaustive computation, not KSS" over-shot in the other direction, because (a) KSS's paper may well dispose of n = 6 anyway, and (b) the Oliver machinery does most of the work there regardless: the degree-6 Oliver groups kill every property whose fixed complex has χ ≢ 1, and only the residue needs cases. The three sites now say "settled by a case check that Oliver reduces, source not verified".
+
+**To close:** read KSS and record which it is. One paragraph of a paper we cite constantly and have not read on this point. *The general lesson is the one the error illustrates: the figure and census passes verify numbers, not attributions, so "which theorem covers this n" is unchecked everywhere and was wrong here for fourteen sessions.*
+
 ### A30. ~~`johnson-presentations.md` is cited and not in the working set~~ — RESOLVED
 
 The file exists and is now in the set. Its Proposition 1 is the unification the citation promised — a transitive action whose coordinates are the k-subsets of a base X (a **k-Johnson presentation**) has a transitive Oliver subgroup **iff** G contains a subgroup that is Oliver and k-homogeneous on X — so the §1 citation is restored, and Appendix C's prime-powers box now states one criterion with three inputs (arity, base size, containment) instead of listing three coincidences. *Spot-checked on reading: AGL(1,5) ⊄ A₅ (the twist x ↦ 2x is an odd 4-cycle), D₁₀'s pair-orbitals are [5, 5] against A₅'s [10], and T(m) has degree 2(m−2) at m = 5, 6, 7 — all as the note states.*
