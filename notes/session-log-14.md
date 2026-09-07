@@ -580,6 +580,20 @@ New commentary document, from a conversation about whether the conjecture could 
 
 **The appendix spells out the nerve-lemma step**, which had been asserted three times in conversation without being written down: Δ_P is covered by its maximal faces (the maximal proper cosets), each a full simplex and all intersections cosets hence contractible, so Δ_P ≃ the nerve; the same lemma applied to the order complex of the coset poset, covered by cones below each maximal coset, gives the same nerve. *Verified numerically rather than asserted: χ̃(Δ_P), χ̃(nerve) and χ̃(coset poset) computed independently agree at C₄, C₆, S₃, A₄.* And **properness is definitional, not an Euler-characteristic adjustment** — allow H = G and Δ_P becomes the full simplex while the coset poset acquires a top element, both contractible, both computed.
 
+## 5p. Planarity, settled at every n — a worked example for the hardness note
+
+Asked whether BBKN is the only known route to eventual evasiveness of planarity. It is not, and following the property all the way down gave a complete answer plus a good illustration for `hardness-of-evasiveness.md` §2a.
+
+**The sparse route, made explicit by our table.** Planar ⟹ ≤ 3n − 6 edges, so the criterion is μ(n) > 3n − 6. The only non-prime-power n where it fails are **{6, 10, 12, 15, 20, 30}**, worst at n = 30 (μ = 78 vs 84). Prime powers are KSS. So six values remain — a sharper statement than BBKN's asymptotic one, and exactly the kind of thing the μ computation buys.
+
+**Two fall to parity** (Rivest–Vuillemin, no Oliver): 32,071 labelled planar graphs at n = 6, odd — I counted it independently and it matches OEIS A066537 — and odd again at n = 15. Even at 10 and 12, so silent there.
+
+**The remaining four fall to orbital shape, which was Vipul's suggestion and works.** At n = 10 the two orbitals are 2K₅ and K₅,₅, *neither* planar (K₅; K₃,₃ ⊆ K₅,₅), so χ = 0. At n = 12 and 20 the 6×2 and 10×2 groups give χ = −7 and −15. At n = 30 the 6×5 group has orbitals 6K₅ (60 edges, non-planar) and three exceeding 3n − 6 = 84, so χ = 0.
+
+**One trap I nearly published.** The n = 30 group is only Oliver with the **entangled generator**: rotation and multiplier taken separately give Γ₁/Γ₂ = C₄ × C₆, *not cyclic*, so not Oliver. With one element z satisfying z⁶ = full twist, ⟨z⟩ = C₂₄ and the chain holds. The framework's own construction, load-bearing in a place it was not designed for — and a reminder that "an Oliver group of degree n with these orbitals" needs the chain checked, not assumed. *An earlier version of the scan also used a diagonal translation instead of independent per-block ones, which split the intra class and hid the 6K₅ orbital entirely.*
+
+**Conclusion: planarity is evasive at every n**, by four routes, three through Oliver. Which is the honest answer to the question — not "only BBKN", but the non-Oliver alternatives are a parity coincidence at two values and a hand computation at four.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

@@ -25,6 +25,35 @@ Four corners, four imports from four unrelated deep theories, and no two of them
 
 > **The second and third rows deserve care, because each is easy to state slightly wrong.** RV's prime power is the number of *variables*; for graph properties that is C(n,2) = n(n−1)/2, never a prime power for n ≥ 4, so RV says nothing about prime-power *vertex* count and KSS is genuinely new there (`orbital-evasiveness-notes.md` Appendix C). And CFSG is paying for **more** than evasiveness in row 3: Shareshian–Woodroofe prove non-contractibility, which is strictly stronger, and the weaker route suffices for evasiveness — see §4.
 
+## 2a. A worked example: planarity, settled at every n by three routes
+
+*Because the table above is easier to believe when one property is followed all the way down. Planarity is the natural test case — monotone, nontrivial, and sparse — and following it exposes both how afterthought-like the asymptotic route is and where the actual work happens.*
+
+**The asymptotic route is close to trivial, which is the point.** A planar graph has at most **3n − 6** edges, and BBKN gives μ(n) = Ω(n log n) unconditionally, so 3n − 6 < μ(n) for all large n and evasiveness follows from sparseness alone. The property's own content — Kuratowski, minors, anything planarity-specific — is never used. It is a corollary of a bound on the *number of edges*.
+
+**Our μ table makes "all large n" explicit rather than asymptotic.** The only non-prime-power n where the sparse criterion fails — μ(n) ≤ 3n − 6 — are
+
+> **n ∈ {6, 10, 12, 15, 20, 30}**, the worst being n = 30 with μ(30) = 78 against 84.
+
+Past 30 it is never close again, since μ(n) ≳ 0.046·C(n,2) is quadratic against 3n. Prime powers are covered separately by KSS, which settles *every* nontrivial monotone property there. So the whole question reduces to six values.
+
+**Two of the six fall to an elementary criterion with no Oliver in it.** Rivest–Vuillemin: if |P⁻¹(1)| is odd, the function is evasive. The labelled planar counts (OEIS A066537) are **32,071 at n = 6** — odd, and independently recomputed here — and odd again at n = 15. At n = 10 and 12 the counts are even and the criterion is silent.
+
+**The remaining four fall to the shape of the orbitals, not to their size** — which is the interesting part, and is Vipul's observation:
+
+| n | Oliver group | orbitals | why no orbital is planar | χ |
+|---|---|---|---|---|
+| 10 | 2 × 5, entangled | 2K₅ (20), K₅,₅ (25) | K₅ is non-planar; K₅,₅ contains K₃,₃ | **0** |
+| 12 | 6 × 2, Γ₂ = C₂⁶, Γ₁/Γ₂ = C₆ | 6, 12, 12, 12, 12, 6, 6 | some are planar, but the alternating sum survives | **−7** |
+| 20 | 10 × 2, Γ₂ = C₂¹⁰, Γ₁/Γ₂ = C₁₀ | 10, 20×8, 10, 10 | ditto | **−15** |
+| 30 | 6 × 5, **entangled** (⟨z⟩ = C₂₄ cyclic) | 6K₅ (60), 75, 150, 150 | 6K₅ non-planar; the rest exceed 3n − 6 = 84 | **0** |
+
+Each χ ≠ 1, so each is evasive. *All four chains were checked to be Oliver: the n = 30 case needs the **entangled generator** — a block rotation plus full twist from one element, giving ⟨z⟩ = C₂₄ — because taking rotation and multiplier separately makes Γ₁/Γ₂ = C₄ × C₆, which is not cyclic and not Oliver.* That is the framework's own construction doing work in a place it was not designed for.
+
+> **So planarity is evasive at every n**, by KSS at prime powers, sparseness plus our table above 30, parity at 6 and 15, and orbital *shape* at 10, 12, 20, 30. **Four routes, three of them through Oliver.** The answer to "is BBKN the only route?" is no — but the alternatives are a parity coincidence and a hand computation at four values, which is a fair description of how thin the non-Oliver toolkit is.
+>
+> **And n = 10 appears here for the same reason it appears everywhere else.** It is in the residue because μ(10) = 20 is small relative to 3n − 6 = 24 — no Oliver group of degree 10 has a large enough orbital — which is exactly why the small-degree CSP has been grinding on it. What settles it is not anything about 10 being hard, but that its two orbitals happen to be 2K₅ and K₅,₅ and that *neither* is planar, for Kuratowski reasons. **The margin is one graph wide:** at t = 2 with trivial top, χ = [A ∈ P] + [B ∈ P], so χ = 1 — and the criterion says nothing — exactly when *one* of the two holds the property. Another sparse property satisfied by 2K₅ but not K₅,₅, or the reverse, would leave n = 10 open again with the same group and the same μ(10) = 20.
+
 ## 3. What the coset family shows, and the refinement that makes it sharper
 
 The coset property — S ⊆ G lies in a left coset of a proper subgroup, invariant under left translation (`monotone-transitive-note.md` §5a) — is an instance of the conjecture, so the conjecture implies it. The only known proof at **every** finite group is Shareshian–Woodroofe's, which rests on CFSG. Hence: *anyone claiming a classification-free proof of the general conjecture is claiming a classification-free proof of that special case, which nobody has.*
