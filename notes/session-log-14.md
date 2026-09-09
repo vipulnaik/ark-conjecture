@@ -648,6 +648,21 @@ Vipul re-noticed that our constructions are *smaller* groups with *larger* orbit
 
 *The lesson for how I write these up:* my first version made it a story about better group selection, which is the flattering reading and the wrong one. The real structure is that the group is a **function of the arithmetic input**, and the whole progression — theirs and ours — is a sequence of number-theoretic hypotheses buying down one parameter.
 
+## 5u. A route to close A30: divisibility by every orbital size
+
+Vipul's observation: **|G| is divisible by every orbital size**, the sizes sum to C(n,2), and there are at most 1/d of them. So |G| >= lcm of the orbital sizes — and unless those sizes share large common factors, the lcm is near their product, which is already n^4-ish against the trivial Ω(n²). **The excess §5 of `johnson-presentations.md` calls unexplained is then not unexplained: it is what divisibility forces.**
+
+**Measured, and it is close to tight.** Computing lcm(orbital sizes) from each recorded witness via the G.3 formulas, over 605 sampled n across [6, 10^6]: median **n^3.70**, 10th percentile n^3.66, range n^2.64 to n^4.56, **not one row below n^2.5**. Against the actual group orders the lcm accounts for nearly all of them — n^3.98 vs n^4.07 at n = 2759, n^3.60 vs n^3.66 at n = 30,030, n^3.68 vs n^3.74 at n = 510,510 — a gap of about **0.06 in the exponent**.
+
+**The edge case is the one Vipul named**: all orbitals of equal size C(n,2)/u for small u, where the lcm collapses to Θ(n²) and the bound gives nothing beyond the trivial one. Ruling it out needs structural information about which multisets of orbital sizes are realisable — a partial re-traversal of `enumeration-proof.md`, at less than full strength: only enough to forbid all-equal. Part G.3's term structure looks like the right place, since intra terms are F*orb(c,d) and cross terms are products of part supports, and those coincide only under conditions the shape space can be asked about directly.
+
+**And Vipul then named the tool**: `orbital-evasiveness-notes.md` **Theorem 2.1's upper-bound argument**, which uses nothing about Oliver groups beyond *solvable, hence not 2-homogeneous off prime-power degree, hence t >= 2*, and instead uses that **the action comes from vertices** to constrain orbital shapes. That turns the edge case into two concrete sub-cases:
+
+- **Transitive:** each u-orbital has a common valency, |Ω| = n*d/2 with sum d_i = n-1, so all orbitals equal <=> all valencies equal <=> t | n-1 and |Ω| = C(n,2)/t. Meeting the floor forces t <= 1/delta, so the bad case is **a transitive group of rank <= 1/delta + 1 with all valencies equal**. Not vacuous — C_n at odd n has every valency 2 — but there delta = 2/(n-1) -> 0. *Small rank and equal valencies pull against each other; that tension is the lemma.*
+- **Intransitive** (what the shape space produces): intra orbitals are regular of size s_i*d/2, cross orbitals biregular of size s_i*e, so all-equal forces **d = 2e** with sum(intra d) = s_i - 1 and sum(cross e) = s_j — a small Diophantine system. *Measured: of 796,763 two-part winners, **0** have all orbitals equal.*
+
+*So A30 changes character twice over: from "nothing explains the excess" to "divisibility explains nearly all of it" to "one lemma, in two cases, both of them the kind Theorem 2.1 already handles". And the re-traversal is genuinely partial, as Vipul guessed — not the full strength of `enumeration-proof.md`, just the vertex-induced regularity, with solvability entering only in the weak form Theorem 2.1 needs it.*
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
