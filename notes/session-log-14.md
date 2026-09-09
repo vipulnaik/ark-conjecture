@@ -630,13 +630,15 @@ Last measurement kept for the record: ladder = B at **120,000 of 120,000**, 0 sh
 
 Vipul re-noticed something and asked where it lives: it is `johnson-presentations.md` §5, "How large must G be?", and the live item inside A30. The observation is that **our stronger constructions are *smaller* groups with *larger* minimum orbitals** than BBKN's Ω(n log n) one. Measured, it is more extreme than the qualitative version:
 
-| n | BBKN's F = n/Q(n) | our witness | order ratio | min orbital |
+| n | single fused class, F = n/Q(n) | table's witness | order ratio | min orbital |
 |---|---|---|---|---|
 | 2,759 | F = 31, c = 89 | `2x653 + 1x1453*` | 10⁵⁰ | 121,396 → **175,813** |
 | 30,030 | F = 2,310, c = 13 | `1x14947 + …` | 10²·⁵⁶¹ | 180,180 → **111,698,931** |
 | 510,510 | F = 30,030, c = 17 | `1x255127 + …` | 10³⁶·⁹³⁵ | 4,084,080 → **32,544,765,501** |
 
-At n = 510,510 BBKN's group is **10³⁶·⁹³⁵ times larger** while its orbital is **8,000 times smaller**.
+At n = 510,510 the single fused class is **10³⁶·⁹³⁵ times larger** while its orbital is **8,000 times smaller**.
+
+> **Correction made on Vipul's prompt:** I first labelled the weak column "BBKN's", which is wrong. That column is the **single fused class at c = Q(n)** — the framework's *own* replacement for BBKN's Ω(n log n) bound, and it already uses the entangled generator. **BBKN's actual construction goes through Vinogradov/Haselgrove and is a different object we have not modelled.** So the comparison is entirely internal, between two of our own shapes — which is if anything the cleaner statement: no attribution is needed for it, and none should be made.
 
 **The general shape, which is the part worth keeping.** Our recorded witnesses are **polynomial in n** — log|Γ|/log n between 2.9 and 9.7 on a sample across [2·10⁴, 10⁶], typically 3.5–4.5 — while BBKN's fused shape is **superpolynomial**, taking F = n/Q(n) blocks so log|Γ| ≈ (n/log n)·log log n. **F is the enemy of both quantities at once**: it is the number of blocks the fusion must tie together, costing a factor of c in the order per block while contributing only c(c−1)/2 to the class. So pushing c up and F down raises the orbital *and* collapses the c^F bottom layer — the trade-off runs the wrong way round for anyone expecting a bigger group to buy a bigger orbital.
 

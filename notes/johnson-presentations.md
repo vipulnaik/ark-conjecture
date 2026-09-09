@@ -96,17 +96,19 @@ At prime power m this is **tight up to a factor of 2**: AGL(1, m) has order m(m�
 
 **But order is not sufficient, and the gap is structural.** C_m ⋊ C_d is transitive of order md for any d | m − 1, and its orbitals have size about md/2, giving δ ≈ d/m → 0 for small d. What the framework needs is not a large group but a **large twist**: a subgroup of AΓL(1, c) type on each block with the multiplicative part of near-maximal order, together with the element fusing the blocks. §4 is the sharp illustration — A₅ has all the ingredients except that the twist is capped at order 2.
 
-> **The excess shrinks as the constructions improve, which is the opposite of what one expects.** Measured on the recorded witnesses, our groups are **polynomial in n** — log|Γ|/log n ranges over roughly **2.9 to 9.7** on a sample across [2·10⁴, 10⁶], typically 3.5–4.5 — while **BBKN's fused shape at the same n is superpolynomial**: it takes F = n/Q(n) blocks, so log|Γ| ≈ F·log c ≈ (n/log n)·log log n, an exponent growing like n·loglog n/(log n)². Side by side:
+> **The excess shrinks as the constructions improve, which is the opposite of what one expects.** The comparison below is **entirely internal — two of our own shapes**, not us against BBKN. The weaker one is the **single fused class at c = Q(n)** (shape S2, n = F·c with F = n/Q(n)), which is the framework's own replacement for BBKN's Ω(n log n) bound and *already uses the entangled generator*; the stronger is whatever the table records at that n. **BBKN's actual construction goes through Vinogradov/Haselgrove and is a different object we have not modelled**, so no order ratio here is attributable to them; theirs would presumably fare worse still, having no entangled generator, but that is a guess and is not measured.
 >
-> | n | BBKN's F = n/Q(n) | our witness | |Γ_BBKN| / |Γ_ours| | min orbital, BBKN vs ours |
+> | n | single fused class, F = n/Q(n) | table's witness | order ratio | min orbital |
 > |---|---|---|---|---|
-> | 2,759 | F = 31, c = 89 | `2x653 + 1x1453*` | 10⁵⁰ | 121,396 vs **175,813** |
-> | 30,030 | F = 2,310, c = 13 | `1x14947 + 1x…` | 10²·⁵⁶¹ | 180,180 vs **111,698,931** |
-> | 510,510 | F = 30,030, c = 17 | `1x255127 + …` | 10³⁶·⁹³⁵ | 4,084,080 vs **32,544,765,501** |
+> | 2,759 | F = 31, c = 89 | `2x653 + 1x1453*` | 10⁵⁰ | 121,396 → **175,813** |
+> | 30,030 | F = 2,310, c = 13 | `1x14947 + 1x…` | 10²·⁵⁶¹ | 180,180 → **111,698,931** |
+> | 510,510 | F = 30,030, c = 17 | `1x255127 + …` | 10³⁶·⁹³⁵ | 4,084,080 → **32,544,765,501** |
+>
+> Measured on the recorded witnesses, our groups are **polynomial in n** — log|Γ|/log n between **2.9 and 9.7** on a sample across [2·10⁴, 10⁶], typically 3.5–4.5 — while the **single fused class is superpolynomial** whenever Q(n) is small: F = n/Q(n) blocks give log|Γ| ≈ F·log c ≈ (n/log n)·log log n.
 >
 > **So each round of improvement made the group smaller and the orbital larger at once.** Pushing c up and F down raises the minimum orbital *and* collapses the c^F bottom layer, because c^F is where the fusion count is paid. The trade-off runs the wrong way round for anyone expecting a bigger group to buy a bigger orbital, and the reason is that **F is the enemy of both**: it is the number of blocks the fusion must tie together, and every block costs a factor of c in the order while contributing only c(c−1)/2 to the class.
 >
-> **That reframes the gap of the next paragraph.** Against the Ω(m²) necessary bound, BBKN's construction is superpolynomially wasteful and ours is polynomially so — a much smaller gap than the framework's own phrasing suggested, and one that closes further at every n where a single fused class suffices (F = 1 or 2, where |Γ| is O(n⁴) outright).
+> **That reframes the gap of the next paragraph.** Against the Ω(m²) necessary bound, the single fused class is superpolynomially wasteful and the two-part shapes are polynomially so — a much smaller gap than the framework's own phrasing suggested, and one that closes further at every n where a single fused class suffices (F = 1 or 2, where |Γ| is O(n⁴) outright).
 
 > **An open gap worth naming.** The necessary bound is Ω(m²), and our best constructions sit at roughly n³–n⁴ — polynomially above it, not superpolynomially. **Nothing in the framework explains even that residual excess.** Either there are much smaller Oliver groups achieving constant δ at composite m — which would widen the class of G to which the argument applies — or the Ω(m²) bound is far from achievable off prime powers and a better lower bound is available. The question is self-contained:
 >
