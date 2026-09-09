@@ -759,9 +759,3 @@ If yes, that is a genuine relative-difficulty statement rather than an impressio
 > 3. **The lcm computation is over recorded witnesses, not over all admissible configurations.** It shows what the winners do, not what a hypothetical smaller group could do — which is what §5 actually asks.
 >
 > *The measurements are sound and may be quoted: median lcm n^3.70 over 605 sampled n, no row below n^2.5, and 0 of 796,763 two-part winners with all orbitals equal. It is the inference from them that is pending.*
-
-### A30. ~~`johnson-presentations.md` is cited and not in the working set~~ — RESOLVED
-
-The file exists and is now in the set. Its Proposition 1 is the unification the citation promised — a transitive action whose coordinates are the k-subsets of a base X (a **k-Johnson presentation**) has a transitive Oliver subgroup **iff** G contains a subgroup that is Oliver and k-homogeneous on X — so the §1 citation is restored, and Appendix C's prime-powers box now states one criterion with three inputs (arity, base size, containment) instead of listing three coincidences. *Spot-checked on reading: AGL(1,5) ⊄ A₅ (the twist x ↦ 2x is an odd 4-cycle), D₁₀'s pair-orbitals are [5, 5] against A₅'s [10], and T(m) has degree 2(m−2) at m = 5, 6, 7 — all as the note states.*
-
-**The group-order question it raised is now its own item, A34.** It is *not* resolved, and leaving it inside a section headed RESOLVED was a mislabel.
