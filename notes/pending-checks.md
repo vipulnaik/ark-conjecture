@@ -734,11 +734,11 @@ If yes, that is a genuine relative-difficulty statement rather than an impressio
 
 **To close:** read KSS and record which it is. One paragraph of a paper we cite constantly and have not read on this point. *The general lesson is the one the error illustrates: the figure and census passes verify numbers, not attributions, so "which theorem covers this n" is unchecked everywhere and was wrong here for fourteen sessions.*
 
-### A30. ~~`johnson-presentations.md` is cited and not in the working set~~ — RESOLVED
+### A34. The minimum order of an Oliver group meeting the density floor — a route, NOT a proof
 
-The file exists and is now in the set. Its Proposition 1 is the unification the citation promised — a transitive action whose coordinates are the k-subsets of a base X (a **k-Johnson presentation**) has a transitive Oliver subgroup **iff** G contains a subgroup that is Oliver and k-homogeneous on X — so the §1 citation is restored, and Appendix C's prime-powers box now states one criterion with three inputs (arity, base size, containment) instead of listing three coincidences. *Spot-checked on reading: AGL(1,5) ⊄ A₅ (the twist x ↦ 2x is an odd 4-cycle), D₁₀'s pair-orbitals are [5, 5] against A₅'s [10], and T(m) has degree 2(m−2) at m = 5, 6, 7 — all as the note states.*
+> **Status: sketch, unverified.** The argument below has not been written out rigorously, has not been checked by anyone, and is not in `johnson-presentations.md` — it lives here until it is. **Three things are pending: review the argument, make it rigorous, and move it into §5 of that document.** Nothing elsewhere may cite it as settled.
 
-**One live item it leaves behind, and Vipul's 2026-09 observation may close it.** §5 asks: **what is the minimum order of an Oliver group on m points whose minimum orbital is >= d*C(m,2), for m not a prime power?** The necessary bound is Ω(m²), tight at prime powers, while the constructions use groups polynomially larger — which §5 calls unexplained.
+**The question, from `johnson-presentations.md` §5:** **what is the minimum order of an Oliver group on m points whose minimum orbital is >= d*C(m,2), for m not a prime power?** The necessary bound is Ω(m²), tight at prime powers, while the constructions use groups polynomially larger — which §5 calls unexplained.
 
 > **The route: orbit-stabiliser applied to every orbital at once.** |G| is divisible by each orbital size, so **|G| >= lcm(m_1, ..., m_t)**, where the m_i sum to C(m,2) and t <= 1/d. If the m_i are near-coprime the lcm is near their product, already m^4-ish and far above m² — so the excess is not unexplained, it is what divisibility forces. *The edge case to rule out is all orbitals of equal size C(m,2)/u for small u, where the lcm collapses back to Θ(m²).* That needs structural information about which multisets of orbital sizes are realisable — a partial re-traversal of `enumeration-proof.md`, not at full strength, only enough to forbid the all-equal case.
 >
@@ -751,3 +751,17 @@ The file exists and is now in the set. Its Proposition 1 is the unification the 
 > **Intransitive case** (which is what the shape space produces). With parts of sizes s_i, an intra-part orbital is regular of valency d and size s_i*d/2; a cross orbital is biregular of size s_i*e. All orbitals equal forces **d = 2e** together with sum(intra d) = s_i - 1 and sum(cross e) = s_j — so **d | s_i - 1 and d/2 | s_j for every ordered pair**, a small Diophantine system rather than an open question. *Measured: of the **796,763** two-part winners in [6, 10^6], **0** have all orbitals equal.*
 >
 > **So the re-traversal needed is genuinely partial**, as Vipul guessed: not the full strength of `enumeration-proof.md`, just the vertex-induced regularity that Theorem 2.1 already uses, applied to the two cases above. The transitive case is where the work is, and where solvability enters in the same weak form Theorem 2.1 needs it.
+
+> **What is actually unproved, itemised**, since the sketch reads more finished than it is:
+>
+> 1. **The transitive case is open.** "Small rank and equal valencies pull against each other" is an observation, not an argument. What is needed: *no solvable transitive group of non-prime-power degree n has rank <= 1/delta + 1 with all valencies equal.* C_n at odd n shows the equal-valency condition alone is satisfiable, so the rank bound is what must do the excluding, and no proof of that is written.
+> 2. **The intransitive case is a Diophantine system, not a contradiction.** d = 2e with d | s_i - 1 and d/2 | s_j has not been shown unsolvable; the 796,763-row measurement says it does not occur among *winners*, which is evidence, not proof.
+> 3. **The lcm computation is over recorded witnesses, not over all admissible configurations.** It shows what the winners do, not what a hypothetical smaller group could do — which is what §5 actually asks.
+>
+> *The measurements are sound and may be quoted: median lcm n^3.70 over 605 sampled n, no row below n^2.5, and 0 of 796,763 two-part winners with all orbitals equal. It is the inference from them that is pending.*
+
+### A30. ~~`johnson-presentations.md` is cited and not in the working set~~ — RESOLVED
+
+The file exists and is now in the set. Its Proposition 1 is the unification the citation promised — a transitive action whose coordinates are the k-subsets of a base X (a **k-Johnson presentation**) has a transitive Oliver subgroup **iff** G contains a subgroup that is Oliver and k-homogeneous on X — so the §1 citation is restored, and Appendix C's prime-powers box now states one criterion with three inputs (arity, base size, containment) instead of listing three coincidences. *Spot-checked on reading: AGL(1,5) ⊄ A₅ (the twist x ↦ 2x is an odd 4-cycle), D₁₀'s pair-orbitals are [5, 5] against A₅'s [10], and T(m) has degree 2(m−2) at m = 5, 6, 7 — all as the note states.*
+
+**The group-order question it raised is now its own item, A34.** It is *not* resolved, and leaving it inside a section headed RESOLVED was a mislabel.
