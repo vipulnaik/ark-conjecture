@@ -626,6 +626,22 @@ Last measurement kept for the record: ladder = B at **120,000 of 120,000**, 0 sh
 
 `validate_table_v3.py --ladder` is now marked vestigial in the source: its two checks SKIP when the flag is absent, which is the normal state, and they are kept only against a revival.
 
+## 5t. The group-order trade-off runs backwards, and now has numbers
+
+Vipul re-noticed something and asked where it lives: it is `johnson-presentations.md` §5, "How large must G be?", and the live item inside A30. The observation is that **our stronger constructions are *smaller* groups with *larger* minimum orbitals** than BBKN's Ω(n log n) one. Measured, it is more extreme than the qualitative version:
+
+| n | BBKN's F = n/Q(n) | our witness | order ratio | min orbital |
+|---|---|---|---|---|
+| 2,759 | F = 31, c = 89 | `2x653 + 1x1453*` | 10⁵⁰ | 121,396 → **175,813** |
+| 30,030 | F = 2,310, c = 13 | `1x14947 + …` | 10²·⁵⁶¹ | 180,180 → **111,698,931** |
+| 510,510 | F = 30,030, c = 17 | `1x255127 + …` | 10³⁶·⁹³⁵ | 4,084,080 → **32,544,765,501** |
+
+At n = 510,510 BBKN's group is **10³⁶·⁹³⁵ times larger** while its orbital is **8,000 times smaller**.
+
+**The general shape, which is the part worth keeping.** Our recorded witnesses are **polynomial in n** — log|Γ|/log n between 2.9 and 9.7 on a sample across [2·10⁴, 10⁶], typically 3.5–4.5 — while BBKN's fused shape is **superpolynomial**, taking F = n/Q(n) blocks so log|Γ| ≈ (n/log n)·log log n. **F is the enemy of both quantities at once**: it is the number of blocks the fusion must tie together, costing a factor of c in the order per block while contributing only c(c−1)/2 to the class. So pushing c up and F down raises the orbital *and* collapses the c^F bottom layer — the trade-off runs the wrong way round for anyone expecting a bigger group to buy a bigger orbital.
+
+**And it reframes §5's own open gap.** Against the Ω(m²) necessary bound, the framework's phrasing ("the constructions use groups polynomially larger… nothing explains that excess") is now sharper: BBKN is superpolynomially wasteful, ours is polynomially so, and at F = 1 or 2 our order is O(n⁴) outright. The unexplained excess is n² vs n³–n⁴, which is a much smaller thing to explain than the paragraph implied.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
