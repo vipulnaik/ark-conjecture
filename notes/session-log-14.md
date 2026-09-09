@@ -626,23 +626,27 @@ Last measurement kept for the record: ladder = B at **120,000 of 120,000**, 0 sh
 
 `validate_table_v3.py --ladder` is now marked vestigial in the source: its two checks SKIP when the flag is absent, which is the normal state, and they are kept only against a revival.
 
-## 5t. The group-order trade-off runs backwards, and now has numbers
+## 5t. The group-order trade-off, corrected twice and finally right
 
-Vipul re-noticed something and asked where it lives: it is `johnson-presentations.md` §5, "How large must G be?", and the live item inside A30. The observation is that **our stronger constructions are *smaller* groups with *larger* minimum orbitals** than BBKN's Ω(n log n) one. Measured, it is more extreme than the qualitative version:
+Vipul re-noticed that our constructions are *smaller* groups with *larger* orbitals than the older ones, and asked where it is discussed: `johnson-presentations.md` §5, and the live item in A30. Getting it right took two corrections from him.
 
-| n | single fused class, F = n/Q(n) | table's witness | order ratio | min orbital |
+**First correction.** I labelled the weak column "BBKN's" when it was the **single fused class at c = Q(n)** — our own replacement for their bound, already using the entangled generator. BBKN's actual group I had not modelled.
+
+**Then I read §§4.1–4.4 and 5.1–5.4**, and the second correction is the one that changes the story. **BBKN did not choose a bad group.** Their §5.1 already uses the n = pk + r shape; the block-permuting group is a product of cyclic groups of prime order over k written as t <= 4 roughly equal primes, and the minimum orbital is Ω(p^{2a} m_k). The block count F is fixed by **what number theory licenses**, not by taste:
+
+| route | fixes F | F at n = 510,510 | orbital | log10(c^F) |
 |---|---|---|---|---|
-| 2,759 | F = 31, c = 89 | `2x653 + 1x1453*` | 10⁵⁰ | 121,396 → **175,813** |
-| 30,030 | F = 2,310, c = 13 | `1x14947 + …` | 10²·⁵⁶¹ | 180,180 → **111,698,931** |
-| 510,510 | F = 30,030, c = 17 | `1x255127 + …` | 10³⁶·⁹³⁵ | 4,084,080 → **32,544,765,501** |
+| BBKN §4.4, unconditional | F = n/Q(n) | 30,030 | n log n | ~36,950 |
+| BBKN §5.3, ERH | p ~ n^{1/4} | 19,098 | n^{5/4-e} | ~27,023 |
+| BBKN §5.4, Chowla | p ~ n^{1/2} | 714 | n^{3/2-e} | ~2,038 |
+| Shparlinski 2014 | p ~ n^{1/2}, uncond. | 714 | n^{5/4+o(1)} | ~2,038 |
+| **ours, under (BCG-AL)** | **F <= 16** | **16** | **d_0 n^2** | **~72** |
 
-At n = 510,510 the single fused class is **10³⁶·⁹³⁵ times larger** while its orbital is **8,000 times smaller**.
+**So the order and the orbital move together because both are functions of F alone** — c^F is the bottom layer, Ω(nc) the orbital — and every rung of §3.6's ladder buys F down. The framework's contribution is a **bounded** F, which is what turns c^F from superpolynomial into O(1) factors. There was never a trade-off to make, and no one ever chose badly.
 
-> **Correction made on Vipul's prompt:** I first labelled the weak column "BBKN's", which is wrong. That column is the **single fused class at c = Q(n)** — the framework's *own* replacement for BBKN's Ω(n log n) bound, and it already uses the entangled generator. **BBKN's actual construction goes through Vinogradov/Haselgrove and is a different object we have not modelled.** So the comparison is entirely internal, between two of our own shapes — which is if anything the cleaner statement: no attribution is needed for it, and none should be made.
+**The one genuinely avoidable loss is the Vinogradov decomposition, and — third correction, also Vipul's — it costs *both* order and orbital.** A single entangled generator of order F(c-1) replaces the product of t <= 4 prime-order cyclic groups. **Orbital: a constant factor t.** Under the product, a pair inside a block has its orbit closed only under the factor acting on *that part*, so it sweeps p_i blocks rather than all k — **fusion happens on the smallest prime chosen, not on k** — giving (k/t)*C(c,2) against k*C(c,2): measured 39,160 vs 121,396 at n = 2759 (3.10x) and 1,020,952 vs 4,084,080 at n = 510,510 (4.00x). **Order: a factor ~k^{t-1}/t^t**, measured 10^1.5 / 10^7.7 / 10^11 at those n. *Neither moves an Ω(n log n) statement — a constant on the orbital and a polynomial-in-k factor on the order are both invisible at big-O level — which is why the point went unremarked rather than being missed.*
 
-**The general shape, which is the part worth keeping.** Our recorded witnesses are **polynomial in n** — log|Γ|/log n between 2.9 and 9.7 on a sample across [2·10⁴, 10⁶], typically 3.5–4.5 — while BBKN's fused shape is **superpolynomial**, taking F = n/Q(n) blocks so log|Γ| ≈ (n/log n)·log log n. **F is the enemy of both quantities at once**: it is the number of blocks the fusion must tie together, costing a factor of c in the order per block while contributing only c(c−1)/2 to the class. So pushing c up and F down raises the orbital *and* collapses the c^F bottom layer — the trade-off runs the wrong way round for anyone expecting a bigger group to buy a bigger orbital.
-
-**And it reframes §5's own open gap.** Against the Ω(m²) necessary bound, the framework's phrasing ("the constructions use groups polynomially larger… nothing explains that excess") is now sharper: BBKN is superpolynomially wasteful, ours is polynomially so, and at F = 1 or 2 our order is O(n⁴) outright. The unexplained excess is n² vs n³–n⁴, which is a much smaller thing to explain than the paragraph implied.
+*The lesson for how I write these up:* my first version made it a story about better group selection, which is the flattering reading and the wrong one. The real structure is that the group is a **function of the arithmetic input**, and the whole progression — theirs and ours — is a sequence of number-theoretic hypotheses buying down one parameter.
 
 ## 5. One methodological note
 

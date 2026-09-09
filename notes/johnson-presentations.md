@@ -96,19 +96,27 @@ At prime power m this is **tight up to a factor of 2**: AGL(1, m) has order m(m�
 
 **But order is not sufficient, and the gap is structural.** C_m ⋊ C_d is transitive of order md for any d | m − 1, and its orbitals have size about md/2, giving δ ≈ d/m → 0 for small d. What the framework needs is not a large group but a **large twist**: a subgroup of AΓL(1, c) type on each block with the multiplicative part of near-maximal order, together with the element fusing the blocks. §4 is the sharp illustration — A₅ has all the ingredients except that the twist is capped at order 2.
 
-> **The excess shrinks as the constructions improve, which is the opposite of what one expects.** The comparison below is **entirely internal — two of our own shapes**, not us against BBKN. The weaker one is the **single fused class at c = Q(n)** (shape S2, n = F·c with F = n/Q(n)), which is the framework's own replacement for BBKN's Ω(n log n) bound and *already uses the entangled generator*; the stronger is whatever the table records at that n. **BBKN's actual construction goes through Vinogradov/Haselgrove and is a different object we have not modelled**, so no order ratio here is attributable to them; theirs would presumably fare worse still, having no entangled generator, but that is a guess and is not measured.
+> **The group order and the minimum orbital improve together, and both are functions of one variable: F, the block count.** This is not a story about anyone choosing a better group. In BBKN's own §4.1 construction the bottom layer is the additive group of the blocks, of order c^F with c = p^a and F = k — so **c^F is the price of the fusion count** — while the minimum orbital is Ω(p^{2a} m_k) = Ω(nc). Driving F down raises the orbital *and* collapses the bottom layer at once, because both are read off F. There is no trade-off to make.
 >
-> | n | single fused class, F = n/Q(n) | table's witness | order ratio | min orbital |
+> **And what drives F down is the number theory available, nothing else.** BBKN's §5.1 already uses the n = pk + r shape; only the unconditional case is forced to F = n/Q(n), because that is all Vinogradov/Haselgrove licenses.
+>
+> | route | what fixes the block count | F at n = 510,510 | orbital | log10 of the c^F layer |
 > |---|---|---|---|---|
-> | 2,759 | F = 31, c = 89 | `2x653 + 1x1453*` | 10⁵⁰ | 121,396 → **175,813** |
-> | 30,030 | F = 2,310, c = 13 | `1x14947 + 1x…` | 10²·⁵⁶¹ | 180,180 → **111,698,931** |
-> | 510,510 | F = 30,030, c = 17 | `1x255127 + …` | 10³⁶·⁹³⁵ | 4,084,080 → **32,544,765,501** |
+> | BBKN §4.4, unconditional | F = n/Q(n) | 30,030 | n log n | ~36,950 |
+> | BBKN §5.3, under ERH | p ~ n^{1/4} | 19,098 | n^{5/4-e} | ~27,023 |
+> | BBKN §5.4, under Chowla | p ~ n^{1/2} | 714 | n^{3/2-e} | ~2,038 |
+> | Shparlinski 2014 | p ~ n^{1/2}, unconditional | 714 | n^{5/4+o(1)} | ~2,038 |
+> | **this framework, under (BCG-AL)** | **F <= 16** | **16** | **d_0 n^2** | **~72** |
 >
-> Measured on the recorded witnesses, our groups are **polynomial in n** — log|Γ|/log n between **2.9 and 9.7** on a sample across [2·10⁴, 10⁶], typically 3.5–4.5 — while the **single fused class is superpolynomial** whenever Q(n) is small: F = n/Q(n) blocks give log|Γ| ≈ F·log c ≈ (n/log n)·log log n.
+> So each rung of `arithmetic-of-density.md` §3.6's ladder buys down F, and the group order follows for free. **The framework's contribution here is a bounded F**, which is what turns c^F from superpolynomial into O(1) factors and the order into a polynomial — log|G|/log n between 2.9 and 9.7 on a sample across [2*10^4, 10^6], typically 3.5–4.5.
 >
-> **So each round of improvement made the group smaller and the orbital larger at once.** Pushing c up and F down raises the minimum orbital *and* collapses the c^F bottom layer, because c^F is where the fusion count is paid. The trade-off runs the wrong way round for anyone expecting a bigger group to buy a bigger orbital, and the reason is that **F is the enemy of both**: it is the number of blocks the fusion must tie together, and every block costs a factor of c in the order while contributing only c(c−1)/2 to the class.
->
-> **That reframes the gap of the next paragraph.** Against the Ω(m²) necessary bound, the single fused class is superpolynomially wasteful and the two-part shapes are polynomially so — a much smaller gap than the framework's own phrasing suggested, and one that closes further at every n where a single fused class suffices (F = 1 or 2, where |Γ| is O(n⁴) outright).
+> > **One genuine inefficiency, and it costs *both* order and orbital.** The block-permuting group must be a product of cyclic groups of prime order, over k written as t <= 4 roughly equal primes — Vinogradov again — where **a single entangled generator of order F(c-1) would do**. Two separate losses follow.
+> >
+> > **On the orbital, a constant factor t.** Under a product of prime-order cyclics, a pair inside one block has its orbit closed only under the factor acting on *that part*, so it sweeps p_i blocks rather than all k: m_intra = (min_i p_i)*C(c,2) ~ (k/t)*C(c,2), against k*C(c,2) under full fusion. **Fusion happens on the smallest prime chosen, not on k.** Measured: 39,160 against 121,396 at n = 2759 (ratio 3.10), and 1,020,952 against 4,084,080 at n = 510,510 (ratio 4.00).
+> >
+> > **On the order, a factor about k^{t-1}/t^t** — the product of the p_i against our single F — measured at 10^1.5 at n = 2759, 10^7.7 at n = 30,030 and 10^11 at n = 510,510.
+> >
+> > *Neither loss moves an Ω(n log n) statement — a constant on the orbital and a polynomial-in-k factor on the order are both invisible at big-O level — which is exactly why the point went unremarked rather than being missed.*
 
 > **An open gap worth naming.** The necessary bound is Ω(m²), and our best constructions sit at roughly n³–n⁴ — polynomially above it, not superpolynomially. **Nothing in the framework explains even that residual excess.** Either there are much smaller Oliver groups achieving constant δ at composite m — which would widen the class of G to which the argument applies — or the Ω(m²) bound is far from achievable off prime powers and a better lower bound is available. The question is self-contained:
 >
