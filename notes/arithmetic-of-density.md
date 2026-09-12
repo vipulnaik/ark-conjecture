@@ -587,9 +587,9 @@ Write a foreign block's twist as t = q^e and its cofactor as u = (r − 1)/t. Th
 | input on shifted primes | θ | quantifier | edge bound | who proved / conjectured it | who connected it to this framework |
 |---|---|---|---|---|---|
 | Bombieri–Vinogradov | 1/4 | all large n | n^{5/4+o(1)} | Bombieri, A. I. Vinogradov (1965) | **Shparlinski**, Thm 1 (2014) — unconditional, matching BBKN's ERH bound without ERH |
-| Chowla-type | 1/2 | all large n | n^{3/2−ε} | conjectural (Chowla) | **BBKN**, Thm 1.4(a) |
-| Baker–Harman, positive relative density | 0.677, now **0.679** | **almost all** n | n^{1.677} | Baker–Harman; 0.679 by **Runbo Li**, arXiv:2508.18285 (2025) | **Shparlinski**, Cor. 3 (2014); the 0.679 update is ours |
+| Chowla-type | 1/2 − ε | all large n | n^{3/2−ε} | conjectural (Chowla) | **BBKN**, Thm 1.4(a) |
 | Elliott–Halberstam, *via the level of distribution* | 1/2 − ε | all large n | n^{3/2−ε} | conjectural (Elliott–Halberstam) | **Shparlinski**, §5 remark (2014) — upgrading his own Thm 1 |
+| Baker–Harman, positive relative density | 0.677, now **0.679** | **almost all** n | n^{1.677} | Baker–Harman; 0.679 by **Runbo Li**, arXiv:2508.18285 (2025) | **Shparlinski**, Cor. 3 (2014); the 0.679 update is ours |
 | Elliott–Halberstam, *via positive relative density* | → 1 | **almost all** n | n^{2−o(1)} | conjectural (Elliott–Halberstam) | **Shparlinski**, §5 remark (2014) — upgrading his own Thm 2 |
 | ERH | — | all large n | n^{5/4−ε} | conjectural | **BBKN**, Thm 1.4(b) — **superseded**: Shparlinski's Thm 1 reaches this unconditionally |
 
