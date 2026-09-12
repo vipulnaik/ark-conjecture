@@ -665,6 +665,20 @@ Vipul's observation: **|G| is divisible by every orbital size**, the sizes sum t
 
 **Filed correctly on Vipul's prompt: this is a sketch, not a result.** It first went into A30, a section headed RESOLVED — the same mislabel I had flagged in that very item two turns earlier and then made worse. Split out as **A34**, headed "a route, NOT a proof", with three pending steps (review, make rigorous, move into `johnson-presentations.md` §5) and an itemised list of what is actually unproved: the transitive case is an observation rather than an argument; the intransitive case is an unsolved Diophantine system rather than a contradiction; and the lcm measurement is over recorded *winners*, not over all admissible configurations, which is what §5 actually asks about. The measurements stand and may be quoted; the inference from them may not.*
 
+## 5v. `monotone-transitive-note.md` §2 rewritten — it made the transitive/Oliver-subgroup conflation
+
+Vipul flagged §2 as wrong. It said: the analogue of μ is the minimum Γ-orbit on coordinates, **Γ is transitive so that is N**, hence δ = 1 at every N and every transitive Γ, and Proposition 1 closes the case with no machinery. **Proposition 1 needs a transitive Oliver *subgroup*, and Γ's Oliver subgroups are generally intransitive** — the exact distinction Appendix C row 6 and §5 of that same note state correctly, contradicted two sections earlier.
+
+Rewritten around the right object:
+
+> **μ_Γ(N) := max over Oliver subgroups Λ ≤ Γ of the minimum Λ-orbit on the N coordinates**
+
+which equals N exactly when Γ has a transitive Oliver subgroup and is smaller otherwise — **at A₅ on 10 points and T(12,162) it is smaller**, so μ_Γ is a genuine quantity there, not a triviality. And, per Vipul's framing and the updated Appendix C, **μ_Γ can be defined but has no theory behind it**: μ(n) is computable because the graph setting fixes the shape of the action (a group on [n] inducing on pairs, hence block-structured orbitals), whereas μ_Γ is contingent on the shape of an arbitrary transitive action — no shape space, no mod-12 keying, no cap formula.
+
+**That also inverts the section's headline claim.** It read "every part of the apparatus is machinery for t >= 2, and the general setting does not have that case". The general setting **does** have that case, precisely where Proposition 1 fails. The correct statement is that the graph setting's t >= 2 case is **tractable** and the general one's is not. The abstract carried the same overstatement and is fixed with it.
+
+**`directed-graph-properties.md` §2 checked and is sound** — Theorem D1's proof is correct and δ_dir is already normalised against n(n−1) as the updated Appendix C requires. What it lacked was the *reason* it is well-posed where μ_Γ is not: the directed action is still **induced from vertices**, so the block structure and hence §3's ceiling table survive. Added, with the one thing that does change — a single ordered orbital needs 2-**transitivity**, not 2-homogeneity, and those part company at degrees ≡ 3 (mod 4).
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

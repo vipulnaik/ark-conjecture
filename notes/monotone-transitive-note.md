@@ -2,7 +2,7 @@
 
 *Companion to `orbital-evasiveness-notes.md`. The k-uniform documents move along the arity axis; this one moves off it entirely, to nontrivial monotone Boolean functions on N coordinates invariant under a transitive group. That setting contains all the k-uniform cases (a k-graph property is the case N = C(n,k) with Γ = Sₙ acting on k-sets), so it is the natural ceiling of the programme.*
 
-**The short answer, stated first because it is negative and the reasons are the interesting part.** The μ(n) apparatus contributes **almost nothing** to the general transitive case, and the reason is structural rather than a matter of the bounds being weak: in the general setting the group acts on the coordinates directly, so transitivity is available where the graph case only ever gets vertex-transitivity, and the Oliver argument closes at its very first rung without any of the machinery. What the framework does contribute is a *localisation of the difficulty* — a computable criterion picking out exactly the groups where the argument fails, and a scan finding the first of them.
+**The short answer, stated first because it is negative and the reasons are the interesting part.** The μ(n) apparatus contributes **almost nothing** to the general transitive case, and the reason is structural rather than a matter of the bounds being weak: in the general setting the group acts on the coordinates directly, so **where Γ contains a transitive Oliver subgroup** the argument closes at its very first rung without any of the machinery — whereas the graph case only ever gets vertex-transitivity, which is not coordinate-transitivity. *The qualification is not decoration: at the groups where Γ has no transitive Oliver subgroup (§3) the analogue μ_Γ is a real quantity, and there the framework contributes nothing because μ_Γ has no theory behind it either (§2).* What the framework does contribute is a *localisation of the difficulty* — a computable criterion picking out exactly the groups where the argument fails, and a scan finding the first of them.
 
 **Status.**
 
@@ -35,19 +35,24 @@ Three corollaries, each a one-line check on Γ:
 
 ---
 
-## 2. Why μ(n) does not transfer, and what that says about its role
+## 2. The analogue of μ(n) here: definable, but with no theory behind it
 
-The framework's central quantity is m\*(Γ) = the minimum size of a Γ-orbital, i.e. of a Γ-orbit on **pairs** of vertices — and δ = m\*/C(n,2). Its analogue here is the minimum Γ-orbit on **coordinates**, and for transitive Γ that is N: the whole thing, in one orbit.
+The framework's central quantity is m\*(Γ) = the minimum size of a Γ-orbital, i.e. of a Γ-orbit on **pairs** of vertices, and δ = m\*/C(n,2). The analogue in the general setting is the minimum orbit on **coordinates** — but of *which* group, and that is where the care is needed.
 
-So the general-transitive analogue of the density is δ = 1, at every N and every transitive Γ — the maximum possible — and by Proposition 1 the conclusion follows immediately with no optimisation, no shape space, no ceilings and no arithmetic. **Every part of the apparatus is machinery for the case t ≥ 2, and the general setting does not have that case.**
-
-> **Which locates precisely what the graph setting costs, and it is worth stating as the framework's own explanation of itself.** For a graph property the group acts on **vertices**, while the coordinates are **pairs**. A vertex-transitive group is therefore *not* coordinate-transitive: its induced action on pairs has one orbit only when it is 2-homogeneous, which for solvable groups forces prime-power degree (`solvable-relaxation.md` §1). At every composite non-prime-power n the pair action has t ≥ 2 orbits, Δ_P^Γ acquires vertices, and the χ condition stops being a contradiction and becomes a constraint that a real property can satisfy — which is exactly `small-degree-computation.md` §7.4's finding that the two-orbital criterion "sharpens but does not close".
+> **It is not Γ's own minimum orbit.** Γ is transitive by hypothesis, so its minimum orbit on coordinates is N, the whole thing. But Proposition 1 does not apply to Γ; it applies to a **transitive Oliver subgroup** of Γ, and Γ's Oliver subgroups are in general **intransitive**. The quantity that matters is therefore
 >
-> **So the whole δ apparatus is the price of the induced action.** μ(n) is measuring how close a vertex action can come to being coordinate-transitive, and the mod-12 ceilings are the arithmetic of how close that is. Nothing analogous arises when the action is on the coordinates to begin with.
+> > **μ_Γ(N) := max over Oliver subgroups Λ ≤ Γ of the minimum Λ-orbit on the N coordinates**,
+>
+> which equals N exactly when Γ contains a transitive Oliver subgroup, and is smaller — sometimes much smaller — when it does not. **At A₅ on 10 points and at T(12,162) it does not** (§3): those groups are transitive and have no transitive Oliver subgroup, so μ_Γ is a genuine quantity there rather than a triviality.
+
+> **And unlike μ(n), it has no theory behind it.** μ(n) is computable because the graph setting fixes the shape of the action — a group on [n], inducing on pairs — so the orbitals are block-structured and the whole apparatus of shape space, ceilings and arithmetic applies. **μ_Γ(N) is contingent on the shape of Γ's action**, which is an arbitrary transitive action on N points, so there is nothing general to optimise over: no shape space, no mod-12 keying, no cap formula. It can be computed group by group and that is all. *This is Appendix C row 6 of `orbital-evasiveness-notes.md`: "μ_Γ(n) can be defined, but almost nothing can be said in general."*
+
+> **So the correct account of what the graph setting costs is the reverse of "the general case is free".** It is not that the general setting lacks the t ≥ 2 case — it has it, at exactly the groups where Proposition 1 fails. It is that the graph setting's t ≥ 2 case is **tractable**, because the induced-action structure gives the orbitals a form the arithmetic can reach, and the general one's is not. A vertex-transitive group is not coordinate-transitive — its pair action has one orbit only when it is 2-homogeneous, which for solvable groups forces prime-power degree (`solvable-relaxation.md` §1) — so at every composite non-prime-power n the pair action has t ≥ 2 orbits, Δ_P^Γ acquires vertices, and the χ condition becomes a constraint a real property can satisfy. **μ(n) measures how close a vertex action can come to being coordinate-transitive, and the mod-12 ceilings are the arithmetic of how close.** The general setting has the same obstruction and no such arithmetic.
 
 **The one thing that does transfer is the negative result about escalation.** `small-degree-computation.md` §7.1's one-sidedness diagnosis — every χ condition and every monotone propagation pushes coordinates *into* P, and the only OUT-generator in the whole system is nontriviality — is a statement about the constraint system and not about graphs. It applies verbatim to any CSP over a general Boolean property, and it predicts that at a group where Proposition 1 fails, adding more groups to a battery will not produce UNSAT either.
 
 ---
+
 
 ## 3. Where Proposition 1 fails: a scan of the transitive groups
 
