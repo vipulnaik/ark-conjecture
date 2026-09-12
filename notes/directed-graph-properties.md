@@ -35,7 +35,7 @@ A **digraph property** is a monotone family of subsets of the n(n−1) ordered p
 
 Write μ_dir(n) for the maximum over Oliver groups Γ ≤ S_n of the minimum Γ-orbit on **ordered** pairs, and δ_dir = μ_dir/(n(n−1)) — normalised against n(n−1), not C(n,2).
 
-> **Why this is a well-posed quantity here, unlike μ_Γ in the general transitive setting.** The action is still **induced from vertices**: Γ acts on [n] and the n(n−1) ordered pairs are determined by that. So the block structure survives, the orbitals have the same block-and-twist form, and there is something for an optimisation to range over — which is why §3's ceiling table exists at all. *Contrast `monotone-transitive-note.md` §2, where the group acts on the coordinates directly, the orbital shapes are unconstrained, and no such table can be written.* The one thing that does change is the t = 1 condition: a single **ordered** orbital needs Γ to be 2-**transitive**, not merely 2-homogeneous, and the two part company at degrees ≡ 3 (mod 4) (`orbital-evasiveness-notes.md` Appendix C, row 4).
+> **The action is still induced from vertices, which is what makes an optimisation possible at all.** Γ acts on [n], and the n(n−1) ordered pairs are determined by that, so the block structure survives and the orbitals keep the same block-and-twist form — which is why §3's ceiling table can be written. *Nothing is lost at the prime powers, where AGL(1, n) takes the whole multiplicative group as twist and is 2-transitive; the ordered and unordered single orbitals are available together. Where the two part company is once the twist is constrained to a q-group, and that is the subject of the rest of this section.*
 
 > **Theorem D1.** For every n, **μ_dir(n) ≥ μ(n)**, and hence **δ_dir(n) ≥ δ(n)/2**.
 >
