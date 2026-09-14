@@ -38,7 +38,7 @@ want to look at the raw materials yourself, here is some guidance:
 
 ### Initial conversation with Fable on 2026-07-22
 
-The project started through a chat session between Vipul Naik and
+The project started through a chat session between me (Vipul Naik) and
 Claude Fable 5, where I asked Claude to look at BBKN and come up with
 a good abstraction, then push the number theory as far as possible.
 
