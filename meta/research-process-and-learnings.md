@@ -361,7 +361,7 @@ research:
   they use with the LLMs are coming from a different
   perspective. Indeed, in the ARK conjecture case, several framing
   errors were identified by Raghav in his own Claude session that
-  Vipul didn't get in his Claude sessions. It's unclear if Vipul's
+  I (Vipul) didn't get in his Claude sessions. It's unclear if my
   Claude sessions would *eventually* have identified these, but the
   fresh human perspective, at minimum, *sped up* the process.
 
