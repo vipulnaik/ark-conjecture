@@ -365,7 +365,7 @@ research:
   Claude sessions would *eventually* have identified these, but the
   fresh human perspective, at minimum, *sped up* the process.
 
-  Even so, it does create a multiplier effect on however many huamn
+  Even so, it does create a multiplier effect on however many human
   collaborators are available. So a sole author can get way more
   perspectives that would normally need a collaborator or human
   reviewer, and 2 authors together can also get way more perspectives
