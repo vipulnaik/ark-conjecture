@@ -421,15 +421,15 @@ on where in the research process we were.
 Starting a new chat on a topic that we've had two other long chats
 about, so that we can start off with fresh eyes.
 
-I've been working (with you in other chats) on making progress on >
-the Aanderaa-Rosenberg-Karp conjecture, building on >
-https://arxiv.org/abs/1001.4829 that connects evasiveness on sparse >
-graphs to additive number theory. I'm not attaching all the >
-documents we worked on, just a relevant subset. Will share more as >
+I've been working (with you in other chats) on making progress on
+the Aanderaa-Rosenberg-Karp conjecture, building on
+https://arxiv.org/abs/1001.4829 that connects evasiveness on sparse
+graphs to additive number theory. I'm not attaching all the
+documents we worked on, just a relevant subset. Will share more as
 needed. Here is what
 
-I'd like you to do the following; if you run out of per-turn budget, >
-share what you have so far and I'll review and then (likely) ask you >
+I'd like you to do the following; if you run out of per-turn budget,
+share what you have so far and I'll review and then (likely) ask you
 to continue.
 
 1. Start with orbital-evasiveness-notes.md. Focus on the introductions
