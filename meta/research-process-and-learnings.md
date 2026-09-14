@@ -10,7 +10,7 @@ of the initial research using LLMs (primarily Claude).
 
 ## Raw materials available
 
-As of 2026-08-11, the research is still in process, so the raw
+As of 2026-09-13, the research is still in process, so the raw
 material guidance may get out of date.
 
 The current document is a selected set of human observations. If you
@@ -205,7 +205,7 @@ followed the practice, starting a new conversation once the existing
 conversation had gotten long, making sure to wrap up the loose ends
 within the existing conversation.
 
-As of 2026-08-11, I was on my sixth conversation.
+As of 2026-09-13, I was on my fourteenth conversation.
 
 This does not include conversations outside the core flow, described
 further down.
@@ -306,12 +306,12 @@ committing.
 At every new conversation, I therefore had to re-upload the relevant
 subset of documents.
 
-I didn't manually edit any of the documents that Claude was working
+Before 2026-09-12, I never manually edited any of the documents that Claude was working
 on. The general philosophy was that this would make state management
 harder, and the coordination would slow things down. My plan was to
 have Claude do all the actual writing and editing of documents until
 everything passed muster, at which point the documents would be used
-as a starting point for a human-written paper.
+as a starting point for a human-written paper. On 2026-09-12, I made my first few manual edits.
 
 #### Script runs
 
