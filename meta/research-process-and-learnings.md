@@ -227,7 +227,7 @@ My initial conversation with Fable used the free credits provided by
 Anthropic (I had $120 in total); I was on the $200/year Claude Pro
 subscription at the time. I blew through the credits quickly. My
 subscription's limits turned out to be inadequate to the demands of
-the research flow, and I ended up continuing the spend credits at a
+the research flow, and I ended up continuing to spend credits at a
 high rate, until I decided to upgrade to the $100/month plan for a
 month. After the upgrade, the work fit within the plan's usage limits
 with the exception of one turn where I ended up spending about
