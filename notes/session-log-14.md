@@ -741,6 +741,18 @@ Vipul proposed reframing the results as: there is k such that every non-evasive 
 
 *Two earlier mis-steps also caught here:* a first residue scan included the thin q = 3 family and produced structured caps **above** the optimal ceiling — impossible, hence the catch; and the n = 11 coincidence (12 in both the note's d and here as F) is recorded as suggestive only, since the correspondence is not exact at other classes.
 
+## 5aa. A35 closed: the framework's query-complexity output is D(h) ≥ μ(n), and it cannot reach the better constants
+
+A35 asked whether a configuration from our shape space gives a fully-evasive multipartite sub-structure larger than Korneffel–Triesch's. **No, and the reason is structural rather than a failed search.**
+
+**What the machinery does give.** For any Oliver Γ, add its orbitals one at a time from ∅ to K_n; a nontrivial h flips at some orbital O, and restricting to O (earlier orbitals present, later ones absent) gives a nontrivial Γ-invariant property on which Γ is transitive, hence evasive. So **D(h) ≥ |O| ≥ min orbital, and D(h) ≥ μ(n)** for every nontrivial monotone graph property. Direct, not claimed as new.
+
+**It is sharp for the route.** An adversary with h(O_min) = 1 and h(K_n ∖ O_min) = 0 forces the flip onto O_min in every order. So single-group certification reaches exactly the minimum orbital, and the best over groups is exactly μ(n). Since μ(n) ≤ n²/4, it never beats KSS's n²/4. Against their explicit finite bound p²/4 it wins at 37,316 n ≤ 10⁶ — *all* n = 2q with n − 1 not a prime power — but only by lower-order terms (median gain 0.0000 of n²/4).
+
+**Why the better constants are out of reach.** Korneffel–Triesch's tripartite sub-structure is intrinsically multi-orbital (unequal parts cannot be permuted), and on t ≥ 2 orbits a single group's χ argument cannot certify every property — one orbital in gives χ = 1. Yao gets past this with a *second* symmetry layer (Sym(Z) makes the property a threshold on a Boolean lattice); μ(n) measures only the first. So the shape space, cataloguing groups by minimum orbital, is the wrong instrument for these sub-structures.
+
+*One unexplored direction kept in the write-up:* the adversary must defeat every group simultaneously, which needs its forced orbitals to intersect pairwise; across conjugates that fails whenever O_min packs with a copy of itself. So combining groups could push the flip off the minimum orbital. Probably a small gain, since the second-smallest orbital is typically barely larger, and not examined. A35 is a ledger row.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
