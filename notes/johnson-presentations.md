@@ -118,11 +118,51 @@ At prime power m this is **tight up to a factor of 2**: AGL(1, m) has order m(m�
 > >
 > > *Neither loss moves an Ω(n log n) statement — a constant on the orbital and a polynomial-in-k factor on the order are both invisible at big-O level — which is exactly why the point went unremarked rather than being missed.*
 
-> **An open gap worth naming.** The necessary bound is Ω(m²), and our best constructions sit at roughly n³–n⁴ — polynomially above it, not superpolynomially. **Nothing in the framework explains even that residual excess.** Either there are much smaller Oliver groups achieving constant δ at composite m — which would widen the class of G to which the argument applies — or the Ω(m²) bound is far from achievable off prime powers and a better lower bound is available. The question is self-contained:
+### 5a. The minimum order, answered: the exponent is 2, 3, 4 or 5, and parity decides between the last two
+
+**Question.** What is the minimum order of an Oliver group on n points whose minimum orbital is ≥ δ·C(n,2), for fixed δ > 0? The necessary bound is Ω(n²), since every orbital size divides the order.
+
+> **Answer, within the shape space.**
 >
-> **What is the minimum order of an Oliver group on m points whose minimum orbital is ≥ δ·C(m,2), for m not a prime power?**
+> | n | minimum \|Γ\| | construction |
+> |---|---|---|
+> | prime power | Θ(n²) | AGL(1, n) |
+> | a prime-power divisor c ≥ δ′n (bounded cofactor; density zero) | Θ(n³) | Reed–Solomon translations, below |
+> | almost all **even** n | **Θ(n⁴)** | one matching block + one foreign block |
+> | almost all **odd** n | **Θ(n⁵)** | two fused matching blocks + one foreign block |
 >
-> `mu_enumerate_v3.py` could answer it over the computed range: it already enumerates every configuration with its density, and would only need each configuration's group order recorded alongside.
+> *Status.* The lower bounds are proofs **modulo Part 0** of `enumeration-proof.md` (every Oliver group meeting the floor lies in the shape space) and **modulo the three short lemmas below, which are sketched and have had no independent reading**. The upper bounds for generic n are **conditional** on the framework's bounded-cofactor Goldbach supply — the same hypothesis μ(n) itself rests on — and are verified on the table to 10⁶. "Almost all" means outside explicit density-zero exceptional sets, described at the end.
+
+**The method: count the roles a group must fill, and show they cannot overlap.** The divisibility bound |Γ| ≥ lcm(orbital sizes) of the earlier draft was the wrong tool — its edge case (all orbitals equal) was never the real obstruction. What forces the order up is that a block-structured group needs several *independent* subgroups, each of size Θ(n):
+
+- **translations** on each block, to make it one vertex-orbit;
+- a **twist** (multipliers) on each block, to fuse its intra pairs into orbitals of size ≥ δn² — which forces the twist to have order ≥ δn, since an intra orbital on a block of size c has size c·d/2 with d the twist;
+- and, where there are two or more blocks of the same prime, translations that **distinguish** them.
+
+The per-axis bound (`enumeration-proof.md` G.4) makes every block size ≥ δn/2, since a cross orbital between blocks of sizes a and b has size at most ab.
+
+**Lemma 1 (distinguishing translations cost c²).** *If two blocks i, j of the same prime-power size c lie in one fused class, the translation subgroup T projects **onto** F_c² on i × j; so |T| ≥ c².* Otherwise the projection P is a line or trivial, and the rest of Γ acts on the quotient F_c²/P ≅ F_c affinely **without translations** — an element acting there as a translation would, raised to the order of its linear part (coprime to c), give a translation of F_c² outside P. An affine group of order coprime to c fixes a point of F_c, and the P-coset over that point is a union of orbits of total size c. Every cross orbital through it then has size at most (number of block pairs)·c = O(n), below δn².
+
+**Lemma 2 (a matching twist cannot share with foreign translations).** *In a configuration with a matching block of prime size c and a foreign block of prime size r, the cyclic layer Γ₁/Γ₂ contains elements acting as the matching twist (order d) and as the foreign translations (order r), and gcd(d, r) = 1 is forced; so |Γ₁/Γ₂| ≥ d·r.* The top q-group acts on the cyclic layer by z ↦ z^k. On the foreign block it must act as a nontrivial multiplier m of the translations, so k ≡ m ≠ 1 (mod r); on the matching block, conjugating a multiplier by an affine map leaves it unchanged when c is prime, so k ≡ 1 (mod d). If r | d the two congruences contradict. *(When c = p^a with a ≥ 2 a Frobenius twist relaxes the second congruence — a thin case, among the exceptions below.)*
+
+**Lemma 3 (the foreign twist stands apart).** *The foreign twist lies in the top layer and the matching translations act trivially on the foreign block.* The first is `enumeration-proof.md` Lemma D2q (a foreign twist in the cyclic layer, beside the translations, is trivial). For the second: Γ₂ is a p-group normal in Γ₁, and a nontrivial action on the foreign block would be by multipliers, whose conjugates by the foreign translations are translations — putting r-elements in a p-group.
+
+**Lower bounds.** *Even n, one matching block + one foreign:* translations c, matching twist d ≥ δn, foreign translations r, foreign twist t ≥ δn (from rt ≥ δn²), pairwise independent by Lemmas 2 and 3 — so |Γ| ≥ c·d·r·t = Ω(n⁴). *Odd n:* a single matching block plus a foreign one has c + r even unless c = 2^a, so generic odd n needs two fused matching blocks, and Lemma 1 turns their translations into c²: |Γ| ≥ c²·d·r·t = Ω(n⁵). *Every alternative at generic n costs at least as much:* a matching block plus two foreign ones has c·d·r₁·r₂·t = Ω(n⁵); more fused blocks only enlarge T; and configurations whose twists could share (two or three foreign blocks under one q-group, or a matching twist moved to the top beside the foreign one) need a common large q-power in several of c − 1, rᵢ − 1, which forces a large prime-power divisor on n − 2 or n − 3 — a density-zero condition.
+
+**Upper bounds.** The recorded witnesses realise them, and the measured orders sit in fixed bands across five decades:
+
+| shape (generic) | order / n⁴, median by decade 10² → 10⁶ | order / n⁵, median by decade 10² → 10⁶ |
+|---|---|---|
+| even, `1xc + 1xr*` | 0.0305 → 0.0311 → 0.0312 → 0.0312 | — |
+| odd, `2xc + 1xr*` | — | 0.00423 → 0.00343 → 0.00198 → 0.00196 |
+
+*So the "exponent between 2.9 and 9.7, typically 3.5–4.5" measured earlier was never a fractional exponent:* it is n⁴ times about 1/32 at even n and n⁵ times about 1/500 at odd n, seen through log|Γ|/log n at finite n (e.g. 4 − log 32/log 10⁵ ≈ 3.7).
+
+**The Θ(n³) case, and where our witnesses were wasteful.** At n = F·c with F | c − 1, index the blocks by a subgroup H ≤ F_cˣ of order F and take translations (i, y) ↦ (i, y + a + b·i) — a **two-dimensional Reed–Solomon code**, of order c², projecting onto every pair of blocks by Vandermonde — with one entangled generator (i, y) ↦ (h·i, λ·y). The chain is T (elementary abelian p-group), Γ/T = ⟨z⟩ cyclic, top trivial; |Γ| = c²(c − 1). *Built and verified:* n = 21 = 3·7 gives order 294 against the witness's c^F·F(c−1) = 6,174; n = 55 = 5·11 gives 1,210 against 8,052,550; n = 39 = 3·13 gives 2,028 against 79,092 — each with minimum orbital a constant fraction of C(n,2). By Lemma 1 no block-structured group does better, since two blocks already need c² translations and the twist needs δn more. **Our witnesses spend c^F where c² suffices** — they use independent translations on every block, which is the natural construction and the wasteful one.
+
+**The exceptional sets**, all of density zero: prime powers (exponent 2); bounded-cofactor n (3); odd n = 2^a + r with r a suitable prime (4, not 5); and n for which n − 2 or n − 3 carries a prime-power divisor from a prime whose powers reach [δn, n], where a shared top q-group can save a factor up to that divisor. The last condition has probability about |log δ|/log n per window of exponents, hence density zero.
+
+> **What this explains about the framework.** The earlier question was why the constructions sit polynomially above Ω(n²). The answer is that Ω(n²) is only achievable with a single block, and every additional block that the arithmetic forces — one foreign block at even n, a second matching block at odd n — brings its own translations and twist, which the chain structure will not let it share. **The parity split in the order is the same parity split as in the shapes**: odd n needs the fused rung because c + r is even.
 
 ---
 

@@ -753,6 +753,18 @@ A35 asked whether a configuration from our shape space gives a fully-evasive mul
 
 *One unexplored direction kept in the write-up:* the adversary must defeat every group simultaneously, which needs its forced orbitals to intersect pairwise; across conjugates that fails whenever O_min packs with a copy of itself. So combining groups could push the flip off the minimum orbital. Probably a small gain, since the second-smallest orbital is typically barely larger, and not examined. A35 is a ledger row.
 
+## 5ab. A34 answered: the minimum order has exponent 2, 3, 4 or 5, and parity decides the last two
+
+**The divisibility route was the wrong tool.** A34 was stuck on the lcm bound's edge case (all orbitals equal). The right argument counts the *roles* a block-structured group must fill — translations per block, a twist per block of order ≥ δn, and translations distinguishing same-prime blocks — and shows they cannot overlap. Three lemmas, sketched: distinguishing translations cost c² (the translation projection onto a block pair must be all of F_c², else a coset of size c is a union of orbits); a matching twist cannot share with foreign translations (the top q-group's action on the cyclic layer gives contradictory congruences mod r and mod d); the foreign twist stands apart (Lemma D2q, and Γ₂ cannot act on the foreign block).
+
+**The answer:** Θ(n²) at prime powers; Θ(n³) at bounded-cofactor n; **Θ(n⁴) at almost all even n; Θ(n⁵) at almost all odd n**. Odd n costs an extra factor because a single matching block plus a foreign one has c + r even, so generic odd n needs two fused matching blocks, whose translations cost c². *The parity split in the order is the parity split in the shapes.*
+
+**Measured, and it resolves the earlier puzzle.** The witnesses' order/n⁴ settles at 0.0312 for even `1xc + 1xr*` and order/n⁵ at 0.00196 for odd `2xc + 1xr*`, stable across five decades. So the "exponent 3.5–4.5" measured last round was never fractional — it was n⁴ and n⁵ times small constants, seen through log|Γ|/log n at finite n. *I had checked only the even shape at first and nearly reported a uniform n⁴; splitting by parity is what exposed the n⁵.*
+
+**And one genuine inefficiency in our own witnesses.** At S2-type n = F·c with F | c − 1, a two-dimensional Reed–Solomon code gives translations of order c² that still distinguish every pair of blocks, so |Γ| = c²(c − 1). Built and verified: n = 21 at 294 vs the witness's 6,174; n = 55 at 1,210 vs 8,052,550. Our witnesses spend c^F where c² suffices.
+
+**Status: answered, not closed.** Written up as `johnson-presentations.md` §5a. A34 narrowed to what remains — an independent reading of the three lemmas (one with a stated Frobenius edge case), the dependence on Part 0 for "every alternative costs as much", and the exceptional-set density argument, which is heuristic. Following Vipul's rule from earlier: a sketch is not marked resolved.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
