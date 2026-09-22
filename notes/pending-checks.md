@@ -339,6 +339,7 @@ Last measurement before retirement: **ladder = B at 120,000 of 120,000 rows**, 0
 | **R7a** | rerun `ladder_verify.py` to 10⁶ at the corrected window | **moot** with R7; the two window/fusion-set defects it found are recorded there in case the script is ever revived |
 | **R7c** | audit `solvable_relaxation.py` and `k3_galois.py` | **done** — the former had the same O(N²) sweep the validator had (5× on the scan, 3× end to end, 22 checks pass to n = 159,027); the latter's self-test had a range-scoped claim stated as a law and a clause whose only witness (a = 155) sat outside the test range |
 | **R11** | recheck `approach-rate-note.md` §4a's falsifiable claim against the completed run | **done** — the offset climbs 0.536 → 0.652 as predicted and the F = 4 share reaches 99.4%; its limit is **ln 2, not 1**, which §4a had wrong. All of it is in that note's new §4b, which is now the only place it needs to be |
+| **A33** | who settles n = 6, and by what argument | **done** — Kahn–Saks–Sturtevant 1984, as a separate case alongside the prime-power theorem (confirmed by Engström 2006's abstract). `small-degree-computation.md` updated at all three sites |
 | **A31** | `aod` §5's decade tables labelled ladder *bounds* where the section says the minima are exact | **done** — recomputed exactly over the 921,265 rows; the ladder's bounds agree at every decade minimum, so the tables now show δ with the bound beside it and the point is recorded in §5 itself: the ladder is **tight at the decade minimisers** |
 | **R7d** | audit `khomog_verify.py` | **done** — one vacuous check (an arithmetic tautology no computation could falsify) replaced, and the {8, 32} finiteness claim swept over every prime power in [6, 63] rather than three spot checks |
 
@@ -728,12 +729,6 @@ Lemma C's coupling conclusion t \| ord_r(p) is proved via a Frobenius exponent a
 
 If yes, that is a genuine relative-difficulty statement rather than an impression. It looks close to automatic since the coset property is a legitimate instance, **but the gap between "evasive" and "χ̃ ≠ 0" is exactly where it could fail**: non-evasive ⟹ contractible ⟹ χ̃ = 0, so the conjecture gives χ̃ ≠ 0 *only for the properties it is applied to*, and one would need the coset property's own complex to be the one whose χ̃ is at issue. It is — but writing that out carefully is the whole content. **A self-contained afternoon**, and the highest-value item in that document.
 
-### A33. Who settles n = 6, and by what argument
-
-**Small, and it has already been got wrong once.** `small-degree-computation.md` said three times that **KSS settle n = 6**. KSS's theorem is prime-power degree and 6 is not a prime power, so that attribution is wrong as stated — but the correction "settled by exhaustive computation, not KSS" over-shot in the other direction, because (a) KSS's paper may well dispose of n = 6 anyway, and (b) the Oliver machinery does most of the work there regardless: the degree-6 Oliver groups kill every property whose fixed complex has χ ≢ 1, and only the residue needs cases. The three sites now say "settled by a case check that Oliver reduces, source not verified".
-
-**To close:** read KSS and record which it is. One paragraph of a paper we cite constantly and have not read on this point. *The general lesson is the one the error illustrates: the figure and census passes verify numbers, not attributions, so "which theorem covers this n" is unchecked everywhere and was wrong here for fourteen sessions.*
-
 ### A34. The minimum order of an Oliver group meeting the density floor — a route, NOT a proof
 
 > **Status: sketch, unverified.** The argument below has not been written out rigorously, has not been checked by anyone, and is not in `johnson-presentations.md` — it lives here until it is. **Three things are pending: review the argument, make it rigorous, and move it into §5 of that document.** Nothing elsewhere may cite it as settled.
@@ -759,3 +754,13 @@ If yes, that is a genuine relative-difficulty statement rather than an impressio
 > 3. **The lcm computation is over recorded witnesses, not over all admissible configurations.** It shows what the winners do, not what a hypothetical smaller group could do — which is what §5 actually asks.
 >
 > *The measurements are sound and may be quoted: median lcm n^3.70 over 605 sampled n, no row below n^2.5, and 0 of 796,763 two-part winners with all orbitals equal. It is the inference from them that is pending.*
+
+### A35. Can a configuration from our shape space give a larger fully-evasive sub-structure?
+
+**The one place the framework's computational infrastructure could bear on the general quantitative bound.** The Kahn–Saks–Sturtevant n²/4 argument (Miller's tutorial, Prop. 5.4) peels vertices while a star or near-clique test keeps the restriction nontrivial, and otherwise restricts to a **bipartite** sub-problem, which Yao's theorem makes evasive at every size; the constant is limited by the bipartite piece having only ~n²/4 edges. Korneffel–Triesch reach 8/25 with a **tripartite** split (parts p, p, n−2p, p ≈ 2n/5) under ℤ/p × ℤ/p × ℤ/(n−2p); the current best is n²/3.
+
+> **The question.** Improving the constant needs a *larger* multipartite sub-structure on which **every** nontrivial monotone property is evasive. Korneffel–Triesch's pieces are multi-block configurations with prime-sized parts under an abelian group; our shape space is a systematic catalogue of multi-block configurations with prime-power blocks, entangled generators and exactly computed orbital structure. **Does any of our configurations give a fully-evasive multipartite sub-structure with more free edges than the current best?**
+>
+> **Why μ(n) itself does not answer it, recorded so it is not re-derived.** The two results sit on transposed axes. The restriction method needs evasiveness for *every* property on a *sub*-structure; μ(n) gives evasiveness on the *full* edge set for a *class* of properties (the sparse ones). A restriction of an arbitrary property is not sparse, so μ never applies. What the μ analysis does supply is the reason the restriction must retreat to bipartite or prime-power pieces: at every non-prime-power n no Oliver group acts on K_n with a single orbital, which is exactly the statement that the full clique is not a fully-evasive sub-structure there.
+
+**Status: a question, not a task.** No computation has been attempted; the first step would be to enumerate which multipartite structures admit a group whose invariant configurations form a family simple enough for χ to be computed, as Yao's fans do.

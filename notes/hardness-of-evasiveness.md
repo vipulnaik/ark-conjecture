@@ -66,6 +66,8 @@ Each χ ≠ 1, so each is evasive. *All four chains were checked to be Oliver: t
 
 The coset property — S ⊆ G lies in a left coset of a proper subgroup, invariant under left translation (`monotone-transitive-note.md` §5a) — is an instance of the conjecture, so the conjecture implies it. The only known proof at **every** finite group is Shareshian–Woodroofe's, which rests on CFSG. Hence: *anyone claiming a classification-free proof of the general conjecture is claiming a classification-free proof of that special case, which nobody has.*
 
+> **Which conjecture this constrains, since it is easy to over-read.** The coset property is a monotone property invariant under a transitive group, but it is **not a graph property**. So the CFSG constraint binds the *general* monotone-transitive conjecture, and says **nothing about ARK** itself, which concerns only graph properties under S_n acting on edges. ARK therefore has strictly more room than the general version: one group to handle rather than every group, and that group the most symmetric one available. If anything makes a short proof of ARK plausible, it is that extra symmetry — the sensitivity conjecture's two-page spectral proof is the precedent for a long-open Boolean-function question closing by a route that owed nothing to the combinatorics before it.
+
 > **But the CFSG dependence is on uniformity, not on the property.** At any *specific* group, evasiveness follows from a finite Möbius computation: Brown's identity **P(G, −1) = −χ̃(Δ(C(G)))** makes χ̃ ≠ 0 sufficient, and χ̃ is computable from the subgroup lattice. At solvable G it follows from Hall's formula with no classification at all. At **A₅** we computed P(A₅,−1) = −1560, so χ̃ = 1560 ≠ 0, and evasiveness there needs nothing deep. What is *open* is whether χ̃ ≠ 0 at **every** finite group — Brown asked it, and Shareshian–Woodroofe settled the stronger non-contractibility question instead.
 >
 > **So the hardness concentrates in the quantifier**, which is the same place the conjecture's own hardness sits, and the same shape as CFSG itself: a uniform statement all of whose instances are individually checkable. That is a more precise claim than "evasiveness is CFSG-hard", and it is the version this document defends.
@@ -99,6 +101,14 @@ If the answer is yes, that is a genuine relative-difficulty statement rather tha
 > **A programme this suggests, which is the useful output.** The realistic direction is the reverse of the exciting one: **hard group theory ⟹ evasiveness of specific natural families**, with Shareshian–Woodroofe as the working example and the coset complex as the template. Identify Δ_P as a complex whose homotopy type is already studied, then bring the classification to bear on its homology. That is what settled the coset family at every group where Oliver could only do the solvable ones, and it is the transferable move for `monotone-transitive-note.md` §6's orbit complexes — whose resistance may simply be that no comparable identification has been found for them.
 
 ---
+
+## 7. Why the question may have faded, which bears on who works on it
+
+*Recorded because it is a structural reason, not drift, and it affects which kinds of attention the problem gets.*
+
+**The famous-sounding half was settled early.** The problem has two halves. The *Aanderaa–Rosenberg* part — that every nontrivial monotone graph property needs Ω(n²) queries — was proved by Rivest and Vuillemin in 1975 (n²/16), and the constant has climbed since (`literature-findings.md` 19b, 19c). What is open is *Karp's* part: that the answer is exactly C(n,2). To a complexity theorist that reads as "is the constant exactly 1?" — a polishing problem in appearance, however deep in fact — and a problem whose asymptotics are known tends to leave the complexity mainstream. The neighbouring questions took the attention: sensitivity and block sensitivity, certificate complexity, polynomial degree, and randomized and quantum query complexity, where the randomized analogue of this very conjecture is open with a much larger gap.
+
+**And its fame, where it has any, points attention the wrong way.** What fame the problem kept in combinatorics comes largely from KSS — a beautiful proof of the prime-power case — and fame that comes from a partial result directs effort along that result's route. The Oliver route is the one this project has shown to be capped: μ(n) is a constant fraction of C(n,2) at every non-prime-power n. So attention, where it arrives, tends to extend the known door rather than find another, which is roughly what this project's own sustained attention produced — a thorough map of the route's limits, not a proof.
 
 ## Appendix. The nerve lemma step, spelled out
 
