@@ -78,6 +78,13 @@ ap = argparse.ArgumentParser()
 ap.add_argument("table")
 ap.add_argument("--baseline", default=None,
                 help="an earlier table to compare against; enables the monotonicity check")
+# --ladder IS VESTIGIAL, 2026-09.  Both checks that read it compare the table
+# against `ladder_verify.py`'s output, and that script is retired
+# (pending-checks R7): it computed a LOWER BOUND on mu, whereas
+# `mu_ladder_exact.py` now computes B exactly.  The two checks are kept because
+# a revival would want them, and they SKIP cleanly when the flag is absent --
+# which is the normal state.  The shape-space half of what they covered is the
+# menu-shape check in group B, which needs no ladder file.
 ap.add_argument("--ladder", default=None, metavar="FILE",
                 help="a ladder_weak*.txt worklist (n, lower-bound-on-delta per line); "
                      "enables the two cross-artefact checks against the ladder. The file "
