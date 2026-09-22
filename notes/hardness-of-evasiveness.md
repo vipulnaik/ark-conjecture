@@ -25,9 +25,11 @@ Four corners, four imports from four unrelated deep theories, and no two of them
 
 > **The second and third rows deserve care, because each is easy to state slightly wrong.** RV's prime power is the number of *variables*; for graph properties that is C(n,2) = n(n−1)/2, never a prime power for n ≥ 4, so RV says nothing about prime-power *vertex* count and KSS is genuinely new there (`orbital-evasiveness-notes.md` Appendix C). And CFSG is paying for **more** than evasiveness in row 3: Shareshian–Woodroofe prove non-contractibility, which is strictly stronger, and the weaker route suffices for evasiveness — see §4.
 
-## 2a. A worked example: planarity, settled at every n by three routes
+## 2a. A worked example: planarity, re-derived through the framework
 
-*Because the table above is easier to believe when one property is followed all the way down. Planarity is the natural test case — monotone, nontrivial, and sparse — and following it exposes both how afterthought-like the asymptotic route is and where the actual work happens.*
+> **Planarity is not a new result, and this section does not claim it.** Best, van Emde Boas and Lenstra proved planarity evasive in **1974**, and Chakrabarti, Khot and Shi (2001) generalised it: **every minor-closed property is evasive for all sufficiently large n**. What follows is a *re-derivation*, kept because it illustrates something the literature results do not: how the framework's different routes partition a single property's domain, and which of them does the work. *(`literature-findings.md` item 18 already recorded the Chakrabarti–Khot–Shi result when this section was first written; the section was not checked against it.)*
+
+*Planarity is the natural test case — monotone, nontrivial, and sparse — and following it exposes both how afterthought-like the asymptotic route is and where the actual work happens.*
 
 **The asymptotic route is close to trivial, which is the point.** A planar graph has at most **3n − 6** edges, and BBKN gives μ(n) = Ω(n log n) unconditionally, so 3n − 6 < μ(n) for all large n and evasiveness follows from sparseness alone. The property's own content — Kuratowski, minors, anything planarity-specific — is never used. It is a corollary of a bound on the *number of edges*.
 
@@ -50,7 +52,7 @@ Past 30 it is never close again, since μ(n) ≳ 0.046·C(n,2) is quadratic agai
 
 Each χ ≠ 1, so each is evasive. *All four chains were checked to be Oliver: the n = 30 case needs the **entangled generator** — a block rotation plus full twist from one element, giving ⟨z⟩ = C₂₄ — because taking rotation and multiplier separately makes Γ₁/Γ₂ = C₄ × C₆, which is not cyclic and not Oliver.* That is the framework's own construction doing work in a place it was not designed for.
 
-> **So planarity is evasive at every n** — but the four routes are not four alternatives, and counting them as such flattens the only distinction that matters here.
+> **So the framework re-derives planarity's evasiveness at every n** — which Best, van Emde Boas and Lenstra had in 1974 — but the four routes are not four alternatives, and counting them as such flattens the only distinction that matters here.
 >
 > > **Exactly one establishes *eventual* evasiveness: sparseness against μ(n).** It is the sole statement of the form "for all large n", and it is BBKN's, refined by our table. Everything else patches a finite residue.
 >

@@ -409,6 +409,20 @@ At least one survey attributes the Ω(n²/3) bound to **unpublished work of Sant
 
 **Why it matters to us.** It is a natural monotone property invariant under a transitive group, settled at groups the Oliver criterion cannot reach — and settled by *identifying the complex* rather than by finding a group. `monotone-transitive-note.md` §5a works it out; the transferable idea for §6's programme is that where the Oliver route is unavailable, recognising Δ_P as a complex with known homotopy type is the alternative. **Both papers are worth reading properly**; neither has been, and the Euler-characteristic side connects to the ⟦Smith-theory⟧ material the Lean README lists as out of reach.
 
+## 19b. Planarity was known, and item 18 already said so
+
+**`hardness-of-evasiveness.md` §2a presented planarity's evasiveness as settled by the framework. It was known — and this file already recorded the fact.** Item 18 states that Chakrabarti–Khot–Shi prove evasiveness for all sufficiently large n for minor-closed properties, which includes planarity, and it warns in so many words that a result of ours could be *really re-deriving a weaker version of the restricted-class results*. §2a was written without consulting it. The sources:
+
+- **Best, van Emde Boas, Lenstra (1974)**, *A sharpened version of the Aanderaa–Rosenberg conjecture* (Report ZW 30/74, Mathematisch Centrum): **planarity is evasive.**
+- **Chakrabarti, Khot, Shi (2001)**, *Evasiveness of subgraph containment and related properties*, SIAM J. Comput.: **every minor-closed property is evasive for all sufficiently large n**, generalising the planarity result; also subgraph containment for an arithmetic progression of n, giving a ½n² − O(n) lower bound for those properties, and bipartite subgraph containment.
+
+**And the general quantitative bounds, since they are the context for how far the conjecture has come:**
+
+- deterministic, all nontrivial monotone properties: **¼n²** (Kahn–Saks–Sturtevant 1984), **(8/25)n² − o(n²)** (Korneffel–Triesch 2010), **n²/3 − o(n²)** (commonly cited to Scheidweiler–Triesch 2013 — *but see item 19, which records that at least one survey attributes it to unpublished work of Santha and Yao; unresolved*), all by the KSS method;
+- randomized: Ω(n log^{1/12} n) (Yao), Ω(n^{5/4}) (King), Ω(n^{4/3}) (Hajnal), **Ω(n^{4/3} log^{1/3} n)** (Chakrabarti–Khot), conjectured Ω(n²); no nontrivial monotone property is known with randomized complexity below n²/4. Friedgut–Kahn–Wigderson give Ω(n²/max{pn, log n}) in terms of the threshold probability p.
+
+> **The lesson, and it is sharper than the attribution errors elsewhere in this corpus:** there the fact was missing; here it was **present and unconsulted**. A result reached through the framework should be checked against the literature for the *specific property* before being described as settled — and "the literature" starts with this file. The framework is general, so it re-derives special cases easily, and a re-derivation reads exactly like a new result unless someone asks. *§2a is still worth keeping — it shows how the routes partition one property's domain, which the 1974 and 2001 papers do not — but it is labelled as a re-derivation now.*
+
 ## 20. Jones–Zvonkin is a programme, not a paper — and they say so themselves
 
 The observation is right and it is worth recording as a programme rather than as a single model paper. The pattern repeats across at least five works:

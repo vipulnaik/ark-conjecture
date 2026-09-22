@@ -580,7 +580,7 @@ New commentary document, from a conversation about whether the conjecture could 
 
 **The appendix spells out the nerve-lemma step**, which had been asserted three times in conversation without being written down: Δ_P is covered by its maximal faces (the maximal proper cosets), each a full simplex and all intersections cosets hence contractible, so Δ_P ≃ the nerve; the same lemma applied to the order complex of the coset poset, covered by cones below each maximal coset, gives the same nerve. *Verified numerically rather than asserted: χ̃(Δ_P), χ̃(nerve) and χ̃(coset poset) computed independently agree at C₄, C₆, S₃, A₄.* And **properness is definitional, not an Euler-characteristic adjustment** — allow H = G and Δ_P becomes the full simplex while the coset poset acquires a top element, both contractible, both computed.
 
-## 5p. Planarity, settled at every n — a worked example for the hardness note
+## 5p. Planarity, re-derived at every n — a worked example for the hardness note *(known since 1974; see 5x)*
 
 Asked whether BBKN is the only known route to eventual evasiveness of planarity. It is not, and following the property all the way down gave a complete answer plus a good illustration for `hardness-of-evasiveness.md` §2a.
 
@@ -698,6 +698,16 @@ Two items came back on `mu-theta-n2-note.md`. Both addressed; the second turned 
 Edits: three in each of `mu-theta-n2-note.md` and `mu-theta-n2-note-latex.md`, plus two scope points in `note-to-framework-bridge.md` item 8 — that the constant and the admissible-d table stand or fall together, and that the framework is *more* general than the note on the twist.
 
 > **A tooling hazard, hit twice today and worth not hitting a third time.** `io.open(f, "w")` **truncates before the encode error fires**, so a write containing a character the encoder rejects destroys the file and reports a traceback that looks like a failed edit. It zeroed `johnson-presentations.md` earlier and `mu-theta-n2-note.md` here; both were restored from staged copies. Every subsequent edit in this session writes to a temp file and `os.replace`s it, which is atomic and leaves the original intact on any failure. *Any script that edits these documents should do the same.*
+
+## 5x. Planarity was known since 1974, and this corpus already said so
+
+While answering a question about query-complexity bounds, the search surfaced that **Best, van Emde Boas and Lenstra proved planarity evasive in 1974**, and that **Chakrabarti, Khot and Shi (2001) proved every minor-closed property evasive for all sufficiently large n**. So §5p's "planarity, settled at every n" was a re-derivation presented as a result.
+
+**The sharper point is that the corpus already had it.** `literature-findings.md` **item 18** records the Chakrabarti–Khot–Shi minor-closed result, and warns explicitly that a result of ours could be "really re-deriving a weaker version of the restricted-class results". `hardness-of-evasiveness.md` §2a was written without consulting it. That is a different failure from the attribution errors earlier this session — there the fact was *missing*; here it was **present and unconsulted**.
+
+**Fixed:** §2a retitled "planarity, re-derived through the framework", with a box stating the 1974 and 2001 results up front and a note that item 18 already had them; `orbital-evasiveness-notes.md` §8's planarity line marked as a special case of the known results; `literature-findings.md` gains **item 19b** with the specific-property results and the general quantitative bounds (deterministic ¼n² → 8/25 → n²/3; randomized up to Ω(n^{4/3} log^{1/3} n), conjectured Ω(n²)), the n²/3 attribution deferring to item 19's open Santha–Yao question rather than asserting Scheidweiler–Triesch.
+
+*§2a is kept* — it shows how the framework's routes partition one property's domain, and which does the work, which the 1974 and 2001 papers do not — *but labelled for what it is.* **Lesson: a result reached through a general framework re-derives special cases easily, and a re-derivation reads exactly like a new result unless someone checks; "the literature" starts with this project's own literature file.**
 
 ## 5. One methodological note
 
