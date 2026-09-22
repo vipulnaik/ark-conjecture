@@ -727,6 +727,20 @@ A stretch of conceptual questions from Vipul about what the framework says beyon
 
 *Checked and clean:* checker 0 hard findings after every edit; A-items in numeric order (A32, A34, A35) with A31 and A33 as ledger rows; all writes atomic (temp file then `os.replace`).
 
+## 5z. Structured versus pseudorandom orbitals — and a correction to my own first answer
+
+Vipul proposed reframing the results as: there is k such that every non-evasive monotone P on n vertices contains K_{a,b} with a, b ≥ kn. Since the argument only puts *some* orbital-union into P, this holds exactly when some Oliver group has **every** orbital containing such a biclique; orbital size is irrelevant, only shape.
+
+**Density does not supply it** — Kővári–Sós–Turán gives only log-size bicliques, tight for random graphs.
+
+**My first answer got the framework side wrong, twice.** I said the foreign orbitals are pseudorandom and that only a Fermat prime could make one a clique, so the reframing "can't be fixed within F·c + r". Both wrong. On *unordered* pairs the foreign orbital is the orbit of differences under ⟨T, −1⟩, of effective index 1/η; so **η = 1 gives the full clique K_r**, which needs only r = 2q^e + 1 with q odd. I had conflated full twist (t = r − 1, Fermat) with η = 1, which differ by exactly the −1. The same slip made me call the n = 2759 orbital index 12 when it is index 6. Caught by computing rather than reasoning.
+
+**The corrected picture, recorded in `oen` with a table over every shape family:** the *only* pseudorandom orbital in the scored shape space is a foreign block with η < 1 — a generalised Paley graph (Paley graphs checked at q = 13–37: largest balanced biclique a = 2–4 against density ½). Everything else is cliques and complete bipartite pieces. Measured: 100% all-structured at **n ≡ 0, 1, 4, 6, 9, 10 (mod 12)** — *exactly the six residues where the solvable relaxation finds the chain free*, which is the same fact seen twice — and 16–65% elsewhere. At the floor n = 2759 the binding orbital is the pseudorandom one.
+
+**And a structured group exists at every residue, paying in fusion count:** generic η = 1 forces r ≡ 11 (mod 12), and the smallest usable F runs 1, 2, 3, 4, 1, 6, 1, 4, 3, 2, 1, **12** across the classes. The structured cap equals the optimum at eight classes (ties at 2, 8 via cap_3(1) = cap_1(1/3), which is why S7 at F = 3 co-wins there) and costs 11–30% at the rest. Every orbital then contains K_{a,a} with a = n/(2(F+1)), worst **k = 1/26 at n ≡ 11**. Verified by building the n = 83 = 12·5 + 23 group: all nine orbitals structured, summing to C(83,2). So the reframing holds *conditionally* for all large n, under a d = 2 Hardy–Littlewood-type supply hypothesis — the short note's d = 2 failure at six classes absorbed by letting F grow.
+
+*Two earlier mis-steps also caught here:* a first residue scan included the thin q = 3 family and produced structured caps **above** the optimal ceiling — impossible, hence the catch; and the n = 11 coincidence (12 in both the note's d and here as F) is recorded as suggestive only, since the correspondence is not exact at other classes.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

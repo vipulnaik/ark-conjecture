@@ -512,6 +512,42 @@ The one place a small increment may sit is the gap between (a′) and (a): uncon
 >
 > *What this is not:* a query count. The argument stays binary, so when O_n ∈ P it says nothing about how far below C(n,2) the complexity falls. What it gives instead is a **necessary condition on any counterexample** — O_n forced into P — which is the forced-IN language of `small-degree-computation.md`'s CSP.
 
+> **Which graph a counterexample must contain: structured versus pseudorandom orbitals.** *(From a reframing of Vipul's.)* The argument gives only that a non-evasive P contains *some* nonempty union of a group's orbitals. So a statement of the form **"every non-evasive monotone P on n vertices contains K_{a,b} with a, b ≥ kn"** holds exactly when some Oliver group has **every** orbital containing such a biclique — orbital *size* is irrelevant to it; only orbital *shape* matters.
+>
+> **Density does not give this.** A graph with cn² edges contains K_{t,t} only for t around log n / log(1/c) (Kővári–Sós–Turán), and random graphs show that is tight: G(n, ½) has density ½ and largest K_{t,t} with t ≈ 2 log₂ n. A linear biclique is a structural property.
+>
+> **In the scored shape space there is exactly one source of pseudorandomness.** Matching blocks carry full twist, so their intra classes are cliques or disjoint unions of cliques; every cross class is complete bipartite. **The only non-structured orbital is a foreign block with η < 1.** On unordered pairs a foreign orbital is the orbit of differences under ⟨T, −1⟩, a cyclotomic graph of effective index (r−1)/|⟨T,−1⟩| = 1/η — a generalised Paley graph, with no linear biclique (for Paley graphs Lindsey's lemma gives ab ≤ q; checked at q = 13, 17, 29, 37, largest balanced biclique a = 2, 2, 3, 4 against density ½). **And η = 1 makes it the full clique K_r**, which needs only r = 2q^e + 1 with q odd — not a Fermat prime. *(An earlier version of this analysis said full twist, hence Fermat primes, was required; that conflated full twist with η = 1, which differ by the −1.)*
+>
+> | shape | orbitals | pseudorandom when | wins |
+> |---|---|---|---|
+> | **S1** one matching block | K_n | never | every prime power |
+> | **S2** fused class, n = F·c | F·K_c; ⌊F/2⌋ cross classes, unions of K_{c,c} | never | bounded-cofactor n |
+> | **S3** matching + foreign | K_c; K_{c,r}; foreign | η < 1 | yes |
+> | **S4** two matching + foreign | two K_c; K_{c,c}; two K_{c,r}; foreign | η < 1 | never in range |
+> | **S5** top-fused + foreign, q = 2 | as S7; foreign of index u | u > 1, i.e. unless r is Fermat | rarely |
+> | **S6** two foreign | two foreign; K_{r₁,r₂} | either η < 1 | never |
+> | **S7** middle-fused + foreign | F·K_c; cross unions; K_{Fc,r}; foreign | η < 1 | yes |
+> | **S9** fused foreign block | F copies of a foreign orbital | η < 1 | never (Lemma D2) |
+> | **S11** matching + two foreign | cliques; complete bipartite; two foreign | either η < 1 | never |
+> | **S12** two matching sizes | cliques and complete bipartite only | never | never |
+>
+> *S8 and S10 never exist.* So the structured/pseudorandom split is purely a question of the foreign block's η.
+>
+> **Measured on the 10⁶ table:** all 124,502 foreign-free winners are all-structured, and 511,572 of 796,763 foreign-block winners (64.2%) have η = 1. By residue class the split is stark: **100% all-structured at n ≡ 0, 1, 4, 6, 9, 10 (mod 12)** — exactly the six residues where `solvable-relaxation.md` finds the Oliver chain costs nothing — and 16–65% at the other six. *At n = 2759, the floor, the binding orbital is the pseudorandom one: foreign orb(1453, 121), effective index 6, size 175,813 = μ(2759), against 425,756 for the clique orbital.*
+>
+> **But a structured group exists at every residue, if one pays in fusion count instead of efficiency.** Generic η = 1 needs r = 2q^e + 1 with q ≥ 5, forcing r ≡ 11 (mod 12); for a generic prime c, n = F·c + r then fixes the smallest usable F. *(The q = 3 option r = 2·3^e + 1 is one of `aod` §3.3.8's thin escapes, with O(log n) members, and cannot support an every-n statement.)*
+>
+> | n mod 12 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
+> |---|---|---|---|---|---|---|---|---|---|---|---|---|
+> | smallest F with η = 1 | 1 | 2 | 3 | 4 | 1 | 6 | 1 | 4 | 3 | 2 | 1 | **12** |
+> | structured cap_F(1) | .2500 | .1716 | .1340 | .1111 | .2500 | .0840 | .2500 | .1111 | .1340 | .1716 | .2500 | **.0502** |
+> | vs the optimal ceiling | 1 | 1 | 1 | 0.889 | 1 | 0.832 | 1 | 0.889 | 1 | 1 | 1 | **0.699** |
+> | k = 1/(2(F+1)) | 1/4 | 1/6 | 1/8 | 1/10 | 1/4 | 1/14 | 1/4 | 1/10 | 1/8 | 1/6 | 1/4 | **1/26** |
+>
+> At n ≡ 2, 8 the structured F = 3 option *ties* the pseudorandom optimum, by cap_3(1) = cap_1(1/3) — which is why S7 at F = 3 co-wins those classes. At n ≡ 3, 5, 7, 11 structure costs 11–30% of density but stays Θ(n²). The last row is the biclique constant: taking c = r = n/(F+1) rather than the density-optimal split, every orbital contains K_{a,a} with a = n/(2(F+1)) — worst at **n ≡ 11, F = 12, k = 1/26**. *Verified by construction at n = 83 = 12·5 + 23, n ≡ 11: all nine orbitals are 12·K₅, K₂₃, or complete bipartite, summing to C(83,2) = 3403.*
+>
+> **So the reframing holds conditionally for all large n, with k = 1/26**, given supply of r = 2q^e + 1 with n − r = F·c at the required F — a Hardy–Littlewood-type hypothesis of the note's kind but with **d = 2 throughout**. The short note observed that d = 2 alone fails outright at six classes; here that failure is absorbed by letting F grow, so the obstruction moves from the twist index to the fusion count. *(Suggestively, n ≡ 11 needs 12 in both: d = 12 in the note, F = 12 here. The match is not exact at other classes, so it is noted rather than claimed.)*
+
 *Why it caps at χ(H) ≤ 3, and why Weil is not needed.* Catching H requires the cross orbital's clique number to be at least χ(H). The cross pairs fuse into a single complete k-partite orbital only when the top q-group is transitive on the C(k,2) block-pairs. For k = 3 this holds — C(3,2) = 3 = k and C₃ rotates them — giving clique number 3. For k = 5 the ten pairs split into two C₅-blow-up orbitals of clique number 2; and full fusion for k ≥ 4 would need the top group 2-homogeneous on blocks, impossible for a nilpotent q-group: a 2-homogeneous group is primitive, a primitive nilpotent group is cyclic of prime degree ℓ, and C_ℓ splits the unordered pairs into (ℓ−1)/2 classes of size ℓ, which is a single class only at ℓ = 3. **So k = 3 is the unique case with a cross orbital of clique number exceeding 2**, and the method reaches exactly the H with χ(H) ≤ 3. Character-sum estimates are what let *cyclotomic* orbitals be shown to contain every fixed H (BBKN's universality property), and that is unavoidable if one wants general n and unrestricted H. It is only within the restricted k ∈ {2,3} block family that they can be dispensed with, because the full twist collapses the orbital count to two and makes both of them trivially H-universal for χ(H) ≤ 3.
 
 *The cap at χ(H) ≤ 3 is permanent for block constructions.* Catching H needs every orbital's clique number to be at least χ(H). A blown-up orbital's clique number equals that of its **pattern** graph on the k blocks — independent of the block size m — and patterns are the pair-orbitals of the top q-group. That is bounded:
