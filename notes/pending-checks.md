@@ -757,3 +757,12 @@ If yes, that is a genuine relative-difficulty statement rather than an impressio
 **From `restriction-game.md` §6(a).** Theorem 1 there reduces restriction-based lower bounds, at fixed interval values, to a widest path over interval endpoints. Build the catalogue at n = 10 — peel intervals, bipartite escapes, and every orbital interval of every Oliver subgroup of S₁₀ up to conjugacy (a GAP list) — and compute the widest path. The KSS-shaped descent gives 25 and a single group gives μ(10) = 20: **anything above 25 is a new explicit lower bound for the open case**, and exactly 25 says the weighted game cannot improve it. *Only interval endpoints and their containments are needed, so the 12-million-class poset at n = 10 is never built.* A computation, not yet started.
 
 **Extended by `restriction-game.md` §5:** the right object is a *case tree* with conditionally certified leaves, not just the weighted widest path. The n = 10 search should include guard-conditioned k-partite leaves (evasive whenever crossed for equal parts, k = 3, 4, 5) and look specifically for leaves covering the branch h(k·K_{n/k}) = 1, where properties like "no isolated vertex" sit. **And read Korneffel–Triesch and Scheidweiler–Triesch first** — §5.2's reconstruction of their topological core is from Miller's summary only, and the residual branches are unreconstructed.
+
+### A37. Non-maximal Oliver groups at the χ rung — answered; two residues left
+
+**Answered (2026-09).** The n = 10 battery does include non-maximal groups: its TOM stage emits every conjugacy class of subgroups of S₁₀ with at most 12 orbitals, and an independent re-derivation (`oliver_tom.g`, freshly built GAP 4.14) reproduces its count exactly — 1,294 Oliver classes, 1,111 with t ≤ 12. The index-2 subgroup that kills triangle-freeness at n = 10 has t = 3, so it is in the battery by construction.
+
+**Left:**
+
+1. **The uncapped band.** 183 Oliver classes at n = 10 have 13 ≤ t ≤ 45 and are never evaluated; the trivial group, the top of that band, is the global χ test. They cannot enter the CSP (exponential in t), but a **post-check battery** — each SAT candidate against all 1,294 classes — is cheap: 8 seconds for bipartiteness. Worth building into the pipeline (`small-degree-computation.md` §7.2).
+2. **Literature.** Whether triangle-freeness at n = 10, and the global Euler characteristic of the bipartite-graph complex (e.g.f. √(2eˣ − 1)), are already known. Until checked, both are re-derivations.
