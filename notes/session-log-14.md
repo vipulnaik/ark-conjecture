@@ -839,6 +839,12 @@ Vipul asked whether `oen` articulates that orbitals of an Oliver group which are
 
 **Consequences recorded:** vertex level (a non-evasive P holds a whole N\*-type or none — at n = 2759, zero or six foreign orbitals, never one); face level (only N\*-invariant complexes are admissible); and extra congruences from p-subgroups of N\* acting on the complex, mod 2 and mod 3 at n = 2759, from groups that need not be Oliver. And the constraint survives where the identifying permutations do not generate an Oliver group — F = 13 — because it comes from P's symmetry, not Γ's. *At n = 10 the two orbitals differ in size, so nothing is identified, which is why it never surfaced there.*
 
+## 5ak. Γ-triviality belongs to subformulas: absorption, and the sandwich form
+
+Vipul pointed out that §9.5″ understated Theorem A: a Γ-small literal is constantly true on proper orbital unions, so (small ∨ anything) is too, and dually (large ∧ anything) is constantly false. Triviality is a property of subformulas, and the residue should count literals surviving **constant propagation**. Semantically: P is evasive whenever P_Γ is constant on proper nonempty unions.
+
+**The sandwich form unifies the three wedges we had.** P ⊆ (H-free) with H Γ-small gives a void complex — with H = K_{a,b} this *is* the biclique theorem. P ⊇ (H-free) with H Γ-large gives a simplex boundary — the sparse criterion for the complement-dual property. Sharpest consequence: **every nontrivial monotone decreasing property inside K_{s,s}-freeness, 2s ≤ β, is evasive**, dense for linear s. `oen` §9.5″ corrected, residue redefined, Theorem B restated for one surviving literal.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
