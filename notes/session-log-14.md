@@ -845,6 +845,10 @@ Vipul pointed out that §9.5″ understated Theorem A: a Γ-small literal is con
 
 **The sandwich form unifies the three wedges we had.** P ⊆ (H-free) with H Γ-small gives a void complex — with H = K_{a,b} this *is* the biclique theorem. P ⊇ (H-free) with H Γ-large gives a simplex boundary — the sparse criterion for the complement-dual property. Sharpest consequence: **every nontrivial monotone decreasing property inside K_{s,s}-freeness, 2s ≤ β, is evasive**, dense for linear s. `oen` §9.5″ corrected, residue redefined, Theorem B restated for one surviving literal.
 
+## 5al. The ladder's group rungs as CNFs over membership bits — `oen` §7.1
+
+Vipul proposed reading the "contains an orbital of every Oliver group" rung as a CNF, then corrected his own negations. What survives: the CNF is over **membership bits** x_G = [G ∈ P], one positive clause per conjugacy class of Oliver groups, of width t_eff. It defines a metaproperty, and since every clause asks P to *contain* something it cannot be "P ⊆ Q"; flipped, **every non-evasive P contains ↓S for some minimal transversal S** of the groups' orbital sets. Up the ladder: the non-sphere rung adds one negative clause per group (a sandwich, still a CNF); χ ≡ 1 mod q is counting, where the natural clause form stops; ℤ-acyclic and above are beyond any group-indexed formula. The conjunction through the χ rung is the small-degree CSP.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
