@@ -87,7 +87,7 @@ Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804
 
 *Can be launched in the background. Flags are checked against the scripts as they stand; where a run needs code that does not exist, that is said rather than papered over with a plausible-looking flag.*
 
-> **Numbered in order, and not every entry is a live run.** **R0, R0c, R1, R6, R6a, R8, R10, R12b** are things to do; **R1b, R7, R12, R12a** are retained because a reader meeting a reference to them elsewhere needs to find out what happened — R7 superseded, R12a a tool with its result recorded, R1b and R12 explaining a scope that is easy to get wrong. **An item whose findings are fully written into the documents becomes a one-line row in the ledger below instead** — that is where R11 and A31 went once §4b of `approach-rate-note.md` and §5 of `aod` carried their content.
+> **Numbered in order, and not every entry is a live run.** **R0, R0c, R1, R6, R6a, R8, R10, R13** are things to do (R13 optional); **R1b, R7, R12, R12a** are retained because a reader meeting a reference to them elsewhere needs to find out what happened — R7 superseded, R12a a tool with its result recorded, R1b and R12 explaining a scope that is easy to get wrong. **An item whose findings are fully written into the documents becomes a one-line row in the ledger below instead** — that is where R11 and A31 went once §4b of `approach-rate-note.md` and §5 of `aod` carried their content.
 
 ## R0. The two producers: how to run them, and what they cost
 
@@ -328,6 +328,16 @@ python3 ceiling_rederive3.py --nmax 2500 --no-filter   # the escapes, deliberate
 Last measurement before retirement: **ladder = B at 120,000 of 120,000 rows**, 0 short, 0 over (was 32,861). *The two defects it historically caught — the block-size window clipped at 0.55, and the fusion set stopping at F = 12 — are recorded in R7 against a revival, which is the only thing that would resurrect either script.*
 
 > **On the run that prompted this.** It produced no terminal output for over an hour and its `ladder_weak.txt.state.json` shows `n_max = 1001000`, past 10⁶ — the ladder was being regenerated over a range wider than the table, which is the cost the script never reports because it has no heartbeat. *A long-running script with no progress output is one nobody can tell apart from a hung one*, which is the same lesson `solvable_relaxation.py` needed and got (A20c's neighbour). Not worth fixing here, since the script is retired.
+
+## R13. `biclique_table.py` beyond 10⁴ — optional
+
+Computes s(n), the largest smallest-block over Oliver groups whose minimal blocks are all 2-homogeneous — the location of the linear biclique region a + b ≤ s(n) (`oen`, biclique box). **Run to 10⁴ in 17 s**; results in `biclique_table_1000.csv` and `biclique_table_10000.csv`, summarised in the box.
+
+```bash
+python3 biclique_table.py --nmax 100000 --out biclique_table_100000.csv   # roughly quadratic: ~30 min
+```
+
+**Worth doing only to watch the thin families recede** — at 10⁴ the generic share of winners is still 16% at class 11 and 38% at class 5. Beyond 10⁵ the script needs restructuring: it loops over (c, F, r) per n, so it should instead iterate over η = 1 foreign primes r and prime powers c once, scattering into n. *Not enumerated, deliberately:* S12 (two matching classes of one prime, different sizes), which could in principle be structured — it would show as an n where a hand construction beats the table.
 
 ## Closed, kept as a one-line ledger
 
@@ -741,3 +751,7 @@ If yes, that is a genuine relative-difficulty statement rather than an impressio
 3. **The exceptional-set density argument** — that twist-sharing needs a large prime-power divisor on n − 2 or n − 3 from a prime whose powers reach [δn, n], with probability about |log δ|/log n per exponent window. Heuristic in its current form.
 
 *The earlier divisibility route (|Γ| ≥ lcm of orbital sizes, with the all-orbitals-equal edge case) is superseded*: the edge case was never the obstruction, and the role count gives the bounds directly. The upper bounds for generic n are conditional on the same bounded-cofactor supply as μ(n) itself.
+
+### A36. The weighted restriction game at small n — target: a new lower bound at n = 10
+
+**From `restriction-game.md` §6(a).** Theorem 1 there reduces restriction-based lower bounds, at fixed interval values, to a widest path over interval endpoints. Build the catalogue at n = 10 — peel intervals, bipartite escapes, and every orbital interval of every Oliver subgroup of S₁₀ up to conjugacy (a GAP list) — and compute the widest path. The KSS-shaped descent gives 25 and a single group gives μ(10) = 20: **anything above 25 is a new explicit lower bound for the open case**, and exactly 25 says the weighted game cannot improve it. *Only interval endpoints and their containments are needed, so the 12-million-class poset at n = 10 is never built.* A computation, not yet started.

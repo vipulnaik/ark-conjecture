@@ -765,6 +765,34 @@ A35 asked whether a configuration from our shape space gives a fully-evasive mul
 
 **Status: answered, not closed.** Written up as `johnson-presentations.md` §5a. A34 narrowed to what remains — an independent reading of the three lemmas (one with a stated Frobenius edge case), the dependence on Part 0 for "every alternative costs as much", and the exceptional-set density argument, which is heuristic. Following Vipul's rule from earlier: a sketch is not marked resolved.
 
+## 5ac. The biclique region made rigorous: universal shape, construction-dependent location
+
+Vipul challenged my remark that the biclique trade-off "collapses to a line" as contingent on our constructions, which were tuned for μ(n) rather than bicliques, and asked for the cross-orbital point to be proved rather than observed. Both concerns were right about the *argument* I had given; the conclusion survives, but it needed separating into two claims.
+
+**Shape — universal, modulo Part 0.** With β(Γ) the smallest minimal block and a, b in the linear regime: (a) any permutation group needs a + b ≤ β, since a biclique inside an intra orbital lies in one block; (b) cross orbitals are complete bipartite on block pairs, so they need only max(a, b) ≤ β — strictly weaker; (c) all-2-homogeneous blocks give exactly the triangle a + b ≤ β; (d) any non-2-homogeneous prime block gives |A||B| ≤ c by characters, so no linear point (checked at c = 13–37, indices 3, 4, 6). **The neat part of (b):** completeness of the cross orbitals is forced by the biclique requirement itself — an incomplete same-prime block pair leaves a perfect-matching coset, which caps any biclique at the number of blocks — so no density hypothesis enters.
+
+**Location — a separate optimisation, s(n) = max β(Γ) over structured groups**, which maximises the smallest block and discards pseudorandom groups (μ's optimisers at six residues). Union of same-shape triangles is the largest, so the region is exactly a + b ≤ s(n). For generic n it is pinned down: at most one foreign block (two η = 1 foreign blocks force a bounded q, a thin family), η = 1 forces r ≡ 11 (mod 12) and hence F ≥ F_min, so s(n) ≤ n/(F_min + 1) modulo Part 0, with equality conditional on supply: **1/2 at n ≡ 0, 4, 6, 10; 1/3 at 1, 9; 1/4 at 2, 8; 1/5 at 3, 7; 1/7 at 5; 1/13 at 11**.
+
+*What I had wrong in the conversational version:* I argued from our witnesses' intra orbitals binding, which is a fact about the witnesses. The rigorous version never looks at a witness — (a) and (b) hold for any group in the shape space.
+
+## 5ad. Tricliques recorded, and s(n) computed to 10⁴
+
+**Tricliques (`oen`, companion box).** The containment analogue fails universally — two vertex orbits give a bipartite cross orbital, so linear tricliques in every orbital need vertex-transitivity, a density-zero set of n. The χ route survives: odd n via two fused blocks (χ = 2, n = 45), even n via **five** fused blocks (χ = 3, verified at n = 58 = 5·7 + 23); three fused blocks fail. Linear forbidden tricliques need η = 1 foreign blocks, giving the simplex a + b + d ≤ min(c, r).
+
+**`biclique_table.py` (new).** Computes s(n) by enumerating structured configurations — S1, S2, S3/S7 with η = 1 foreign, S6, S11 — with the cyclic-layer coprimality gcd(F(c−1), r) = 1. To 10⁴ in 17 s. Findings: every n has a structured group; within generic winners s(n)/n tracks 1/(F_min + 1) at all twelve residues; overall medians run high at small n because the density-zero families (S2, q = 2, 3 foreign, prime-power c) are not yet rare, and they recede on schedule — generic share rising at every class from [500, 10³) to [5000, 10⁴). Worst case class 11 at F = 12: s/n = 0.0678 at n = 6887, approaching 1/13 from below. *n = 527, the worst case below 10³, is also where the solvable relaxation's ratio peaks at 4.129 — both are the smallest hard class-11 n, and the coincidence is probably no more than that.* Larger runs are R13, optional, and need the loop restructured beyond 10⁵.
+
+## 5ae. `restriction-game.md`: a framework for the query-complexity bounds
+
+Vipul asked whether the quantitative bounds (RV, KSS, Korneffel–Triesch, n²/3, BBKN's forbidden-subgraph bound) could be put under one framework the way evasiveness had been. Written up as a new note.
+
+**The core result is a reduction.** Restriction-based bounds are strategies in one game: an adversary picks an invariant up-set, the prover picks a certified interval it crosses. **Theorem 1:** a family of intervals is unavoidable iff it contains a *descent* from the top configuration to ∅, each interval's top containing a translate of the previous bottom — because every constraint is a single implication, so forcing is reachability. With values attached, the game's value is a **widest path**. KSS's star/near-clique case analysis is exactly this closure run by hand; RV is the same descent with a weaker certificate; our D(h) ≥ μ(n) is orbital-chain descents, and combining groups is automatic.
+
+**Lemma 2 explains the n²/4 barrier.** A KSS-shaped escape needs an isolated vertex at the bottom and a universal vertex at the top; if its free set is a single orbit, every free edge joins universal to isolated vertices, so |S| ≤ ⌊n²/4⌋. *Brute-forced at n = 4–7: maximum exactly 4, 6, 9, 12.* So 1/4 is the ceiling of transitivity-certified escapes, not a choice.
+
+**Beyond 1/4 is a different level of game**, diagnosed but not reconstructed. The constants 8/25 and 1/3 match complete tripartite cross-edge counts exactly, and such escapes are multi-orbit, hence not fully evasive worlds — "every edge between the two cliqued parts present" is nontrivial with complexity below the free-set size, and it arises from "contains K_{2|P₁|}". So the payoff depends on the restricted function, conditional certificates link intervals, and it stops being a widest path. The sharp observation: big certified worlds exist (symmetric k-partite, 0.40 at k = 5), but none can be reached by a KSS-shaped descent — the obstacle is reachability, not certification.
+
+**Filed:** A36, compute the weighted game at n = 10 — anything above 25 would be a new bound for the open case. Not claimed as new: whether Theorem 1 or Lemma 2 is folklore is unchecked.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
