@@ -76,8 +76,6 @@ In a KSS-shaped descent, peel steps recurse to 𝒢_{n−1} and one *escape* int
 
 ## 5. How Korneffel–Triesch cross 1/4: conditional certificates
 
-*An earlier version of this section guessed Korneffel–Triesch's escape had one empty part. It does not: all three parts are cliqued. The correction changes what the framework needs.*
-
 ### 5.1 What they do
 
 From Miller's tutorial (§5.4) — the paper itself we have not read. Split V into V₁, V₂, V₃ with |V₁| = |V₂| = p, a prime near 2n/5, and |V₃| = n − 2p. Restrict h to *tripartite* graphs P, taken together with complete graphs on all three parts: h′(P) = h(P ∪ K_{V₁} ∪ K_{V₂} ∪ K_{V₃}). The group G = ℤ/p × ℤ/p × ℤ/(n−2p) acts by cycling each part. "From this action and some other arguments" they get 8n²/25 − o(n²).

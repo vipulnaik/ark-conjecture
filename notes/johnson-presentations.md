@@ -133,7 +133,7 @@ At prime power m this is **tight up to a factor of 2**: AGL(1, m) has order m(m�
 >
 > *Status.* The lower bounds are proofs **modulo Part 0** of `enumeration-proof.md` (every Oliver group meeting the floor lies in the shape space) and **modulo the three short lemmas below, which are sketched and have had no independent reading**. The upper bounds for generic n are **conditional** on the framework's bounded-cofactor Goldbach supply — the same hypothesis μ(n) itself rests on — and are verified on the table to 10⁶. "Almost all" means outside explicit density-zero exceptional sets, described at the end.
 
-**The method: count the roles a group must fill, and show they cannot overlap.** The divisibility bound |Γ| ≥ lcm(orbital sizes) of the earlier draft was the wrong tool — its edge case (all orbitals equal) was never the real obstruction. What forces the order up is that a block-structured group needs several *independent* subgroups, each of size Θ(n):
+**The method: count the roles a group must fill, and show they cannot overlap.** The divisibility bound |Γ| ≥ lcm(orbital sizes) is the wrong tool — its edge case (all orbitals equal) is not the real obstruction. What forces the order up is that a block-structured group needs several *independent* subgroups, each of size Θ(n):
 
 - **translations** on each block, to make it one vertex-orbit;
 - a **twist** (multipliers) on each block, to fuse its intra pairs into orbitals of size ≥ δn² — which forces the twist to have order ≥ δn, since an intra orbital on a block of size c has size c·d/2 with d the twist;
