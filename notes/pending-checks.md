@@ -135,7 +135,7 @@ python3 mu_ladder_exact.py 2755 2762 --cert-threshold 0.05     # exercises the u
 |---|---|---|---|
 | **⟦REQUOTE-ON-EXTENSION⟧** | a table measurement — winner counts, shares, low-density tails, first instances | requoting from the table; `check_doc_figures.py` recomputes most of them and `validate_table_v3.py`'s INFO lines print the rest | **yes** — these are exactly what the two runs move |
 | **⟦PENDING-CERT-RUN⟧** | an output of a certificate or shape script (`wide_cert.py`, `fallback_cert.py`, `shape_realize.py`) — coverage counts, shape-scan totals | rerunning that script | **no** — extending the tables does not touch these |
-| **⟦NEEDS-ITS-OWN-RUN⟧** | the orbital-count distribution, which no script produces because t is not a CSV column | a bespoke run (see `notes` §9.7 for the formula) | **no** |
+| ~~**⟦NEEDS-ITS-OWN-RUN⟧**~~ | **retired 2026-09** — its one site, the orbital-count distribution in `notes` §9.7, is now produced by `orbital_counts.py` and was regenerated on the completed table | — | — |
 
 *A fourth tag, ⟦PENDING-1E5-EXACT-RUN⟧, was retired earlier and its notice has been folded away; the range convention it enforced is now invariant I7's job. Nothing should reintroduce it.*
 

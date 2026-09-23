@@ -917,7 +917,7 @@ The part that could escape to the top is precisely the part that was never at ri
 
 twists dᵢ | cᵢ−1 (a q-power when foreign), subject to Lemma C. The orbital data is that of Part E's value formula: intra-orbital Fᵢ·orb(cᵢ, dᵢ) per class, within-class cross (Fᵢ or Fᵢ/2)·cᵢ² when Fᵢ > 1 — Fᵢ for odd Fᵢ, Fᵢ/2 for even Fᵢ — and between-orbit classes of size sᵢsⱼ.
 
-**G.3a The full orbital decomposition.** *Added 2026-09.* G.3 names one class of each *type* — the ones the score's minimum ranges over — without multiplicities, so its sizes do not sum to C(n,2). The complete decomposition is uniform by part type. Let part i be a vertex orbit of Fᵢ blocks of prime size cᵢ carrying a multiplier group of order dᵢ on each block, and put hᵢ = |⟨twist, −1⟩| (= dᵢ if dᵢ is even, 2dᵢ if odd) and sᵢ = Fᵢcᵢ. Then the orbitals are:
+**G.3a The full orbital decomposition.** *Added 2026-09.* *The orbital **count** was already in `orbital-evasiveness-notes.md` §9.7 (t = Σᵢ[(cᵢ−1)/|±Tᵢ| + ⌊Fᵢ/2⌋] + C(k,2)); what is new here is the sizes and shapes, which let the count be checked against C(n,2).* G.3 names one class of each *type* — the ones the score's minimum ranges over — without multiplicities, so its sizes do not sum to C(n,2). The complete decomposition is uniform by part type. Let part i be a vertex orbit of Fᵢ blocks of prime size cᵢ carrying a multiplier group of order dᵢ on each block, and put hᵢ = |⟨twist, −1⟩| (= dᵢ if dᵢ is even, 2dᵢ if odd) and sᵢ = Fᵢcᵢ. Then the orbitals are:
 
 | type | number of orbitals | size of each | shape |
 |---|---|---|---|
