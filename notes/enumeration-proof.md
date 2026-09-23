@@ -938,10 +938,134 @@ twists dᵢ | cᵢ−1 (a q-power when foreign), subject to Lemma C. The orbital
 | **S4** c + c + r, unfused | two K_c; K_{c,c}; e_r cyclotomic; two K_{c,r} | 5 + e_r |
 | **S5** top-fused F·c + r | as S7, with e_r = u | 2 + ⌊F/2⌋ + u |
 | **S6** r₁ + r₂ | e₁ + e₂ cyclotomic; K_{r₁,r₂} | 1 + e₁ + e₂ |
-| **S7** F·c + r | F·K_c; ⌊F/2⌋ within-class cross; e_r cyclotomic; K_{Fc,r} | 2 + ⌊F/2⌋ + e_r |
-| **S9** fused foreign F·r | e_r intra of size F·rh_r/2; ⌊F/2⌋ within-class cross; plus the rest | — |
+| **S7** F·c + r | F·K_c; within-class cross as in S2 — ⌊(F−1)/2⌋ of size Fc² and, for even F, one of size (F/2)c²; e_r cyclotomic; K_{Fc,r} | 2 + ⌊F/2⌋ + e_r |
+| **S9** fused foreign F·r | e_r intra of size F·rh_r/2; within-class cross as in S2, with r for c; plus the rest | — |
 | **S11** c + r₁ + r₂ | K_c; e₁ + e₂ cyclotomic; three between | 4 + e₁ + e₂ |
 | **S12** F₁c₁ + F₂c₂, same p | each class's (a) and (b); between one orbital, or gcd(F₁, F₂) if the two rotations are coupled in one cyclic generator | — |
+
+*Per shape, with every orbital type on its own row.* Notation as above: h = |⟨twist, −1⟩| for a block, e = (size − 1)/h its effective index, and [F even] is 1 or 0. In every table the size × count column sums to C(n,2); the identity used is ⌊(F−1)/2⌋·F + [F even]·F/2 = C(F,2), true for both parities.
+
+**S1 — n = c, a prime power**
+
+| orbital | size | count | size × count |
+|---|---|---|---|
+| K_c | C(c,2) | 1 | C(c,2) |
+| **total** | | **1** | **C(c,2) = C(n,2)** |
+
+**S2 — n = F·c, one fused class**
+
+| orbital | size | count | size × count |
+|---|---|---|---|
+| intra: F·K_c | F·C(c,2) | 1 | F·C(c,2) |
+| within-class cross, distance s < F/2: blow-up of C(F, ±s) | Fc² | ⌊(F−1)/2⌋ | ⌊(F−1)/2⌋·Fc² |
+| within-class cross, antipodal s = F/2: F/2 disjoint K_{c,c} | (F/2)c² | [F even] | [F even]·(F/2)c² |
+| **total** | | **1 + ⌊F/2⌋** | **F·C(c,2) + C(F,2)c² = C(Fc,2) = C(n,2)** |
+
+*Built: 3×7 gives 63·1 + 147·1 = 210 = C(21,2); 4×7 gives 84·1 + 196·1 + 98·1 = 378 = C(28,2).*
+
+**S3 — n = c + r**
+
+| orbital | size | count | size × count |
+|---|---|---|---|
+| intra: K_c | C(c,2) | 1 | C(c,2) |
+| foreign: cyclotomic class of index e_r on r points | rh_r/2 | e_r | C(r,2) |
+| between: K_{c,r} | cr | 1 | cr |
+| **total** | | **2 + e_r** | **C(c,2) + C(r,2) + cr = C(n,2)** |
+
+*Built: 11 + 13\* with t = 3, h = 6, e = 2 gives 55·1 + 39·2 + 143·1 = 276 = C(24,2).*
+
+**S4 — n = c + c + r, two unfused matching blocks**
+
+| orbital | size | count | size × count |
+|---|---|---|---|
+| intra: K_c, one per block | C(c,2) | 2 | 2·C(c,2) |
+| between the two blocks: K_{c,c} | c² | 1 | c² |
+| foreign: cyclotomic class of index e_r | rh_r/2 | e_r | C(r,2) |
+| between a block and the foreign: K_{c,r} | cr | 2 | 2cr |
+| **total** | | **5 + e_r** | **C(2c,2) + C(r,2) + 2cr = C(n,2)** |
+
+*Built: 7 + 7 + 11\* with t = 5, h = 10, e = 1 gives 21·2 + 49·1 + 55·1 + 77·2 = 300 = C(25,2).*
+
+**S5 — n = F·c + r, top-layer fusion, q = 2 so the foreign index is u**
+
+| orbital | size | count | size × count |
+|---|---|---|---|
+| intra: F·K_c | F·C(c,2) | 1 | F·C(c,2) |
+| within-class cross, distance s < F/2 | Fc² | ⌊(F−1)/2⌋ | ⌊(F−1)/2⌋·Fc² |
+| within-class cross, antipodal s = F/2: F/2 disjoint K_{c,c} | (F/2)c² | [F even] | [F even]·(F/2)c² |
+| foreign: cyclotomic class of index u | rh_r/2 | u | C(r,2) |
+| between: K_{Fc,r} | Fcr | 1 | Fcr |
+| **total** | | **2 + ⌊F/2⌋ + u** | **C(Fc,2) + C(r,2) + Fcr = C(n,2)** |
+
+*Not built separately; the orbit structure is S7's with e_r = u.*
+
+**S6 — n = r₁ + r₂, two foreign blocks under one top prime**
+
+| orbital | size | count | size × count |
+|---|---|---|---|
+| foreign on r₁: cyclotomic class of index e₁ | r₁h₁/2 | e₁ | C(r₁,2) |
+| foreign on r₂: cyclotomic class of index e₂ | r₂h₂/2 | e₂ | C(r₂,2) |
+| between: K_{r₁,r₂} | r₁r₂ | 1 | r₁r₂ |
+| **total** | | **1 + e₁ + e₂** | **C(r₁,2) + C(r₂,2) + r₁r₂ = C(n,2)** |
+
+*Built: 7\* + 19\* with t = 3, 9 (h = 6, 18; e = 1, 1) gives 21·1 + 171·1 + 133·1 = 325 = C(26,2).*
+
+**S7 — n = F·c + r, cyclic-layer fusion**
+
+| orbital | size | count | size × count |
+|---|---|---|---|
+| intra: F·K_c | F·C(c,2) | 1 | F·C(c,2) |
+| within-class cross, distance s < F/2: blow-up of C(F, ±s) | Fc² | ⌊(F−1)/2⌋ | ⌊(F−1)/2⌋·Fc² |
+| within-class cross, antipodal s = F/2: F/2 disjoint K_{c,c} | (F/2)c² | [F even] | [F even]·(F/2)c² |
+| foreign: cyclotomic class of index e_r | rh_r/2 | e_r | C(r,2) |
+| between: K_{Fc,r} | Fcr | 1 | Fcr |
+| **total** | | **2 + ⌊F/2⌋ + e_r** | **C(Fc,2) + C(r,2) + Fcr = C(n,2)** |
+
+*Built: 2×11 + 23\* with t = 11, h = 22, e = 1 gives 110·1 + 121·1 + 253·1 + 506·1 = 990 = C(45,2) — at F = 2 the distance-s < F/2 row is empty and only the antipodal one appears. And at the floor, 2×653 + 1453\* with e = 6: 425,756·1 + 426,409·1 + 175,813·6 + 1,897,618·1 = 3,804,661 = C(2759,2).*
+
+**S9 — a fused foreign block, shown as n = F·r + c**
+
+| orbital | size | count | size × count |
+|---|---|---|---|
+| intra on the fused foreign part: F copies of a cyclotomic class | F·rh_r/2 | e_r | F·C(r,2) |
+| within-class cross, distance s < F/2 | Fr² | ⌊(F−1)/2⌋ | ⌊(F−1)/2⌋·Fr² |
+| within-class cross, antipodal s = F/2 | (F/2)r² | [F even] | [F even]·(F/2)r² |
+| intra on the matching block: K_c | C(c,2) | 1 | C(c,2) |
+| between: K_{Fr,c} | Frc | 1 | Frc |
+| **total** | | **2 + ⌊F/2⌋ + e_r** | **C(Fr,2) + C(c,2) + Frc = C(n,2)** |
+
+*Not built; S9 never wins (Lemma D2).*
+
+**S11 — n = c + r₁ + r₂**
+
+| orbital | size | count | size × count |
+|---|---|---|---|
+| intra: K_c | C(c,2) | 1 | C(c,2) |
+| foreign on r₁: cyclotomic class of index e₁ | r₁h₁/2 | e₁ | C(r₁,2) |
+| foreign on r₂: cyclotomic class of index e₂ | r₂h₂/2 | e₂ | C(r₂,2) |
+| between: K_{c,r₁} | cr₁ | 1 | cr₁ |
+| between: K_{c,r₂} | cr₂ | 1 | cr₂ |
+| between: K_{r₁,r₂} | r₁r₂ | 1 | r₁r₂ |
+| **total** | | **4 + e₁ + e₂** | **C(c,2) + C(r₁,2) + C(r₂,2) + cr₁ + cr₂ + r₁r₂ = C(n,2)** |
+
+*Built: 5 + 7\* + 11\* with e = 1, 1 gives 10 + 21 + 55 + 35 + 55 + 77 = 253 = C(23,2).*
+
+**S12 — n = F₁c₁ + F₂c₂, two matching classes of one prime, independent rotations**
+
+| orbital | size | count | size × count |
+|---|---|---|---|
+| intra, class 1: F₁·K_{c₁} | F₁·C(c₁,2) | 1 | F₁·C(c₁,2) |
+| within-class cross, class 1, s < F₁/2 | F₁c₁² | ⌊(F₁−1)/2⌋ | ⌊(F₁−1)/2⌋·F₁c₁² |
+| within-class cross, class 1, antipodal | (F₁/2)c₁² | [F₁ even] | [F₁ even]·(F₁/2)c₁² |
+| intra, class 2: F₂·K_{c₂} | F₂·C(c₂,2) | 1 | F₂·C(c₂,2) |
+| within-class cross, class 2, s < F₂/2 | F₂c₂² | ⌊(F₂−1)/2⌋ | ⌊(F₂−1)/2⌋·F₂c₂² |
+| within-class cross, class 2, antipodal | (F₂/2)c₂² | [F₂ even] | [F₂ even]·(F₂/2)c₂² |
+| between: K_{s₁,s₂} | s₁s₂ | 1 | s₁s₂ |
+| **total** | | **3 + ⌊F₁/2⌋ + ⌊F₂/2⌋** | **C(s₁,2) + C(s₂,2) + s₁s₂ = C(n,2)** |
+
+*Not built. If the two rotations are coupled in one cyclic generator, the between row splits into gcd(F₁, F₂) orbitals of size s₁s₂/gcd(F₁, F₂) — unverified.*
+
+*S8 and S10 never exist (Lemmas D1, D2q), so they have no table.*
 
 *Verified by building the groups and computing orbitals directly*, in eight cases — S2 at 4×7 (full twist) and 2×13 (partial twist d = 3, giving two intra orbitals of 78); S3 at 11 + 13\*; S7 at 2×11 + 23\*; S6 at 7\* + 19\*; S11 at 5 + 7\* + 11\*; S4 at 7 + 7 + 11\*; and the 2-homogeneous 5×7 — all eight match the table exactly and sum to C(n,2). **At the floor n = 2759** (2×653 + 1×1453\*, t = 121, h = 242) the decomposition is one intra orbital of 425,756, one within-class cross of 426,409, one between of 1,897,618, and **six** foreign orbitals of 175,813 — summing to C(2759,2) = 3,804,661. *An earlier computation in this project counted one foreign orbital there and silently fell 879,065 short — five orbitals of 175,813; the table above is what prevents that.*
 
