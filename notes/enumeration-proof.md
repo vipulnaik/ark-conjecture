@@ -1,6 +1,6 @@
 # Bounding μ(n) by enumeration of Oliver configurations
 
-> **Status of the computed range: two contiguous tables, agreeing wherever they overlap, and B = μ at every row by theorem.** `mu_ladder_exact.py` (menu + S6/S11 scored exactly, certified above C(n,2)/25 by Theorem E.5 and `ladder-completeness.md` Proposition 1) is **complete over [6, 10⁶]**: all **921,265** eligible n — composite, non-prime-power — with **no uncertified row**. `mu_exact.py`'s exhaustive search, the arbiter, is contiguous to n = 76,752 (69,107 rows) and still running toward 10⁵. The two agree on the integer `mu_bound` at every common n (`validate_table_v3.py --baseline`: ALL equal, 0 higher, 0 lower; the witnesses that differ are ties). Since every row clears 1/25 — the minimum is **175813/3804661 = 0.046210 at n = 2759**, and the only other value below 0.05 anywhere is 0.048039 at n = 2183 — Corollary E.6 makes every value μ(n), not a bound on it: **μ is known exactly at every composite non-prime-power n ≤ 10⁶.** The R1 battery passes on both (27 PASS / 0 FAIL). Further extension is **discretionary**. *The prefix/tail discipline is dormant rather than retired:* it applies again the moment an extension fills higher n from a worklist. **Measured figures in these documents are scoped to the 921,265-row range [6, 10⁶] unless a narrower range is named beside them.**
+> **Status of the computed range: two contiguous tables, agreeing wherever they overlap, and B = μ at every row by theorem.** `mu_ladder_exact.py` (menu + S6/S11 scored exactly, certified above C(n,2)/25 by Theorem E.5 and `ladder-completeness.md` Proposition 1) is **complete over [6, 10⁶]**: all **921,265** eligible n — composite, non-prime-power — with **no uncertified row**. `mu_exact.py`'s exhaustive search, the arbiter, is **complete over [6, 10⁵]** — all **90,299** rows, contiguous, no gaps, 0 uncertified. The two agree on the integer `mu_bound` at every common n (`validate_table_v3.py --baseline`: ALL equal, 0 higher, 0 lower; the witnesses that differ are ties). Since every row clears 1/25 — the minimum is **175813/3804661 = 0.046210 at n = 2759**, and the only other value below 0.05 anywhere is 0.048039 at n = 2183 — Corollary E.6 makes every value μ(n), not a bound on it: **μ is known exactly at every composite non-prime-power n ≤ 10⁶.** The R1 battery passes on both (27 PASS / 0 FAIL). Further extension is **discretionary**. *The prefix/tail discipline is dormant rather than retired:* it applies again the moment an extension fills higher n from a worklist. **Measured figures in these documents are scoped to the 921,265-row range [6, 10⁶] unless a narrower range is named beside them.**
 >
 > **The two populations have merged.** n = **2759** — the ladder's argmin, once the single row above the contiguous frontier — now sits well inside it, so the file floor and the contiguous floor are the same number: **δ ≥ 175813/3804661 = 0.046209898…, attained at n = 2759**, with n = 2183 at 0.048039 next and **39 rows at or below 1/16, none below 1/25**. `converse_check.py` and `validate_table_v3.py` still scope aggregates to the prefix and report any tail separately, which costs nothing while the two coincide and is what makes the next extension safe.
 >
@@ -916,6 +916,36 @@ The part that could escape to the top is precisely the part that was never at ri
 > **n = Σᵢ Fᵢ·cᵢ**, Fᵢ = F_mid,ᵢ·F_top,ᵢ with F_top a q-power, cᵢ a prime power, each cᵢ p-characteristic or a foreign prime,
 
 twists dᵢ | cᵢ−1 (a q-power when foreign), subject to Lemma C. The orbital data is that of Part E's value formula: intra-orbital Fᵢ·orb(cᵢ, dᵢ) per class, within-class cross (Fᵢ or Fᵢ/2)·cᵢ² when Fᵢ > 1 — Fᵢ for odd Fᵢ, Fᵢ/2 for even Fᵢ — and between-orbit classes of size sᵢsⱼ.
+
+**G.3a The full orbital decomposition.** *Added 2026-09.* G.3 names one class of each *type* — the ones the score's minimum ranges over — without multiplicities, so its sizes do not sum to C(n,2). The complete decomposition is uniform by part type. Let part i be a vertex orbit of Fᵢ blocks of prime size cᵢ carrying a multiplier group of order dᵢ on each block, and put hᵢ = |⟨twist, −1⟩| (= dᵢ if dᵢ is even, 2dᵢ if odd) and sᵢ = Fᵢcᵢ. Then the orbitals are:
+
+| type | number of orbitals | size of each | shape |
+|---|---|---|---|
+| (a) intra-block, part i | (cᵢ − 1)/hᵢ | Fᵢ·cᵢhᵢ/2 | Fᵢ disjoint cyclotomic class graphs of index (cᵢ−1)/hᵢ — **Fᵢ·K_{cᵢ} at full twist** |
+| (b) within-part cross, Fᵢ ≥ 2, block rotation | ⌊Fᵢ/2⌋, one per block distance s | Fᵢcᵢ² for s < Fᵢ/2; (Fᵢ/2)cᵢ² for s = Fᵢ/2 | blow-up of the circulant C(Fᵢ, ±s) by complete bipartite pieces |
+| (b′) the same, 2-homogeneous block action | 1 | C(Fᵢ, 2)·cᵢ² | complete Fᵢ-partite |
+| (c) between parts i < j | 1 | sᵢsⱼ | complete bipartite K_{sᵢ, sⱼ} |
+
+**They sum to C(n,2)**: (a) and (b) together cover the pairs inside part i, Fᵢ·C(cᵢ,2) + C(Fᵢ,2)·cᵢ² = C(sᵢ,2), and Σᵢ C(sᵢ,2) + Σ_{i<j} sᵢsⱼ = C(n,2). A foreign block is a part with F = 1, c = r and multiplier order t, so it contributes (r − 1)/h_r orbitals — the effective index, 1/η — of size r·h_r/2. G.3's list is exactly the minimum over (a), the smallest of (b), and (c).
+
+*By family* (prime blocks, matching blocks at full twist, e_r = (r−1)/h_r for a foreign block r):
+
+| shape | orbitals | count |
+|---|---|---|
+| **S1** n = c | one K_c | 1 |
+| **S2** F·c | F·K_c; ⌊(F−1)/2⌋ of size Fc² and, for even F, one of size (F/2)c² | 1 + ⌊F/2⌋ |
+| **S3** c + r | K_c; e_r cyclotomic of size rh_r/2; K_{c,r} | 2 + e_r |
+| **S4** c + c + r, unfused | two K_c; K_{c,c}; e_r cyclotomic; two K_{c,r} | 5 + e_r |
+| **S5** top-fused F·c + r | as S7, with e_r = u | 2 + ⌊F/2⌋ + u |
+| **S6** r₁ + r₂ | e₁ + e₂ cyclotomic; K_{r₁,r₂} | 1 + e₁ + e₂ |
+| **S7** F·c + r | F·K_c; ⌊F/2⌋ within-class cross; e_r cyclotomic; K_{Fc,r} | 2 + ⌊F/2⌋ + e_r |
+| **S9** fused foreign F·r | e_r intra of size F·rh_r/2; ⌊F/2⌋ within-class cross; plus the rest | — |
+| **S11** c + r₁ + r₂ | K_c; e₁ + e₂ cyclotomic; three between | 4 + e₁ + e₂ |
+| **S12** F₁c₁ + F₂c₂, same p | each class's (a) and (b); between one orbital, or gcd(F₁, F₂) if the two rotations are coupled in one cyclic generator | — |
+
+*Verified by building the groups and computing orbitals directly*, in eight cases — S2 at 4×7 (full twist) and 2×13 (partial twist d = 3, giving two intra orbitals of 78); S3 at 11 + 13\*; S7 at 2×11 + 23\*; S6 at 7\* + 19\*; S11 at 5 + 7\* + 11\*; S4 at 7 + 7 + 11\*; and the 2-homogeneous 5×7 — all eight match the table exactly and sum to C(n,2). **At the floor n = 2759** (2×653 + 1×1453\*, t = 121, h = 242) the decomposition is one intra orbital of 425,756, one within-class cross of 426,409, one between of 1,897,618, and **six** foreign orbitals of 175,813 — summing to C(2759,2) = 3,804,661. *An earlier computation in this project counted one foreign orbital there and silently fell 879,065 short — five orbitals of 175,813; the table above is what prevents that.*
+
+*Scope.* Prime c throughout. For c = p^a with a Galois twist, (a)'s count becomes the number of orbits of ⟨multipliers, Frobenius, −1⟩ on the nonzero elements of the field of order c, not written out here. A Reed–Solomon translation group (`johnson-presentations.md` §5a) gives the same cross orbitals as independent translations, since its projection onto every block pair is full.
 
 **G.4 The search is bounded on every axis.** With δ = m\*/C(n,2): the intra-orbital satisfies Fᵢ·orb(cᵢ,dᵢ) < Fᵢcᵢ²/2 and must be at least m\*, while Fᵢcᵢ ≤ n. Hence
 

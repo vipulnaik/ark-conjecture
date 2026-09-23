@@ -809,6 +809,14 @@ Vipul asked whether F = 3 is the only clean triclique case. **Under block rotati
 
 **Triangle-freeness does not evade eventual evasiveness** — it evades only the *containment* route. The χ route gives it at generic n of both parities, conditional on supply, a statement of the same kind as BBKN's under Chowla. Unconditionally for all large n, BBKN's C(n,2) − O(1) remains the best known; unconditionally at explicit n, the table's odd two-fused-block witnesses are certificates once their foreign classes are checked for triangles.
 
+## 5ah. The full orbital decomposition, written down at last — `enumeration-proof.md` G.3a
+
+Vipul noticed that neither ep nor oen gives a decomposition you could sum to C(n,2). Correct: G.3 names one class of each *type* — what the score's minimum ranges over — without multiplicities. **And the gap had already caused a silent error**: the lcm computation for A34 counted one foreign orbital at n = 2759, where there are six, and fell 879,065 short of C(n,2) — flagged "partial" in its output and not chased at the time.
+
+**The decomposition is uniform by part type.** For a part of F blocks of prime size c with h = |⟨twist, −1⟩|: (a) intra, (c−1)/h orbitals of size Fch/2; (b) within-part cross, one per block distance, size Fc² or (F/2)c² at the antipodal distance — fused into one C(F,2)c² under a 2-homogeneous block action; (c) between parts, one complete bipartite orbital. These sum to C(n,2) identically. A per-family table follows, S1 through S12.
+
+**Verified by construction** in eight cases — S2 full and partial twist, S3, S4, S6, S7, S11 and the 2-homogeneous 5×7 — every one matching exactly and summing to C(n,2); and arithmetically at n = 2759. *One slip caught on re-reading: I first wrote the shortfall as 878,065; it is 879,065, which is exactly five missing orbitals of 175,813.* The write also tripped the non-BMP encoding hazard again, but the temp-file pattern left the original untouched this time — the fix working as intended.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
