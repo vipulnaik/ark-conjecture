@@ -2,7 +2,7 @@
 
 *Companion to `orbital-evasiveness-notes.md` and `hardness-of-evasiveness.md`. The evasiveness results in this project run through one framework — a group, its fixed complex, an Euler characteristic — and that framework turned "clever proofs" into a search over groups and arithmetic. The quantitative bounds in the literature (Rivest–Vuillemin n²/16, Kahn–Saks–Sturtevant n²/4, Korneffel–Triesch 8n²/25, the n²/3 bound, BBKN's C(n,2) − O(1) for forbidden subgraphs) look instead like a collection of tricks. This note argues they are strategies in a single game, and that one level of that game reduces to a widest-path computation.*
 
-**Status.** §2's reduction (Theorem 1) and §4's escape bound (Lemma 2) are proved here and checked by computation at small n. §3's reconstructions of KSS and Rivest–Vuillemin are exact. §5 — where the n²/4 barrier is crossed — is a diagnosis, not a reconstruction: we have not read Korneffel–Triesch or the n²/3 paper closely enough to recast their arguments, and say so. **The restriction method itself is standard; whether Theorem 1 or Lemma 2 is folklore has not been checked.**
+**Status.** §2's reduction (Theorem 1) and §4's escape bound (Lemma 2) are proved here and checked by computation at small n. §3's reconstructions of KSS and Rivest–Vuillemin are exact. §5 reconstructs the topological core of Korneffel–Triesch from Miller's description — the papers themselves have not been read — and computes the equal-parts extension exactly; the residual branches of their arguments are not reconstructed. **The restriction method itself is standard; whether Theorem 1 or Lemma 2 is folklore has not been checked.**
 
 ---
 
@@ -74,19 +74,60 @@ In a KSS-shaped descent, peel steps recurse to 𝒢_{n−1} and one *escape* int
 
 > **So n²/4 is the ceiling of the regime KSS work in**, not an artefact of their choice: within KSS-shaped descents whose escape is certified by transitivity, no escape has more free edges than the balanced bipartite one. Crossing 1/4 requires either a different descent shape or an escape whose free set has **two or more orbits** — and the latter is where the constants 8/25 and 1/3 live.
 
-## 5. Beyond 1/4: escapes that are not fully evasive worlds
+## 5. How Korneffel–Triesch cross 1/4: conditional certificates
 
-The later constants match the edge counts of complete tripartite cross structures exactly: parts p, p, n − 2p give p² + 2p(n − 2p), maximised at p = 2n/5 to **8n²/25** (Korneffel–Triesch); equal thirds give **n²/3**. That is consistent with an escape whose free set is the complete tripartite cross edges, and — by Lemma 2 — such an escape cannot be a single orbit.
+*An earlier version of this section guessed Korneffel–Triesch's escape had one empty part. It does not: all three parts are cliqued. The correction changes what the framework needs.*
 
-**And a multi-orbit escape is not a fully evasive world**, which is the structural reason these arguments need more than a weight. Take parts P₁, P₂ cliqued in U and P₃ empty, so the free set has two edge types: X between P₁ and P₂, and Y between them and P₃. The property "every edge of X is present" is nontrivial, monotone and invariant, yet has complexity |X| < |X ∪ Y| — it never needs to look at Y. It even arises as a restriction of a genuine graph property: "contains K_{2|P₁|}" restricts to it on this interval. **So the escape's payoff depends on which function is restricted**, and a fixed weight v(I) can only be the small worst case.
+### 5.1 What they do
 
-This forces a second level of the game:
+From Miller's tutorial (§5.4) — the paper itself we have not read. Split V into V₁, V₂, V₃ with |V₁| = |V₂| = p, a prime near 2n/5, and |V₃| = n − 2p. Restrict h to *tripartite* graphs P, taken together with complete graphs on all three parts: h′(P) = h(P ∪ K_{V₁} ∪ K_{V₂} ∪ K_{V₃}). The group G = ℤ/p × ℤ/p × ℤ/(n−2p) acts by cycling each part. "From this action and some other arguments" they get 8n²/25 − o(n²).
 
-> V* = min over h of max { D(h|I) : I crossed by h } ≥ V(ℐ),
+In this note's terms the interval is **(U, Kₙ) with U = three disjoint cliques**, free set the complete tripartite cross edges, p² + 2p(n − 2p) of them — exactly 8n²/25 at p = 2n/5. G has three orbitals on the free set: A between V₁ and V₂, and B, C between V₃ and V₁, V₂. G is Oliver: ℤ/p × ℤ/p is a p-group and the quotient ℤ/(n−2p) is cyclic.
 
-in which the prover is paid the restricted function's actual complexity. Arguments at this level establish *conditional certificates*: if h's restriction to one interval is not evasive — AND-like, say — then h crosses some other interval of high value. These link intervals together, so the problem is no longer a widest path. **This is where "and some other arguments" in Miller's description of Korneffel–Triesch sits.** The framework names that level and says what shape its arguments must take, but does not make it mechanical, and we have not reconstructed the actual descents of the 8/25 and 1/3 papers.
+**This interval is not a KSS-shaped escape at all.** Its bottom, three cliques, has no isolated vertex, so Lemma 2's hypothesis is not met — Lemma 2 is evaded, not contradicted.
 
-One observation sharpens the target. **Large certified worlds exist; the difficulty is reaching them.** Complete k-partite cross edges on k parts of prime size m, with *no* distinguished part, are certified evasive by a transitive Oliver group whenever the parts can be permuted 2-homogeneously by a cyclic-by-q group: Γ = (ℤ/m)^k ⋊ (ℤ/k ⋊ Q), with Q a q-group of multipliers on the k parts. That is possible for Fermat k ∈ {3, 5, 17, 257, 65537}, where Q is the whole multiplier group, and for primes k = 2q^e + 1, where Q has index 2 and −1 supplies the rest on unordered pairs. The chain is (ℤ/m)^k, then ℤ/k, then Q; the full translations make each pair of parts a single orbit, and Q makes all pairs of parts one orbit. The value is (1 − 1/k)·n²/2 — 0.40 at k = 5. But a symmetric k-partite world has no isolated vertex at its bottom and no distinguished part, so it cannot be the escape of a KSS-shaped descent; Lemma 2 says exactly that. The obstacle to beating 1/3 is therefore not certifying big worlds but **making big certified worlds reachable**: either new descent shapes, or conditional certificates for asymmetric ones.
+### 5.2 The topological core, reconstructed
+
+*This is our derivation; it is consistent with Miller's description but not checked against the paper.*
+
+The escape is needed only in the branch KSS could not close — **neither peel crossed** — so h already satisfies two *guard* facts:
+
+- every graph with a **universal vertex** satisfies h (it contains the star, and the star-peel was not crossed);
+- every graph with an **isolated vertex** fails h (it lies inside K_{n−1} ⊔ K₁, and the other peel was not crossed).
+
+Now look at the fixed complex of G. **Any union of two orbitals together with U has a universal vertex** — U ∪ A ∪ B makes every vertex of V₁ adjacent to everything — so by the first guard no two orbitals form a face. The complex is a set of isolated points, and χ is the number of orbitals whose addition to U keeps h false. Oliver's theorem forces χ = 1 for a non-evasive h′.
+
+The second symmetry layer finishes it. Swapping V₁ and V₂ preserves U, so h′ is swap-invariant **even though the swap is not in G**; the set of points is therefore ∅, {A}, {B, C} or {A, B, C}, with χ = 0, 1, 2, 3. **So h′ is evasive in every case but one**: the pattern {A}, i.e.
+
+> h(K_{2p} ⊔ K_{n−2p}) = 0 but h(K_{n−p} ⊔ K_p) = 1,
+
+together with the branch h(U) = 1, where the interval is not crossed at all. Those two residual branches are what "some other arguments" must dispose of. We have not reconstructed how.
+
+### 5.3 What this adds to the framework
+
+**Conditional certificates.** Lemma 2 assumed an escape had to be certified *unconditionally* — evasive for every invariant function on its sub-world — which forces a single orbit and caps it at n²/4. Korneffel–Triesch's escape is not an evasive world: with three orbits, some invariant functions on it are cheap. It is **evasive for every function consistent with what the descent has already established** — the guard facts. Those facts kill exactly the bad cases: a function like "every A-edge present" would need U ∪ B ∪ C to fail h, but that graph has a universal vertex.
+
+So interval values must be allowed to depend on the branch: **v(I | 𝒩)**, the minimum complexity over sub-world functions consistent with the facts implied by the intervals 𝒩 not crossed on the way. The game becomes a **case tree**: the prover queries h on finitely many test graphs (star, near-clique, three cliques, …), and each leaf is an interval certified *conditionally on its branch*. The bound is the minimum leaf value, and checking a proposed tree is mechanical — each leaf's certificate is a χ computation over the guard-consistent invariant complexes. KSS is a depth-two tree; §2's widest path is the special case where certificates ignore their branch.
+
+**Two symmetry layers.** The Oliver group G does the topology; the larger stabiliser — here the V₁ ↔ V₂ swap, which G lacks — cuts the χ = 1 patterns down. This is Yao's structure again, where a cyclic group does the topology and Sym(Z) makes the property a threshold. It is also what the project has elsewhere called running an Oliver-like argument where the shoe doesn't fit: the certificate is not "a transitive Oliver group" but "an Oliver group whose χ condition fails on every complex the guards and the full stabiliser allow".
+
+### 5.4 With conditional certificates, the topology stops being the bottleneck
+
+Take k **equal** parts of prime-power size m, all cliqued, and G = (ℤ/m)^k, a p-group. Each pair of parts is one orbital, so a face is a set of part-pairs — an edge set of K_k. The universal-vertex guard forbids any part joined to all k − 1 others; the parts are cliques, so no isolated vertex arises; and the full stabiliser permutes the parts, so the complex is an S_k-invariant down-set of graphs on k vertices with maximum degree ≤ k − 2. *Computed by enumerating every such down-set:*
+
+| k | graph classes | invariant down-sets | down-sets with χ = 1 | escape value |
+|---|---|---|---|---|
+| 3 | 1 | 2 | **0** | n²/3 |
+| 4 | 6 | 11 | **0** | 3n²/8 |
+| 5 | 22 | 267 | **0** | 2n²/5 |
+
+**So an equal-parts k-partite escape, whenever it is crossed in the guarded branch, is evasive — with no residual pattern at all.** At k = 3 this is the unequal case with the V₃ asymmetry removed: full S₃ symmetry leaves only ∅ and all three points, χ ∈ {0, 3}. The value (1 − 1/k)·n²/2 is **n²/3 at k = 3, exactly the Scheidweiler–Triesch constant** — which suggests, though we have not checked, that their improvement over Korneffel–Triesch is precisely equalising the parts to remove the residual {A}, peeling to n = 3m with m prime at o(n²) cost.
+
+### 5.5 Where the difficulty went
+
+If topology is not the bottleneck, crossing is. The k-partite escape is crossed only when **h(k·K_{n/k}) = 0**, and the branch h(k·K_{n/k}) = 1 needs different intervals. That branch is not exotic. **"No isolated vertex"** sits in KSS's case 3, yet k·K_{n/k} has no isolated vertex for every k ≤ n/2, so it crosses none of these escapes — checked at n = 12 for k = 2, 3, 4, 6 — and among {peels, bipartite, all-cliqued k-partite} only the bipartite escape pays, at n²/4. Any bound above 1/4 must handle it with an interval built around its own structure: bottoms with isolated vertices, where the restricted function depends only on edges at those vertices.
+
+> **The framework's precise open problem, then:** a case tree whose leaves cover the branch h(k·K_{n/k}) = 1 with conditional certificates of value above 1/3. The equal-parts computation says the k-partite leaf is already worth 3/8 at k = 4 and 2/5 at k = 5 wherever it is reached; what is missing is a leaf for the properties that never reach it. **This is where Korneffel–Triesch's and Scheidweiler–Triesch's unreconstructed arguments must live**, and reading those papers is the first step.
 
 ## 6. A computational programme
 
@@ -94,8 +135,12 @@ One observation sharpens the target. **Large certified worlds exist; the difficu
 
 **(b) Other descent shapes.** Lemma 2 is scoped to KSS's shape — peel one vertex, isolated or universal. Peeling k vertices with uniform attachment gives other shapes with their own escape conditions; whether any admits a single-orbit escape above n²/4 is a finite question at each n.
 
-**(c) Conditional certificates.** Formalise the second level well enough to recast Korneffel–Triesch as an explicit certificate. Then "is 1/3 the value of the game over known certificates?" becomes a well-posed question rather than a comparison of papers.
+**(c) Read the two papers.** Korneffel–Triesch (Combinatorica 30 (2010)) and Scheidweiler–Triesch (SIAM J. Discrete Math. 27 (2013)) — to confirm §5.2's reconstruction, and to see how each handles the residual branches.
+
+**(d) Case trees at small n.** Search for case trees — test graphs plus conditionally certified leaves — that beat the KSS tree, starting with n = 10 and A36's catalogue.
+
+**(e) The branch h(k·K_{n/k}) = 1.** Characterise which properties live there beyond "no isolated vertex", and find conditional leaves for them. By §5.5 this, not topology, is the whole gap between 1/3 and 1/2 within this family of arguments.
 
 ## 7. What this buys
 
-For evasiveness, the project's framework reduced proof to a catalogue (groups and their orbitals) plus a mechanical test (χ of the fixed complex). This note does the same for query complexity at the first level: **a catalogue of certified sub-worlds plus a mechanical widest path**. It explains at once why RV and KSS got the constants they did, why n²/4 is a genuine barrier for transitivity-certified escapes, and why every argument past it needed a different kind of reasoning. What it does not yet do is make the second level mechanical — and that is where the open constants are.
+For evasiveness, the project's framework reduced proof to a catalogue (groups and their orbitals) plus a mechanical test (χ of the fixed complex). This note does the same for query complexity at the first level: **a catalogue of certified sub-worlds plus a mechanical widest path**. It explains at once why RV and KSS got the constants they did, and why n²/4 is a genuine barrier for escapes certified unconditionally. Past it, the right extension is **conditional certification in a case tree** — which is how Korneffel–Triesch evade Lemma 2 — and once that is allowed, the topology is no longer the obstacle: equal-parts k-partite escapes are evasive in the guarded branch at every k we checked. The open constants live in the branch where those escapes are never crossed.
