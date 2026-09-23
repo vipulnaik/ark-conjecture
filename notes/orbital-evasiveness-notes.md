@@ -226,7 +226,9 @@ By Theorem 3.1, Cor. 3.2 is an equivalence, so lower bounds on μ yield additive
 
 For a monotone decreasing P with complex Δ_P:
 
-> **trivial ⟹ strongly collapsible ⟹ non-evasive ⟹ collapsible ⟹ contractible ⟹ ℤ-acyclic ⟺ (𝔽_p-acyclic for every p) ⟹ 𝔽_p-acyclic for one p ⟹ ℚ-acyclic ⟹ χ(Δ_P) = 1.**
+> **trivial ⟹ strongly collapsible ⟹ non-evasive ⟹ collapsible ⟹ contractible ⟹ ℤ-acyclic ⟺ (𝔽_p-acyclic for every p) ⟹ 𝔽_p-acyclic for one p ⟹ ℚ-acyclic ⟹ χ(Δ_P) = 1 ⟹ χ(Δ_P) ≡ 1 (mod every prime p ≤ n).**
+>
+> The last two rungs are **global-χ-resistant** and **small global-χ-resistant** in the named family defined with the resistance terminology below.
 
 Two rungs added to the earlier form. **Strongly collapsible** (Barmak–Minian, DCG 2012: reducible to a point by removing dominated vertices, those whose link is a cone) sits above non-evasive, since removing a dominated vertex leaves a nonevasive link and, inductively, a nonevasive deletion. **Their Theorem 6.2 gives it the fixed-point property**: every automorphism group of a strongly collapsible complex fixes a point, so a strongly collapsible vertex-homogeneous complex is a simplex (Cor. 6.4). Hence any counterexample is nonevasive but *not* strongly collapsible — and by their Cor. 6.13 may be taken **minimal** (no dominated vertex), since the core of a vertex-homogeneous nonevasive complex is again vertex-homogeneous and nonevasive. Between these two rungs sits their graded notion of *n-collapsibility* (0 = strongly collapsible; n+1 = some vertex has an n-collapsible link), so a counterexample would carry a definite collapsibility index ≥ 1. See `literature-findings.md` §13. **ℚ-acyclic** sits between 𝔽_p-acyclic-for-one-p and χ = 1: it kills all Betti numbers but permits torsion, and it is the rung the programme's near-misses actually reach — the chiral n = 5 candidate (H̃₁ = ℤ/2, ℝP²-like) and the A₅-on-15 completions of `a5_on_15.py` (rank-4 𝔽₂-homology) are both ℚ-acyclic and acyclic mod every odd prime tested, and fail exactly at ℤ. Note that "𝔽_p-acyclic for one p" does not imply ℚ-acyclic in general (a complex can have free homology invisible to no p), so the two are incomparable rungs both implying χ = 1; they are written in the order the tests here meet them.
 
@@ -277,6 +279,38 @@ This is the spine; §7.2 hangs the group-dependent tests off it and draws the wh
 >
 > **Organising the χ rung.** *Maximal versus full:* the two differ, and separating them does measure what large-group methods can see — for bipartiteness, nothing. But maximality is the wrong axis at this rung, because χ-resistance is not monotone in the group; the data sort by **transitivity and orbital count**, which is also the axis the pipeline's MAXT cap already uses. *Which primes:* every Oliver group's order divides n!, so every congruence is modulo a prime **p ≤ n** — at n = 10 the top primes are 2 (577 groups) and 3 (21), and 699 of the 1,294 are trivial-top, hence exact. **For global χ the primes p ≤ n are natural for a sharper reason**: orbit counting gives χ(Δ_P) ≡ χ(Δ_P^{Syl_p}) (mod p) for a Sylow p-subgroup of S_n, for *any* property, acyclic or not. So "global χ ≡ 1 mod every p ≤ n" is decided by one small fixed complex per prime, and it is exactly the χ-shadow of the Sylow conditions — which, p-groups being trivial-top, demand χ(Δ^{Syl_p}) = 1 on the nose. *Verified at n = 10 for bipartiteness:* the Sylow 2, 3, 5, 7 subgroups (orders 256, 81, 25, 7; t = 5, 3, 5, 9) give χ = 2, 1, 1, 4, matching the global value 1,062,436 mod each prime. *And bipartiteness fails the congruence at some p ≤ n for every n from 3 to 30* — narrowest at n = 14, where only p = 11 fails — so a Sylow subgroup alone kills it throughout, without the trivial group's exact integer. That integer is strictly stronger than all the congruences together: they fix χ only modulo the primorial of n, roughly e^n, while the complex has up to 2^{C(n,2)} faces. Different fixed complexes' Euler characteristics are linked only by Smith counting, χ(Δ^H) ≡ χ(Δ^G) (mod p) for H ◁ G of p-power index, with no control across primes. *Homology:* it is the right level for transferring information between groups — F_p-acyclicity passes up p-group chains by Smith's theorem, which χ does not — but it is only *forced* on p-groups; a q-top group's fixed complex may legitimately be non-acyclic, so homology adds power through the p-subgroups, where the pipeline already checks it by Smith normal form, not through the q-top groups themselves.
 
+> **The resistance metaproperties, named.** Five properties of a monotone property P (in the §7.1 convention), in increasing order of how much they ask of the groups:
+>
+> | name | definition |
+> |---|---|
+> | **Oliver-resistant** | every Oliver group has an orbital in P — the CNF Φ₁ |
+> | **Oliver-χ-resistant** | every Oliver group meets its condition: χ(Δ_P^Γ) = 1 if Γ has a trivial top, ≡ 1 mod each top prime otherwise |
+> | **trivial-top Oliver-χ-resistant** | every trivial-top (p-by-cyclic) Oliver group has χ(Δ_P^Γ) = 1 |
+> | **global-χ-resistant** | χ(Δ_P) = 1 |
+> | **small global-χ-resistant** | χ(Δ_P) ≡ 1 (mod p) for every prime p ≤ n |
+>
+> **Implications.**
+>
+> - *Oliver-χ-resistant ⇒ trivial-top Oliver-χ-resistant*: the trivial-top groups are among all Oliver groups, and their condition is the exact one.
+> - *trivial-top Oliver-χ-resistant ⇒ global-χ-resistant*: the trivial group is trivial-top, and its fixed complex is Δ_P.
+> - *global-χ-resistant ⇒ small global-χ-resistant*: immediate.
+> - *Oliver-χ-resistant ⇒ Oliver-resistant*: a group with no orbital in P has fixed complex {∅}, with χ = 0, which meets neither χ = 1 nor χ ≡ 1 mod any prime.
+> - *ℤ-acyclic ⇒ Oliver-χ-resistant* is Oliver's theorem, and *AC_p for one p ⇒ global-χ-resistant* is the spine of §7.1.
+>
+> **Small global-χ-resistance has a group form.** Orbit counting gives χ(Δ_P) ≡ χ(Δ_P^{Syl_p}) (mod p) for a Sylow p-subgroup of S_n, so small global-χ-resistance holds **iff χ(Δ_P^{Syl_p}) ≡ 1 (mod p) for every p ≤ n**. Since Sylow subgroups are trivial-top, this also shows trivial-top Oliver-χ-resistance implies it directly; and it is implied by AC_p for each p ≤ n, through Smith's theorem on the Sylow subgroups.
+>
+> **Checked on every nontrivial monotone property at n = 4 (22) and n = 5 (860), and on 1,500 random ones at n = 6** (`metaproperty_ladder_check.py`, using the table-of-marks exports `tom4.txt`, `tom5.txt`, `tom6.txt`): no violation of any implication, and the Sylow form agrees with the definition on every property. How many properties satisfy each:
+>
+> | | Oliver-resistant | Oliver-χ | trivial-top Oliver-χ | global-χ | small global-χ |
+> |---|---|---|---|---|---|
+> | n = 4, all 22 | 0 | 0 | 0 | 0 | 4 |
+> | n = 5, all 860 | 0 | 0 | 0 | 0 | 0 |
+> | n = 6, 1,500 sampled | 325 | 0 | 0 | 15 | 46 |
+>
+> **Separations.** *Strict, with examples:* trivial-top Oliver-χ ⇒ global-χ (15 properties at n = 6 are global- but not trivial-top-χ-resistant); global-χ ⇒ small global-χ (4 at n = 4, one with χ = −5 ≡ 1 mod 6; 31 at n = 6); Oliver-χ ⇒ Oliver-resistant (325 at n = 6, bipartiteness at every n ≡ 2 mod 4 among them). *Incomparable in one direction:* Oliver-resistant does not imply global-χ-resistant (310 at n = 6). *Open:* whether trivial-top Oliver-χ-resistance implies full Oliver-χ-resistance, and whether global-χ-resistance implies Oliver-resistance — at these sizes trivial-top groups alone kill every sampled property, so neither separation can appear, and all 15 global-χ-resistant properties at n = 6 happen to be Oliver-resistant.
+>
+> *Two facts the counts show in passing.* At n = 4 and 5, **no nontrivial monotone property is global-χ-resistant**, so global χ alone proves ARK there, and at n = 5 even the congruence form suffices. At n = 6 no sampled property survives the trivial-top groups, consistent with KSS at n = 6; the sample is not exhaustive.
+
 > **The rungs demonstrably separate, and two computations show it.** Exhaustive enumeration of the invariant monotone properties at two transitive groups with no transitive Oliver subgroup (`monotone-transitive-note.md` §3) found **448 satisfying χ(Δ_P) = 1 and none 𝔽_p-acyclic** — so the bottom rung is satisfiable where the next is not. Sharper still, 28 of those are **ℚ-acyclic**, failing ℤ-acyclicity only by a single ℤ/2: the smallest is the down-closure of one A₅-orbit of Hamiltonian cycles of K₅, which is homotopy equivalent to **ℝP²**. Chasing that family to its conclusion (`pending-checks.md` R10, script `chiral_mv.py`) shows n = 5 is the *only* member whose chiral half is even ℚ-acyclic. **Nothing in the graph setting has ever satisfied even the bottom rung**, which is the contrast worth holding: where the group route fails, χ = 1 becomes satisfiable — except for graph properties, where it has not.
 
 **ARK is exactly the assertion that the first implication reverses.** The ladder also runs from combinatorial to topological to algebraic invariants: non-evasiveness and collapsibility depend on the simplicial structure, contractibility only on homotopy type, acyclicity and χ only on homology — each step discarding information.
@@ -325,78 +359,75 @@ The middle row is the useful refinement: Smith gives χ(Δ_P^{Γ₂}) = 1 from A
 Hence the implication structure is a branching diagram rather than a chain:
 
 ```
-                +-------------------------+
-                |         trivial         |
-                +------------+------------+
-                             |
-                             |   ARK  <=>  this arrow reverses
-                             |
-                +------------v------------+
-                |       non-evasive       |     combinatorial:
-                +------------+------------+     depends on the
-                             |                  simplicial structure
-                +------------v------------+
-                |       collapsible       |
-                +------------+------------+
-                             |            - - - - - - - - - - - - -
-                +------------v------------+     topological:
-                |      contractible       |     homotopy type only
-                +------------+------------+
-                             |            - - - - - - - - - - - - -
-                +------------v------------+     algebraic:
-                |        Z-acyclic        |     homology only
-                |    ( = AND_p  AC_p )    |
-                +------------+------------+
-                             |
-                             |     +-----------------------------------------+
-                             +---->|  OLIVER(p,q; G)    chi(D^G) = 1 mod q   |
-                             |     |  G HAS a nontrivial cyclic middle       |
-                             |     +-----------------------------------------+
-                             |
-                   (drop to a single prime)
-                             |
-                +------------v------------+
-                |          AC_p           |
-                |  (F_p-acyclic, ONE p)   |
-                +------------+------------+
-                             |
-                             |     +-----------------------------------------+
-                             +---->|  SMITH(p; G)       D^G is AC_p          |
-                             |     |  G a p-group        (so chi(D^G) = 1)   |
-                             |     +-----------------------------------------+
-                             |
-                             |     +-----------------------------------------+
-                             +---->|  OLIVER(p,q; G)    chi(D^G) = 1 mod q   |
-                             |     |  G = p-group : q-group, NO cyclic mid.  |
-                             |     +--------------------+--------------------+
-                             |                          |
-                             |     +--------------------v--------------------+
-                             |     |  EVERY box above gives   chi(D^G) != 0  |
-                             |     |  (not > 0: a congruence mod q permits   |
-                             |     |   1-q, 1-2q, ...; only SMITH and the    |
-                             |     |   trivial-top case give chi = 1 exactly)|
-                             |     +--------------------+--------------------+
-                             |                          |
-                             |     +--------------------v--------------------+
-                             |     |  D^G is NONVOID                         |
-                             |     |  <=> P contains at least one orbital    |
-                             |     |      of G     (transversal cond., 8.7)  |
-                             |     +-----------------------------------------+
-                             |
-                +------------v------------+
-                |     chi(Delta_P) = 1    |
-                +------------+------------+
-                             |
-                +------------v------------+
-                | chi(Delta_P) = 1 (mod q)|
-                +-------------------------+
+                     +------------------------------------+
+                     |         trivial:  K_n in P         |
+                     +-----------------+------------------+
+                                       |
+                                       |   ARK  <=>  this arrow reverses
+                                       v
+                     +------------------------------------+
+                     |            non-evasive             |   combinatorial
+                     +-----------------+------------------+
+                                       v
+                     +------------------------------------+
+                     |            collapsible             |
+                     +-----------------+------------------+   - - - - - - - -
+                                       v
+                     +------------------------------------+
+                     |            contractible            |   topological
+                     +-----------------+------------------+   - - - - - - - -
+                                       v
+                     +------------------------------------+
+                     |   Z-acyclic   ( = AC_p for all p ) |   algebraic
+                     +---------+------------------+-------+
+                               |                  |
+               Oliver's thm    |                  |   drop to ONE prime
+                               v                  v
+  +--------------------------------------+   +--------------------------------------+
+  | OLIVER-CHI-RESISTANT                 |   | AC_p  (F_p-acyclic, one p)           |
+  | every Oliver G:  chi(D^G) = 1        |   |  SMITH: D^G is AC_p for p-groups G,  |
+  |   exactly if G has a trivial top,    |   |    so chi(D^G) = 1 on them           |
+  |   = 1 mod each top q otherwise       |   |  OLIVER(p,q) with no cyclic middle:  |
+  +---------+--------------------+-------+   |    chi(D^G) = 1 mod q                |
+            |                    |           +------------------+-------------------+
+            | (chi = 0 on a      |                              |
+            |  void complex)     |                              |
+            v                    v                              |
+  +---------------------+  +-------------------------------+    |
+  | OLIVER-RESISTANT    |  | TRIVIAL-TOP                   |    |
+  | every Oliver G has  |  | OLIVER-CHI-RESISTANT          |    |
+  | an orbital in P     |  | every p-by-cyclic G:          |    |
+  | (the CNF Phi_1)     |  |   chi(D^G) = 1  exactly       |    |
+  +---------------------+  +---------------+---------------+    |
+                                           |  G = 1             |
+                                           v                    v
+                           +-------------------------------------------------+
+                           | GLOBAL-CHI-RESISTANT         chi(D_P) = 1       |
+                           +------------------------+------------------------+
+                                                    v
+                           +-------------------------------------------------+
+                           | SMALL GLOBAL-CHI-RESISTANT                      |
+                           | chi(D_P) = 1 mod every prime p <= n             |
+                           | <=> chi(D^{Syl_p}) = 1 mod p for all p <= n     |
+                           +-------------------------------------------------+
+
+  Strictness, from every monotone property at n = 4, 5 and 1,500 sampled at n = 6:
+    OLIVER-CHI  => TRIVIAL-TOP     converse open (trivial-top kills every sample)
+    TRIVIAL-TOP => GLOBAL          strict  (15 separating properties at n = 6)
+    GLOBAL      => SMALL GLOBAL    strict  (n = 4: chi = -5 = 1 mod 6)
+    OLIVER-CHI  => OLIVER-RES.     strict  (bipartiteness, n = 2 mod 4)
+    OLIVER-RES. vs GLOBAL          OLIVER-RES. does not imply GLOBAL; converse open
+
+  The chi rungs are NOT monotone in the group: a subgroup can fail where G passes,
+  and the smallest group, G = 1, is the global test.  Maximal Oliver groups suffice
+  for OLIVER-RESISTANT, but not for any chi rung.
 ```
 
-*Monotonicity is an outer condition, not a rung.* The entire diagram presupposes that P is a **monotone** (downward-closed) graph property — that is what makes the family of members a simplicial complex Δ_P in the first place, so without it not one of the boxes below "non-evasive" is even defined (§9.2 develops the consequences of this, and §9 as a whole is about what monotonicity costs). Nontriviality is likewise a side hypothesis rather than a rung: it is what makes the fixed complexes of §7.2's right-hand boxes small enough to contradict, since it is exactly the statement that ∅ ∈ P and K_n ∉ P.
+*Monotonicity is an outer condition, not a rung.* The entire diagram presupposes that P is a **monotone** (downward-closed) graph property — that is what makes the family of members a simplicial complex Δ_P in the first place, so without it not one of the boxes below "non-evasive" is even defined (§9.2 develops the consequences of this, and §9 as a whole is about what monotonicity costs). Nontriviality is likewise a side hypothesis rather than a rung: it is what makes the fixed complexes of §7.2's group conditions small enough to contradict, since it is exactly the statement that ∅ ∈ P and K_n ∉ P.
 
-*The bottom of the right column is what the structural criterion uses.* Every test box yields **χ(Δ_P^Γ) ≠ 0**, since 0 ≢ 1 mod q for any q ≥ 2 — and a *void* complex has χ = 0, so the fixed complex must contain at least one face. By downward closure a face is a nonempty invariant graph, i.e. a union of orbitals, each of whose orbitals is then also in P. That is precisely the transversal condition of §9.7: **P contains at least one orbital of Γ**. Two things follow. It is the weakest consequence of every box above it, which is why the transversal condition can never deliver more than the CSP does — the point recorded in §9.7 and now visible in the diagram. And it is *strictly* weaker at two steps: χ ≠ 0 does not recover the congruence, and non-voidness does not recover χ ≠ 0, since a nonvoid complex can perfectly well have χ = 0. Note also that the extraction gives χ ≠ 0 rather than χ > 0; strict positivity is available only from SMITH (where χ = 1 exactly, the fixed complex being 𝔽_p-acyclic) and from the trivial-top Oliver case. **And non-voidness is not the last drop available from the congruence:** χ(Δ_P^Γ) equals the orbital count when the fixed complex has no higher faces, so χ ≡ 1 mod q constrains that count directly. §9.7's two-orbital criterion reads it that way, and is strictly stronger than the transversal condition at no extra cost.
+*The OLIVER-RESISTANT box is what the structural criterion uses.* Every test box yields **χ(Δ_P^Γ) ≠ 0**, since 0 ≢ 1 mod q for any q ≥ 2 — and a *void* complex has χ = 0, so the fixed complex must contain at least one face. By downward closure a face is a nonempty invariant graph, i.e. a union of orbitals, each of whose orbitals is then also in P. That is precisely the transversal condition of §9.7: **P contains at least one orbital of Γ**. Two things follow. It is the weakest consequence of every box above it, which is why the transversal condition can never deliver more than the CSP does — the point recorded in §9.7 and visible in the diagram. And it is *strictly* weaker at two steps: χ ≠ 0 does not recover the congruence, and non-voidness does not recover χ ≠ 0, since a nonvoid complex can perfectly well have χ = 0. Note also that the extraction gives χ ≠ 0 rather than χ > 0; strict positivity is available only from SMITH (where χ = 1 exactly, the fixed complex being 𝔽_p-acyclic) and from the trivial-top Oliver case. **And non-voidness is not the last drop available from the congruence:** χ(Δ_P^Γ) equals the orbital count when the fixed complex has no higher faces, so χ ≡ 1 mod q constrains that count directly. §9.7's two-orbital criterion reads it that way, and is strictly stronger than the transversal condition at no extra cost.
 
-*Reading the diagram.* The spine is the chain of §7.1, running from combinatorial through topological to algebraic invariants; the three boxes on the right are the conditions the machinery actually tests, each hanging off the weakest rung that implies it. **Particular versus all** appears at three places: AC_p is one prime while ℤ-acyclicity is the conjunction over all of them; each right-hand box is one group Γ and one pair (p,q), while the CSP of `small-degree-computation.md` enforces the conjunction over an entire battery, i.e. all (p,q) realisable at this n; and χ(Δ_P) ≡ 1 mod q is one modulus while χ(Δ_P) = 1 is all of them at once. The global test of `small-degree-computation.md` §3.7 enforces only the single weakest node in the diagram, which is why it is cheap, why passing it means nothing, and why it nevertheless killed the n = 10 skeleton — the CSP had enforced the right-hand boxes and never that one.
+*Reading the diagram.* The spine runs from combinatorial through topological to algebraic invariants; the capitalised boxes are the named resistance metaproperties, each hanging off the weakest rung that implies it. **Particular versus all** appears at three places: AC_p is one prime while ℤ-acyclicity is the conjunction over all of them; a single group condition is one group Γ with its (p, q), while each metaproperty box — and the CSP of `small-degree-computation.md`, over its battery — takes the conjunction over groups; and a congruence mod one prime is a single residue, small global-χ-resistance is every prime p ≤ n, and global-χ-resistance is the exact integer, strictly stronger than all those congruences together. The global test of `small-degree-computation.md` §3.7 is the trivial group's condition — the G = 1 arrow into GLOBAL-CHI-RESISTANT — which is why it is cheap, and why it killed the n = 10 skeleton: the CSP had enforced every group condition with at most 12 orbitals, and the trivial group has 45.
 
 *Which particular primes are attacked.* Two families give a contradiction from a **single** AC_p rather than from ℤ-acyclicity.
 
