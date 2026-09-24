@@ -961,6 +961,10 @@ Vipul asked for a general argument producing, for any P, an Oliver group whose c
 
 **Follow-up to 5bb — measured:** n = 6 sample: t ≤ 2 kills 87.6%, t ≤ 3 99.9%, t ≤ 5 100%. Parity principle confirmed on self-dual properties (silent on all even t, killed at t = 3). n = 10: all 61 natural properties killed at t ≤ 3; the thresholds needing t = 3 are k = 20–24 around the self-dual k = 22. Measurement scripts were inline, not saved.
 
+**Follow-up to 5bb — overlap with §9.7.** Vipul pointed to §9.7: its fixed-complex criterion and t = 1–4 table already contain the truth-table reduction and the two-orbital case (credited to Angel–Borja), and its t = 3 row is more precise than what I wrote — a q = 2 reading also admits three isolated orbitals (χ = 3), so "χ = 1 iff contractible" holds only for exact readings. §7.7 rewritten to cite §9.7 and fixed in two places; new content is the parity principle, blow-up descent and the self-dual hard core. A duplicate measurement paragraph I added was removed in favour of the one already present.
+
+**Follow-up:** on Vipul's request, the implications block under the §7.2 diagram now has a paragraph on the §7.6 weakly symmetric separations (ℤ-acyclic ⇒ Oliver-χ strict, Oliver-χ ⇒ nontrivial-top strict, nontrivial-top ⇏ global-χ), noting that the graph-case questions remain open.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
