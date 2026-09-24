@@ -915,6 +915,8 @@ Vipul asked whether ℤ-acyclic and higher rungs are self-dual, and suggested th
 
 Vipul pointed out that deducing trivial-group resistance from nontrivial-top χ-resistance needs at least one nontrivial Oliver group, or the condition is vacuous and P = {∅} would pass. C_n supplies it: Oliver, nontrivial, faithful on pairs for n ≥ 3. Its condition forces an orbital, hence an edge, into P. The implication bullet in `oen` §7.2 now states this.
 
+**Follow-up:** the diagram arrow into NONTRIVIAL-TOP was mislabelled "G != 1"; it relaxes exact conditions to congruences, now "mod q only". Strictness of Oliver-χ ⇒ nontrivial-top is genuinely open (no nontrivial-top-resistant property at n ≤ 6); added to the legend's open list and to A38 item 1.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

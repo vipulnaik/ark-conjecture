@@ -370,7 +370,7 @@ Hence the implication structure is a branching diagram rather than a chain:
  | has a trivial top, 1 mod q otherwise |   +--------------+---------------+
  +---+----------------+-------------+---+                  |
      |                |             |                      |
-     | G transitive   | G != 1      | G = 1                |
+     | G transitive   | mod q only  | G = 1                |
      v                v             v                      |
  +-------------+  +------------+  +------------------------+ |
  | VERTEX-     |  | NONTRIV.-  |  | GLOBAL-CHI-RESISTANT   |<+
@@ -410,7 +410,8 @@ Hence the implication structure is a branching diagram rather than a chain:
    OLIVER-RES.     => VT-RESISTANT    204 at n = 6
    OLIVER-CHI      => VT-OLIVER-CHI   66 at n = 6
  Not implied by GLOBAL: NONTRIVIAL-TOP (15 at n = 6).
- Open: does NONTRIVIAL-TOP imply GLOBAL?  Does GLOBAL imply OLIVER-RESISTANT?
+ Open: is OLIVER-CHI => NONTRIVIAL-TOP strict?  Does NONTRIVIAL-TOP imply GLOBAL?
+       Does GLOBAL imply OLIVER-RESISTANT?
 
  The chi rungs are not monotone in the group: G = 1 is the global test, and a subgroup
  can fail where G passes.  Maximal groups suffice for the two resistance boxes only.
