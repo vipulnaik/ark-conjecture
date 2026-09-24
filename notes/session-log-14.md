@@ -935,6 +935,14 @@ Vipul pointed out that deducing trivial-group resistance from nontrivial-top χ-
 
 **Follow-up:** the §7.2 diagram lacked ℚ-acyclic; added as a box [sd] between the one-prime box and global-χ (𝔽_p-acyclic ⇒ ℚ-acyclic ⇒ χ = 1), with its connectors placed on the actual junction columns.
 
+## 5ay. Natural explanations: what has them and what doesn't; the bipartite parity lemma
+
+Vipul observed that the natural explanations covered only one side of each separation. Checked: **"no perfect matching" is not χ = 1** (χ = 2 at n = 4, −8 at n = 6), nor are its natural refinements; the 148 χ = 1 examples are all its sub-properties, and that explains their Oliver-susceptibility, but their χ = 1 is found by search. **Verified** the max-degree example for Oliver-resistant ⇏ vertex-transitive-resistant (n = 6 and 10), and recorded the prime-power emptiness of the nontrivial-top rung.
+
+**Bipartiteness under transitive groups:** a parity lemma (invariant bipartite graphs under a transitive group have even, equal-size components) proves susceptibility at every odd n for *all* transitive groups, and at n ≡ 2 (mod 4) all 481 groups have a *largest* invariant bipartite graph — a full simplex, stronger than a cone. Proof attempt: three parity consequences and a reduction to a same-shape quotient; proved for two-block systems and in-component matchings; the straddling-matching base case is open. Recorded in `oen` §§7.2 and 7.4; A38 items 2 and 5.
+
+**Follow-up (pending checks):** the Bollobás scope is still unconfirmed (only citations found). New: a Combinatorica paper shows every decreasing property of bipartite graphs is evasive, covering all our bipartiteness conclusions; and BBKN Theorem 1.3(b)'s proof is deferred to the journal version in the arXiv paper. Both added to `literature-findings.md` entry 23 and A37.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
