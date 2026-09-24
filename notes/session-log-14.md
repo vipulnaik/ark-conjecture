@@ -917,6 +917,18 @@ Vipul pointed out that deducing trivial-group resistance from nontrivial-top χ-
 
 **Follow-up:** the diagram arrow into NONTRIVIAL-TOP was mislabelled "G != 1"; it relaxes exact conditions to congruences, now "mod q only". Strictness of Oliver-χ ⇒ nontrivial-top is genuinely open (no nontrivial-top-resistant property at n ≤ 6); added to the legend's open list and to A38 item 1.
 
+## 5ax. A37/A38 worked through; vertex-transitive groups are multiplicative
+
+**Settled:** global-χ ⇏ Oliver-resistant — 148 properties at n = 6 with χ = 1 avoiding every orbital of a transitive two-orbital group (exhaustive search inside the orbital-free down-set; one verified by brute force, 23 classes, avoiding 3K₂ and K₂,₂,₂). **None of the 151 known χ = 1 properties is ℚ-acyclic** (3 exact over ℚ with Betti (15,15) or (40,40); 148 mod two large primes), so at n = 6 the ladder breaks exactly between ℚ-acyclic and χ = 1. **Bipartiteness fails small global at every n ≤ 300** via an exact recurrence, with two unproved periodicity patterns. **Cone conjecture proved for two-block systems.**
+
+**A counting error caught:** the n = 6 random sample of 1,500 draws was only 740 distinct properties, so every n = 6 figure in §7 was inflated (15 global-χ properties were 3); all corrected, conclusions unchanged. Two background jobs also died silently mid-run (likely memory), fixed by a resumable chunked run.
+
+**Literature:** BBKN Theorem 1.3 also gives evasiveness for almost all n unconditionally; Bollobás 1976 likely covers triangle-freeness at every n (title only), which makes my earlier "C(n,2) − O(1) is the best unconditional bound for triangle-freeness" wrong; the bipartite complex is a known wedge of spheres. Recorded as `literature-findings.md` entry 23.
+
+**Recorded, on Vipul's request:** vertex-transitive Oliver groups are multiplicative — every one has an orbital of at most n(q(n) − 1)/2 edges, so their susceptibility reaches only an n·q(n) ≳ n log n sparse threshold, unconditionally, while Θ(n²) needs the additive families (`oen` §7.2 fact 8).
+
+**Follow-up to 5ax:** the fact-8 caveat about BBKN is resolved by `johnson-presentations.md` §5 (pointed out by Vipul): their unconditional case uses q(n) with F = n/q(n), but a Vinogradov decomposition in place of entangled generators, losing constants. Fact 8 now cites it.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

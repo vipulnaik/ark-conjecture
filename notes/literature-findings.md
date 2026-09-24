@@ -520,6 +520,14 @@ So there is **one wall, and it is not at the top rung** — it is the gap betwee
 
 *Prompted by the A₅-on-15 search (`monotone-transitive-note.md` §6 item 3a), which produced ℚ-acyclic invariant complexes with 2-torsion and raised two questions: do strongly collapsible complexes have a fixed-point property for their automorphism groups, and do ℤ-acyclic vertex-transitive complexes exist at all. Both are answered in the literature, the second in a way that reshapes what the search is for.*
 
+## 23. Triangle-freeness, bipartiteness and forbidden subgraphs: what is already known
+
+Three checks against results derived in `orbital-evasiveness-notes.md` §§7 and the triclique box.
+
+- **Babai–Banerjee–Kulkarni–Naik, "Evasiveness and the distribution of prime numbers" (arXiv:1001.4829), Theorem 1.3.** For every graph H, the forbidden-subgraph property is (a) eventually evasive assuming the Weak Chowla Conjecture, (b) evasive for almost all n unconditionally, and (c) of query complexity C(n,2) − O(1) for all n unconditionally, improving the C(n,2) − O(n) of Chakrabarti–Khot–Shi. *Our notes had cited only (c) and (a); (b) is the stronger unconditional statement.*
+- **Bollobás, "Complete subgraphs are elusive", J. Combin. Theory B 21 (1976) 1–7.** By its title, containing a complete subgraph K_k is evasive; triangle-freeness is the k = 3 case, so it is evasive for every n. *Not read — the scope (all n, or large n) should be confirmed from the paper.* If it holds for all n, our triangle-freeness results at n = 10, 45 and 58 re-derive known cases; their value is the group mechanism, not the conclusion.
+- **The bipartite-graph complex.** A survey (arXiv:1209.6365, "Decision trees, monotone functions, and semimatroids") records that the complexes of acyclic, bipartite (attributed to Chari) and disconnected graphs are homotopy equivalent to wedges of spheres, and Jonsson's *Simplicial Complexes of Graphs* (LNM 1928) treats the topology and enumeration of bipartite graphs. So bipartiteness's evasiveness is known; our generating function √(2eˣ − 1) and the ODE proof that B(n) ≠ 0 re-derive its Euler characteristic.
+
 ## 13. Barmak–Minian, "Strong homotopy types, nerves and collapses" (DCG 47, 2012; arXiv:0907.2954) — the fixed-point theorem holds, and the conjecture reduces to minimal complexes
 
 Read in full. Four results bear directly on the programme.

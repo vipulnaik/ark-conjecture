@@ -760,17 +760,15 @@ If yes, that is a genuine relative-difficulty statement rather than an impressio
 
 ### A37. Non-maximal Oliver groups at the χ rung — answered; two residues left
 
-**Answered (2026-09).** The n = 10 battery does include non-maximal groups: its TOM stage emits every conjugacy class of subgroups of S₁₀ with at most 12 orbitals, and an independent re-derivation (`oliver_tom.g`, freshly built GAP 4.14) reproduces its count exactly — 1,294 Oliver classes, 1,111 with t ≤ 12. The index-2 subgroup that kills triangle-freeness at n = 10 has t = 3, so it is in the battery by construction.
+**Answered.** The n = 10 battery does include non-maximal groups: its TOM stage emits every conjugacy class of subgroups of S₁₀ with at most 12 orbitals, reproduced independently by `oliver_tom.g` (1,294 Oliver classes, 1,111 with t ≤ 12).
 
-**Left:**
+**Literature — answered** (`literature-findings.md` entry 23): bipartiteness's complex is a known wedge of spheres (Chari; Jonsson's book); triangle-freeness is covered by Bollobás 1976, "Complete subgraphs are elusive" — **from the title only; the paper's scope (all n or large n) still needs confirming**; and BBKN Theorem 1.3 adds evasiveness for almost all n, unconditionally.
 
-1. **The uncapped band.** 183 Oliver classes at n = 10 have 13 ≤ t ≤ 45 and are never evaluated; the trivial group, the top of that band, is the global χ test. They cannot enter the CSP (exponential in t), but a **post-check battery** — each SAT candidate against all 1,294 classes — is cheap: 8 seconds for bipartiteness. Worth building into the pipeline (`small-degree-computation.md` §7.2).
-2. **Literature.** Whether triangle-freeness at n = 10, and the global Euler characteristic of the bipartite-graph complex (e.g.f. √(2eˣ − 1)), are already known. Until checked, both are re-derivations.
+**Left:** the uncapped band — 183 Oliver classes at n = 10 with 13 ≤ t ≤ 45 — as a **post-check battery** on SAT candidates (`small-degree-computation.md` §7.2); not built, since it needs pipeline candidates not in this directory.
 
 ### A38. Open questions on the metaproperty ladder (`oen` §§7.2, 7.4)
 
-1. **The open separations.** Does nontrivial-top Oliver-χ-resistance imply global-χ-resistance? Does global-χ-resistance imply Oliver-resistance? Neither can be decided at n ≤ 5, and a 1,500-property sample at n = 6 has no nontrivial-top-resistant property and all 15 global-χ-resistant ones Oliver-resistant. **An exhaustive n = 6 run of `metaproperty_ladder_check.py`** is the natural test; the number of monotone properties on 6 vertices, and so its feasibility, has not been checked.
-   *Also open: is Oliver-χ ⇒ nontrivial-top Oliver-χ strict?* No nontrivial-top-resistant property exists at n ≤ 6, so no separating example can appear there. A negative answer to "nontrivial-top ⇒ global?" would settle it, since Oliver-χ ⇒ global; a positive one would not, since the other trivial-top groups' exact conditions could still separate the two.
-2. **The cone conjecture.** Every transitive Oliver group at n ≡ 2 (mod 4) gives a cone complex for bipartiteness — 481 checked at n = 6–22 (`bip_transitive_cone_scan.py`), the apex varying with the group. A proof would settle the vertex-transitive χ row of the §7.4 table.
-3. **Bipartiteness beyond n = 30 at the small global rung.** It fails the congruence at some p ≤ n for every n ≤ 30; no argument covers larger n. The ODE u′ = 1 + ½ u²/(1 − u) might give B(n) mod p directly.
-4. **How far do graph properties climb?** 15 sampled properties at n = 6 have χ(Δ_P) = 1 (one confirmed by direct count). Whether any is ℚ- or 𝔽_p-acyclic is unchecked — the first measurement of how far the graph-property ladder fails to collapse above χ.
+1. **Separations.** *Settled:* global-χ-resistance does **not** imply Oliver-resistance — 148 counterexamples at n = 6 from a targeted exhaustive search, one verified by brute force. *Open:* is Oliver-χ ⇒ nontrivial-top Oliver-χ strict, and does nontrivial-top imply global-χ? No property at n ≤ 6 survives the nontrivial-top groups, so neither can be tested there; a negative answer to the second would settle the first. An exhaustive n = 6 run remains untried (size unknown).
+2. **The cone conjecture.** *Proved for groups with a two-block system* (`oen` §7.4). *Open* for groups without one, whose minimal blocks have size 2; 481 transitive groups at n = 6–22 are all cones.
+3. **Bipartiteness at the small-global rung.** *Extended to n ≤ 300*: fails at every n. Two unproved patterns would settle all n ≢ 2 (mod 6): B(n) odd exactly when n ≢ 2 (mod 3), and B(n) prime to 3 at every odd n.
+4. **How far do graph properties climb?** *Answered at n = 6*: none of the 151 known χ = 1 properties is ℚ-acyclic (3 exact over ℚ, 148 modulo two large primes). Open at larger n.
