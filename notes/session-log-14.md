@@ -929,6 +929,8 @@ Vipul pointed out that deducing trivial-group resistance from nontrivial-top χ-
 
 **Follow-up to 5ax:** the fact-8 caveat about BBKN is resolved by `johnson-presentations.md` §5 (pointed out by Vipul): their unconditional case uses q(n) with F = n/q(n), but a Vinogradov decomposition in place of entangled generators, losing constants. Fact 8 now cites it.
 
+**Follow-up:** fact 8's "about n·q(n)/2" tightened to the exact n(q(n) − 1)/2 on Vipul's suggestion — S2 with c = q(n) attains it exactly (intra orbital n(q(n) − 1)/2, cross orbitals ≥ n·q(n)/2), so it is the precise threshold both ways.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
