@@ -947,6 +947,20 @@ Vipul observed that the natural explanations covered only one side of each separ
 
 **Bollobás confirmed** from the open-archive abstract: containing K_k is elusive, no restriction on n — triangle-freeness evasive for every n; hedges removed. **Exhaustive n = 6 judged infeasible**: ≥ 2²⁴ monotone properties (antichains inside the 24-class 7-edge level). **Proved B(n) odd iff n ≢ 2 (mod 3)** — mod-4 comparison of c = b² reduces parity to a relation that [k ≢ 2 mod 3] satisfies, via Jacobsthal numbers — so bipartiteness fails small global at every n ≢ 2 (mod 3); checked to n = 150. Not attempted further: the straddling-matching case, the mod-3 pattern, the post-check battery (needs pipeline candidates).
 
+## 5ba. Weakly symmetric: Oliver-χ-resistant without ℤ-acyclic
+
+Vipul suggested testing the ℤ-acyclic ⇒ Oliver-χ arrow on weakly symmetric functions. **Obstruction**: a transitive Oliver subgroup kills everything (RP²₆ under A₅ fails at A₄, transitive on 6 points, and at V₄). **A₅ on the 10 edges of K₅**: 44 of 3,176 nontrivial invariant functions are Oliver-χ-resistant, none of the 3,176 is ℤ-acyclic; 32 not ℚ-acyclic, 8 with only 2-torsion, 4 with only 3-torsion; none S₅-invariant. Recorded as `oen` §7.6 and A39; scripts ws_oliver.g, ws_check.py, ws_search.py.
+
+**Follow-up to 5ba:** Vipul pointed out that §7.6's closing contrast ("once the group is too small to have transitive Oliver subgroups") was misleading: S_n on edges has no transitive Oliver subgroup at any non-prime-power n either. Rewritten: the difference is the number of Oliver conditions (8 for A₅ vs 50 classes at n = 6, 1,294 at n = 10), and A₅ on K₅'s edges is S₅ with its one transitive Oliver subgroup AGL(1, 5) removed.
+
+**Follow-up to 5ba — the whole ladder, weakly symmetric:** for A₅ on K₅'s edges (3,176 functions) every proved implication holds, and both graph-case open separations are settled: Oliver-χ ⇒ nontrivial-top strict (272; 44 with global χ = 1), nontrivial-top ⇏ global-χ (228; witness verified by direct computation). So a graph-case proof of either would need S_n specifically. The exporter gained a nontrivial-top column; ws_check.py's loader patched for it and both earlier results re-run unchanged.
+
+## 5bb. A susceptibility algorithm: small-orbital tests and a parity principle
+
+Vipul asked for a general argument producing, for any P, an Oliver group whose condition it fails. Recorded as `oen` §7.7: the truth-table reduction; the **two-orbital lemma** (P fails every reading unless exactly one orbital graph lies in P); t = 3 (χ = 1 iff contractible); shapes (blocks, point stabiliser, two orbits); blow-up descent; and the **parity principle** χ̃(Δ_{P*}^Γ) = (−1)^{t−1}χ̃(Δ_P^Γ), so self-dual properties (existing exactly at n ≡ 2, 3 mod 4) are invisible to every even-t group. No complete algorithm; the hard core is properties that look self-dual on every small-t family. Measurement filed as A40.
+
+**Follow-up to 5bb — measured:** n = 6 sample: t ≤ 2 kills 87.6%, t ≤ 3 99.9%, t ≤ 5 100%. Parity principle confirmed on self-dual properties (silent on all even t, killed at t = 3). n = 10: all 61 natural properties killed at t ≤ 3; the thresholds needing t = 3 are k = 20–24 around the self-dual k = 22. Measurement scripts were inline, not saved.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
