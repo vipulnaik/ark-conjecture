@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-bip_fixed_chi_scan.py -- bipartiteness against every Oliver group in an oliver_tom.g export.
+bip_fixed_chi_scan.py -- bipartiteness against every Oliver group in an oliver_tom.g export (six-field format).
 
 For each group, chi of the fixed complex of bipartiteness (the sets of orbitals whose union is
 bipartite; the full set excluded), by depth-first search over that down-set with an
@@ -19,8 +19,8 @@ from collections import Counter
 def parse(path):
     G = []
     for line in open(path):
-        order, trans, tag, orbs = line.rstrip("\n").split("|")
-        tag = "exact" if tag == "exact" else json.loads(tag)
+        order, trans, exact, qs, ntq, orbs = line.rstrip("\n").split("|")
+        tag = "exact" if exact == "true" else json.loads(qs)
         orbs = [[(e[0] - 1, e[1] - 1) for e in o] for o in json.loads(orbs)]
         G.append(dict(order=int(order), trans=(trans == "true"), tag=tag, orbs=orbs))
     return G

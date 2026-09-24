@@ -1,32 +1,41 @@
 #!/usr/bin/env python3
 """
-metaproperty_ladder_check.py -- the five named resistance metaproperties (orbital-evasiveness-notes.md 7.1)
+metaproperty_ladder_check.py -- the named resistance metaproperties (orbital-evasiveness-notes.md section 7),
 checked on every nontrivial monotone property at small n: exhaustive at n = 4, 5; random down-closures at n = 6.
-Needs tom{n}.txt from oliver_tom.g (every Oliver subgroup class of S_n with its condition and orbitals).
-
+Input: tom{n}.txt from oliver_tom.g, one Oliver subgroup class of S_n per line:
+    order | transitive | exact | top primes | nontrivial-top primes | orbitals on pairs
+Metaproperties (P monotone decreasing, empty graph in P, K_n not in P):
+  OR     Oliver-resistant                    every Oliver group has an orbital in P
+  VTOR   vertex-transitive Oliver-resistant  every transitive Oliver group has an orbital in P
+  OCR    Oliver-chi-resistant                exact groups: chi = 1; others: chi = 1 mod each top prime
+  TTR    trivial-top Oliver-chi-resistant    every exact (p-by-cyclic) group: chi = 1   [proved equal to OCR]
+  NTR    nontrivial-top Oliver-chi-resist.   every group: chi = 1 mod each nontrivial-top prime
+  VTOCR  vertex-transitive Oliver-chi-res.   OCR's condition on every transitive Oliver group
+  GR     global-chi-resistant                chi(Delta_P) = 1
+  SGR    small global-chi-resistant          chi(Delta_P) = 1 mod every prime p <= n
+Also: every claimed implication, the Sylow form of SGR, and Alexander duality -- each metaproperty compared
+between P and its dual P' = {G : complement of G not in P}.
 USAGE   python3 metaproperty_ladder_check.py 5 all        python3 metaproperty_ladder_check.py 6 sample 1500
-Reports: properties satisfying each metaproperty; violations of the claimed implications and of the Sylow
-characterisation of small global-chi-resistance; counts and examples of each separation.
 """
-
 import sys, json, itertools, random
 import numpy as np
+from collections import Counter
 n=int(sys.argv[1]); mode=sys.argv[2] if len(sys.argv)>2 else "all"; samples=int(sys.argv[3]) if len(sys.argv)>3 else 0
-E=list(itertools.combinations(range(n),2)); eidx={e:i for i,e in enumerate(E)}; m=len(E)
-masks=np.arange(1<<m,dtype=np.int64)
-canon=masks.copy()
+path=sys.argv[4] if len(sys.argv)>4 else f"tom{n}.txt"
+E=list(itertools.combinations(range(n),2)); eidx={e:i for i,e in enumerate(E)}; m=len(E); FULL=(1<<m)-1
+masks=np.arange(1<<m,dtype=np.int64); canon=masks.copy()
 for perm in itertools.permutations(range(n)):
     pe=[eidx[tuple(sorted((perm[u],perm[v])))] for u,v in E]
     img=np.zeros_like(masks)
     for i in range(m): img|=((masks>>i)&1)<<pe[i]
     canon=np.minimum(canon,img)
-cls_of_canon={c:i for i,c in enumerate(sorted(set(canon.tolist())))}
-cls=np.array([cls_of_canon[c] for c in canon.tolist()]); K=len(cls_of_canon)
+ids={c:i for i,c in enumerate(sorted(set(canon.tolist())))}
+cls=np.array([ids[c] for c in canon.tolist()]); K=len(ids)
 rep=np.zeros(K,dtype=np.int64)
-for c,i in cls_of_canon.items(): rep[i]=c
+for c,i in ids.items(): rep[i]=c
 ecount=np.array([bin(int(r)).count("1") for r in rep]); labeled=np.bincount(cls,minlength=K)
-empty=cls[0]; full=cls[(1<<m)-1]
-below=[set() for _ in range(K)]                    # classes of subgraphs of each class
+empty=int(cls[0]); full=int(cls[FULL]); comp=np.array([int(cls[FULL^int(r)]) for r in rep])
+below=[set() for _ in range(K)]
 for i in range(K):
     r=int(rep[i]); s=r
     while True:
@@ -35,69 +44,72 @@ for i in range(K):
         s=(s-1)&r
 primes=[p for p in range(2,n+1) if all(p%d for d in range(2,p))]
 G=[]
-for line in open(f"tom{n}.txt"):
-    order,trans,tag,orbs=line.rstrip("\n").split("|")
-    tag="exact" if tag=="exact" else json.loads(tag)
+for line in open(path):
+    order,trans,exact,qs,ntq,orbs=line.rstrip("\n").split("|")
     orbs=[sum(1<<eidx[(e[0]-1,e[1]-1)] for e in o) for o in json.loads(orbs)]
-    t=len(orbs); ucls=[]; usz=[]
+    t=len(orbs); uc=[]; us=[]
     for T in range(1,1<<t):
         mk=0
         for j in range(t):
             if T>>j&1: mk|=orbs[j]
-        ucls.append(cls[mk]); usz.append(bin(T).count("1"))
-    G.append(dict(order=int(order),tag=tag,single=[int(cls[o]) for o in orbs],
-                  ucls=np.array(ucls),sign=np.where(np.array(usz)%2==1,1,-1)))
-nfact=1
-for k in range(2,n+1): nfact*=k
+        uc.append(cls[mk]); us.append(bin(T).count("1"))
+    G.append(dict(order=int(order),trans=(trans=="true"),exact=(exact=="true"),qs=json.loads(qs),ntq=json.loads(ntq),
+                  single=[int(cls[o]) for o in orbs],uc=np.array(uc),sign=np.where(np.array(us)%2==1,1,-1)))
+nf=1
+for k in range(2,n+1): nf*=k
 def ppart(p):
-    x=nfact; r=1
+    x=nf; r=1
     while x%p==0: x//=p; r*=p
     return r
-syl={p:[g for g in G if g['order']==ppart(p)] for p in primes}
+syl={p:[i for i,g in enumerate(G) if g['order']==ppart(p)] for p in primes}
 def meta(Pset):
     inP=np.zeros(K,bool); inP[list(Pset)]=True
-    chis=[int((g['sign']*inP[g['ucls']]).sum()) for g in G]
-    OR=all(any(inP[c] for c in g['single']) for g in G)
-    ok=[(c==1) if g['tag']=="exact" else all(c%q==1%q for q in g['tag']) for g,c in zip(G,chis)]
-    OCR=all(ok); TTR=all(o for o,g in zip(ok,G) if g['tag']=="exact")
+    chi=[int((g['sign']*inP[g['uc']]).sum()) for g in G]
+    res=[any(inP[c] for c in g['single']) for g in G]
+    ocr=[(c==1) if g['exact'] else all((c-1)%q==0 for q in g['qs']) for g,c in zip(G,chi)]
+    ntr=[all((c-1)%q==0 for q in g['ntq']) for g,c in zip(G,chi)]
     glob=int(sum(labeled[i]*(-1)**(ecount[i]-1) for i in Pset if ecount[i]>0))
-    GR=glob==1; SGR=all(glob%p==1%p for p in primes)
-    sylow_ok=all(any(((int((g['sign']*inP[g['ucls']]).sum()))-1)%p==0 for g in syl[p]) for p in primes)
-    return dict(OR=OR,OCR=OCR,TTR=TTR,GR=GR,SGR=SGR,sylow=sylow_ok,glob=glob)
+    M=dict(OR=all(res), VTOR=all(r for r,g in zip(res,G) if g['trans']),
+           OCR=all(ocr), TTR=all(c==1 for c,g in zip(chi,G) if g['exact']), NTR=all(ntr),
+           VTOCR=all(o for o,g in zip(ocr,G) if g['trans']), GR=(glob==1), SGR=all((glob-1)%p==0 for p in primes))
+    M['sylow']=all(any((chi[i]-1)%p==0 for i in syl[p]) for p in primes)
+    return M
+def dual(Pset): return frozenset(i for i in range(K) if comp[i] not in Pset)
 def downsets():
     order=sorted(range(K),key=lambda i:ecount[i])
-    def rec(k,chosen):
-        if k==K:
-            yield chosen; return
-        i=order[k]
-        yield from rec(k+1,chosen)
-        if below[i]-{i}<=chosen: yield from rec(k+1,chosen|{i})
+    def rec(k,ch):
+        if k==K: yield ch; return
+        i=order[k]; yield from rec(k+1,ch)
+        if below[i]-{i}<=ch: yield from rec(k+1,ch|{i})
     yield from rec(0,frozenset())
 def props():
     if mode=="all":
         for D in downsets():
             if empty in D and full not in D: yield D
     else:
-        rng=random.Random(7); nonfull=[i for i in range(K) if i!=full]
+        rng=random.Random(7); pool=[i for i in range(K) if i!=full]
         for _ in range(samples):
-            gens=rng.sample(nonfull,rng.randint(1,4)); D=set()
-            for g in gens: D|=below[g]
+            D=set()
+            for g in rng.sample(pool,rng.randint(1,4)): D|=below[g]
             if full not in D: yield frozenset(D)
-from collections import Counter
-C=Counter(); ex={}; viol=Counter(); total=0; hold=Counter()
-imps=[("OCR","TTR"),("TTR","GR"),("GR","SGR"),("OCR","OR")]
+NAMES=["OR","VTOR","OCR","TTR","NTR","VTOCR","GR","SGR"]
+IMPS=[("OCR","NTR"),("NTR","SGR"),("NTR","OR"),("OCR","OR"),("TTR","GR"),("GR","SGR"),("OR","VTOR"),
+      ("OCR","VTOCR"),("VTOCR","VTOR")]
+hold=Counter(); viol=Counter(); sep=Counter(); dualmis=Counter(); total=0
 for D in props():
-    total+=1; M=meta(D)
-    for key in ('OR','OCR','TTR','GR','SGR'): hold[key]+=M[key]
-    for a,b in imps:
-        if M[a] and not M[b]: viol[(a,b)]+=1
-    if M['SGR']!=M['sylow']: viol[('SGR<=>sylow',)]+=1
-    for a,b in [("TTR","OCR"),("GR","TTR"),("SGR","GR"),("OR","OCR"),("OR","GR"),("GR","OR"),("TTR","OR"),("OR","TTR")]:
-        if M[a] and not M[b]:
-            C[(a,b)]+=1; ex.setdefault((a,b),(sorted(int(ecount[i]) for i in D),M['glob']))
-print(f"n={n} ({mode}): {K} graph classes, {len(G)} Oliver groups, {total} nontrivial monotone properties")
-print("  properties satisfying each:",dict(hold))
-print("  violations of claimed implications / of SGR <=> Sylow residues:",dict(viol) if viol else "NONE")
-for (a,b) in [("TTR","OCR"),("GR","TTR"),("SGR","GR"),("OR","OCR"),("OR","GR"),("GR","OR"),("TTR","OR"),("OR","TTR")]:
-    k=C.get((a,b),0)
-    print(f"  {a:4s} but not {b:4s}: {k:6d}" + (f"   e.g. member edge-counts {ex[(a,b)][0][:12]}..., global chi {ex[(a,b)][1]}" if k else ""))
+    total+=1; M=meta(D); Md=meta(dual(D))
+    for k in NAMES: hold[k]+=M[k]; dualmis[k]+=(M[k]!=Md[k])
+    if M['OCR']!=M['TTR']: viol['OCR<=>TTR']+=1
+    if M['SGR']!=M['sylow']: viol['SGR<=>Sylow form']+=1
+    for a,b in IMPS:
+        if M[a] and not M[b]: viol[f"{a}=>{b}"]+=1
+    for a in NAMES:
+        for b in NAMES:
+            if a!=b and M[a] and not M[b]: sep[(a,b)]+=1
+print(f"n={n} ({mode}): {K} graph classes, {len(G)} Oliver groups ({sum(g['trans'] for g in G)} transitive), {total} nontrivial monotone properties")
+print("  satisfying each:", dict((k,hold[k]) for k in NAMES))
+print("  violations (implications, OCR<=>TTR collapse, Sylow form):", dict(viol) if viol else "NONE")
+print("  P vs its dual, mismatches per metaproperty:", dict((k,dualmis[k]) for k in NAMES))
+interesting=[("SGR","NTR"),("OR","NTR"),("NTR","GR"),("GR","NTR"),("VTOR","OR"),("VTOCR","OCR"),("VTOCR","NTR"),
+             ("OR","GR"),("GR","OR"),("SGR","GR"),("GR","TTR"),("OR","OCR")]
+print("  separations (holds / fails):", ", ".join(f"{a}/{b} {sep[(a,b)]}" for a,b in interesting))

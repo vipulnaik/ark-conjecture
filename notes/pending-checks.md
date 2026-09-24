@@ -766,3 +766,10 @@ If yes, that is a genuine relative-difficulty statement rather than an impressio
 
 1. **The uncapped band.** 183 Oliver classes at n = 10 have 13 ≤ t ≤ 45 and are never evaluated; the trivial group, the top of that band, is the global χ test. They cannot enter the CSP (exponential in t), but a **post-check battery** — each SAT candidate against all 1,294 classes — is cheap: 8 seconds for bipartiteness. Worth building into the pipeline (`small-degree-computation.md` §7.2).
 2. **Literature.** Whether triangle-freeness at n = 10, and the global Euler characteristic of the bipartite-graph complex (e.g.f. √(2eˣ − 1)), are already known. Until checked, both are re-derivations.
+
+### A38. Open questions on the metaproperty ladder (`oen` §§7.2, 7.4)
+
+1. **The two open separations.** Does nontrivial-top Oliver-χ-resistance imply global-χ-resistance? Does global-χ-resistance imply Oliver-resistance? Neither can be decided at n ≤ 5, and a 1,500-property sample at n = 6 has no nontrivial-top-resistant property and all 15 global-χ-resistant ones Oliver-resistant. **An exhaustive n = 6 run of `metaproperty_ladder_check.py`** is the natural test; the number of monotone properties on 6 vertices, and so its feasibility, has not been checked.
+2. **The cone conjecture.** Every transitive Oliver group at n ≡ 2 (mod 4) gives a cone complex for bipartiteness — 481 checked at n = 6–22 (`bip_transitive_cone_scan.py`), the apex varying with the group. A proof would settle the vertex-transitive χ row of the §7.4 table.
+3. **Bipartiteness beyond n = 30 at the small global rung.** It fails the congruence at some p ≤ n for every n ≤ 30; no argument covers larger n. The ODE u′ = 1 + ½ u²/(1 − u) might give B(n) mod p directly.
+4. **How far do graph properties climb?** 15 sampled properties at n = 6 have χ(Δ_P) = 1 (one confirmed by direct count). Whether any is ℚ- or 𝔽_p-acyclic is unchecked — the first measurement of how far the graph-property ladder fails to collapse above χ.

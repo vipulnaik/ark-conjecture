@@ -90,6 +90,8 @@ Refining §2.0's table for the group-dependent tests, which is what the battery 
 
 The trivial-top case is the harshest — a congruence collapses to an equality — which is why the pipeline tags it separately. The p-group condition is not a congruence but a homological one, and is checked by Smith normal form rather than by an alternating sum.
 
+**Q-tagged rows are consequences of their cores — but only inside the battery.** For an Oliver group G with chain P ◁ H ◁ G, the core H is p-by-cyclic, hence trivial-top, and Smith counting for the q-group G/H acting on H's fixed-point space gives χ(Δ^G) ≡ χ(Δ^H) (mod q). So the exact condition on H implies the congruence on G, and over *all* Oliver groups the q-tagged conditions add nothing (`orbital-evasiveness-notes.md` §7: trivial-top Oliver-χ-resistance equals Oliver-χ-resistance). In the capped CSP they are not redundant: the core has at least as many orbitals as G and can exceed MAXT, in which case its exact row is absent and G's congruence is the only trace of it. **Q-tagged rows should not be pruned as redundant.**
+
 **Each condition comes in a primal and a dual form.** P^∨ = {G : Ḡ ∉ P} is monotone, nontrivial, and evasive exactly when P is; complements of orbital unions are orbital unions of the *same* group, so the dual bits are y[S] = 1 − x[comp S] — no new variables, a second condition per group for free.
 
 ### 2.3 The complement involution

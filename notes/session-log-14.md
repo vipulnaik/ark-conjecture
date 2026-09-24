@@ -889,6 +889,18 @@ Vipul named the rungs: Oliver-resistant, Oliver-χ-resistant, trivial-top Oliver
 
 **`oen` §7.1** gains the named box and a spine extended to small global; **§7.2's diagram is redrawn** with the named boxes, the G = 1 arrow into global, the Sylow form, a strictness legend, and the non-monotonicity of the χ rungs. Its "Reading the diagram" paragraph and three layout references ("right-hand boxes", "bottom of the right column") rewritten for the new layout.
 
+## 5at. The agreed batch: section 7 rebuilt, new rungs verified, bipartiteness placed on every rung
+
+**Data.** Regenerated every Oliver export in a six-field format adding each group's nontrivial-top primes (S₄ 11, S₅ 17, S₆ 50, S₁₀ 1,294 — matching before) plus transitive groups of degree 14, 18, 22 (29, 391, 25). Only the trivial group lacks a nontrivial-top reading, across all 1,817.
+
+**Checks** (`metaproperty_ladder_check.py`, now eight metaproperties plus duals): no violation at n = 4, 5 (all) or 6 (1,500); **Alexander duality confirmed** — zero P-versus-dual mismatches on every χ rung, 1,254 and 1,121 on the two resistance rungs; new separations 46 (small global, not nontrivial-top), 204 (vertex-transitive-resistant, not Oliver-resistant), 66 (vt Oliver-χ, not Oliver-χ). All 481 transitive Oliver groups at n = 6–22 give bipartite cones.
+
+**Two new proofs.** B(n) ≠ 0 for every n ≥ 3 via u′ = 1 + ½ u²/(1 − u) — replacing the asymptotic argument, checked to n = 30. And the dual of bipartiteness is Oliver-resistant exactly at non-prime-power n (two bipartite complements would 4-colour K_n).
+
+**`oen` §7 rebuilt** (39.6k → ~43k chars): 7.1 conventions (with n ≥ 3) and spine; 7.2 definitions, the seven-row named family, seven structural facts (including the collapse proof and duality), implications, checks, the CNF view and a redrawn diagram with self-duality marks and a strictness legend; 7.3 unchanged except Oliver's n_G; **7.4 bipartiteness on every rung** in a status table; **7.5 scope** for the weakly symmetric setting. *The reread found four errors, not just clutter*: "global χ is the weakest rung" and "independent of the fixed-complex conditions"; "χ = 1 not excluded at prime powers" (false at n = 4, 5); §7.3's n_G = 0 "for p-groups" (for all p-by-cyclic groups); and **"nothing in the graph setting has ever satisfied even the bottom rung"** — false: 15 sampled properties at n = 6 have χ = 1, one confirmed by brute force over all 32,768 labelled graphs.
+
+**Elsewhere:** `small-degree-computation.md` §2.2 notes that q-tagged rows follow from their cores' exact rows but must not be pruned in the capped CSP; `literature-findings.md`'s pointer to "§7.2's bottom box" and §9's "weakest node" repointed to the OLIVER-RESISTANT box. Scripts re-issued and rerun from the outputs directory. Open questions filed as **A38**.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

@@ -11,8 +11,11 @@ labelled bipartite graphs,
 
 has e.g.f. sqrt(2 e^x - 1), and chi(Delta_bip) = 1 - B(n).  A non-evasive property needs
 chi = 1 (this is Oliver's condition for the trivial group), so B(n) != 0 proves bipartiteness
-evasive.  For large n: the nearest zero of 2e^x - 1 is the unique point x = -ln 2, so B(n)
-alternates in sign with |B(n)| ~ C n! n^(-3/2) / (ln 2)^n and cannot vanish.
+evasive -- and B(n) != 0 for EVERY n >= 3, by an ODE argument:  put f(y) = sqrt(2e^(-y) - 1) = 1 - u(y).
+Then f^2 = 2e^(-y) - 1 gives 2ff' = -(f^2 + 1), i.e.  u' = 1 + (1/2) u^2/(1 - u) = 1 + (1/2)(u^2 + u^3 + ...),
+whose right side has nonnegative coefficients; by induction every coefficient of u is >= 0, and u^m
+contributes u_1^m = 1 to y^m, so u_(m+1) > 0 for m >= 2.  Since B(n) = (-1)^(n+1) n! u_n, B(n) != 0 for n >= 3,
+with sign (-1)^(n+1).  (u_2 = 0: bipartiteness is trivial at n = 2.)  main() checks this identity too.
 
 USAGE   python3 bipartite_global_chi.py [NMAX]      (default 30; brute-force check to n = 5)
 """
@@ -77,6 +80,23 @@ def main():
     for n in range(1, 6):
         assert B[n] == brute(n), n
     print("brute force agrees for n = 1..5")
+    u = [Fr(0)] * (N + 2); u[1] = Fr(1)
+
+    def mulu(a, c):
+        out = [Fr(0)] * (N + 2)
+        for i, x in enumerate(a):
+            if x:
+                for j, y in enumerate(c[:N + 2 - i]):
+                    out[i + j] += x * y
+        return out
+    for d in range(1, N):
+        rhs = Fr(0); pw = mulu(u, u); k = 2
+        while k <= d:
+            rhs += pw[d] / 2; pw = mulu(pw, u); k += 1
+        u[d + 1] = rhs / (d + 1)
+    assert all(B[n] == (-1) ** (n + 1) * factorial(n) * u[n] for n in range(1, N + 1))
+    assert all(u[n] > 0 for n in range(3, N + 1))
+    print("ODE identity B(n) = (-1)^(n+1) n! u_n and u_n > 0 (n >= 3) confirmed to n =", N)
     for n in range(2, N + 1):
         print(f"{n:3d}  B(n) = {B[n]:>40d}   chi = {1 - B[n]:>40d}   "
               f"{'EVASIVE' if B[n] != 0 else 'chi = 1'}")
