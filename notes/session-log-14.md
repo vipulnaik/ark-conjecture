@@ -931,6 +931,10 @@ Vipul pointed out that deducing trivial-group resistance from nontrivial-top χ-
 
 **Follow-up:** fact 8's "about n·q(n)/2" tightened to the exact n(q(n) − 1)/2 on Vipul's suggestion — S2 with c = q(n) attains it exactly (intra orbital n(q(n) − 1)/2, cross orbitals ≥ n·q(n)/2), so it is the precise threshold both ways.
 
+**Follow-up:** `oen` §7.1 claimed "𝔽_p-acyclic for one p does not imply ℚ-acyclic", contradicting its own spine; Vipul spotted it. The implication holds for finite complexes (dim H_i(X; 𝔽_p) ≥ rank H_i(X; ℤ)), and is strict through torsion (ℝP²). Sentence replaced.
+
+**Follow-up:** the §7.2 diagram lacked ℚ-acyclic; added as a box [sd] between the one-prime box and global-χ (𝔽_p-acyclic ⇒ ℚ-acyclic ⇒ χ = 1), with its connectors placed on the actual junction columns.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
