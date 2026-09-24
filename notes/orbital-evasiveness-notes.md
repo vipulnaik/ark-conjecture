@@ -430,7 +430,13 @@ Hence the implication structure is a branching diagram rather than a chain:
    OLIVER-CHI      => VT-OLIVER-CHI   29 at n = 6
  Not implied by GLOBAL: NONTRIVIAL-TOP (3 at n = 6); OLIVER-RESISTANT (148 at n = 6,
    from a targeted search -- none of which the random sample hit).
- Open: is OLIVER-CHI => NONTRIVIAL-TOP strict?  Does NONTRIVIAL-TOP imply GLOBAL?
+ Open for graph properties: is OLIVER-CHI => NONTRIVIAL-TOP strict?  Does NONTRIVIAL-TOP
+   imply GLOBAL?
+ Settled for weakly symmetric functions (7.6: A5 on the 10 edges of K5, all 3,176
+ nontrivial invariant functions, every implication above holding):
+   Z-ACYCLIC       => OLIVER-CHI      strict: 44 Oliver-chi, none Z-acyclic
+   OLIVER-CHI      => NONTRIVIAL-TOP  strict: 272 (44 of them with global chi = 1)
+   NONTRIVIAL-TOP  does not imply GLOBAL: 228; nor conversely: 24
 
  The chi rungs are not monotone in the group: G = 1 is the global test, and a subgroup
  can fail where G passes.  Maximal groups suffice for the two resistance boxes only.

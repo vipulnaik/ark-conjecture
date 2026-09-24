@@ -965,6 +965,8 @@ Vipul asked for a general argument producing, for any P, an Oliver group whose c
 
 **Follow-up:** on Vipul's request, the implications block under the §7.2 diagram now has a paragraph on the §7.6 weakly symmetric separations (ℤ-acyclic ⇒ Oliver-χ strict, Oliver-χ ⇒ nontrivial-top strict, nontrivial-top ⇏ global-χ), noting that the graph-case questions remain open.
 
+**Follow-up:** the summary inside the §7.2 diagram block ("Strict, with examples" / "Open") now records the §7.6 weakly symmetric separations too; my previous edit had updated only the prose implications list below it, as Vipul noted.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
