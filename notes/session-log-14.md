@@ -943,6 +943,10 @@ Vipul observed that the natural explanations covered only one side of each separ
 
 **Follow-up (pending checks):** the Bollobás scope is still unconfirmed (only citations found). New: a Combinatorica paper shows every decreasing property of bipartite graphs is evasive, covering all our bipartiteness conclusions; and BBKN Theorem 1.3(b)'s proof is deferred to the journal version in the arXiv paper. Both added to `literature-findings.md` entry 23 and A37.
 
+## 5az. Pending checks, continued
+
+**Bollobás confirmed** from the open-archive abstract: containing K_k is elusive, no restriction on n — triangle-freeness evasive for every n; hedges removed. **Exhaustive n = 6 judged infeasible**: ≥ 2²⁴ monotone properties (antichains inside the 24-class 7-edge level). **Proved B(n) odd iff n ≢ 2 (mod 3)** — mod-4 comparison of c = b² reduces parity to a relation that [k ≢ 2 mod 3] satisfies, via Jacobsthal numbers — so bipartiteness fails small global at every n ≢ 2 (mod 3); checked to n = 150. Not attempted further: the straddling-matching case, the mod-3 pattern, the post-check battery (needs pipeline candidates).
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
