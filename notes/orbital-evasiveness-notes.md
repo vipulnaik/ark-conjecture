@@ -232,7 +232,7 @@ For a monotone decreasing P with complex Δ_P:
 
 Two rungs need comment. **Strongly collapsible** (Barmak–Minian, DCG 2012: reducible to a point by removing dominated vertices, those whose link is a cone) sits above non-evasive, since removing a dominated vertex leaves a nonevasive link and, inductively, a nonevasive deletion. **Their Theorem 6.2 gives it the fixed-point property**: every automorphism group of a strongly collapsible complex fixes a point, so a strongly collapsible vertex-homogeneous complex is a simplex (Cor. 6.4). Hence any counterexample is nonevasive but *not* strongly collapsible — and by their Cor. 6.13 may be taken **minimal** (no dominated vertex), since the core of a vertex-homogeneous nonevasive complex is again vertex-homogeneous and nonevasive. Between these two rungs sits their graded notion of *n-collapsibility* (0 = strongly collapsible; n+1 = some vertex has an n-collapsible link), so a counterexample would carry a definite collapsibility index ≥ 1. See `literature-findings.md` §13. **ℚ-acyclic** sits between 𝔽_p-acyclic-for-one-p and χ = 1: it kills all Betti numbers but permits torsion, and it is the rung the programme's near-misses actually reach — the chiral n = 5 candidate (H̃₁ = ℤ/2, ℝP²-like) and the A₅-on-15 completions of `a5_on_15.py` (rank-4 𝔽₂-homology) are both ℚ-acyclic and acyclic mod every odd prime tested, and fail exactly at ℤ. Note that "𝔽_p-acyclic for one p" does not imply ℚ-acyclic in general (a complex can have free homology invisible to no p), so the two are incomparable rungs both implying χ = 1; they are written in the order the tests here meet them.
 
-**ARK is exactly the assertion that the first implication reverses.** The ladder also runs from combinatorial to topological to algebraic invariants: non-evasiveness and collapsibility depend on the simplicial structure, contractibility only on homotopy type, acyclicity and χ only on homology — each step discarding information.
+**ARK is exactly the assertion that non-evasive implies trivial.** The first implication already reverses unconditionally: Δ_P is vertex-homogeneous, since S_n is transitive on edges, and a strongly collapsible vertex-homogeneous complex is a simplex (Barmak–Minian Cor. 6.4). So ARK is the reversal of the *second* implication, strongly collapsible ⟸ non-evasive, and the §7.2 diagram labels it so. The ladder also runs from combinatorial to topological to algebraic invariants: non-evasiveness and collapsibility depend on the simplicial structure, contractibility only on homotopy type, acyclicity and χ only on homology — each step discarding information.
 
 *Ladder collapse, not ladder emptiness.* The useful way to read this for a class of complexes is that the conjecture holds on the class iff the ladder **collapses** there — every rung is equivalent to trivial, because the only complexes on the class that reach even the bottom rung are trivial. A test then does two things at once: excluding the bottom rung proves the conjecture on the class, and a *non-trivial* complex found at any rung measures exactly how far the class's ladder fails to collapse.
 
@@ -301,13 +301,13 @@ The middle row is the useful refinement: Smith gives χ(Δ_P^{Γ₂}) = 1 from A
 4. **With (p, q) fixed, χ-resistance passes to exactly the interval [H, G].** The Oliver groups with a given chain P ◁ H ◁ G are subgroup-closed, and counting gives χ(Δ^K) ≡ χ(Δ^{K∩H}) (mod q), so each subgroup's residue is set by its core K ∩ H. *Verified at n = 10 for bipartiteness* on the two transitive non-exact groups with top prime 2 (orders 20 and 40): G and its core give χ = 1, a Sylow 2-subgroup — core trivial, so carrying the global residue 1,062,436 ≡ 0 — gives χ = 8 and 0. The subgroup H of fact 3 is the core of G′ and passes mod 2; the genuine failures lie outside the interval.
 5. **Trivial-top Oliver-χ-resistance equals Oliver-χ-resistance.** Let G be Oliver with chain P ◁ H ◁ G and a nontrivial q-top. Its core H is p-by-cyclic, hence trivial-top, so trivial-top resistance gives χ(Δ^H) = 1; and G/H, a q-group, acts on the fixed-point space of H with fixed-point space that of G, so χ(Δ^G) ≡ χ(Δ^H) = 1 (mod q). This is the last step of Oliver's own proof, pure counting, consuming no hypothesis. *The congruence must be applied to fixed-point spaces, via barycentric subdivision, not by counting faces of Δ^H: a face fixed by G/H has different sizes counted in H-orbitals and in G-orbitals, so signs do not match face by face.* The pipeline consequence is recorded in `small-degree-computation.md` §2.2.
 6. **Sylow form of small global-χ-resistance**: it holds iff χ(Δ_P^{Syl_p}) ≡ 1 (mod p) for every p ≤ n (orbit counting, §7.1). Since every Sylow q-subgroup has the nontrivial-top reading 1 ◁ 1 ◁ Syl_q, nontrivial-top Oliver-χ-resistance implies it. *Verified at n = 10 for bipartiteness:* the Sylow 2, 3, 5, 7 subgroups (orders 256, 81, 25, 7) give χ = 2, 1, 1, 4, matching the global value mod each prime.
-7. **Alexander duality.** For the complement-dual P′ = {G : Ḡ ∉ P}, the fixed complex of any Γ is the Alexander dual of P's on the same orbitals, and reduced Euler characteristic changes only by a sign under Alexander duality. So **every χ rung is self-dual**, while **Oliver-resistance is not**: P′ contains an orbital O exactly when P omits K_n ∖ O, so resistance of the dual is the omission clause of the CNF view below. *Verified on every property at n = 4, 5 and 1,500 at n = 6*: zero mismatches between P and P′ on each χ rung, against 1,254 for Oliver-resistance and 1,121 for its vertex-transitive version. Since evasiveness is itself self-dual, the χ rungs have the right symmetry and the resistance rungs only half of it.
+7. **Alexander duality.** Take the complement-dual P′ = {G : Ḡ ∉ P}. **Duality is an involution on nontrivial properties** — K_n ∉ P exactly when ∅ ∈ P′ — while the trivial property's dual is the empty one, excluded by §7.1; so self-duality is always meant on nontrivial P. For such P, the fixed complex of any Γ is the Alexander dual of P's on the same orbitals, and reduced Euler characteristic changes only by a sign under Alexander duality. So **every χ rung is self-dual**. Applied to Δ_P itself, the duality swaps reduced homology with reindexed reduced cohomology, so **the homological spine rungs — ℤ-, 𝔽_p- and ℚ-acyclic — are self-dual too**; and **non-evasiveness is self-dual**, since a decision tree for P becomes one for P′ of the same depth by complementing its answers and its output. The top two rungs are self-dual only vacuously, containing no nontrivial P. Collapsible and contractible are homotopy-level, which Alexander duality does not control, and their status is not settled here. **Oliver-resistance is not** self-dual: P′ contains an orbital O exactly when P omits K_n ∖ O, so resistance of the dual is the omission clause of the CNF view below. *Verified on every property at n = 4, 5 and 1,500 at n = 6*: zero mismatches between P and P′ on each χ rung, against 1,254 for Oliver-resistance and 1,121 for its vertex-transitive version. Since evasiveness is itself self-dual, the χ rungs have the right symmetry and the resistance rungs only half of it.
 
 **Implications**, all proved:
 
 - ℤ-acyclic ⇒ Oliver-χ-resistant (Oliver's theorem); AC_p for one p ⇒ global-χ-resistant (the spine).
 - Oliver-χ ⇒ global-χ (the trivial group) ⇒ small global-χ.
-- Oliver-χ ⇒ nontrivial-top Oliver-χ ⇒ small global-χ (fact 6), and nontrivial-top Oliver-χ ⇒ Oliver-resistant (χ ≡ 1 mod q rules out a void complex, and any orbital in P contains an edge, which is an orbital of the trivial group).
+- Oliver-χ ⇒ nontrivial-top Oliver-χ ⇒ small global-χ (fact 6), and nontrivial-top Oliver-χ ⇒ Oliver-resistant. Every nontrivial Oliver group is in the class, and χ ≡ 1 mod q rules out a void fixed complex, so each has an orbital in P. The trivial group, the one Oliver group outside the class, needs a bootstrap: some nontrivial Oliver group must exist, or the condition would hold vacuously even for P = {∅}. The cyclic group C_n on the vertices supplies one — it is Oliver, nontrivial, and for n ≥ 3 acts faithfully on pairs — so P contains one of its orbitals, hence by down-closure a single edge, which is an orbital of the trivial group.
 - Oliver-χ ⇒ vertex-transitive Oliver-χ ⇒ vertex-transitive Oliver-resistant, and Oliver-resistant ⇒ vertex-transitive Oliver-resistant.
 
 **Checked** on every nontrivial monotone property at n = 4 (22) and n = 5 (860) and on 1,500 random ones at n = 6 (`metaproperty_ladder_check.py`, using the exports of `oliver_tom.g`): no violation of any implication, of fact 5 or of the Sylow form. How many properties satisfy each:
@@ -336,12 +336,17 @@ Hence the implication structure is a branching diagram rather than a chain:
 
 ```
                      +--------------------------------------+
-                     |          trivial:  K_n in P          |
+                     |       trivial:  K_n in P       [sd*] |
+                     +------------------+-------------------+
+                                        |  reverses: D_P is vertex-homogeneous
+                                        v  (Barmak-Minian, Cor. 6.4)
+                     +--------------------------------------+
+                     |      strongly collapsible      [sd*] |
                      +------------------+-------------------+
                                         |  ARK <=> this arrow reverses
                                         v
                      +--------------------------------------+
-                     |             non-evasive              |  combinatorial
+                     |           non-evasive           [sd] |  combinatorial
                      +------------------+-------------------+
                                         v
                      +--------------------------------------+
@@ -353,13 +358,13 @@ Hence the implication structure is a branching diagram rather than a chain:
                      +------------------+-------------------+  - - - - - - -
                                         v
                      +--------------------------------------+
-                     |   Z-acyclic  ( = AC_p for every p )  |  algebraic
+                     |  Z-acyclic (= AC_p for every p) [sd] |  algebraic
                      +---------+------------------+---------+
                                |                  |
                  Oliver's thm  |                  |  drop to ONE prime
                                v                  v
  +--------------------------------------+   +------------------------------+
- | OLIVER-CHI-RESISTANT            [sd] |   | AC_p  (F_p-acyclic, one p)   |
+ | OLIVER-CHI-RESISTANT            [sd] |   | AC_p: F_p-acyclic, one p [sd]|
  |   = TRIVIAL-TOP OLIVER-CHI-RESISTANT |   | SMITH: D^G is AC_p for every |
  | every Oliver G: chi(D^G) = 1 if G    |   | p-group G, so chi(D^G) = 1   |
  | has a trivial top, 1 mod q otherwise |   +--------------+---------------+
@@ -390,8 +395,12 @@ Hence the implication structure is a branching diagram rather than a chain:
  | every transitive Oliver G has an orbital in P |
  +-----------------------------------------------+
 
- [sd] self-dual: holds for P iff for its dual P' = {G : complement of G not in P}.
-      The two resistance boxes are not; OLIVER-RESISTANT for P' is the omission clause.
+ [sd]  self-dual on nontrivial P: holds for P iff for its dual P' = {G : complement of G
+       not in P}, which is again nontrivial.  [sd*]  vacuously: no nontrivial P lies there,
+       and the dual of the trivial property is the empty one, excluded by 7.1.
+       Unmarked spine boxes are homotopy-level, which Alexander duality does not control.
+       The two resistance boxes are not self-dual; OLIVER-RESISTANT for P' is the omission
+       clause.
 
  Strict, with examples (every property at n = 4, 5; 1,500 sampled at n = 6):
    OLIVER-CHI      => GLOBAL          15 at n = 6

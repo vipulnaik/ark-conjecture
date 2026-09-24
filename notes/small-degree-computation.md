@@ -46,7 +46,7 @@ Everything the pipeline tests is a consequence of one implication, and it is wor
 
 > **non-evasive ⟹ ℤ-acyclic ⟹ 𝔽_p-acyclic for each p ⟹ χ(Δ_P) = 1.**
 
-(There are intermediate rungs — collapsible, contractible — between the first two; they matter for the general theory and not here, since no test in this document distinguishes them.) **ARK is exactly the assertion that the first implication reverses**, and each step to the right discards information: the left end is simplicial, the middle homotopical and homological, the right end a single integer.
+(There are intermediate rungs — collapsible, contractible — between the first two; they matter for the general theory and not here, since no test in this document distinguishes them.) **ARK is exactly the assertion that the left end is reached only by the trivial property** (non-evasive ⟹ trivial; `orbital-evasiveness-notes.md` §7.1), and each step to the right discards information: the left end is simplicial, the middle homotopical and homological, the right end a single integer.
 
 **Two families of test hang off this chain, and they are independent.**
 

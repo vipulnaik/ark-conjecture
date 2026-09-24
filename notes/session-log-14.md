@@ -901,6 +901,20 @@ Vipul named the rungs: Oliver-resistant, Oliver-χ-resistant, trivial-top Oliver
 
 **Elsewhere:** `small-degree-computation.md` §2.2 notes that q-tagged rows follow from their cores' exact rows but must not be pruned in the capped CSP; `literature-findings.md`'s pointer to "§7.2's bottom box" and §9's "weakest node" repointed to the OLIVER-RESISTANT box. Scripts re-issued and rerun from the outputs directory. Open questions filed as **A38**.
 
+## 5au. "ARK is the reversal of the first implication" — corrected in two places
+
+Vipul noted that with *strongly collapsible* on the spine, ARK is no longer the first implication's reversal. In fact the first reverses unconditionally (Δ_P is vertex-homogeneous; Barmak–Minian Cor. 6.4), so ARK is the reversal of the second — non-evasive ⟹ trivial. The same sentence in `small-degree-computation.md` §2.0 was wrong differently: its chain starts at non-evasive ⟹ ℤ-acyclic, whose reversal is not ARK. Both restated as "non-evasive implies trivial"; the §7.2 diagram, which draws trivial → non-evasive as a single arrow, is correct as drawn.
+
+**Follow-up to 5au:** the diagram now draws *strongly collapsible* as its own box between trivial and non-evasive, the first arrow labelled as reversing by Barmak–Minian and the ARK label moved to the second, so the text no longer has to explain a merged arrow.
+
+## 5av. Self-duality stated on nontrivial P; the spine's self-dual rungs marked
+
+Vipul asked whether ℤ-acyclic and higher rungs are self-dual, and suggested the "[sd]" definition allow the trivial escape. Duality is an involution on nontrivial properties (K_n ∉ P ⟺ ∅ ∈ P′); the trivial property's dual is the excluded empty one. Self-dual on nontrivial P: non-evasive (decision trees complement), ℤ-/𝔽_p-/ℚ-acyclic (Alexander duality on Δ_P), and every χ rung; trivial and strongly collapsible only vacuously ([sd*]); collapsible and contractible unmarked — homotopy-level, not controlled by Alexander duality, status unsettled. Diagram marks and legend updated, fact 7 extended.
+
+## 5aw. The nontrivial-top ⇒ Oliver-resistant step needs a bootstrap
+
+Vipul pointed out that deducing trivial-group resistance from nontrivial-top χ-resistance needs at least one nontrivial Oliver group, or the condition is vacuous and P = {∅} would pass. C_n supplies it: Oliver, nontrivial, faithful on pairs for n ≥ 3. Its condition forces an orbital, hence an edge, into P. The implication bullet in `oen` §7.2 now states this.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
