@@ -973,6 +973,8 @@ Vipul doubted that small-orbital groups suffice at large n and proposed τ(P, n)
 
 **Follow-up to 5bc:** a sixth statement falsified by the n = 6 find — §7.1 and A38.4 said no graph property at n = 6 is ℚ-acyclic and that the ladder breaks exactly between ℚ-acyclic and χ = 1; the resistant dual pair is ℚ-acyclic, so the break for them is between ℚ-acyclic and ℤ-acyclic. Both corrected.
 
+**Follow-up to 5bc — structure of the resistant pair:** P₁ = bipartite graphs with no caterpillar (P₅ plus a pendant at the second vertex, the unbalanced (3,2,2,1,1,1) tree); maximal members K₃,₃, K₁,₅ and K₁,₄ with a leg extended; equivalently the 26 balanced-bipartite classes plus 4 star-like ones. P₂ = no 2K₃, K₅ or X. Both verified exactly; recorded in §7.9 and A41.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
