@@ -975,6 +975,8 @@ Vipul doubted that small-orbital groups suffice at large n and proposed τ(P, n)
 
 **Follow-up to 5bc — structure of the resistant pair:** P₁ = bipartite graphs with no caterpillar (P₅ plus a pendant at the second vertex, the unbalanced (3,2,2,1,1,1) tree); maximal members K₃,₃, K₁,₅ and K₁,₄ with a leg extended; equivalently the 26 balanced-bipartite classes plus 4 star-like ones. P₂ = no 2K₃, K₅ or X. Both verified exactly; recorded in §7.9 and A41.
 
+**Follow-up to 5bc — explanation and n = 10:** P₁ = odd–odd bipartite plus extended-star subgraphs. Group by group: 40 cones (apex a fixed edge, 3K₂, K₃,₃, K₁,₅, a 3-edge star or C₆), 7 acyclic small-2-group complexes, 2 cancellations (orders 3, 6). At n = 10 five natural analogues all fail (125–183 of the 727 groups with t ≤ 8): balanced versions by emptiness at the 3 + 7 split, odd–odd versions by excess. The n = 6 pair reflects n = 6's arithmetic. Script `resistant6_candidates.py`.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
