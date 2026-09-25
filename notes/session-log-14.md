@@ -981,6 +981,12 @@ Vipul doubted that small-orbital groups suffice at large n and proposed τ(P, n)
 
 Natural analogues of the n = 6 pair failed (side-size families: best 125 of 727 small groups; S = {1,3,4,5} 422). Switched to a counterexample-guided search: templates = orbital unions, containment by a bitmask embedding test, group conditions solved by CP-SAT, violators added per round. **Feasible through every group with t ≤ 6, checked completely**; partway into t = 7. Bugs caught: the loop reported success on a timeout (a further t = 6 violator was then found); state was lost when a run was killed (now saved per round); the embedding test's slow cases were failed tests against dense graphs (now run on complements when sparser, 2× faster, verified identical). Single-core speed is the bottleneck. Scripts and state in `n10_search/`.
 
+**Follow-up to 5bd:** a compiled embedding test (C via ctypes, ≈200×, identical on all stage-one pairs) and pynauty certificates unblocked the search: **feasible through every Oliver class with t ≤ 11 at n = 10**, each level checked completely (214 active constraints, 4,484 templates). Remaining: t = 12 and the 183 classes with t > 12.
+
+**Follow-up to 5bd — t = 12:** 8 groups added (5,318 templates); solver UNKNOWN at 60 s; a 240 s re-solve killed, probably memory. Saved state has the t = 12 stage unresolved; the t ≤ 11 result stands.
+
+**Follow-up to 5bd — hand-off:** Vipul offered to run the search longer. Scripts made portable (paths and solver settings via environment variables, re-solve of an UNKNOWN saved stage), smoke-tested from the project directory, and instructions written into A41. Running longer settles t = 12; the t > 12 classes still need new code.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

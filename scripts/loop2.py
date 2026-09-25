@@ -1,11 +1,18 @@
-import sys, time, pickle; sys.path.insert(0,"/tmp/g/n10")
+import sys, os, time, pickle; sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
 from cegar import *
 import warnings; warnings.filterwarnings("ignore")
-TMAX=int(sys.argv[1]); BUDGET=float(sys.argv[2]); BATCH=4
+TMAX=int(sys.argv[1]); BUDGET=float(sys.argv[2]); BATCH=8
 t0=time.time(); G=load_groups(); st=pickle.load(open(ST,"rb")); T=st['T']; active=st['active']; sol=st['sol']; T.new=[]
 def ok(g,c): return (c==1) if g['exact'] else all((c-1)%q==0 for q in g['qs'])
 def save():
     pickle.dump(dict(T=T,active=active,sol=sol),open(ST,"wb"))
+RESOLVE=float(os.environ.get("N10_RESOLVE_TIMEOUT","600"))
+if isinstance(sol,str):
+    print(f"saved state is {sol}; re-solving current stage (limit {RESOLVE:.0f}s, {WORKERS} workers)...",flush=True)
+    for gi in active: G[gi]['U']=unions(G[gi])
+    sol=solve(T,active,G,timeout=RESOLVE)
+    for gi in active: G[gi].pop('U',None)
+    save(); print("  re-solve:", sol if isinstance(sol,str) else f"feasible, {len(sol)} in P",flush=True)
 rounds=0
 while True:
     if isinstance(sol,str): print("INFEASIBLE/UNKNOWN at this stage:",sol); break
@@ -31,7 +38,7 @@ while True:
         for mk,sg in unions(G[gi]): T.id(mk)
     T.close()
     for gi in active: G[gi]['U']=unions(G[gi])
-    sol=solve(T,active,G)
+    sol=solve(T,active,G,timeout=float(os.environ.get('N10_SOLVE_TIMEOUT','300')))
     for gi in active: G[gi].pop('U',None)
     rounds+=1; save()
     print(f"  round {rounds}: +{len(bad)} groups (t={sorted({G[b]['t'] for b in bad})}); {len(T.reps)} templates; "

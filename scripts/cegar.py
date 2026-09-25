@@ -3,12 +3,15 @@ import networkx as nx
 from networkx.algorithms import isomorphism as iso
 from ortools.sat.python import cp_model
 n=10; E=list(itertools.combinations(range(n),2)); eidx={e:i for i,e in enumerate(E)}; FULL=(1<<45)-1
-ST="/tmp/g/n10/state.pkl"
+HERE=os.path.dirname(os.path.abspath(__file__))
+ST=os.environ.get("N10_STATE", os.path.join(HERE,"state.pkl"))
+TOM10=os.environ.get("N10_TOM10", os.path.join(HERE,"..","tom10.txt"))
+WORKERS=int(os.environ.get("N10_WORKERS","8"))
 def graph(mk):
     g=nx.Graph(); g.add_nodes_from(range(n)); g.add_edges_from(E[i] for i in range(45) if mk>>i&1); return g
 def load_groups():
     G=[]
-    for line in open("/mnt/user-data/outputs/ark-collapse/tom10.txt"):
+    for line in open(TOM10):
         order,trans,exact,qs,ntq,orbs=line.rstrip("\n").split("|")
         orbs=[sum(1<<eidx[(min(a,b)-1,max(a,b)-1)] for a,b in o) for o in json.loads(orbs)]
         G.append(dict(order=int(order),exact=exact=="true",qs=json.loads(qs),orbs=orbs,t=len(orbs)))
@@ -146,7 +149,7 @@ def solve(T,active,G,timeout=60):
             L=1
             for q in g['qs']: L=L*q//__import__('math').gcd(L,q)
             k=m.NewIntVar(-10**6,10**6,f"k{gi}"); m.Add(expr-1==L*k)
-    sv=cp_model.CpSolver(); sv.parameters.max_time_in_seconds=timeout; sv.parameters.num_workers=8
+    sv=cp_model.CpSolver(); sv.parameters.max_time_in_seconds=timeout; sv.parameters.num_workers=WORKERS
     r=sv.Solve(m)
     if r in (cp_model.OPTIMAL,cp_model.FEASIBLE): return {i for i in range(len(x)) if sv.Value(x[i])}
     return "INFEASIBLE" if r==cp_model.INFEASIBLE else "UNKNOWN"
