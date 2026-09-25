@@ -977,6 +977,10 @@ Vipul doubted that small-orbital groups suffice at large n and proposed τ(P, n)
 
 **Follow-up to 5bc — explanation and n = 10:** P₁ = odd–odd bipartite plus extended-star subgraphs. Group by group: 40 cones (apex a fixed edge, 3K₂, K₃,₃, K₁,₅, a 3-edge star or C₆), 7 acyclic small-2-group complexes, 2 cancellations (orders 3, 6). At n = 10 five natural analogues all fail (125–183 of the 727 groups with t ≤ 8): balanced versions by emptiness at the 3 + 7 split, odd–odd versions by excess. The n = 6 pair reflects n = 6's arithmetic. Script `resistant6_candidates.py`.
 
+## 5bd. Searching for a resistant property at n = 10
+
+Natural analogues of the n = 6 pair failed (side-size families: best 125 of 727 small groups; S = {1,3,4,5} 422). Switched to a counterexample-guided search: templates = orbital unions, containment by a bitmask embedding test, group conditions solved by CP-SAT, violators added per round. **Feasible through every group with t ≤ 6, checked completely**; partway into t = 7. Bugs caught: the loop reported success on a timeout (a further t = 6 violator was then found); state was lost when a run was killed (now saved per round); the embedding test's slow cases were failed tests against dense graphs (now run on complements when sparser, 2× faster, verified identical). Single-core speed is the bottleneck. Scripts and state in `n10_search/`.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
