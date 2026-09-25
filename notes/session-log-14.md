@@ -995,6 +995,10 @@ Profile counts: t ≤ 3 passes 2/546 at n = 6 vs 110/24,474 at n = 10; t ≤ 4 p
 
 **Follow-up to 5be:** Vipul asked whether the model explains the rarity of ℤ-acyclic properties. No: added a caveat to §7.10 — the n = 6 pair is ℚ-acyclic, undercutting the chain-complex argument; the gap is torsion; non-cone acyclic complexes exist; constructions are outside a random model; the likely obstruction is full Smith-theoretic 𝔽_p-acyclicity. Also recorded the rigorous fact that no nontrivial ℤ-acyclic property exists at n = 6.
 
+## 5bf. Information-theoretic variants
+
+Vipul asked for an information-theoretic condition implying Oliver-χ without acyclicity: proposed Γ-invariant proper subcube partitions (exact χ = 1). He introduced certificate- and secret-shuffler evasiveness; proved the certificate characterisation and the one-shuffle reduction; his walk-and-check protocol makes bipartiteness secret-shuffler non-evasive for n ≥ 4 (his first variant needed a lemma, checked for n ≤ 7). Partition-versus-cover explains why neither relaxation implies χ. Accounting principle and property table; conjecture secret-shuffler evasive ⇔ certificate-evasive, **confirmed exhaustively at n = 4** with a control (ordinary evasiveness: all 22 evasive). Recorded as `oen` §7.11 and A42; script `ss_evasive_n4.py`.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.

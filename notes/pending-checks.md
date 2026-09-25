@@ -805,3 +805,7 @@ Arguments: the largest orbital count t to check (12), and a wall-clock budget in
 *Send back*: the console output and the final `state.pkl`.
 
 *Tested here*: a smoke run from the project directory with only environment variables set loads the state, re-solves, and stops cleanly. Not tested: any platform other than Linux x86-64.
+
+### A42. Information-theoretic variants
+
+*Recorded* (`oen` §7.11): invariant subcube partitions ⇒ exact χ = 1 at the group; certificate-evasive = the two trivial properties; one-shuffle reduction; bipartiteness secret-shuffler non-evasive for n ≥ 4; the conjecture secret-shuffler evasive ⇔ certificate-evasive, checked exhaustively at n = 4. *Open*: (1) does non-evasiveness imply orbitwise non-evasiveness (the fixed-point question for decision trees)? (2) do the n = 6 resistant pair admit Γ-invariant proper subcube partitions for their Oliver groups, or an S₆-invariant one, and is that forced by their cone/acyclic structure? (3) the conjecture at n = 5 (more expensive search) and in general; (4) prove the n ≤ 7 lemma for the original bipartite protocol, or drop it for the walk-and-check version; (5) record-level check of the table's protocol sketches.
