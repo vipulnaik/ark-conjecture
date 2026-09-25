@@ -987,6 +987,8 @@ Natural analogues of the n = 6 pair failed (side-size families: best 125 of 727 
 
 **Follow-up to 5bd — hand-off:** Vipul offered to run the search longer. Scripts made portable (paths and solver settings via environment variables, re-solve of an UNKNOWN saved stage), smoke-tested from the project directory, and instructions written into A41. Running longer settles t = 12; the t > 12 classes still need new code.
 
+**Follow-up to 5bd — structure at n = 10:** the loop's t ≤ 11 solution had been overwritten by the t = 12 state; re-solved the 214-group model (feasible, 649 templates). **No bipartite-only property satisfies it** (infeasible from the t = 6 groups on), so trimmed bipartiteness is out at n = 10. The re-solved solution's fixed complexes: 178 cones (apexes mostly small sparse orbitals — a fixed edge, matchings, K₄, a triangle, a star), 21 acyclic, 15 cancelling — the same layered pattern as P₁ at n = 6. Not re-checked against non-active t ≤ 11 groups; minimal forcing set not extracted (run killed).
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
