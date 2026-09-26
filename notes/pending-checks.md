@@ -776,7 +776,7 @@ If yes, that is a genuine relative-difficulty statement rather than an impressio
 
 ### A39. Weakly symmetric functions: the Oliver-χ ⇒ ℤ-acyclic gap
 
-*Found* (`oen` §7.6): for A₅ on the 10 edges of K₅, 44 of 3,176 nontrivial invariant functions are Oliver-χ-resistant and none is ℤ-acyclic. *Also settled there*: both separations open in the graph case (A38.1). *Next*: (1) groups with no transitive Oliver subgroup but where ℤ-acyclic examples exist (Illies's cyclic-type counterexample lives at n = 12, but cyclic groups are themselves transitive Oliver; A₅ on 15 points is a candidate, too large for exhaustive search here); (2) between A₅ and S₅, which conditions kill the 44 — i.e. how much of the gap S_n's extra Oliver subgroups close; (3) the intermediate rungs (𝔽_p-acyclic, ℚ-acyclic) for these functions.
+*Found* (`oen` §7.6): for A₅ on the 10 edges of K₅, 44 of 3,176 nontrivial invariant functions are Oliver-χ-resistant and none is ℤ-acyclic. *Also settled there*: both separations open in the graph case (A38.1). *Next*: (1) groups with no transitive Oliver subgroup but where ℤ-acyclic examples exist (A₅ on 15 points is a candidate, too large for exhaustive search here; *not* Illies's n = 12 example, which is non-monotone and so has no complex — an earlier version of this item misread it, see `monotone-transitive-note.md` §4); (2) between A₅ and S₅, which conditions kill the 44 — i.e. how much of the gap S_n's extra Oliver subgroups close; (3) the intermediate rungs (𝔽_p-acyclic, ℚ-acyclic) for these functions.
 
 ### A40. How far do the small-orbital tests reach?
 
@@ -809,3 +809,7 @@ Arguments: the largest orbital count t to check (12), and a wall-clock budget in
 ### A42. Information-theoretic variants
 
 *Recorded* (`oen` §7.11): invariant subcube partitions ⇒ exact χ = 1 at the group; certificate-evasive = the two trivial properties; one-shuffle reduction; bipartiteness secret-shuffler non-evasive for n ≥ 4; the conjecture secret-shuffler evasive ⇔ certificate-evasive, checked exhaustively at n = 4. *Open*: (1) does non-evasiveness imply orbitwise non-evasiveness (the fixed-point question for decision trees)? (2) do the n = 6 resistant pair admit Γ-invariant proper subcube partitions for their Oliver groups, or an S₆-invariant one, and is that forced by their cone/acyclic structure? (3) the conjecture at n = 5 (more expensive search) and in general; (4) prove the n ≤ 7 lemma for the original bipartite protocol, or drop it for the walk-and-check version; (5) record-level check of the table's protocol sketches.
+
+### A43. Self-duality of collapsibility and contractibility
+
+*Recorded* (`oen` §7.12): collapsible ⇒ K\* contractible (PL sketch); the dual-of-join formula; Lutz's 60-vertex complex has contractible dual; ~60,000 random collapsible complexes (N = 6–9) all had collapsible duals. *Open*: (1) collapsible ⇒ K\* collapsible, via a targeted search (not random expansions) or an argument; (2) contractible ⇒ K\* contractible — compute π₁ of the dual of a dunce hat, which needs a valid triangulation (the subdivided-triangle attempt fails at the corners); (3) write out the PL argument in full; (4) collapsibility of Lutz's complex or its dual.
