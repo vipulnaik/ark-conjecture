@@ -813,3 +813,7 @@ Arguments: the largest orbital count t to check (12), and a wall-clock budget in
 ### A43. Self-duality of collapsibility and contractibility
 
 *Recorded* (`oen` §7.12): collapsible ⇒ K\* contractible (PL sketch); the dual-of-join formula; Lutz's 60-vertex complex has contractible dual; ~60,000 random collapsible complexes (N = 6–9) all had collapsible duals. *Open*: (1) collapsible ⇒ K\* collapsible, via a targeted search (not random expansions) or an argument; (2) contractible ⇒ K\* contractible — compute π₁ of the dual of a dunce hat, which needs a valid triangulation (the subdivided-triangle attempt fails at the corners); (3) write out the PL argument in full; (4) collapsibility of Lutz's complex or its dual.
+
+### A44. Bi-resistance
+
+*Recorded* (`oen` §7.13): definition, convexity, equality with the χ condition at two-orbital groups, strict place between Oliver-χ and Oliver-resistant, counts at n = 6 and natural properties at n = 10. *Open*: (1) add bi-resistance as a rung in `metaproperty_ladder_check.py`; (2) test K₄-free and 3-colourable at n = 10; (3) whether bi-resistance can force triviality for some transitive group without a transitive Oliver subgroup.

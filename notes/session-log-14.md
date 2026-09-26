@@ -1007,6 +1007,10 @@ Vipul asked for an information-theoretic condition implying Oliver-χ without ac
 
 Vipul asked whether collapsibility and contractibility are self-dual. Collapsible ⇒ K\* contractible (PL sketch); dual of a join ≃ suspension of the join of duals, so Lutz's 60-vertex example has contractible dual; refined spine with "both collapsible" as a possible rung. Search: ~60,000 random collapsible complexes, N = 6–9, every dual collapsed. Two bugs fixed on the way (a wrong expansion step; the empty face treated as collapsible). Dunce-hat triangulation attempt failed geometrically at the corners. Vipul flagged stars being swallowed by markdown; the new text escapes them. Recorded as `oen` §7.12 and A43.
 
+## 5bh. Bi-resistance
+
+After the "not K_n" exchange, Vipul asked whether resistant-plus-dual-resistant is worth a name. Proved: convex; equals the χ condition at two-orbital groups; Oliver-χ ⇒ bi-resistant ⇒ resistant, both strict. Measured: 92 of 740 bi-resistant at n = 6 (including all 3 with global χ = 1); at n = 10 the natural bi-resistant properties are exactly those that needed t = 3 in §7.7. Recorded as `oen` §7.13 with a pointer line in the §7.2 diagram summary and implications list; A44.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
