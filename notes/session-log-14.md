@@ -1015,6 +1015,10 @@ After the "not K_n" exchange, Vipul asked whether resistant-plus-dual-resistant 
 
 At A₅ on K₅'s edges 772 of 3,176 functions are bi-resistant. Derived the half-split criterion (bi-resistance possible iff the half-split graph has no loop or odd cycle). Vipul asked whether chiral graph properties on 5 vertices give a loop: no — pentagon and pentagram are swapped only by odd permutations. GAP scan of degrees 4–14: **12T162** (edges of two tetrahedra; H a diagonal A₄ with the two tetrahedra's edge sets as orbits) has a loop, so every nontrivial monotone 12T162-invariant function is evasive, with no transitive Oliver subgroup. Two script slips on the way (a report-line index error, which was itself the signal of a loop; a regex edit that silently failed, making the per-degree counts wrong). Recorded in `oen` §7.13 with the two-block criterion; A44 item 3 answered.
 
+**Follow-up to 5bh:** on Vipul's suggestion, §7.13 now counts the always-true property as bi-resistant by fiat (it is resistant and χ-resistant naturally, but its dual, always-false, contains no orbital), so the implication chain holds throughout; convexity is restricted to nontrivial properties.
+
+**Follow-up:** §7.13's fiat now cites §7.1 convention (ii) as its reason (Vipul): the always-false property has no empty face, so it is no simplicial complex and is outside the setting; the dual half of bi-resistance at the tautology asks about it.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
