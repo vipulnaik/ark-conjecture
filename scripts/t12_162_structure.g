@@ -1,0 +1,21 @@
+Read("/tmp/g/ws_oliver.g");
+G := TransitiveGroup(12,162); XX := [1..12];
+Print("G: ", StructureDescription(G), ", order ", Size(G), ", point stabiliser ", StructureDescription(Stabilizer(G,1)), "\n");
+Print("derived series orders: ", List(DerivedSeriesOfGroup(G), Size), "\n");
+Print("block systems: ", List(AllBlocks(G), b -> Length(b)), "\n");
+for b in AllBlocks(G) do Print("  block of size ", Length(b), ": ", Orbit(G, Set(b), OnSets), "\n"); od;
+A := [1,4,5,8,9,12]; B := [2,3,6,7,10,11];
+SA := Stabilizer(G, A, OnSets);
+Print("setwise stabiliser of A: order ", Size(SA), " (", StructureDescription(SA), "), index ", Index(G,SA), "\n");
+Print("  its action on A: ", StructureDescription(Image(ActionHomomorphism(SA, A))), ", on B: ", StructureDescription(Image(ActionHomomorphism(SA, B))), "\n");
+Print("  A4 x A4 = derived-type core? normal subgroups of G of order 144: ",
+      List(Filtered(NormalSubgroups(G), N -> Size(N)=144), N -> [StructureDescription(N), Orbits(N,XX)]), "\n");
+H := First(List(ConjugacyClassesSubgroups(G), Representative), H -> Size(H)=12 and OliverData(H)<>fail and Length(Orbits(H,XX))=2 and Length(Orbits(H,XX)[1])=6);
+Print("H (order 12): ", StructureDescription(H), ", generators ", GeneratorsOfGroup(H), ", orbits ", Orbits(H,XX), "\n");
+Print("  H on its orbit A: ", StructureDescription(Image(ActionHomomorphism(H, Orbits(H,XX)[1]))), " (kernel order ", Size(Kernel(ActionHomomorphism(H, Orbits(H,XX)[1]))), ")\n");
+Print("  H on its orbit B: ", StructureDescription(Image(ActionHomomorphism(H, Orbits(H,XX)[2]))), "\n");
+Print("  point stabiliser in H: ", StructureDescription(Stabilizer(H, 1)), "\n");
+g := RepresentativeAction(G, Set(Orbits(H,XX)[1]), Set(Orbits(H,XX)[2]), OnSets);
+Print("swap g = ", g, ", order ", Order(g), "; g^2 fixes A setwise: ", OnSets(Set(Orbits(H,XX)[1]), g^2) = Set(Orbits(H,XX)[1]), "\n");
+Print("G/ (setwise stabiliser of {A,B} partition) : the partition {A,B} is a block system: ", ForAny(AllBlocks(G), b -> Set(b) = A or Set(b) = B), "\n");
+QUIT;

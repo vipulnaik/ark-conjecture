@@ -1011,6 +1011,10 @@ Vipul asked whether collapsibility and contractibility are self-dual. Collapsibl
 
 After the "not K_n" exchange, Vipul asked whether resistant-plus-dual-resistant is worth a name. Proved: convex; equals the χ condition at two-orbital groups; Oliver-χ ⇒ bi-resistant ⇒ resistant, both strict. Measured: 92 of 740 bi-resistant at n = 6 (including all 3 with global χ = 1); at n = 10 the natural bi-resistant properties are exactly those that needed t = 3 in §7.7. Recorded as `oen` §7.13 with a pointer line in the §7.2 diagram summary and implications list; A44.
 
+## 5bi. When bi-resistance closes the gap
+
+At A₅ on K₅'s edges 772 of 3,176 functions are bi-resistant. Derived the half-split criterion (bi-resistance possible iff the half-split graph has no loop or odd cycle). Vipul asked whether chiral graph properties on 5 vertices give a loop: no — pentagon and pentagram are swapped only by odd permutations. GAP scan of degrees 4–14: **12T162** (edges of two tetrahedra; H a diagonal A₄ with the two tetrahedra's edge sets as orbits) has a loop, so every nontrivial monotone 12T162-invariant function is evasive, with no transitive Oliver subgroup. Two script slips on the way (a report-line index error, which was itself the signal of a loop; a regex edit that silently failed, making the per-degree counts wrong). Recorded in `oen` §7.13 with the two-block criterion; A44 item 3 answered.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
