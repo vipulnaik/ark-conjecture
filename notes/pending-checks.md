@@ -817,3 +817,7 @@ Arguments: the largest orbital count t to check (12), and a wall-clock budget in
 ### A44. Bi-resistance
 
 *Recorded* (`oen` §7.13): definition, convexity, equality with the χ condition at two-orbital groups, strict place between Oliver-χ and Oliver-resistant, counts at n = 6 and natural properties at n = 10. *Open*: (1) add bi-resistance as a rung in `metaproperty_ladder_check.py`; (2) test K₄-free and 3-colourable at n = 10; (3) *answered* (`oen` §7.13): an exact half-split criterion; the two-block form gives evasiveness at 12T162, the only such group found in degrees 4–14 (order ≤ 5,000 at 12–14). *Remaining*: scan degree 12–14 groups of order > 5,000 and larger degrees; confirm the sign-kernel identification of 12T162 by an isomorphism test.
+
+### A45. Random monotone properties
+
+*Recorded* (`oen` §7.10, expanded): the uniform model, the duality identity, exact membership at n = 4, 5 and sampled at n = 6, the fractions reached by the sparse and biclique criteria, the ladder rungs on random properties at n = 6. *Open*: (1) a Korshunov-type theorem for the graph poset (literature check); (2) the anti-concentration conjecture — almost every monotone graph property evasive via global χ — and whether it is already known; (3) resistance → probability 1 is heuristic and not visible at n = 6; (4) a sampler at n = 10 (needs a representation not enumerating graph classes).

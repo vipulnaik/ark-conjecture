@@ -603,7 +603,9 @@ Write **τ(P, n)** for the smallest orbital count t of an Oliver group at n, wit
 The survivors are saved in `template_survivors6.json`.
 
 
-### 7.10 A heuristic picture: why resistance is plentiful, and why it stops at χ *(heuristic, not proved)*
+### 7.10 Random and pseudorandom pictures: plentiful in number, vanishing in fraction *(heuristic, with exact small-n data)*
+
+Two questions sit together here. *How many* χ-resistant properties are there (plentitude, first three paragraphs)? And what *fraction* of all monotone properties does each rung of the ladder, and each proved evasiveness criterion, reach (the uniform model, last paragraphs)? The answers are consistent: plentiful in absolute number, a vanishing fraction.
 
 **Plentitude.** Treat each Oliver condition as a random event — χ(Δ_P^Γ) ≡ 1 (mod q) with probability about 1/q, independently across groups. There are at most 2^Θ(n²) conditions (conjugacy classes of subgroups of S_n) against doubly exponentially many monotone properties, so resistant properties should be plentiful. The model fails for the near-maximal groups, whose conditions are rigid template-profile constraints (§7.9), and these are handled exactly. *Measured*: groups with t ≤ 3 pass 2 of 546 profiles at n = 6 and 110 of 24,474 at n = 10 (0.37% and 0.45%, roughly flat); t ≤ 4 pass 2 at n = 6 and **exactly 2,822** at n = 10 (the solver completed its enumeration). The rigid layer does not tighten, and the freedom beyond it grows enormously. *Relation to the arithmetic model*: layered, not subsumed. Cramér / parametric Bateman–Horn decides which structured groups exist at n; the rigid layer plays the role of Bateman–Horn's local factors; combinatorial pseudorandomness governs the bulk.
 
@@ -612,6 +614,34 @@ The survivors are saved in `template_survivors6.json`.
 **Caveat: what this does not explain.** The picture explains why the χ-level conditions are weak, not why ℤ-acyclicity should be rare. (a) It computes no probability of acyclicity. (b) Argument (i) is undercut by §7.9: the n = 6 resistant pair *is* ℚ-acyclic, so all rational Betti numbers vanished there; what failed was the step from ℚ to ℤ, the torsion at 2 and 3, and the picture says nothing about why torsion should appear. (c) Argument (ii) rules out only the cheap source of acyclicity: non-cone ℤ-acyclic and vertex-transitive ℤ-acyclic complexes exist in general. (d) ARK concerns all properties, and a counterexample would more plausibly be constructed than found at random (no such construction is known even for monotone weakly symmetric functions — Illies's n = 12 example is not monotone; `monotone-transitive-note.md` §4); pseudorandomness is silent about constructions. *Where the obstruction more likely lives*: full Smith theory. ℤ-acyclicity forces 𝔽_p-acyclicity for every p, hence 𝔽_p-acyclic fixed complexes for every p-subgroup — homology-level conditions, of which Oliver's are only the χ-shadows. *What is rigorous*: no nontrivial ℤ-acyclic graph property exists at prime powers (AGL(1, n)) or at n = 6 (the only Oliver-χ-resistant properties there are the pair, neither ℤ-acyclic); n = 10 is open.
 
 **Why torsion escapes Oliver witnesses.** For a cyclic subgroup, χ(Δ^⟨g⟩) is the Lefschetz number, which sees only rational homology, so a ℚ-acyclic property passes every cyclic group whatever its torsion. Torsion at p can matter only through Smith's step for a *non-cyclic* p-subgroup P at a torsion prime; even there χ(Δ^P) ≡ χ(Δ) (mod p) by counting orbits, so a defect is a multiple of p and appears only if Δ^P acquires rational homology. *Checked at n = 6*: for the resistant P₁ (torsion at 2 and 3), all 14 non-cyclic p-subgroup classes give cones (10) or acyclic complexes (4), so the torsion never reaches a fixed complex. *At n = 10*: of the 325 non-cyclic p-subgroup classes with t ≤ 11, the re-solved solution gives 262 cones and 41 acyclic complexes, and violates χ = 1 at 22 non-active 2-groups — confirming it is not a full t ≤ 11 solution, and that failures land in non-cyclic 2-groups whose complexes are not structurally forced (`n10_search/noncyclic_p_subgroups.g`). *As n grows*, the channels multiply (non-cyclic 2-subgroups grow like 2^Θ(n²)), their complexes are less often cones, and Smith's bound lets larger torsion register, so a given torsion-carrying property should be caught more often; with doubly exponentially many properties, survivors can still grow in number.
+
+**The uniform model.** Draw P uniformly from the nontrivial monotone graph properties (§7.1's conventions). *Heuristic, by analogy with Korshunov's theorem for the Boolean lattice (not proved for the graph poset):* a random P is determined by its behaviour on the middle layer, edge count about N/2 with N = C(n,2): a graph noticeably below N/2 edges lies in P with probability → 1, one noticeably above with probability → 0, and the window is narrow. *Exact identity* (all n): **Pr[G ∈ P] + Pr[Ḡ ∈ P] = 1**, since P ↦ P\* is a bijection on nontrivial properties and G ∈ P\* iff Ḡ ∉ P; so every self-complementary graph has probability exactly ½. *Within a layer*, graphs with concentrated degrees sit higher than their edge count suggests (at n = 5, 4 edges: K₁,₄ 0.69, even-degree graphs up to 0.87).
+
+*Measured* (`random_monotone.py`; exhaustive at n = 4, 5; Markov chain on down-sets at n = 6, 9,000 samples per seed, two seeds agreeing to within 0.03, duality identity satisfied to within 0.03):
+
+| edges | n = 4 (22 properties) | n = 5 (860) | n = 6 (median over classes) |
+|---|---|---|---|
+| 1–2 | 0.73–0.96 | 0.99–1.00 | 1.000 |
+| 3 | **0.500** (middle) | 0.94–0.97 | 1.000 |
+| 4 | 0.14–0.27 | 0.67–0.87 | 1.000 |
+| 5 | 0.045 | **0.42–0.58** (middle) | 0.998 |
+| 6 | 0 | 0.13–0.33 | 0.955 |
+| 7 | | 0.03–0.07 | 0.718 |
+| 8 | | ≤ 0.01 | 0.266 |
+| 9 | | ≤ 0.001 | 0.035 |
+| 10 | | 0 | 0.001 |
+
+At n = 6 the crossover is at N/2 = 7.5. Named graphs at n = 6: K₁,₅ 0.90, C₆ 0.92, 2K₃ 0.76, K₂,₄ 0.46, K₃,₃ 0.23.
+
+**What each route reaches.**
+
+- *The proved criteria reach a vanishing fraction.* The sparse criterion needs every member below μ(n) ≈ δN edges with δ < ½, so P misses the whole middle: fraction about 2^(−W), W the number of middle-layer classes. The biclique criterion needs K_{a,b} ∉ P with a, b ≥ kn; K_{a,b} lies Θ(n²) edges below the middle, so a random P contains it, but the obstruction is milder — only middle-layer classes containing K_{kn,kn} are excluded, and a typical middle graph has bicliques of size about log n — so the fraction is about 2^(−εW) with ε exponentially small. Both → 0; on a log-log scale the biclique result reaches far more.
+- *Resistance and bi-resistance should reach probability → 1 along the non-prime-power n*, heuristically — and only there: at a prime power AGL(1, n) has the single orbital K_n, so no nontrivial property is resistant and the probability is exactly 0 under this model, which draws only nontrivial properties. (The always-true property is resistant, and bi-resistant by §7.13's fiat; a model that included it would give probability 1/(number of properties) at prime powers, still → 0.) Over all n the lim inf is therefore 0 and the limit exists only along non-prime-powers. The reason for the → 1: every Oliver group at a non-prime-power n has an orbital below N/2 (orbitals partition C(n,2) and there are at least two), with a margin of Θ(n) edges for the extremal two-orbital groups. **Not yet visible at n = 6**, where the margins are one or two edges: resistant 73.3%, vertex-transitive-resistant 79.8%, bi-resistant 52.3% (600 samples). n = 6 is the only non-prime-power size where this is computable; n = 10 has too many classes for the chain.
+- *The χ route flips the probabilities.* At n = 6: small global 0.8%, global χ = 1 in 4 of 9,000 samples (0.04%), nontrivial-top and Oliver-χ in none of 600. So the Oliver conditions make a random property susceptible almost always, while the resistance conditions pass it most of the time.
+
+**Conjecture (anti-concentration), open.** A random P is decided by roughly independent coin flips on the middle layer, so χ(Δ_P) is a sum of many roughly independent signed contributions; a Littlewood–Offord-type bound would make χ = 1 exponentially unlikely, and then **almost every monotone graph property is evasive, by the trivial group alone**. The uniform measure concentrates on exactly the balanced, near-self-dual properties that are hardest for the orbital tests (§§7.7, 7.13), but the global χ test does not care about balance. The literature may already contain this; not checked.
+
+*Reconciling the two halves.* The pseudorandom plentitude count and the uniform fraction agree: at most 2^Θ(n²) conditions, each costing a bounded factor, remove a share of order 2^(−2^Θ(n²)) of all properties, while the total is 2^W with log₂ W ≈ n²/2. So χ-resistant properties are a vanishing fraction and yet doubly exponentially many.
 
 
 ### 7.11 Information-theoretic variants: partitions versus covers

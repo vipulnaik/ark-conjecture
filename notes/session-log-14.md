@@ -1019,6 +1019,12 @@ At A₅ on K₅'s edges 772 of 3,176 functions are bi-resistant. Derived the hal
 
 **Follow-up:** §7.13's fiat now cites §7.1 convention (ii) as its reason (Vipul): the always-false property has no empty face, so it is no simplicial complex and is outside the setting; the dual half of bi-resistance at the tautology asks about it.
 
+## 5bj. Random monotone properties
+
+Vipul asked for the membership probability of a graph under a uniformly random monotone property. Exact at n = 4, 5; Markov-chain sampled at n = 6 (two seeds agreeing; a first run's degree-sequence lookup matched two classes to "K₃,₃" and was replaced by exact isomorphism). Transition at N/2, sharpening with n; exact duality identity. The proved criteria (sparse, biclique) reach a vanishing fraction; resistance and bi-resistance heuristically → 1 but at n = 6 only 73% and 52%; the χ rungs are nearly never met (global χ = 1 in 0.04%). Anti-concentration conjecture filed. Folded into an expanded §7.10 rather than a new §7.14, on Vipul's suggestion; A45.
+
+**Follow-up to 5bj:** §7.10 now says explicitly (Vipul) that resistance and bi-resistance → 1 only along non-prime-power n; at prime powers the probability is exactly 0, so the lim inf over all n is 0.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
