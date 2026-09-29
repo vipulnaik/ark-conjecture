@@ -1025,6 +1025,8 @@ Vipul asked for the membership probability of a graph under a uniformly random m
 
 **Follow-up to 5bj:** §7.10 now says explicitly (Vipul) that resistance and bi-resistance → 1 only along non-prime-power n; at prime powers the probability is exactly 0, so the lim inf over all n is 0.
 
+**Follow-up to 5bj:** Vipul asked why Erdős-style probabilistic existence works for Ramsey but not for resistant properties. Recorded at the end of §7.10: rare good events vs rare bad events; the independence heuristic fails at prime powers; resistant properties are atypical; ℤ-acyclicity is structural, not a conjunction.
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
