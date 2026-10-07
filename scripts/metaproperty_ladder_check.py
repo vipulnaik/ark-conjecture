@@ -66,10 +66,11 @@ def meta(Pset):
     inP=np.zeros(K,bool); inP[list(Pset)]=True
     chi=[int((g['sign']*inP[g['uc']]).sum()) for g in G]
     res=[any(inP[c] for c in g['single']) for g in G]
+    dres=[any(not inP[comp[c]] for c in g['single']) for g in G]   # dual property contains an orbital
     ocr=[(c==1) if g['exact'] else all((c-1)%q==0 for q in g['qs']) for g,c in zip(G,chi)]
     ntr=[all((c-1)%q==0 for q in g['ntq']) for g,c in zip(G,chi)]
     glob=int(sum(labeled[i]*(-1)**(ecount[i]-1) for i in Pset if ecount[i]>0))
-    M=dict(OR=all(res), VTOR=all(r for r,g in zip(res,G) if g['trans']),
+    M=dict(OR=all(res), BI=all(res) and all(dres), VTOR=all(r for r,g in zip(res,G) if g['trans']),
            OCR=all(ocr), TTR=all(c==1 for c,g in zip(chi,G) if g['exact']), NTR=all(ntr),
            VTOCR=all(o for o,g in zip(ocr,G) if g['trans']), GR=(glob==1), SGR=all((glob-1)%p==0 for p in primes))
     M['sylow']=all(any((chi[i]-1)%p==0 for i in syl[p]) for p in primes)
@@ -92,9 +93,9 @@ def props():
             D=set()
             for g in rng.sample(pool,rng.randint(1,4)): D|=below[g]
             if full not in D: yield frozenset(D)
-NAMES=["OR","VTOR","OCR","TTR","NTR","VTOCR","GR","SGR"]
+NAMES=["OR","BI","VTOR","OCR","TTR","NTR","VTOCR","GR","SGR"]
 IMPS=[("OCR","NTR"),("NTR","SGR"),("NTR","OR"),("OCR","OR"),("TTR","GR"),("GR","SGR"),("OR","VTOR"),
-      ("OCR","VTOCR"),("VTOCR","VTOR")]
+      ("OCR","VTOCR"),("VTOCR","VTOR"),("OCR","BI"),("BI","OR")]
 hold=Counter(); viol=Counter(); sep=Counter(); dualmis=Counter(); total=0
 for D in props():
     total+=1; M=meta(D); Md=meta(dual(D))

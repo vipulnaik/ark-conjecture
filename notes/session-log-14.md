@@ -1027,6 +1027,14 @@ Vipul asked for the membership probability of a graph under a uniformly random m
 
 **Follow-up to 5bj:** Vipul asked why Erdős-style probabilistic existence works for Ramsey but not for resistant properties. Recorded at the end of §7.10: rare good events vs rare bad events; the independence heuristic fails at prime powers; resistant properties are atypical; ℤ-acyclicity is structural, not a conjunction.
 
+## 5bk. The OpenAI batch
+
+Vipul shared the Artin paper, the PD(1) paper and the catalogue. Prop. 2.1 gives θ = 0.9 at density 1/log x; the PD(1) law, if correct, gives every θ < 1 at positive density, making the EH-conditional almost-all n^{2−ε} rung unconditional (endpoint untouched). Read the dilation-graph companion's statements and #314's introduction. Corrected my conflation of the two Chowla conjectures (Vipul). Checked the repository: neither 011 nor 029 is formalized; the only related Lean file formalizes the elementary totient transfer. Recorded as a conditional row with its dependency chain, literature entry 24, and A46.
+
+## 5bl. Pending checks picked off
+
+K₄-free and 3-colourable bi-resistant at n = 10 (A44.2). Rung BI added to the ladder script, no violations at n = 4, 5, 6, self-dual (A44.1). τ(bipartite) = 3 machine-checked at n = 6 and 10 (A41.1, partial). Not attempted: the dunce-hat dual (A43.2 — needs a valid triangulation), the secret-shuffler search at n = 5 (A42.3).
+
 ## 5. One methodological note
 
 Both of this session's results came from reading **script output as evidence about a bound**, not as a verdict on the values it was computed for. The two `wide_cert` survivors were filed as a B_lo deficiency and fixed as one; the fix was right and the filing lost the information that the two densities were 0.039994 and 0.039996. Likewise the validator's S7f3 trend FAIL was attributed in advance to a sensitivity limitation of the aggregate. **Whenever a check's failure is explained by a property of the check, the explanation should be tested against the data before it is written down.** Both times it was not, and both times the data were saying something.
