@@ -52,7 +52,7 @@ Everything the pipeline tests is a consequence of one implication, and it is wor
 
 | test | needs | form |
 |---|---|---|
-| Oliver congruences | ℤ-acyclicity | χ(Δ_P^Γ) ≡ 1 (mod q) for each Oliver Γ |
+| Oliver congruences | 𝔽_p-acyclicity for Γ's bottom prime p (ℚ-acyclicity if the bottom is trivial) | χ(Δ_P^Γ) ≡ 1 (mod q) for each Oliver Γ |
 | Smith conditions | 𝔽_p-acyclicity | Δ_P^{P₀} is 𝔽_p-acyclic for p-subgroups P₀ |
 | **global χ** | **χ(Δ_P) = 1** | one integer, for the whole complex |
 
@@ -64,7 +64,7 @@ The first two constrain **fixed complexes** — the subcomplexes cut out by a gr
 
 The reason we have not climbed is that **no plausible counterexample to ℤ-acyclicity has turned up.** Every candidate the CSP produced has been killed at the χ = 1 rung — the weakest rung of all — or has survived every rung tested. There has been no case where a property passed χ = 1 and the acyclicity conditions and then needed a finer test, so building machinery for the higher rungs would be building it speculatively. If the n = 12 battery returns SAT and its skeleton survives the global χ test, that changes, and §3.8 becomes the next tool rather than the last resort.
 
-*One structural fact about the bottom rung, which explains the prime-power case.* For n = p^k take Γ = AGL(1, n) = 𝔽_n ⋊ C_{n−1}: an Oliver chain with a **trivial** top layer, so ℤ-acyclicity forces χ(Δ_P^Γ) = 1 exactly — while the invariant graphs are only ∅ and K_n, giving a fixed complex {∅} with χ = 0. That is KSS, and it is the t = 1 row of §2.4 below. But the collapse stops at ℤ-acyclicity: 𝔽_p-acyclicity and χ(Δ_P) = 1 are *not* excluded at prime powers, because Smith theory applied to the translation subgroup leaves a large fixed complex and yields no contradiction. Even where ARK is a theorem, the last two rungs are strictly weaker than the rest.
+*One structural fact about the bottom rung, which explains the prime-power case.* For n = p^k take Γ = AGL(1, n) = 𝔽_n ⋊ C_{n−1}: an Oliver chain with a **trivial** top layer, so ℤ-acyclicity forces χ(Δ_P^Γ) = 1 exactly — while the invariant graphs are only ∅ and K_n, giving a fixed complex {∅} with χ = 0. That is KSS, and it is the t = 1 row of §2.4 below. The contradiction needs less than ℤ-acyclicity: **𝔽_p-acyclicity for p = char(n) already suffices**, since Smith theory makes the translation subgroup's fixed complex 𝔽_p-acyclic, a finite 𝔽_p-acyclic complex is ℚ-acyclic, and the Lefschetz number of the cyclic layer's generator on it is then 1 = χ of its fixed complex. What is *not* excluded at prime powers is 𝔽_ℓ-acyclicity for ℓ ≠ p, and χ(Δ_P) = 1. So even where ARK is a theorem, the global-χ rung is strictly weaker than the rest.
 
 ### 2.1 Fixed complexes and orbital partitions
 
@@ -142,7 +142,7 @@ Each emitted line carries a key, a description, a tag, and the orbital map. The 
 
 **What was dropped is recorded and large.** At n = 12, `done_keys.txt` has 16,353 keys against 7,115 emitted, so **9,238 groups were built and discarded** — non-Oliver, or exceeding the `MAXT = 12` orbital cap. That is 56% of everything GAP constructed, and it bounds what raising MAXT could add.
 
-*Independent reproduction.* A separately written Oliver predicate (`oliver_tom.g` in the notes directory: largest normal p-subgroup, then the normal closure of the non-q Sylow subgroups), run on the S₁₀ table of marks in a freshly built GAP 4.14, finds 1,593 classes, **1,294 Oliver, and 1,111 with at most 12 orbitals — exactly the TOM emission of §8.5**. That is a second check on `IsOliverTop` beyond the negative-control battery, and it supplies the uncapped list: 183 Oliver classes at n = 10 with 13 ≤ t ≤ 45. Of the 1,294, 699 are trivial-top (exact), 577 have top prime 2, and 21 top prime 3.
+*Independent reproduction.* A separately written Oliver predicate (`oliver_tom.g` in the notes directory: largest normal p-subgroup, then the normal closure of the non-q Sylow subgroups), run on the S₁₀ table of marks in a freshly built GAP 4.14, finds 1,593 classes, **1,294 Oliver, and 1,111 with at most 12 orbitals — exactly the TOM emission of §8.5**. That is a second check on `IsOliverTop` beyond the negative-control battery, and it supplies the uncapped list: 183 Oliver classes at n = 10 with 13 ≤ t ≤ 45. Of the 1,294, 699 have a trivial-top reading (exact), 577 a reading at top prime 2, and 21 at top prime 3 — 1,297 readings in all, so at least three classes carry more than one.
 
 ### 3.2 Deduplication by orbital partition
 
@@ -237,13 +237,13 @@ At n = 10 the enumeration's structural lemmas were checked against the actual or
 
 967 groups → 75 selected: tags {trivial-top 18, q = 2 17, q = 3 5, P2 29, P3 3, P5 2, P7 1}, orbital counts 2 through 10, V = 1,242 classes.
 
-> **This is 75 of 170 available conditions, and the shortfall is the old dedup key's, not the orbital cap's.** The `--maxt 10` cut leaves 167 distinct (partition, prime) conditions in the n = 10 file; the key that produced the 75 was the incomplete invariant of §3.2, which merged Oliver conditions roughly three to one — 40 kept where 125 exist (`small-degree-verification.md` item 7). By §1.2's asymmetry this is safe for §4.1's μ(10) = 20, which is read off `groups_out.txt` and never touches the battery, and unsafe in exactly one direction for everything in §§5.2–5.5: **dropping conditions can only turn a real UNSAT into a SAT.**
+> **This is 75 of 170 available conditions, and the shortfall is the old dedup key's, not the orbital cap's.** The `--maxt 10` cut leaves 170 distinct (partition, prime) conditions in the n = 10 file; the key that produced the 75 was the incomplete invariant of §3.2, which merged Oliver conditions roughly three to one — 40 kept where 128 exist (`small-degree-verification.md` item 7). By §1.2's asymmetry this is safe for §4.1's μ(10) = 20, which is read off `groups_out.txt` and never touches the battery, and unsafe in exactly one direction for everything in §§5.2–5.5: **dropping conditions can only turn a real UNSAT into a SAT.**
 
 ### 5.2 SAT, and the surviving skeleton
 
-The CSP is **satisfiable on the 75-condition battery**, and has remained so across every escalation of that battery — every one of which was taken under the same truncation (§5.1), so the run on the full 167 conditions is untried rather than confirmatory.
+The CSP is **satisfiable on the 75-condition battery**, and has remained so across every escalation of that battery — every one of which was taken under the same truncation (§5.1), so the run on the full 170 conditions is untried rather than confirmatory.
 
-> **What the SAT/UNSAT question is now worth, given §5.4.** Every solution the CSP has produced, including this one's canonical extension, has died to the global χ test. So the operative question is not "is the CSP satisfiable" but "does any solution survive χ = 1" — and those are different searches, because χ is not expressible on the CSP's variables (§3.7: the variables are memberships of orbital unions, χ is a sum over all 12,005,168 iso classes). Running the full 167 conditions answers the first question and leaves the second untouched; a battery that returns UNSAT settles the degree outright, but a battery that returns SAT has, on the evidence so far, produced another χ kill rather than a candidate. **That argues for spending the next effort on a χ-magnitude screen inside the probe loop rather than on battery size** — which is the same conclusion §8.4 reaches from the constraint-strength side, and it makes item 12's cost/strength measurement less informative than it looks, since it measures the wrong one of the two questions. The found solution has 214 IN classes, IN edge counts running 0–25 and OUT 8–45. Its skeleton — the maximal IN classes, which generate the minimal monotone extension — has **10 generators at 12, 13, 15, 15, 15, 15, 18, 18, 20, 25 edges**.
+> **What the SAT/UNSAT question is now worth, given §5.4.** Every solution the CSP has produced, including this one's canonical extension, has died to the global χ test. So the operative question is not "is the CSP satisfiable" but "does any solution survive χ = 1" — and those are different searches, because χ is not expressible on the CSP's variables (§3.7: the variables are memberships of orbital unions, χ is a sum over all 12,005,168 iso classes). Running the full 170 conditions answers the first question and leaves the second untouched; a battery that returns UNSAT settles the degree outright, but a battery that returns SAT has, on the evidence so far, produced another χ kill rather than a candidate. **That argues for spending the next effort on a χ-magnitude screen inside the probe loop rather than on battery size** — which is the same conclusion §8.4 reaches from the constraint-strength side, and it makes item 12's cost/strength measurement less informative than it looks, since it measures the wrong one of the two questions. The found solution has 214 IN classes, IN edge counts running 0–25 and OUT 8–45. Its skeleton — the maximal IN classes, which generate the minimal monotone extension — has **10 generators at 12, 13, 15, 15, 15, 15, 18, 18, 20, 25 edges**.
 
 Consistent with §2.4: the solution has 2K₅ **in** and K₅,₅ **out**, which is exactly the one-of-two the two-orbital criterion demands, satisfied legitimately. That is why n = 10 remained SAT and why the global χ test was needed.
 
@@ -297,10 +297,10 @@ The mechanism behind the persistent SAT is structural rather than computational.
 
 - **χ conditions** are satisfied by making the fixed complex contractible, which is easiest when more unions are IN.
 - **𝔽_p-acyclicity** likewise.
-- **Monotone propagation** carries IN downward and never generates an OUT.
-- **The only OUT-generator in the entire system is nontriviality** — the single constraint that Kₙ ∉ P.
+- **Monotone propagation** carries IN downward, and carries OUT upward only from OUTs already present.
+- **The only *primal* OUT-generator is nontriviality** — the single constraint that Kₙ ∉ P.
 
-So the constraint system is **one-sided**. Adding groups adds IN-pressure and almost no OUT-pressure, which is why escalating the battery has not changed the verdict and, on this analysis, would not be expected to. *The mechanism is structural and does not depend on which battery was run; the empirical half of the claim does, and every escalation so far was inside the 75-condition truncation (§5.1). The full-battery run is the diagnosis's cheapest test as well as its cheapest threat.*
+So the primal constraint system is **one-sided**. *The dual conditions of §2.2 are the exception, and the diagnosis has to be read with them in view*: a dual condition is a χ condition on P^∨, so it pushes complements IN and hence graphs of P **OUT** — exactly the pressure this paragraph says is missing — and the CSP enforces primal and dual together (§3.5). What the measurements show is that this OUT-pressure is absorbed by the same cone escape (§7.2: the dual battery cuts 878 joint patterns to 138, but every original pattern survives), not that it is absent. Adding groups adds IN-pressure and almost no OUT-pressure, which is why escalating the battery has not changed the verdict and, on this analysis, would not be expected to. *The mechanism is structural and does not depend on which battery was run; the empirical half of the claim does, and every escalation so far was inside the 75-condition truncation (§5.1). The full-battery run is the diagnosis's cheapest test as well as its cheapest threat.*
 
 ### 7.2 The cone escape
 
@@ -343,7 +343,7 @@ The inference *rate* transfers intact from n = 10 — the invariant filters are 
 
 ### 8.2a A cost model for stage 3 at n = 10, calibrated, and what the full battery will take
 
-*Benchmarked with the shipped `consume_gap.py`, `networkx` 3.6.1 and the real n = 10 `groups_out` file. Stages 1–2 and the stage-3 inference were run to completion on the full 167-condition battery (`--estimate-only`, 8 minutes, most of it stage-2 catalog canonicalisation), so **V and the VF2 pair count below are measured, not modelled.** The per-call VF2 cost is measured on 600 invariant-passing pairs drawn from that catalog; the closure cost on the shipped `close()`.*
+*Benchmarked with the shipped `consume_gap.py`, `networkx` 3.6.1 and the real n = 10 `groups_out` file. Stages 1–2 and the stage-3 inference were run to completion on the full 170-condition battery (`--estimate-only`, 8 minutes, most of it stage-2 catalog canonicalisation), so **V and the VF2 pair count below are measured, not modelled.** The per-call VF2 cost is measured on 600 invariant-passing pairs drawn from that catalog; the closure cost on the shipped `close()`.*
 
 **Two batteries, both measured.** The hand-built stages (A/B/B2/C) give 170 distinct conditions; the **`TOM` stage — every conjugacy class of subgroups of S₁₀, read from the table of marks — gives 242**, and it **strictly contains** the hand-built set (below). Sizing figures, from `--estimate-only` runs on the real files:
 
@@ -378,7 +378,7 @@ Both catalogs are complement-closed with palindromic edge-count histograms. *(Th
 | | 16 | **8192** | 12.9 h | 1.1 h | **~14 h** |
 | | 32 | **8192** | 6.5 h | 1.1 h | **~7.6 h** |
 
-Single-threaded the TOM battery is 207 h of VF2, which is what the old row-based loop would have taken. **The closure column is serial and does not shrink with cores**, so past ~32 cores it is the floor — and it grows as V^2.6, which is why the TOM run wants `--batch 8192` where the smaller battery is fine at the 2048 default. At the pre-`--batch` default of 128 the closure alone would be 21 h (167-condition) or 70 h (TOM), in both cases exceeding all the VF2 work on 8 cores.
+Single-threaded the TOM battery is 207 h of VF2, which is what the old row-based loop would have taken. **The closure column is serial and does not shrink with cores**, so past ~32 cores it is the floor — and it grows as V^2.6, which is why the TOM run wants `--batch 8192` where the smaller battery is fine at the 2048 default. At the pre-`--batch` default of 128 the closure alone would be 21 h (170-condition) or 70 h (TOM), in both cases exceeding all the VF2 work on 8 cores.
 
 **Read the projection as a lower estimate by perhaps 1.5×.** The 290 ms is over invariant-passing pairs; the pairs that reach VF2 are those closure could not decide either, which selects toward the hard tail. The run's own per-batch log lines give the true rate in the first ten minutes and the instructions in `small-degree-verification.md` say to read them.
 
@@ -419,10 +419,12 @@ This is the concrete gap. By §1.2 it cannot corrupt the μ results; it can only
 > |---|---|---|---|
 > | **n = 10** hand-built | 967 | 131 | 170 |
 > | **n = 10** TOM | 1,111 | **186** (55 new, **0 lost**) | **242** |
-> | **n = 12** hand-built | 7,115 | 296 | 427 |
+> | **n = 12** hand-built | 7,115 | 296 | 427 † |
 > | **n = 12** TOM | 6,211 | **441** (145 new, **0 lost**) | **711** |
 >
 > **So every conjugacy class of subgroups of Sₙ is represented and the hole is closed at both degrees.** The two batteries agreeing — on all 131 and all 296 partitions the hand-built stages produce, and on all 11 of the hand-built multi-prime partitions — is also the only independent check `IsOliverTop` has, and it now spans 427 conditions rather than 170.
+>
+> † §6.1 and §8.4 count 425 conditions in the same file. The likeliest explanation is the n = 10 one (§8.2a: rows retagged `2+3` on regeneration, same partitions), but it has not been checked; recount from the file before quoting either.
 >
 > *TOM emits **fewer rows** at n = 12 while carrying half again as many partitions.* The hand-built file spends 5,924 of its 7,115 rows on stage C's p-subgroups, which collapse to a few hundred distinct partitions; TOM pays once per conjugacy class. **Row count is not a measure of battery strength** and should not be quoted as one — the condition count is.
 >
@@ -459,7 +461,7 @@ The connection to §5.3 is worth noting. K₁,₈ is forced IN while the spannin
 3. **Re-probe the 54 CAP classes** at a larger node budget, before any statement about the free band or any escalation decision that depends on its width (§5.5).
 4. **Probe the 15 unprobed involution partners** of the forced classes — `414, 434, 439, 457, 493` (predicted forced IN, 7–9 edges) and `541, 543, 548, 549, 555, 560, 561, 562, 565, 566` (predicted forced OUT, 37–43 edges). Each is a cheap two-sided test of the duality of §2.3 and would roughly double the known backbone if it confirms.
 5. **Run the n = 10 CSP against Angel–Borja's five surviving types** (§4.3). Non-circular validation if it reproduces their eliminations; a publishable increment if it kills more. *(The arithmetic programme deprioritises this: the exhaustive n = 10 and n = 12 m\* comparisons validate the machinery more strongly. Its standing is as an increment on Angel–Borja, not as validation the framework is waiting on.)*
-6. ~~Close the subdirect-product hole~~ **— DONE at both degrees** (§8.5): stage `TOM` emitted every conjugacy class of subgroups of S₁₀ and of S₁₂ from the table of marks, strictly containing the hand-built stages in each case. So job (a)'s μ(10) = 20 **and** μ(12) = 18 are exhaustive rather than "no enumerated group exceeds B(n)", and job (c) has complete batteries of 242 and 711 conditions.
+6. ~~Close the subdirect-product hole~~ **— DONE at both degrees** (§8.5): stage `TOM` emitted every conjugacy class of subgroups of S₁₀ and of S₁₂ from the table of marks, strictly containing the hand-built stages in each case. So job (a)'s μ(10) = 20 **and** μ(12) = 18 are exhaustive rather than "no enumerated group exceeds B(n)", and job (c) has batteries of 242 and 711 conditions, complete **up to the MAXT = 12 orbital cap** — the 183 Oliver classes at n = 10 with 13 ≤ t ≤ 45 (§2.0) are still outside them.
 7. **Decide how S is computed at n = 12** (§8.3): full down-closure versus the exponential-formula route.
 8. **Settle the multi-prime tag question** (§8.6) and either exercise or retire the lcm strengthening.
 9. **Climb the ladder, if a candidate ever warrants it** (§2.0). Nothing in the pipeline probes above ℤ-acyclicity, because no candidate has yet survived the χ = 1 rung to need it. If the n = 12 battery returns SAT and its skeleton passes the global χ test, the adversary game of §3.8 stops being a last resort and becomes the next tool — and `adversary.py` should be validated against Adamaszek's ℰ as a negative control before any EVASIVE verdict from it is trusted.

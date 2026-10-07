@@ -2,6 +2,8 @@
 
 **Status: confirmed by explicit permutation-group construction (n = 33), then measured against the table: 289 of 2,186 rows have μ(n) > recorded B(n).** This note records the construction, the error it exposes, what it breaks, what survives, and the repair list. Written 2026-08-16 during the fb_common.py necessity review; the finding fell out of asking why condition (4)'s F_mid strip is a *necessary* condition.
 
+> **Current status.** Repairs 1–6 below are applied: the enumerator and certificates carry no F_mid strip, the table is rebuilt, Theorem 3.1 and the ceiling table are rewritten, and the n = 33 group is a regression witness in `verify_witness.g`. The rebuilt tables confirm the predicted values exactly at every row quoted here — μ(78) = 468, μ(105) = 812, μ(207) = 2525, μ(231) = 2943, μ(253) = 5256. The one superseded figure is n = 1817, which the rebuild puts at 0.091483 (`2x389 + 1x1039*`), well above the ≥ 0.0594 bound in §3.2. Repair 7 (D1/D2/D2q under the corrected space) is tracked as `enumeration-proof.md` J0; Part E's realisability battery has not yet reached the three entangled-generator rows (`pending-checks.md`).
+
 ## 1. The claim that fails
 
 Theorem 3.1 (orbital-evasiveness-notes §3), the SAFE cap in `mu_enumerate_v2.value()` (dmax = q-part × largest divisor coprime to F_mid), fb_common condition (4)'s F_mid-gcd strip, rung B's "twist cut to the odd part of c − 1," and (BCG) clause 4 all rest on one argument: *the cyclic layer Γ₁/Γ₂ carries the block rotation C_{F_mid} and the twist's cyclic part, a cyclic group has a unique subgroup of each order, so the two are pairwise coprime.*

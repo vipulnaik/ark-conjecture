@@ -48,7 +48,7 @@ conjecture.  So the script does not merely flag it:
     coincidence and not a certification.
 
 On the current table no n is uncertified (the floor is 0.04621 at n = 2759).
-Two small-n caveats, both inside the certified table: Theorem E.5 has fifteen
+Two small-n caveats, both inside the certified table: Theorem E.5 has twelve
 listed exceptions at n <= 63, so the `certified` flag there rests on the table
 rather than on the theorem; and the S11 fusion count is bounded by FMAX like
 S7's, which the same cap argument justifies.

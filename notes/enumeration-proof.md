@@ -1049,7 +1049,7 @@ twists dᵢ | cᵢ−1 (a q-power when foreign), subject to Lemma C. The orbital
 | between: K_{r₁,r₂} | r₁r₂ | 1 | r₁r₂ |
 | **total** | | **4 + e₁ + e₂** | **C(c,2) + C(r₁,2) + C(r₂,2) + cr₁ + cr₂ + r₁r₂ = C(n,2)** |
 
-*Built: 5 + 7\* + 11\* with e = 1, 1 gives 10 + 21 + 55 + 35 + 55 + 77 = 253 = C(23,2).*
+*A group built at 5 + 7\* + 11\* with e = 1, 1 gives 10 + 21 + 55 + 35 + 55 + 77 = 253 = C(23,2) — but e = 1 on both foreign blocks means full twists 6 and 10, which are not powers of one prime, so that group has no Oliver chain of this shape (Lemma B′). The admissible reading is q = 2, twist 2 on each foreign block, e = 3, 5, with the same total; n = 23 is prime and outside the table either way. An admissible S11 at a tabulated n is 4 + 7\* + 19\* at q = 3 (twists 3 and 9, e = 1, 1): 6 + 21 + 171 + 28 + 76 + 133 = 435 = C(30,2) — predicted, not built.*
 
 **S12 — n = F₁c₁ + F₂c₂, two matching classes of one prime, independent rotations**
 
@@ -1068,7 +1068,7 @@ twists dᵢ | cᵢ−1 (a q-power when foreign), subject to Lemma C. The orbital
 
 *S8 and S10 never exist (Lemmas D1, D2q), so they have no table.*
 
-*Verified by building the groups and computing orbitals directly*, in seven cases — S2 at 4×7 (full twist) and 2×13 (partial twist d = 3, giving two intra orbitals of 78); S3 at 11 + 13\*; S7 at 2×11 + 23\*; S6 at 7\* + 19\*; S4 at 7 + 7 + 11\*; and the 2-homogeneous 5×7 — all seven match the table exactly and sum to C(n,2). *(No S11 case is in this list: 5 + 7\* + 11\* at q = 2 is inadmissible as a full-twist configuration, because Lemma C's coupling t | ord_r(p) fails at the 11-block — ord₁₁(5) = 5 is odd, so its 2-power twist is forced trivial. An admissible replacement is 4 + 7\* + 19\* at q = 3, predicted orbitals 6, 21, 171, 28, 76, 133, summing to 435 = C(30,2); **not built**.)* **At the floor n = 2759** (2×653 + 1×1453\*, t = 121, h = 242) the decomposition is one intra orbital of 425,756, one within-class cross of 426,409, one between of 1,897,618, and **six** foreign orbitals of 175,813 — summing to C(2759,2) = 3,804,661. *Counting that foreign block as a single orbital falls 879,065 short — five orbitals of 175,813 — which is the error the table guards against.*
+*Verified by building the groups and computing orbitals directly*, in seven cases — S2 at 4×7 (full twist) and 2×13 (partial twist d = 3, giving two intra orbitals of 78); S3 at 11 + 13\*; S7 at 2×11 + 23\*; S6 at 7\* + 19\*; S4 at 7 + 7 + 11\*; and the 2-homogeneous 5×7 — all seven match the table exactly and sum to C(n,2). *(No S11 case is in this list: a 5 + 7\* + 11\* build with e = 1, 1 uses full foreign twists 6 and 10, which no single top prime supplies, and n = 23 is prime; see the S11 table above for the admissible reading and a tabulated replacement.)* **At the floor n = 2759** (2×653 + 1×1453\*, t = 121, h = 242) the decomposition is one intra orbital of 425,756, one within-class cross of 426,409, one between of 1,897,618, and **six** foreign orbitals of 175,813 — summing to C(2759,2) = 3,804,661. *Counting that foreign block as a single orbital falls 879,065 short — five orbitals of 175,813 — which is the error the table guards against.*
 
 *Scope.* Prime c throughout. For c = p^a with a Galois twist, (a)'s count becomes the number of orbits of ⟨multipliers, Frobenius, −1⟩ on the nonzero elements of the field of order c, not written out here. A Reed–Solomon translation group (`johnson-presentations.md` §5a) gives the same cross orbitals as independent translations, since its projection onto every block pair is full.
 

@@ -120,7 +120,7 @@ against ≈0.28 measured at n ≤ 25,620. And the mechanism is visible directly:
 
 ## 6. Not done
 
-- No attempt at a rigorous upper bound on the loss. The natural route — an admissible c must exist within O(log³n) of x\*n — is a shifted-prime-triple statement of exactly the kind §6 of `sp-to-floor.md` shows the sumset route cannot supply.
+- No attempt at a rigorous upper bound on the loss. The natural route — an admissible c must exist within O(log³n) of x\*n — is a shifted-prime-triple statement of exactly the kind §6 of `bcp-to-floor.md` shows the sumset route cannot supply.
 - The second-order Bateman–Horn correction is quoted as "about the right size" for the deficit; it has not been computed. **This is now the sharpest open item here**, because §4b has isolated it: on the uncontaminated F = 4 population at [10⁵, 10⁶] the shortfall is 6–8% and *flat across every quantile of the Exp(1) curve* (0.91–0.97), which is what a multiplicative correction to the density looks like and not what a modelling error looks like. Computing it would turn the note's last loose constant into a prediction.
 - The classes other than 11 are untouched. The same analysis applies with different slopes and a different local system at each of the six ceilings; nothing suggests a different shape of answer.
 - The competing-shape effect of §4 is described, not modelled. A model would need the joint distribution of several shapes' deficits, which is more machinery than the question warrants — and §4b removes the need at large n, where the F = 4 share reaches 99.4% and the contamination is gone.

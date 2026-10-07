@@ -239,7 +239,7 @@ Distinct (partition, prime) conditions in the n = 10 file, by orbital cap:
 | **10** | 756 | **170** | 128 | 42 |
 | 12 (whole file) | 967 | **189** | 128 | 61 |
 
-**Now compare the batteries the published n = 10 runs actually used.** The log records `517 raw -> 57 kept (40 Oliver, 17 p-groups)` and then `756 raw -> 75 kept (40 Oliver, 35 p-groups)`. Against the corrected key those same cuts hold **123** and **170** distinct conditions. So the old invariant key merged conditions roughly three to one on the Oliver side — **40 kept where 125 exist** — and the published battery carried **75 of 170 available conditions, 44%**.
+**Now compare the batteries the published n = 10 runs actually used.** The log records `517 raw -> 57 kept (40 Oliver, 17 p-groups)` and then `756 raw -> 75 kept (40 Oliver, 35 p-groups)`. Against the corrected key those same cuts hold **123** and **170** distinct conditions. So the old invariant key merged conditions roughly three to one on the Oliver side — **40 kept where 128 exist** — and the published battery carried **75 of 170 available conditions, 44%**.
 
 **Which results this touches, and which it does not.**
 
@@ -297,7 +297,7 @@ By `small-degree-computation.md` §2.4 the χ constraint is decisive at t ≤ 3 
 
 **n = 12.** The census is **7,115 = 295 (trivial top) + 657 (q = 2) + 67 (q = 3) + 6,096 p-groups**, the p-groups splitting 6,004 / 88 / 2 / 2 across P2 / P3 / P5 / P11; by stage, **A 194, B 969, B2 28, C 5,924**; all lines well formed with 66-entry orbital maps. Max m\* is **18**, attained by 8 groups / 1 orbital partition / 3 conditions (item 1). The dedup at `--maxt 8` is **2,293 → 230**, reproduced exactly.
 
-**Counts that have been wrong and are now pinned:** the n = 12 census is 7,115, not 8,819; the m\* = 18 attainers are 8 groups, not six or seven "ways"; the CAP range is 9–36, not 12–36; the attainer tags at both degrees include a trivial top. And the published n = 10 battery is **75 of 167 available conditions**, which is a fact about the SAT claim rather than about μ(10) (item 7).
+**Counts that have been wrong and are now pinned:** the n = 12 census is 7,115, not 8,819; the m\* = 18 attainers are 8 groups, not six or seven "ways"; the CAP range is 9–36, not 12–36; the attainer tags at both degrees include a trivial top. And the published n = 10 battery is **75 of 170 available conditions**, which is a fact about the SAT claim rather than about μ(10) (item 7).
 
 ## 13a. The Adamaszek reproduction is a decision-tree check, not a CSP check
 

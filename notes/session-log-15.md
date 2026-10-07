@@ -215,3 +215,91 @@ All of these come from `validate_table_v3.py`, `orbital_counts.py`, direct reads
 
 - Reruns over [6, 10⁶] of the checks that are now explicitly scoped to older tables: `converse_check.py`, aod's no-row-exceeds-its-cap comparison, and the theorem-settled counts of ep Part I. None is load-bearing above 1/25, where Corollary E.6 does the work.
 - **4 + 7\* + 19\*** remains predicted, not built.
+
+---
+
+## 7. Auxiliary documents, first pass
+
+*Order chosen by load-bearing weight for the headline result (μ = B to 10⁶), then by citation count from oen / ep / aod.*
+
+### 7.1 Correction to §6.1: the 5 + 7\* + 11\* reason was wrong
+
+§6.1 attributed the inadmissibility to Lemma C's coupling t | ord_r(p). That coupling applies only when **r divides the matching block's twist** (r | d). Here d | 4, and neither 7 nor 11 divides it, so the coupling says nothing. The actual defect: the group built for the S11 table used e = 1, 1, i.e. **full foreign twists 6 and 10**, which no single top prime supplies (Lemma B′). And n = 23 is prime, so "matches the table" could not hold. The q = 2 reading (twist 2 on each foreign block, e = 3, 5) is admissible, with the same orbital total 253. ep's S11 table and the verified-groups list now say this, and point to 4 + 7\* + 19\* at q = 3 as the tabulated replacement (predicted, not built).
+
+### 7.2 `ladder-completeness.md`: conclusions hold, two proof steps replaced
+
+- **Three foreign primes (Proposition 1).** The ratio argument ("any two have ratio ≥ 2") is false: with mixed k and e, ratios as close as 1.2 occur (2·5^e against 12·5^{e−1}). Efficiency excludes them instead: the smallest part has y ≤ 1/3, so it needs η > 9/25. Brute force over triples with k ≤ 40, d ≤ 4 and q ≤ 31 gives max min η·y² = 0.037 < 1/25.
+- **Fermat exclusion (Proposition 2).** "Finitely many Fermat primes, all at n < 200" is wrong, since 257 and 65537 occur. Recomputed: over every prime pair (Fermat, k·2^e + 1) with k ∈ {1, 3, 5} and e < 64, only {3, 5} and {5, 7} exceed 1/9 or 1/16, both at n < 30. The pair 65537 + 163841 caps at 0.082 / 0.049. The suprema 1/9 and 1/16 at odd q, and 0.0469 at q = 2 without a Fermat prime, were reproduced by brute force.
+- **Letter-level fixes:**
+  - k ≤ 12 holds only for parts of share below 1/2; in general it is k < 32.
+  - The merge step needs a ≥ b, not a > b.
+  - The p^b ≥ 5 step follows from the intra bound for n ≥ 76; the share bound alone does not give it.
+  - S11 may carry a fused class.
+- **Checked clean:** `mu_ladder_exact.py` enumerates k ≤ 40 and fused S11, so the certified table does not inherit the note's letter-level gaps. Its docstring's "fifteen" E.5 exceptions is now twelve.
+
+### 7.3 `entangled-generator-finding.md`
+
+Checked clean: every predicted value matches the rebuilt tables — μ(78) = 468, 105 → 812, 207 → 2525, 231 → 2943, 253 → 5256. Repairs 1–6 are applied, and the n = 33 group is in `verify_witness.g`. A current-status block was added, noting n = 1817 is superseded (0.091483) and that repair 7 is tracked as ep J0.
+
+### 7.4 `small-degree-computation.md` (read in full)
+
+- **§2.0, the prime-power remark was wrong in the same way oen §7 was.** It said 𝔽_p-acyclicity is "not excluded at prime powers" because Smith theory on the translations "yields no contradiction". But at n = p^k, 𝔽_p-acyclicity for p = char(n) already excludes everything. Smith makes the translation subgroup's fixed complex 𝔽_p-acyclic. A finite 𝔽_p-acyclic complex is ℚ-acyclic: its integral homology is finitely generated with A = pA, hence finite of order prime to p. The cyclic layer's generator then has Lefschetz number 1, which equals χ of its fixed complex, against χ({∅}) = 0. What is not excluded is 𝔽_ℓ-acyclicity for ℓ ≠ p, and global χ = 1. The §2.0 table row for the Oliver congruences now reads "𝔽_p-acyclicity for the bottom prime (ℚ-acyclic if trivial bottom)" rather than ℤ-acyclicity.
+- **§7.1, the one-sidedness diagnosis overstated.** It said the only OUT-generator is nontriviality. That holds for the *primal* conditions, but the CSP also enforces the *dual* conditions (§2.2, §3.5). A dual χ condition pushes complements IN, hence graphs OUT, which is exactly the pressure the diagnosis says is missing. The text now says the dual OUT-pressure exists and is absorbed by the cone escape, which is what §7.2's 878 → 138 patterns measure, rather than being absent.
+- **Count inconsistencies.** The n = 10 battery is 170 conditions with 128 Oliver, per the verification table. "167" and "125 exist" are corrected in both `small-degree-computation.md` and `small-degree-verification.md`. The 699/577/21 split of the 1,294 classes double-counts, as in oen: 1,297 readings. n = 12's hand-built 427 conditions (§8.5) against 425 elsewhere is flagged, not resolved; it is probably the same retagging as at n = 10, but unchecked. The "complete batteries of 242 and 711" in §10 are complete only up to the MAXT = 12 cap; the 183 Oliver classes at n = 10 with t ≥ 13 remain outside.
+- **Checked clean:**
+  - the n = 12 census sums (295 + 657 + 67 + 6,096 = 7,115; 6,004 + 88 + 2 + 2);
+  - 183 = 1,294 − 1,111;
+  - 8,082 = 967 + 7,115;
+  - the §8.4 percentages (230/425 = 54%, 125/425 = 29%);
+  - the backbone tally (25 + 20 + 310 + 54 = 409);
+  - χ(max-deg ≤ 1) = −1,215, recomputed from the matching numbers of K₁₀;
+  - δ_S2 at n = 10, 12;
+  - the 12,005,168 graph count.
+
+### 7.5 `solvable-relaxation.md`
+
+- **New connection: B₀ = μ_solv exactly.** oen §2's B₀ uses cap(s) = s(L(s) − 1)/2, which is this document's score(s) verbatim, over the same max–min. So the "robust fallback" bound *is* the solvable optimum. That explains the shared minimum of 0.123 at n = 551, and it means the gap B₀/B is the chain's cost. It also shows ep's Theorem 2.3 two-part reduction and this document's "at most two parts" box are the same unproved claim. A box is added in §2.
+- **The citation owed for the interval-constrained three-prime theorem.** A candidate is suggested, *flagged for checking against the paper*: Matomäki–Maynard–Shao (2017), almost-equal summands within n^{0.55}. The four-prime even case follows by peeling off one prime near n/4.
+- **Corrections:**
+  - "Forces the two primes into ratio ≥ 2" is false, as in §7.2; closer ratios exist and pay in efficiency.
+  - "F = 2 on eight residues and F = 4 on four" is now five of six odd classes and class 11.
+  - §5's "most class-11 values exceed 7 − 4√3 — 91 of 119" contradicted §4's 19,583 of 63,672, which is the current count.
+- **Checked clean, recomputed from the ladder table:**
+  - 63,672 class-11 rows, of which 19,583 exceed 7 − 4√3;
+  - one-part winners at F = 2, 3, 4, 5: 41,706 / 28,814 / 22,173 / 18,048;
+  - Proposition 1's proof (Kantor for 2-homogeneous not 2-transitive, Huppert for solvable 2-transitive);
+  - 0.49981 = 1296/2593 at n = 2594.
+
+### 7.6 `johnson-presentations.md`
+
+Read in full; no corrections. **Checked clean:**
+- the A₅ example: AGL(1,5)'s twist is a 4-cycle, hence odd; D₁₀ has orbitals [5, 5]; A₅ is its own only transitive subgroup on pairs;
+- Lemmas 1–3 of §5a and the resulting lower bounds c·d·r·t = Ω(n⁴) at even n and c²·d·r·t = Ω(n⁵) at odd n. Lemma 2 is consistent with ep's Lemma C: it assumes a nontrivial foreign twist, which Lemma C's coupling would kill if r | d;
+- the BBKN-route table at n = 510,510: F = n/Q = 30,030, log₁₀ 17^{30,030} ≈ 36,950;
+- the Θ(n³) Reed–Solomon orders.
+
+### 7.7 `shape-counting.md`, and a stale filename
+
+- **N(δ₀) recomputed** by an independent enumeration of Σ√Fᵢ ≤ 1/√δ₀ with the m₁ + 1 foreign choices: 24, 65, 83, 112, 164 at δ₀ = 1/9, 1/16, 0.051813, the floor, 1/25. All match.
+- **Stale references fixed:** `sp-to-floor.md` → `bcp-to-floor.md` in `shape-counting.md`, `shparlinski-constants.md` and `approach-rate-note.md`, and (SP) / (SP_{D,c,ρ}) → (BCP) / (BCP_{D,c,ρ}) in `shparlinski-constants.md`. Both are patterns `check_doc_figures.py` already flags as old names.
+- `three-part-family-split.md` is archived and not reviewed.
+
+### 7.8 `monotone-transitive-note.md` — an internal contradiction, which also corrects oen Appendix C
+
+- **§6 item 0 had already closed A₆ and S₆ on 10 points** by inclusion. Each contains A₅ acting transitively on the same 10 points (the point-stabiliser A₅ on 3+3 partitions of {1..6} ≅ pairs of {1..5}), and the exhaustive A₅ search found no non-evasive property. Yet §3, §5 and §6 item 1 still listed them among "six still open". The note now says four remain unresolved by the criterion — M₁₂, and PSL(3,2), PSL(2,13) and the order-322,560 group at degree 14 — and that none can host a counterexample anyway, since n ≤ 14 is verified in the literature.
+- **oen Appendix C row 6, as rewritten in §2 of this log, was wrong:**
+  - It listed 10T7 as open, but A₅ on pairs is settled by exhaustive search.
+  - It omitted M₁₂ and 14T54.
+  - It ignored the literature's n ≤ 14.
+
+  The row now says: the criterion first fails at 10T7 (then 10T26, 10T31, 12T162; M₁₂ and three degree-14 groups unresolved by it); evasiveness is settled at every failing group computed; n ≤ 14 is verified in the literature; the first open degree is 15 (A₅ on 15 points).
+- The transfer of the one-sidedness diagnosis (§2) is updated to match §7.4's correction about dual conditions.
+- **Checked clean:**
+  - the degree-2p construction (order 2^{p−1}·p, inside A₂ₚ, Oliver with trivial top);
+  - χ(A) = 21 − 110 + 120 − 30 = 1 for Lutz's complex;
+  - the Heawood nerve (χ = −7, b₁ = 8);
+  - the PSL(2,7) involution complex (χ = 168).
+
+### 7.9 Not yet read
+
+`small-degree-verification.md` (only the dedup table checked), `hardness-of-evasiveness.md`, `restriction-game.md`, `chiral-graph-properties.md`, `directed-graph-properties.md`, `three-uniform-note.md`, `general-k-note.md`, `bcp-to-floor.md`, `shparlinski-constants.md`, `approach-rate-note.md`, `literature-findings.md` beyond item 1, `note-to-framework-bridge.md`, `mu-theta-n2-note*.md`, `a18-resolution.md`, `t5-resolution.md`, `verification-lessons.md`, `fusion-count-ceilings.md` (archived).
