@@ -160,3 +160,58 @@ All of these come from `validate_table_v3.py`, `orbital_counts.py`, direct reads
 - **pending-checks:** the stale numbers in T8; the opening claim that every measured figure is current.
 
 **Checker:** pattern proposals for `check_doc_figures.py` were not implemented. After the edits it reports 48 findings needing a decision, against 42 before. Most of the increase is line-shift noise and parser misreads ("999,958" read as n = 999). A few are deliberate scope notes that cite older tables.
+
+---
+
+## 6. Second pass — the items §5 left open
+
+*The fixes listed in §5 as noted but not applied are now applied, each re-derived as it went in. Three of §5's "re-derivations owed" are settled; one is rescoped rather than rerun.*
+
+### 6.1 Re-derivations settled
+
+- **Why 5 + 7\* + 11\* is inadmissible.** Lemma C's coupling t | ord_r(p) fails at the 11-block. The only common top prime is q = 2, giving twist 2 at both foreign blocks, but ord₁₁(5) = 5 is odd, so the 11-block's 2-power twist is forced trivial. (ord₇(5) = 6, so the 7-block is fine.) The replacement 4 + 7\* + 19\* at q = 3 passes the same test: ord₇(2) = 3 and ord₁₉(2) = 18 take twists 3 and 9, matching its predicted orbitals 21 = 7·3 and 171 = 19·9. ep now states the reason.
+- **`certified_K`.** Read off the writers: `mu_exact.py` and `mu_ladder_exact.py` both write the part count k into `parts`, `certified_K` and `partcap` alike, keeping `mu_enumerate_v3.py`'s header. On both tables the three columns are identical: {1: 15,787, 2: 74,512} on the exact table, {1: 124,502, 2: 796,763} on the ladder table. Only `mu_enumerate_v3.py` recorded a Part F halting K. ep Part I now says so; the "worth checking" hedge is gone.
+- **oen §8's TOM cap.** 1,111 / 6,211 are the Oliver classes with **at most 12 orbitals**, not all subgroup classes. The cap loses nothing, since more than 12 orbitals forces one below C(n,2)/13 = 3.46 and 5.08, under μ(10) = 20 and μ(12) = 18. oen states this.
+- **aod's "zero rows exceed their own cap"** was not rerun. It is scoped to the 1,167-winner table it was run on, with the rerun noted as open.
+
+### 6.2 oen
+
+- The "Open Problem 7" references (the n = 6…11 window and "either outcome is a theorem") now point to **Open Problem 6**, the single-shape search at n = 6.
+- **The 1,297 vs 1,294 overlap.** The trivial-top / q = 2 / q = 3 buckets (699 + 577 + 21 = 1,297) exceed the 1,294 Oliver classes at n = 10, so at least three classes carry more than one reading. This is stated in place.
+- **A₅ is not "S₅ with AGL(1,5) removed".** It is the index-2 subgroup. What separates it is that AGL(1, 5) — whose multiplier x ↦ 2x is a 4-cycle, hence odd — does not lie in A₅. Rewritten.
+- **Planarity's fsc is ≈ n¹⁰, not n⁹.** A K₅ subdivision spreads up to n − 5 subdividing vertices over 10 edges, giving Θ(n¹⁰) patterns; K₃,₃ gives Θ(n⁹).
+- **orb(c, d) = cd, not cd/2, for the 2-homogeneous-not-2-transitive case** at c ≡ 3 (mod 4). With d = (c−1)/2 odd, −1 is not in the twist, so the two ordered orbitals fold into one unordered orbital of size cd = C(c, 2). Fixed here and at the matching 2-homogeneity remark in aod. aod §3.1's Euler-criterion paragraph already had it right.
+- **Overview certificate claim:** checked clean. "Run to n = 100,000, succeeding at every value" matches aod's 90,299 of 90,299 for the B_refined = B_safe certificate. Left as it stands.
+
+### 6.3 ep
+
+- **F_mid coprimality, in three places.** The Part 0 diagram's middle column ("must share no prime with any twist or outside block"), the n = 308 gotcha and the general-configuration paragraph now say the same thing as Part E and aod §3.2.3. One entangled generator of order F_mid·d carries the rotation and the full twist together, so no coprimality against the twists is needed. Coprimality with outside blocks is a sufficient condition for building, not a proved necessary one. The cyclic-branch scale estimate in G now says "ignoring coherence with other classes".
+- **Part H forward pointer.** The old ladder constants (1/4, 0.049, 0.028, giving k ≤ 2, 4, 5) are replaced by the mod-12 ceilings: **k ≤ 2 at every class except n ≡ 5, 11 (mod 12), where k ≤ 3** (1/√0.134 = 2.73, 1/√0.125 = 2.83, 1/√0.101 = 3.15, 1/√0.0718 = 3.73). The δ-conflation paragraph quotes the current floor.
+- **The s-ladder corollary is now sharp.** Since s < 1/√δ − 1 ⟺ δ < 1/(s+1)², branch s is reachable only when δ < 1/(s+1)², strictly. The "guarantees s ≤ K when δ > 1/(K+2)²" side was already correct.
+- **E.5: one more "15 exceptions"**, in the s = 1 / s = 2 (a ≥ 2) bullet, is now 12. A repo-wide grep finds no others outside the session logs; `lean/README.md` does not cite the count.
+- **Certificate run scope.** "Requoted from the run on the completed table" is now "the 2,187-row table it covered (not rerun over [6, 10⁶], where Corollary E.6 does the work)".
+
+### 6.4 aod
+
+- **§6.2's coprimality contradiction.** The cyclicity paragraph required distinct classes' twist orders to be pairwise coprime; two paragraphs later the diagonal-generator paragraph said they need none. The first is now aligned with the second. Both, and the §6.4 conditionality paragraph, drop the claim that the cyclic layer's order must be coprime to the block rotations F_mid, the entangled generator again. What remains is Lemma C: cyclic-layer twists coprime to the foreign primes. "Coprimality budget" in the linkage remark is now "Lemma C's twist–foreign coupling".
+- **§4.5: S7 at F = 3 co-carries n ≡ 2, 8 (mod 12).** Its safe-prime rung ties S3's obstructed ceiling (2 − √3)/2 there exactly, as §3.3 already said. The fates table and the shares paragraph had it losing to S3's 1/4 at every even n.
+- **§6.5 census line.** "S3, S4 and S7 at F = 2" is now S3 and S7 at F = 2, with F = 4 at class 11 and F = 3 at classes 2 and 8; S4 is dominated by the fused rung at every c.
+- **§6.3 bound.** cap_F(1) **≥** 1/25 ⟺ F ≤ 16, with equality at F = 16, matching the feasibility cut √F + 1 ≤ 5.
+- **S6 near-misses.** The locally surviving members of the obstructed families are n = 26 and n = 20, as the census row says. n = 12 is among the scan's next-best values but is not a survivor.
+- **Class-11 arithmetic (§3.2).** The paragraph used F = 2 and r = Dq + 1 with a conclusion about c mod 4. The class-11 rung is F = 4 with r = 6qᵉ + 1. Since n ≡ 3 (mod 8), an odd c = (n − r)/4 needs r ≡ 7 (mod 8), which pins **qᵉ ≡ 1 (mod 4)**, consistent with §3.3's r ≡ 7 (mod 24). The congruence falls on the twist prime power, not on c, and an even c (a power of 2) covers the other case.
+- The stray "4." flagged in §5 was not found on re-reading; the hit was a legitimate numbered list item, condition 4 of the (BCG-AL) hypothesis.
+
+### 6.5 pending-checks and dehistoricization
+
+- **The opening claim that every measured figure is current** now names the exceptions: run outputs scoped to older tables and not rerun. These are `fallback_cert.py` on 2,187 rows; `converse_check.py` and T8 on [6, 2600]; and aod's cap check on 1,167 winners.
+- **T8.** D(δ₀) = 2(1 − √δ₀)²/δ₀ was recomputed: **26.7 at δ₀ = 0.046210** (against 43 for 2/δ₀) and 32 at 1/25. These replace 25.4 and 42. The measurements paragraph is scoped to [6, 2600] as a last run, with a rerun as the open item.
+- **Era labels added in the first pass were removed**, now that this log records the history: the 74.8% / 77% asides (oen glossary, ep G), the v4 0.045742 aside (oen §2.4), "7 on the old prefix, 18 under v4" (aod §7, ep J), and "the old 39%" (literature-findings).
+
+### 6.6 Checker
+
+`check_doc_figures.py` now reports **43** findings needing a decision, against 42 at the start of the session and 48 after the first pass. There are 11 historicizing phrases, nearly all pre-existing. The remainder are scope notes that deliberately name older tables (the certificate, converse and cap-check runs) and known parser misreads. New checker patterns were still not implemented.
+
+### 6.7 Still open after this pass
+
+- Reruns over [6, 10⁶] of the checks that are now explicitly scoped to older tables: `converse_check.py`, aod's no-row-exceeds-its-cap comparison, and the theorem-settled counts of ep Part I. None is load-bearing above 1/25, where Corollary E.6 does the work.
+- **4 + 7\* + 19\*** remains predicted, not built.
