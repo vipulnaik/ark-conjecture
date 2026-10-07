@@ -300,6 +300,65 @@ Read in full; no corrections. **Checked clean:**
   - the Heawood nerve (χ = −7, b₁ = 8);
   - the PSL(2,7) involution complex (χ = 168).
 
-### 7.9 Not yet read
+### 7.9 `hardness-of-evasiveness.md` — two rows of the planarity table were wrong
 
-`small-degree-verification.md` (only the dedup table checked), `hardness-of-evasiveness.md`, `restriction-game.md`, `chiral-graph-properties.md`, `directed-graph-properties.md`, `three-uniform-note.md`, `general-k-note.md`, `bcp-to-floor.md`, `shparlinski-constants.md`, `approach-rate-note.md`, `literature-findings.md` beyond item 1, `note-to-framework-bridge.md`, `mu-theta-n2-note*.md`, `a18-resolution.md`, `t5-resolution.md`, `verification-lessons.md`, `fusion-count-ceilings.md` (archived).
+The §2a table claims the framework re-derives planarity's evasiveness at each of the six n where μ(n) ≤ 3n − 6. All four orbital rows were recomputed by direct orbit enumeration and a planarity test on every orbital union.
+
+- **n = 12.** The stated group (C₂⁶ swaps, C₆ block rotation) has orbitals **6, 12, 24, 24**, not "6, 12, 12, 12, 12, 6, 6". With independent swaps all four edges between two blocks lie in one orbit. χ = **2**, not −7. The conclusion (χ ≠ 1, trivial top, evasive) survives.
+- **n = 20, a real gap.** The stated 10 × 2 group has orbitals 10, 20, 40, 40, 40, 40 and gives **χ = 1 exactly**, so it proves nothing. The row's orbital list was again inconsistent with its own group. The entangled **4 × 5** group closes it: four 5-blocks, step multipliers with product 2, Γ₁/Γ₂ = C₁₆, trivial top, and it is the μ(20) = 40 optimum. Its orbitals are 4K₅ (40), 50 and 100, none planar, so χ = **0**. The table and the note under it now say this.
+- **Checked clean:**
+  - the exceptional set {6, 10, 12, 15, 20, 30} against the exact table (μ(30) = 78);
+  - the labelled planar-graph count 32,071 at n = 6, recomputed by brute force over 2¹⁵ graphs;
+  - the n = 10 and n = 30 rows.
+
+### 7.10 `restriction-game.md`
+
+Read in full; no corrections. **Checked clean:**
+- Theorem 1's Horn-clause proof and the KSS descent (I₂ → I₃ → I₁);
+- the Korneffel–Triesch free-set count p² + 2p(n − 2p) = 8n²/25 at p = 2n/5;
+- the universal-vertex argument that no two orbitals form a face, and the swap-symmetry reduction to the four patterns;
+- the k = 4 graph-class count of 6.
+
+### 7.11 `bcp-to-floor.md`
+
+- **BH pair counts.** The note's "recount" (13,934 / 10,281) included Q = 2, i.e. the pairs (2, 5) and (2, 13). It attributed the difference to a window-edge convention. Recounted: odd Q, as the construction requires, gives **13,933 / 7,422 / 10,280 / 5,420**.
+- **Checked clean:**
+  - the window-optimum identity δ(k, d) = (√k + √(d/2))⁻² = cap_k(2/d);
+  - every cell of the per-class grid, including the class-11 margin over (6, 4), (2, 12) at 0.0670 and (12, 2) at 0.0502;
+  - the mod-4 pins (and their consistency with the qᵉ ≡ 1 (mod 4) correction of §6.4);
+  - the ℓ ≥ 5 solution count ≥ ℓ − 3;
+  - the §6.1 Mertens-tail argument.
+
+### 7.12 `approach-rate-note.md`
+
+- One count fixed: the F = 4 share is 40,488 of **40,752**, matching the decade table's 8,266 + 32,486, not 40,742.
+- **Checked clean, recomputed from the table:**
+  - the slopes 8 − 4√3 and (8/3)(2√3 − 3), and 1.7410;
+  - C₀ = 0.6351664 (product over primes to 10⁷);
+  - the ℓ = 2 factor 4 and the ℓ = 3 factor 3/4 in S(n);
+  - 44,089 of 63,672 class-11 values below the ceiling, and the decade counts 61 / 3,149 / 8,266 / 32,486.
+
+### 7.13 `chiral-graph-properties.md` — the open prime-power case, closed within AΓL(1, c)
+
+- **New result (Theorem 2′).** For c = p^a ≡ 1 (mod 4) with a ≥ 2, A_c ∩ AΓL(1, c) contains a 2-transitive Oliver group **iff p ≡ 3 (mod 4)**. This turns §6 item 6's searched pattern (rescued at 9, 49, 81, 121; not at 25, 169) into a theorem for every such c. The proof uses Frobenius–Zolotarev: the sign of a linear map on 𝔽_p^a is (det / p).
+  - **Signs of the two generators.** Multiplication by ζ has non-residue determinant, so it is odd. Frob permutes a normal basis cyclically, so det = (−1)^{a−1}, and Frob is odd iff p ≡ 3 (mod 4) when a is even.
+  - **If Frob is even**, every even element of ΓL(1, c) preserves the squares, so no even subgroup is transitive.
+  - **If Frob is odd**, ⟨ζ², ζ·Frob^j⟩ with j the odd part of a is even, transitive and Oliver (top q = 2). At c = 9 it is the note's 3²:Q₈.
+  - **Checked** by cycle counting of Frob for p ≤ 29, a ≤ 8.
+- **What remains.** Huppert's exceptional solvable 2-transitive groups occur at p ≡ 1 (mod 4) only at c = 25. A sketch (SL(2,3)-based stabilisers have no cyclic normal subgroup with q-group quotient) says none is Oliver; it is flagged as a sketch, and a GAP check would close it. Granting it: δ_chi(p^a) = 1/2 exactly at every p^a with p ≡ 1 (mod 4), and 1 at every other prime power.
+- **Consequences:**
+  - ε(c) is now stated in terms of the characteristic.
+  - The chiral frontier's prime-power list is every p^a with p ≡ 1 (mod 4), not just 25 and 169.
+  - oen Appendix C row 3 is updated.
+  - **A caveat added:** the rescue's 2-element sits in the top layer, so ε = 1 at such c inside a configuration is conditional on top prime 2 (or fusion). Whether another chain avoids that is not checked.
+- **§6 item 4's logic, corrected.** "Wherever the chiral ladder clears 1/25, μ_chi = B_safe = μ" does not follow: a chiral lower bound above 1/25 need not reach B_safe. What holds is μ_chi = μ wherever a chiral construction attains B_safe.
+- **Checked clean:**
+  - Theorem 1's index-2 argument;
+  - rules (M) and (F2), including the sign (−1)^{Fc} at full twist;
+  - the c = 9 group's generators and its Oliver chain;
+  - the ported caps cap₁(1; ½) = 3 − 2√2, cap₂(1; ½) = 1/9 and 0.10102, and the ×0.686 / ×0.754 factors.
+  - *Noted, not edited:* (F2) at **odd** F gives sign (−1)^c, odd at odd c. So the F = 3 co-carrier at n ≡ 2, 8 (§4.5 of aod) pays a chiral penalty. S3 attains the same ceiling there, so nothing changes.
+
+### 7.14 Not yet read
+
+`small-degree-verification.md` (only the dedup table checked), `directed-graph-properties.md`, `three-uniform-note.md`, `general-k-note.md`, `shparlinski-constants.md` (only the renaming), `literature-findings.md` beyond item 1, `note-to-framework-bridge.md`, `mu-theta-n2-note*.md`, `a18-resolution.md`, `t5-resolution.md`, `verification-lessons.md`.

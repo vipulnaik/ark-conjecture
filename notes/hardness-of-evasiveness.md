@@ -46,11 +46,11 @@ Past 30 it is never close again, since μ(n) ≳ 0.046·C(n,2) is quadratic agai
 | n | Oliver group | orbitals | why no orbital is planar | χ |
 |---|---|---|---|---|
 | 10 | 2 × 5, entangled | 2K₅ (20), K₅,₅ (25) | K₅ is non-planar; K₅,₅ contains K₃,₃ | **0** |
-| 12 | 6 × 2, Γ₂ = C₂⁶, Γ₁/Γ₂ = C₆ | 6, 12, 12, 12, 12, 6, 6 | some are planar, but the alternating sum survives | **−7** |
-| 20 | 10 × 2, Γ₂ = C₂¹⁰, Γ₁/Γ₂ = C₁₀ | 10, 20×8, 10, 10 | ditto | **−15** |
+| 12 | 6 × 2, Γ₂ = C₂⁶, Γ₁/Γ₂ = C₆ (block rotation) | 6, 12, 24, 24 | some are planar, but the alternating sum survives | **2** |
+| 20 | 4 × 5, **entangled** (step multipliers with product 2, a generator of 𝔽₅ˣ) | 4K₅ (40), 50, 100 | 4K₅ is non-planar; the cross orbitals contain K₃,₃ | **0** |
 | 30 | 6 × 5, **entangled** (⟨z⟩ = C₂₄ cyclic) | 6K₅ (60), 75, 150, 150 | 6K₅ non-planar; the rest exceed 3n − 6 = 84 | **0** |
 
-Each χ ≠ 1, so each is evasive. *All four chains were checked to be Oliver: the n = 30 case needs the **entangled generator** — a block rotation plus full twist from one element, giving ⟨z⟩ = C₂₄ — because taking rotation and multiplier separately makes Γ₁/Γ₂ = C₄ × C₆, which is not cyclic and not Oliver.* That is the framework's own construction doing work in a place it was not designed for.
+Each χ ≠ 1, so each is evasive. *All four chains were checked to be Oliver: the n = 30 case needs the **entangled generator** — a block rotation plus full twist from one element, giving ⟨z⟩ = C₂₄ — because taking rotation and multiplier separately makes Γ₁/Γ₂ = C₄ × C₆, which is not cyclic and not Oliver.* That is the framework's own construction doing work in a place it was not designed for. The n = 20 row needs it too: the 10 × 2 group (C₂¹⁰ swaps, C₁₀ rotation) has orbitals 10, 20, 40, 40, 40, 40 and gives χ = 1 exactly, so it says nothing. The entangled 4 × 5 group — the μ(20) = 40 optimum, Γ₁/Γ₂ = C₁₆ — gives χ = 0. *(Orbitals and χ for the n = 12 and n = 20 rows recomputed by direct orbit enumeration and planarity testing of every orbital union.)*
 
 > **So the framework re-derives planarity's evasiveness at every n** — which Best, van Emde Boas and Lenstra had in 1974 — but the four routes are not four alternatives, and counting them as such flattens the only distinction that matters here.
 >
