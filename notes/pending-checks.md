@@ -720,6 +720,8 @@ Promoting the note's findings into `aod` raises the value of a second reading ra
 
 ### A28. Score the Galois layer: B_refined⁺
 
+> **⟦MOOT pending J0a⟧** The motivating example below does not show what it claims: C₁₈ ⋊ Frob₃'s minimum 3087 = orb(343, 18) comes from its cyclic part C₁₈ (the *unstripped* twist). With the stripped twist C₆ = 𝔽₇^× the Frobenius fixes 𝔽₇ pointwise, so the orbit of 1 has size 6 and the minimum stays 1029. No example is known of the Galois layer raising a minimum; until J0a produces one, B_refined⁺ has nothing to score (see `enumeration-proof.md` E‴).
+
 *Small, well-posed, and the last structural source of an interior μ(n) apart from J0a itself.*
 
 `mu_enumerate`'s `orb(c, d)` takes a matching block's twist to be **cyclic** of order d, which is exact for a stabiliser inside the Singer cycle and *under*-states one inside ΓL(1, c) proper. At c = 343 with foreign prime 19, C₁₈ ⋊ Frob₃ sits in an Oliver chain at q = 3 and realises minimum intra-orbital 3087 against the stripped cyclic reading's 1029. So B_refined as implemented is not the sharpest construction-side lower bound available; **B_refined⁺**, taking the twist inside ΓL(1, c), is.

@@ -11,7 +11,9 @@ A = fb.Arith(N + 2)
 PP = [c for c in range(3, N) if A.prime_power(c)]
 PR = [r for r in range(3, N) if A.is_prime(r)]
 def fcap(r, q):      # foreign block value at top prime q ('*' = trivial twist)
-    return r if q == '*' else fb.orb(r, fb.qpart(r - 1, q))
+    # The trivial twist goes through orb() too, so that the C(r,2) cap applies:
+    # a block of size r = 2 holds a single pair and is worth 1, not 2.
+    return fb.orb(r, 1) if q == '*' else fb.orb(r, fb.qpart(r - 1, q))
 def leftover_best(L, p, q, r, c, Fc, cur):
     """max over leftover readings (0,1,2 parts) of min(intra, cross terms); returns
     the best min-term contribution, or None if L cannot be composed."""
