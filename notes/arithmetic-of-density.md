@@ -590,7 +590,7 @@ Write a foreign block's twist as t = q^e and its cofactor as u = (r − 1)/t. Th
 | Chowla-type | 1/2 | all large n | n^{3/2−ε} | conjectural (Chowla) | **BBKN**, Thm 1.4(a) |
 | Baker–Harman, positive relative density | 0.677, now **0.679** | **almost all** n | n^{1.677} | Baker–Harman; 0.679 by **Runbo Li**, arXiv:2508.18285 (2025) | **Shparlinski**, Cor. 3 (2014); the 0.679 update is ours |
 | Elliott–Halberstam, *via the level of distribution* | 1/2 − ε | all large n | n^{3/2−ε} | conjectural (Elliott–Halberstam) | **Shparlinski**, §5 remark (2014) — upgrading his own Thm 1 |
-| Elliott–Halberstam, *via positive relative density* | → 1 | **almost all** n | n^{2−o(1)} | conjectural (Elliott–Halberstam) | **Shparlinski**, §5 remark (2014) — upgrading his own Thm 2 |
+| Elliott–Halberstam, *via positive relative density* | → 1 | **almost all** n | n^{2−ε}, every ε > 0 | conjectural (Elliott–Halberstam) | **Shparlinski**, §5 remark (2014) — upgrading his own Thm 2 |
 | *Conditional:* PD(1) law for p − 1, *via positive relative density* | every θ < 1 | **almost all** n | n^{2−ε}, every ε > 0 | **claimed**, OpenAI, *The Poisson–Dirichlet law for prime predecessors* (Sept 2026) — **unrefereed and unformalized** | ours: it would make the EH row above unconditional |
 | ERH | — | all large n | n^{5/4−ε} | conjectural | **BBKN**, Thm 1.4(b) — **superseded**: Shparlinski's Thm 1 reaches this unconditionally |
 
