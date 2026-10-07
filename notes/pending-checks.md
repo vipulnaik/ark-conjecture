@@ -825,3 +825,12 @@ Arguments: the largest orbital count t to check (12), and a wall-clock budget in
 ### A46. The OpenAI batch as a conditional input
 
 *Recorded* (`arithmetic-of-density.md` §3.6, `literature-findings.md` entry 24): the conditional PD(1) row and its dependency chain. *Open*: (1) watch github.com/openai/math (`lean/formalization.yaml`) and the literature for verification of families 011 and 029; (2) whether family 003's zero-free region helps the all-large-n rung (likely not); (3) whether Prop. 2.1's control of v₂(p − 1) and the residue class mod M matters for the ceiling analysis; (4) if anything becomes formalized, audit the Lean statement against the paper.
+
+*Side remark, not needed for the θ-ladder (which uses only p − 1):* the PD(1) argument appears to give the same law for p − a₀, for every fixed a₀ ≠ 0, **with no a₀-dependent correction**. The statistic only sees prime factors ≥ exp(L^0.1), and all of those are coprime to a fixed a₀. (The shift is written a₀ to avoid our c, r in n = Fc + r and the paper's a, b, c.) Where the shift enters:
+- PD (3.10): the target becomes t = a₀(b − a), with a, b the paper's moduli.
+- PD Lemma 7.2: the progression class is ℓy ≡ −a₀ (mod r).
+- PD (7.21): the model probabilities are unchanged for p ∤ a₀.
+- Companion §6.5: the determinant identity becomes mh′ − m′h = ka₀ instead of k; the converse needs (m, ka₀) = 1, which holds since m is W-rough.
+- PD Theorem 6.1: its proof already handles a family of shifts kD and isolates the unit shift at the end; with shift a₀, the raw term has shift a₀.
+
+*Read:* PD §3.1, §3.4, §7 in full; the Theorem 6.1 statement and the paragraph after it; companion §6.5. *Not read:* PD §4–5 (where the shift should appear only as the scaled target), the rest of the §6 proof, §8 (skimmed), and companion §5. The paper itself states only p − 1. The method's generality belongs in a one-line remark after Thm 1.1 that the paper doesn't have. The interesting extension is uniformity in a₀ growing with x, e.g. |a₀| ≤ L^A or x^δ. That strains the |k| ≪ L^{O(1)} bounds and the "band primes ∤ a₀" step. No route to ask the producers: the repo has issues disabled for outsiders.
