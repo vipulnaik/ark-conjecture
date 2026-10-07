@@ -418,7 +418,7 @@ on where in the research process we were.
 
 [Starting off with Fable to make progress on open problems more decisively]
 
-Starting a new chat on a topic that we've had two other long chats
+Starting a new chat on a topic that we've had several other long chats
 about, so that we can start off with fresh eyes.
 
 I've been working (with you in other chats) on making progress on
