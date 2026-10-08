@@ -673,3 +673,23 @@ Vipul raised two corrections to my take.
 1. **"No transitive Oliver subgroup" separates nothing.** Graph properties at non-prime-power n lack one too. The real asymmetry is quantitative. For graph properties, Oliver subgroups of S_n acting on pairs have large minimum orbits and few orbits: μ(n) = Θ(n²), conditional on (BCG). So resistance imposes real structure even where the ladder does not collapse. For a general transitive action there may be no Oliver subgroup with large orbits or few orbits, so the group-theoretic obstruction does not even get started.
 2. **Lutz's 60-vertex complex is already settled.** I had called it an untested experiment, following `literature-findings` §28 item 3. That item was stale: `monotone-transitive-note` §6 item 3a records that the complex is a join A ∗ A′, and every vertex link of A has χ = 0, so it is evasive. §28 item 3 is now rewritten to state the result. `lutz30.py`, which that note cites, is not in `scripts/`.
 - **Follow-up on the missing script.** `lutzA.py` exists, but it does not contain the argument: it computes Aut(A) and the vertex set of one link, not link Euler characteristics or the join factorisation. `lutz30.py` was never committed; it appears only in archived session log 13. I reconstructed it as `scripts/lutz30.py`. It is self-contained, with A's 21 facets copied from `lutzA.py`, because `lutzA.py` imports pynauty, which won't build here. It reproduces the recorded figures: f(A) = (30, 195, 340, 255, 96, 15), χ(A) = 1, and every vertex link has χ = 0.
+
+## 13. The OpenAI catalogue (overview PDF and github.com/openai/math, cloned 2026-10-07)
+
+**No evasiveness content.** I searched the overview text and every TeX source for evasive, elusive, Aanderaa–Rosenberg and Kahn–Saks. The only hit is Aanderaa–Cohen, in the Boone–Higman paper. Family 186's paper on monotone graph property thresholds does not cite the evasiveness literature either.
+
+**Entries near the programme:**
+- 011: PD(1) for p − 1. Already in `aod` §3.6 as the conditional row.
+- 003: quasi-RH, Re s > 7/8. Formalized as `DirichletSevenEighths`.
+- 029: Artin's conjecture, infinitude.
+- 007: two-point Chowla, the Liouville version, not BBKN's.
+- 013: Ostmann.
+- 026: large prime gaps.
+- 132, 176, 186, 284: Boolean functions and thresholds.
+- 314: chromatic Smith fixed points for p-groups, with loss equal to the cyclic subnormal length. This echoes the shape of Oliver's chain; already in entry 24 as not applicable.
+
+**A46(2) resolved negatively.** Re s > 7/8 gives level about x^{1/8} for individual moduli. On the all-large-n rung that is an exponent of at most 9/8, which is below Shparlinski's unconditional 5/4.
+
+**Formalization status at the snapshot.** 011 and 029 are not formalized; 003 is.
+
+**Updated:** pending-checks A46; `literature-findings` entry 24.
