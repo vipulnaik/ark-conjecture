@@ -601,3 +601,29 @@ The goal was to find out whether, at n ≡ 2 (mod 4), every transitive group's b
 **Docs:**
 - oen §7.4: the table row reads "holds at every n ≤ 46"; the verification line is updated; there is a new "group-theoretic form" paragraph.
 - pending-checks A38 item 2 is updated.
+
+## 10. The Sylow approach to A38 item 2
+
+Before starting, I confirmed the local copy matched GitHub (reset onto `7124f33` after a byte comparison).
+
+**Pairwise suffices.** The union of two invariant bipartite graphs is again one, so it is enough to prove the result two graphs at a time and iterate.
+
+**Main reduction (oen §7.4, "Sylow form").** Let T be a Sylow 2-subgroup of H, and S ⊇ T a Sylow 2-subgroup of L, so [S:T] = 2.
+- The conjecture is equivalent to λ: S → S/T being L-stable.
+- Equivalently, to no element of S ∖ T fixing a point of D.
+- Equivalently, to T having twice as many orbits on D as S.
+- The focal subgroup theorem supplies the colouring character. K_h = T·O²(K_h) is in its kernel, and every K_C, which contains an N_L(T)-conjugate of S, is not.
+
+**Also proved:**
+- **The local version.** By Witt, N_L(T) is transitive on Fix_D(T). It acts there through a group of order 2·odd, whose odd part splits every edge.
+- **The case T = 1.**
+- **A side remark, not written up.** Neighbours of x in a graph U with S ≤ K_C(U) are fixed by no element of S ∖ T, because such an element swaps x with x′, which lies in the other half.
+
+**Generation by the K_C is essential.** A₄ on the six edges of K₄ violates the fixed-point-free condition with L = A₄. There the union is not connected, and its true L is V₄.
+
+**Computed:** the fixed-point-free condition holds for every transitive group at n ≡ 2 (mod 4) up to 46 (`scripts/bip_sylow_check.g`, about 50 min; 0 failures at every degree).
+
+**Open:** the fixed-point-free condition itself. Attempts that did not close it:
+- Comparing χ_N with χ_{N(T^g)} on N(T) ∩ N(T^g) works only when Fix⟨T, T^g⟩ is nonempty and the two local colourings agree there.
+- An F₂ affine-space averaging over S needs an S-semi-invariant colouring to exist, which is the statement itself.
+- Inducting on Fix(Q) for Q = T ∩ S_y: N_L(Q) need not be transitive on Fix(Q).
