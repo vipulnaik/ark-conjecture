@@ -581,6 +581,8 @@ Also in §5.11: "non-trivial vertex-homogeneous non-evasive examples cannot be o
 
 The construction, unfindable in earlier searches, is reproduced in arXiv:1409.7890, Prop. 3.15. It is a ℤ/12-invariant family of 56 sets: ∅ together with the sets lying connected inside one line of the 3 × 4 torus grid ℤ/3 × ℤ/4, where rows are 4-cycles and columns are triangles. It is not monotone, has f(∅) ≠ f(X), and has decision-tree complexity 11, as the source's depth-11 tree shows and `illies12.py` recomputes. Its full symmetry group is S₃ × D₄ = T(12,28), which contains a 12-cycle, so the same family made monotone would be ruled out by `monotone-transitive-note.md` Proposition 1. Details there, §4.
 
+**Not the smallest.** An exhaustive search over the transitive groups of degree 6 finds a counterexample at n = 6, under A₄ acting on the edges of K₄ (D = 5); composition then gives one at every multiple of 6. We found no mention of a 6-variable example in the literature. Lovász–Young (arXiv:cs/0205031 §2.3) assert one at n = 14 without construction or reference. The "infinite family" claimed in our earlier notes had no recorded source.
+
 ## 28. What this changes in the programme
 
 1. **`orbital-evasiveness-notes.md`'s ladder note must be corrected**: strong collapsibility's fixed-point property is Barmak–Minian Thm 6.2, not a belief; and the "ladder collapse" reading must say that for vertex-homogeneous complexes the collapse fails at ℤ-acyclic and contractible (Lutz), so the *only* rung at which the conjecture can still be true is the top one. Our A₅-on-15 measurement (ℚ-acyclic, 2-torsion) is then a statement about 15 vertices, and the interesting comparison is with 60.

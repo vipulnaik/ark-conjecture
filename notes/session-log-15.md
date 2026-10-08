@@ -771,3 +771,23 @@ Vipul's framing, which I agreed with: bipartiteness is the first natural propert
 - The parity identity then forces the row length to be 4.
 
 **Note updated:** `monotone-transitive-note` §4, new paragraph "Why 3 and 4".
+
+## 18. The "infinite family" of set-system counterexamples; a 6-variable counterexample
+
+**Literature.** The note's claim of "an infinite family, Illies's the smallest" traces to session log 6, with no source recorded. Web searches found nothing that substantiates it. Sources checked:
+- Lovász–Young (arXiv:cs/0205031 §2.3): asserts a counterexample at n = 14, with no construction or reference.
+- Hajnal 1991: cites Illies only.
+- Miller's tutorial: nothing.
+- Rivest–Vuillemin 1975: confirms the conjecture's hypotheses are Γ(P) transitive and P(0) ≠ P(1), with no monotonicity and no cyclicity.
+
+**Search.** `rv_search.c` enumerates unions of subset orbits with exactly one of ∅, X, filtered by total and link parity, with exact D by DP. `rv_search.py` drives it, `rv_orbits.g` supplies the orbits.
+- **Degree 6, all 16 transitive groups:** only T(6,4) = A₄ on the edges of K₄ gives non-evasive examples, 8 of them with D = 5.
+- One was verified independently in Python (`rv6_a4.py`): A₄-invariant, f(∅) = 1, f(X) = 0, not monotone, signed count 0, D = 5.
+- Its description: ∅; singletons; non-opposite 2-sets; the 4 triangles; each opposite pair plus a point of the cyclically preceding pair; the 3 unions of two opposite pairs. 32 sets.
+- **Degree 10, the 26 groups with ≤ 26 subset orbits:** none. Smaller groups were not searched (2^30+ unions).
+
+**Composition** gives every multiple of 6: AND-blocks, or an outer function g with g(∅) ≠ g(X). Checked at n = 12, where both have D = 10.
+
+**Notes updated.** `monotone-transitive-note` §4 gets a new paragraph, and its Illies sentence is corrected. `literature-findings` 28a.
+
+**Open:** degrees not divisible by 6, including Lovász–Young's 14.
