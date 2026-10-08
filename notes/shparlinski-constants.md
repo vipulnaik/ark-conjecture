@@ -89,11 +89,11 @@ This is the pattern the whole document is about: an unspecified `≫` conceals a
 
 If `n ∈ [x/2, x]` admits `r ∈ ℛ` with `P(n − r) ≥ n^γ`, set `p = P(n−r)`, `q = P(r−1)`, `k = (n−r)/p`. Since `r ≤ x/4 ≤ n/2`, we get `pk = n − r ≥ n/2`. Evaluating **§1.5's orbitals** rather than f's terms:
 
-- matching intra: `k·C(p,2) = (pk)(p−1)/2 ≥ (n/2)(n^γ − 1)/2 ≥ n^{1+γ}/4` for large n;
+- matching intra: `k·C(p,2) = (pk)(p−1)/2 ≥ (n/2)(n^γ − 1)/2 = (1 − o(1))·n^{1+γ}/4`;
 - cross: `kpr ≥ (n/2)·c₀x ≥ (c₀/2)·n²` — `Ω(n²)`, never the minimum;
 - foreign intra: `≥ rq/2 > r^{1+α}/2 ≥ (c₀^{1+α}/2)·n^{1+α} ≥ (c₀^{1+α}/2)·n^{1+γ}` (taking the even-q value, the safe one).
 
-> **`m*(Γ) ≥ min{1/4, c₀/2, c₀^{1+α}/2}·n^{1+γ}`**, and with `c₀ = A/8 < 1` the minimum is **`(A/8)^{1+α}/2`**. At α = 0.677 and A = 1 that is `0.125^{1.677}/2 ≈ 0.0155` — **half** what f's uncorrected terms give, the factor coming from the matching intra term (and from the even-q foreign case, taken conservatively).
+> **`m*(Γ) ≥ min{1/4, c₀/2, c₀^{1+α}/2}·n^{1+γ}`**, and with `c₀ = A/8 < 1` the minimum is **`(A/8)^{1+α}/2`**. At α = 0.677 and A = 1 that is `0.125^{1.677}/2 ≈ 0.0153` — **half** what f's uncorrected terms give. The binding term is the foreign one, so here the factor comes from taking the even-q value conservatively; the matching term's own factor 2 (`1/4` against f's `1/2`) does not bind at this c₀.
 
 Two observations that matter later. **The foreign term carries α** and is `Ω(n^{1+α})`, so the r-side is already at the exponent the input set supplies, with no loss. **The matching term carries γ**, and it is the companion `n − r` that has to produce it. §3 and §6 are about the fact that these two are not symmetric.
 
@@ -110,7 +110,7 @@ Substituting `#ℛ ≥ (A/8)x/log x`:
 
 Summing over the `O(log x)` dyadic blocks gives the paper's `(log x)⁴`. The constants are `8c/A` and `8/(Ac₁²)` — both inherited, both harmless.
 
-*Checked numerically:* at x = 10¹², γ = 1/2, with c = c₁ = 1, the two branches agree at ≈ 2.1×10⁴, which is the crossover `x^{2γ−1} = x⁰ = 1`; for γ > 1/2 the second dominates. Consistent with the paper's `x^{max{0,2γ−1}}`.
+*Checked numerically:* at x = 10¹², γ = 1/2, with c = c₁ = 1, the two branches agree at `(8/A)(log x)³ ≈ (8/A)·2.1×10⁴`, which is the crossover `x^{2γ−1} = x⁰ = 1`; for γ > 1/2 the second dominates. Consistent with the paper's `x^{max{0,2γ−1}}`.
 
 ---
 
@@ -124,7 +124,7 @@ Three properties, worth separating because they are easily conflated — they co
 
 > **certified `P(n−r) ≤ x/(2√2·(log x)^{3/2})`** — sub-linear, by a factor `(log x)^{3/2}`, *no matter how good the input set is.*
 
-Numerically: at x = 10¹² this cap is x/400, at x = 10³⁰ it is x/1608 — and it grows without bound. Run the requirement backwards: to certify `p ≥ δ₀x` with δ₀ = 1/25 the sieve would need `#ℰ ≥ (δ₀x log x)²/#ℛ`, which at x = 10¹² with a `x/log²x` input set is `933·x`. Larger than the interval the exceptional set lives in, so it is not a matter of a better estimate — **the sieve cannot certify a linear prime factor at any input density**, because it is capped by the sizes of the two sets it is playing against.
+Numerically: at x = 10¹² this cap is x/411, at x = 10³⁰ it is x/1624 — and it grows without bound. Run the requirement backwards: to certify `p ≥ δ₀x` with δ₀ = 1/25 the sieve would need `#ℰ ≥ (δ₀x log x)²/#ℛ`, which at x = 10¹² with a `x/log²x` input set is `933·x`. Larger than the interval the exceptional set lives in, so it is not a matter of a better estimate — **the sieve cannot certify a linear prime factor at any input density**, because it is capped by the sizes of the two sets it is playing against.
 
 **(c) Therefore thinness costs a logarithm and the endpoint costs the argument.** These are different failures and the distinction is the point of this note.
 
@@ -144,7 +144,7 @@ Our set is `S_D = {r prime : (r−1)/Q(r) ≤ D}` with Q the largest **prime-pow
 
 **One power of log x, exactly, and nothing else changes.** Not the structure of the argument, not the applicability of Lemma 7, not any hypothesis about S_D beyond its size. For every fixed γ < 1 this is still `o(x)`, so:
 
-> **Result A.** (BCP_{D,c,ρ}) at any `ρ ≍ 1/log^C x` implies: for all but `O(x^{2γ−1}(log x)^{C+3})` integers `n ≤ x`, `f(n) ≫ n^{1+γ}` — hence `μ(n) ≫ n^{1+γ}` and monotone properties with `≪ n^{1+γ}` edges are evasive. In particular **`n^{2−ε}` for almost all n, every ε > 0**, from the bounded-cofactor hypothesis alone with no Baker–Harman input.
+> **Result A.** (BCP_{D,c,ρ}) at any `ρ ≍ 1/log^C x` implies: for all but `O(x^{max{0,2γ−1}}(log x)^{C+4})` integers `n ≤ x` (`(log x)^{C+3}` per dyadic block, one more for the block sum), `f(n) ≫ n^{1+γ}` — hence `μ(n) ≫ n^{1+γ}` and monotone properties with `≪ n^{1+γ}` edges are evasive. In particular **`n^{2−ε}` for almost all n, every ε > 0**, from the bounded-cofactor hypothesis alone with no Baker–Harman input.
 
 ---
 
@@ -158,7 +158,7 @@ This is the part the `≫` notation hides completely, and it is the most useful 
 
 so **γ may be taken to depend on x**, up to
 
-> **`γ < 1 − (k/2)·loglog x / log x`**, with `k = 3` for a `1/log x`-relative-density input and `k = 4` for a `1/log²x` one.
+> **`γ < 1 − (k/2)·loglog x / log x`**, with `k = 3` for an input of density `1/log x` in the integers (constant relative to the primes) and `k = 4` for density `1/log²x` in the integers.
 
 *(Legitimate because Lemma 7 is applied at a fixed x, with no uniformity in γ required across x — worth stating, since a γ varying with x is exactly the kind of step that is usually illegitimate.)*
 
@@ -187,7 +187,7 @@ Assemble the requirement, now in the project's own convention: a floor is `m* �
 >
 > **`(r−1)/q ≤ D(δ₀) := 2(1 − √δ₀)²/δ₀`**,
 >
-> which is F.4 as it now stands — 25.4 at the computed floor against the crude 42, and `D ≤ 630` rather than 700 on the round trip of §8.2. **The sharpening comes from the companion clause**, which is precisely what §6 identifies as where all the difficulty sits; it is worth noting that the same asymmetry that blocks the sumset route also tightens the converse.
+> which is F.4 as it now stands — 26.7 against the crude 43 at the table floor δ₀ = 0.046210, and `D ≤ 630` rather than 700 on the round trip of `aod` §6.7. **The sharpening comes from the companion clause**, which is precisely what §6 identifies as where all the difficulty sits; it is worth noting that the same asymmetry that blocks the sumset route also tightens the converse.
 
 > **A trap worth naming, because it leaves no trace in the answer.** Deriving this from `p²k ≥ δ₀n²` instead — f's uncorrected term against the `n²` convention — also yields `p ≥ δ₀n`. The two factors of 2 cancel: the one `p²k` gains over `kp(p−1)/2`, against the one `δ₀n²` gains over `δ₀·C(n,2)`. Either alone moves the constant; together they leave it invariant, so a spot-check of the conclusion cannot detect that both are present. **Agreement with F.4 is the check that catches it**, since F.4 is derived in the C(n,2) convention from true orbitals throughout.
 

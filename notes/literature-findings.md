@@ -84,9 +84,9 @@ Three things follow.
 
 **The whole picture is one parameter, and the ceiling is a level-of-distribution barrier.** Writing θ for the guaranteed size of a prime factor of r − 1, the route delivers n^{1+θ}: Bombieri–Vinogradov θ = 1/4 gives 5/4 for all large n, Chowla-type θ = 1/2 gives 3/2, Baker–Harman θ = 0.677 with positive relative density gives 1.677 for almost all n, and Elliott–Halberstam θ → 1 gives n^{2−ε} for every ε > 0. Our (BCG-AL) is the θ = 1 endpoint. Unlike Chowla's 1/2 — the value of a *conjecture* — Baker–Harman's is the current output of a *method*, resting on Brun–Titchmarsh on average, i.e. on primes in progressions to moduli past x^{1/2}. The exponent moves whenever that control does: **Runbo Li (arXiv:2508.18285, 2025) has raised it to 0.679** via Maynard's triple-convolution estimates, in the lineage that took Bombieri–Friedlander–Iwaniec's x^{29/56} to Maynard's x^{11/21} and Lichtman's x^{17/32}. **Cite 0.679, not 0.677.** *Conditional addition (2026-10)*: an unrefereed, unformalized OpenAI paper claims the PD(1) law for p − 1, which would give every θ < 1 at positive relative density and so n^{2−ε} for almost all n unconditionally; see entry 24 and `arithmetic-of-density.md` §3.6.
 
-**The γ = 1 endpoint reframing is precisely locatable.** Shparlinski's Theorem 2 is parameterised by α, defined by the density of primes r with P(r − 1) > r^α, where P is the largest prime divisor. Baker–Harman gives α = 0.677 unconditionally, now 0.679 (Li 2025); he notes "the standard heuristic suggests that the condition of Theorem 2 holds with any α < 1", and that Elliott–Halberstam gives any α < 1. Our hypothesis (BCG-AL) is effectively the **γ = α = 1 endpoint** of that ladder. Presenting (BCG-AL) that way says something informative about its cost — it is the limit of a parameterised family whose current unconditional value is 0.677 — rather than asserting a barrier.
+**The γ = 1 endpoint reframing is precisely locatable.** Shparlinski's Theorem 2 is parameterised by α, defined by the density of primes r with P(r − 1) > r^α, where P is the largest prime divisor. Baker–Harman gives α = 0.677 unconditionally, now 0.679 (Li 2025); he notes "the standard heuristic suggests that the condition of Theorem 2 holds with any α < 1", and that Elliott–Halberstam gives any α < 1. Our hypothesis (BCG-AL) is effectively the **γ = α = 1 endpoint** of that ladder. Presenting (BCG-AL) that way says something informative about its cost — it is the limit of a parameterised family whose current unconditional value is 0.679 (Li 2025) — rather than asserting a barrier.
 
-*One technical mismatch to be careful about.* Shparlinski's α concerns the largest **prime** divisor P(r − 1). Our efficiency η is built from the largest prime **power** divisor of the odd part of r − 1, together with the 2-part. These are not the same quantity and the ladder does not transfer verbatim. Worth checking whether his Theorem 2 goes through with the prime-power version before we claim to be its endpoint.
+*One technical mismatch to be careful about.* Shparlinski's α concerns the largest **prime** divisor P(r − 1). Our efficiency η is built from the largest prime **power** divisor of the odd part of r − 1, together with the 2-part. These are not the same quantity and the ladder does not transfer verbatim. **Resolved** (`shparlinski-constants.md` §4.1): since P(m) ≤ Q(m), every hypothesis or conclusion about P implies the one about Q, so the ladder transfers in the safe direction, and within S₁₂ the two versions differ on 0.55% of primes.
 
 ## 3. Rivest–Vuillemin — the constant is now n²/3, and our floor is well below it
 
@@ -98,7 +98,7 @@ The chain, from BBKN's own history section plus follow-ups:
 - Korneffel–Triesch, *Combinatorica* 30(6) (2010), 735–743: an improved constant
 - **Scheidweiler–Triesch, SIAM J. Discrete Math. 27(1) (2013), 257–265: n²/3 − o(n²), the current best**
 
-So the co-author's point is right and stronger than stated: it is not merely that Ω(n²) is known, but that the best *unconditional* constant is **1/3**. Our computed global density floor is 0.045742 (n = 1817), i.e. about 0.023n² — a factor of ~15 below the known weak bound. (But see item 7 of the second pass: the two quantities must not be compared as if competing; the sentence here records magnitudes only.)
+So the co-author's point is right and stronger than stated: it is not merely that Ω(n²) is known, but that the best *unconditional* constant is **1/3**. Our computed global density floor is 0.046210 (n = 2759), i.e. about 0.023n² — a factor of ~14 below the known weak bound. (But see item 7 of the second pass: the two quantities must not be compared as if competing; the sentence here records magnitudes only.)
 
 **This is not a defect in our result, but it is a defect in how `aod` §5 currently reads.** The two statements are different in kind. Scheidweiler–Triesch lower-bound D(P) for *every* nontrivial monotone property; our m\* ≥ δ·C(n,2) gives **full evasiveness** — exactly C(n,2) queries — for properties of dimension below m\*. A weak bound on all properties and an exact result on a restricted class are incomparable. But `aod` §5 does not currently say so, and a referee will read any Θ(n²) framing as competing with n²/3 and losing. Fix it before submission; cite Scheidweiler–Triesch and Korneffel–Triesch in the same block.
 
@@ -152,10 +152,10 @@ That is `notes` §8 territory almost exactly — the same n, the same tool, the 
 
 ## What remains
 
-0. **Read Angel–Borja** (item 6), before writing anything about n = 10. Same degree, same tool, same target; unknown overlap.
+0. ~~**Read Angel–Borja** (item 6).~~ **Done** — second pass, item 5: complementary, not overlapping.
 1. ~~**Read Black's spacing definition** (item 4).~~ **Superseded by items 4 and 17.** The framework is now identified; what replaces "read it" is a specific comparison — does our group data give better *spacing* at composite non-prime-power n than the sequences already in the literature? *(Items 2 and 3 below are resolved — see the second pass; item 4's other actions live in `pending-checks.md` T4.)*
-2. **Check whether Shparlinski's Theorem 2 survives the prime-power version of α** (item 2). If it does, "the γ = 1 endpoint" is a clean and accurate framing for (BCG-AL); if not, we need a different way to say it.
-3. **Read Scheidweiler–Triesch and Korneffel–Triesch properly** (item 3). I have n²/3 secondhand; the primary source should be checked before it goes in a comparison table.
+2. ~~**Check whether Shparlinski's Theorem 2 survives the prime-power version of α** (item 2).~~ **Done** — it does, in the safe direction (`shparlinski-constants.md` §4.1).
+3. **Read Scheidweiler–Triesch and Korneffel–Triesch properly** (item 3). Still open: the second pass (item 7) settled the quantity from abstracts and citing papers only, and item 19 adds an unresolved attribution question.
 4. **Decide the framing** (item 1). Not a literature question any more — the literature is now clear. It is a decision about what the paper claims, and it should be made before more writing happens, because it determines whether `aod` §3 is a contribution or a recap.
 
 ---
@@ -221,7 +221,7 @@ Neither implies the other. Ours is the stronger conclusion on a smaller class; t
 
 ## 8. What is still open in T4
 
-**Only the Shparlinski prime-power question**, and it needs the paper body. His Theorem 2 ladder is stated for the largest **prime** divisor of r − 1; our η is built from the largest prime **power** divisor of the odd part, together with the 2-part. The two agree when r − 1 = 2q and differ otherwise. If his argument transfers verbatim to the prime-power version, "(BCG-AL) is the θ = 1 endpoint" is exact rather than approximate; if it does not, `aod` §3.6's caveat has to stay. This is a judgement about a proof's robustness, not a fact to look up.
+**Nothing of the original T4 list.** The Shparlinski prime-power question below is resolved in `shparlinski-constants.md` §4.1, in the safe direction; the paragraph is kept as the statement of what was asked. His Theorem 2 ladder is stated for the largest **prime** divisor of r − 1; our η is built from the largest prime **power** divisor of the odd part, together with the 2-part. The two agree when r − 1 = 2q and differ otherwise. If his argument transfers verbatim to the prime-power version, "(BCG-AL) is the θ = 1 endpoint" is exact rather than approximate; if it does not, `aod` §3.6's caveat has to stay. This is a judgement about a proof's robustness, not a fact to look up.
 
 ---
 
@@ -357,15 +357,13 @@ The division we should state explicitly, in `arithmetic-of-density.md` §3's ope
 |---|---|---|
 | the mod-12 ceilings (§3.3) | **unconditional** | local obstructions at ℓ = 2, 3 and the balance-point optimisation |
 | the shape space being finite (`aod` §6) | **unconditional** | the feasibility criterion Σ√Fᵢ ≤ 1/√δ |
-| the collapse μ(n) = B(n) at computed n | **unconditional** | the eight necessary conditions, per-n |
+| the collapse μ(n) = B(n) at computed n | **unconditional** | Corollary E.6 with the ladder floor δ ≥ 0.04621 over [6, 10⁶]; the per-n certificates are an independent second route |
 | the escape densities (`aod` §4.3) | **conditional** | Bateman–Horn-type supply |
-| the fallback branch, e = 1 at δ > 1/9 | **unconditional** | Proposition F.1 at k = 3 |
-| the fallback branch, e = 1 at δ ≤ 1/9 | **a bounded search, empty over the computed range** | not a theorem; the check is per n |
-| the fallback branch, e ≥ 2 and q = 2 | **open** | needs domination, not supply |
-| the fallback branch being a finite residue overall (`ep` Part E″) | **conditional**, and only partly established | a floor δ ≥ δ₀, i.e. (BCG-AL); plus Lemma C at a > 1 for the p-characteristic half |
+| the fallback branch at δ > 1/25, every e and q | **unconditional** | `ep` Part E‴, Theorem E.5 (twelve listed small-n exceptions and the bare safe-prime pair) |
+| the fallback branch at δ ≤ 1/25 | **open**, and empty over the computed range | no row of [6, 10⁶] sits at or below 1/25 |
 | the global floor conjecture (`aod` §5) | **conjectural**, verified to 10⁶ over four families | — |
 
-**The fourth row is the one most likely to be misread**, so state it carefully wherever it appears. The fallback branch has been *characterised* — a named finite residue under a stated hypothesis — not *closed*. B_refined = B_safe remains a per-n certificate rather than a theorem, and the characterisation itself is conditional on a density floor, which q-pinning needs. (The p-characteristic half of the leftover is unconditional: Lemma C's coupling and Corollary C′ close it at every a.) A well-characterised open problem and a solved one read alike once the boxes are written; the table is where the difference has to be visible.
+**The fallback rows are the ones most likely to be misread**, so state them carefully wherever they appear. Above δ = 1/25 the branch is closed by theorem (Corollary E.6 gives μ(n) = B(n) there), and every computed n lies above that line; below it nothing is proved, and the per-n certificates of `pending-checks.md` R1b are the instrument for any future row that lands there. A well-characterised open problem and a solved one read alike once the boxes are written; the table is where the difference has to be visible.
 
 The Jones–Zvonkin practice suggests putting this table near the front and labelling every density statement at first mention. What we should *not* do is what an earlier draft of this file drifted towards — comparing our conditional density against other fields' unconditional open problems as though they were competing strengths.
 
@@ -516,10 +514,6 @@ So there is **one wall, and it is not at the top rung** — it is the gap betwee
 
 **The headline, since it bears on how §3 of `aod` should be read — stated more carefully than this file first had it.** At k ≥ 3 the *constants* die: δ₃ → 0, because full-density blocks require solvable 3-**homogeneous** groups (the right notion — 3-transitivity is more than is needed, and e.g. AGL(1,8) is 3-homogeneous without being 3-transitive), which exist at degrees {3, 4, 5, 8, 32} only (Kantor). But `three-uniform-note.md` §§5.2, 5.7 shows the *optimisation* survives: the allocation, the mod-12 classification and the balance points transfer row for row, with β₃ = cap_F(η)/2 exactly in the generic column. So the accurate sentence for `aod` §3 is that its **constants** rest on the group-theoretic accident of 2-homogeneous solvable groups at every prime power, while its **structure** — cap formula, residues, balance points — is arity-independent.
 
-# Fourth pass (2026-09): the Evasiveness Conjecture for simplicial complexes — strong collapsibility, minimal cores, and the known vertex-homogeneous acyclic examples
-
-*Prompted by the A₅-on-15 search (`monotone-transitive-note.md` §6 item 3a), which produced ℚ-acyclic invariant complexes with 2-torsion and raised two questions: do strongly collapsible complexes have a fixed-point property for their automorphism groups, and do ℤ-acyclic vertex-transitive complexes exist at all. Both are answered in the literature, the second in a way that reshapes what the search is for.*
-
 ## 23. Triangle-freeness, bipartiteness and forbidden subgraphs: what is already known
 
 Three checks against results derived in `orbital-evasiveness-notes.md` §§7 and the triclique box.
@@ -540,7 +534,11 @@ A catalogue of 372 result families in 722 manuscripts, produced by an internal O
 
 *Where Lean would help*: for formalized families the repository pairs statement files with comparator configurations (`lean/ComparatorChallenges/`), so a statement-versus-paper audit is feasible if a formalized result ever bears on this project.
 
-## 13. Barmak–Minian, "Strong homotopy types, nerves and collapses" (DCG 47, 2012; arXiv:0907.2954) — the fixed-point theorem holds, and the conjecture reduces to minimal complexes
+# Sixth pass (2026-09): the Evasiveness Conjecture for simplicial complexes — strong collapsibility, minimal cores, and the known vertex-homogeneous acyclic examples
+
+*Prompted by the A₅-on-15 search (`monotone-transitive-note.md` §6 item 3a), which produced ℚ-acyclic invariant complexes with 2-torsion and raised two questions: do strongly collapsible complexes have a fixed-point property for their automorphism groups, and do ℤ-acyclic vertex-transitive complexes exist at all. Both are answered in the literature, the second in a way that reshapes what the search is for.*
+
+## 25. Barmak–Minian, "Strong homotopy types, nerves and collapses" (DCG 47, 2012; arXiv:0907.2954) — the fixed-point theorem holds, and the conjecture reduces to minimal complexes
 
 Read in full. Four results bear directly on the programme.
 
@@ -558,7 +556,7 @@ Read in full. Four results bear directly on the programme.
 
 **Status of the conjecture per the paper (2009):** verified for prime-power vertex counts, open in general. (`monotone-transitive-note.md` §4's "verified for n ≤ 14" comes from a later source and is not contradicted.)
 
-## 14. Lutz, "Examples of ℤ-acyclic and contractible vertex-homogeneous simplicial complexes" (DCG 27, 2002) and "Some results related to the evasiveness conjecture" (JCTB 81, 2001) — the ladder does NOT collapse at ℤ-acyclic, contractible, or (probably) collapsible
+## 26. Lutz, "Examples of ℤ-acyclic and contractible vertex-homogeneous simplicial complexes" (DCG 27, 2002) and "Some results related to the evasiveness conjecture" (JCTB 81, 2001) — the ladder does NOT collapse at ℤ-acyclic, contractible, or (probably) collapsible
 
 **This corrects a working assumption of the programme.** `orbital-evasiveness-notes.md`'s ladder note and the session discussion treated "no ℤ-acyclic vertex-transitive complex is known" as the state of the art, with our ℚ-acyclic-with-torsion examples as the closest approach. That is wrong. Lutz 2002 (abstract, via Springer): Oliver had already given an 11-dimensional ℤ-acyclic non-contractible vertex-homogeneous complex; Lutz constructs a 5-dimensional ℤ-acyclic example, further higher-dimensional ones, and **an infinite series of *contractible* vertex-homogeneous complexes** that are not simplices. Lutz 2001 shows there are no non-trivial ℤ-acyclic vertex-homogeneous complexes of dimension 2 or 3.
 
@@ -566,7 +564,7 @@ Barmak–Minian (§6, citing KSS and Lutz) go further: "there exist examples of 
 
 **So the ladder for vertex-homogeneous complexes fails to collapse at ℤ-acyclic and at contractible, and probably at collapsible; only the top rung, non-evasive, is open.** The "homological conspiracy" is not merely achievable — it has been achieved, in print, since 1975 (Oliver) and 2002 (Lutz). What the programme's near-misses measure is how far *small* complexes on *specific* small G-sets get, not what exists.
 
-## 15. Benedetti–Lutz, "Random discrete Morse theory and a new library of triangulations" (arXiv:1303.6422, 2013), §5.11 — the smallest known contractible vertex-homogeneous complex has 60 vertices
+## 27. Benedetti–Lutz, "Random discrete Morse theory and a new library of triangulations" (arXiv:1303.6422, 2013), §5.11 — the smallest known contractible vertex-homogeneous complex has 60 vertices
 
 The library entry `contractible_vertex_homogeneous`, from Lutz 2002, is 11-dimensional with
 
@@ -578,9 +576,9 @@ Also in §5.11: "non-trivial vertex-homogeneous non-evasive examples cannot be o
 
 **Two tools worth knowing from the same paper.** Engström's *Fourier-Morse theory* (Exp. Math. 18, 2009) — discrete Morse functions built from KSS non-evasiveness, so an output (1,0,…,0) is a *certificate of non-evasiveness*, and it runs on large complexes. Bagchi–Datta: every ℤ₂-acyclic complex with ≤ 7 vertices is collapsible (sharp at 8, the dunce hat).
 
-## 16. What this changes in the programme
+## 28. What this changes in the programme
 
 1. **`orbital-evasiveness-notes.md`'s ladder note must be corrected**: strong collapsibility's fixed-point property is Barmak–Minian Thm 6.2, not a belief; and the "ladder collapse" reading must say that for vertex-homogeneous complexes the collapse fails at ℤ-acyclic and contractible (Lutz), so the *only* rung at which the conjecture can still be true is the top one. Our A₅-on-15 measurement (ℚ-acyclic, 2-torsion) is then a statement about 15 vertices, and the interesting comparison is with 60.
-2. **The A₅-on-15 search gets two new filters**, both cheap: *minimality* (no dominated vertex — necessary at 15 by item 13's divisor argument) and *ℤ-acyclicity of the whole complex* (via the Alexander dual, Smith normal form). Together with strong-collapsibility being excluded automatically by minimality, a survivor would be a minimal, vertex-homogeneous, ℤ-acyclic complex on 15 vertices — which by Lutz 2001 must have dimension ≥ 4, and our duals are 5-dimensional, so no contradiction.
+2. **The A₅-on-15 search gets two new filters**, both cheap: *minimality* (no dominated vertex — necessary at 15 by item 25's divisor argument) and *ℤ-acyclicity of the whole complex* (via the Alexander dual, Smith normal form). Together with strong-collapsibility being excluded automatically by minimality, a survivor would be a minimal, vertex-homogeneous, ℤ-acyclic complex on 15 vertices — which by Lutz 2001 must have dimension ≥ 4, and our duals are 5-dimensional, so no contradiction.
 3. **The regular A₅ action at 60 vertices is where the literature's examples are.** Whether Lutz's 60-vertex contractible complex is non-evasive appears to be *untested* — Benedetti–Lutz could not even settle collapsibility by random Morse. Its f-vector is published; the complex itself is in the Benedetti–Lutz library. Running Engström's Fourier-Morse heuristic and the exact adversary recursion on it is a concrete, cheap experiment on the strongest known candidate, and one nobody seems to have done.
 4. **Torsion.** Lutz 2001's dimension bound and the Sylow argument in the session (every non-solvable group contains C₂×C₂, so 𝔽₂-acyclicity of the whole complex is the filter that catches the A₅ near-misses) are consistent: the known examples are high-dimensional precisely because low-dimensional ℤ-acyclicity is impossible, and 2-torsion is the cheapest failure mode for A₅.

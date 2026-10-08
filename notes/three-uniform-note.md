@@ -146,6 +146,13 @@ Passing from Γ(d, 1) to Γ(d, m) multiplies the group order by m, and a larger 
 >
 > **The general statement: the Galois part can help only when p < k**, since 𝔽_p supplies a k-subset exactly when p ≥ k. At k = 2 that is never; at k = 3 it is exactly p = 2; at k = 4 it is p ∈ {2, 3}, and the excluded set grows with k. *Verified at k = 2 across c = 8, 9, 16, 25, 32, 64, 128 and every twist — the minimum is identical under Γ(d, 1) and Γ(d, a) in all 28 cases, including the c = 32 and c = 128 blocks where the k = 3 minimum rises by 5 and 7.*
 
+> **Scope: everything in §2.2 is about the split groups Γ(d, m), which contain a pure Frobenius.** ΓL(1, c) also has **non-split** subgroups ⟨ζ^e, ζ^i·Frob^j⟩, whose Galois part is coupled to a multiplier. For these, "a k-subset of 𝔽_p is fixed" is no longer an escape, because no group element acts as a pure Frobenius. So the Galois part *can* raise the minimum at p ≥ k, already at k = 2:
+>
+> - at c = 9, ⟨ζ², ζ·Frob⟩ is regular on 𝔽₉^× (minimum 36 against the split Γ(4, 2)'s 18);
+> - at c = 343, ⟨ζ⁵⁷, ζ·Frob⟩ reaches 3087 = 3·orb(343, 6) (`enumeration-proof.md` E‴).
+>
+> Both verified by orbit enumeration. Whenever the full split group Γ(c − 1, m) is Oliver-admissible it dominates every subgroup, non-split ones included, so nothing changes there. **But where Oliver's condition caps the twist** — a stripped twist, a not-prime-power a with no good split, or the chiral parity restriction — **a non-split group may beat every admissible split one.** At k = 3, under §5.8's under-crediting trap, that is the unsafe direction. A k = 3 enumerator indexed by Γ(d, m) alone is therefore not yet an upper bound; it must also score the non-split subgroups, or prove them dominated under the Oliver constraints. *(`general-k-note.md` §2.3 records the same gap at general k.)*
+
 > **What this buys: the verification problem becomes arithmetic.** No orbit computation is needed to decide whether the Galois part helps at a given block — the answer is a function of (p, a, d, m) alone, and under Oliver's condition of (p, a, d). In particular the gain exists **only in characteristic 2**, only at m = a, and only when gcd(a, 6) = 1 with a admitting the Oliver-constrained layer split above — **which does not require a to be a prime power**: a = 35 with d = 31 splits, as the box on that case shows. (An earlier form of this line said "a prime power with least prime ≥ 5", which is the a′ = 1 branch of the split mistaken for the whole of it.)
 >
 > *Verified at 16 further (c, p, a, d) combinations* spanning c = 8, 16, 32, 64, 81, 125, 128 — every prediction correct, including the no-rise cases at a = 6 (c = 64) and at p = 3, 5 with a ≥ 3, which the escape clauses alone would not have settled.

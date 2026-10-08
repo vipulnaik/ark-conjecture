@@ -8,7 +8,7 @@
 |---|---|
 | §1 the object, and the literature | **settled by citation** — this is Karp's original formulation |
 | §2 the halving theorem and when it is paid | **proved**; the twist-parity criterion verified computationally |
-| §3 the directed ceiling table | **derived** from §2 by substitution into cap_F |
+| §3 the directed ceiling table | **derived** from §2 by substitution into cap_F, with both arithmetic pins (parity and mod 4) re-applied |
 | §4 oriented graphs: the 2-cycle fiat | **proved**; monotonicity verified exhaustively at n = 3 |
 | §5a0 up/down versus self-duality | **proved**; the poset's rank sequence computed at n = 3, 4, 5 |
 | §5a1 lift/projection retraction, and the direction of algorithms | **proved**; π∘L = id and the lift criterion verified at n = 3, the downward failure witnessed at n = 4 |
@@ -61,24 +61,38 @@ So the whole apparatus transfers with a factor two, exactly as `chiral-graph-pro
 
 ## 3. The directed ceiling table
 
-The cap formula cap_F(η) = η/(1 + √(Fη))² is an optimisation over part sizes and is indifferent to what realises the terms, so it ports with η replaced by η_dir. Taking each class's undirected optimum (F, η) from `aod` §3.3.5 and halving η — the odd-q branch, which is what every class but the Fermat rows uses — and re-optimising F subject to the parity constraint (odd n needs even F):
+The cap formula cap_F(η) = η/(1 + √(Fη))² is an optimisation over part sizes and is indifferent to what realises the terms, so it ports with η replaced by η_dir. For each class the candidates are the undirected shapes with η halved (the odd-q branch, which every generic row uses). The fusion count is then re-optimised subject to **both** of the undirected table's arithmetic pins:
+- the parity constraint (odd n needs even F);
+- the mod-4 pin on D. At odd n, F ≡ 2 (mod 4) forces r ≡ n − 2 (mod 4), which fixes D mod 4 exactly as in `bcp-to-floor.md` §3.
 
-| n mod 12 | undirected (F, η) | undirected cap | directed η | directed best F | **directed cap** | ratio (exact) |
-|---|---|---|---|---|---|---|
-| 0, 4, 6, 10 | (1, 1) | 1/4 | 1/2 | 1 | **3 − 2√2 = 0.1715729** | 12 − 8√2 = 0.68629 |
-| 1, 9 | (2, 1) | 3 − 2√2 | 1/2 | 2 | **1/8 = 0.125** | (3 + 2√2)/8 = 0.72855 |
-| 2, 8 | (1, 1/3) | (2−√3)/2 = 0.1339746 | 1/6 | 1 | **(7 − 2√6)/25 = 0.0840408** | 2(7−2√6)(2+√3)/25 = 0.62729 |
-| 3, 7 | (2, 1/2) | 1/8 | 1/4 | 2 | **(3 − 2√2)/2 = 0.0857864** | 12 − 8√2 = 0.68629 |
-| 5 | (2, 1/3) | 5 − 2√6 = 0.1010205 | 1/6 | 2 | **(2 − √3)/4 = 0.0669873** | (2−√3)(5+2√6)/4 = 0.66311 |
-| 11 | (4, 1/3) | 7 − 4√3 = 0.0717968 | 1/6 | **2** | **(2 − √3)/4 = 0.0669873** | (2 + √3)/4 = 0.93301 |
+| n mod 12 | undirected (F, η) | undirected cap | directed (F, η_dir) | **directed cap** | ratio (exact) |
+|---|---|---|---|---|---|
+| 0, 4, 6, 10 | (1, 1) | 1/4 | (1, 1/2) | **3 − 2√2 = 0.1715729** | 12 − 8√2 = 0.68629 |
+| 1, 9 | (2, 1) | 3 − 2√2 | (2, 1/2) | **1/8 = 0.125** | (3 + 2√2)/8 = 0.72855 |
+| 2, 8 | (1, 1/3) ~ (3, 1) | (2−√3)/2 = 0.1339746 | **(3, 1/2)** | **5 − 2√6 = 0.1010205** | 2(5−2√6)(2+√3) = 0.75403 |
+| 3, 7 | (2, 1/2) | 1/8 | (2, 1/4) | **(3 − 2√2)/2 = 0.0857864** | 12 − 8√2 = 0.68629 |
+| 5 | (2, 1/3) | 5 − 2√6 = 0.1010205 | (2, 1/6) | **(2 − √3)/4 = 0.0669873** | (2−√3)(5+2√6)/4 = 0.66311 |
+| 11 | (4, 1/3) | 7 − 4√3 = 0.0717968 | **(4, 1/6)** | **(5 − 2√6)/2 = 0.0505103** | (5−2√6)(7+4√3)/2 = 0.70352 |
 
-*Each closed form is cap_F(η_dir) evaluated exactly and checked against the decimal to twelve places.* The derivations are one line each from cap_F(η) = η/(1 + √(Fη))²: at F = 1, η = 1/2 the denominator is 3/2 + √2 and the cap is 1/(3 + 2√2) = 3 − 2√2; at F = 1, η = 1/6 it is 1/(7 + 2√6) = (7 − 2√6)/25; at F = 2, η = 1/4 it is 1/(6 + 4√2) = (3 − 2√2)/2; at F = 2, η = 1/6 it is 1/(8 + 4√3) = (2 − √3)/4; and F = 2, η = 1/2 gives 1/8 outright, the only rational entry.
+*Each closed form is cap_F(η_dir) evaluated exactly; the decimals were recomputed.*
 
-> **Five of the six are on the undirected ladder or exactly half of it, and the reason is an identity the undirected table already carries.** `aod` §3.3.5 records **cap_F(η) = cap₁(Fη)/F**, so every directed entry taken at F = 2 is half of an F = 1 undirected ceiling: (3 − 2√2)/2 is half the class-1 ceiling, (2 − √3)/4 is half the class-2 one, and 1/8 and 3 − 2√2 are undirected ceilings unmoved. **The single exception is classes 2 and 8**, whose optimum stays at F = 1, so no halving identity applies and **(7 − 2√6)/25 is a genuinely new constant** — the only value in the directed table that does not appear in the undirected one. That it is the class whose ratio is worst (0.627) is the same fact twice: the classes that keep F = 1 pay the efficiency cut in full, and those that can move to F = 2 buy part of it back.
+**The two rows where the choice matters:**
+- **Classes 2 and 8.** The undirected ceiling is attained by two shapes at once (`aod` §3.3): S3 at η = 1/3 and the F = 3 safe-prime shape at η = 1. Halving separates them. S3 drops to cap₁(1/6) = (7 − 2√6)/25 = 0.0840, but the F = 3 shape keeps η_dir = 1/2 and reaches cap₃(1/2) = 1/(5 + 2√6) = 5 − 2√6. So the F = 3 shape wins outright in the directed world.
+- **Class 11.** The F = 2 shape is not available at D = 6. At n ≡ 3 (mod 4), 2c ≡ 2 (mod 4) forces r ≡ 1 (mod 4), hence 4 | D, and with the mod-3 pin D = 12. That gives η_dir = 1/12 and cap₂(1/12) = 0.0420. F = 4 keeps D = 6 and gives cap₄(1/6) = (5 − 2√6)/2 = 0.0505, the best available (F = 6 and F = 8 are worse).
 
-**Three things the table says.** The global directed constant is **cap₂(1/6) = (2 − √3)/4 = 0.0669873**, attained at **n ≡ 5 and n ≡ 11 (mod 12)** — so the extremal class is no longer unique, and class 5 joins class 11 at the bottom. The loss is nowhere the full factor of two: the ratios run (7−2√6)-driven 0.627 up to (2 + √3)/4 = 0.933, because halving η moves the balance point and a larger share compensates, the same effect `chiral-graph-properties.md` §5 records for ε. And **the F = 4 rung stops being optimal at class 11** — at η = 1/6 the best even fusion count is 2, which is why that class loses least.
+> **Every directed entry is on the undirected ladder or exactly half of it.** The reason is an identity the undirected table already carries: cap_{2F}(η/2) = cap_F(η)/2, and cap_F(η) = cap₁(Fη)/F.
+> - 3 − 2√2 and 1/8 are undirected ceilings, unmoved.
+> - 5 − 2√6 at classes 2 and 8 is the undirected class-5 ceiling.
+> - (3 − 2√2)/2, (2 − √3)/4 and (5 − 2√6)/2 are halves of the class-1, class-2 and class-5 ceilings.
+>
+> **No genuinely new constant appears.**
 
-*A coincidence worth not over-reading, since it has now appeared twice.* cap₁(1/2) = 3 − 2√2 and cap₂(1/4) are S_n ceilings one rung down, exactly as the chiral note's ε = ½ penalty produced. Both are "halve the efficiency", so the ladder shifts rather than acquiring new constants; the two tables are indexed differently and nothing transfers between them.
+**Three things the table says.**
+1. **The global directed constant is (5 − 2√6)/2 = 0.0505103**, attained at **n ≡ 11 (mod 12) alone**. The extremal class is the same as in the undirected world, and the F = 4 rung stays optimal there for the same mod-4 reason.
+2. **The loss is nowhere the full factor of two.** The ratios run from 0.663 (class 5) to 0.754 (classes 2 and 8), because halving η moves the balance point and a larger share compensates. This is the same effect `chiral-graph-properties.md` §5 records for ε.
+3. **The directed floor conjecture would sit near 1/25 times about 0.70**, not at 1/50. That is what §6 item 2's directed μ table would test.
+
+*A coincidence worth not over-reading.* cap₁(1/2) = 3 − 2√2 and cap₂(1/4) are S_n ceilings one rung down, exactly as the chiral note's ε = ½ penalty produced. Both are "halve the efficiency", so the ladder shifts rather than acquiring new constants; the two tables are indexed differently and nothing transfers between them.
 
 ---
 
@@ -203,8 +217,8 @@ The expectation is right — the oriented model should be the easier place to *f
 
 1. ~~**For which n does an Oliver group with all orbitals self-paired exist?**~~ **Closed: every n.** D_n is generously transitive and Oliver at every degree (§5), so the question has no content — which also removes the interest, since it means Theorem D3's hypothesis is free and the theorem's force comes entirely from the 2-cycle fiat.
 1a. **The ternary oriented model is the real question, it is open, and §5a places it: it implies ARK.** Is every nontrivial monotone S_n-invariant property of oriented graphs evasive in the C(n,2)-query ternary model? By the lift (Proposition D4) this is **at least as strong as ARK**, so it will not be proved by anything cheap — but that also makes it a sharper target than a mere generalisation: the extra content over ARK is exactly the properties that *do* see the orientation, and asking whether those are the hard ones is a question the undirected framework cannot pose. The Boolean machinery does not apply; what would be needed is a fixed-point argument for group actions on the ternary decision-tree complex, and no such thing is in the framework or, so far as the searches went, the literature.
-1b. **Which oriented properties are not lifts?** §5a's P′ ignores orientation entirely, so the lifted family contributes nothing beyond ARK. The interesting subfamily is its complement — properties genuinely sensitive to direction. Two data points so far, both at n = 4: **acyclicity is evasive** (D = 6 = C(4,2)), and **dominant-vertex is not** (D = 4) but fails strict nontriviality (§5b). So the live question is whether a *strictly* nontrivial non-lift can be non-evasive, and acyclicity — strictly nontrivial, since no tournament is acyclic, wait: the transitive tournament *is* acyclic, so acyclicity is false at some tournaments too and is likewise not strictly nontrivial in the decreasing sense — is worth redoing with the condition stated carefully.
+1b. **Which oriented properties are not lifts?** §5a's P′ ignores orientation entirely, so the lifted family contributes nothing beyond ARK. The interesting subfamily is its complement — properties genuinely sensitive to direction. Two data points so far, both at n = 4: **acyclicity is evasive** (D = 6 = C(4,2)), and **dominant-vertex is not** (D = 4) but fails strict nontriviality (§5b). So the live question is whether a *strictly* nontrivial non-lift can be non-evasive. Acyclicity does not answer it: the transitive tournament is acyclic, so acyclicity contains a tournament and is not strictly nontrivial in the decreasing sense either. A strictly nontrivial direction-sensitive example is still wanted.
 1c. **Run the n = 4 sweep properly.** 42 orbits, down-set DP over the orbit poset, both nontriviality conventions; the first attempt tried 2⁴² subsets and was abandoned. This is the cheapest experiment that could produce a strictly-nontrivial non-lift counterexample or rule one out at n = 4.
-2. **The directed μ table.** `mu_ladder_exact.py` computes the undirected B(n) from a shape's parts; the directed score of a configuration is the same arithmetic with η_dir in place of η (§2), so a `--directed` flag is a small change and would give the directed analogue of the 1/25 floor. The prediction from §3 is a floor near 0.0670·(2/1) of the undirected one at the extremal classes, i.e. that the two floors stand in ratio 0.63–0.93 by class rather than a uniform half.
+2. **The directed μ table.** `mu_ladder_exact.py` computes the undirected B(n) from a shape's parts; the directed score of a configuration is the same arithmetic with η_dir in place of η (§2), so a `--directed` flag is a small change and would give the directed analogue of the 1/25 floor. The prediction from §3 is that the directed and undirected values stand in ratio about 0.66–0.75 by class rather than a uniform half, with the extremal class still n ≡ 11 (mod 12) at (5 − 2√6)/2.
 3. **Does the digraph case have its own n = 10?** KSS settles prime powers for digraphs. Whether the composite non-prime-power digraph case is *strictly harder or easier* than the undirected one is not addressed by Theorem D1, which only bounds one by the other. The small-degree pipeline of `small-degree-computation.md` would answer it at n = 10 with the orbital map replaced by the ordered one — t is larger, so §2.4's fixed-complex criterion is weaker, which argues the digraph case is the harder of the two.
 4. **Tournaments.** A tournament is a *maximal* oriented graph, so the maximal faces of the oriented complex are exactly the tournaments on n vertices. Whether that gives a usable handle — the complex is pure of dimension C(n,2) − 1 — is unexplored.

@@ -64,7 +64,7 @@ Write $d = 2e$. The leading 2 is forced immediately: q is an odd prime, so $r = 
 
 Now r mod 4 is determined by d mod 4, since q is odd: $d \equiv 2 \pmod 4$ gives $r \equiv 3 \pmod 4$, and $d \equiv 0 \pmod 4$ gives $r \equiv 1 \pmod 4$. For **even** n this is irrelevant — $c = n-r$ is odd automatically, being even minus odd. For **odd** n it is not, because the third polynomial is **$(n-dq-1)/2$**, not $n-dq-1$. That halving is the change of variable. It means the parity of c — which is what $\ell = 2$ controls — depends on n − r modulo **4** rather than modulo 2:
 
-> $$c = (n-r)/2 \text{ is odd} \iff n - r \equiv 2 \pmod 4,$$,
+> $$c = (n-r)/2 \text{ is odd} \iff n - r \equiv 2 \pmod 4,$$
 
 so $d \equiv 2 \pmod 4$, i.e. $d \in \{2,6\}$, serves odd $n \equiv 1 \pmod 4$, while $d \equiv 0 \pmod 4$, i.e. $d \in \{4,12\}$, serves odd $n \equiv 3 \pmod 4$. This is $\ell = 2$ biting a **second** time, and it costs a second factor of 2 — but only in the odd case.
 
@@ -120,7 +120,7 @@ One infinite family needs no hypothesis. For $n = 2m$ with $m$ a prime power, ta
 $$\mu(2m) \;\ge\; m(m-1), \qquad \text{i.e. } \delta(n) = \tfrac12 - o(1).$$
 This is best possible up to the $o(1)$: for non-prime-power $n$ an Oliver group has at least two u-orbitals, which partition the $\binom{n}{2}$ pairs, so $m^*(\Gamma) \le \lfloor \binom{n}{2}/2 \rfloor$ and $\delta(n) \le 1/2$. (Density $1$ would force $2$-homogeneity, hence primitivity; an Oliver group is solvable, and a solvable primitive group has prime-power degree.)
 
-The constant $\delta_0$ above is deliberately crude. Optimising the block sizes and the efficiency $t/(r-1)$ gives materially better constants. The local conditions at the primes $2$ and $3$ depend on $n$ modulo $12$, but the optimised constants are keyed \emph{modulo $12$} as well, with the residue entering through the efficiency available to the foreign block; the optimisation is finer, the modulus the same.
+The constant $\delta_0$ above is deliberately crude. Optimising the block sizes and the efficiency $t/(r-1)$ gives materially better constants. The local conditions at the primes $2$ and $3$ depend on $n$ modulo $12$, and the optimised constants are keyed \emph{modulo $12$} as well, with the residue entering through the efficiency available to the foreign block; the optimisation is finer, the modulus the same.
 
 A companion computation, which we do not reproduce here, scans four explicit families of such constructions --- each written down directly as a permutation group, with its minimum orbital in closed form --- and exhibits one at every composite non-prime-power $n$ it covers, giving
 $$\delta(n) \;\ge\; 0.0462 \qquad \text{for every composite non-prime-power } n \le 10^6,$$

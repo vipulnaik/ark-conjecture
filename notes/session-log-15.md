@@ -359,6 +359,245 @@ Read in full; no corrections. **Checked clean:**
   - the ported caps cap₁(1; ½) = 3 − 2√2, cap₂(1; ½) = 1/9 and 0.10102, and the ×0.686 / ×0.754 factors.
   - *Noted, not edited:* (F2) at **odd** F gives sign (−1)^c, odd at odd c. So the F = 3 co-carrier at n ≡ 2, 8 (§4.5 of aod) pays a chiral penalty. S3 attains the same ceiling there, so nothing changes.
 
-### 7.14 Not yet read
+### 7.14 Correction to §1.4: the Galois layer *does* raise a minimum — through non-split elements
+
+§1.4 called ep E‴'s c = 343 example wrong and declared B_refined⁺ moot. That was itself wrong. I tested only the **split** group C₆ ⋊ ⟨Frob⟩, whose Frobenius fixes 𝔽₇ pointwise.
+
+**The non-split group** H = ⟨ζ⁵⁷, ζ·Frob⟩ ≤ ΓL(1, 343) has order 18, linear part C₆ and quotient C₃ (Oliver at q = 3). It acts **freely** on 𝔽₃₄₃^×, so its minimum pair-orbital is 343·18/2 = 3087 = 3·orb(343, 6), three times the stripped score. That is what the original text claimed; it just named the group as "C₁₈ ⋊ Frob₃".
+
+**Verification:** orbit enumeration over every i in ⟨ζ⁵⁷, ζ^i·Frob⟩. The minimum on 𝔽^× is 18 exactly when i ≢ 0 (mod 3), and 6 at the split choice. The same mechanism at c = 9: ⟨ζ², ζ·Frob⟩ doubles the split group's minimum, 8 against 4 on 𝔽₉^×.
+
+**Restored:**
+- ep E‴'s bullet now names the non-split group and the verification.
+- B_refined⁺ is reinstated as a real repair that must score non-split semilinear twists.
+- pending-checks A28's "moot" notice is replaced by one naming the group precisely.
+
+### 7.15 `general-k-note.md`
+
+- **The same gap, one level up.** Proposition 1 and the τ/θ/γ formulas are derived for the **split** block group Γ(d, m) = 𝔽_c ⋊ (C_d ⋊ C_m). §2.3's "the Galois part can help only when p < k" is false for non-split subgroups of ΓL(1, c) already at k = 2, as the two examples above show.
+  - "No fourth source" survives: the stabiliser still filters through three layers.
+  - The γ criterion holds only for split groups.
+  - Non-split groups are dominated wherever the full split group is admissible, since a subgroup's minimum orbit never exceeds the whole group's. The question is live only where Oliver constraints cap the twist (stripped twists, chiral parity, a not a prime power).
+  - A box is added after §2.3.
+- **Checked clean:**
+  - τ_k from coset unions;
+  - θ_k's j | k or j | k − 1, and the c = 13, k = 5 values 39 and 39 against the naive 13 and 26;
+  - the k = 5 foreign θ values;
+  - the β_k = cap_F(η)/2 identity;
+  - the c = 32, k = 4 partition sums (5·248 + 35·992 = 1240 + 7·4960 = 35,960 = C(32,4)) and 1240 = 32·31·5/4;
+  - the c = 16 values 4 and 20.
+
+### 7.16 `directed-graph-properties.md` — the directed ceiling table was wrong at two classes
+
+§3 halved η per class and re-optimised F under the parity constraint only. It ignored the **mod-4 pin on D** and the **two-shape tie at classes 2 and 8**.
+
+- **Class 11.** The table used F = 2 at η_dir = 1/6, which is unavailable. At n ≡ 3 (mod 4), 2c + r forces r ≡ 1 (mod 4), hence 4 | D, and with the mod-3 pin D = 12. So η_dir = 1/12, and cap₂(1/12) = 0.0420. The best is F = 4 at D = 6: cap₄(1/6) = **(5 − 2√6)/2 = 0.0505103**, not (2 − √3)/4 = 0.0670.
+- **Classes 2 and 8.** The undirected ceiling is a tie between S3 (η = 1/3) and the F = 3 safe-prime shape (η = 1). Halving breaks the tie in the F = 3 shape's favour: cap₃(1/2) = **5 − 2√6 = 0.1010**, not cap₁(1/6) = (7 − 2√6)/25 = 0.0840.
+- **Consequences:**
+  - The global directed constant is (5 − 2√6)/2 at class 11 alone, not (2 − √3)/4 at classes 5 and 11.
+  - The "genuinely new constant" (7 − 2√6)/25 disappears: every directed entry is now an undirected ceiling or exactly half of one.
+  - The directed/undirected ratios run 0.663–0.754, not 0.627–0.933.
+  - Fixed in §3, §6 item 2 and oen Appendix C row 4.
+- **Also:** a stream-of-consciousness "wait:" in §6 item 1b is rewritten.
+- **Checked clean:**
+  - Theorem D1; the self-pairing criterion −1 ∈ T ⟺ d even; η_dir = t/(r − 1), and its Fermat/safe-prime cases;
+  - the dihedral self-pairing;
+  - the oriented-poset rank sequences (1, 6, 12, 8) and (1, 12, 60, 160, 240, 192, 64);
+  - 2^45 ≈ 3.5·10¹³; 32 of 64 tournaments on 4 vertices with a dominant vertex (4·2³);
+  - 42 oriented graphs on 4 vertices.
+
+### 7.17 `mu-theta-n2-note.md` (the short note) — read in full, no corrections
+
+**Checked clean:**
+- **The admissible-d table**, recomputed by brute force over (n mod 12, d): every row matches.
+- **The singular-series bound** 4·(9/8)·C₀, and the three obstruction mechanisms.
+- **The 1/300 corner minimum** in both parities, and 1/150 with the true rt.
+- **Condition 2's implied upper bounds; condition 4's "at most five values".**
+- **The verification orbitals:** {10, 21, 35} and {10, 10, 21, 25, 35, 35} sum to C(12,2) and C(17,2).
+- **The Oliver chains of both constructions.**
+- **"16 times" δ₀** (0.0462·350 = 16.2).
+- **The LaTeX twin** carries the same figures.
+
+The Shparlinski / Baker–Harman / Li exponents were not re-checked against sources.
+
+### 7.18 `note-to-framework-bridge.md`
+
+- **Range figures brought current.** The ladder table is complete to 10⁶ and the exact table to 10⁵. This replaces "777,613" and "71,288" at six sites, including §4b's "known exactly to three-quarters of a million", now "to a million".
+- **§4b teasers updated to this session's results:**
+  - chiral prime powers: fails exactly at p^a with p ≡ 1 (mod 4), Theorem 2′;
+  - directed global constant: (5 − 2√6)/2 at n ≡ 11, §7.16.
+- **One label clarified.** The "balance points" paragraph lists the *framework's* fused balance points, including 0.134 at class 11, not the note family's; it now says so. The note family's six all lie in [0.2247, 0.5] as §4 item 4 says.
+- **Checked clean:**
+  - the note-family δ₀ table (x* and values at all six classes, including (2 − √3)² = 7 − 4√3 at class 5);
+  - the 25× ratio;
+  - the covering counts 9 / 25 / 66 and 24 / 65 / 164;
+  - "13 systems per parity".
+
+### 7.19 Archived resolution notes, and `verification-lessons.md`
+
+- **`a18-resolution.md`.**
+  - The banner said the r = q sub-case (F ≥ 2 fused outside blocks with r = q) was "still open". It is closed by ep Part D2's **Lemma D2q** (2 ≤ F < q), with branch (a) covering F ≥ q, and the census's S10 row already reads "any F, killed (D2q)". The banner now says so.
+  - The domination theorem's threshold read n ≥ 1582 in three places and n ≥ 471 in one. At the current ladder floor 0.04621 it is n ≥ 471 ((1/0.04621)² ≈ 468); all sites now agree.
+  - **Checked clean:** the n = 85 witness, |Γ| = 5440 and 170 + 680 + 2720 = 3570 = C(85, 2).
+- **`t5-resolution.md`.** The coupling proof's matching-part step assumes a semilinear stabiliser, i.e. J0a at a ≥ 2, as ep's Lemma C status already says. The banner now records that the coupling t | ord_r(p) is proved only for semilinear stabilisers, while the domination bound r·a is J0a-free (ep E‴'s eigenvalue-orbit box). **Checked clean:** the n ≥ 371 threshold; the n = 28 witness order 150.
+- **`verification-lessons.md`.** One instance added under Site 1: this session's split-only "refutation" of the c = 343 Galois example (§7.14). A refutation must range over everything the claim's quantifier allows.
+
+### 7.20 three-uniform-note
+
+Read in full. Added one scope box before "What this buys: the verification problem becomes arithmetic". It says the k = 2 orbit formulas cover split Γ(d,m) only, with the non-split counterexamples c = 9 and c = 343. It also says that at k = 3, leaving out non-split groups risks under-crediting the minimum.
+
+Checked clean:
+- §3 c = 16 bound (960 ≥ 560).
+- §2.2.3 c = 128 orbit sizes.
+- §4.3 Galois table at a = 11 and a = 13.
+- Every row of §5.4 (n = 30, 90, 133, 250).
+- Every β₃ cell of §5.7, including the class-11 κ_c = 3 tie.
+- §6.2 rows (r = 151 and 251; ideal r ≈ 199).
+
+Sections 7–10 read with no corrections.
+
+### 7.21 small-degree-verification
+
+Read in full.
+
+**Fixes:**
+- **§16 memo rate.** The default run's memo rate is 769 entries / 1.16M nodes = 0.66 per thousand, not 0.32. Corrected in the prose, the outcome table and the memo paragraph. The seed rates (0.12, 0.29, 0.15, 0.25) and the V = 1,242 rate (6.2) check.
+- **Seed 2 claim.** "The only seed doing either" was false: seeds 3 and 4 also grew their memo. It now says seed 2 is the only seed whose rate fell, and the one whose memo grew most.
+- **Seed depths.** "~120 above the default" → 119–147.
+- **Stale cross-references.** Two references to "item 4's bounded fallback" pointed at the CAP-probe item; they mean §16 step 4. The bare "§1.2" now names `small-degree-computation.md`. The "add the backtrack-ceiling counter … copy-paste" sentence was stale, since it is already patched. Step 3 no longer calls the default run the incumbent.
+- **§7 percentage.** 45% → 44% (75 of 170).
+- **§12.** "The full 167" names no battery; it now names the 170-condition and 242-condition batteries.
+- **§15a, stale since the 30-point run completed:**
+  - "All 830 complexes" is replaced (2,392 in the two-subgroup family alone).
+  - The "30 points" Unrun bullet is removed, since that run is now listed as complete.
+  - The "Next family, not yet coded" paragraph is removed: it describes `twosub.py` itself.
+- **§6 dehistoricized.** It is retitled "live". The "if that also yields no `+` tag, retire" text and the "weight on the second reading" datum are rewritten as current state. The refuted sketch is kept as is.
+
+**Checked clean:**
+- the §1 stage-3 projections (2,176 calls / 30,002 s / 16,061 pairs → 22 days; 13.7×);
+- every percentage in the §1 `--maxt` table;
+- §5b's 9,238 = 16,353 − 7,115 (56%);
+- both §13 censuses (they sum by tag, by p-group prime and by stage);
+- §2's CAP counts (25 + 20 + 310 + 54 = 409; 70% of probe time);
+- §12's 93% / 7%;
+- the §16 seed-share column.
+
+**Not checked:** run outputs themselves (no artefacts here).
+
+### 7.22 shparlinski-constants
+
+Read in full.
+
+**Fixes:**
+- **§2.2 constant.** 0.0155 → 0.0153.
+- **§2.2 attribution.** The halving was attributed to the matching term. It is in fact the foreign term (even-q, taken conservatively) that binds at c₀ = A/8; the matching term's factor 2 does not bind there.
+- **§2.2 bound.** The matching bound is now stated as (1 − o(1))·n^{1+γ}/4, not ≥ n^{1+γ}/4.
+- **§2.3.** The numerical crossover now carries its (8/A) factor.
+- **§3(b).** The caps are x/411 and x/1624, not x/400 and x/1608.
+- **§4 Result A exponent.** It said (log x)^{C+3} for n ≤ x. That is the per-block figure; summed it is C+4. The x^{2γ−1} also gains its max{0, ·}.
+- **§5.** "Relative density" in the k = 3/4 sentence clashed with the table, which uses relative-to-primes. The sentence is reworded to density in the integers.
+- **§6 F.4 figures.** "25.4 against the crude 42 at the computed floor" was stale. It is now 26.7 against 43 at δ₀ = 0.046210, matching ep F.4. The "round trip of §8.2" pointed at a nonexistent section; it is now `aod` §6.7.
+
+**Checked clean:**
+- §1.5's orbit formulas and the μ(10) = 20 cross-check (50 > 22);
+- §2.3's bounds;
+- §3(b)'s 933·x;
+- §5's thresholds and e⁵ ≈ 148;
+- §6's crude and sharpened cofactor derivations;
+- §7's S₁₂ density (25,353 / (x/log²x) = 2.67 at 2·10⁶);
+- D ≤ 630 at δ₀ = 1/350.
+
+**Not checked:** the 0.37/log x Baker–Harman density, and the 0.55% / 5.4% prime-power census (needs a sieve run).
+
+### 7.23 literature-findings
+
+Read in full.
+
+**Fixes:**
+- **Duplicate numbering.** Items 13–16 were numbered twice, and there were two "Fourth pass" headers. The simplicial-complex items are now 25–28 under "Sixth pass", with the header moved below items 23–24, which belong to the fifth. Inbound references updated: oen §13 → §25 and §§14–15 → §§26–27; monotone-transitive-note §§13–16 → §§25–28. The aod, three-uniform and pending-checks references point at the first set and are unchanged.
+- **Stale global floor.** 0.045742 at n = 1817 was the v4 artefact; it is now 0.046210 at n = 2759, a factor ~14.
+- **Baker–Harman exponent.** "Current unconditional value 0.677" → 0.679, which agrees with the file's own "cite 0.679".
+- **Prime-power question resolved.** The Shparlinski prime-power question (items 2 and 8, "What remains" 2) is marked resolved by `shparlinski-constants` §4.1.
+- **What remains.** Angel–Borja is marked done. The Triesch item is kept open, with the reason given.
+- **§16 standing table.** It predated Theorem E.5. The three fallback rows are replaced by "δ > 1/25: unconditional (E.5)" and "δ ≤ 1/25: open, empty over [6, 10⁶]". The collapse row now rests on Corollary E.6, and the explanatory paragraph is rewritten.
+
+**Checked clean:**
+- 124,502 / 921,265 = 13.5%;
+- 921,265 = non-prime-powers in [6, 10⁶];
+- 12,005,168 graphs on 10 vertices;
+- Romanov / Erdős / van der Corput dates against the item 9 correction.
+
+**Not checked (effort):**
+- "each class's ceiling is met to within 2%" (§12.3);
+- "nine of eighteen candidate patterns" (item 5).
+
+### 7.24 mu-theta-n2-note-latex
+
+Read in full; content matches the Markdown version. Two fixes:
+- a stray "$$," after the mod-4 display;
+- "depend on n modulo 12, but … keyed modulo 12 as well" → "and" (mirrored in the Markdown note).
+
+**Checked clean:**
+- 𝔖 ≥ 2.858249 = 4·(9/8)·0.635166;
+- the 1/300 corner minimum (both parities) and 1/150 with true rt;
+- the n = 12 and n = 17 verifications (|Γ| = 420, 2100; orbitals as listed);
+- δ(2m) → 1/2;
+- 0.0462·350 ≈ 16;
+- δ(6) = 0.400 and δ(12) = 0.273.
+
+The auxiliary-document pass is complete.
 
 `small-degree-verification.md` (only the dedup table checked), `directed-graph-properties.md`, `three-uniform-note.md`, `general-k-note.md`, `shparlinski-constants.md` (only the renaming), `literature-findings.md` beyond item 1, `note-to-framework-bridge.md`, `mu-theta-n2-note*.md`, `a18-resolution.md`, `t5-resolution.md`, `verification-lessons.md`.
+
+---
+
+## 8. Clarity pass through oen §7 (at Vipul's request; auxiliary review paused)
+
+**Structure.**
+- **§7.1 is now about the complex alone.** It opens with a one-line scope note. AC_p is defined at the spine, and the spine's prose says where the three kinds of invariant (combinatorial, topological, algebraic) sit.
+- **The group-dependent material moved to §7.2**, where its terms are defined. This covers "the bottom rungs are group rungs", the "where our tests sit" table, and the prime-power collapse. §7.1 had used *global-χ-resistant*, *small global-χ-resistant*, *Oliver-χ-resistant* and the resistance rungs before §7.2 defined them. The moved block sits after the named-family table, so every term it uses is already defined.
+- **The strongly-collapsible point is stated once.** The Barmak–Minian fixed-point property, "a strongly collapsible vertex-homogeneous complex is a simplex", and "ARK is the reversal of the second arrow" were split across two paragraphs with the corollary stated twice. They are now one boxed statement, followed by the consequences for a counterexample (not strongly collapsible, minimal, collapsibility index ≥ 1).
+- **"Why the rungs are where they are"** collects the two placement arguments, strongly collapsible ⇒ non-evasive and AC_p ⇒ ℚ-acyclic.
+- **Headings:** §§7.2–7.5 are `###` headings like §§7.6–7.13, instead of bold run-in paragraphs.
+- **Removed:** a stale sentence at the end of §7.5 promising "the three subsections below" that fix where each test sits.
+
+**Substantive.**
+- **The prime-power collapse paragraph repeated the error fixed in `small-degree-computation.md` §2.0 (§7.4 above).** It said Smith theory "excludes neither 𝔽_p-acyclicity nor χ = 1" at prime powers, which contradicts §7.2's own (A). AGL(1, n) excludes AC_{char(n)}: it is Oliver with bottom 𝔽_n and its fixed complex is {∅}. The paragraph is merged into (A), now titled "the collapse, and exactly how far it reaches". The chain there reads trivial ⟺ … ⟺ ℤ-acyclic ⟺ AC_{char(n)} ⟺ Oliver-χ-resistant. What is left open at a prime power is AC_r for r ≠ char(n), ℚ-acyclicity and the two χ rungs.
+- **Dehistoricized:** §7.6's opening ("when this section was written… has since found"), its "both separations then open", and §7.9's "both separations that were open".
+- **§7.13's scan paragraph** now notes that the degree-10 groups it lists are settled anyway by the A₅ search plus inclusion, adds degree 11 to the clean degrees, and names M₁₂ and 14T54 among the unscanned groups.
+- **Checked clean, against the A₅ counts and the table:**
+  - every derived count in §7.6: 316 − 44 = 272; 316 − 228 = 88 = 44 + 44; 112 − 88 = 24; 392 − 112 = 280; 1,831 and 112 against 100 in both; 12;
+  - §7.13's 772 − 728 = 44;
+  - §7.9's 40 + 7 + 2 + 1 = 50 and 178 + 21 + 15 = 214;
+  - §7.10's 2/546 = 0.37% and 110/24,474 = 0.45%;
+  - §7.8's "measured t ≤ 9" (max t = 9 on the 10⁶ table) and §7.2's "t_eff ≤ 5 for 99.9%" (`orbital_counts.py`);
+  - the parity principle's sign and the simplex-boundary χ = 1 + (−1)^t;
+  - §7.12's join-dual formula and the contractibility of the dual of Lutz's complex;
+  - the Sylow orbital counts behind "at most 9 orbitals" at n = 10.
+- **Flagged, not changed:** the A₅-on-15 Alexander dual is "1,152-face" in §7.1 and "1,151 faces" in `monotone-transitive-note.md`, probably the empty face counted or not. Unchecked.
+- **Checker:** `check_doc_figures.py` on oen gives 33 findings and 1 historicizing phrase, against 35 and 2 before the pass.
+
+
+## 9. Bipartiteness and vertex-transitive Oliver-χ-resistance (pending-checks A38 item 2)
+
+The goal was to find out whether, at n ≡ 2 (mod 4), every transitive group's bipartite orbitals have a bipartite union. That would make the fixed complex a full simplex, so bipartiteness would be vertex-transitive Oliver-χ-resistant.
+
+**Search for a counterexample: none.** GAP was installed from apt; it has TransGrp up to degree 47. `scripts/bip_union_scan.g` covered every transitive group, Oliver or not, at n = 6, 10, …, 46:
+- 16,712 groups in all; 15,728 have a bipartite orbital.
+- The union was bipartite in every case.
+- By degree: 16, 45, 63, 983, 59, 96, 5,712, 115, 76, 9,491, 56 groups. Run time is about a minute.
+- 46 is the library's last degree ≡ 2 (mod 4).
+
+**Reformulation.** Enlarge each U to complete bipartite on its components. The data is then H ≤ K_h ◁₂ K_C, and the union is bipartite iff the half-swap characters φ_U extend to one character of L = ⟨K_C⟩ (via the Cayley lift).
+
+**Proved case: H ◁ L.** L/H is regular of order 2·odd, so it has an even subgroup of index 2. That subgroup contains every odd-order K_h/H and no K_C/H. This covers regular groups and all-matching groups; it applies to 23/55 groups at n = 22, 27/89 at 26 and 1,273/5,173 at 30.
+
+**Failed candidates, kept so they are not retried:**
+- The sign of g on D: H is not even on D in 870 of 5,173 groups at n = 30, and the colouring mismatched in 403.
+- The sign on L/T, with T a Sylow 2-subgroup of H. It worked at n ≤ 26 but was too slow to finish at 18 and 30, and was superseded by the next item.
+
+**Certificate found.** ε_U, the sign of g on U's halves inside D, equals W's swap character on every generator of L, for every U, at every degree up to 46 (`scripts/bip_halves_sign_check.g`, 0 mismatches, about 10 min). This reduces the conjecture to: ε_U on a Sylow 2-subgroup S of K_C(U′) has kernel S_x. The other component orbits must cancel; no proof yet.
+
+**Docs:**
+- oen §7.4: the table row reads "holds at every n ≤ 46"; the verification line is updated; there is a new "group-theoretic form" paragraph.
+- pending-checks A38 item 2 is updated.

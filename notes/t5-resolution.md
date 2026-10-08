@@ -6,6 +6,8 @@
 >
 > **What has moved since.** The range check is against `mu_table_safe_v4.csv`, now a superseded baseline — the direction is unaffected, a corrected B(n) only rising against a fixed bound. The condition-(4) analysis here is also the origin of a distinction the framework leans on elsewhere: a strip that is *not* necessary absolutely but *is* necessary above a threshold. That reading, and the n·log₂n threshold, are current.
 >
+> **One scope point the proof below leaves implicit.** Its matching-part bullet assumes h acts on a block through ΓL(1, c) — automatic at a = 1, but at a ≥ 2 it is the semilinearity assumption J0a, as `enumeration-proof.md`'s Lemma C status line records. The **bound** the domination needs, orb(r, t) ≤ r·a, is J0a-free by the eigenvalue-orbit argument of ep E‴'s closing box. So §3's domination stands at every a; the exact coupling t | ord_r(p) is proved only for semilinear stabilisers.
+>
 > **One thing to carry if this note is ever reopened:** its Remark (i) is a clean instance of the failure mode `verification-lessons.md` §1 calls site 2 — the lemma's *statement* was stronger than its own proof's conclusion, and survived because it was only ever tested against the case the proof did cover.
 
 *Resolution note for item T5 of `pending-checks.md`. Verification: `t5_verify.py` (eight checks — the a = 2 witness, the coupling's tightness and its negative control, the a = 1 boundary, and the range check — all passing). Status: the coupling theorem is **proved here** with one reading; the witnesses are **machine-verified**. For Vipul's review before integration, as with Lemma D2.*

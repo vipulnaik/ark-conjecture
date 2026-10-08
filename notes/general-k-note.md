@@ -92,6 +92,13 @@ Because 𝔽_p supplies a k-subset exactly when p ≥ k, and that is the whole c
 >
 > So the honest general statement is: **gain requires p < k, m = a, gcd(d, k(k−1)) = 1, and the absence of every subfield escape** — with the last condition in closed form at k = 3, 4 and open beyond.
 
+> **A gap in §§1–2: everything above is for the split group Γ(d, m) = 𝔽_c ⋊ (C_d ⋊ C_m).** ΓL(1, c) also has **non-split** subgroups H = ⟨ζ^e, ζ^i·Frob^j⟩ whose Galois part is coupled to a multiplier, and those contain no pure Frobenius. For them the Galois-layer stabiliser of a k-set is the set of elements ζ^u·Frob^v fixing it, which need not fix any subfield set. **So "the Galois part can help only when p < k" is false for non-split groups, already at k = 2:**
+>
+> - At c = 9, ⟨ζ², ζ·Frob⟩ (the 3²:Q₈ of `chiral-graph-properties.md`) has linear part C₄ but acts regularly on 𝔽₉^×. Its minimum pair-orbital is 36, double the split Γ(4, 2)'s 18.
+> - At c = 343, ⟨ζ⁵⁷, ζ·Frob⟩ has linear part C₆ but minimum 3087 = 3·orb(343, 6) (`enumeration-proof.md` E‴).
+>
+> Both verified by orbit enumeration. Proposition 1's "no fourth source" survives, since the stabiliser still filters through three layers, but the γ formula and §2.3's criterion hold only for split block groups. The k ≥ 3 enumeration must also score non-split ones, or show they are dominated wherever the full split group Γ(c − 1, m) is admissible. They are dominated there, since a subgroup's minimum orbit never exceeds the whole group's. The question is live only where Oliver constraints cap the twist, such as a stripped twist, the chiral parity restriction, or a not-prime-power a.
+
 **So the escape widens but does not change in kind.** At k = 3 only characteristic 2 can gain; at k = 4 and 5, characteristics 2 and 3; at general k, every p < k. It is the same escape, with the same coupling (§3), the same cost (the top prime is pinned to a divisor of a, and every foreign block then needs q | r − 1), and the same Oliver-constrained layer split. **A programme at k = 4 inherits `k3_galois.py` with L_3 replaced by L_4 and nothing else; a programme at k ≥ 5 must first replace the L_k tests with the size-aware ones above.**
 
 > **The supply effect, restated at the corrected conditions.** The twist condition is a coprimality with k(k−1), so the density of admissible twists falls by ∏_{p | k(k−1)} (1 − 1/p) — a **mild, polynomially-driven thinning through the primes of k(k−1)**, not the superexponential collapse the L_k reading suggested. The escape survives at every k and reaches fewer blocks as k grows, but the thinning is gentler than lcm(1..k) arithmetic would give.
