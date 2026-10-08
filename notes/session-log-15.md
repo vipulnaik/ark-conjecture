@@ -627,3 +627,41 @@ Before starting, I confirmed the local copy matched GitHub (reset onto `7124f33`
 - Comparing χ_N with χ_{N(T^g)} on N(T) ∩ N(T^g) works only when Fix⟨T, T^g⟩ is nonempty and the two local colourings agree there.
 - An F₂ affine-space averaging over S needs an S-semi-invariant colouring to exist, which is the statement itself.
 - Inducting on Fix(Q) for Q = T ∩ S_y: N_L(Q) need not be transitive on Fix(Q).
+
+## 11. Property B (2-colourable 3-graphs) as the 3-uniform analogue of bipartiteness
+
+**Choice of property.** Vipul asked for a 3-uniform analogue of bipartiteness's Oliver-resistance. Tripartiteness is the wrong generalisation. Property B is the right one (a vertex 2-colouring with no monochromatic triple):
+- it contains tripartiteness;
+- the intransitive argument transfers verbatim, since a triple orbit meeting two vertex orbits is never monochromatic under the orbit colouring.
+
+**Resistance, quick check.** Every transitive solvable group at n = 6, 10, 12 has a 2-colourable triple orbit, including n = 12, where bipartiteness fails. AΓL(1,8) at n = 8 has none: its one orbit is K₈⁽³⁾. Brute force was too slow at n = 14, 15.
+
+**Global χ, exact values:**
+- n = 4: the property is trivial (every 3-graph on 4 points is 2-colourable).
+- n = 5: χ = 2. The property is "not complete".
+- n = 6: χ = −9.
+- n = 7: χ = 273, via a DP over triples whose state is the set of surviving bipartitions (11.6M states, about 1 min).
+- n = 8 is out of reach this way.
+
+**χ mod p via Sylow fixed complexes.** χ(Δ) ≡ χ(Δ^Q) (mod p). Every n from 5 to 20 has some p ≤ n with χ ≢ 1 (mod p), so **property B is evasive for every 5 ≤ n ≤ 20**. Witnessing primes:
+
+| n | primes with χ ≢ 1 |
+|---|---|
+| 7 | 3, 5, 7 (consistent with 273) |
+| 8 | 2, 3, 5, 7 |
+| 9 | 2, 3, 5, 7 |
+| 10 | 5, 7 only |
+| 11 | 2, 3, 5, 11 |
+| 12 | 3 only |
+| 13 | 2, 13 |
+| 14 | 2, 3, 7 |
+| 15 | 2, 5, 7 |
+| 16 | 2, 3 |
+| 17 | 17 only (the 2-Sylow gives 1; resolved through the nerve of the 8 maximal faces) |
+| 18 | 3 |
+| 19 | 3 |
+| 20 | 2 |
+
+Not every p was tried at the larger degrees: lines with more than 26 orbits were skipped.
+
+**Scripts:** `scripts/propb_global_chi.py`, `propb_sylow_orbits.g`, `propb_sylow_chi.py`, `propb_sylow_chi_nerve.py`.
