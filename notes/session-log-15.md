@@ -693,3 +693,18 @@ Vipul raised two corrections to my take.
 **Formalization status at the snapshot.** 011 and 029 are not formalized; 003 is.
 
 **Updated:** pending-checks A46; `literature-findings` entry 24.
+
+## 14. A38 item 2, continued: reductions for a minimal counterexample
+
+Vipul's framing, which I agreed with: bipartiteness is the first natural property whose climb up the ladder is decided by the arithmetic of n. It is the test case for how the group-indexed rungs get met. It fails the spine at once, at global χ.
+
+**Added to oen §7.4.** Take a minimal counterexample, two graphs at a time, minimising |D| first and then |L|.
+- (R1) L is minimal transitive. A transitive subgroup preserves the same graphs.
+- (R2) No nontrivial normal subgroup has odd orbits. Such a subgroup forces M ∩ K_C ⊆ K_h; the graphs then inflate and descend to D/M, which has 2·odd points, and the colouring lifts.
+- (R3) L = O²(L). A normal subgroup of 2-power index is transitive, because otherwise (R2) applies; so by (R1) it is L itself.
+
+**Consequences:** S is not cyclic, and every ε_U is trivial.
+
+**A₄ on six points passes all three reductions.** It escapes only because K_C = V₄ ≠ A₄. So generation by the K_C must be what closes the gap.
+
+**Open:** show that, in a minimal transitive 2-perfect group of degree 2·odd, the component stabilisers of the invariant bipartite graphs cannot generate the whole group.
