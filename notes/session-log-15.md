@@ -791,3 +791,11 @@ Vipul's framing, which I agreed with: bipartiteness is the first natural propert
 **Notes updated.** `monotone-transitive-note` §4 gets a new paragraph, and its Illies sentence is corrected. `literature-findings` 28a.
 
 **Open:** degrees not divisible by 6, including Lovász–Young's 14.
+
+## 19. Graph properties with f(∅) ≠ f(K_n): settled through n = 5
+
+Adamaszek's ℰ, the unique nontrivial nonevasive property on ≤ 5 vertices up to the obvious symmetries, is closed under complement: it has 5 complementary pairs and 1 self-complementary class, per the arXiv text. So f(∅) = f(K₅), and the same holds for every image under negation, complementation or duality.
+
+Together with the degree-6 search (S₄ on the edges of K₄ admits none), there is **no graph-property counterexample to relaxed Rivest–Vuillemin for n ≤ 5**. The first open case is n = 6.
+
+ℰ is described in `small-degree-computation` §4.3 and `small-degree-verification` §13a, not in `literature-findings`; only its reference is in oen. The new sentence goes in `monotone-transitive-note` §4.
