@@ -708,3 +708,43 @@ Vipul's framing, which I agreed with: bipartiteness is the first natural propert
 **A₄ on six points passes all three reductions.** It escapes only because K_C = V₄ ≠ A₄. So generation by the K_C must be what closes the gap.
 
 **Open:** show that, in a minimal transitive 2-perfect group of degree 2·odd, the component stabilisers of the invariant bipartite graphs cannot generate the whole group.
+
+## 15. monotone-transitive-note rewritten (Vipul: outdated, belabours superseded points)
+
+**Restructured to describe the current state**, keeping section numbers, §6 items 0 and 3, and §6 item 3a, which other documents cite.
+
+- **§4 T(12,162) is now settled.** Every nontrivial monotone G-invariant function is evasive, by a two-orbit Oliver subgroup whose orbits, the two blocks, G swaps: the loop criterion of oen §7.13. Re-verified in GAP: 0 transitive Oliver subgroups, and 6 Oliver classes with two orbits of size 6; for orders 12, 24, 48, 96 and 144 the orbits are the blocks and G swaps them (the order-36 class does not). The note had said "every route closed"; the μ_Γ route is closed, but the Oliver route works one step up, via bi-resistance. The exhaustive search there is now a check of the criterion, not evidence. The Illies paragraph is condensed into §4.
+- **§5's "That cannot be right, and finding the error" framing is removed.** It is stated directly instead.
+- **New result in §5:** the loop escape is unavailable to graph properties at non-prime-power n. A two-orbital Oliver group with isomorphic orbitals is rank 3. If primitive and solvable it is affine, hence prime power. If imprimitive, its valencies are b − 1 and n − b, which forces b = 1. If intransitive, its orbitals are a star and a clique.
+- **§3 has a single current table**, in place of the two-pass "revised after" tables, the randomised-search history and the unresolved lists.
+  - The groups are now identified in GAP: 10T26 = A₆, 10T31 = A₆.2 (contains a transitive A₅, checked), 14T10 = PSL(3,2), 14T30 = PSL(2,13), 14T54 = 2⁶:S₇.
+  - Those two degree-14 groups are no longer "unresolved by the criterion". `halfsplit_scan.g` decides them exhaustively: no transitive Oliver subgroup, and bi-resistant properties exist, so they are open by these methods.
+  - Only M₁₂ and 2⁶:S₇ remain undecided.
+- **§2 is condensed.** It adds Vipul's point: in general there may be no Oliver subgroup with large or few orbits, unlike the graph setting.
+- **§6:**
+  - Item 1 is retargeted to M₁₂ and 2⁶:S₇, plus half-split graphs on the extension to degree 20.
+  - Item 5 is rewritten as the list of candidate homes: A₅/10 (searched), PSL(3,2) and PSL(2,13) on 14, and the two undecided groups.
+  - The stale "Lutz complex untested" sentence in item 3a is removed; the result is below it in the same item.
+  - The 5a header's history ("Added 2026-09") is removed.
+- **oen:** the §7.13 scan line now has the GAP identifications and states 12T162 settled; the Appendix C row 6 line notes the same.
+
+## 16. Illies's counterexample recovered
+
+**Source.** Earlier literature searches had failed. A web search found the construction in arXiv:1409.7890 (Prop. 3.15): the ℤ/12-orbits of ∅, {1}, {1,4}, {1,5}, {1,4,7}, {1,5,9} and {1,4,7,10}, 56 sets in all. The source's depth-11 tree is a figure that the text fetch did not reproduce.
+
+**Checked (`scripts/illies12.py`, about 5 s):**
+- not monotone;
+- f(∅) = 1 and f(X) = 0;
+- Σ(−1)^{|S|} = 0;
+- exact decision-tree complexity D = 11. One optimal tree has 110 leaves, 36 of them at depth 11; its top queries are 1, 2, 3, 4 adaptively.
+
+**Explanation found here.** Under x ↦ (x mod 3, x mod 4), F is ∅ together with the sets lying connected inside one line of the 3 × 4 torus: rows are C₄, columns are K₃. The description was verified equal to F.
+- The symmetry group is S₃ × D₄, order 48, which GAP identifies as T(12,28). It is maximal, being Aut(K₃ □ C₄).
+- It contains the 12-cycle, so Proposition 1 shows a monotone analogue is impossible.
+- Neither Sylow subgroup is transitive, so Rivest–Vuillemin's counting does not apply either.
+
+**Edits:**
+- `monotone-transitive-note` §4: new "recovered" paragraph.
+- §6 item 2 marked done; item 4 notes the positive control.
+- `literature-findings` entry 28a.
+- A direct GAP stabiliser computation of Aut(F) inside S₁₂ timed out after 10 minutes. The group was instead checked by construction, plus the automorphism group of the grid graph as the upper bound.
