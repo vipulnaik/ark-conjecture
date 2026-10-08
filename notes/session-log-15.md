@@ -748,3 +748,26 @@ Vipul's framing, which I agreed with: bipartiteness is the first natural propert
 - §6 item 2 marked done; item 4 notes the positive control.
 - `literature-findings` entry 28a.
 - A direct GAP stabiliser computation of Aut(F) inside S₁₂ timed out after 10 minutes. The group was instead checked by construction, plus the automorphism group of the grid graph as the upper bound.
+
+## 17. Why 3 and 4 (Vipul: the construction does not seem to generalise)
+
+**RV attribution fixed** in `monotone-transitive-note` §3. Rivest and Vuillemin used the Sylow counting; at prime powers the p-layer alone is transitive, so Oliver's other layers are not needed.
+
+**Generalisation tested.** The a × b torus grid, lines cycles or complete, F = ∅ ∪ {connected in one line}.
+- **Brute force** (`illies_grid.py` + `dtree.c`, exact D by base-3 subcube DP): over 2×2, 2×3, 2×4, 2×5, 2×6, 2×7, 3×3, 3×4, 3×5, with every cycle/complete combination, only 3×4 with cycle rows is non-evasive (D = 11). 4×4 has nonzero parity, so it is evasive regardless, but its D was not computed.
+- **Global parity** is 1 + a·s(b) + b·s(a) + ab. It is zero only for b = a + 1 with b even and the b-lines cycles.
+- **Link parity**:
+  - complete columns: b/2 − 2, which forces b = 4;
+  - odd-cycle columns: (b − a + 1)/2 − 1, which is automatically 0 when b = a + 1.
+
+**5 × 6 with cycle columns.**
+- The plain parity-guided search did not finish in 20 min.
+- A symmetry-reduced search was still running after 6 min (1.4M states), and was stopped.
+- The locality solver (`illies_local_solver.py`) decides it at once: EVASIVE. Kill switches are interchangeable, and the zero phase is a search over query orders. It was validated against brute force on 3×4, 4×3, 2×3, 3×5, 2×4, 3×3, 2×5 and 2×6.
+- **The cause is the link** (`illies_link.py`): it is non-evasive (D = 4 of 5) at 3×4 and evasive at 5×6 (9/9), 7×8 (13/13) and 9×10 (17/17). An evasive first-query link makes the whole family evasive: the adversary answers 0 at the kill switches and finishes the link with g = 1.
+
+**Mechanism at 3×4.** g = NOR(R) ∨ (NOR(C) ∧ R ≠ {r₂}). It has a depth-4 tree: query r₁; if 0, query r₃; if that is also 0, the column drops out and g = ¬r₂. Hand-verified on all 32 inputs.
+- The column drops out because the column is a triangle, K₃ = C₃, on which every subset is connected to the pivot.
+- The parity identity then forces the row length to be 4.
+
+**Note updated:** `monotone-transitive-note` §4, new paragraph "Why 3 and 4".
