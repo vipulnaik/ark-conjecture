@@ -665,3 +665,11 @@ Before starting, I confirmed the local copy matched GitHub (reset onto `7124f33`
 Not every p was tried at the larger degrees: lines with more than 26 orbits were skipped.
 
 **Scripts:** `scripts/propb_global_chi.py`, `propb_sylow_orbits.g`, `propb_sylow_chi.py`, `propb_sylow_chi_nerve.py`.
+
+## 12. Reflection on graph properties vs weakly symmetric functions; a stale literature item
+
+Vipul raised two corrections to my take.
+
+1. **"No transitive Oliver subgroup" separates nothing.** Graph properties at non-prime-power n lack one too. The real asymmetry is quantitative. For graph properties, Oliver subgroups of S_n acting on pairs have large minimum orbits and few orbits: μ(n) = Θ(n²), conditional on (BCG). So resistance imposes real structure even where the ladder does not collapse. For a general transitive action there may be no Oliver subgroup with large orbits or few orbits, so the group-theoretic obstruction does not even get started.
+2. **Lutz's 60-vertex complex is already settled.** I had called it an untested experiment, following `literature-findings` §28 item 3. That item was stale: `monotone-transitive-note` §6 item 3a records that the complex is a join A ∗ A′, and every vertex link of A has χ = 0, so it is evasive. §28 item 3 is now rewritten to state the result. `lutz30.py`, which that note cites, is not in `scripts/`.
+- **Follow-up on the missing script.** `lutzA.py` exists, but it does not contain the argument: it computes Aut(A) and the vertex set of one link, not link Euler characteristics or the join factorisation. `lutz30.py` was never committed; it appears only in archived session log 13. I reconstructed it as `scripts/lutz30.py`. It is self-contained, with A's 21 facets copied from `lutzA.py`, because `lutzA.py` imports pynauty, which won't build here. It reproduces the recorded figures: f(A) = (30, 195, 340, 255, 96, 15), χ(A) = 1, and every vertex link has χ = 0.
