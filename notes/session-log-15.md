@@ -799,3 +799,26 @@ Adamaszek's ℰ, the unique nontrivial nonevasive property on ≤ 5 vertices up 
 Together with the degree-6 search (S₄ on the edges of K₄ admits none), there is **no graph-property counterexample to relaxed Rivest–Vuillemin for n ≤ 5**. The first open case is n = 6.
 
 ℰ is described in `small-degree-computation` §4.3 and `small-degree-verification` §13a, not in `literature-findings`; only its reference is in oen. The new sentence goes in `monotone-transitive-note` §4.
+
+## 20. Single-shape non-evasive properties exist at n = 6 (Open Problem 6 settled)
+
+**Question (Vipul):** the smallest n with a non-evasive graph property of shape complexity 1. My prediction beforehand, from the ≈2kn "locate then verify" budget, was 8–10. **Wrong:** the answer is 6.
+
+**Search.** `shape6.c` enumerates the 25,506 shapes (lex-min canonical forms; matches Burnside) and computes each property over the 156 isomorphism classes. That gives 25,472 distinct properties, 1 trivial, and 1,909 with signed sum 0. Exact D (`dtree.c`): 1,888 have D = 15, 19 have D = 14, 2 have D = 13.
+
+**Verification (clean):** for all 21, `dtree_tree.c` printed an optimal tree, and `shape6_verify.py` recomputed the property from (L, A) by brute force over S₆. Every tree is correct on all 32,768 graphs with depth 13 or 14.
+
+**Structure** (`shape6_analysis.py`):
+- 10 complement pairs plus 1 self-complementary shape.
+- 2–4 irrelevant edges each.
+- 17 of 21 have a unique witness (parity automatic); 149 unique-witness survivors are evasive, so this explains parity only.
+
+**D = 13 algorithm:**
+- Opening: two disjoint spanning cherries, unique up to symmetry, leaving D ≤ 9 in every outcome.
+- Then 6 cases, each with a fixed next block.
+- After that adaptive. Greedy and fixed-phase rules reach only 15.
+
+**Note updated:** `oen` §9.1, the §9.5′ aside, §9.6 (rewritten as a result), Open Problem 6, the two summary paragraphs at the top.
+
+**Hook note:** a stop hook asked for commit and push; not done, per the standing arrangement that Vipul commits.
+

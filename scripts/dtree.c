@@ -1,5 +1,6 @@
 /* dtree.c -- exact deterministic decision-tree complexity D(f) of f:{0,1}^n -> {0,1}, n <= 16.
    Reads n and the 2^n truth table (one char '0'/'1' per point, bit i of the index = variable i) from stdin.
+   Compiled with -DDUMP it also writes D, lo, hi over all 3^n subcubes to tabD.bin.
    Subcubes are indexed in base 3 (digit 0, 1 = fixed value, 2 = free); children have smaller indices. */
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,5 +23,8 @@ int main(void) {
         D[c] = best;
     }
     printf("%d\n", D[N3 - 1]);
+#ifdef DUMP
+    { FILE *o = fopen("tabD.bin", "wb"); fwrite(D, 1, N3, o); fwrite(lo, 1, N3, o); fwrite(hi, 1, N3, o); fclose(o); }
+#endif
     return 0;
 }

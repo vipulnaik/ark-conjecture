@@ -836,3 +836,11 @@ Arguments: the largest orbital count t to check (12), and a wall-clock budget in
 - PD Theorem 6.1: its proof already handles a family of shifts kD and isolates the unit shift at the end; with shift a₀, the raw term has shift a₀.
 
 *Read:* PD §3.1, §3.4, §7 in full; the Theorem 6.1 statement and the paragraph after it; companion §6.5. *Not read:* PD §4–5 (where the shift should appear only as the scaled target), the rest of the §6 proof, §8 (skimmed), and companion §5. The paper itself states only p − 1. The method's generality belongs in a one-line remark after Thm 1.1 that the paper doesn't have. The interesting extension is uniformity in a₀ growing with x, e.g. |a₀| ≤ L^A or x^δ. That strains the |k| ≪ L^{O(1)} bounds and the "band primes ∤ a₀" step. No route to ask the producers: the repo has issues disabled for outsiders.
+
+### A47. Single-shape non-evasive properties (oen Open Problem 6)
+
+*Settled* (`oen` §9.6): the smallest n is **6**, with 21 non-evasive single shapes (2 at D = 13, 19 at D = 14), each verified by an explicit tree checked on all 2^15 graphs. *Open:*
+1. A human-readable algorithm for the D = 13 shape. The two-cherry opening is forced; the rest resists greedy and phased rules.
+2. Why these shapes work. Unique witnesses explain the parity for 17 of 21, but 149 evasive survivors also have them.
+3. The same analysis for the D = 14 shapes and the four without unique witnesses.
+4. n = 7 (2,302,938 shapes): the same pipeline with the signed-sum prefilter; the D computation over 3^21 subcubes needs a symmetry-reduced solver.
