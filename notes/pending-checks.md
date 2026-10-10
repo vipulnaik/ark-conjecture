@@ -844,3 +844,11 @@ Arguments: the largest orbital count t to check (12), and a wall-clock budget in
 2. Why these shapes work. Unique witnesses explain the parity for 17 of 21, but 149 evasive survivors also have them.
 3. The same analysis for the D = 14 shapes and the four without unique witnesses.
 4. n = 7 (2,302,938 shapes): the same pipeline with the signed-sum prefilter; the D computation over 3^21 subcubes needs a symmetry-reduced solver.
+
+### A48. Regular actions and the coset template (`monotone-transitive-note` §5b)
+
+*Recorded:* the regular action is universal for both versions; counting in it gives exactly Rivest–Vuillemin; the design equation; Illies's construction is non-evasive at all 28 choices across the five groups of order 12; the exhaustive template search at orders ≤ 15 finds only order 12; a sketch that monotone pieces in pairwise-trivially-intersecting subgroups cannot give a contractible complex. *Open:*
+1. Write out the monotone sketch's homotopy step, including blocks that are not contractible.
+2. D₁₂ and C₂ × C₆ in the template search (35–45 orbits; needs a smarter enumeration than all unions).
+3. Solve the design equation with richer piece menus and test larger groups (orders 18, 20, 24, then A₅). Needs a decision-tree solver that uses the coset structure, since D on 2^|G| inputs is out of reach beyond about 16.
+4. Prove Illies-type non-evasiveness from the local structure at a point, so that order-12 genericity becomes a theorem, and find which other local configurations admit such a proof.

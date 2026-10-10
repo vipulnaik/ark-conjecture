@@ -173,6 +173,48 @@ Left quotients are invariant under left translation, since (gs)⁻¹(gt) = s⁻�
 
 ---
 
+## 5b. Regular actions: universal, and where Illies's construction really lives
+
+*From a question of Vipul's: is the conjecture easier when the group acts regularly, i.e. for set systems on a group G invariant under left multiplication only (not under automorphisms or right multiplication)?*
+
+**No easier: the regular action is the whole problem, group by group.** A counterexample for any transitive action G/K yields one for the regular action of the same G.
+- *Monotone:* pull the complex back along g ↦ gK (§6 item 0).
+- *Not monotone:* compose f with AND over each coset gK. This keeps f(∅) ≠ f(X) and D < |G|, as in §4's composition.
+
+So Illies's ℤ/12 example is already regular, and the 6-variable A₄ example of §4, AND-ed over the pairs gC₂, becomes a left-invariant counterexample on A₄ itself.
+
+**What counting gives in the regular action is exactly Rivest–Vuillemin.** A set with stabiliser H has a left-translation orbit of size |G : H|. So Σ_{f(S)=1} (−1)^{|S|} is 1 (for ∅) plus multiples of the indices of proper subgroups. A prime dividing all those indices exists exactly when G is a p-group, since otherwise a maximal subgroup containing a Sylow p-subgroup has index prime to p. Two consequences:
+- Free orbits contribute multiples of |G|, so a counterexample needs its *periodic* sets (unions of cosets of a nontrivial subgroup) to carry signed weight ≡ −1 (mod |G|).
+- The Oliver route is at its weakest here: a subgroup acting by left multiplication is transitive only if it is G (§5a).
+
+**The coset template.** Choose subgroups H₁, …, H_k and, for each, a family of *pieces*: subsets of Hᵢ, invariant under left multiplication by Hᵢ, which is what makes the next step well defined. Let F be ∅ together with every left translate g·(piece). Illies's example is this with G = ℤ/12, H₁ = ⟨3⟩ with the connected arcs of its 4-cycle, and H₂ = ⟨4⟩ with every subset of its triangle.
+
+*The design equation.* If the Hᵢ meet pairwise trivially, each piece of size ≥ 2 lies in exactly one coset. Writing σᵢ for the signed count of Hᵢ's pieces of size ≥ 2, the root parity condition becomes
+
+> Σᵢ |G : Hᵢ| · σᵢ = |G| − 1.
+
+For Illies: σ = 4 − 4 + 1 = 1 for the 4-cycle arcs and σ = 3 − 1 = 2 for the triangle, so 3·1 + 4·2 = 11. **With these two piece types the equation reads 1 − |G| + |G|/4 + 2|G|/3 = 0, which forces |G| = 12.** So the 12 is the parity equation's choice, not ℤ/12's. The equation is necessary only; §4's grid family shows the restricted functions after the first query are the real filter.
+
+**The construction is group-generic at order 12** (`illies_transplant.py`). Take G any group of order 12, K an order-4 subgroup made a 4-cycle by its Cayley structure (⟨y⟩ with y^{±1}, or V₄ with two of its three involutions), and T an order-3 subgroup with K ∩ T = 1. Then F = ∅ ∪ (all subsets of left cosets of T) ∪ (connected arcs of left cosets of K) is non-evasive, D = 11, **at every one of the 28 such choices across all five groups of order 12**: C₁₂ (1), C₃ ⋊ C₄ (3), A₄ (12), D₁₂ (9), C₂ × C₆ (3). This is consistent with §4's analysis of why 3 × 4 works, which is local to a point's row and column.
+
+**Exhaustive search within the template** (`coset_template_orbits.g`, `coset_template_search.py`, using `rv_search.c`). Members lie in left cosets of proper cyclic subgroups, or of all proper subgroups. Every union of orbits with exactly one of ∅, G was tested, at every group of non-prime-power order ≤ 15 whose orbit count is at most 30:
+
+| order | groups | non-evasive |
+|---|---|---|
+| 6, 10, 14, 15 | S₃, C₆, D₅, C₁₀, D₇, C₁₄, C₁₅ (both subgroup classes) | **0** |
+| 12 | C₁₂ | 8 |
+| 12 | C₃ ⋊ C₄ | 24 (all subgroups are cyclic, so the two classes agree) |
+| 12 | A₄ | 0 with cyclic subgroups; **12** once V₄ is allowed |
+| 12 | D₁₂, C₂ × C₆ | not searched (35–45 orbits) |
+
+All found have D = 11, and all are Illies-shaped. Every C₃ ⋊ C₄ example (checked by coset type) takes one C₄ with exactly Illies's 4-cycle arcs (3 choices) and pairs it with one of 8 "column" families inside the cosets of C₆. The Illies transplant is one of the 8; the other 7 use pieces in the C₆ cosets, which meet C₄ in the centre. The A₄ examples agree with the transplants in count (12) and piece structure; they were not matched set-for-set. **So within this template, at orders up to 15, Illies's construction is the only mechanism found, and order 12 is the only order that hosts it.** The 6-variable A₄ example is not of this form after the pull-back, since its pulled-back members span several cosets.
+
+**Monotone pieces: the template is dead when the subgroups meet trivially** (sketch). For a monotone F the piece families are complexes, and Δ is a union of translates of them. If the Hᵢ meet pairwise trivially, two translates share at most one point. Treat each connected component of a translate, with at least 2 points, as a block. For Δ to be contractible the blocks must form a hypertree: connected, with Σ_blocks (size − 1) = |G| − 1. By transitivity every point lies in the same number r of blocks.
+- r = 1: the blocks partition G, and connectivity forces a single block G, which is the trivial property.
+- r ≥ 2: the number of blocks N ≤ r|G|/2 and Σ size = r|G|, so the hypertree condition r|G| − N = |G| − 1 gives (r/2 − 1)|G| + 1 ≤ 0, which is false.
+
+So a monotone construction must use overlapping subgroups, where translates share edges and larger faces. That is the territory of Brown's coset complexes (§5a). *Not written out in full:* the homotopy step, that a union of blocks pairwise meeting in at most a point is contractible only if the incidence structure is a hypertree, is standard but has not been checked in this setting.
+
 ## 6. The counterexample programme
 
 0. **Only MINIMAL transitive groups need testing; the rest are settled by inclusion.** If H ≤ G are both transitive on X, every G-invariant family is H-invariant, so if every nontrivial monotone H-invariant family is evasive, so is every G-invariant one. Hence the census needs only the minimal transitive groups that are not Oliver. This settles A₆ and T(10,31) = A₆.2 on 10 points: each contains A₅ acting transitively on the same 10 points (in A₆, the point-stabiliser A₅ permutes the ten 3+3 partitions of six points as A₅ on pairs of five), and item 3's exhaustive scan at A₅ found nothing.

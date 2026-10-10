@@ -822,3 +822,21 @@ Together with the degree-6 search (S₄ on the edges of K₄ admits none), there
 
 **Hook note:** a stop hook asked for commit and push; not done, per the standing arrangement that Vipul commits.
 
+## 21. Regular actions; Illies is a construction on every group of order 12
+
+**Question (Vipul):** is the conjecture easier for regular actions (left-invariant set systems on a group)? Then: a counterexample search via Cayley-graph-local definitions on a suitable group. Vipul's correction: invariance is under left multiplication only, not automorphisms. Vipul's caution: pieces are constrained by monotonicity in general, and Illies was not.
+
+**Answers:**
+- No easier: regular is universal (pull-back for monotone, AND over cosets for non-monotone).
+- Counting in the regular action is exactly Rivest–Vuillemin.
+- Template and design equation: the equation forces |G| = 12 for Illies's two piece types.
+- Monotone pieces with pairwise trivially intersecting subgroups cannot give a contractible complex (hypertree counting; sketch).
+
+**Computations:**
+- `illies_transplant.py`: Illies's construction is non-evasive (D = 11) at all 28 choices across all five groups of order 12.
+- `coset_template_search.py`: orders 6, 10, 14, 15 give none. At order 12: C₁₂ 8, C₃ ⋊ C₄ 24 (3 choices of C₄ × 8 column families), A₄ 12 (needs V₄; exactly the transplants). D₁₂ and C₂ × C₆ were not searched.
+- *Clean:* on C₃ ⋊ C₄ the three transplants were matched set-for-set against search solutions (separate code from the search). On A₄ the transplants and the search solutions agree in count (12) and in piece structure, but were not matched set-for-set. On C₁₂ the transplant was not matched against the 8 search solutions.
+- *Bugs on the way:* group names with spaces broke the parser; GAP's closures over loop variables emit warnings but are harmless.
+
+**Note updated:** `monotone-transitive-note` §5b (new); `pending-checks` A48.
+
