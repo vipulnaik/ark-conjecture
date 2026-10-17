@@ -53,7 +53,7 @@ So **`aod` §3's even construction is k = 1 and its odd construction is k = 2** 
 - **They always require a foreign part.** W_n is empty of the configurations n = F·c with no foreign block at all — which are **13.5% of our computed table** (124,502 of 921,265 over [6, 10⁶]) and every value with δ > 1/4. On those n, f(n) as defined does not see the winner.
 - **They never claim f(n) is the maximum over all Oliver groups.** It is a lower bound from one family. Our Theorem 2.3 plus the enumeration claims B(n) is the *exact* maximum, which is a different kind of statement and is the part neither paper attempts.
 
-**And they never study f(n) at fixed n.** Both papers only ever bound f(n) asymptotically by instantiating at a chosen scale — BBKN at p = Θ(n^{1/4}), q = Θ(n^{1/4−ε}) under ERH and p = Θ(n^{1/2}), q = Θ(n^{1/2−δ}) under Chowla; Shparlinski at p, q ∈ [n^{1/4−ε}, 2n^{1/4−ε}]. Nobody computes f(n) exactly, tabulates it, locates its balance point, or asks for its minimum over a range. The density δ(n) = μ(n)/C(n,2), the residue-class caps, and the global floor are all questions about f(n) (or rather about B(n)) that the literature has not posed.
+**And they never study f(n) at fixed n.** Both papers only ever bound f(n) asymptotically by instantiating at a chosen scale — BBKN at p = Θ(n^{1/4}), q = Θ(n^{1/4−ε}) under ERH and p = Θ(n^{1/2}), q = Θ(n^{1/2−δ}) under Chowla; Shparlinski at p, q ∈ [n^{1/4−ε}, 2n^{1/4−ε}]. Nobody computes f(n) exactly, tabulates it, locates its balance point, or asks for its minimum over a range. The density δ(n) = μ\*(n)/C(n,2), the residue-class caps, and the global floor are all questions about f(n) (or rather about B(n)) that the literature has not posed.
 
 **Framing consequence, for us to decide.** The honest positioning is that `aod` §3 recovers a known family and the contribution is (i) the exact determination of the maximum over *all* Oliver groups rather than a lower bound from one family, and (ii) the arithmetic of that maximum at fixed n. If we present `aod` §3 as a new construction a referee who knows Shparlinski will stop reading. Worth deciding early whether the paper is "the exact value of BBKN's f(n), corrected upward and computed" — which is defensible and interesting — or something else.
 
@@ -172,7 +172,7 @@ That is `notes` §8 territory almost exactly — the same n, the same tool, the 
 
 **So the two frameworks use Oliver groups for different purposes.** We extract a *size* — m\*(Γ) large means sparse properties are evasive. They extract *named members* — "P contains a perfect matching", "P contains 2C_p or K_{p,p}" — and combine those with the mod-p class count. Neither subsumes the other, and the overlap in machinery is Oliver's theorem and nothing else.
 
-**Their Proposition 4.5 is our Theorem 2.1 with the twist deleted.** Their group at n = 2p is Γ = ⟨α, β, γ⟩ with α the p transpositions, β and γ the two independent p-cycles — i.e. (C_p × C_p) ⋊ C₂, Oliver with a *trivial top* layer. Its orbitals are K_{p,p} of size p² together with (p−1)/2 classes C(t) ∪ C(t′) of size 2p each, so **m\* = 2p**. Our Theorem 2.1 uses the same bottom and swap plus the **diagonal multiplicative twist** C_{p−1}, which fuses those (p−1)/2 classes into a single orbital of size p(p−1), giving **m\* = p(p−1) = μ(2p)**. At p = 5: theirs is {25, 10, 10}, ours is {25, 20}.
+**Their Proposition 4.5 is our Theorem 2.1 with the twist deleted.** Their group at n = 2p is Γ = ⟨α, β, γ⟩ with α the p transpositions, β and γ the two independent p-cycles — i.e. (C_p × C_p) ⋊ C₂, Oliver with a *trivial top* layer. Its orbitals are K_{p,p} of size p² together with (p−1)/2 classes C(t) ∪ C(t′) of size 2p each, so **m\* = 2p**. Our Theorem 2.1 uses the same bottom and swap plus the **diagonal multiplicative twist** C_{p−1}, which fuses those (p−1)/2 classes into a single orbital of size p(p−1), giving **m\* = p(p−1) = μ\*(2p)**. At p = 5: theirs is {25, 10, 10}, ours is {25, 20}.
 
 > So on the size axis we are strictly stronger — P must contain a graph with ≥ p(p−1) edges, not ≥ 2p. But their weaker group buys something we do not get: because its orbits are *named* graphs (2C_p and K_{p,p}), the transversal condition yields a qualitative membership statement. Fusing the classes destroys exactly that. **This is a real trade-off and worth stating in `notes` §9.7:** a larger m\* comes from merging orbitals, and merged orbitals are less informative about *which* graphs are in P.
 
@@ -190,7 +190,7 @@ That is `notes` §8 territory almost exactly — the same n, the same tool, the 
 
 The framework is **orbit augmentation sequences**: sequences of sets with group actions, carrying a parameter called the **spacing**, which is a lower bound on decision-tree complexity for any nontrivial monotone property invariant under all the groups involved — **assuming all those groups are p-groups**. Operations (composition, direct product) build the sequences up; applications to k-graphs go via liftings with wreath-product actions of p-groups.
 
-Three reasons it does not interact with μ, which settles the item as suspected:
+Three reasons it does not interact with μ\*, which settles the item as suspected:
 
 - **p-groups only.** No cyclic layer and no second prime, so it is not the Oliver condition at all — the whole coherence apparatus of `notes` §2.4 has nothing to constrain.
 - **It bounds D(f) directly**, not the minimum orbital of one group. Spacing is a property of a *sequence*; m\* is a property of a single group.
@@ -210,7 +210,7 @@ The lineage, all bounds on **c(n)**, the minimum over *all* nontrivial monotone 
 | Korneffel–Triesch (2010) | **(8/25)n² − o(n²)** = 0.32 n² |
 | Scheidweiler–Triesch | **n²/3 − o(n²)** — current best |
 
-**These are not competing with μ, and the numbers must not be compared.** c(n) is a *universal* lower bound: every nontrivial monotone property needs that many queries. μ(n) supports a *conditional but exact* statement: any property whose members all have fewer than μ(n) edges needs **all** C(n,2) queries. So:
+**These are not competing with μ\*, and the numbers must not be compared.** c(n) is a *universal* lower bound: every nontrivial monotone property needs that many queries. μ\*(n) supports a *conditional but exact* statement: any property whose members all have fewer than μ\*(n) edges needs **all** C(n,2) queries. So:
 
 > Their result: every property needs ≥ n²/3 ≈ 0.667·C(n,2) queries.
 > Ours: sparse properties need exactly C(n,2), i.e. 1·C(n,2), on a restricted class.
@@ -357,13 +357,13 @@ The division we should state explicitly, in `arithmetic-of-density.md` §3's ope
 |---|---|---|
 | the mod-12 ceilings (§3.3) | **unconditional** | local obstructions at ℓ = 2, 3 and the balance-point optimisation |
 | the shape space being finite (`aod` §6) | **unconditional** | the feasibility criterion Σ√Fᵢ ≤ 1/√δ |
-| the collapse μ(n) = B(n) at computed n | **unconditional** | Corollary E.6 with the ladder floor δ ≥ 0.04621 over [6, 10⁶]; the per-n certificates are an independent second route |
+| the collapse μ\*(n) = B(n) at computed n | **unconditional** | Corollary E.6 with the ladder floor δ ≥ 0.04621 over [6, 10⁶]; the per-n certificates are an independent second route |
 | the escape densities (`aod` §4.3) | **conditional** | Bateman–Horn-type supply |
 | the fallback branch at δ > 1/25, every e and q | **unconditional** | `ep` Part E‴, Theorem E.5 (twelve listed small-n exceptions and the bare safe-prime pair) |
 | the fallback branch at δ ≤ 1/25 | **open**, and empty over the computed range | no row of [6, 10⁶] sits at or below 1/25 |
 | the global floor conjecture (`aod` §5) | **conjectural**, verified to 10⁶ over four families | — |
 
-**The fallback rows are the ones most likely to be misread**, so state them carefully wherever they appear. Above δ = 1/25 the branch is closed by theorem (Corollary E.6 gives μ(n) = B(n) there), and every computed n lies above that line; below it nothing is proved, and the per-n certificates of `pending-checks.md` R1b are the instrument for any future row that lands there. A well-characterised open problem and a solved one read alike once the boxes are written; the table is where the difference has to be visible.
+**The fallback rows are the ones most likely to be misread**, so state them carefully wherever they appear. Above δ = 1/25 the branch is closed by theorem (Corollary E.6 gives μ\*(n) = B(n) there), and every computed n lies above that line; below it nothing is proved, and the per-n certificates of `pending-checks.md` R1b are the instrument for any future row that lands there. A well-characterised open problem and a solved one read alike once the boxes are written; the table is where the difference has to be visible.
 
 The Jones–Zvonkin practice suggests putting this table near the front and labelling every density statement at first mention. What we should *not* do is what an earlier draft of this file drifted towards — comparing our conditional density against other fields' unconditional open problems as though they were competing strengths.
 
@@ -444,7 +444,7 @@ Peel down to the largest prime p ≤ n, where C_p = C(p,2) by KSS: D(h) ≥ min{
 
 **A single framework for all of these bounds** is proposed in `restriction-game.md`: each is a strategy in one restriction game, whose first level reduces to a widest path over certified sub-worlds; KSS's case analysis is that reduction run by hand, and n²/4 is the ceiling for escapes certified by transitivity (Lemma 2 there).
 
-**Why the μ(n) framework does not move these constants** — settled, and written up in `orbital-evasiveness-notes.md` beside the threshold result. The framework's own restriction argument gives **D(h) ≥ μ(n)**, and that is sharp for it: certification by a single Oliver group reaches only a single orbital, which an adversary forces to be the minimum. Since μ(n) ≤ n²/4, it never beats Kahn–Saks–Sturtevant; it improves their explicit finite bound only by lower-order terms, at n = 2q. The better constants restrict to multi-orbital sub-structures, which need the extra symmetry layer Yao's argument exploits and the shape space does not model.
+**Why the μ\*(n) framework does not move these constants** — settled, and written up in `orbital-evasiveness-notes.md` beside the threshold result. The framework's own restriction argument gives **D(h) ≥ μ\*(n)**, and that is sharp for it: certification by a single Oliver group reaches only a single orbital, which an adversary forces to be the minimum. Since μ\*(n) ≤ n²/4, it never beats Kahn–Saks–Sturtevant; it improves their explicit finite bound only by lower-order terms, at n = 2q. The better constants restrict to multi-orbital sub-structures, which need the extra symmetry layer Yao's argument exploits and the shape space does not model.
 
 ## 20. Jones–Zvonkin is a programme, not a paper — and they say so themselves
 

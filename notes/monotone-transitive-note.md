@@ -2,7 +2,7 @@
 
 *Companion to `orbital-evasiveness-notes.md`. The k-uniform documents move along the arity axis; this one moves off it entirely, to nontrivial monotone Boolean functions on N coordinates invariant under a transitive group. That setting contains all the k-uniform cases (a k-graph property is the case N = C(n,k) with Γ = Sₙ acting on k-sets), so it is the natural ceiling of the programme.*
 
-**The short answer.** In the general setting the group acts on the coordinates directly. So wherever Γ contains a **transitive Oliver subgroup** the argument closes at its first rung, with none of the μ(n) machinery (§1). Where Γ has none, the analogue μ_Γ is a real quantity but has no theory behind it (§2). The graph case is different because Sₙ acts on the pairs through the vertices: there transitivity on coordinates is 2-homogeneity, which a solvable group has only at prime-power degree, and μ(n) is what the arithmetic supplies in its place (§5). What the framework contributes in the general setting is a *localisation*: a computable criterion picking out the groups where the argument fails (§3), and a stronger fallback, bi-resistance, that settles one of them (§4).
+**The short answer.** In the general setting the group acts on the coordinates directly. So wherever Γ contains a **transitive Oliver subgroup** the argument closes at its first rung, with none of the μ\*(n) machinery (§1). Where Γ has none, the analogue μ\*_Γ is a real quantity but has no theory behind it (§2). The graph case is different because Sₙ acts on the pairs through the vertices: there transitivity on coordinates is 2-homogeneity, which a solvable group has only at prime-power degree, and μ\*(n) is what the arithmetic supplies in its place (§5). What the framework contributes in the general setting is a *localisation*: a computable criterion picking out the groups where the argument fails (§3), and a stronger fallback, bi-resistance, that settles one of them (§4).
 
 **Literature status.** The monotone weakly-symmetric conjecture is **open**, and verified for N ≤ 14 in the literature (§4).
 
@@ -11,7 +11,7 @@
 | section | standing |
 |---|---|
 | §1 the criterion | **proved**; essentially KSS's argument stated for general Γ |
-| §2 why μ(n) does not transfer | **proved** |
+| §2 why μ\*(n) does not transfer | **proved** |
 | §3 the scan | **computed**, degrees 4–14; M₁₂ and 14T54 not decided |
 | §4 T(12,162) | **settled**: every nontrivial monotone invariant function is evasive, by a two-orbit Oliver subgroup whose orbits the group swaps |
 | §5 what this says about graph properties | **proved**: neither a transitive Oliver subgroup on pairs nor a loop exists away from prime-power n |
@@ -38,15 +38,15 @@ Three corollaries, each a one-line check on Γ:
 
 ---
 
-## 2. The analogue of μ(n) here: definable, but with no theory behind it
+## 2. The analogue of μ\*(n) here: definable, but with no theory behind it
 
 The framework's central quantity is m\*(Γ), the minimum size of a Γ-orbital (an orbit on **pairs** of vertices), and δ = m\*/C(n,2). The analogue here is a minimum orbit on **coordinates**, and the group that matters is not Γ itself: Γ is transitive, but Proposition 1 needs a transitive *Oliver subgroup*, and Γ's Oliver subgroups are in general intransitive. So the quantity is
 
-> **μ_Γ(N) := max over Oliver subgroups Λ ≤ Γ of the minimum Λ-orbit on the N coordinates**,
+> **μ\*_Γ(N) := max over Oliver subgroups Λ ≤ Γ of the minimum Λ-orbit on the N coordinates**,
 
 which equals N exactly when Γ contains a transitive Oliver subgroup, and is smaller — sometimes much smaller — when it does not (A₅ on 10 points and T(12,162), §3).
 
-**μ_Γ has no theory behind it.** μ(n) is computable because the graph setting fixes the shape of the action — a group on [n], inducing on pairs — so the orbitals are block-structured and the shape space, ceilings and arithmetic apply. μ_Γ(N) depends on an arbitrary transitive action on N points: there is no shape space, no mod-12 keying, no cap formula, and it can only be computed group by group (`orbital-evasiveness-notes.md` Appendix C row 6). In particular there is no general guarantee of an Oliver subgroup with large orbits, or with few orbits. That is the real difference from graph properties: there, Oliver-resistance does not collapse the ladder at non-prime-power n, but the Θ(n²) orbitals of §3 of `arithmetic-of-density.md` force real structure on every resistant property; here the group theory may give nothing to start from.
+**μ\*_Γ has no theory behind it.** μ\*(n) is computable because the graph setting fixes the shape of the action — a group on [n], inducing on pairs — so the orbitals are block-structured and the shape space, ceilings and arithmetic apply. μ\*_Γ(N) depends on an arbitrary transitive action on N points: there is no shape space, no mod-12 keying, no cap formula, and it can only be computed group by group (`orbital-evasiveness-notes.md` Appendix C row 6). In particular there is no general guarantee of an Oliver subgroup with large orbits, or with few orbits. That is the real difference from graph properties: there, Oliver-resistance does not collapse the ladder at non-prime-power n, but the Θ(n²) orbitals of §3 of `arithmetic-of-density.md` force real structure on every resistant property; here the group theory may give nothing to start from.
 
 **One thing does transfer: the negative result about escalation.** `small-degree-computation.md` §7.1's one-sidedness diagnosis — every primal χ condition and every monotone propagation pushes coordinates *into* P, the only primal OUT-generator being nontriviality — is a statement about the constraint system, not about graphs. It predicts that at a group where Proposition 1 fails, adding more groups to a battery will not produce UNSAT either.
 
@@ -66,7 +66,7 @@ One whole family of degrees is settled outright.
 >
 > **At prime degree this is just Cauchy's theorem**: transitivity forces p | |G|, Cauchy gives an element of order p, and on p points such an element is a single p-cycle — regular, transitive, cyclic, Oliver. *Attribution*: the prime-power case is due to **Rivest and Vuillemin**, by exactly this Sylow counting. They had no need of Oliver groups: at a prime power the p-group layer alone is transitive, so the cyclic and q-layers that KSS added are not needed.
 
-So failures can only occur at composite non-prime-power degrees. In the S_n world μ(n) = C(n,2) exactly at prime powers, because AGL(1, p^a) is 2-homogeneous; here a Sylow subgroup is transitive exactly at prime powers. **Both settings measure how far a degree is from being a prime power**, one through orbitals on pairs and the other through orbits on coordinates.
+So failures can only occur at composite non-prime-power degrees. In the S_n world μ\*(n) = C(n,2) exactly at prime powers, because AGL(1, p^a) is 2-homogeneous; here a Sylow subgroup is transitive exactly at prime powers. **Both settings measure how far a degree is from being a prime power**, one through orbitals on pairs and the other through orbits on coordinates.
 
 *Containing versus being.* Testing every transitive group of degrees 6–11 for whether **it** is Oliver (`oliver_negative.g`, R6 item 1 of `pending-checks.md`) gives 108 Oliver against 52 not, and eleven of the failures are solvable, at degrees 8 and 9. Those are prime powers, so every property invariant under those groups is evasive anyway: a group can fail the chain condition while a subgroup satisfies it, and it is the subgroup that decides.
 
@@ -101,7 +101,7 @@ So failures can only occur at composite non-prime-power degrees. In the S_n worl
 | **transitive subgroups** | **exactly one: G itself** |
 | G Oliver? | **no** |
 
-G is minimal transitive and not itself Oliver, so Proposition 1 has nothing to act on, and μ_Γ < 12.
+G is minimal transitive and not itself Oliver, so Proposition 1 has nothing to act on, and μ\*_Γ < 12.
 
 **But the Oliver route still closes, one step up.** G has a block system with two blocks of size 6, {1,4,5,8,9,12} and {2,3,6,7,10,11}, and has Oliver subgroups whose two orbits are exactly those blocks — five conjugacy classes of them, of orders 12, 24, 48, 96 and 144 (*verified by enumerating all subgroup classes of G*). The smallest is a diagonal A₄ rotating the two tetrahedra whose edges the blocks are, in lockstep; the structure is worked out in `orbital-evasiveness-notes.md` §7.13. For such an H, a G-invariant P contains one block iff it contains the other, since G swaps them; the union of the two is the whole set, which P omits. So Δ_P^H is either empty (χ = 0) or two isolated points (χ = 2), and neither is ≡ 1 modulo any prime. **Every nontrivial monotone G-invariant function is evasive.** This is the bi-resistance criterion of `orbital-evasiveness-notes.md` §7.13: a two-orbit Oliver subgroup whose orbits the group swaps forms a *loop* in the half-split graph, and a loop rules out every nontrivial property. Of the groups with no transitive Oliver subgroup through degree 14, T(12,162) is the only one with a loop.
 
@@ -140,7 +140,7 @@ It is not monotone. Neither Sylow subgroup of A₄ is transitive on the 6 points
 
 ## 5. What this sharpens about graph properties
 
-For a graph property the coordinates are the C(n,2) pairs and the group is Sₙ, which is transitive on them. Proposition 1 does not apply, because Sₙ is not Oliver for n ≥ 5. What it needs is a transitive Oliver *subgroup* of Sₙ on the pairs, i.e. a solvable 2-homogeneous group, and that exists only at prime-power n. **So the graph case is exactly the general case, with the coordinate-transitivity requirement replaced by 2-homogeneity.** At prime powers AGL(1, p^k) supplies it and KSS follows; at every other n, μ(n) is the fallback, and in the t ≥ 2 case the fixed-point argument consumes the minimum orbital itself, so μ(n) is not a modelling choice.
+For a graph property the coordinates are the C(n,2) pairs and the group is Sₙ, which is transitive on them. Proposition 1 does not apply, because Sₙ is not Oliver for n ≥ 5. What it needs is a transitive Oliver *subgroup* of Sₙ on the pairs, i.e. a solvable 2-homogeneous group, and that exists only at prime-power n. **So the graph case is exactly the general case, with the coordinate-transitivity requirement replaced by 2-homogeneity.** At prime powers AGL(1, p^k) supplies it and KSS follows; at every other n, μ\*(n) is the fallback, and in the t ≥ 2 case the fixed-point argument consumes the minimum orbital itself, so μ\*(n) is not a modelling choice.
 
 **The §4 escape does not help graph properties either.** For a graph property, the analogue of a loop is an Oliver group with exactly two orbitals that Sₙ maps to each other, i.e. two isomorphic orbital graphs. A vertex-transitive group with exactly two orbitals is rank 3. If primitive and solvable it is affine, so of prime-power degree. If imprimitive, its orbitals are "same block" and "different block", of valencies b − 1 and n − b; these are equal only if n = 2b − 1, and b | n then forces b = 1. A group intransitive on vertices has a third orbital unless one vertex orbit is a single point, and then the two orbitals are a star and a clique. **So at non-prime-power n no Oliver group gives a loop, and neither escape that settles the general case is available to graph properties.**
 

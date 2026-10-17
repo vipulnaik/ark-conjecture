@@ -42,7 +42,7 @@ The one lever on item 1 worth naming: **B(n) ≤ B_solv(n)**. A *missing* Oliver
 
 ## 2. Failure directions are not symmetric, and the dangerous one is usually the quiet one
 
-**Under-scoring is the failure that matters** for an upper-bound claim. B(n) is a maximum over admissible configurations, so a shape scored *below* what a group achieves makes B too small and can break μ(n) ≤ B(n). A restriction that looks conservative fails exactly this way — which is why "erring on the safe side" is not a defence when the quantity is itself a bound. Over-scoring is unsound in the other direction: a cap crediting an orbital no group delivers.
+**Under-scoring is the failure that matters** for an upper-bound claim. B(n) is a maximum over admissible configurations, so a shape scored *below* what a group achieves makes B too small and can break μ\*(n) ≤ B(n). A restriction that looks conservative fails exactly this way — which is why "erring on the safe side" is not a defence when the quantity is itself a bound. Over-scoring is unsound in the other direction: a cap crediting an orbital no group delivers.
 
 **A rebuild must never lower a value.** Adding configurations can only raise a maximum, so a rebuild that comes out lower anywhere means a shape has been *lost*, not gained.
 

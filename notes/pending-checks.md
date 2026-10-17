@@ -9,7 +9,7 @@
 | `mu_table_ladder.csv` | `mu_ladder_exact.py` | **10⁶ — complete** | 921,265 | exact B(n), certified above C(n,2)/25 by Theorem E.5 + `ladder-completeness.md` Prop 1 |
 | `mu_table_exact.csv` | `mu_exact.py` | **10⁵ — COMPLETE** | 90,299 | exhaustive search — the arbiter |
 
-Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804661 = 0.046210 at n = 2759** (the only other value below 0.05 anywhere is 0.048039 at n = 2183). Since every row clears 1/25, **Corollary E.6 makes each value μ(n), not a bound on it** — so μ is known exactly at every composite non-prime-power n ≤ 10⁶.
+Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804661 = 0.046210 at n = 2759** (the only other value below 0.05 anywhere is 0.048039 at n = 2183). Since every row clears 1/25, **Corollary E.6 makes each value μ\*(n), not a bound on it** — so μ\* is known exactly at every composite non-prime-power n ≤ 10⁶.
 
 ## Five standing rules
 
@@ -23,7 +23,7 @@ Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804
 
 **Companion files.** `verification-lessons.md` — the failure-mode taxonomy and the reasoning behind these checks. `fusion-count-ceilings.md` — ⟦ARCHIVED⟧. `shape-counting.md` — the enumeration behind `aod` §6.
 
-*Do not restate the inequality as `B_safe ≤ μ`.* `B_safe` over-counts per configuration; what holds is B_refined ≤ μ ≤ B_safe, the endpoints collapsing where E.5 or the certificate applies.
+*Do not restate the inequality as `B_safe ≤ μ*`.* `B_safe` over-counts per configuration; what holds is B_refined ≤ μ\* ≤ B_safe, the endpoints collapsing where E.5 or the certificate applies.
 
 ## Before the pause: the landing checklist
 
@@ -39,7 +39,7 @@ Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804
    python3 solvable_relaxation.py mu_table_ladder.csv --solvable-table solvable_table.csv
    ```
 
-   The writer mirrors `mu_exact.py`'s driver (resume by reissuing, `--chunks i/N`, work-weighted ETA); the scoring core lives in `solvable_table.py` alone and is imported by the validator, so the two cannot drift; and a loaded cache is spot-checked against a fresh recomputation at the extremes, the single-orbit rows and a random sample, refusing outright if it does not cover the μ table's range. *Verified: corrupting the n = 551 row makes the check FAIL and name it.*
+   The writer mirrors `mu_exact.py`'s driver (resume by reissuing, `--chunks i/N`, work-weighted ETA); the scoring core lives in `solvable_table.py` alone and is imported by the validator, so the two cannot drift; and a loaded cache is spot-checked against a fresh recomputation at the extremes, the single-orbit rows and a random sample, refusing outright if it does not cover the μ\* table's range. *Verified: corrupting the n = 551 row makes the check FAIL and name it.*
 
 3. **The three unreached GAP battery rows** (n = 78, 33, 105): run the battery to completion once, or record that they were skipped. R8 says which they are and why they matter.
 4. **`wide_cert.py` is rescoped, not owed** (see R1b): B is known exactly to 10⁶, so a certificate "beyond the table" has no range to certify below 10⁶. It would matter again only for an extension past 10⁶.
@@ -117,7 +117,7 @@ python3 mu_ladder_exact.py 2755 2762 --cert-threshold 0.05     # exercises the u
 
 **Cost, measured.** `mu_exact.py` scales as ~n^2.3 with a tail nearer n^2.9 per row — about 3 h *per value* at 10⁶. `mu_ladder_exact.py` is **4.3 ms/n at 2.5·10⁵ and 15 ms/n at 10⁶**, so a contiguous run to 10⁶ is ~3 h single-threaded and under half an hour on eight chunks. *Quote per-value cost by density band, not one aggregate rate: a δ < 0.10 value costs about twice a δ ≥ 0.22 one, so an n/s figure weights the hard values and understates any speedup.*
 
-**Two columns mean different things by producer, and the difference is the point.** `certified` = 1 means F.1's k self-certification from `mu_exact.py`, but E.5 + Proposition 1 from `mu_ladder_exact.py` — there a 0 means the row fell below 1/25, where every pruning step is unjustified and the value is a lower bound. `fallback` = 1 only on a row that went through the exhaustive handoff and whose optimum is a fallback: the only rows where μ(n) = B(n) is not established by any theorem.
+**Two columns mean different things by producer, and the difference is the point.** `certified` = 1 means F.1's k self-certification from `mu_exact.py`, but E.5 + Proposition 1 from `mu_ladder_exact.py` — there a 0 means the row fell below 1/25, where every pruning step is unjustified and the value is a lower bound. `fallback` = 1 only on a row that went through the exhaustive handoff and whose optimum is a fallback: the only rows where μ\*(n) = B(n) is not established by any theorem.
 
 > **What `mu_ladder_exact.py` does when a row does not clear 1/25 — the case that matters most.** Such an n would also be the first counterexample to the floor conjecture, so the script does not merely flag it: it hands the n to `mu_exact.py`'s exhaustive `best_for_n` (imported from the same directory; `--on-uncertified flag` to suppress), prints both values and whether the exhaustive optimum is a fallback configuration — in which case `fallback_cert.py` is the next step — and writes `EXHAUSTIVE` or `EXHAUSTIVE-FALLBACK` into the witness. `--check` lists uncertified rows separately whatever the value comparison says, because agreement at such a row is a coincidence, not a certification.
 
@@ -147,7 +147,7 @@ python3 mu_ladder_exact.py 2755 2762 --cert-threshold 0.05     # exercises the u
 
 ## R1. Routine, after any new batch of table values
 
-**Current status: the battery has been run against the completed 10⁶ table and passes.** `validate_table_v3.py` 27 PASS / 0 FAIL / 16 INFO with the exhaustive table as baseline, all μ equal on the overlap. `t5_verify.py`, `converse_check.py`, `audit_fmid.py`, `check_doc_figures.py` clean. `fallback_cert.py` and `wide_cert.py` are rescoped — see **R1b**. `solvable_relaxation.py` owed a recount at 10⁶.
+**Current status: the battery has been run against the completed 10⁶ table and passes.** `validate_table_v3.py` 27 PASS / 0 FAIL / 16 INFO with the exhaustive table as baseline, all μ\* equal on the overlap. `t5_verify.py`, `converse_check.py`, `audit_fmid.py`, `check_doc_figures.py` clean. `fallback_cert.py` and `wide_cert.py` are rescoped — see **R1b**. `solvable_relaxation.py` owed a recount at 10⁶.
 
 Run in order; the first gates the rest.
 
@@ -176,7 +176,7 @@ python3 check_doc_figures.py $TABLE *.md               # 8. documents against th
 - **`t5_verify.py`** — Lemma C's coupling and Corollary C′. Its pass 4 and its threshold now read the range and the floor **from the table**; both were hardcoded (A20c).
 - **`converse_check.py`** — headline is *0 violations*, but the run is for the two constants. **Max cofactor** is quoted in `ep` F.4 and `aod` §6.7 as **12**, matching (BCG)'s own d ≤ 12; a value above 12 would weaken the claim that (BCG)'s constant is natural rather than chosen. **Slack** is max-cofactor against 2/floor, so it moves whenever the **floor** moves and is **range-dependent on a correct table** — requote it with its range and do not read a change in it as a finding.
 - **`audit_fmid.py`** — headline is *0 shared-F_mid configurations above B(n)*, but **read the coverage line first**. It screens only the low-density rows, which is a scope statement rather than a shortfall. It is the only artefact behind the shape space's shared-block-count admission, so a hit is a configuration to score exactly, not a reason to tighten the admission.
-- **`solvable_relaxation.py`** — all PASS; B_solv ≥ B_safe is structural, so a FAIL means the Oliver side credits a class no solvable group carries. Two INFO lines look alarming without their reason: the **class-11 share** exceeding 7 − 4√3 is expected (the ceilings bound the balanced additive family, not μ), and the **attainment share** is the S2 identity showing through. Requote both, and the ratio distribution, from the run.
+- **`solvable_relaxation.py`** — all PASS; B_solv ≥ B_safe is structural, so a FAIL means the Oliver side credits a class no solvable group carries. Two INFO lines look alarming without their reason: the **class-11 share** exceeding 7 − 4√3 is expected (the ceilings bound the balanced additive family, not μ\*), and the **attainment share** is the S2 identity showing through. Requote both, and the ratio distribution, from the run.
 - **`check_doc_figures.py`** — `--quiet` for findings only, `--pass {figures,scope,prose,hygiene,census,refs,tables}` for one pass. **Pass every `.md` that might be cited**, or `refs` reports live citations as dangling.
 
 **Static — one run per environment, not per batch.** `eta_derive.py`, `khomog_verify.py`, `a18_rq_verify.py`, `k3_galois.py`, `shape_realize.py` and `ceiling_rederive.py` — the last two read no table at all and are sized for small n by design (**R6**, **R6a**).
@@ -233,15 +233,15 @@ python3 ceiling_rederive.py --nmax 16000 --no-filter # control: expect exceedanc
 
 > **What survives, and it is the result rather than the method:**
 >
-> > **min { μ(n)/C(n,2) : n ≤ 10⁶, composite, not a prime power } = 175813/3804661 = 0.046209898…, attained only at n = 2759**
+> > **min { μ\*(n)/C(n,2) : n ≤ 10⁶, composite, not a prime power } = 175813/3804661 = 0.046209898…, attained only at n = 2759**
 >
-> — now with the stronger provenance that the contiguous exact table *contains* the argmin rather than reaching it by a worklist row, and no entry anywhere below 1/25. The ladder gives μ ≥ this unconditionally (it exhibits groups); B gives μ ≤ this granting μ ≤ B_safe; above 1/25 Corollary E.6 closes the gap outright.
+> — now with the stronger provenance that the contiguous exact table *contains* the argmin rather than reaching it by a worklist row, and no entry anywhere below 1/25. The ladder gives μ\* ≥ this unconditionally (it exhibits groups); B gives μ\* ≤ this granting μ\* ≤ B_safe; above 1/25 Corollary E.6 closes the gap outright.
 
 **When `ladder_verify.py` would become useful again:** only far beyond 10⁶, where a lower-bound-only scan is meaningfully cheaper per value than computing B. At 15 ms/n for exact B that crossover is not near, and until it is, running the ladder alone buys a weaker statement for no saving. *If it is ever revived, the two defects found in it must be carried over: the block-size window must be `[0.10, 0.85]`, not `[0.10, 0.55]` (the narrow one clipped the two-part family at 274 tabulated n, understating by up to 1.8×), and the fusion set must be 3..16 ∪ {25}, not 3..12 ∪ {16, 25} (cap_F(1) crosses 1/25 between F = 16 and 17).*
 
-## R8. The Part E realisability battery — the only leg of μ = B with no per-n check
+## R8. The Part E realisability battery — the only leg of μ\* = B with no per-n check
 
-**What a pass settles:** that the enumeration's score at that n is *attained*, i.e. μ(n) ≥ B(n). Not completeness. This is the only artefact that builds a group; everything else re-derives a value.
+**What a pass settles:** that the enumeration's score at that n is *attained*, i.e. μ\*(n) ≥ B(n). Not completeness. This is the only artefact that builds a group; everything else re-derives a value.
 
 ```bash
 gap -q -A -o 8g verify_witness.g                            # the battery
@@ -257,7 +257,7 @@ WITNESS="p=5 q=2: 2x5" MUBOUND=20 gap -q -A verify_witness.g   # a single row
 
 **Coverage: ten rows, largest n = 308**, spanning the fused rung at F = 2, 3, 5, 6, a trivial-top attainer, cyclic-layer fusion beside a foreign block, Lemma C's worked example, and the three regressions. **What is still uncovered, in priority order:**
 
-1. **n = 2759** — the range minimiser, and the one n where the framework claims μ *exactly* rather than boundedly. Its binding class is the **foreign** one at r·Q with Q = 11², a proper prime power: a stratum no current row reaches, every other foreign row here having prime Q.
+1. **n = 2759** — the range minimiser, and the one n where the framework claims μ\* *exactly* rather than boundedly. Its binding class is the **foreign** one at r·Q with Q = 11², a proper prime power: a stratum no current row reaches, every other foreign row here having prime Q.
 2. **Even F ≥ 4** — the cross-class coefficient is (F/2)·c² rather than F·c², and F = 4 is the fusion count that sets the ceiling at n ≡ 11 (mod 12). The battery has F = 6 but no F = 4.
 3. **A two-part row from the current census**, since most rows are configurations that no longer win at their n.
 
@@ -277,10 +277,10 @@ WITNESS="p=5 q=2: 2x5" MUBOUND=20 gap -q -A verify_witness.g   # a single row
 
 **Read the column name, and know which way the inequality runs.** `b3_census` is the max over the *census* shapes. Two directions, two hypotheses, neither established at k = 3:
 
-- **μ₃ ≥ B₃^census** if every census shape is realisable by an Oliver group (the Part E analogue — no GAP battery exists at k = 3);
-- **μ₃ ≤ B₃^census** if the census is complete (§10 item 1, open).
+- **μ\*₃ ≥ B₃^census** if every census shape is realisable by an Oliver group (the Part E analogue — no GAP battery exists at k = 3);
+- **μ\*₃ ≤ B₃^census** if the census is complete (§10 item 1, open).
 
-So the useful reading is a **lower** bound on μ₃ modulo realisability. Nothing should read the column as μ₃. What it legitimately replaces is the *hand* searches: §6.2's "optimal" at one n, §6's escape counts, §5's class ceilings.
+So the useful reading is a **lower** bound on μ\*₃ modulo realisability. Nothing should read the column as μ\*₃. What it legitimately replaces is the *hand* searches: §6.2's "optimal" at one n, §6's escape counts, §5's class ceilings.
 
 > **A defect caught on the first run, worth recording because the check that caught it was a question about direction.** The script credited a Galois part of order m without requiring m to be a power of the top prime q — the Frobenius lives in the top layer, which is a q-group. **295 of 306 rows crediting m > 1 had the top prime ≠ 5 while crediting m = 5 on a 32-block.** Fixed; 266 rows fell, all downward, and n = 133 did not move because there q = 5 = m is the coincidence §6.2 exists to display. This is §4.3's warning — "spending the top prime on the Galois gain cripples every foreign block" — made concrete.
 
@@ -322,7 +322,7 @@ python3 ceiling_rederive3.py --nmax 2500 --no-filter   # the escapes, deliberate
 
 **`ladder_vs_B.py` is retired, 2026-09**, and not because it is slow. What it tested was **the ladder script** — whether `ladder_verify.py`'s four families, at its particular window and fusion set, contain a B-optimal configuration at every tabulated n. That question is now moot twice over:
 
-- **`ladder_verify.py` itself is retired (R7)**: it computed a lower bound on μ, and `mu_ladder_exact.py` computes B exactly at 15 ms/n, so nothing downstream reads a ladder value any more.
+- **`ladder_verify.py` itself is retired (R7)**: it computed a lower bound on μ\*, and `mu_ladder_exact.py` computes B exactly at 15 ms/n, so nothing downstream reads a ladder value any more.
 - **Its one live consumer is covered elsewhere.** `validate_table_v3.py`'s menu-shape check reports **921,265 of 921,265 rows above 1/25 with a menu-shape witness, 0 off-menu**, which certifies the *shape space* — the half that matters for `ladder-completeness.md` Proposition 1 — and `offmenu_scan.py` at 10⁶ covers the S6/S11 half. What is lost is only the check on the *implementation*, of a script no longer run.
 
 Last measurement before retirement: **ladder = B at 120,000 of 120,000 rows**, 0 short, 0 over (was 32,861). *The two defects it historically caught — the block-size window clipped at 0.55, and the fusion set stopping at F = 12 — are recorded in R7 against a revival, which is the only thing that would resurrect either script.*
@@ -350,7 +350,7 @@ python3 biclique_table.py --nmax 100000 --out biclique_table_100000.csv   # roug
 | **R7c** | audit `solvable_relaxation.py` and `k3_galois.py` | **done** — the former had the same O(N²) sweep the validator had (5× on the scan, 3× end to end, 22 checks pass to n = 159,027); the latter's self-test had a range-scoped claim stated as a law and a clause whose only witness (a = 155) sat outside the test range |
 | **R11** | recheck `approach-rate-note.md` §4a's falsifiable claim against the completed run | **done** — the offset climbs 0.536 → 0.652 as predicted and the F = 4 share reaches 99.4%; its limit is **ln 2, not 1**, which §4a had wrong. All of it is in that note's new §4b, which is now the only place it needs to be |
 | **A33** | who settles n = 6, and by what argument | **done** — Kahn–Saks–Sturtevant 1984, as a separate case alongside the prime-power theorem (confirmed by Engström 2006's abstract). `small-degree-computation.md` updated at all three sites |
-| **A35** | can a shape-space configuration give a larger fully-evasive sub-structure than Korneffel–Triesch? | **no** — single-group certification only ever reaches a single orbital, which the adversary forces to be the minimum, so the route gives exactly D(h) ≥ μ(n) ≤ n²/4; the better constants use multi-orbital sub-structures that need a second symmetry layer the shape space does not model. Written up in `oen` beside the threshold result |
+| **A35** | can a shape-space configuration give a larger fully-evasive sub-structure than Korneffel–Triesch? | **no** — single-group certification only ever reaches a single orbital, which the adversary forces to be the minimum, so the route gives exactly D(h) ≥ μ\*(n) ≤ n²/4; the better constants use multi-orbital sub-structures that need a second symmetry layer the shape space does not model. Written up in `oen` beside the threshold result |
 | **A31** | `aod` §5's decade tables labelled ladder *bounds* where the section says the minima are exact | **done** — recomputed exactly over the 921,265 rows; the ladder's bounds agree at every decade minimum, so the tables now show δ with the bound beside it and the point is recorded in §5 itself: the ladder is **tight at the decade minimisers** |
 | **R7d** | audit `khomog_verify.py` | **done** — one vacuous check (an arithmetic tautology no computation could falsify) replaced, and the {8, 32} finiteness claim swept over every prime power in [6, 63] rather than three spot checks |
 
@@ -366,7 +366,7 @@ python3 biclique_table.py --nmax 100000 --out biclique_table_100000.csv   # roug
 
 **A machine reading is weakest exactly where the failure mode is "an argument that reads as plausible"**: it verifies constants and recomputes tables freely, and cannot notice a step whose plausibility is doing the work. That is the residual human item.
 
-**Where to look, in order.** Part E's realisability (T2) — reading a construction is not building one, so the read pass could not close it. Part 0's completeness — the worst record, the sole support for μ ≤ B_safe, and the place a missing shape hides. Then Parts D2q and E″, which carry the most intricate case analysis per line.
+**Where to look, in order.** Part E's realisability (T2) — reading a construction is not building one, so the read pass could not close it. Part 0's completeness — the worst record, the sole support for μ\* ≤ B_safe, and the place a missing shape hides. Then Parts D2q and E″, which carry the most intricate case analysis per line.
 
 ### T2. Part E's realisability: preconditions are checked, construction is not
 
@@ -377,7 +377,7 @@ Part E's construction has been read and found sound as written, with E.3(ii)'s (
 **What is owed, and it is what a check cannot reach.**
 
 - **Whether to build groups at all, and how often.** The shapes and the order to run them are R8; the priority follows from the ceiling table, so **S7 at F = 4 needs even-F battery entries** rather than being treated as a curiosity.
-- **J0a, the stabiliser assumption** (item 5 of the enumeration-proof gap inventory above)**. Discharged for every computed value by the flat cap, and without loss at a fixed twist order by the orbit-counting argument below.** *(The flat cap is the stronger of the two and the one to quote: B_safe credits F·C(c,2) and sᵢsⱼ, both counting bounds on the pair set rather than statements about the group, so μ ≤ B_safe holds whatever the stabiliser is. The argument below is what additionally rules out a non-field stabiliser **at the same order**; a larger-order one is the residue, and it reaches only E.3(i).)* The construction takes a matching block's twist inside the field's multiplicative group, whereas the stabiliser of a primitive affine group of degree p^a may be any irreducible subgroup H ≤ GL(a, p). The worry was that some non-field H realises a block orbital the field cannot. It cannot:
+- **J0a, the stabiliser assumption** (item 5 of the enumeration-proof gap inventory above)**. Discharged for every computed value by the flat cap, and without loss at a fixed twist order by the orbit-counting argument below.** *(The flat cap is the stronger of the two and the one to quote: B_safe credits F·C(c,2) and sᵢsⱼ, both counting bounds on the pair set rather than statements about the group, so μ\* ≤ B_safe holds whatever the stabiliser is. The argument below is what additionally rules out a non-field stabiliser **at the same order**; a larger-order one is the residue, and it reaches only E.3(i).)* The construction takes a matching block's twist inside the field's multiplicative group, whereas the stabiliser of a primitive affine group of degree p^a may be any irreducible subgroup H ≤ GL(a, p). The worry was that some non-field H realises a block orbital the field cannot. It cannot:
 
   > **At a fixed order t, the field subgroup is optimal.** Any orbit of H on the c − 1 nonzero vectors has size at most |H| = t, by orbit–stabiliser. The multiplicative subgroup of 𝔽_c^× of order t acts **semiregularly** — its orbits are the cosets, every one of size exactly t — so it attains that bound at every vector simultaneously. Hence **no subgroup of GL(a, p) of order t has a larger minimum orbit than the field subgroup of order t**, and the same holds for the ± version that governs pair orbitals, replacing H by ⟨H, −1⟩. Since the block's contribution is decided by its minimum orbit, a construction that reaches for a non-field stabiliser can never beat the field one at the same order.
   >
@@ -389,9 +389,9 @@ Part E's construction has been read and found sound as written, with E.3(ii)'s (
 
 *Why necessity rather than truth, and why the failure is invisible: `verification-lessons.md` §2.*
 
-Both certificates pass with every Part E′ theorem disabled, so these eight conditions, together with Part 0's shape space and Lemma D2's domination of fused foreign classes, are the whole trusted base for μ(n) = B(n). `fb_common.py` carries a per-condition necessity argument in its header, so **what is owed is scrutiny of those eight arguments, not their reconstruction** — and the value is in the independence, so a second reader beats another pass by the first.
+Both certificates pass with every Part E′ theorem disabled, so these eight conditions, together with Part 0's shape space and Lemma D2's domination of fused foreign classes, are the whole trusted base for μ\*(n) = B(n). `fb_common.py` carries a per-condition necessity argument in its header, so **what is owed is scrutiny of those eight arguments, not their reconstruction** — and the value is in the independence, so a second reader beats another pass by the first.
 
-**What a reading of these has to keep straight, and it is one thing.** The certificate's question is whether a share-carrying configuration's **SAFE score** can reach B_safe(n), and SAFE credits a p-characteristic part the flat F·C(c,2). So a condition on such a part is necessary exactly when F·C(c,2) ≥ B implies it. A cap of F·orb(c, dmax) — the twist stripped of the foreign prime — tests a *smaller* number and can reject a configuration whose SAFE score does reach B: anti-permissive, and invisible in the output. The strip bounds a different quantity, what an actual *group* of that shape realises, which yields μ = B_refined rather than B_refined = B_safe, and is itself valid only for a ΓL(1)-type stabiliser. **The conditions therefore use the flat cap and no strip**, which is also why they no longer inherit Lemma C, Corollary C′ or J0a. Measured: with flat caps and `--no-theorems`, the candidate list is empty at every row of the computed table.
+**What a reading of these has to keep straight, and it is one thing.** The certificate's question is whether a share-carrying configuration's **SAFE score** can reach B_safe(n), and SAFE credits a p-characteristic part the flat F·C(c,2). So a condition on such a part is necessary exactly when F·C(c,2) ≥ B implies it. A cap of F·orb(c, dmax) — the twist stripped of the foreign prime — tests a *smaller* number and can reject a configuration whose SAFE score does reach B: anti-permissive, and invisible in the output. The strip bounds a different quantity, what an actual *group* of that shape realises, which yields μ\* = B_refined rather than B_refined = B_safe, and is itself valid only for a ΓL(1)-type stabiliser. **The conditions therefore use the flat cap and no strip**, which is also why they no longer inherit Lemma C, Corollary C′ or J0a. Measured: with flat caps and `--no-theorems`, the candidate list is empty at every row of the computed table.
 
 **Where to press hardest, in order.** **Condition (7)–(8)'s leftover machinery** is now the least examined part, since it carries the load the strip used to at the L = c shapes — check that the subset-sum reachability really over-approximates (it ignores inter-leftover cross terms and distinctness from p, both permissive, but the reasoning wants a second reader). **Condition (2)'s `'*'` branch**, gated on r ≥ B, fires only at n = 6 in range, so it is untested by the passing run. **Condition (6)** is not independently necessary and is retained as a tripwire; check nothing has come to rely on it.
 
@@ -567,7 +567,7 @@ Both coordinates of the joint optimum are settled without a search. The **F side
 
 *Home: the Lean project's own `README.md`, which carries the phasing, the case for and against, and the failure-mode analysis. **This item exists so the work resurfaces even when nobody thinks to mention it**; do not restate the reasoning here.*
 
-> **State, 2026-09.** All three files sorry-free (the word appears only in comments); `ArkCore.lean` compiles against core 4.15.0 with no Mathlib; `Note.lean`'s main theorem `theorem_arithmetic_half` is correctly scoped — its primality and coprimality hypotheses are bound with underscores because the arithmetic half does not use them, which is the honest signal that they belong to the Oliver half. **The README predates Theorem E.5**, and E.5 is now the highest-value formalisation target in the project: arithmetic on SAFE terms, one human reading, load-bearing for the whole "μ known exactly to 10⁶" claim. Recorded there as Phase 1b. Also reachable and cheap: the BBKN-replacement inequality `μ(n) ≥ n·(Q(n) − 1)/2` (three lines from `orb_full`, if the note's §1 commentary keeps it), and the self-pairing lemma `orb c d = c·d/2 ⟺ d even` behind `directed-graph-properties.md` §2.
+> **State, 2026-09.** All three files sorry-free (the word appears only in comments); `ArkCore.lean` compiles against core 4.15.0 with no Mathlib; `Note.lean`'s main theorem `theorem_arithmetic_half` is correctly scoped — its primality and coprimality hypotheses are bound with underscores because the arithmetic half does not use them, which is the honest signal that they belong to the Oliver half. **The README predates Theorem E.5**, and E.5 is now the highest-value formalisation target in the project: arithmetic on SAFE terms, one human reading, load-bearing for the whole "μ\* known exactly to 10⁶" claim. Recorded there as Phase 1b. Also reachable and cheap: the BBKN-replacement inequality `μ*(n) ≥ n·(Q(n) − 1)/2` (three lines from `orb_full`, if the note's §1 commentary keeps it), and the self-pairing lemma `orb c d = c·d/2 ⟺ d even` behind `directed-graph-properties.md` §2.
 
 **Two obligations, and the first is the one that rots silently.**
 
@@ -602,7 +602,7 @@ Both coordinates of the joint optimum are settled without a search. The **F side
 
 *A standing constraint on `validate_table_v3.py`'s group-A density test. Why a float tolerance fails here: `verification-lessons.md` §2.*
 
-A stored decimal density with k places is a correct rounding of μ/C(n,2) iff |stored − B/C| ≤ ½·10⁻ᵏ, evaluated in **exact rational arithmetic**, with k **read off the string**:
+A stored decimal density with k places is a correct rounding of μ\*/C(n,2) iff |stored − B/C| ≤ ½·10⁻ᵏ, evaluated in **exact rational arithmetic**, with k **read off the string**:
 
 ```python
 def density_ok(r):
@@ -690,7 +690,7 @@ Adding n = 2759 above the contiguous frontier made the pass report 22 extra find
 
 ### A24. Is the shape space complete?
 
-*Now load-bearing for a second claim, and that is new.* Until n = 2759, completeness carried only the μ ≤ B direction of the certified range. It now also carries the framework's **one exact value of μ**: the pinch at 2759 gives μ = 175813/3804661 *granting* μ ≤ B_safe, and a missing shape would make B too small there, so the true μ(2759) would be larger and both the minimum and its uniqueness would move. The failure runs the safe way — the floor would be an understatement, never an overstatement — but the *exactness* is exactly as strong as this item.
+*Now load-bearing for a second claim, and that is new.* Until n = 2759, completeness carried only the μ\* ≤ B direction of the certified range. It now also carries the framework's **one exact value of μ\***: the pinch at 2759 gives μ\* = 175813/3804661 *granting* μ\* ≤ B_safe, and a missing shape would make B too small there, so the true μ\*(2759) would be larger and both the minimum and its uniqueness would move. The failure runs the safe way — the floor would be an understatement, never an overstatement — but the *exactness* is exactly as strong as this item.
 
 The ceiling table is a theorem about the Oliver-admissible family **as currently characterized**, and the entangled-generator correction showed that characterization can be wrong in the permissive direction — a whole family was excluded by an argument that confused a quotient for a subgroup. **Nobody has searched for the optimal admissible family**, in this project or in the literature: BBKN had no reason to, since below the endpoint any admissible family gives the same order (`literature-findings.md` §15b). So the literature's silence is evidence neither for nor against the entangled construction's optimality, and this is the one place a further constant factor could still be hiding. No cheap test is known; the honest status is that the ceiling is a ceiling *over what we have enumerated*.
 
@@ -722,11 +722,11 @@ Promoting the note's findings into `aod` raises the value of a second reading ra
 
 > *The example below is right in substance, with the group named precisely.* The group realising 3087 at c = 343 is **non-split**: H = ⟨ζ⁵⁷, ζ·Frob⟩, of order 18 with linear part C₆. It acts freely on 𝔽₃₄₃^×, verified by orbit enumeration, whereas the split C₆ ⋊ ⟨Frob⟩ fixes 𝔽₇ pointwise and stays at 1029. `enumeration-proof.md` E‴ states it this way. B_refined⁺ must therefore score non-split semilinear twists.
 
-*Small, well-posed, and the last structural source of an interior μ(n) apart from J0a itself.*
+*Small, well-posed, and the last structural source of an interior μ\*(n) apart from J0a itself.*
 
 `mu_enumerate`'s `orb(c, d)` takes a matching block's twist to be **cyclic** of order d, which is exact for a stabiliser inside the Singer cycle and *under*-states one inside ΓL(1, c) proper. At c = 343 with foreign prime 19, C₁₈ ⋊ Frob₃ sits in an Oliver chain at q = 3 and realises minimum intra-orbital 3087 against the stripped cyclic reading's 1029. So B_refined as implemented is not the sharpest construction-side lower bound available; **B_refined⁺**, taking the twist inside ΓL(1, c), is.
 
-**Why it is worth doing even though nothing currently depends on it.** Part E‴'s trichotomy leaves exactly one way for μ(n) to sit *strictly between* the endpoints: a proper prime power c, a stripped twist, and a density below the E.1/E.3(iii) caps. Scoring the Galois layer removes the middle of those three, after which an interior μ requires a stabiliser outside ΓL(1, c) altogether — i.e. J0a proper, which is a much sharper thing to be left with than "the refined scoring is not tight".
+**Why it is worth doing even though nothing currently depends on it.** Part E‴'s trichotomy leaves exactly one way for μ\*(n) to sit *strictly between* the endpoints: a proper prime power c, a stripped twist, and a density below the E.1/E.3(iii) caps. Scoring the Galois layer removes the middle of those three, after which an interior μ\* requires a stabiliser outside ΓL(1, c) altogether — i.e. J0a proper, which is a much sharper thing to be left with than "the refined scoring is not tight".
 
 **What it costs.** One clause in `orb` (multiply by the Frobenius orbit count where the twist order divides a subfield's), a re-run of the shape sweeps at c = 4, 8, 9, 16, 25, 27, 32, 49, 64, 81, and a check that `B_refined⁺ ≤ B_safe` still holds at every row. It cannot move B_safe, and it can only *raise* a lower bound, so the direction is safe. **Do not let it touch the certificates**, which score SAFE and must stay flat.
 
@@ -752,11 +752,11 @@ If yes, that is a genuine relative-difficulty statement rather than an impressio
 2. **The claim that every alternative configuration costs at least as much at generic n** — the lower bounds are per-shape, and the minimum over shapes rests on the census being complete, i.e. on **Part 0** (trusted base, not in Lean).
 3. **The exceptional-set density argument** — that twist-sharing needs a large prime-power divisor on n − 2 or n − 3 from a prime whose powers reach [δn, n], with probability about |log δ|/log n per exponent window. Heuristic in its current form.
 
-*The earlier divisibility route (|Γ| ≥ lcm of orbital sizes, with the all-orbitals-equal edge case) is superseded*: the edge case was never the obstruction, and the role count gives the bounds directly. The upper bounds for generic n are conditional on the same bounded-cofactor supply as μ(n) itself.
+*The earlier divisibility route (|Γ| ≥ lcm of orbital sizes, with the all-orbitals-equal edge case) is superseded*: the edge case was never the obstruction, and the role count gives the bounds directly. The upper bounds for generic n are conditional on the same bounded-cofactor supply as μ\*(n) itself.
 
 ### A36. The weighted restriction game at small n — target: a new lower bound at n = 10
 
-**From `restriction-game.md` §6(a).** Theorem 1 there reduces restriction-based lower bounds, at fixed interval values, to a widest path over interval endpoints. Build the catalogue at n = 10 — peel intervals, bipartite escapes, and every orbital interval of every Oliver subgroup of S₁₀ up to conjugacy (a GAP list) — and compute the widest path. The KSS-shaped descent gives 25 and a single group gives μ(10) = 20: **anything above 25 is a new explicit lower bound for the open case**, and exactly 25 says the weighted game cannot improve it. *Only interval endpoints and their containments are needed, so the 12-million-class poset at n = 10 is never built.* A computation, not yet started.
+**From `restriction-game.md` §6(a).** Theorem 1 there reduces restriction-based lower bounds, at fixed interval values, to a widest path over interval endpoints. Build the catalogue at n = 10 — peel intervals, bipartite escapes, and every orbital interval of every Oliver subgroup of S₁₀ up to conjugacy (a GAP list) — and compute the widest path. The KSS-shaped descent gives 25 and a single group gives μ\*(10) = 20: **anything above 25 is a new explicit lower bound for the open case**, and exactly 25 says the weighted game cannot improve it. *Only interval endpoints and their containments are needed, so the 12-million-class poset at n = 10 is never built.* A computation, not yet started.
 
 **Extended by `restriction-game.md` §5:** the right object is a *case tree* with conditionally certified leaves, not just the weighted widest path. The n = 10 search should include guard-conditioned k-partite leaves (evasive whenever crossed for equal parts, k = 3, 4, 5) and look specifically for leaves covering the branch h(k·K_{n/k}) = 1, where properties like "no isolated vertex" sit. **And read Korneffel–Triesch and Scheidweiler–Triesch first** — §5.2's reconstruction of their topological core is from Miller's summary only, and the residual branches are unreconstructed.
 
@@ -852,3 +852,5 @@ Arguments: the largest orbital count t to check (12), and a wall-clock budget in
 2. D₁₂ and C₂ × C₆ in the template search (35–45 orbits; needs a smarter enumeration than all unions).
 3. Solve the design equation with richer piece menus and test larger groups (orders 18, 20, 24, then A₅). Needs a decision-tree solver that uses the coset structure, since D on 2^|G| inputs is out of reach beyond about 16.
 4. Prove Illies-type non-evasiveness from the local structure at a point, so that order-12 genericity becomes a theorem, and find which other local configurations admit such a proof.
+
+*Notation (2026-10-17):* μ(n) is now **μ\*(n)** throughout the current documents, with all variants starred (oen §1). Archived logs and code (script names, identifiers, the `mu-theta-n2-note` file names) keep `mu`.

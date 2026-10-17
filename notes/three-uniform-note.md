@@ -39,7 +39,7 @@ Treat this as a design document. Where a claim is measured rather than proved, i
 
 **The group theory.** Parts B, B′, D and D2 of `enumeration-proof.md`, together with Part 0, are statements about *which groups exist* and about their block structure. None mentions pairs, and they transfer unchanged. *(Parts A and C do not: A's term types are a partition of k and C's counting bound is pair-specific — see §8, which is the authority on the part-by-part status.)* So does the shape space: chain primes (p, q), orbits, matching and foreign blocks, fusion counts F = F_mid·F_top, and the cyclic-layer budget in its corrected form — Lemma C's twist–foreign strip and the exclusion of duplicated foreign primes — which is a *domination* (two foreign orbits of one prime share a diagonal C_r and carry a same-position class of size r, Lemma D2 in its non-permuted form), not a non-existence; F_mid itself does **not** join a pairwise-coprimality budget — at either arity, since the fusion image is a quotient of the layer rather than a subgroup.
 
-**The sandwich.** B_refined ≤ μ₃ ≤ B_safe has the same shape, with the same reasons, once the scoring function is replaced.
+**The sandwich.** B_refined ≤ μ\*₃ ≤ B_safe has the same shape, with the same reasons, once the scoring function is replaced.
 
 **And the optimisation transfers too, which is less obvious.** Replacing the scoring function changes which term binds, and one might expect the balance-point analysis of `aod` §3.3 to go with it. It does not: the allocation of n among the parts is the same quadratic optimisation, with the same closed form and — in the generic case — the *same balance points row for row* (§5.2, §5.7). What is k-specific is the map from a part's arithmetic to its efficiency, not what is then done with the efficiencies.
 
@@ -558,7 +558,7 @@ the k = 3 analogue of δ. (At k = 2, δ = m\*/C(n,2) ≈ 2m\*/n², so β₂ = δ
 
 ### 5.8 What the sandwich would look like at k = 3
 
-*The k = 2 framework runs on B_refined ≤ μ ≤ B_safe with the gap coming from exactly one place. The gap is different at k = 3, and the k = 2 SAFE cap does not transfer. Recorded because a k = 3 implementation would otherwise have to rediscover all three points.*
+*The k = 2 framework runs on B_refined ≤ μ\* ≤ B_safe with the gap coming from exactly one place. The gap is different at k = 3, and the k = 2 SAFE cap does not transfer. Recorded because a k = 3 implementation would otherwise have to rediscover all three points.*
 
 **First, n = 133 is fallback-free.** At k = 2, "fallback" means Lemma C strictly reduces a matching block's twist, i.e. the twist shares a prime with a foreign block. At n = 133 the matching twist is 31 and the foreign prime is 101, and gcd(31, 101) = 1, so **Lemma C never bites** — refined and safe scorings agree there. The configuration is also consistent in the new sense of §4.3: the Galois part needs q = 5 and the foreign twist needs q = 5, and both are met by the *same* q. Nothing is credited that the group cannot deliver.
 
@@ -631,14 +631,14 @@ The mod-5 rows decay steadily; **r = 101 jumps by a factor of four over its neig
 
 The near-balanced split 43 + 43 + 47 is second and loses by more than half. Worth noting that **133 has no balanced two-part split into prime powers at all** — the options are {2, 131}, {5, 128}, {8, 125}, {32, 101}, and of those {8, 125} is inadmissible (two matching blocks must share one p, but 8 is a 2-power and 125 a 5-power), {2, 131} dies on the size-2 block, and {5, 128} forces 5 to be the foreign block, worth 10.
 
-> **Caveat, and it is a real difference from k = 2 — now half-closed.** At k = 2 this kind of statement is backed by `mu_enumerate_v3.py`, which enumerates the whole shape space, plus `brute.py` as an independent check. **`mu3_menu.py` (2026-09) is the counterpart, and it goes exactly half the distance**: it scores *every shape in §4.2's census* at every n in a range and writes `b3_census`, replacing "best in the family searched by hand at one n" with "best over the census, systematically". What it does **not** do is close §10 item 1, because the census is not known to be complete at k = 3 — §4 re-analyses the k = 2 shape list rather than deriving one. So **B₃^census ≥ μ₃ requires the census to be complete, which is open**, and the column is named `b3_census` and never `mu3`.
+> **Caveat, and it is a real difference from k = 2 — now half-closed.** At k = 2 this kind of statement is backed by `mu_enumerate_v3.py`, which enumerates the whole shape space, plus `brute.py` as an independent check. **`mu3_menu.py` (2026-09) is the counterpart, and it goes exactly half the distance**: it scores *every shape in §4.2's census* at every n in a range and writes `b3_census`, replacing "best in the family searched by hand at one n" with "best over the census, systematically". What it does **not** do is close §10 item 1, because the census is not known to be complete at k = 3 — §4 re-analyses the k = 2 shape list rather than deriving one. So **B₃^census ≥ μ\*₃ requires the census to be complete, which is open**, and the column is named `b3_census` and never `mu3`.
 >
 > **Which way the inequality runs, since it is easy to state the wrong half.** Two directions with two different hypotheses:
 >
-> > **μ₃ ≥ B₃^census** given that every census shape is **realisable** by an Oliver group (the Part E analogue, which at k = 3 has no counterpart to the GAP battery);
-> > **μ₃ ≤ B₃^census** given that the census is **complete**, which is §10 item 1 and open.
+> > **μ\*₃ ≥ B₃^census** given that every census shape is **realisable** by an Oliver group (the Part E analogue, which at k = 3 has no counterpart to the GAP battery);
+> > **μ\*₃ ≤ B₃^census** given that the census is **complete**, which is §10 item 1 and open.
 >
-> So the useful reading is the first: `b3_census` is a **lower** bound on μ₃ modulo realisability, and the open completeness question is what stops it being an upper one. Neither hypothesis is established at k = 3, which is why the column is named for what it is.
+> So the useful reading is the first: `b3_census` is a **lower** bound on μ\*₃ modulo realisability, and the open completeness question is what stops it being an upper one. Neither hypothesis is established at k = 3, which is why the column is named for what it is.
 >
 > *What is sound in it is the scoring.* The orbit law is proved (modulo one routine stabiliser step) and verified on 104 triples; and §4.1's "only intra terms bind" is proved in three lines by the degree count, so a configuration's score is min over classes of F·orb₃ with **no term-type comparison at all** — which is why the enumerator is short where the k = 2 one is long. *Independently reproduced on writing it:* every value in §6.2's table (orb₃(32,31,5) = 4960, orb₃(32,31,1) = 992, orb₃(101,25,1) = 2525, and all seven r-rows), and the full-density degrees of §3.1 — 5, 8 and 32 attain C(c,3) while 16 does not, Kantor's classification showing up in the arithmetic rather than being assumed by it.
 >
@@ -692,7 +692,7 @@ That rules out every sparse property — the same service BBKN's Ω(n log n) per
 | **Part 0** (shape space) | **unchanged**; the picture proof's step 1 and step 2 are about chunks and blocks, not pairs |
 | **Part A** (orbits and crosses) | **restructured**: a 3-set meets the chunks in a partition of 3, so there are *three* term types (3+0+0, 2+1+0, 1+1+1) rather than two — but by §4.1 only the first ever binds, so the min is over the 3+0+0 terms alone |
 | **Part B, B′** (per-orbit classification) | **unchanged** — statements about blocks |
-| **Part C** (valency recursion) | **needs redoing**: the counting bound B₀ is pair-specific; the analogue would bound μ₃ by a partition-only quantity, and the two-part reduction would need re-verifying |
+| **Part C** (valency recursion) | **needs redoing**: the counting bound B₀ is pair-specific; the analogue would bound μ\*₃ by a partition-only quantity, and the two-part reduction would need re-verifying |
 | **Part D, D2** | D1's margin widens (F < F³ rather than F < F²). **D2 is a domination statement, not an exclusion** — fused outside blocks exist at k = 2 and are beaten by n^{3/2}/2 — so the k = 3 version should be stated that way from the start, with its bound re-derived from the k = 3 class structure |
 | **Part E** (value formula) | **replace orb by orb₃(c, d, m)** and add the 1+1+1 cross term Fᵢcᵢ·Fⱼcⱼ·F_lc_l. The within-class cross term splits into sub-cases by how the 3-set distributes across the F blocks; these have not been worked out, and by §4.1 none of them binds |
 | **Part E′, E″** (collapse) | **structure survives, but the fallback question gains a second axis** — Lemma C's strip, *and* the global-q coupling between per-block Galois gains (§5.8). The k = 2 SAFE cap does not transfer |

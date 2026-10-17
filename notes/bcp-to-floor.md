@@ -16,7 +16,7 @@ The question: can the almost-all-Goldbach machinery take Hypothesis (BCP) — a 
 
 > **Theorem (conditional).** Assume Hypothesis (BH-SW) below for the four two-prime systems `{Q, dQ+1}`, `d ∈ {2, 4, 6, 12}`. Then for every ε > 0 and A > 0, for all but `O_{ε,A}(x/(log x)^A)` integers `n ≤ x`,
 >
-> `μ(n) ≥ (δ(n mod 12) − ε)·C(n,2)`,
+> `μ*(n) ≥ (δ(n mod 12) − ε)·C(n,2)`,
 >
 > with the per-class constants of §4.4, uniformly `δ(·) ≥ 7 − 4√3 ≈ 0.0718` — the binding class being **n ≡ 11 (mod 12)**.
 
@@ -46,7 +46,7 @@ Three remarks. **(i)** This is Bateman–Horn for finitely many *fixed* systems,
 
 **Reduction Lemma.** Let `k ∈ {1, 2, 4}`, `d ∈ {2, 4, 6, 12}`, and suppose `n = kp + r` with `p, r` prime, `r = dQ + 1`, `Q` prime, `gcd(k(p−1), r) = 1`, `p` odd, `p ≠ r`, and `r ∈ (αn, βn]` for window constants `0 < α < β < 1`. Then
 
-> `μ(n) ≥ min{ k·C(p,2), 2p²·[k=4], p²·[k=2], k·p·r, r·Q } ≥ (min{u²/k, 2αu, 2α²/d} − o(1)) · n²/2`, `u := 1 − β`.
+> `μ*(n) ≥ min{ k·C(p,2), 2p²·[k=4], p²·[k=2], k·p·r, r·Q } ≥ (min{u²/k, 2αu, 2α²/d} − o(1)) · n²/2`, `u := 1 − β`.
 
 *Construction and proof.* [INTERFACE + VERIFIED COMPUTATIONALLY] Take the group `Γ = (𝔽_p^k ⋊ ⟨g⟩) × (C_r ⋊ C_Q)` on `kp + r` points, where `g` is the **entangled generator** `(v_0, …, v_{k−1}) ↦ (ζ v_{k−1}, v_0, …, v_{k−2})`, `ζ` a primitive root mod p, so `⟨g⟩` is cyclic of order `k(p−1)` with `g^k = ζ·diag` — the cyclic-layer rotation with full twist that the framework's corrected shape space provides at any k. The Oliver chain: `Γ₂ = 𝔽_p^k` (bottom p-group), `Γ₁/Γ₂ = ⟨g⟩ × C_r` (cyclic — this is where `gcd(k(p−1), r) = 1` is used; **it does not hold automatically**, since in the optimised windows `r ≈ αn` is the *smaller* summand, so `r < k(p−1)` throughout. What is true is that `r` prime with `r > k` makes `r | k(p−1)` force `r | p−1`, i.e. `p ≡ 1 (mod r)`, which for `p` of linear size leaves at most `(1−α)/(kα) = O(1)` values of `p` per `n` — excluded with the other degenerate cases at cost `O(x^{1/2+ε})` in §4.3. This is the same condition as clause 4 of (BCG_{1/5}) in the short note, and it is handled the same way: by exclusion, not by automaticity), top `= C_Q` (q-group, Q prime). The orbitals, enumerated explicitly at `(p,k) ∈ {(5,2),(7,2),(5,3),(5,4),(7,4)}` and in every case matching the formulas: matching intra `k·C(p,2)` in a single orbital (full twist reached through `g^k`); cross-block `p²·(orbit structure of C_k on block-pairs)`, smallest `p²` at k = 2 and `2p²` at k = 4 (the antipodal orbit), in all cases `> k·C(p,2)` strictly, since the smallest cross-block class is `(k/2)p² > k·p(p−1)/2`, so never binding below the intra term; part-to-part cross `k·p·r`, a single orbital by joint transitivity; foreign intra `r·Q` for odd Q and `r·Q/2` for even (the `−1 ∈ C_Q` dichotomy of `shparlinski-constants.md` §1.5), and **Q is odd throughout this note**, so the bound uses `r·Q`.
 

@@ -10,23 +10,23 @@ Let Γ ≤ S_n. The **u-orbitals** of Γ are its orbits on the C(n,2) unordered 
 
 with Γ₂ a p-group, Γ₁/Γ₂ cyclic, and Γ/Γ₁ a q-group, for some primes p, q. These are exactly the groups to which Oliver's fixed-point theorem applies. Define
 
-> **μ(n) = max { m\*(Γ) : Γ ≤ S_n an Oliver group }.**
+> **μ\*(n) = max { m\*(Γ) : Γ ≤ S_n an Oliver group }.**
 
-Throughout we measure μ against the number of pairs, writing
+Throughout we measure μ\* against the number of pairs, writing
 
-> **δ(n) = μ(n) / C(n,2)**
+> **δ(n) = μ\*(n) / C(n,2)**
 
 for the *density*. All constants below are stated in this unit; since C(n,2) ~ n²/2, a density δ corresponds to about δn²/2 edges.
 
 The relevance is the standard orbital-annihilation argument, which we recall to fix conventions. Let P be a nontrivial monotone-decreasing graph property on n vertices, and Δ(P) its simplicial complex on the vertex set E(K_n). If P is nonevasive then Δ(P) is collapsible, hence ℤ-acyclic; Oliver's theorem then gives χ(Δ(P)^Γ) ≡ 1 (mod q) for any Oliver group Γ with top q-group. But Δ(P)^Γ consists of the Γ-invariant graphs in P, and every such graph is a union of u-orbitals. So if every u-orbital of Γ exceeds the edge budget of P, the only invariant member is the empty graph, χ(Δ(P)^Γ) = 0, and 0 ≡ 1 (mod q) is false for every prime q — a contradiction. (When the top is trivial the congruence is an equality χ = 1 and the same contradiction is immediate.) Hence:
 
-> **Proposition 1.** If every graph in P has fewer than μ(n) edges, then P is evasive.
+> **Proposition 1.** If every graph in P has fewer than μ\*(n) edges, then P is evasive.
 
-BBKN's Theorem 1.4 is exactly this route with μ(n) ≥ n^(3/2−ε) for all sufficiently large n, obtained under Chowla's conjecture on the least Dirichlet prime; their conclusions are likewise eventual. Our object here is the growth rate of μ(n) itself.
+BBKN's Theorem 1.4 is exactly this route with μ\*(n) ≥ n^(3/2−ε) for all sufficiently large n, obtained under Chowla's conjecture on the least Dirichlet prime; their conclusions are likewise eventual. Our object here is the growth rate of μ\*(n) itself.
 
 ## 2. The result
 
-> **Theorem.** Assume Hypothesis (BCG_{1/5}) below. Then μ(n) = Θ(n²) — equivalently, δ(n) ≥ δ₀ for an absolute constant δ₀ > 0 and **all sufficiently large n**. Consequently, for all sufficiently large n, every nontrivial monotone graph property on n vertices whose members have fewer than δ₀·C(n,2) edges is evasive — in BBKN's terminology, such properties are **eventually evasive**.
+> **Theorem.** Assume Hypothesis (BCG_{1/5}) below. Then μ\*(n) = Θ(n²) — equivalently, δ(n) ≥ δ₀ for an absolute constant δ₀ > 0 and **all sufficiently large n**. Consequently, for all sufficiently large n, every nontrivial monotone graph property on n vertices whose members have fewer than δ₀·C(n,2) edges is evasive — in BBKN's terminology, such properties are **eventually evasive**.
 
 The "sufficiently large" is inherited from (BCG_{1/5}) and is not an artefact of the argument: Proposition 1 is exact at every n, but it is (BCG_{1/5}) that supplies a suitable group at a given n, and (BCG_{1/5}) is an eventual hypothesis. For any particular n one can of course check directly whether a construction exists, and §4 records one infinite family for which no hypothesis is needed at all.
 
@@ -141,7 +141,7 @@ again. This proves the Theorem with **δ₀ = 1/350**, i.e. roughly n²/700 edge
 
 One infinite family needs no hypothesis. For n = 2m with m a prime power, take two blocks of size m — each identified with the field 𝔽_m, not with ℤ/m, which differs from the blocks of §3 as soon as m is not prime — with C_(m−1) = 𝔽_m\* twisting both diagonally, together with a block swap; the resulting group is Oliver with q = 2, its orbitals are m(m−1) and m², and so
 
-> μ(2m) ≥ m(m−1), i.e. δ(n) = 1/2 − o(1).
+> μ\*(2m) ≥ m(m−1), i.e. δ(n) = 1/2 − o(1).
 
 This is best possible up to the o(1): for non-prime-power n an Oliver group has at least two u-orbitals, which partition the C(n,2) pairs, so m\*(Γ) ≤ ⌊C(n,2)/2⌋ and δ(n) ≤ 1/2. (Density 1 would force 2-homogeneity, hence primitivity; an Oliver group is solvable, and a solvable primitive group has prime-power degree.)
 
@@ -151,17 +151,17 @@ A companion computation, which we do not reproduce here, scans four explicit fam
 
 > δ(n) ≥ 0.0462 for every composite non-prime-power n ≤ 10⁶,
 
-the scan's minimum over the range being attained at n = 2759. These are lower bounds, which is all the present argument needs; over that range the density therefore never falls below **16 times** the δ₀ = 1/350 proved above. *(A matching upper bound — and hence exact values of μ — is the object of a companion classification of the possible orbit structures together with a finite search over the resulting configurations. That is separate work, and nothing here depends on it.)*
+the scan's minimum over the range being attained at n = 2759. These are lower bounds, which is all the present argument needs; over that range the density therefore never falls below **16 times** the δ₀ = 1/350 proved above. *(A matching upper bound — and hence exact values of μ\* — is the object of a companion classification of the possible orbit structures together with a finite search over the resulting configurations. That is separate work, and nothing here depends on it.)*
 
 The comparison is worth making carefully, because the two statements have different quantifiers and the computation is the stronger of the two on that axis. The Theorem gives δ(n) ≥ 1/350 **for all sufficiently large n**, and says nothing about any particular n. The computation gives δ(n) ≥ 0.0462 for **every** composite non-prime-power n in [6, 10⁶] — a global statement over its range, with no exceptional set: the minimum is attained at n = 2759, well inside the range, and small n sit comfortably above it (δ = 0.400 at n = 6, 0.273 at n = 12). So 1/350 is conservative not merely as an eventual constant but as a global one, and no n is currently known at which δ is small.
 
 ## 5. Comparison with BBKN and Shparlinski
 
-BBKN obtain μ(n) ≥ n^(3/2−ε) under Chowla's conjecture, and note that 3/2 is a natural barrier for their method: it is the exponent at which the least-prime-in-an-arithmetic-progression input runs out. The present route replaces that input with a Goldbach-type one and passes the barrier, at the cost of a different and not obviously comparable hypothesis. Neither (BCG_{1/5}) nor Chowla is known to imply the other.
+BBKN obtain μ\*(n) ≥ n^(3/2−ε) under Chowla's conjecture, and note that 3/2 is a natural barrier for their method: it is the exponent at which the least-prime-in-an-arithmetic-progression input runs out. The present route replaces that input with a Goldbach-type one and passes the barrier, at the cost of a different and not obviously comparable hypothesis. Neither (BCG_{1/5}) nor Chowla is known to imply the other.
 
 **All the bounds in this direction, ours included, are governed by one exponent.** The constructions consume a foreign block of prime size r whose twist has order a large divisor of r − 1, so what is needed is a large prime-power divisor of a shifted prime: writing P(r−1) > r^θ for what can be guaranteed, the block contributes about r^(1+θ) and, with r of order n, the family delivers **n^(1+θ)**. BBKN's Chowla bound is θ = 1/2. Hypothesis (BCG_{1/5}) is the **θ = 1 endpoint**, which is why it yields n² and why it is of Goldbach rather than Bateman–Horn difficulty.
 
-**Shparlinski (2014) supplies the strongest unconditional results on that scale**, and they are the most directly comparable predecessors to what is proved here. Bombieri–Vinogradov gives θ = 1/4 and hence **μ(n) ≥ n^(5/4+o(1)) unconditionally, for all large n** — which already matches BBKN's ERH bound with no hypothesis at all, so that ERH statement should not be quoted as the state of the art. Using instead the Baker–Harman result on shifted primes with a large prime factor, θ = 0.677 gives **μ(n) ≫ n^(1.677)**, though now for **almost all** n rather than all large n; the exponent in the underlying shifted-prime input has since been improved to 0.679 (Runbo Li, arXiv:2508.18285, 2025 — stated there for infinitely many primes; the almost-all transfer uses the positive-proportion form, which the method supplies, as it does for Baker–Harman's 0.677).
+**Shparlinski (2014) supplies the strongest unconditional results on that scale**, and they are the most directly comparable predecessors to what is proved here. Bombieri–Vinogradov gives θ = 1/4 and hence **μ\*(n) ≥ n^(5/4+o(1)) unconditionally, for all large n** — which already matches BBKN's ERH bound with no hypothesis at all, so that ERH statement should not be quoted as the state of the art. Using instead the Baker–Harman result on shifted primes with a large prime factor, θ = 0.677 gives **μ\*(n) ≫ n^(1.677)**, though now for **almost all** n rather than all large n; the exponent in the underlying shifted-prime input has since been improved to 0.679 (Runbo Li, arXiv:2508.18285, 2025 — stated there for infinitely many primes; the almost-all transfer uses the positive-proportion form, which the method supplies, as it does for Baker–Harman's 0.677).
 
 The quantifiers matter and are easy to blur in our favour. On the *all large n* row the unconditional record is 5/4; the two larger exponents, 1.677 and 3/2, both carry exceptional sets, and 3/2 is in any case conditional. Against that scale, the present result is the θ = 1 endpoint under a hypothesis, for all sufficiently large n.
 

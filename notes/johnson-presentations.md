@@ -1,6 +1,6 @@
 # Johnson presentations: when a transitive action is secretly an action on k-subsets
 
-*Companion to `monotone-transitive-note.md`. That document shows the μ(n) apparatus contributes nothing to the general transitive case, because there the group acts on the coordinates directly and the Oliver argument closes at once. This one identifies the structural feature that puts an action back into the regime where the apparatus **is** the right tool — namely, that the coordinate set is the set of k-subsets of a smaller set the group also acts on. Graph properties are the case k = 2; the point of the abstraction is that nothing about S_n is needed to state it.*
+*Companion to `monotone-transitive-note.md`. That document shows the μ\*(n) apparatus contributes nothing to the general transitive case, because there the group acts on the coordinates directly and the Oliver argument closes at once. This one identifies the structural feature that puts an action back into the regime where the apparatus **is** the right tool — namely, that the coordinate set is the set of k-subsets of a smaller set the group also acts on. Graph properties are the case k = 2; the point of the abstraction is that nothing about S_n is needed to state it.*
 
 **Status.**
 
@@ -66,7 +66,7 @@ And it identifies precisely which classical result does the work at each arity:
 
 > **So the arithmetic of the problem enters at the base size m, not at the coordinate count.** That is the cleanest statement of where number theory comes into this programme: it is the arithmetic governing which k-homogeneous Oliver groups exist at degree m, and it lives one level below the object being studied.
 
-**When the criterion fails, μ(m) is the fallback.** No k-homogeneous Oliver subgroup means no single orbital, and the question becomes how large the *minimum* orbital can be — which is exactly μ(m)/C(m,2) and the entire apparatus of `enumeration-proof.md` and `arithmetic-of-density.md`.
+**When the criterion fails, μ\*(m) is the fallback.** No k-homogeneous Oliver subgroup means no single orbital, and the question becomes how large the *minimum* orbital can be — which is exactly μ\*(m)/C(m,2) and the entire apparatus of `enumeration-proof.md` and `arithmetic-of-density.md`.
 
 ---
 
@@ -131,7 +131,7 @@ At prime power m this is **tight up to a factor of 2**: AGL(1, m) has order m(m�
 > | almost all **even** n | **Θ(n⁴)** | one matching block + one foreign block |
 > | almost all **odd** n | **Θ(n⁵)** | two fused matching blocks + one foreign block |
 >
-> *Status.* The lower bounds are proofs **modulo Part 0** of `enumeration-proof.md` (every Oliver group meeting the floor lies in the shape space) and **modulo the three short lemmas below, which are sketched and have had no independent reading**. The upper bounds for generic n are **conditional** on the framework's bounded-cofactor Goldbach supply — the same hypothesis μ(n) itself rests on — and are verified on the table to 10⁶. "Almost all" means outside explicit density-zero exceptional sets, described at the end.
+> *Status.* The lower bounds are proofs **modulo Part 0** of `enumeration-proof.md` (every Oliver group meeting the floor lies in the shape space) and **modulo the three short lemmas below, which are sketched and have had no independent reading**. The upper bounds for generic n are **conditional** on the framework's bounded-cofactor Goldbach supply — the same hypothesis μ\*(n) itself rests on — and are verified on the table to 10⁶. "Almost all" means outside explicit density-zero exceptional sets, described at the end.
 
 **The method: count the roles a group must fill, and show they cannot overlap.** The divisibility bound |Γ| ≥ lcm(orbital sizes) is the wrong tool — its edge case (all orbitals equal) is not the real obstruction. What forces the order up is that a block-structured group needs several *independent* subgroups, each of size Θ(n):
 
@@ -177,4 +177,4 @@ The per-axis bound (`enumeration-proof.md` G.4) makes every block size ≥ δn/2
 > - KSS at prime powers = the criterion firing at k = 2, m = p^a;
 > - the collapse of constants at k ≥ 3 = the k-homogeneous solvable groups running out;
 > - the chiral mod-4 split = the containment condition failing inside A_m;
-> - μ(n) itself = what remains when the criterion fails and one must settle for a minimum orbital rather than a single one.
+> - μ\*(n) itself = what remains when the criterion fails and one must settle for a minimum orbital rather than a single one.

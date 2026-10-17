@@ -840,3 +840,16 @@ Together with the degree-6 search (S₄ on the edges of K₄ admits none), there
 
 **Note updated:** `monotone-transitive-note` §5b (new); `pending-checks` A48.
 
+## 22. Notation: μ(n) → μ\*(n)
+
+**Proposal (Vipul, after discussion with Raghav):** write μ\*(n) to make the max–min nature clear and to avoid clashing with the number-theoretic μ. Agreed: star all variants as well.
+
+**Done.** A script-driven replacement over the current documents: `notes/*.md` outside `archive/`, `README.md`, `lean/README.md`, and the LaTeX twin, where `\mu` becomes `\mu^*`.
+- 493 of 500 occurrences changed. Markdown text uses μ\*, matching the existing m\*(Γ); code spans use an unescaped μ*.
+- *Excluded by hand* (μ as a group element, not the function): `a18-resolution.md` line 25 (the diagonal twist μ) and `orbital-evasiveness-notes.md` line 1010 (μ: b ↦ 2b, μrμ⁻¹, μdμ⁻¹, μ²). These are the only 7 unchanged occurrences.
+- *Not changed:* archived session logs and the earlier entries of this log (history), script names and identifiers, the `mu-theta-n2-note*` file names, and the Lean code.
+- *Checks (clean):* no unescaped star outside a code span; every remaining bare μ is on the two excluded lines; `sync_note.py` (run from `notes/`) gives identical output before and after.
+- *Notation sentence* added after the definition in oen §1.
+- *Reverted on Vipul's request:* `claude-understanding-of-project-plan.md` §6, which discusses naming decisions, keeps the pre-rename μ(n), with a parenthetical recording the rename to μ\*(n). That line's four occurrences are now unstarred, so the rename count is 489 of 500 (11 left: 7 group-element uses and these 4).
+- *Reverted on Vipul's request:* `meta/research-process-and-learnings.md` (5 occurrences): it quotes a past conversation verbatim. Standing rule: files under `meta/` are never edited, only flagged to Vipul. Final count: 484 of 495 occurrences outside `meta/` renamed.
+

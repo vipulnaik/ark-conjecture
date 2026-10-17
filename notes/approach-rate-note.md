@@ -2,7 +2,7 @@
 
 *Auxiliary note. `arithmetic-of-density.md` states the class-11 ceiling as δ(n) ≤ 7 − 4√3 − o(1) and does not say what the o(1) is. This note works it out, tests it, and says which half of the answer the singular series supplies and which half is a Cramér-model assumption. It is kept out of `aod` deliberately: the leading term is Bateman–Horn arithmetic of the kind `aod` already uses, but the distributional half is a heuristic about a shrinking window, which is a class of assumption `aod` does not otherwise carry.*
 
-**Status: heuristic with an empirical fit, now tested against exact μ over the full 10⁶ range. Not a theorem, and not a conjecture the framework depends on.** Nothing in `aod`, `enumeration-proof.md` or the short note uses any of this; the ceiling itself is unaffected.
+**Status: heuristic with an empirical fit, now tested against exact μ\* over the full 10⁶ range. Not a theorem, and not a conjecture the framework depends on.** Nothing in `aod`, `enumeration-proof.md` or the short note uses any of this; the ceiling itself is unaffected.
 
 ---
 
@@ -91,7 +91,7 @@ The ratio is constant to ±5% across the range, so the loss really does vary inv
 
 ## 4b. The falsifiable part, tested at 10⁶ — and the offset was never going to reach 1
 
-*Added when μ became known exactly at every composite non-prime-power n ≤ 10⁶ (921,265 rows), which is the first data that can settle §4a's prediction.*
+*Added when μ\* became known exactly at every composite non-prime-power n ≤ 10⁶ (921,265 rows), which is the first data that can settle §4a's prediction.*
 
 **The prediction holds. The offset climbs, and the competing-shape account is confirmed as its cause.** Over all 63,672 class-11 values to 10⁶, of which 44,089 (69.2%) fall below the ceiling:
 
