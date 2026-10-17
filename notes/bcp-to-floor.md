@@ -2,7 +2,7 @@
 
 *Renamed 2026-09 from `sp-to-floor.md`; the hypothesis formerly written (SP) is now **(BCP)**, bounded-cofactor primes, so that its relation to **(BCG)** — bounded-cofactor Goldbach — is visible in the label: (BCG) is (BCP) plus the per-n additive clause (`arithmetic-of-density.md` §6.8). S_D is still the shifted-prime set and that phrase is kept throughout.*
 
-*Standalone working note, companion to `shparlinski-constants.md`. **One pass by the author, plus a second reading of the algebra, the local analysis, §6.1's counterexample and every reproducible numerical claim** — not of the Siegel–Walfisz major-arc assembly, the singular-series completion at non-squarefree q, or the Vinogradov dilation lemma, which remain as labelled; each step below carries a rigor label — [PROVED HERE], [STANDARD, not rewritten], [VERIFIED COMPUTATIONALLY], or [INTERFACE to the framework's shape space]. The headline claims should be treated as a detailed proof sketch by one reader until a second reading disagrees or doesn't.*
+*Standalone working note, companion to `shparlinski-constants.md`. **One pass by the author, plus a second reading of the algebra, the local analysis, §6.1's counterexample and every reproducible numerical claim, plus a third (2026-10-17, §9) that recomputed all of those independently, proved the Reduction Lemma's orbitals in general, reran §7 at the corrected orbital, and strengthened the hypothesis statement to what §4.2 actually consumes** — not of the Siegel–Walfisz major-arc assembly, the singular-series completion at non-squarefree q, or the Vinogradov dilation lemma, which remain as labelled; each step below carries a rigor label — [PROVED HERE], [STANDARD, not rewritten], [VERIFIED COMPUTATIONALLY], or [INTERFACE to the framework's shape space]. The headline claims should be treated as a detailed proof sketch by one reader until a second reading disagrees or doesn't.*
 
 ---
 
@@ -32,13 +32,15 @@ For an even `d` and coprime residue data `(q, b)`, let
 
 > `π_d(t; q, b) = #{Q ≤ t : Q prime, dQ + 1 prime, dQ + 1 ≡ b (mod q)}`.
 
-**Hypothesis (BH-SW_d).** For every `B > 0` there is `B′ = B′(B)` such that, uniformly for `q ≤ (log t)^B` and all `b`,
+**Hypothesis (BH-SW_d).** For every `A, B > 0`, uniformly for `q ≤ (log t)^B` and all `b`,
 
-> `π_d(t; q, b) = 𝔰_d(q, b) · 𝔖_d · t/(log t)² · (1 + O_B((log t)^{−B′}))`,
+> `π_d(t; q, b) = 𝔰_d(q, b) · 𝔖_d · t/(log t)² · (1 + O_{A,B}((log t)^{−A}))`,
 
 where `𝔖_d` is the Bateman–Horn constant of the pair `{Q, dQ+1}` and `𝔰_d(q, b)` are **the standard local proportions of that pair** — the density of the local model in which `Q` and `dQ+1` are independently "prime-like" mod q. Explicitly, `𝔰_d(q,b)` is supported on `b` with `(b, q) = 1` and `b ≡ dQ̄ + 1` for a unit `Q̄`, with the natural weights; §4.2 uses only two of its properties: it is the **specific** BH local measure (not an abstract one), and its Fourier coefficients `τ_d(q, a) = Σ_b 𝔰_d(q,b) e(ab/q)` inherit Ramanujan-sum decay from that specificity.
 
-Three remarks. **(i)** This is Bateman–Horn for finitely many *fixed* systems, with Siegel–Walfisz-quality uniformity in progressions to **polylogarithmic** moduli — no level-of-distribution content whatever; the moduli here and the moduli in `shparlinski-constants.md` §7.5's endpoint discussion differ by the entire ladder, and Friedlander–Granville's endpoint failure is about the latter. **(ii)** It implies (BCP) trivially (take q = 1), so the theorem is genuinely a strengthening of the hypothesis side, and §6 shows the strengthening is not removable by this method. **(iii)** Proper prime powers `Q = q^j`, `j ≥ 2` are excluded from the systems; they only ever *add* members to S_D, so excluding them is safe for a lower bound, and they are rare in it anyway (0.55% of S₁₂ below 2·10⁶).
+*Corrected 2026-10-17:* the first statement read "for every B there is B′ = B′(B)", which allows a fixed small saving and is too weak for §4.2: the major-arc error there is ≪ x(log x)^{5B−2−A}, and B is already fixed large by the minor arcs, so the saving A must be available for **every** A at each B. That is Siegel–Walfisz strength, which the name always intended.
+
+Three remarks. **(i)** This is Bateman–Horn for finitely many *fixed* systems, with Siegel–Walfisz-quality uniformity in progressions to **polylogarithmic** moduli — no level-of-distribution content whatever; the moduli here and the moduli in `shparlinski-constants.md` §7.5's endpoint discussion differ by the entire ladder, and Friedlander–Granville's endpoint failure is about the latter. **(ii)** It implies (BCP) trivially (take q = 1), so the theorem is genuinely a strengthening of the hypothesis side, and §6 shows the strengthening is not removable by this method. **(iii)** Proper prime powers `Q = q^j`, `j ≥ 2` are excluded from the systems; they only ever *add* members to S_D, so excluding them is safe for a lower bound, and they are rare in it anyway. *(The figure first quoted here, 0.55% of S₁₂ below 2·10⁶, does not reproduce: reading S₁₂ as the primes r ≤ 2·10⁶ with (r − 1)/12 a prime power gives **34 of 3,114, 1.09%**. The conclusion, that they are rare, is unaffected.)*
 
 ---
 
@@ -78,9 +80,11 @@ Hence the per-class grid, with `δ(k,d) = (√k + √(d/2))^{−2} = cap_k(2/d)`
 | 1, 9 | (2, 2) | `3 − 2√2 ≈ 0.1716` | | 5 | (2, 6) | `(√2+√3)^{−2} ≈ 0.1010` |
 | 2, 8 | (1, 6) | `(1+√3)^{−2} ≈ 0.1340` | | **11** | **(4, 6)** | **`7 − 4√3 ≈ 0.0718`** |
 
-The binding class `n ≡ 11 (mod 12)` needs simultaneously `k ≡ 0 (mod 4)` with `d ≡ 2 (mod 4)` and `3 | kd` — it is the class where both pins act against each other, and **`(4,6)` is the cheapest resolution**, at `(√k+√(d/2))² = 7 + 4√3`. Alternatives are strictly worse: the transpose `(6,4)` and `(2,12)` both give `≈ 0.0670`, and `(12,2)` gives `≈ 0.0502`.
+The binding class `n ≡ 11 (mod 12)` admits two branches, `k ≡ 0 (mod 4)` with `d ≡ 2 (mod 4)`, or `k ≡ 2 (mod 4)` with `d ≡ 0 (mod 4)`, each needing `3 | kd`. It is the class where both pins act against each other, and **`(4,6)` is the cheapest resolution**, at `(√k+√(d/2))² = 7 + 4√3`. Alternatives are strictly worse: the transpose `(6,4)` and `(2,12)` both give `≈ 0.0670`, and `(12,2)` gives `≈ 0.0502`.
 
 > **The corrected objective is not symmetric in `(k,d)`, and that changes the shape of this class.** Under the halved foreign term the objective was `1/(√k+√d)²`, symmetric, so `(4,6)` and `(6,4)` tied and the optimum was a degenerate pair. With the true orbital the term is `√(d/2)`, and the transpose falls to `0.0670`: **`(4,6)` is the unique optimum at class 11.** Worth noting because a tie is fragile — anything perturbing the objective could have flipped it — whereas a strict optimum with a `0.0718 : 0.0670` margin is not.
+>
+> *Added 2026-10-17.* The corrected objective's actual symmetry is **k ↔ d/2**: δ(k, d) = δ(d/2, 2k). At class 11 the partner of (4,6) is (3,8), which is infeasible, since odd k forces even n, so the optimum is unique there (checked over k ≤ 12 and even d ≤ 24 by `bcp_floor_checks.py`). At **classes 2 and 8** it is not unique: **(3,2) ties (1,6)** at `(1+√3)^{−2}`. It is feasible locally, and the Reduction Lemma holds at k = 3 (orbitals enumerated, §9). The constant is unchanged; what changes is the claim that the analytic route *selects* a single (F, d) per class. At 2 and 8 it selects a tie between F = 1 and F = 3.
 
 **This grid is the framework's ceiling table, not a resemblance to it.** Every cell agrees with `arithmetic-of-density.md` §3.3.5 exactly — 1/4, 3 − 2√2, (1+√3)^{−2}, 1/8, (√2+√3)^{−2}, 7 − 4√3 — under the identification `F = k`, `η = 2/d`, and the binding constant is the framework's global constant `7 − 4√3` at the same extremal class. It also reproduces clause 3 of (BCG) cell by cell: `d = 2` at the even classes and at 1, 9; `d = 4` at 3, 7; `d = 6` at 2, 8, 5 and 11; `F = 4` at 11 alone. So the mod-12 keying is the *same* optimization arrived at twice, and the surprise is not the agreement of two formulas but that **the analytic route selects the same (F, d) per class with no access to the shape space at all** — the two moduli 4 and 3 pin `r − 1`'s divisor structure identically whether one is enumerating Oliver groups or solving a congruence for a circle-method window.
 
@@ -115,7 +119,9 @@ The main term of §4.2 has size `≍ x/(log x)²` (the Λ-weight soaks one logar
 - **Prime side, unconditional.** Siegel–Walfisz: `f(a/q + η) = (c_k(q,a)/φ(q_k))·v(η) + O(x·exp(−c√(log x)))`, with `v(η) = Σ_{m ∈ M} e(kmη)` and `|c_k| ≤ 1`; `q_k = q/gcd(q,k)`-type constants, `k ≤ 4`.
 - **Hypothesis side.** Writing `g(a/q + η) = Σ_b e(ab/q)·Σ_{r ∈ ℬ, r ≡ b} e(rη)` and applying partial summation to the inner sum, (BH-SW_d) gives, uniformly on the arc (`|η| ≤ P/x`, so the summation-by-parts loss is a factor `≤ 1 + |η|x ≤ P`),
 
-  > `g(a/q + η) = τ_d(q, a)·W(η) + O(x·(log x)^{B − B′})`, `W(η) = 𝔖_d ∫_window e(tη)·dt/(log t)²`.
+  > `g(a/q + η) = τ_d(q, a)·W(η) + O_A(x·(log x)^{2B − 2 − A})`, `W(η) = 𝔖_d ∫_window e(tη)·dt/(log t)²`.
+
+  *(Bookkeeping, corrected 2026-10-17: the partial-summation factor P = (log x)^B and the sum over at most q ≤ P residue classes b each cost a factor P. Integrated against sup|f| ≪ x over 𝔐, of measure ≪ P³/x, the total major-arc error is ≪ x(log x)^{5B−2−A}, below the threshold x/(log x)³ once A ≥ 5B + 1. This is where the every-A form of (BH-SW) is used.)*
 
   This is the step a cardinality hypothesis cannot perform: without the per-class asymptotic, `g(a/q + η)` is undetermined for every `q ≥ 2`, and the major-arc integral with it.
 
@@ -183,14 +189,49 @@ All [VERIFIED COMPUTATIONALLY], reproducible from the session log:
 - **Local grid.** Coverage of every class at every prime-power modulus in `{4, 8, 16, 3, 9, 5, 7}` and every prime `< 200`; the per-(k,d) failures are exactly the mod-4 and mod-3 pins described in §3, nothing else.
 - **End-to-end.** At `x = 4·10⁶` with per-class `(k,d)` and windows backed off 4% inside the optima: **zero exceptional n among the 400,000 consecutive `n ∈ (10⁶, 1.4·10⁶]`**, and the worst realized `δ(n)` in each class sits within the predicted 8% of its ideal — e.g. class 11 realizes 0.04655 against the ideal 0.05051. The BH pair counts feeding this: 13,933 / 7,422 / 10,280 / 5,420 pairs for d = 2, 4, 6, 12 below 4·10⁶, counting odd Q only as the construction requires. *(The figures 13,934 and 10,281 also count Q = 2 — the pairs (2, 5) and (2, 13) — which the even-twist dichotomy of §2 excludes; the difference is Q = 2, not a window-edge convention. Recounted.)*
 
-  ⟦PENDING-RERUN⟧ **The end-to-end run scored foreign orbitals at `rQ/2` and so inherits the factor-2 undercount corrected in §2.** The structural conclusion — zero exceptional n, realized values within a predictable margin of ideal — is unaffected, since both sides of the comparison move together; the *numbers* are not. Expected on a rerun with `orb = rQ` at odd Q: class 11 realizing `≈ 0.066` against the ideal `0.0718`. Not rerun here.
+  **Rerun at the corrected orbital (2026-10-17, `bcp_floor_e2e.c`).**
+  - *Control first:* under the original scoring (rQ/2, windows optimised for that objective) the script reproduces the original class-11 figure **0.04655** exactly. That fixes what the original "worst realized δ(n)" measured: the **worst representation in the window**, not each n's best one.
+  - *Corrected:* at `orb = rQ`, **zero exceptional n in every class**, and class 11 realizes **0.06617** against the ideal **0.07180**, as predicted.
+  - *A caution on what that figure shows.* The worst-representation value is **0.96² × ideal in every class**, to four places. It is window geometry, attained at the window's corners, and so not evidence about primes. The informative statistics are the zero exceptional count and **each n's best representation**, whose worst over the range is 0.06794 at class 11 (ratio 0.946) and 0.959–0.981 of ideal elsewhere.
 
 ---
 
 ## 8. Status and what is not checked
 
 - **One pass, one reader**, and the two evaluations labeled [STANDARD] — the Vinogradov dilation lemma and the Siegel–Walfisz major-arc manipulation — are used, not rewritten. The singular-series completion is sketched for squarefree q only.
-- The Reduction Lemma's constructions are verified by orbit enumeration at five parameter pairs, not proved for all (p, k); the general proof is a finite orbit computation in the same pattern and is not expected to hold surprises, but it has not been written.
+- ~~The Reduction Lemma's constructions are verified by orbit enumeration at five parameter pairs, not proved for all (p, k).~~ **Proved for all (p, k), §9.**
 - The comparison `1/13.9` vs `1/350` compares **different hypotheses with different quantifiers**; it should not be quoted without both caveats.
 - The transference question of §6.2 is raised, not begun. If it succeeds, (BCP) as literally stated suffices and this note's hypothesis is overkill; if it fails in an instructive way, the failure would locate exactly how much distributional information the truth requires. Either outcome is informative, which is what makes it the right next question on this side of the framework.
 - The mod-12 agreement with the ceiling table is **explained** (§3): it is the same optimization, `δ(k,d) = cap_k(2/d)`, and not a coincidence. What remains genuinely open is one level up — *why the analytic route selects the same (F, d) at every residue class when it has no access to the shape space*. The congruence conditions that pin `d` here are conditions on `r − 1`'s divisor structure, and the shape space's conditions are on which Oliver chains exist; that these agree cell by cell is a fact about the arithmetic of `r = dQ + 1`, and it is the reason to believe the mod-12 keying is intrinsic rather than an artifact of how either table was built.
+
+---
+
+## 9. Third reading (2026-10-17): what was rechecked, and the general orbital proof
+
+*Independent of the earlier passes: every computation was redone from scratch (`scripts/bcp_floor_checks.py`, `scripts/bcp_floor_e2e.c`), not rerun from the session log.*
+
+**Clean:**
+- The closed form δ(k, d) = (√k + √(d/2))⁻² = cap_k(2/d), algebraically and against a grid search at all nine (k, d) pairs. The optimising u matches √k/(√k + √(d/2)) to three places.
+- The Local Lemma's table, every cell. It is recomputed from the congruences at moduli 16 and 9, plus every prime 5 ≤ ℓ < 200, where no failure occurs for any (k, d) in the grid. The per-class optimum and the class-11 runner-ups (2,12) and (6,4) at 0.0670 also check out. The optimum stays the same when the grid is widened to k ≤ 12, even d ≤ 24; the only new feature is the tie at classes 2 and 8 recorded in §3.
+- The mod-4 and mod-3 pin arguments, by hand. The class-11 sentence was restated as two branches.
+- The window optimisation, including that the cross term never binds: 2αu ≥ u²/k at the balance point since 2√(dk/2) ≥ 1.
+- §6.1's counterexample. The only care point is that the Mertens product must start above K, which the text already says.
+- §4.1's minor-arc count: x(log x)^{2c+4−B} follows from Bessel and Vinogradov as displayed.
+- The BH pair counts 13,933 / 7,422 / 10,280 / 5,420.
+- The end-to-end run, as recorded in §7.
+
+**Corrected:** the hypothesis's strength and the major-arc error display (§1, §4.2), the class-11 wording and the 2/8 tie (§3), the remark-(iii) percentage (§1), and the rerun (§7).
+
+**The Reduction Lemma's orbitals, for all (p, k).** Points are k blocks 𝔽_p × {i} plus 𝔽_r. Γ acts by blockwise translations, the entangled g ((x, i) ↦ (x, i+1) for i < k − 1, and (x, k−1) ↦ (ζx, 0)), and C_r ⋊ C_Q on 𝔽_r.
+- *Intra-block pairs.* Translations reduce a pair to (block i, difference δ ∈ 𝔽_p^× up to sign); g moves i through all k blocks, and g^k multiplies δ by ζ, a generator of 𝔽_p^×. One orbital, **k·C(p,2)**.
+- *Cross-block pairs.* Translations act independently on the two blocks, so all p² pairs between blocks i and j lie in one orbit. g acts on unordered block pairs as rotation of ℤ/k, whose orbits are the differences ±(j − i): k pairs each, except k/2 pairs for the antipodal difference when k is even. Orbitals **k·p²**, and **(k/2)·p²** antipodal: p² at k = 2, 2p² and 4p² at k = 4, 3p² at k = 3. All exceed k·C(p,2).
+- *Part-to-part pairs.* Γ is a direct product transitive on each part, so there is one orbital, **k·p·r**.
+- *Foreign intra pairs.* Translate to {0, δ}, δ ∈ 𝔽_r^× modulo ±1. The orbit of δ under ⟨C_Q, −1⟩ has size 2Q if −1 ∉ C_Q (Q odd) and Q if −1 ∈ C_Q, giving orbitals **r·Q** and **r·Q/2**.
+
+Enumeration agrees at (p, k, r, Q) = (5,2,13,3), (7,2,13,3), (5,3,11,5), (5,4,13,3), (7,4,31,5), (11,1,7,3), and the even-Q control (5,4,13,4) gives 26 = rQ/2. This retires A27's item 1 as far as the orbital structure goes. The Oliver chain itself (Γ₂ = 𝔽_p^k, Γ₁/Γ₂ = ⟨g⟩ × C_r cyclic under gcd(k(p − 1), r) = 1, top C_Q) is as stated in §2.
+
+**Not rechecked (effort budget):**
+- The two [STANDARD] steps, the Vinogradov dilation lemma and the Siegel–Walfisz major-arc evaluation of f.
+- The singular-series completion beyond the squarefree sketch, and the uniform positive lower bound c₀(k, d) on 𝔖_{k,d}(n). The local factors are positive by the Local Lemma; the uniformity of the product was not rewritten.
+- §6.2's sieve claim.
+

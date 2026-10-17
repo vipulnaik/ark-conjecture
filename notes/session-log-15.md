@@ -853,3 +853,25 @@ Together with the degree-6 search (S₄ on the edges of K₄ admits none), there
 - *Reverted on Vipul's request:* `claude-understanding-of-project-plan.md` §6, which discusses naming decisions, keeps the pre-rename μ(n), with a parenthetical recording the rename to μ\*(n). That line's four occurrences are now unstarred, so the rename count is 489 of 500 (11 left: 7 group-element uses and these 4).
 - *Reverted on Vipul's request:* `meta/research-process-and-learnings.md` (5 occurrences): it quotes a past conversation verbatim. Standing rule: files under `meta/` are never edited, only flagged to Vipul. Final count: 484 of 495 occurrences outside `meta/` renamed.
 
+## 23. `bcp-to-floor.md` third reading; A23, A26, A27, A32
+
+**Request (Vipul):** a thorough read of `bcp-to-floor.md` and an exploration of A26; then the highest-value §2b items that fit.
+
+**`bcp-to-floor.md`** (new §9; scripts `bcp_floor_checks.py`, `bcp_floor_e2e.c`):
+- *Recomputed clean:* the closed form, the Local Lemma (moduli 16, 9 and primes below 200), the window optimisation, the class-11 runner-ups, §6.1, the minor-arc count and the BH pair counts.
+- *Proved:* the Reduction Lemma's orbitals for all (p, k).
+- *Corrected:*
+  - (BH-SW) must give every saving A at each B, not one B′(B).
+  - The major-arc error display.
+  - The class-11 sentence, which has two branches.
+  - A tie at classes 2 and 8 between (3,2) and (1,6), with `aod` §6.9(b) qualified to match.
+  - The 0.55% figure, which reproduces as 1.09%.
+- *A23 rerun:* the control reproduces 0.04655; at the corrected orbital, zero exceptional n and class 11 at 0.06617. The note's "realized δ" turned out to be window geometry, and each n's best representation is now reported alongside it.
+- *My own error on the way:* the first orbital enumeration modelled 𝔽_p^k on p^k points instead of k blocks of p points, and gave nonsense sizes. Fixed before anything was recorded.
+
+**A26:** the θ-ladder is consistent with `aod` §3.6. There is a table-versus-blockquote quantifier mismatch inside `aod` (source check needed) and one wording point in the note. The F = 4 recommendation is to stay silent; the decision is Vipul's.
+
+**A32:** answered no; recorded in `hardness-of-evasiveness.md` §5.
+
+**Not done (effort budget):** A28 (B_refined⁺), A34's lemmas, A36 (restriction game at n = 10), and A27 items 2–3.
+

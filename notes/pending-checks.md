@@ -673,7 +673,10 @@ The all-shapes **penalised** column (`shape-counting.md` §4) is a **lower bound
 
 The R1 reference point reads *0 FAIL*, which holds for an enumerator output under the current scoring. Run against a **baseline** it does not: a row whose recorded winner is a cyclic-fused class scored under the superseded cut twist re-derives *higher* from its own witness, so group A's re-derivation check fires. On the v4 baseline that is **18 rows of 2,186** — a subset of the 289 known-low rows, the other ~271 being exceeded by a different configuration rather than by a rescoring of their own witness, and so invisible to a check that re-derives from the recorded witness. **Neither number is a defect**; the pairing of them is the thing to state, since 289 and 18 look like they should match and do not. Either scope the expectation in R1's banner or have the check name the baseline case when `--baseline` is supplied.
 
-### A23. `bcp-to-floor.md` §7's end-to-end run needs rerunning at the corrected orbital
+### A23. ~~`bcp-to-floor.md` §7's end-to-end run needs rerunning at the corrected orbital~~ — DONE 2026-10-17
+
+**Done** (`bcp_floor_e2e.c`). A control first reproduces the original 0.04655 under the old scoring, which identifies the statistic as the window's worst representation. At `rQ`: zero exceptional n in every class, and class 11 at 0.06617 against 0.07180. That worst-representation figure is pure window geometry (0.96² × ideal in every class); the informative statistic is each n's best representation, 0.06794 at class 11. Recorded in the note's §7. The original text follows.
+
 
 The run scored foreign intra orbitals at `rQ/2` where every `d` in its grid is even and `Q` is therefore an **odd** prime, so the true orbital is `rQ` (§2, corrected). Both sides of its comparison moved together, so the structural conclusion — zero exceptional n among 400,000 consecutive values, realized δ within a predictable margin of ideal — survives; the numbers do not. **Expected on rerun:** class 11 realizing ≈ 0.066 against the ideal 0.0718, in place of 0.04655 against 0.05051. The §3 grid search wants the same treatment. Tagged ⟦PENDING-RERUN⟧ in the note; not fabricated here.
 
@@ -700,11 +703,26 @@ The ceiling table is a theorem about the Oliver-admissible family **as currently
 
 ### A26. The note before circulation: what to re-read, and one decision to make
 
+*Re-read 2026-10-17; the decision remains Vipul's.* The note's §5 θ-ladder against `aod` §3.6:
+- *Clean:* every rung, value and attribution agrees. That covers Bombieri–Vinogradov 1/4 via Shparlinski Thm 1, Chowla 1/2 via BBKN, Baker–Harman 0.677 → 0.679 (Li) almost-all, Elliott–Halberstam's two rungs via Shparlinski §5, and ERH superseded.
+- *Mismatch, inside `aod`, not the note:* §3.6's table gives "all large n" for the Chowla and Elliott–Halberstam level-of-distribution rungs, while its own blockquote says the 3/2 rungs carry O((log x)⁴) exceptional sets. The note agrees with the blockquote ("1.677 and 3/2 both carry exceptional sets"). Needs the primary sources (BBKN Thm 1.4(a), Shparlinski Thm 1's form) to decide which is right.
+- *Wording in the note:* §5 says (BCG_{1/5}) is "of Goldbach rather than Bateman–Horn difficulty", then calls its prime-factor clause "Sophie Germain-type, independently twin-prime-hard", which is Bateman–Horn-type. "Goldbach as well as Bateman–Horn" would be accurate.
+- *Not in the note, and recommended to stay out before circulation:* `aod`'s conditional PD(1) row (an unrefereed claim).
+- *On F = 4, recommendation:* stay silent in the Theorem and proofs, since the note's family is the unfused one and naming the F = 4 shape invites the non-nesting confusion. At most add one sentence in §4 saying the constant is not optimised and a sharper shape analysis exists.
+
+
 *The naming and the non-nesting are done — the note carries `(BCG_{1/5})` with a paragraph explaining it, and `note-to-framework-bridge.md` §4 states the non-nesting. What is left is a reading and a judgement call.*
 
 `mu-theta-n2-note.md` remains **correct on its own terms** — its family is the unfused one, its window is deliberately generous, its constant crude by design — and nothing here touches its Theorem. What changed around it: its hypothesis is now **(BCG_{1/5})**, and its relation to the framework's is **non-nesting in both directions**, not "a weaker form of the same thing". (BCG-AL) hands over an `F = 4` configuration at n ≡ 11 (mod 12) with `c/n ≈ 0.134`, which the note's `c ≥ n/5` rejects; the note in turn is far weaker in constant and restricted to `n = c + r` and `n = 2c + r`. **Before any circulation:** re-read the note's §5 θ-ladder against `aod` §3.6's current attributions, and decide whether the note should mention the F = 4 shape at all or stay deliberately silent about it.
 
 ### A27. A second reading of `bcp-to-floor.md`, now that `aod` §6.9 quotes it
+
+*Third reading done 2026-10-17 (note §9).* The cheap tier (a)–(c) is clean. **Item 1 is done**: the orbitals are proved for all (p, k), with enumeration at seven cases. Two corrections came out of it:
+- **(BH-SW) was stated too weakly.** "For each B some B′(B)" must be "every A for each B", since the major-arc error is x(log x)^{5B−2−A}. `aod` §6.9(e) already describes it at Siegel–Walfisz strength.
+- **A tie at classes 2 and 8**, (3,2) against (1,6). `aod` §6.9(b) is qualified accordingly.
+
+*Still open:* item 2 (major-arc assembly beyond the error bookkeeping, and the singular-series completion at non-squarefree q with its uniform lower bound) and item 3 (the two [STANDARD] steps).
+
 
 Promoting the note's findings into `aod` raises the value of a second reading rather than lowering it, and §6.9 is written so the tiers can be checked independently.
 
@@ -734,7 +752,10 @@ Promoting the note's findings into `aod` raises the value of a second reading ra
 
 Lemma C's coupling conclusion t \| ord_r(p) is proved via a Frobenius exponent and assumes a semilinear stabiliser at a ≥ 2. The **bound** it is consumed for — orb(r, t) ≤ r·a, which is all Corollary C′ and E.3(i) use — appears to need no such assumption: the r-element of the cyclic layer has r-th-root-of-unity eigenvalues on V = 𝔽_p^a, closed under Frobenius, hence at most a/ord_r(p) Frobenius orbits; conjugation is a power map whose reduction mod r is the induced multiplier, so the multiplier group permutes those orbits and M⟨p⟩/⟨p⟩ acts freely on cosets, giving \|M\| ≤ a. **One reading only, and nothing currently rests on it** — E.3(i) is theorem-side and `--no-theorems` closes every n without it, and Part E‴ does not use Lemma C at all. If it holds it removes J0a from Corollary C′ and weakens E.3(i)'s "worth at most c" only to "at most max(c, r·a)", still linear. → T1's queue, after Part 0.
 
-### A32. Does the conjecture yield a classification-free proof of Brown's question?
+### A32. ~~Does the conjecture yield a classification-free proof of Brown's question?~~ — ANSWERED 2026-10-17: no
+
+`hardness-of-evasiveness.md` §5. The conjecture yields only evasiveness of the coset complex, the weakest link of χ̃ ≠ 0 ⟹ not contractible ⟹ evasive. Brown's question would need an unsupported converse bridge. §3's weaker relative-difficulty statement stands. The original text follows.
+
 
 **A question, not a task, from `hardness-of-evasiveness.md` §5.** The coset property (`monotone-transitive-note.md` §5a) is an instance of the general monotone-transitive conjecture, and its only known proof at **every** finite group goes through CFSG. So:
 
