@@ -106,7 +106,7 @@ with `f(θ) = Σ_{m ∈ M} Λ(m) e(kmθ)` (M the induced p-range) and `g(θ) = �
 
 > `Σ_n |∫_𝔪 f g e(−nθ) dθ|² ≤ ∫_𝔪 |f|²|g|² ≤ (sup_𝔪 |f|)² · ∫₀¹ |g|² = (sup_𝔪 |f|)² · #ℬ`.
 
-`∫₀¹|g|² = #ℬ` is Parseval — **the count and nothing else**; even an upper bound `#ℬ ≤ π(x)` suffices here, since the count's lower bound is spent only on the main term. For the sup: θ ∈ 𝔪 means every rational approximation `a/q` with `q ≤ x/P` has `q > P`; then `kθ` has approximations of denominator `≥ P/k`, and Vinogradov's estimate gives `sup_𝔪 |f| ≪ x·(log x)^{c}·P^{−1/2}` for an absolute c. [STANDARD, not rewritten: the dilation-by-k bookkeeping, `k ≤ 4`, is routine but is the one lemma this note uses without writing out.] Choosing `B` large:
+`∫₀¹|g|² = #ℬ` is Parseval — **the count and nothing else**; even an upper bound `#ℬ ≤ π(x)` suffices here, since the count's lower bound is spent only on the main term. For the sup: θ ∈ 𝔪 means every rational approximation `a/q` with `q ≤ x/P` has `q > P`; then `kθ` has approximations of denominator `≥ P/k`, and Vinogradov's estimate gives `sup_𝔪 |f| ≪ x·(log x)^{c}·P^{−1/2}` for an absolute c. [Written out in §9a.] Choosing `B` large:
 
 > `#{n in slab : |E_𝔪(n)| ≥ x/(log x)³} ≪ x·(log x)^{2c+4−B} = O_A(x/(log x)^A)`. *(Using the upper bound `#ℬ ≪ x/(log x)²` cited just above, not `#ℬ ≤ x`; B is free, so the difference is bookkeeping, but the display should spend the bound it names.)*
 
@@ -127,7 +127,7 @@ The main term of §4.2 has size `≍ x/(log x)²` (the Λ-weight soaks one logar
 
 - **Assembly.** `∫_𝔐 f g e(−nθ) = 𝔖_{k,d}(n; P)·J(n) + (error)`, with the truncated singular series `𝔖(n; P) = Σ_{q ≤ P} Σ_{(a,q)=1} c_k(q,a)·τ_d(q,a)·e(−na/q)` and the singular integral `J(n) = ∫ v·W·e(−nη) ≍ 𝔖_d·x/(log x)²·(window measure)`.
 
-- **Completion and nonvanishing.** [STANDARD for squarefree q; general q not written out] Here the *exactness* of the local densities earns its keep twice. Once for decay: `τ_d(q,a)` is the Fourier coefficient of the explicit BH local measure and decays like a Ramanujan-type sum, `≪ gcd-driven/φ(q)`, so the series completes with tail `≪ P^{−1/2}` after the standard `Σ_a`-cancellation in n. And once for positivity: `𝔖_{k,d}(n) = Π_ℓ σ_ℓ(k,d,n)` with the local factors those of the Local Lemma — positive at every ℓ for the class-adapted `(k,d)`, with the product convergent and bounded below by an absolute `c₀(k,d) > 0` uniformly in n within the class. **With abstract limiting densities in place of the exact ones, both steps fail** — decay because `|τ| ≤ 1` is all one has, positivity because §6's counterexample realizes `𝔖(n) = 0` on almost all n.
+- **Completion and nonvanishing.** [Written out in §9b, including non-squarefree q and the uniform lower bound] Here the *exactness* of the local densities earns its keep twice. Once for decay: `τ_d(q,a)` is the Fourier coefficient of the explicit BH local measure and decays like a Ramanujan-type sum, `≪ gcd-driven/φ(q)`, so the series completes with tail `≪ P^{−1/2}` after the standard `Σ_a`-cancellation in n. And once for positivity: `𝔖_{k,d}(n) = Π_ℓ σ_ℓ(k,d,n)` with the local factors those of the Local Lemma — positive at every ℓ for the class-adapted `(k,d)`, with the product convergent and bounded below by an absolute `c₀(k,d) > 0` uniformly in n within the class. **With abstract limiting densities in place of the exact ones, both steps fail** — decay because `|τ| ≤ 1` is all one has, positivity because §6's counterexample realizes `𝔖(n) = 0` on almost all n.
 
 ### 4.3 Conclusion of the analytic part
 
@@ -198,7 +198,7 @@ All [VERIFIED COMPUTATIONALLY], reproducible from the session log:
 
 ## 8. Status and what is not checked
 
-- **One pass, one reader**, and the two evaluations labeled [STANDARD] — the Vinogradov dilation lemma and the Siegel–Walfisz major-arc manipulation — are used, not rewritten. The singular-series completion is sketched for squarefree q only.
+- ~~One pass, one reader, and the two evaluations labeled [STANDARD] are used, not rewritten; the singular-series completion is sketched for squarefree q only.~~ All four steps are written out in §9a–§9c (2026-10-17). What remains on citation is genuinely textbook: Vinogradov's bound for Σ Λ(m)e(mφ), Siegel–Walfisz, the large sieve, and the Selberg upper-bound sieve for a pair of linear forms in a progression.
 - ~~The Reduction Lemma's constructions are verified by orbit enumeration at five parameter pairs, not proved for all (p, k).~~ **Proved for all (p, k), §9.**
 - The comparison `1/13.9` vs `1/350` compares **different hypotheses with different quantifiers**; it should not be quoted without both caveats.
 - The transference question of §6.2 is raised, not begun. If it succeeds, (BCP) as literally stated suffices and this note's hypothesis is overkill; if it fails in an instructive way, the failure would locate exactly how much distributional information the truth requires. Either outcome is informative, which is what makes it the right next question on this side of the framework.
@@ -230,8 +230,41 @@ All [VERIFIED COMPUTATIONALLY], reproducible from the session log:
 
 Enumeration agrees at (p, k, r, Q) = (5,2,13,3), (7,2,13,3), (5,3,11,5), (5,4,13,3), (7,4,31,5), (11,1,7,3), and the even-Q control (5,4,13,4) gives 26 = rQ/2. This retires A27's item 1 as far as the orbital structure goes. The Oliver chain itself (Γ₂ = 𝔽_p^k, Γ₁/Γ₂ = ⟨g⟩ × C_r cyclic under gcd(k(p − 1), r) = 1, top C_Q) is as stated in §2.
 
-**Not rechecked (effort budget):**
-- The two [STANDARD] steps, the Vinogradov dilation lemma and the Siegel–Walfisz major-arc evaluation of f.
-- The singular-series completion beyond the squarefree sketch, and the uniform positive lower bound c₀(k, d) on 𝔖_{k,d}(n). The local factors are positive by the Local Lemma; the uniformity of the product was not rewritten.
-- §6.2's sieve claim.
+### 9a. The two steps formerly cited as standard
+
+**Dilation (minor arcs).** f(θ) = F(kθ), where F(φ) = Σ_{m ≤ X} Λ(m)e(mφ) and X ≍ x/k. By Dirichlet, kθ has a/q with q ≤ Q₀ := x/P and |kθ − a/q| ≤ 1/(qQ₀).
+- If q ≤ P/k, then |θ − a/(kq)| ≤ 1/(kqQ₀) ≤ P/x with kq ≤ P. Reducing a/(kq) only lowers the denominator, so θ ∈ 𝔐.
+- Hence θ ∈ 𝔪 forces P/k < q ≤ x/P. Vinogradov's F(φ) ≪ (Xq^{−1/2} + X^{4/5} + X^{1/2}q^{1/2})(log X)⁴ then gives sup_𝔪 |f| ≪ x(log x)⁴P^{−1/2} for k ≤ 4, i.e. **c = 4** in §4.1.
+
+**Siegel–Walfisz evaluation of f (major arcs).** e(km·a/q) = e(m·a′/q′) with q′ = q/(q, k) and a′ = ka/(q, k), so Siegel–Walfisz gives Σ_{m ≤ t} Λ(m)e(ma′/q′) = (μ(q′)/φ(q′))·t + O(t·exp(−c√log t)) for q′ ≤ P. Partial summation against e(kmη), with |η| ≤ P/x, costs a factor ≤ 1 + 4P, which is absorbed. So c_k(q, a) = μ(q/(q, k)), as §4.2 uses.
+
+### 9b. Singular series: non-squarefree q, completion, and the uniform lower bound
+
+**Support.** The summand A(q) = Σ_{(a,q)=1} c_k(q,a)τ_d(q,a)e(−na/q) is multiplicative in q, and c_k(q, a) = μ(q/(q, k)) vanishes unless q/(q, k) is squarefree. With k | 4 this leaves only **q = 2^j·(odd squarefree), j ≤ 1 + v₂(k) ≤ 3**. So the non-squarefree case is a bounded 2-adic factor. The prime side kills every other square factor, and no separate argument is needed.
+
+**Explicit local factor at ℓ ≥ 5, ℓ ∤ d.** The BH local measure is uniform on r ∉ {0, 1} mod ℓ (Q a unit and r = dQ + 1 a unit), so τ_d(ℓ, a) = −(1 + e(a/ℓ))/(ℓ − 2). With c_ℓ the Ramanujan sum,
+
+> σ_ℓ(n) = 1 + A(ℓ) = 1 + (c_ℓ(n) + c_ℓ(n − 1))/((ℓ − 1)(ℓ − 2)),
+
+which is 1 + 1/(ℓ − 1) if ℓ | n(n − 1), and 1 − 2/((ℓ − 1)(ℓ − 2)) otherwise. *Verified against brute-force local densities at ℓ = 5, 7, 11, 13, for every k ∈ {1, 2, 4}, d ∈ {2, 4, 6, 12} with ℓ ∤ d, and every n mod ℓ: no mismatch.* Both values are positive for ℓ ≥ 5, so
+
+> 𝔖_{k,d}(n) ≥ σ₂σ₃ · Π_{ℓ ≥ 5} (1 − 2/((ℓ − 1)(ℓ − 2))) ≈ 0.7216·σ₂σ₃,
+
+and σ₂, σ₃ (the finitely many 2- and 3-adic values, ℓ = 3 being the only odd prime dividing d) are positive exactly when the Local Lemma's congruence is solvable. **This is the uniform lower bound c₀(k, d) > 0.**
+
+**Completion, for almost all n.** Pointwise the tail Σ_{q > P} A(q) is only controlled for n without many small prime factors in n(n − 1), so use the mean square, as in the almost-all Goldbach literature.
+- For squarefree q, |c_k(q,a)τ_d(q,a)| ≪ q^{−2+ε}. So Σ_{(a,q)=1} |·|² ≪ q^{−3+ε}, and the large sieve gives Σ_{n ≤ 2x} |Σ_{P < q ≤ √x} A(q)|² ≪ x·P^{−2+ε}.
+- For q > √x the pointwise bound |A(q)| ≤ (q, n(n−1))·q^{−2+ε} sums to x^{−1/2+ε}·d(n(n − 1)), which is negligible.
+
+Hence |𝔖(n) − 𝔖(n; P)| ≥ c₀/2 for at most ≪ xP^{−2+ε} values of n, which is inside the theorem's O(x(log x)^{−A}) once B is large.
+
+### 9c. §6.2's sieve claim
+
+The Selberg upper-bound sieve for the two linear forms Q, dQ + 1 with Q in a fixed class mod m gives
+
+> ≪ (m/φ(m))·𝔖_d · X/(φ(m)(log X)²), uniformly for m ≤ X^{1/2−ε}.
+
+At m = ∏_{ℓ ≤ L} ℓ with φ(m) ≍ log x, the factor m/φ(m) ≍ log L ≍ log log log x, so the share of the (BCP) count in one class is ≪ (log log log x)/log x → 0, as §6.2 states.
+
+**Not rechecked:** nothing in the note's analytic chain is now left on citation beyond the four textbook inputs named in §8. The note is still **one author plus one independent reader**; nobody has read the circle-method assembly as a referee would.
 

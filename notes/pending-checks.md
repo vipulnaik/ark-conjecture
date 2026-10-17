@@ -311,24 +311,6 @@ python3 ceiling_rederive3.py --nmax 2500 --no-filter   # the escapes, deliberate
 
 **What the run leaves open**, and it is sharper than what it replaced: nine of twenty-four cells fall short, and they are exactly the *other* column at each class. Whether each unreachable column is arithmetically obstructed or merely thin in supply is the open question — at class 0, κ_c = 2 the η = 1 entry needs r − 1 = 2·q^e with q ≥ 5, a supply condition of the safe-prime family rather than an obvious obstruction. A k = 3 analogue of `aod` §3.3.8's escape analysis would settle it.
 
-## R12b. ~~Rerun `ladder-completeness.md`'s two scans at 10⁶~~ — `offmenu_scan.py` DONE; `ladder_vs_B.py` RETIRED
-
-**Found in the 2026-09 read-through.** Every measured figure in `ladder-completeness.md` is scoped to the **36,848-row frontier** of its writing and neither scan has been rerun since the exact table completed to 10⁶:
-
-- **`offmenu_scan.py`** — the S6/S11 sweep, currently "over all efficient-prime pairs with a common q up to 36,848 … 729 tabulated n, above 1/25 at 352, maximum density 0.1111 at n = 4376, never reaches B(n)". This is **the empirical half of Proposition 2**, and it is the half that licenses reading a ladder value as B: Proposition 1 says the optimum is a menu shape *or* S6/S11, and the scan is what says the second disjunct is never taken.
-- **`ladder_vs_B.py`** — "ladder = B at all 32,861 tabulated values", now 921,265.
-
-**Done 2026-09.** `offmenu_scan.py` at 10⁶: off-menu shapes score at **5,739** tabulated n (was 729), above 1/25 at **5,045** (was 352), **reach B at none**, maximum density **0.1111 still at n = 4376**. So Proposition 2's empirical half holds over twenty-seven times the range with the margin unchanged. Worth noting for a future extension: a near-approach family appears around n ≈ 2.95·10⁵ on the Fermat pair 65537\* + 163841\* at q = 2, reaching **0.70 of B** — the largest ratio anywhere above n = 5000.
-
-**`ladder_vs_B.py` is retired, 2026-09**, and not because it is slow. What it tested was **the ladder script** — whether `ladder_verify.py`'s four families, at its particular window and fusion set, contain a B-optimal configuration at every tabulated n. That question is now moot twice over:
-
-- **`ladder_verify.py` itself is retired (R7)**: it computed a lower bound on μ\*, and `mu_ladder_exact.py` computes B exactly at 15 ms/n, so nothing downstream reads a ladder value any more.
-- **Its one live consumer is covered elsewhere.** `validate_table_v3.py`'s menu-shape check reports **921,265 of 921,265 rows above 1/25 with a menu-shape witness, 0 off-menu**, which certifies the *shape space* — the half that matters for `ladder-completeness.md` Proposition 1 — and `offmenu_scan.py` at 10⁶ covers the S6/S11 half. What is lost is only the check on the *implementation*, of a script no longer run.
-
-Last measurement before retirement: **ladder = B at 120,000 of 120,000 rows**, 0 short, 0 over (was 32,861). *The two defects it historically caught — the block-size window clipped at 0.55, and the fusion set stopping at F = 12 — are recorded in R7 against a revival, which is the only thing that would resurrect either script.*
-
-> **On the run that prompted this.** It produced no terminal output for over an hour and its `ladder_weak.txt.state.json` shows `n_max = 1001000`, past 10⁶ — the ladder was being regenerated over a range wider than the table, which is the cost the script never reports because it has no heartbeat. *A long-running script with no progress output is one nobody can tell apart from a hung one*, which is the same lesson `solvable_relaxation.py` needed and got (A20c's neighbour). Not worth fixing here, since the script is retired.
-
 ## R13. `biclique_table.py` beyond 10⁴ — optional
 
 Computes s(n), the largest smallest-block over Oliver groups whose minimal blocks are all 2-homogeneous — the location of the linear biclique region a + b ≤ s(n) (`oen`, biclique box). **Run to 10⁴ in 17 s**; results in `biclique_table_1000.csv` and `biclique_table_10000.csv`, summarised in the box.
@@ -353,6 +335,10 @@ python3 biclique_table.py --nmax 100000 --out biclique_table_100000.csv   # roug
 | **A35** | can a shape-space configuration give a larger fully-evasive sub-structure than Korneffel–Triesch? | **no** — single-group certification only ever reaches a single orbital, which the adversary forces to be the minimum, so the route gives exactly D(h) ≥ μ\*(n) ≤ n²/4; the better constants use multi-orbital sub-structures that need a second symmetry layer the shape space does not model. Written up in `oen` beside the threshold result |
 | **A31** | `aod` §5's decade tables labelled ladder *bounds* where the section says the minima are exact | **done** — recomputed exactly over the 921,265 rows; the ladder's bounds agree at every decade minimum, so the tables now show δ with the bound beside it and the point is recorded in §5 itself: the ladder is **tight at the decade minimisers** |
 | **R7d** | audit `khomog_verify.py` | **done** — one vacuous check (an arithmetic tautology no computation could falsify) replaced, and the {8, 32} finiteness claim swept over every prime power in [6, 63] rather than three spot checks |
+| **R12b** | rerun `ladder-completeness.md`'s two scans at 10⁶ | **done / retired** — `offmenu_scan.py` at 10⁶: off-menu shapes at 5,739 n, above 1/25 at 5,045, reaching B at none, maximum still 0.1111 at n = 4376; `ladder_vs_B.py` retired with `ladder_verify.py` (R7). Account in session-log-14 |
+| **A20b** | δ must be computed from the integers, never parsed from the six-decimal density column | **done** — `Row.delta = B/C` in `validate_table_v3.py` and `converse_check.py`; the two spurious FAILs at n = 999685 traced to rounding; per-class closest cap gaps tabulated. Account in session-log-14 |
+| **A23** | rerun `bcp-to-floor.md` §7 at the corrected orbital rQ | **done 2026-10-17** — control reproduces 0.04655; corrected: zero exceptional n, class 11 at 0.06617 (worst representation, window geometry) and 0.06794 (best). `bcp-to-floor.md` §7, session-log-15 §23 |
+| **A32** | does the conjecture give a classification-free proof of Brown's question? | **no** — it yields only evasiveness of the coset complex, the weakest link of χ̃ ≠ 0 ⟹ not contractible ⟹ evasive. `hardness-of-evasiveness.md` §5 |
 
 ## §2a. Needs human thought
 
@@ -625,28 +611,6 @@ The range minimum is **175813/3804661 = 0.04620989885…**, so the natural 5-pla
 
 **The same applies one level up, to any rounded scan output.** `ladder_verify.py` prints five places, so the file alone supports only "≥ printed − 5·10⁻⁶" at each entry. That is enough here — the next-lowest entry is 0.04801, hence at worst 0.048005, clear of the minimum by 0.0017 — but it is a margin to check, not a formality: had the two lowest entries been within 10⁻⁵ of each other, the printed file could not have established which was the minimiser. **On any ladder rerun whose two lowest values are close, print more digits before drawing a uniqueness conclusion.**
 
-### A20b. delta must be computed from the integers, never parsed from the density column — DONE
-
-**The failure this exists to prevent, because it fired.** `validate_table_v3.py` parsed `Row.delta` from the CSV's `density` column, which carries **six decimals** — a rounding error up to 5·10⁻⁷. The cap_F margins at n ≈ 10⁶ are *narrower than that*: the closest approach on the completed 10⁶ table is **1.77·10⁻⁷** and **96 rows sit within 5·10⁻⁷**. So a rounded density can land on the wrong side of a cap, and at exactly one row in 921,265 it did:
-
-> **n = 999685**, witness `2x292801 + 1x414083*`: true density **0.171572510776**, column **0.171573**, cap₂(1) = 3 − 2√2 = **0.171572875254**. The true value is below the cap by 3.6·10⁻⁷; the rounded one is above it by 1.2·10⁻⁷.
-
-That produced **two spurious FAILs** — the cap_F check and the feasibility check, which reads 1/√δ — on the same row, from one cause. *Confirmed exactly in integers: (3C − B)² − 8C² = 514799345346156900 > 0, so δ < 3 − 2√2 with no floating point anywhere.* **The data were correct and the checker was wrong.**
-
-**The same defect was in a second script, and there it was far louder.** `converse_check.py` also parsed the density column, and inequality (2) of Proposition F.4 — r ≥ √(δ·n(n−1)) — is *tight*, its closest ratio on the 10⁶ table being 1.0000. The inflated δ therefore broke it on **991 rows**, and the script printed *"991 violation(s) — F.4 is contradicted by the table"*. Checked exactly in integers, r(r−1) ≥ 2B holds at **every one of the 796,763 one-foreign rows**; with δ computed from the integers the script reports **all four inequalities clean**. *A script whose failure message is "the Proposition is contradicted" is exactly the one that must not read a rounded column* — and the two scripts failed the same way in the same week, which is why the guard below is a check rather than a comment.
-
-**Fixed and guarded.** `Row.delta` is now `B / C`; `delta_str` is kept because check A20's whole job is to verify the column against B/C, and that check must read the string while every other check must not. Three guards: the cap_F check now **reports its margin** (closest approach, and how many rows sit within the column's rounding error) so the next person sees immediately that the column is unusable here; a new group-A check **fails if anyone reverts** `Row.delta` to `float(density)`; and both are documented at the point of use.
-
-> **The failure is evidence for the bound.** A rounding error can only flip a comparison whose two sides are within the rounding error of each other, so this could not have happened against a loose ceiling. Measured on the completed 10⁶ table, the closest approach to cap_F(η) **in every one of the twelve residue classes**:
->
-> | n mod 12 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
-> |---|---|---|---|---|---|---|---|---|---|---|---|---|
-> | closest gap (×10⁻⁶) | 1.25 | 0.36 | 0.18 | 1.40 | 3.25 | 0.23 | 2.25 | 1.14 | 0.19 | 0.40 | 6.26 | 0.41 |
->
-> **Every class is approached to within 7·10⁻⁶, six of them to within 5·10⁻⁷**, and the approach tightens with the range: the closest gap in each decade runs 9.3·10⁻³ (n ≈ 70), 3.9·10⁻⁴, 3.7·10⁻⁵, 3.0·10⁻⁶, 1.8·10⁻⁷ — *gap × n roughly constant at 0.14–0.65*, which is the O(1/n) discretisation of the balance point and exactly the rate a tight ceiling should show. So the ceilings of `arithmetic-of-density.md` §3.3 are not merely upper bounds but **attained to the resolution the integers allow**, in every class, and the checker's one-in-a-million false positive is a symptom of that rather than of anything wrong.
-
-*The general form, which is why this is worth a section rather than a line in a log:* a derived column is a **lossy** copy of the data, and a check that reads it is testing the printer rather than the value. The tell is that the failure appeared only after the table grew — the margins tighten as n grows, so the rounding error stays fixed while the quantity being compared does not. **Six decimals were ample at n = 2600 and are not at 10⁶**, and no amount of care at the earlier scale would have surfaced it.
-
 ### A20c. A screen must derive its range from the table, never from a constant — DONE
 
 **Two scripts silently under-screened the completed table while printing a pass.** `t5_verify.py`'s pass 4 built its event list to a hardcoded `N = 2484`, so on the 10⁶ table the running maximum froze there and the check passed vacuously at **918,781 of the 921,265 rows it reported**. `audit_fmid.py` had `--nmax` defaulting to 2600 against a hardcoded sieve bound of 2700, so it screened **2,186 of 921,265 rows** — and its coverage line, "0 non-prime-power values in that range absent from the table", reads exactly like a clean pass because it is one, over the range it chose.
@@ -672,13 +636,6 @@ The all-shapes **penalised** column (`shape-counting.md` §4) is a **lower bound
 *Not owed work — retained because it is the reference point that makes a baseline run readable, and the 289-vs-18 pairing is asked about repeatedly.*
 
 The R1 reference point reads *0 FAIL*, which holds for an enumerator output under the current scoring. Run against a **baseline** it does not: a row whose recorded winner is a cyclic-fused class scored under the superseded cut twist re-derives *higher* from its own witness, so group A's re-derivation check fires. On the v4 baseline that is **18 rows of 2,186** — a subset of the 289 known-low rows, the other ~271 being exceeded by a different configuration rather than by a rescoring of their own witness, and so invisible to a check that re-derives from the recorded witness. **Neither number is a defect**; the pairing of them is the thing to state, since 289 and 18 look like they should match and do not. Either scope the expectation in R1's banner or have the check name the baseline case when `--baseline` is supplied.
-
-### A23. ~~`bcp-to-floor.md` §7's end-to-end run needs rerunning at the corrected orbital~~ — DONE 2026-10-17
-
-**Done** (`bcp_floor_e2e.c`). A control first reproduces the original 0.04655 under the old scoring, which identifies the statistic as the window's worst representation. At `rQ`: zero exceptional n in every class, and class 11 at 0.06617 against 0.07180. That worst-representation figure is pure window geometry (0.96² × ideal in every class); the informative statistic is each n's best representation, 0.06794 at class 11. Recorded in the note's §7. The original text follows.
-
-
-The run scored foreign intra orbitals at `rQ/2` where every `d` in its grid is even and `Q` is therefore an **odd** prime, so the true orbital is `rQ` (§2, corrected). Both sides of its comparison moved together, so the structural conclusion — zero exceptional n among 400,000 consecutive values, realized δ within a predictable margin of ideal — survives; the numbers do not. **Expected on rerun:** class 11 realizing ≈ 0.066 against the ideal 0.0718, in place of 0.04655 against 0.05051. The §3 grid search wants the same treatment. Tagged ⟦PENDING-RERUN⟧ in the note; not fabricated here.
 
 ### A23a. `check_doc_figures.py` — the tail row changed what "current" means
 
@@ -721,7 +678,12 @@ The ceiling table is a theorem about the Oliver-admissible family **as currently
 - **(BH-SW) was stated too weakly.** "For each B some B′(B)" must be "every A for each B", since the major-arc error is x(log x)^{5B−2−A}. `aod` §6.9(e) already describes it at Siegel–Walfisz strength.
 - **A tie at classes 2 and 8**, (3,2) against (1,6). `aod` §6.9(b) is qualified accordingly.
 
-*Still open:* item 2 (major-arc assembly beyond the error bookkeeping, and the singular-series completion at non-squarefree q with its uniform lower bound) and item 3 (the two [STANDARD] steps).
+**Items 2 and 3 also done, later on 2026-10-17** (note §9a–§9c):
+- the dilation lemma (c = 4) and the Siegel–Walfisz evaluation;
+- the singular series, where non-squarefree q reduces to a bounded 2-adic factor, an explicit local factor σ_ℓ at ℓ ≥ 5 (checked against brute force) gives a uniform lower bound c₀ ≈ 0.72·σ₂σ₃, and the completion is by mean square via the large sieve;
+- §6.2's sieve claim.
+
+*What would still add value:* a referee-style read of the whole circle-method assembly by someone other than the author and me. Item 4 was A23, now done.
 
 
 Promoting the note's findings into `aod` raises the value of a second reading rather than lowering it, and §6.9 is written so the tiers can be checked independently.
@@ -736,7 +698,10 @@ Promoting the note's findings into `aod` raises the value of a second reading ra
 
 **What a disagreement would cost.** (a)–(d) are quoted in `aod` §§3.5.3, 6.8 and 6.9 and would survive; (e) is cited rather than restated, so a failure there retracts a citation and the strengthened reading of the asymptotic half, not any unconditional claim. That asymmetry is deliberate and should be preserved if §6.9 is ever expanded.
 
-### A28. Score the Galois layer: B_refined⁺
+### A28. Score the Galois layer: B_refined⁺ — RESOLVED 2026-10-17, one reading
+
+**Resolved** (`enumeration-proof.md` E‴ addendum, `galois_orb.py`). Within ΓL(1, c) the Galois layer can never beat the full stripped cyclic twist, which is the score `mu_enumerate` already uses: orb⁺ ≤ orb(c, D), proved by a fixed-coset argument and checked exhaustively to c = 400. So **B_refined⁺ = B_refined**, the enumerator needs no change, and the trichotomy's only interior source is J0a proper. The documented 343 example compares against a non-maximal twist (C₆ rather than the stripped C₁₈). The cheaper observation, that no computed row could have moved anyway because E.6 pins B_refined = B_safe above 1/25 and the table's floor is 0.0462, is moot given the theorem. *Owed:* a second reading of the valuation step. The original text follows.
+
 
 > *The example below is right in substance, with the group named precisely.* The group realising 3087 at c = 343 is **non-split**: H = ⟨ζ⁵⁷, ζ·Frob⟩, of order 18 with linear part C₆. It acts freely on 𝔽₃₄₃^×, verified by orbit enumeration, whereas the split C₆ ⋊ ⟨Frob⟩ fixes 𝔽₇ pointwise and stays at 1029. `enumeration-proof.md` E‴ states it this way. B_refined⁺ must therefore score non-split semilinear twists.
 
@@ -752,24 +717,17 @@ Promoting the note's findings into `aod` raises the value of a second reading ra
 
 Lemma C's coupling conclusion t \| ord_r(p) is proved via a Frobenius exponent and assumes a semilinear stabiliser at a ≥ 2. The **bound** it is consumed for — orb(r, t) ≤ r·a, which is all Corollary C′ and E.3(i) use — appears to need no such assumption: the r-element of the cyclic layer has r-th-root-of-unity eigenvalues on V = 𝔽_p^a, closed under Frobenius, hence at most a/ord_r(p) Frobenius orbits; conjugation is a power map whose reduction mod r is the induced multiplier, so the multiplier group permutes those orbits and M⟨p⟩/⟨p⟩ acts freely on cosets, giving \|M\| ≤ a. **One reading only, and nothing currently rests on it** — E.3(i) is theorem-side and `--no-theorems` closes every n without it, and Part E‴ does not use Lemma C at all. If it holds it removes J0a from Corollary C′ and weakens E.3(i)'s "worth at most c" only to "at most max(c, r·a)", still linear. → T1's queue, after Part 0.
 
-### A32. ~~Does the conjecture yield a classification-free proof of Brown's question?~~ — ANSWERED 2026-10-17: no
-
-`hardness-of-evasiveness.md` §5. The conjecture yields only evasiveness of the coset complex, the weakest link of χ̃ ≠ 0 ⟹ not contractible ⟹ evasive. Brown's question would need an unsupported converse bridge. §3's weaker relative-difficulty statement stands. The original text follows.
-
-
-**A question, not a task, from `hardness-of-evasiveness.md` §5.** The coset property (`monotone-transitive-note.md` §5a) is an instance of the general monotone-transitive conjecture, and its only known proof at **every** finite group goes through CFSG. So:
-
-> **Must a proof of the general conjecture yield, as a special case, a classification-free proof that χ̃(Δ(C(G))) ≠ 0 for every finite group** — i.e. a classification-free resolution of Brown's open question?
-
-If yes, that is a genuine relative-difficulty statement rather than an impression. It looks close to automatic since the coset property is a legitimate instance, **but the gap between "evasive" and "χ̃ ≠ 0" is exactly where it could fail**: non-evasive ⟹ contractible ⟹ χ̃ = 0, so the conjecture gives χ̃ ≠ 0 *only for the properties it is applied to*, and one would need the coset property's own complex to be the one whose χ̃ is at issue. It is — but writing that out carefully is the whole content. **A self-contained afternoon**, and the highest-value item in that document.
-
 ### A34. Review the minimum-order result — answered, with three lemmas awaiting an independent reading
 
 **The question is answered** in `johnson-presentations.md` §5a: the minimum order of an Oliver group on n points with minimum orbital ≥ δ·C(n,2) is **Θ(n²)** at prime powers, **Θ(n³)** at bounded-cofactor n (a Reed–Solomon construction, built and verified at n = 21, 39, 55), **Θ(n⁴)** at almost all even n and **Θ(n⁵)** at almost all odd n. The measured witness orders sit in fixed bands across five decades (order/n⁴ → 0.0312 even; order/n⁵ → 0.00196 odd), which is what the earlier "exponent 3.5–4.5" was.
 
 **What is still owed, and it is a reading rather than a search:**
 
-1. **Lemmas 1–3 of §5a** — distinguishing translations cost c²; a matching twist cannot share with foreign translations; the foreign twist stands apart. Each is a paragraph, sketched, with **no independent check**. Lemma 1 has a stated edge case (semilinear Frobenius when c = p^a and p divides the Frobenius order) that should be checked explicitly.
+1. ~~**Lemmas 1–3 of §5a** — sketched, with no independent check.~~ **Read independently 2026-10-17** (§5a's new box). All three hold.
+   - Lemma 1 needs T read as the block-pair stabiliser's translations on i × j.
+   - Its Frobenius edge case, and a second unstated one (c = 2^a with a block swap, built at c = 4), give O(n log n) orbitals instead of O(n), which is harmless.
+   - Lemma 2 rests on its cyclic-layer premise.
+   - Lemma 3 should cite Galois's theorem.
 2. **The claim that every alternative configuration costs at least as much at generic n** — the lower bounds are per-shape, and the minimum over shapes rests on the census being complete, i.e. on **Part 0** (trusted base, not in Lean).
 3. **The exceptional-set density argument** — that twist-sharing needs a large prime-power divisor on n − 2 or n − 3 from a prime whose powers reach [δn, n], with probability about |log δ|/log n per exponent window. Heuristic in its current form.
 

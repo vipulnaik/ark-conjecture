@@ -875,3 +875,31 @@ Together with the degree-6 search (S₄ on the edges of K₄ admits none), there
 
 **Not done (effort budget):** A28 (B_refined⁺), A34's lemmas, A36 (restriction game at n = 10), and A27 items 2–3.
 
+## 24. Pending-checks cleanup; the skipped checks; A28 resolved
+
+**Request (Vipul):** remove completely settled items from `pending-checks.md`, run the checks skipped last time, then continue.
+
+**Cleanup:**
+- *Removed:* R12b, A20b, A23 and A32, each with a one-line ledger row so references still resolve.
+- *Kept, with live residue:* R7, where the ledger itself says so, and A20c, whose `audit_fmid.py` still needs bisecting.
+
+**`bcp-to-floor.md` §9a–§9c** (A27 items 2 and 3):
+- the dilation lemma, giving c = 4;
+- the Siegel–Walfisz evaluation of f;
+- the singular series:
+  - non-squarefree q reduces to a bounded 2-adic factor, because μ(q/(q, k)) kills every other square;
+  - the explicit local factor σ_ℓ = 1 + (c_ℓ(n) + c_ℓ(n−1))/((ℓ−1)(ℓ−2)) at ℓ ≥ 5 matches brute force at ℓ = 5, 7, 11, 13;
+  - uniform lower bound c₀ ≈ 0.72·σ₂σ₃;
+  - completion by mean square via the large sieve;
+- §6.2's sieve claim.
+
+**A34 item 1** (`johnson-presentations.md` §5a): Lemmas 1–3 read independently, and all hold.
+- Lemma 1 needs T read as the block-pair stabiliser's translations on i × j.
+- Its Frobenius edge case, and an unstated p = 2 block-swap case, give O(n log n) orbitals, which is harmless. The swap case was built at c = 4 (orbits of size 2c).
+- Lemma 3 should cite Galois's theorem.
+
+**A28 resolved** (`galois_orb.py`, `enumeration-proof.md` E‴ addendum). Within ΓL(1, c) a semilinear top element never beats the full stripped cyclic twist: orb⁺ ≤ orb(c, D), by a fixed-coset valuation argument, checked exhaustively to c = 400. So B_refined⁺ = B_refined and the enumerator needs no change. The documented 343 example used the non-maximal twist C₆; at the stripped C₁₈ the cyclic score is already 3087.
+- *My errors on the way:* the first run tried only d = D and so found nothing, which disagreed with the documented example and exposed the non-maximal twist. A botched in-place patch of the script was replaced by a clean rewrite.
+
+**Still open (effort budget):** A36 (the restriction game at n = 10), A34 items 2–3, and second readings of today's A28 and Lemma 1–3 arguments.
+
