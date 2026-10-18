@@ -964,3 +964,12 @@ With pieces in pairwise-trivially-intersecting subgroups, blocks meet in at most
 
 `shape_realize.py --interclass`: 495 admissible shapes, all four orbital terms match their scores. A negative control (wrong `orb`) flags 349. The first control I designed (non-admissible shapes) does not fire, because gcd(F·d, r) governs Oliver-ness, not the inter-class orbital. Recorded as an input to item 3: the construction realises every prime-power foreign twist.
 
+## 33. R6 item 3: Lemma C's foreign strip checked
+
+`lemma_c_share.py`: 3,248 realisable sharing groups (r | d), c ≤ 64, F = 1.
+- The coupling t | ord_r(p) holds with 0 violations. The non-normalising control gives 174.
+- The largest foreign twist realised is exactly ord_r(p), and the realised minimum orbital equals Corollary C′'s bound min(r·ord_r(p), C(r,2)) with 0 excesses.
+- `--refined` under-credits 257 of these groups (worst c = 32, r = 31: credit 16, realised 155), as the doc anticipates. The licence B(c+r) > bound holds at every tabulated n (worst 155/252 at n = 63).
+
+All three R6 items are now done.
+
