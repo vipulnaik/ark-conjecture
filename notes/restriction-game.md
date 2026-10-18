@@ -162,7 +162,18 @@ So **D(f) ≥ C(n,2) − n/2 at n = 10, 14, 22, 34, 38, 46**, plus n = 6, where 
 - *Independent referee agent:* the logic is valid; the group is rebuilt in GAP (order, orbits and Oliver series all confirmed); the generalisation is derived independently.
 - *The game computation itself.* It also reproduces the KSS-shaped value: the descent found at v = 25 uses peel I₂ and the K₅ bipartite escape.
 
-**Literature (light check, not exhaustive):** nothing found stating D ≥ 40 at n = 10, or C(n,2) − n/2 at n = 2p. Miller's tutorial (arXiv:1306.0110) gives only KSS's n²/4 − o(n²) and the prime-power theorem. Angel–Borja (arXiv:1603.04412) leave n = 10's evasiveness open; their Prop. 4.4 (every perfect matching lies in any non-evasive property on 2p vertices) is the same dichotomy in membership form, with no query bound drawn from it. **Before any external claim of novelty, a proper literature search is owed**, including Scheidweiler–Triesch-type small-n bounds and the papers citing Angel–Borja.
+**Literature (light check, not exhaustive):** nothing found stating D ≥ 40 at n = 10, or C(n,2) − n/2 at n = 2p. Miller's tutorial (arXiv:1306.0110) gives only KSS's n²/4 − o(n²) and the prime-power theorem. Angel–Borja (arXiv:1603.04412) leave n = 10's evasiveness open; their Prop. 4.4 (every perfect matching lies in any non-evasive property on 2p vertices) is the same dichotomy in membership form, with no query bound drawn from it. **A dedicated literature search followed** (independent agent, 2026-10-17). It found no statement of D ≥ 40 at n = 10, or of C(n,2) − n/2 at n = 2p, and put about 75% on the result not being in print.
+- It read Angel–Borja in full. They prove only a dimension bound on the property's complex (dim ≥ 4p − 1, i.e. 19 at n = 10), use no intervals, and use no group transitive on K_n − M.
+- It suggested D ≥ C(9,2) = 36 at n = 10 as "folklore, by restricting to a K₉". **That inference is wrong:** a property false on K₉ + K₁ and true on the star crosses neither peel interval, and closing that gap is exactly KSS's bipartite escape, at cost 25. So 25 stays the explicit baseline.
+- *Still unread:* Scheidweiler–Triesch, whose server failed, Korneffel–Triesch, Triesch's earlier papers, Lovász–Young, and a systematic pass over papers citing Angel–Borja. Those are where a small-n bound would most likely appear, so the novelty claim stays provisional until they are checked.
+
+**The two-step descent at other degrees** (`scripts/two_step_descent.py`). Over all pairs of Oliver orbitals O₁, O₂ in the group data with K_n − O₁ embedding in O₂, the best bound is:
+- n = 6: 12 of 15, over all 50 Oliver classes of S₆;
+- n = 10: 40 of 45, over all 1,294 classes;
+- n = 14: 84 of 91, over transitive Oliver groups only;
+- n = 22: 220 of 231, likewise.
+
+In every case the matching construction is the optimum. **n = 18 did not finish**: it was stopped at the 30-minute limit, since networkx monomorphism over its 391 transitive Oliver groups' orbitals is too slow. It needs a faster embedding test, such as the C library in `n10_search/`.
 
 ## 7. What this buys
 

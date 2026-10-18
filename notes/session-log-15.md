@@ -920,3 +920,11 @@ Together with the degree-6 search (S₄ on the edges of K₄ admits none), there
 
 **Still open:** the intermediate-P repair to Lemma 1, written out; A34 items 2–3; the literature search for A36; extending A36 beyond the matching shape.
 
+## 26. A36 literature and other degrees; Lemma 1 repair written out
+
+**Literature search for A36** (independent agent): nothing found stating D ≥ 40 at n = 10 or C(n,2) − n/2 at n = 2p, with about 75% that it is not in print. Angel–Borja, read in full, give only a dimension bound (19 at n = 10). The agent's suggestion that D ≥ 36 is folklore at n = 10 was **rejected**: peel intervals alone are avoidable, and the bipartite escape (25) is what closes them. Triesch-line papers and the papers citing Angel–Borja are still unread.
+
+**Two-step descent at other degrees** (`two_step_descent.py`): 12/15 at n = 6, 40/45 at n = 10, 84/91 at n = 14, 220/231 at n = 22. The matching construction is optimal among two-step descents in the data at each. n = 18 was stopped at the 30-minute background limit without a result (the embedding test is too slow there).
+
+**Lemma 1's intermediate-P case written out** (`johnson-presentations.md` §5a): a twist power of order > √c generates F_c, so |P| ∈ {1, c, c²} for c > δ⁻⁴.
+
