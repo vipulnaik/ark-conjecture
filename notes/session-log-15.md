@@ -928,3 +928,17 @@ Together with the degree-6 search (S₄ on the edges of K₄ admits none), there
 
 **Lemma 1's intermediate-P case written out** (`johnson-presentations.md` §5a): a twist power of order > √c generates F_c, so |P| ∈ {1, c, c²} for c > δ⁻⁴.
 
+## 27. Near-complete items closed; A39 corrected; `audit_fmid.py` range defect
+
+**Closed into the ledger:**
+- *A22:* scoping sentence added to R1's status paragraph.
+- *A23a:* its lesson moved to `verification-lessons.md` §5.
+- *A27 and A28:* complete.
+- *R10:* the n = 5 Smith form confirmed directly. Integer homology of each chiral half is ℤ/2 in degree 1, by Smith normal form over `chiral_mv.build(5)`; the regression passes.
+
+**A39(1) corrected on Vipul's reading.** Lutz's 30-vertex A (A₅ on A₅/C₂) already answers it. And "no transitive Oliver subgroup" is automatic for any ℤ-acyclic invariant complex, by Oliver's fixed-point theorem, so it was never an extra hypothesis.
+
+**`audit_fmid.py`:** a hardcoded N = 2700 survived in every committed version, contrary to A20c's record. Fixed (derived range, bisected c-loop, base-prime grouping) with controls. Clean to 10⁵; the full run was still going at the end of this entry.
+
+**A36 literature:** a second, targeted search found nothing, with 21 the best explicit n = 10 figure in print. Scheidweiler–Triesch's full text remains the last check before a novelty claim.
+

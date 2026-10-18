@@ -147,7 +147,7 @@ python3 mu_ladder_exact.py 2755 2762 --cert-threshold 0.05     # exercises the u
 
 ## R1. Routine, after any new batch of table values
 
-**Current status: the battery has been run against the completed 10⁶ table and passes.** `validate_table_v3.py` 27 PASS / 0 FAIL / 16 INFO with the exhaustive table as baseline, all μ\* equal on the overlap. `t5_verify.py`, `converse_check.py`, `audit_fmid.py`, `check_doc_figures.py` clean. `fallback_cert.py` and `wide_cert.py` are rescoped — see **R1b**. `solvable_relaxation.py` owed a recount at 10⁶.
+**Current status: the battery has been run against the completed 10⁶ table and passes.** *Scope of the 0 FAIL expectation (formerly A22):* it holds for an enumerator output under the current scoring. Run with a **superseded** table as the current one, group A's re-derivation check fires on rows whose recorded cyclic-fused winner was scored under the old cut twist: **18 rows of 2,186** on the v4 table, a subset of its 289 known-low rows (the rest are beaten by a different configuration, which a re-derivation from the recorded witness cannot see). That is expected, not a defect. `validate_table_v3.py` 27 PASS / 0 FAIL / 16 INFO with the exhaustive table as baseline, all μ\* equal on the overlap. `t5_verify.py`, `converse_check.py`, `audit_fmid.py`, `check_doc_figures.py` clean. `fallback_cert.py` and `wide_cert.py` are rescoped — see **R1b**. `solvable_relaxation.py` owed a recount at 10⁶.
 
 Run in order; the first gates the rest.
 
@@ -265,12 +265,6 @@ WITNESS="p=5 q=2: 2x5" MUBOUND=20 gap -q -A verify_witness.g   # a single row
 
 > **`-A` is belt and braces, not a requirement.** The script once defined a global named `Orb`, which the autoloaded `orb` package owns and makes read-only, so without `-A` it aborted with `Variable: 'Orb' is read only` — a message naming a variable rather than this file. That global is now `ArkOrb`, and a **collision guard** at the top checks every global the file defines and, on a clash, names it and says what to do. *Renaming beats requiring the flag*: a script correct only under a start-up option fails exactly for whoever omits it, and the failure does not point at the cause.
 
-## R10. The chiral-half homology — only the n = 5 Smith form remains
-
-*Script: `chiral_mv.py` (`--verify` runs the regression, `--table N` prints the closed forms). The question — whether any chiral half of the Hamiltonian-cycle complex is **ℤ-acyclic**, the lowest rung at which a counterexample could exist — is answered **no**, at every n ≡ 1 (mod 4); see the session log for the closed forms and the argument.*
-
-**What remains.** Only the n = 5 torsion, and only if one wants the Smith form rather than the answer: the connecting map is ℤ⁶ → ℤ⁶ with cokernel (ℤ/2)², elementary divisors (1,1,1,1,2,2). The regression at n = 5, 6, 7 should be re-run after any change to `chiral_mv.py`; it checks the closed forms against direct 𝔽₂ homology and asserts non-negative Betti numbers, which is what catches the boundary-orientation bug described in the script header.
-
 ## R12. `mu3_menu.py` — B₃ over the k = 3 census
 
 **New 2026-09, and it closes half of `three-uniform-note.md` §10 item 1.** Scores every shape in that note's §4.2 census at every n in a range and writes `n, C(n3), b3_census, delta3, witness`. Table to n = 2000 in the working set as `b3_census_2000.csv` (1,666 rows, 7 s).
@@ -339,6 +333,11 @@ python3 biclique_table.py --nmax 100000 --out biclique_table_100000.csv   # roug
 | **A20b** | δ must be computed from the integers, never parsed from the six-decimal density column | **done** — `Row.delta = B/C` in `validate_table_v3.py` and `converse_check.py`; the two spurious FAILs at n = 999685 traced to rounding; per-class closest cap gaps tabulated. Account in session-log-14 |
 | **A23** | rerun `bcp-to-floor.md` §7 at the corrected orbital rQ | **done 2026-10-17** — control reproduces 0.04655; corrected: zero exceptional n, class 11 at 0.06617 (worst representation, window geometry) and 0.06794 (best). `bcp-to-floor.md` §7, session-log-15 §23 |
 | **A32** | does the conjecture give a classification-free proof of Brown's question? | **no** — it yields only evasiveness of the coset complex, the weakest link of χ̃ ≠ 0 ⟹ not contractible ⟹ evasive. `hardness-of-evasiveness.md` §5 |
+| **R10** | the chiral-half homology at n ≡ 1 (mod 4) | **done 2026-10-17** — no chiral half of the Hamiltonian-cycle complex is ℤ-acyclic (closed forms, session log). The last residue, the n = 5 Smith form, is now confirmed directly: integer homology of each half, by Smith normal form over `chiral_mv.build(5)`, is **H̃ = ℤ/2 in degree 1 only**, so the sum is (ℤ/2)², matching the stated cokernel with elementary divisors (1,1,1,1,2,2). `chiral_mv.py --verify` passes at n = 5, 6, 7 |
+| **A22** | `validate_table_v3.py`'s group-A expectation is scoped to the current table | **done 2026-10-17** — the scoping sentence is now in R1's status paragraph: run on a superseded table, group A fires on 18 of 2,186 v4 rows, a subset of the 289 known-low rows, and neither number is a defect |
+| **A23a** | `check_doc_figures.py`: the tail row changed what "current" means | **done** — both fixes made (two floors in `CUR`; extremal from the whole file, distributional from the prefix); the lesson moved to `verification-lessons.md` §5 |
+| **A27** | second reading of `bcp-to-floor.md` | **done 2026-10-17** — cheap tier clean; orbitals proved for all (p, k); (BH-SW) strengthened to Siegel–Walfisz strength; the 2/8 tie found; the [STANDARD] steps, the singular series (non-squarefree q, uniform lower bound) and §6.2's sieve claim written out (note §9–§9c). Only a referee-style read by a third party remains, which is not a pending check |
+| **A28** | score the Galois layer, B_refined⁺ | **resolved 2026-10-17** — within ΓL(1, c) the Galois layer never beats the full stripped cyclic twist (orb⁺ ≤ orb(c, D)), so B_refined⁺ = B_refined and the enumerator needs no change. Proof in `enumeration-proof.md` E‴, second-read by an independent referee with a finite-field check to c = 729; `galois_orb.py` |
 
 ## §2a. Needs human thought
 
@@ -613,6 +612,11 @@ The range minimum is **175813/3804661 = 0.04620989885…**, so the natural 5-pla
 
 ### A20c. A screen must derive its range from the table, never from a constant — DONE
 
+**Update 2026-10-17.** *A defect first:* every committed `audit_fmid.py` still hardcoded the sieve at N = 2700, so the range fix recorded below was never committed, and `--nmax` above 2700 could not have run. *Fixed now:* the range is derived from the table, the c-loop is bisected, and parts are paired only within a base prime.
+- *Controls:* identical output to the old version on the current table at n ≤ 2600, and on the superseded `mu_table_safe_v2.csv`, where both give the same 21 hits tuple for tuple. It reproduces this item's 4,945-row slice to n = 22,591.
+- *New coverage:* **clean to n = 10⁵**: 22,034 rows screened at δ ≤ 0.13, 0 hits, 100 s.
+- *The full 921,265-row run* was still going after an hour of CPU time when this was written. The scaling residue is now runtime, not a range bug; the result is to be recorded when it finishes.
+
 **Two scripts silently under-screened the completed table while printing a pass.** `t5_verify.py`'s pass 4 built its event list to a hardcoded `N = 2484`, so on the 10⁶ table the running maximum froze there and the check passed vacuously at **918,781 of the 921,265 rows it reported**. `audit_fmid.py` had `--nmax` defaulting to 2600 against a hardcoded sieve bound of 2700, so it screened **2,186 of 921,265 rows** — and its coverage line, "0 non-prime-power values in that range absent from the table", reads exactly like a clean pass because it is one, over the range it chose.
 
 Both now derive the range from the table's own maximum, and `t5_verify.py` also reads the **floor** from the table rather than quoting 0.02516 (its threshold accordingly moves from n ≥ 763 to n ≥ 371). Its r-loop was rewritten to run over the prime *divisors* of p^a − 1 rather than every prime below it, without which the corrected range is not reachable.
@@ -630,23 +634,6 @@ The all-shapes **penalised** column (`shape-counting.md` §4) is a **lower bound
 **What to do:** derive the penalty for the fused reading (the smaller class is worth F′·C(c′,2), so the requirement should scale with √F′ rather than being charged per size-group), and recount the three all-shapes entries. Expect them to rise, staying between the current penalised figures and the unpenalised 34 / 115 / 357.
 
 **Priority: low.** The top row is unaffected — a fused unequal shape needs n to be a sum of two distinct p-power multiples, a density-zero condition that puts it among §6.5's escapes rather than in the covering accounting — and §6.6's covering statement quotes N_add, which is counted directly and never uses this table. So the exposure is to a commentary figure, and `shape-counting.md` §4 states the direction of the error.
-
-### A22. `validate_table_v3.py`'s group-A expectation is scoped to the current table
-
-*Not owed work — retained because it is the reference point that makes a baseline run readable, and the 289-vs-18 pairing is asked about repeatedly.*
-
-The R1 reference point reads *0 FAIL*, which holds for an enumerator output under the current scoring. Run against a **baseline** it does not: a row whose recorded winner is a cyclic-fused class scored under the superseded cut twist re-derives *higher* from its own witness, so group A's re-derivation check fires. On the v4 baseline that is **18 rows of 2,186** — a subset of the 289 known-low rows, the other ~271 being exceeded by a different configuration rather than by a rescoring of their own witness, and so invisible to a check that re-derives from the recorded witness. **Neither number is a defect**; the pairing of them is the thing to state, since 289 and 18 look like they should match and do not. Either scope the expectation in R1's banner or have the check name the baseline case when `--baseline` is supplied.
-
-### A23a. `check_doc_figures.py` — the tail row changed what "current" means
-
-*Both fixes are made; this records the reasoning, since the next tail row will raise it again.*
-
-Adding n = 2759 above the contiguous frontier made the pass report 22 extra findings. **They were correct, not artefacts** — the documents' "the table floor is 0.048039" had silently become a *contiguous-range* figure quoted as the table's. Two changes followed:
-
-1. **Both floors are current figures.** The contiguous floor and the file floor answer different questions and a document may legitimately quote either; keeping only one made the other read as stale. `CUR` now carries both, and which one a sentence means is a prose matter no pass can check.
-2. **Extremal quantities come from the whole file, distributional ones from the prefix.** Both current tables are contiguous, so this is dormant — but it re-arms the moment an extension fills higher n selectively, since such rows are computed *because* they may be new minima and belong in a floor rather than a share.
-
-**The general lesson**, since this will recur: a checker's notion of "the current table" is a *population choice*, and a file that is a contiguous prefix plus a biased tail has two populations, not one. Any quantity added to `quantities()` needs classifying as extremal or distributional at the time it is added.
 
 ### A24. Is the shape space complete?
 
@@ -672,47 +659,6 @@ The ceiling table is a theorem about the Oliver-admissible family **as currently
 
 `mu-theta-n2-note.md` remains **correct on its own terms** — its family is the unfused one, its window is deliberately generous, its constant crude by design — and nothing here touches its Theorem. What changed around it: its hypothesis is now **(BCG_{1/5})**, and its relation to the framework's is **non-nesting in both directions**, not "a weaker form of the same thing". (BCG-AL) hands over an `F = 4` configuration at n ≡ 11 (mod 12) with `c/n ≈ 0.134`, which the note's `c ≥ n/5` rejects; the note in turn is far weaker in constant and restricted to `n = c + r` and `n = 2c + r`. **Before any circulation:** re-read the note's §5 θ-ladder against `aod` §3.6's current attributions, and decide whether the note should mention the F = 4 shape at all or stay deliberately silent about it.
 
-### A27. A second reading of `bcp-to-floor.md`, now that `aod` §6.9 quotes it
-
-*Third reading done 2026-10-17 (note §9).* The cheap tier (a)–(c) is clean. **Item 1 is done**: the orbitals are proved for all (p, k), with enumeration at seven cases. Two corrections came out of it:
-- **(BH-SW) was stated too weakly.** "For each B some B′(B)" must be "every A for each B", since the major-arc error is x(log x)^{5B−2−A}. `aod` §6.9(e) already describes it at Siegel–Walfisz strength.
-- **A tie at classes 2 and 8**, (3,2) against (1,6). `aod` §6.9(b) is qualified accordingly.
-
-**Items 2 and 3 also done, later on 2026-10-17** (note §9a–§9c):
-- the dilation lemma (c = 4) and the Siegel–Walfisz evaluation;
-- the singular series, where non-squarefree q reduces to a bounded 2-adic factor, an explicit local factor σ_ℓ at ℓ ≥ 5 (checked against brute force) gives a uniform lower bound c₀ ≈ 0.72·σ₂σ₃, and the completion is by mean square via the large sieve;
-- §6.2's sieve claim.
-
-*What would still add value:* a referee-style read of the whole circle-method assembly by someone other than the author and me. Item 4 was A23, now done.
-
-
-Promoting the note's findings into `aod` raises the value of a second reading rather than lowering it, and §6.9 is written so the tiers can be checked independently.
-
-**Cheap and self-contained (an hour):** (a) the identity `1/(√k+√(d/2))² = cap_k(2/d)`, algebra; (b) the six-cell (F, d) match against §3.5.3's clause 3, a table comparison; (c) the generic-set counterexample, elementary. If these three hold, §6.9(a)–(d) stand whatever happens to the rest, which is why they are separated out.
-
-**The real read (a day or more), in descending value:**
-1. **The Reduction Lemma's orbital structure**, proved rather than enumerated at five (p,k) pairs — and specifically the foreign term, which carried a factor-2 error through the note's first draft and set its headline constant 42% low. The corrected value `rQ` at odd Q is verified by enumeration and matches `shparlinski-constants.md` §1.5, but **it has one reader**.
-2. **The major-arc assembly** (§4.2), where the hypothesis is actually consumed; the singular-series completion is sketched for squarefree `q` only.
-3. The two [STANDARD] steps used on citation — the Vinogradov dilation lemma and the Siegel–Walfisz manipulation.
-4. §7's end-to-end run, which is separately blocked on A23's rerun.
-
-**What a disagreement would cost.** (a)–(d) are quoted in `aod` §§3.5.3, 6.8 and 6.9 and would survive; (e) is cited rather than restated, so a failure there retracts a citation and the strengthened reading of the asymptotic half, not any unconditional claim. That asymmetry is deliberate and should be preserved if §6.9 is ever expanded.
-
-### A28. Score the Galois layer: B_refined⁺ — RESOLVED 2026-10-17, one reading
-
-**Resolved** (`enumeration-proof.md` E‴ addendum, `galois_orb.py`). Within ΓL(1, c) the Galois layer can never beat the full stripped cyclic twist, which is the score `mu_enumerate` already uses: orb⁺ ≤ orb(c, D), proved by a fixed-coset argument and checked exhaustively to c = 400. So **B_refined⁺ = B_refined**, the enumerator needs no change, and the trichotomy's only interior source is J0a proper. The documented 343 example compares against a non-maximal twist (C₆ rather than the stripped C₁₈). The cheaper observation, that no computed row could have moved anyway because E.6 pins B_refined = B_safe above 1/25 and the table's floor is 0.0462, is moot given the theorem. **Second reading done the same day** by an independent referee agent: correct, plus its own finite-field check (c ≤ 729, about 33,000 cases, no violation). Nothing is owed; the item is kept only until the next cleanup. The original text follows.
-
-
-> *The example below is right in substance, with the group named precisely.* The group realising 3087 at c = 343 is **non-split**: H = ⟨ζ⁵⁷, ζ·Frob⟩, of order 18 with linear part C₆. It acts freely on 𝔽₃₄₃^×, verified by orbit enumeration, whereas the split C₆ ⋊ ⟨Frob⟩ fixes 𝔽₇ pointwise and stays at 1029. `enumeration-proof.md` E‴ states it this way. B_refined⁺ must therefore score non-split semilinear twists.
-
-*Small, well-posed, and the last structural source of an interior μ\*(n) apart from J0a itself.*
-
-`mu_enumerate`'s `orb(c, d)` takes a matching block's twist to be **cyclic** of order d, which is exact for a stabiliser inside the Singer cycle and *under*-states one inside ΓL(1, c) proper. At c = 343 with foreign prime 19, C₁₈ ⋊ Frob₃ sits in an Oliver chain at q = 3 and realises minimum intra-orbital 3087 against the stripped cyclic reading's 1029. So B_refined as implemented is not the sharpest construction-side lower bound available; **B_refined⁺**, taking the twist inside ΓL(1, c), is.
-
-**Why it is worth doing even though nothing currently depends on it.** Part E‴'s trichotomy leaves exactly one way for μ\*(n) to sit *strictly between* the endpoints: a proper prime power c, a stripped twist, and a density below the E.1/E.3(iii) caps. Scoring the Galois layer removes the middle of those three, after which an interior μ\* requires a stabiliser outside ΓL(1, c) altogether — i.e. J0a proper, which is a much sharper thing to be left with than "the refined scoring is not tight".
-
-**What it costs.** One clause in `orb` (multiply by the Frobenius orbit count where the twist order divides a subfield's), a re-run of the shape sweeps at c = 4, 8, 9, 16, 25, 27, 32, 49, 64, 81, and a check that `B_refined⁺ ≤ B_safe` still holds at every row. It cannot move B_safe, and it can only *raise* a lower bound, so the direction is safe. **Do not let it touch the certificates**, which score SAFE and must stay flat.
-
 ### A29. Second reading: the J0a-free bound t ≤ a
 
 Lemma C's coupling conclusion t \| ord_r(p) is proved via a Frobenius exponent and assumes a semilinear stabiliser at a ≥ 2. The **bound** it is consumed for — orb(r, t) ≤ r·a, which is all Corollary C′ and E.3(i) use — appears to need no such assumption: the r-element of the cyclic layer has r-th-root-of-unity eigenvalues on V = 𝔽_p^a, closed under Frobenius, hence at most a/ord_r(p) Frobenius orbits; conjugation is a power map whose reduction mod r is the induced multiplier, so the multiplier group permutes those orbits and M⟨p⟩/⟨p⟩ acts freely on cosets, giving \|M\| ≤ a. **One reading only, and nothing currently rests on it** — E.3(i) is theorem-side and `--no-theorems` closes every n without it, and Part E‴ does not use Lemma C at all. If it holds it removes J0a from Corollary C′ and weakens E.3(i)'s "worth at most c" only to "at most max(c, r·a)", still linear. → T1's queue, after Part 0.
@@ -736,7 +682,7 @@ Lemma C's coupling conclusion t \| ord_r(p) is proved via a Frobenius exponent a
 
 ### A36. The weighted restriction game at small n — DONE 2026-10-17: value 40 at n = 10
 
-**Result** (`restriction-game.md` §6a; `restriction_game10.py`, `matching_descent.g`). The game's value is **40**, not 25. The witness is a two-step descent through the order-320 Oliver group with edge orbits {perfect matching, the other 40 edges}, so **every nontrivial monotone graph property on 10 vertices has D ≥ 40**. The same construction gives D ≥ C(n,2) − n/2 at n = 14, 22, 34, 38, 46, and wherever a solvable 2-homogeneous Oliver construction exists. Refereed by an independent agent: valid, with a group rebuild in GAP. *Owed:* (1) **the literature search is partly done** (agent, 2026-10-17): nothing found, about 75% not in print, Angel–Borja read in full. Triesch's papers, Scheidweiler–Triesch, Lovász–Young and the papers citing Angel–Borja are still unread, and the novelty claim stays provisional until they are; (2) whether multi-step descents or larger catalogues push n = 10 beyond 40 (the catalogue's maximum interval value is 40, so this catalogue cannot); (3) other n, via other orbital pairs where the complementary graph embeds in the large orbital. The original text follows.
+**Result** (`restriction-game.md` §6a; `restriction_game10.py`, `matching_descent.g`). The game's value is **40**, not 25. The witness is a two-step descent through the order-320 Oliver group with edge orbits {perfect matching, the other 40 edges}, so **every nontrivial monotone graph property on 10 vertices has D ≥ 40**. The same construction gives D ≥ C(n,2) − n/2 at n = 14, 22, 34, 38, 46, and wherever a solvable 2-homogeneous Oliver construction exists. Refereed by an independent agent: valid, with a group rebuild in GAP. *Owed:* (1) **the literature search is partly done** (agent, 2026-10-17): nothing found, about 75% not in print, Angel–Borja read in full. a second targeted search read Lovász–Young and Triesch 1994's abstract and found nothing (best explicit n = 10 figure in print: 21, via Lovász–Young at p = 7). **Scheidweiler–Triesch's full text** (paywalled; the RWTH page errors) and the citation list of Angel–Borja are still unread; one of them is the last check before a novelty claim; (2) whether multi-step descents or larger catalogues push n = 10 beyond 40 (the catalogue's maximum interval value is 40, so this catalogue cannot); (3) other n, via other orbital pairs where the complementary graph embeds in the large orbital. The original text follows.
 
 
 **From `restriction-game.md` §6(a).** Theorem 1 there reduces restriction-based lower bounds, at fixed interval values, to a widest path over interval endpoints. Build the catalogue at n = 10 — peel intervals, bipartite escapes, and every orbital interval of every Oliver subgroup of S₁₀ up to conjugacy (a GAP list) — and compute the widest path. The KSS-shaped descent gives 25 and a single group gives μ\*(10) = 20: **anything above 25 is a new explicit lower bound for the open case**, and exactly 25 says the weighted game cannot improve it. *Only interval endpoints and their containments are needed, so the 12-million-class poset at n = 10 is never built.* A computation, not yet started.
@@ -761,7 +707,7 @@ Lemma C's coupling conclusion t \| ord_r(p) is proved via a Frobenius exponent a
 
 ### A39. Weakly symmetric functions: the Oliver-χ ⇒ ℤ-acyclic gap
 
-*Found* (`oen` §7.6): for A₅ on the 10 edges of K₅, 44 of 3,176 nontrivial invariant functions are Oliver-χ-resistant and none is ℤ-acyclic. *Also settled there*: both separations open in the graph case (A38.1). *Next*: (1) groups with no transitive Oliver subgroup but where ℤ-acyclic examples exist (A₅ on 15 points is a candidate, too large for exhaustive search here; *not* Illies's n = 12 example, which is non-monotone and so has no complex — an earlier version of this item misread it, see `monotone-transitive-note.md` §4); (2) between A₅ and S₅, which conditions kill the 44 — i.e. how much of the gap S_n's extra Oliver subgroups close; (3) the intermediate rungs (𝔽_p-acyclic, ℚ-acyclic) for these functions.
+*Found* (`oen` §7.6): for A₅ on the 10 edges of K₅, 44 of 3,176 nontrivial invariant functions are Oliver-χ-resistant and none is ℤ-acyclic. *Also settled there*: both separations open in the graph case (A38.1). ~~(1) groups with no transitive Oliver subgroup but where ℤ-acyclic examples exist~~ **Already answered, and the phrasing was confused** (corrected 2026-10-17 on Vipul's reading). Lutz's complex A (`monotone-transitive-note.md` §6) is ℤ-acyclic on 30 vertices, invariant under A₅ acting transitively on A₅/C₂, so it is a weakly symmetric ℤ-acyclic example. The 60-vertex complex is its join A ∗ A′. And "no transitive Oliver subgroup" was never an extra condition: by Oliver's theorem any ℤ-acyclic invariant complex forces it, since an Oliver group acting on a ℤ-acyclic complex has a fixed point and a transitive action leaves no invariant face. The live form of the question is the one the A₅ data points at: the gap **between ℤ-acyclic and non-evasive** (A is ℤ-acyclic; is any vertex-transitive complex non-evasive?), which is `monotone-transitive-note.md` §6's question, not this item's. *Next*: (2) between A₅ and S₅, which conditions kill the 44 — i.e. how much of the gap S_n's extra Oliver subgroups close; (3) the intermediate rungs (𝔽_p-acyclic, ℚ-acyclic) for these functions.
 
 ### A40. How far do the small-orbital tests reach?
 

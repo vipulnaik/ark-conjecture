@@ -40,6 +40,12 @@ is the tolerable direction, but it is not a reason to feed it an old file.
 Where the current table is PARTIAL, the rows it does not reach are simply not
 screened, and the script says how many so the gap cannot be read as a pass.
 
+RANGE AND SPEED (2026-10-17, pending-checks A20c).  The sieve range is now derived from the table (every committed
+version hardcoded N = 2700, so --nmax could not exceed it); the c-loop starts at the smallest c that can pass, by
+bisection; and parts are paired only within one base prime, since both classes must be p-characteristic.  Controls:
+identical output to the previous version on the current table at n <= 2600 (0 hits) and on the superseded
+mu_table_safe_v2.csv (the same 21 hits, tuple for tuple); reproduces A20c's 4,945-row slice to n = 22,591.
+
 SCOPE CUTS, stated rather than buried.  Only rows with delta <= 0.13 are
 screened (two fused classes need sum sqrt(F) >= 2*sqrt(2), so delta <= 1/8, plus
 slack for the optimistic scoring), and F is capped at FMAX below.  Both are
@@ -49,6 +55,8 @@ exist.
 import argparse
 import csv
 import sys
+from bisect import bisect_left
+from collections import defaultdict
 from math import comb, gcd, isqrt
 
 _ap = argparse.ArgumentParser(description=__doc__,
@@ -56,11 +64,22 @@ _ap = argparse.ArgumentParser(description=__doc__,
 _ap.add_argument("table", nargs="?", default="mu_table_safe_v5_code_v3.csv",
                  help="the mu table to screen against; give the CURRENT one "
                       "(see WHICH TABLE in the module docstring)")
-_ap.add_argument("--nmax", type=int, default=2600,
-                 help="screen rows with n <= NMAX (default 2600)")
+_ap.add_argument("--nmax", type=int, default=None,
+                 help="screen rows with n <= NMAX (default: the whole table)")
 ARGS = _ap.parse_args()
 
-N = 2700
+# The sieve range is DERIVED from the table (pending-checks A20c): it was a hardcoded N = 2700 in every committed
+# version, so any --nmax above 2700 could not have run.
+rows = []
+for r in csv.DictReader(open(ARGS.table)):
+    n = int(r['n'])
+    if ARGS.nmax is None or n <= ARGS.nmax:
+        rows.append((n, int(r['mu_bound'])))
+if not rows:
+    sys.exit("no rows read from %s -- wrong file?" % ARGS.table)
+if ARGS.nmax is None:
+    ARGS.nmax = max(n for n, _ in rows)
+N = max(max(n for n, _ in rows), ARGS.nmax) + 2
 sieve = bytearray([1]) * (N + 1)
 sieve[0] = sieve[1] = 0
 for i in range(2, isqrt(N) + 1):
@@ -98,13 +117,6 @@ for r in range(3, N + 1, 2):
         best = max(best, y)
     EFF[r] = max((2 ** a) / m, 2 * best / m)
 
-rows = []
-for r in csv.DictReader(open(ARGS.table)):
-    n = int(r['n'])
-    if n <= ARGS.nmax:
-        rows.append((n, int(r['mu_bound'])))
-if not rows:
-    sys.exit("no rows read from %s -- wrong file?" % ARGS.table)
 # Coverage matters as much as the verdict: a screen that reads a partial table
 # is silent about every n the table does not reach, and the silence looks
 # exactly like a pass.  Report it.
@@ -142,7 +154,8 @@ for n, B in rows:
     parts = []
     for F in range(2, FMAX + 1):
         cf = coeff(F)
-        for c in PP:
+        clo = max(2, isqrt(max(0, 2 * B // F)) - 2, isqrt(max(0, B // cf)) - 2)   # bisect: no c below this can pass
+        for c in PP[bisect_left(PP, clo):]:
             s = F * c
             if s > n - 2:
                 break
@@ -150,12 +163,14 @@ for n, B in rows:
                 continue
             parts.append((F, c, s))
     parts.sort(key=lambda t: t[2])
-    for i in range(len(parts)):
-        F1, c1, s1 = parts[i]
-        for j in range(i, len(parts)):
-            F2, c2, s2 = parts[j]
-            if base[c1] != base[c2]:
-                continue                     # both classes must be p-characteristic
+    groups = defaultdict(list)               # both classes must be p-characteristic: pair only within a base prime
+    for t in parts:
+        groups[base[t[1]]].append(t)
+    for grp in groups.values():
+      for i in range(len(grp)):
+        F1, c1, s1 = grp[i]
+        for j in range(i, len(grp)):
+            F2, c2, s2 = grp[j]
             if gcd(F1, F2) == 1:
                 continue                     # never rejected: not our delta
             if s1 * s2 < B:
@@ -181,14 +196,15 @@ for n, B in rows:
     # three fused classes sharing a prime pairwise or partially: only feasible
     # at delta <= 1/(3 sqrt2)^2 = 0.0555
     if delta <= 0.062:
-        for i in range(len(parts)):
-            F1, c1, s1 = parts[i]
-            for j in range(i, len(parts)):
-                F2, c2, s2 = parts[j]
+      for grp in groups.values():
+        for i in range(len(grp)):
+            F1, c1, s1 = grp[i]
+            for j in range(i, len(grp)):
+                F2, c2, s2 = grp[j]
                 if s1 + s2 + 4 > n:
                     break
-                for k in range(j, len(parts)):
-                    F3, c3, s3 = parts[k]
+                for k in range(j, len(grp)):
+                    F3, c3, s3 = grp[k]
                     if s1 + s2 + s3 > n:
                         break
                     if s1 + s2 + s3 != n:

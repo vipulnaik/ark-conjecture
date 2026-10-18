@@ -98,6 +98,8 @@ The two must agree in one direction only: **witness passes ⟹ search must not f
 
 ---
 
+**A checker's "current table" is a population choice** *(from pending-checks A23a, closed 2026-10-17).* Adding n = 2759 above the contiguous frontier made `check_doc_figures.py` report 22 findings, and they were correct: the documents' "table floor" had silently become a contiguous-range figure quoted as the whole file's. Both floors are now current figures in `CUR`, and extremal quantities come from the whole file while distributional ones come from the contiguous prefix. **The general lesson**, since this will recur: a checker's notion of "the current table" is a *population choice*, and a file that is a contiguous prefix plus a biased tail has two populations, not one. Any quantity added to `quantities()` needs classifying as extremal or distributional at the time it is added.
+
 ## 6. Cost as a design constraint
 
 **A check that costs seconds gets skipped, and a skipped check is worth nothing.** A validation suite that runs in a fraction of a second on the whole table is something to run reflexively — before every certificate, after every batch, on any hunch — rather than a job to schedule. That is worth protecting as a constraint: keep per-row checks linear in rows and parts, on numbers already parsed, and push anything whose cost grows with *n* rather than with the row count into a certificate.
