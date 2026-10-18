@@ -960,3 +960,7 @@ With pieces in pairwise-trivially-intersecting subgroups, blocks meet in at most
 
 `shape_realize.py --foreign`: C_r ⋊ C_t for every prime r ≤ 200 and prime-power t | r − 1, against the enumerator's own `orb` (imported). 197 blocks, 0 mismatches. The control (halving removed) fires at exactly the even t below the cap. R6 items 2 (inter-class F·c·r) and 3 (Lemma C's foreign strip) remain.
 
+## 32. R6 item 2: inter-class term checked
+
+`shape_realize.py --interclass`: 495 admissible shapes, all four orbital terms match their scores. A negative control (wrong `orb`) flags 349. The first control I designed (non-admissible shapes) does not fire, because gcd(F·d, r) governs Oliver-ness, not the inter-class orbital. Recorded as an input to item 3: the construction realises every prime-power foreign twist.
+

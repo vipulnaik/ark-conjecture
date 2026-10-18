@@ -48,6 +48,7 @@ Usage:
                                         # confirm this test would have caught it
     python3 shape_realize.py --foreign --nmax 200   # FOREIGN block: C_r : C_t vs the enumerator's own orb(r, t)
     python3 shape_realize.py --foreign --strip      # control: halving removed, OVER-SCORE at even t < r - 1
+    python3 shape_realize.py --interclass --nmax 40 # matching class + foreign block, one diagonal chain element
 Exits nonzero on any mismatch.
 """
 import argparse
@@ -268,7 +269,14 @@ def main():
                     help="check the FOREIGN block's score (pending-checks R6 item 1): realise C_r : C_t for prime r and every "
                          "prime-power twist t | r-1, and compare its minimum orbital with mu_enumerate_v3.orb(r, t, False). "
                          "With --strip, score with the halving removed (control: expect OVER-SCORE exactly at even t)")
+    ap.add_argument("--interclass", action="store_true",
+                    help="check the INTER-CLASS term F*c*r (pending-checks R6 item 2): a fused matching class plus a foreign "
+                         "block, linked by ONE diagonal cyclic generator (z on the matching class, translation on the foreign "
+                         "block), with the foreign twist on top.  Admissible (gcd(F*d, r) = 1) shapes must realise exactly F*c*r; "
+                         "non-admissible ones are run as the control")
     args = ap.parse_args()
+    if args.interclass:
+        return interclass_main(args)
     if args.foreign:
         return foreign_main(args)
 
@@ -319,6 +327,89 @@ def main():
     if args.strip and bad:
         print("The strip is detected exactly as expected -- this is the control.")
     return 1 if (bad and not args.strip) else 0
+
+
+def interclass_main(args):
+    """R6 item 2.  Points: the fused matching class (F blocks of c = p^a) plus a foreign block Z_r.  Generators:
+    matching translations (identity on the foreign block); the DIAGONAL chain element g = (z, tau), z the entangled
+    generator of the matching class and tau : y -> y + 1 on the foreign block; the top element w : y -> omega*y on the
+    foreign block (omega of order t), identity on the matching class.  The cyclic layer is cyclic and w normalises it
+    exactly when gcd(ord z, r) = gcd(F*d, r) = 1 (CRT), which is Lemma C's condition.  Scored terms: matching intra
+    F*orb(c, d), cross-block, foreign intra orb(r, t), and the inter-class F*c*r."""
+    from math import gcd
+    def isprime(m):
+        return m > 1 and all(m % k for k in range(2, int(m ** 0.5) + 1))
+    def prime_power(m):
+        for q in range(2, m + 1):
+            if m % q == 0:
+                while m % q == 0:
+                    m //= q
+                return m == 1
+        return False
+    print("shape_realize.py --interclass -- matching class + foreign block, one diagonal chain element\n")
+    tested = bad = ctrl = ctrl_low = 0
+    for p, a in [(2, 2), (3, 1), (5, 1), (7, 1), (2, 3), (3, 2), (11, 1)]:
+        c = p ** a
+        for F in (1, 2, 3):
+            for d in [x for x in range(1, c) if (c - 1) % x == 0]:
+                for r in [x for x in range(3, 14) if isprime(x) and x != p]:
+                    for t in [x for x in range(2, r) if (r - 1) % x == 0 and prime_power(x)]:
+                        if F * c + r > args.nmax:
+                            continue
+                        npts, gens, blk = fused_class_group(p, a, F, d)
+                        N = npts + r
+                        ext = [tuple(list(gg) + list(range(npts, N))) for gg in gens[:-1]]          # translations
+                        z = gens[-1]
+                        g = tuple(list(z) + [npts + (y + 1) % r for y in range(r)])                    # diagonal (z, tau)
+                        om = next(x for x in range(2, r) if pow(x, t, r) == 1 and all(pow(x, t // q, r) != 1 for q in range(2, t + 1) if t % q == 0 and isprime(q)))
+                        w = tuple(list(range(npts)) + [npts + (om * y) % r for y in range(r)])
+                        orbs = {}
+                        G = ext + [g, w]
+                        # orbit classification by representative pair
+                        pairs = [(i, j) for i in range(N) for j in range(i + 1, N)]
+                        pidx = {q: k for k, q in enumerate(pairs)}; par = list(range(len(pairs)))
+                        def find(x):
+                            while par[x] != x:
+                                par[x] = par[par[x]]; x = par[x]
+                            return x
+                        ch = True
+                        while ch:
+                            ch = False
+                            for gg in G:
+                                for k, (u, v) in enumerate(pairs):
+                                    a1, b1 = gg[u], gg[v]
+                                    ra, rb = find(k), find(pidx[(min(a1, b1), max(a1, b1))])
+                                    if ra != rb: par[ra] = rb; ch = True
+                        sizes = {}
+                        for k, (u, v) in enumerate(pairs):
+                            kind = ("inter" if (u < npts) != (v < npts) else "foreign" if u >= npts else
+                                    "intra" if blk[u] == blk[v] else "cross")
+                            sizes.setdefault((kind, find(k)), 0); sizes[(kind, find(k))] += 1
+                        mins = {}
+                        for (kd, _), v in sizes.items():
+                            mins[kd] = min(mins.get(kd, v), v)
+                        inter = mins["inter"]
+                        s_intra, s_cross, _ = score_terms(p, a, F, d, False)
+                        want = {"inter": F * c * r, "intra": s_intra, "foreign": orb(r, t, False)}
+                        if F > 1:
+                            want["cross"] = s_cross
+                        admissible = gcd(F * d, r) == 1
+                        if admissible:
+                            tested += 1
+                            miss = [(k, want[k], mins.get(k)) for k in want if mins.get(k) != want[k]]
+                            if miss:
+                                bad += 1
+                                print(f"  ADMISSIBLE MISMATCH F={F} c={c} d={d} r={r} t={t}: " + "; ".join(f"{k} scored {w} realised {m}" for k, w, m in miss))
+                        else:
+                            ctrl += 1
+                            if inter < F * c * r:
+                                ctrl_low += 1
+                                if args.verbose:
+                                    print(f"  control F={F} c={c} d={d} r={r} t={t}: inter {inter} < F*c*r {F*c*r}")
+    print(f"admissible shapes: {tested}, inter-class mismatches: {bad}")
+    print(f"non-admissible (r | F*d): {ctrl}, of which inter-class < F*c*r: {ctrl_low}  -- the gcd condition governs whether the "
+          "group is Oliver (cyclic layer normalised by the top), not the size of this orbital, so 0 here is expected")
+    return 1 if bad else 0
 
 
 def foreign_main(args):
