@@ -946,3 +946,7 @@ Together with the degree-6 search (S₄ on the edges of K₄ admits none), there
 
 Run in 50,000-wide chunks with the new `--nmin`. The single detached run died without a result, and a container restart cost one in-progress chunk, which was rerun. **All 921265 rows: 232105 at δ ≤ 0.13 screened, 0 hits.** A20c is closed into the ledger.
 
+## 29. A38.3: B(n) mod 3 proved
+
+B(n) ≡ [n odd] (mod 3) for all n ≥ 1, by the convolution identity from A² = 2eˣ − 1 and sinh²x = (cosh 2x − 1)/2. Checked to n = 200. Then the general fact: B(n) mod p has period p − 1 (Stirling expansion), so p | B(n) when (p − 1) | (n − 2), and a covering check by primes with p − 1 | 240 settles every n except **n ≡ 2 (mod 240)** above the computed range. That class cannot be closed by any finite prime set.
+
