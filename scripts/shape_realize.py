@@ -46,6 +46,8 @@ Usage:
     python3 shape_realize.py --nmax 60  # wider sweep (cost grows like n^2 per shape)
     python3 shape_realize.py --strip    # score with the RETIRED F_mid strip, to
                                         # confirm this test would have caught it
+    python3 shape_realize.py --foreign --nmax 200   # FOREIGN block: C_r : C_t vs the enumerator's own orb(r, t)
+    python3 shape_realize.py --foreign --strip      # control: halving removed, OVER-SCORE at even t < r - 1
 Exits nonzero on any mismatch.
 """
 import argparse
@@ -262,7 +264,13 @@ def main():
     ap.add_argument("--strip", action="store_true",
                     help="score with the retired F_mid strip (expect UNDER-SCOREs)")
     ap.add_argument("--verbose", action="store_true")
+    ap.add_argument("--foreign", action="store_true",
+                    help="check the FOREIGN block's score (pending-checks R6 item 1): realise C_r : C_t for prime r and every "
+                         "prime-power twist t | r-1, and compare its minimum orbital with mu_enumerate_v3.orb(r, t, False). "
+                         "With --strip, score with the halving removed (control: expect OVER-SCORE exactly at even t)")
     args = ap.parse_args()
+    if args.foreign:
+        return foreign_main(args)
 
     mode = "RETIRED F_mid strip" if args.strip else "current (full twist)"
     print(f"shape_realize.py -- scoring mode: {mode}\n")
@@ -311,6 +319,50 @@ def main():
     if args.strip and bad:
         print("The strip is detected exactly as expected -- this is the control.")
     return 1 if (bad and not args.strip) else 0
+
+
+def foreign_main(args):
+    """R6 item 1: a foreign block is a prime block r carrying C_r : C_t, t a prime power dividing r - 1 (Lemma B').
+    Its scored intra term is orb(r, t) from the ENUMERATOR ITSELF (imported, so the live code is what is tested); the
+    realised term is the minimum pair-orbital of the actual group.  The efficiency eta = orb(r, t) / C(r, 2) is
+    2t/(r-1) for odd t and t/(r-1) for even t."""
+    import importlib.util, os
+    spec = importlib.util.spec_from_file_location("mue", os.path.join(os.path.dirname(os.path.abspath(__file__)), "mu_enumerate_v3.py"))
+    mue = importlib.util.module_from_spec(spec)
+    sys.argv = [sys.argv[0]]                        # the enumerator parses argv at import time in some versions
+    spec.loader.exec_module(mue)
+    def isprime(m):
+        return m > 1 and all(m % k for k in range(2, int(m ** 0.5) + 1))
+    def prime_power(m):
+        for q in range(2, m + 1):
+            if m % q == 0:
+                while m % q == 0:
+                    m //= q
+                return m == 1
+        return False
+    mode = "CONTROL: halving removed (expect OVER-SCORE exactly at even t)" if args.strip else "enumerator's orb(r, t, False)"
+    print(f"shape_realize.py --foreign -- scoring: {mode}\n")
+    tested = bad = 0
+    for r in range(3, args.nmax + 1):
+        if not isprime(r):
+            continue
+        g = next(x for x in range(2, r) if all(pow(x, (r - 1) // q, r) != 1 for q in range(2, r) if (r - 1) % q == 0 and isprime(q)))
+        for t in [x for x in range(1, r) if (r - 1) % x == 0 and prime_power(x)] + [1]:
+            w = pow(g, (r - 1) // t, r)
+            gens = [tuple((x + 1) % r for x in range(r)), tuple((w * x) % r for x in range(r))]
+            real = min(orbitals(r, gens))
+            score = min(r * t, comb(r, 2)) if args.strip else mue.orb(r, t, False)
+            tested += 1
+            if score != real:
+                bad += 1
+                print(f"  r={r:<4} t={t:<4} scored {score:>6} realised {real:>6}  {'UNDER' if score < real else 'OVER'}-SCORE")
+            elif args.verbose:
+                print(f"  r={r:<4} t={t:<4} {score:>6} ok   eta = {score / comb(r, 2):.4f}")
+    print(f"\n{tested} (r, t) foreign blocks tested, {bad} mismatches.")
+    if args.strip:
+        print("Control run: mismatches are expected exactly at even t." if bad else "CONTROL FAILED TO FIRE")
+        return 0 if bad else 1
+    return 1 if bad else 0
 
 
 if __name__ == "__main__":

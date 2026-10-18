@@ -209,11 +209,21 @@ For Illies: σ = 4 − 4 + 1 = 1 for the 4-cycle arcs and σ = 3 − 1 = 2 for t
 
 All found have D = 11, and all are Illies-shaped. Every C₃ ⋊ C₄ example (checked by coset type) takes one C₄ with exactly Illies's 4-cycle arcs (3 choices) and pairs it with one of 8 "column" families inside the cosets of C₆. The Illies transplant is one of the 8; the other 7 use pieces in the C₆ cosets, which meet C₄ in the centre. The A₄ examples agree with the transplants in count (12) and piece structure; they were not matched set-for-set. **So within this template, at orders up to 15, Illies's construction is the only mechanism found, and order 12 is the only order that hosts it.** The 6-variable A₄ example is not of this form after the pull-back, since its pulled-back members span several cosets.
 
-**Monotone pieces: the template is dead when the subgroups meet trivially** (sketch). For a monotone F the piece families are complexes, and Δ is a union of translates of them. If the Hᵢ meet pairwise trivially, two translates share at most one point. Treat each connected component of a translate, with at least 2 points, as a block. For Δ to be contractible the blocks must form a hypertree: connected, with Σ_blocks (size − 1) = |G| − 1. By transitivity every point lies in the same number r of blocks.
+**Monotone pieces: the template is dead when the subgroups meet trivially** (proved below). For a monotone F the piece families are complexes, and Δ is a union of translates of them. If the Hᵢ meet pairwise trivially, two translates share at most one point. Treat each connected component of a translate, with at least 2 points, as a block. For Δ to be contractible the blocks must form a hypertree: connected, with Σ_blocks (size − 1) = |G| − 1. By transitivity every point lies in the same number r of blocks.
 - r = 1: the blocks partition G, and connectivity forces a single block G, which is the trivial property.
 - r ≥ 2: the number of blocks N ≤ r|G|/2 and Σ size = r|G|, so the hypertree condition r|G| − N = |G| − 1 gives (r/2 − 1)|G| + 1 ≤ 0, which is false.
 
-So a monotone construction must use overlapping subgroups, where translates share edges and larger faces. That is the territory of Brown's coset complexes (§5a). *Not written out in full:* the homotopy step, that a union of blocks pairwise meeting in at most a point is contractible only if the incidence structure is a hypertree, is standard but has not been checked in this setting.
+So a monotone construction must use overlapping subgroups, where translates share edges and larger faces. That is the territory of Brown's coset complexes (§5a). *The homotopy step, written out (2026-10-17).*
+- **Every face lies in a block.** Δ is the union of the translates g·Kᵢ, so every face lies in some translate, hence in one of its connected components (the blocks, together with isolated vertices).
+- **Two distinct blocks meet in at most one vertex.** Components of one translate are disjoint. Translates over distinct cosets of the same Hᵢ are disjoint, and over the same coset they coincide, because Kᵢ is Hᵢ-invariant. For i ≠ j, gHᵢ ∩ g′Hⱼ is a coset of Hᵢ ∩ Hⱼ = 1.
+- **Δ ≃ Γ ∨ ⋁_b K_b.** Δ is the colimit of the diagram whose objects are the blocks K_b and the shared vertices, with the inclusions v → K_b. All maps are inclusions of subcomplexes, so the colimit is the homotopy colimit. In the homotopy colimit, each connected K_b can slide all its attaching points to one basepoint, which gives **Δ ≃ Γ ∨ ⋁_b K_b**, with Γ the bipartite point–block incidence graph (each K_b wedged on at its node).
+- **Contractibility.** Each wedge summand is a retract, so **Δ is contractible iff Γ is a tree and every block is contractible**. The tree condition is the hypertree condition Σ_b (|b| − 1) = |G| − 1, with connectivity.
+- **Transitivity defeats it.** Left translation permutes the blocks, so every point lies in the same number r of blocks.
+  - r = 0: Δ is discrete.
+  - r = 1: the blocks partition G, and since every block lies in a proper coset there are at least two, so Δ is disconnected.
+  - r ≥ 2: the counting above gives a contradiction.
+
+**So for |G| ≥ 2, Δ is never contractible, whatever the piece complexes are**: contractible, disconnected or otherwise. The obstruction is the incidence graph alone.
 
 ## 6. The counterexample programme
 

@@ -952,3 +952,11 @@ B(n) ≡ [n odd] (mod 3) for all n ≥ 1, by the convolution identity from A² =
 
 *Follow-up:* the independent referee confirmed (1), and (2)–(3) for odd p only, with n ≥ 2 in (3); p = 2 has period 3 (Bell numbers mod 2). The caveat caught a bug in my class check, which had used p = 2 through the invalid shortcut. Fixed in `bip_small_global_check.py`, the rerun finds an odd witness ≤ 67 at every n ≡ 2 (mod 240) to 10⁷.
 
+## 30. A48.1: the template obstruction proved
+
+With pieces in pairwise-trivially-intersecting subgroups, blocks meet in at most one vertex, so Δ ≃ Γ ∨ ⋁ K_b (colimit = homotopy colimit; slide each block's attaching points to a basepoint). Contractible ⇔ Γ is a tree and every block is contractible; transitivity rules out the tree. Written out in `monotone-transitive-note` §5b, replacing the sketch.
+
+## 31. R6 item 1: foreign-block scoring checked against realised groups
+
+`shape_realize.py --foreign`: C_r ⋊ C_t for every prime r ≤ 200 and prime-power t | r − 1, against the enumerator's own `orb` (imported). 197 blocks, 0 mismatches. The control (halving removed) fires at exactly the even t below the cap. R6 items 2 (inter-class F·c·r) and 3 (Lemma C's foreign strip) remain.
+

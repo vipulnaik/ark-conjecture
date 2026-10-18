@@ -212,7 +212,7 @@ gap -q -o 8g oliver_negative.g                # the admissibility predicate's ne
 
 **Still owed** — *none blocked; all buildable in `shape_realize.py`'s existing Python. Order below is by cost.*
 
-1. **The foreign block's η = 2t/(r−1)**, against a realised AGL(1,r) twist. Cheapest by a wide margin: a foreign block is a *prime* block, so no field construction arises. Wants a `--foreign` mode with a `--strip` control.
+1. ~~**The foreign block's η = 2t/(r−1)**, against a realised AGL(1,r) twist.~~ **Done 2026-10-17:** `shape_realize.py --foreign` builds C_r ⋊ C_t for every prime r ≤ 200 and every prime-power t | r − 1, and compares it with the enumerator's own `orb(r, t, False)`, imported from `mu_enumerate_v3.py`: **197 blocks, 0 mismatches**. Control `--foreign --strip` (halving removed) fires at exactly the even t < r − 1: 23 of the 26 even-t blocks to r = 60, the other 3 being t = r − 1, where the C(r,2) cap equalises. *Original text:* Cheapest by a wide margin: a foreign block is a *prime* block, so no field construction arises. Wants a `--foreign` mode with a `--strip` control.
 2. **The inter-class term F·c·r.** The "chain element linking two classes" is one generator — a diagonal element acting as the twist on the matching block and as twist or translation on the foreign one. Build matching blocks through the existing `field()` basis, or restrict a first pass to prime c.
 3. **Lemma C's foreign strip.** Highest value of the three. The target is not "did the matching block lose its twist" — forcing twist and foreign translations into one cyclic layer leaves the matching intra at full score — but **the largest foreign twist still realisable once the layer is cyclic, against what the enumerator credits**. A statement about the foreign term, so it wants item 1 first.
 
@@ -763,7 +763,7 @@ Arguments: the largest orbital count t to check (12), and a wall-clock budget in
 ### A48. Regular actions and the coset template (`monotone-transitive-note` §5b)
 
 *Recorded:* the regular action is universal for both versions; counting in it gives exactly Rivest–Vuillemin; the design equation; Illies's construction is non-evasive at all 28 choices across the five groups of order 12; the exhaustive template search at orders ≤ 15 finds only order 12; a sketch that monotone pieces in pairwise-trivially-intersecting subgroups cannot give a contractible complex. *Open:*
-1. Write out the monotone sketch's homotopy step, including blocks that are not contractible.
+1. ~~Write out the monotone sketch's homotopy step.~~ **Done 2026-10-17** (§5b): Δ ≃ Γ ∨ ⋁ K_b via the homotopy colimit, so contractible ⇔ Γ is a tree and every block is contractible, and transitivity rules out the tree for every |G| ≥ 2. No assumption on the piece complexes is needed.
 2. D₁₂ and C₂ × C₆ in the template search (35–45 orbits; needs a smarter enumeration than all unions).
 3. Solve the design equation with richer piece menus and test larger groups (orders 18, 20, 24, then A₅). Needs a decision-tree solver that uses the coset structure, since D on 2^|G| inputs is out of reach beyond about 16.
 4. Prove Illies-type non-evasiveness from the local structure at a point, so that order-12 genericity becomes a theorem, and find which other local configurations admit such a proof.
