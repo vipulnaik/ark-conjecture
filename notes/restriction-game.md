@@ -139,6 +139,31 @@ If topology is not the bottleneck, crossing is. The k-partite escape is crossed 
 
 **(e) The branch h(k·K_{n/k}) = 1.** Characterise which properties live there beyond "no isolated vertex", and find conditional leaves for them. By §5.5 this, not topology, is the whole gap between 1/3 and 1/2 within this family of arguments.
 
+## 6a. Result: the weighted game at n = 10 has value 40 (2026-10-17)
+
+*`scripts/restriction_game10.py`, on the 1,294 Oliver classes of S₁₀ in `outputs/tom10.txt`.* The catalogue of §6(a) consists of the two peel intervals (value C₉ = 36), the bipartite escapes, and every orbital interval (U, U ∪ O) of every Oliver class. By Theorem 1 its value is the largest v for which the intervals of value ≥ v contain a descent. The forcing closure finds descents at every v ≤ 40 and none at 41, so **V = 40**, against the 25 that §6(a) anticipated.
+
+**The descent is two steps, and needs no computer to state.** Let Γ ≤ S₁₀ be the order-320 group (even-weight flips C₂⁴) ⋊ AGL(1, 5): it preserves the perfect matching M = {12, 34, 56, 78, 9 10} and acts 2-transitively on its five pairs. Its edge orbits are M and K₁₀ − M, of sizes 5 and 40. It is an Oliver group via P = C₂⁴ ◁ N = P ⋊ C₅ ◁ Γ, with N/P ≅ C₅ cyclic and Γ/N ≅ C₄ a 2-group. For any nontrivial monotone graph property f on 10 vertices:
+- **If f(M) = 0**, f crosses (M, K₁₀). The restriction to the 40 edges of K₁₀ − M is nontrivial, monotone and Γ-invariant, Γ acts on those edges transitively and faithfully, so by Proposition 1 the restriction is evasive. Hence **D(f) ≥ 40**.
+- **If f(M) = 1**, then K₁₀ − M′, for another perfect matching M′, contains a copy of M. So f(K₁₀ − M′) = 1 while f(∅) = 0, and f crosses (∅, K₁₀ − M′), whose free set carries a conjugate of Γ transitively. Again **D(f) ≥ 40**.
+
+> **Every nontrivial monotone graph property on 10 vertices has D(f) ≥ 40** (out of 45). The previous explicit bound from this framework was 25 (KSS-shaped descent), and μ\*(10) = 20 from a single group's *minimum* orbital. This descent instead uses a group's *largest* orbital, together with the fact that the complementary orbital embeds in it.
+
+*Precision points.* Proposition 1 is needed in **Oliver's full class**: p = q = 2 is allowed, and KSS's narrower "Γ/P cyclic" form does not cover Γ, since Γ/O₂(Γ) ≅ AGL(1, 5) is not cyclic. Angel–Borja use the same version. The degenerate case, where the restricted complex is {∅} (the restriction is OR on 40 edges), is trivially evasive. Lemma 2 of §4 does not apply: neither step needs an isolated or universal vertex. This is the "different descent shape" §4 leaves open.
+
+**Generalisation: n = 2p.** The same construction works whenever an Oliver group on 2m points has edge orbits exactly {perfect matching, the rest}. It then gives **D(f) ≥ C(n, 2) − n/2**. Solvability forces the action on the m pairs to be solvable and 2-homogeneous, so m is a prime power. For m = p prime the group on pairs is C_p ⋊ C_d, with d = p − 1 or d = (p − 1)/2 odd, and the Oliver condition needs C_d to be a prime power: p − 1 a power of 2 (Fermat primes), or (p − 1)/2 an odd prime power. *Searched* (`scripts/matching_descent.g`: E ⋊ H inside C₂ ≀ H for every solvable 2-homogeneous transitive H of degree m, E all flips or the even-weight ones, tested with the same Oliver routine as `oliver_tom.g`):
+- groups exist at **m = 3, 5, 7, 11, 17, 19, 23**, i.e. **n = 6, 10, 14, 22, 34, 38, 46**, and at m = 16, where n = 32 is a prime power already covered by KSS;
+- **none** at m = 9, 13, 25, 27, 29, 31, which agrees with the C_d condition at the primes and shows nothing new at the proper prime powers 9, 25, 27;
+- the run stopped at m = 32, the transitive-groups library's limit there; m = 47 ((47 − 1)/2 = 23) is predicted to work but was not run.
+
+So **D(f) ≥ C(n,2) − n/2 at n = 10, 14, 22, 34, 38, 46**, plus n = 6, where full evasiveness is already known. In fraction terms that is 1 − 1/(n − 1) of the maximum, e.g. 84 of 91 at n = 14 and 220 of 231 at n = 22.
+
+**Checked:**
+- *Independent referee agent:* the logic is valid; the group is rebuilt in GAP (order, orbits and Oliver series all confirmed); the generalisation is derived independently.
+- *The game computation itself.* It also reproduces the KSS-shaped value: the descent found at v = 25 uses peel I₂ and the K₅ bipartite escape.
+
+**Literature (light check, not exhaustive):** nothing found stating D ≥ 40 at n = 10, or C(n,2) − n/2 at n = 2p. Miller's tutorial (arXiv:1306.0110) gives only KSS's n²/4 − o(n²) and the prime-power theorem. Angel–Borja (arXiv:1603.04412) leave n = 10's evasiveness open; their Prop. 4.4 (every perfect matching lies in any non-evasive property on 2p vertices) is the same dichotomy in membership form, with no query bound drawn from it. **Before any external claim of novelty, a proper literature search is owed**, including Scheidweiler–Triesch-type small-n bounds and the papers citing Angel–Borja.
+
 ## 7. What this buys
 
 For evasiveness, the project's framework reduced proof to a catalogue (groups and their orbitals) plus a mechanical test (χ of the fixed complex). This note does the same for query complexity at the first level: **a catalogue of certified sub-worlds plus a mechanical widest path**. It explains at once why RV and KSS got the constants they did, and why n²/4 is a genuine barrier for escapes certified unconditionally. Past it, the right extension is **conditional certification in a case tree** — which is how Korneffel–Triesch evade Lemma 2 — and once that is allowed, the topology is no longer the obstacle: equal-parts k-partite escapes are evasive in the guarded branch at every k we checked. The open constants live in the branch where those escapes are never crossed.

@@ -903,3 +903,20 @@ Together with the degree-6 search (S₄ on the edges of K₄ admits none), there
 
 **Still open (effort budget):** A36 (the restriction game at n = 10), A34 items 2–3, and second readings of today's A28 and Lemma 1–3 arguments.
 
+## 25. Still-open items: referee passes; A36 gives D ≥ 40 at n = 10
+
+**Referee passes** by independent agents:
+- *A28's theorem:* correct, with its own finite-field check (c ≤ 729, about 33,000 cases).
+- *Lemma 1–3 reading:* confirmed. Two corrections were applied to `johnson-presentations.md`: |H ∩ V| ≤ 2 (not = 1) in the swap case, and a missed intermediate-P case at a ≥ 2, which has a sketched repair still to be written out.
+
+**A36** (`restriction_game10.py`): the weighted restriction game at n = 10 has **value 40**. The witness is the two-step descent (M, K₁₀), then (∅, K₁₀ − M′), through the order-320 Oliver group (C₂⁴) ⋊ AGL(1,5), whose edge orbits are {perfect matching, the other 40 edges}. So **D(f) ≥ 40 for every nontrivial monotone graph property on 10 vertices**, against the 25 expected.
+- The second referee agent judged it valid with caveats: it needs Oliver's full class, and the degenerate OR case should be noted. It rebuilt the group in GAP with an explicit Oliver series and derived the n = 2p generalisation independently.
+- `matching_descent.g` confirms the construction at n = 6, 10, 14, 22, 34, 38, 46 (m ≤ 31 searched), and that none exists at m = 9, 13, 25, 27, 29, 31.
+- *Literature:* a light check only (Miller's tutorial, Angel–Borja), with nothing found. A proper search is owed before any novelty claim.
+
+**My errors on the way:**
+- The first GAP run used `E`, a read-only GAP global, and sat in the break loop for half an hour; the rename to `EE` hit another builtin.
+- A `pkill -f` pattern again matched its own shell, the same trap as earlier in the session.
+
+**Still open:** the intermediate-P repair to Lemma 1, written out; A34 items 2–3; the literature search for A36; extending A36 beyond the matching shape.
+
