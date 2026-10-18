@@ -64,6 +64,8 @@ _ap = argparse.ArgumentParser(description=__doc__,
 _ap.add_argument("table", nargs="?", default="mu_table_safe_v5_code_v3.csv",
                  help="the mu table to screen against; give the CURRENT one "
                       "(see WHICH TABLE in the module docstring)")
+_ap.add_argument("--nmin", type=int, default=0,
+                 help="screen only rows with n >= NMIN (for chunked runs; default 0)")
 _ap.add_argument("--nmax", type=int, default=None,
                  help="screen rows with n <= NMAX (default: the whole table)")
 ARGS = _ap.parse_args()
@@ -73,7 +75,7 @@ ARGS = _ap.parse_args()
 rows = []
 for r in csv.DictReader(open(ARGS.table)):
     n = int(r['n'])
-    if ARGS.nmax is None or n <= ARGS.nmax:
+    if (ARGS.nmax is None or n <= ARGS.nmax) and n >= ARGS.nmin:
         rows.append((n, int(r['mu_bound'])))
 if not rows:
     sys.exit("no rows read from %s -- wrong file?" % ARGS.table)
@@ -127,10 +129,10 @@ for _p in [x for x in range(2, ARGS.nmax + 1) if sieve[x]]:
     while _v <= ARGS.nmax:
         _pp.add(_v)
         _v *= _p
-_gaps = [n for n in range(6, ARGS.nmax + 1) if n not in _present and n not in _pp]
-print("screening %s: %d rows, n <= %d, %d "
+_gaps = [n for n in range(max(6, ARGS.nmin), ARGS.nmax + 1) if n not in _present and n not in _pp]
+print("screening %s: %d rows, %d <= n <= %d, %d "
       "non-prime-power values in that range absent from the table "
-       "(unscreened)" % (ARGS.table, len(rows), ARGS.nmax, len(_gaps)))
+       "(unscreened)" % (ARGS.table, len(rows), ARGS.nmin, ARGS.nmax, len(_gaps)))
 if _gaps:
     print("  first absent n: %s%s"
           % (", ".join(str(x) for x in _gaps[:10]),

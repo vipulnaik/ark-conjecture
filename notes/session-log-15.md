@@ -942,3 +942,7 @@ Together with the degree-6 search (S₄ on the edges of K₄ admits none), there
 
 **A36 literature:** a second, targeted search found nothing, with 21 the best explicit n = 10 figure in print. Scheidweiler–Triesch's full text remains the last check before a novelty claim.
 
+## 28. `audit_fmid.py` over the full table: clean
+
+Run in 50,000-wide chunks with the new `--nmin`. The single detached run died without a result, and a container restart cost one in-progress chunk, which was rerun. **All 921265 rows: 232105 at δ ≤ 0.13 screened, 0 hits.** A20c is closed into the ledger.
+
