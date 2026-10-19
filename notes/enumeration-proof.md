@@ -774,6 +774,11 @@ The survivors at 10⁴ before the multi-part check were themselves informative: 
 
   In every sub-case δ < 1/25, strictly. ∎
 
+> **Second reading, 2026-10-19 (session-log-15 §45): sound, with one hypothesis to make explicit.** Every sub-case's arithmetic re-checks, and so do the exhaustiveness of the four a = 1, s = 2 sub-cases, the ratio window, the q = 2 divisibility (Fermat r ≥ 17 gives r ≡ 2 (mod 5), so 5 | c) and `fallback_sup.py`'s 12 exceptions (rerun to n = 3000, identical).
+> - **The hypothesis.** The last sub-case uses **r′ ≠ r**. With r′ = r allowed, the twist analysis also admits r′ = r: for odd q, 6·3^{e−1} + 1 = 2·3^e + 1. Then n = 4r + 1 and the counting bound gives only about 1/16.
+> - **Why it is harmless.** The enumerator and `fallback_sup.py` both exclude a repeated foreign prime, and Lemma D2's same-position class of size r is what justifies that: such a configuration has an orbital of size r < C(n,2)/25. So the theorem holds as used.
+> - **The fix.** The statement should say "foreign primes distinct", or the sub-case should cite D2 for r′ = r.
+
 > **The 12 exceptions, and why they are not a qualification.** Enumerating *every* fallback configuration at every n ≤ 3000 — any (F, c), any r | c − 1, any top prime, leftover of zero, one or two admissible parts — and taking the sup of SAFE per n, the configurations reaching C(n,2)/25 are these and nothing else (`fallback_sup.py`):
 >
 > | n | c | r | F | L | q | s | a | SAFE |

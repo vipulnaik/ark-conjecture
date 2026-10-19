@@ -507,7 +507,7 @@ Both coordinates of the joint optimum are settled without a search. The **F side
 
 **Two obligations.**
 1. **Sync — the one that rots silently.** Nothing in this repository's checks looks at `.lean` files. Any revision to §3.3.5's table, the cap algebra, `orb`, or the E′ s-bound should be followed by a pass over all three files. A document changing a constant now contradicts a *proved theorem*; `Basic.lean`'s ceiling list has six entries, so a table that gains or loses a constant no longer matches.
-2. **Progress.** **Theorem E.5 is the highest-value next target** — arithmetic on SAFE terms, one human reading, load-bearing for "μ\* known exactly to 10⁶"; the README predates it (Phase 1b). Also cheap: `μ*(n) ≥ n·(Q(n) − 1)/2` and the self-pairing lemma `orb c d = c·d/2 ⟺ d even`. Phases 2 and 3 are not owed.
+2. **Progress.** **Theorem E.5 is the highest-value next target** — arithmetic on SAFE terms, one human reading plus a machine second reading (2026-10-19), load-bearing for "μ\* known exactly to 10⁶"; the README predates it (Phase 1b). Also cheap: `μ*(n) ≥ n·(Q(n) − 1)/2` and the self-pairing lemma `orb c d = c·d/2 ⟺ d even`. Phases 2 and 3 are not owed.
 
 **Two lessons to carry:**
 - **Check k = 0 first** on any "k things each with property P force a bound" claim: `prop_F1` was false as stated, the same failure as `size_of_capacity`.

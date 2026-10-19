@@ -1403,3 +1403,18 @@ There is no need to triangulate the dunce hat. K sits in S^m with m = N − 2, a
 - **Not checked:** the heuristic says nothing when it fails. At n = 4 it misses one non-trivial property that the exact search settles, so a heuristic failure is never evidence of evasiveness.
 
 **Gotcha:** the first full run was piped through `tail`, so a timeout killed it with no progress visible. Results now print per property, unbuffered.
+
+## 45. Second reading of Theorem E.5
+
+I read the proof in full against its sub-cases.
+- **Checked and clean:**
+  - the s ≥ 4 and s = 3 branches;
+  - the F ≥ 2 bound, where (r−1)/(5(5r+1)) < 1/25 ⇔ 5r − 5 < 5r + 1;
+  - the p-characteristic-leftover case;
+  - the two-or-more-part leftover, with θ/(3 + 2√θ)² ≤ 1/25 on (0, 1];
+  - the ratio window r′/r ∈ (3/4, 2);
+  - the odd-q twist bounds, which force r = 2q^e + 1 and leave r′ = 2r − 1 as the only distinct in-window value;
+  - the q = 2 case: 3 | c for r = 3·2^e + 1, and 5 | c for Fermat r ≥ 17 since 2^{2^k} ≡ 1 (mod 5) for k ≥ 2, leaving n ∈ {15, 23} by direct listing.
+- **Corroboration:** `fallback_sup.py 3000` reproduces exactly the 12 exceptions, with largest n = 63. The closest non-bare a = 1, s = 2 approach is 0.99555 of 1/25, at n = 1797.
+- **One implicit hypothesis:** r′ ≠ r in the one-foreign-leftover case. Without it, r′ = r is in the window — for odd q, 6·3^{e−1} + 1 = 2·3^e + 1 — giving n = 4r + 1 and a bound near 1/16. It is supplied by the distinct-foreign-prime convention (enumerator, `fallback_sup.py` line 31), which Lemma D2's size-r same-position class justifies.
+- **Recorded in `ep` beside the proof**, with the suggested fix. The theorem's statement itself is unchanged; that edit is Vipul's call. This is a machine reading, the kind T1 says is weakest at "a step whose plausibility does the work".
