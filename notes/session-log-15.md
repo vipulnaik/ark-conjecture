@@ -1385,3 +1385,7 @@ A44's old text, verbatim:
 > ### A44. Bi-resistance
 >
 > *Recorded* (`oen` §7.13): definition, convexity, equality with the χ condition at two-orbital groups, strict place between Oliver-χ and Oliver-resistant, counts at n = 6 and natural properties at n = 10. *Done*: (1) rung BI added to `metaproperty_ladder_check.py`, no violations, self-dual; (2) K₄-free and 3-colourable both bi-resistant at n = 10. (3) *answered* (`oen` §7.13): an exact half-split criterion; the two-block form gives evasiveness at 12T162, the only such group found in degrees 4–14 (order ≤ 5,000 at 12–14). *Remaining*: scan degree 12–14 groups of order > 5,000 and larger degrees; confirm the sign-kernel identification of 12T162 by an isomorphism test.
+
+## 43. A43(2): contractible ⇒ K* contractible in codimension ≥ 3
+
+There is no need to triangulate the dunce hat. K sits in S^m with m = N − 2, and |K*| ≃ S^m ∖ |K|. When m − dim K ≥ 3, general position gives π₁ = 1, Alexander duality gives the complement acyclic, and Hurewicz plus Whitehead make it contractible. So the implication holds for every contractible K with dim K ≤ N − 5, including every dunce hat triangulation (dimension 2, at least 8 vertices). A43(2) is narrowed to dim K ≥ N − 4 and recorded in `oen` §7.12. *Not checked numerically*; the argument is standard.

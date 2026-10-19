@@ -695,6 +695,13 @@ Write K\* for the Alexander dual {σ : V ∖ σ ∉ K}. Non-evasiveness is self-
 
 **Open**: collapsible ⇒ K\* collapsible? (The argument makes the complement a ball, but a complex homotopy equivalent to a ball need not collapse — the dunce hat.) Contractible ⇒ K\* contractible? (Alexander duality gives only ℤ-acyclic; π₁(K\*) is that of the complement, which for a contractible K with a Mazur-type regular neighbourhood is a homology ball whose π₁ is killed only after gluing the neighbourhood back — not forced to be trivial, but no example is known here.)
 
+**Contractible ⇒ K\* contractible whenever dim K ≤ N − 5** (2026-10-19; standard PL facts, the same ones as above). Write m = N − 2, so K lies in S^m and |K\*| ≃ S^m ∖ |K|.
+- **Simply connected.** If m − dim K ≥ 3, general position lets every loop and every homotopy of loops in S^m avoid |K|, so π₁(S^m ∖ |K|) = π₁(S^m) = 1.
+- **Acyclic.** Alexander duality gives H̃_i(S^m ∖ |K|) ≅ H̃^{m−i−1}(K) = 0.
+- **Contractible.** A simply connected, ℤ-acyclic CW complex is contractible, by Hurewicz and Whitehead.
+
+So the dual of **any** contractible K of dimension at most N − 5 is contractible, with no condition on K beyond contractibility. That includes every dunce hat triangulation: dimension 2, and a triangulation needs at least 8 vertices, so N − 5 ≥ 3. The question is open only for dim K ≥ N − 4, where K comes within codimension 2 of filling the sphere. *The Mazur-type worry above needs codimension ≤ 2, which is exactly that range.*
+
 **The refined spine**, if collapsibility is not self-dual: non-evasive ⇒ K and K\* both collapsible ⇒ K collapsible ⇒ K and K\* both contractible ⇒ K contractible ⇒ ℤ-acyclic (self-dual). The first step because non-evasiveness is self-dual; the third by the implication above. Whether "both collapsible" gives extra leverage for ARK is unclear.
 
 **Duals of joins, and Lutz's 60-vertex complex.** For complexes on disjoint vertex sets, (K₁ ∗ K₂)\* = (K₁\* ∗ Δ_(V₂)) ∪ (Δ_(V₁) ∗ K₂\*), two cones glued along K₁\* ∗ K₂\*, so the dual of a join is homotopy equivalent to the suspension of K₁\* ∗ K₂\*. Lutz's contractible vertex-homogeneous complex K = A ∗ A′ on the regular A₅-set (`monotone-transitive-note.md` §6: A his 30-vertex ℤ-acyclic complex; K evasive) therefore has **contractible dual**: A\* is ℤ-acyclic, hence connected, a join of connected ℤ-acyclic complexes is simply connected and ℤ-acyclic, hence contractible, and so is its suspension. Lutz's example is contractible on both sides; collapsibility of either side remains open.
