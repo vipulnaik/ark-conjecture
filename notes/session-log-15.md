@@ -1436,3 +1436,19 @@ I read the proof in full against its sub-cases.
   - Neither affects the theorem: n = 21 is an exception, n = 22 has no configuration, and at n = 15 the real bound clears.
   - My §45 reading missed both. The formalisation caught what the reading didn't.
 - **Not covered:** Lemma E.2's bound L(a) ≤ 2^{(a−1)/2} + 1, the E.1 and E.3(iii) windows, the twist classification behind `PowRel`, and the SAFE model.
+
+## 47. Lean: Lemma E.2 and Theorem E.1's Mersenne window
+
+`E5Core.lean` now also proves:
+- **Number theory, in core Lean.** `IsPrimeN` (core has no `Nat.Prime`), plus `gcd_pow_eq_one`, `dvd_of_dvd_mul_coprime` and `prime_pow_dvd_coprime`.
+- **`gcd_two_pow_pm`:** gcd(2^m − 1, 2^m + 1) = 1.
+- **`lemma_E2`:** every prime power dividing 2^(2m) − 1 is ≤ 2^m + 1.
+- **`orb_le_mul`** and **`twist_split`.**
+- **`mersenne_window` / `e1_mersenne`:** with a = 2m + 1 ≥ 7, SAFE ≤ orb(r, t) < C(n,2)/25 at every n ≥ 2^{a+1} − 1.
+
+Results:
+- Silent compile. `#print axioms` shows only `propext`, `Quot.sound` and, via `by_cases`, `Classical.choice` — no `sorryAx`.
+- A non-vacuity example at a = 7 (r = 127, t = 9, n = 255).
+- **Sharpening:** E.5's s = 1 bullet said the Mersenne windows are empty "from a = 13". The bound closes from a = 7 (numerically confirmed for every a ≤ 21). The text now reads a = 7.
+
+**Still uncovered:** the repunit window of E.3(iii), `PowRel`'s twist classification, and the SAFE model.

@@ -18,11 +18,18 @@ the **counting and congruence steps** of that proof over ℕ, in the style of `A
   r′ = 2r − 1.  The power-of-q structure enters only through `PowRel` below.
 * `fermat_c_div5`, `three_c_div3` — the q = 2 divisibility facts.
 * finite checks: the q = 2 survivors n ∈ {15, 23}, and E.4's (16, 5) pair.
+* `lemma_E2` — every prime power dividing 2^(2m) − 1 is ≤ 2^m + 1 (via
+  `prime_pow_dvd_coprime` and `gcd_two_pow_pm`; primality is `IsPrimeN`, since core Lean has
+  no `Nat.Prime`).
+* `mersenne_window`, `e1_mersenne` — Theorem E.1's cap clears C(n,2)/25 at every n ≥ 2^(a+1) − 1
+  once a = 2m + 1 ≥ 7, so the Mersenne exceptions are confined to a ∈ {2, 3, 5}; `twist_split`
+  supplies E.1's case split on the twist.
 
 **What is NOT here.** The group theory (Lemma B′, the SAFE terms themselves), the twist
 classification behind `PowRel` (that two powers of one prime are equal or differ by a factor
-≥ q), Lemma E.2's prime-power bound L(a) ≤ 2^{(a−1)/2} + 1, and the Mersenne / repunit
-windows of E.1 and E.3(iii).  Those are stated as hypotheses where used, or not at all.
+≥ q), the repunit window of E.3(iii), and the a ∈ {2, 3, 5} Mersenne exceptions themselves
+(the table's 12 rows, checked by `fallback_sup.py`).  Those are stated as hypotheses where
+used, or not at all.
 
 Compile: `lean -o ArkCore.olean ArkCore.lean`, then `LEAN_PATH=<dir of ArkCore.olean> lean E5Core.lean`.
 A silent compile is the evidence of zero `sorry`.
@@ -182,12 +189,187 @@ and n = 22 (where no configuration with this pair exists). -/
 theorem e4_pair_sharp : ¬ (25 * orb 5 4 false < pairs 21) ∧ ¬ (25 * orb 5 4 false < pairs 22) := by
   decide
 
+/-! ### Lemma E.2 and Theorem E.1's Mersenne window -/
+
+/-- Primality, stated directly (core Lean has no `Nat.Prime`). -/
+def IsPrimeN (p : Nat) : Prop := 2 ≤ p ∧ ∀ d, d ∣ p → d = 1 ∨ d = p
+
+/-- A prime coprime to B stays coprime to B in every power. -/
+theorem gcd_pow_eq_one (p B : Nat) (h : Nat.gcd B p = 1) : ∀ k, Nat.gcd B (p ^ k) = 1 := by
+  intro k
+  induction k with
+  | zero => simp
+  | succ k ih =>
+    have h1 := Nat.gcd_mul_dvd_mul_gcd B (p ^ k) p
+    rw [← Nat.pow_succ, ih, h, Nat.one_mul] at h1
+    exact Nat.eq_one_of_dvd_one h1
+
+/-- If gcd(d, B) = 1 and d ∣ A·B then d ∣ A. -/
+theorem dvd_of_dvd_mul_coprime (d A B : Nat) (h : Nat.gcd d B = 1) (hd : d ∣ A * B) : d ∣ A := by
+  have h1 := Nat.gcd_mul_dvd_mul_gcd d A B
+  rw [h, Nat.mul_one, Nat.gcd_eq_left hd] at h1
+  exact Nat.dvd_trans h1 (Nat.gcd_dvd_right d A)
+
+/-- **A prime power dividing a product of coprime factors divides one of them.** -/
+theorem prime_pow_dvd_coprime (p k A B : Nat) (hp : IsPrimeN p) (hAB : Nat.gcd A B = 1)
+    (hd : p ^ k ∣ A * B) : p ^ k ∣ A ∨ p ^ k ∣ B := by
+  -- p cannot divide both A and B
+  by_cases hB : p ∣ B
+  · -- then p ∤ A, so gcd(A, p) = 1
+    have hA : Nat.gcd A p = 1 := by
+      rcases hp.2 (Nat.gcd A p) (Nat.gcd_dvd_right A p) with h | h
+      · exact h
+      · exfalso
+        have hpA : p ∣ A := h ▸ Nat.gcd_dvd_left A p
+        have : p ∣ Nat.gcd A B := Nat.dvd_gcd hpA hB
+        rw [hAB] at this
+        have := Nat.eq_one_of_dvd_one this
+        have := hp.1; omega
+    have hg : Nat.gcd (p ^ k) A = 1 := by rw [Nat.gcd_comm]; exact gcd_pow_eq_one p A hA k
+    right
+    exact dvd_of_dvd_mul_coprime (p ^ k) B A hg (by rw [Nat.mul_comm]; exact hd)
+  · have hB1 : Nat.gcd B p = 1 := by
+      rcases hp.2 (Nat.gcd B p) (Nat.gcd_dvd_right B p) with h | h
+      · exact h
+      · exact absurd (h ▸ Nat.gcd_dvd_left B p) hB
+    have hg : Nat.gcd (p ^ k) B = 1 := by rw [Nat.gcd_comm]; exact gcd_pow_eq_one p B hB1 k
+    left
+    exact dvd_of_dvd_mul_coprime (p ^ k) A B hg hd
+
+/-- 2^m − 1 and 2^m + 1 are coprime (m ≥ 1). -/
+theorem gcd_two_pow_pm (m : Nat) (hm : 1 ≤ m) : Nat.gcd (2 ^ m - 1) (2 ^ m + 1) = 1 := by
+  have hx : 2 ≤ 2 ^ m := by
+    have := Nat.one_lt_two_pow (n := m) (by omega); omega
+  have hodd : (2 ^ m + 1) % 2 = 1 := by
+    have : 2 ^ m % 2 = 0 := by
+      have : 2 ^ m = 2 * 2 ^ (m - 1) := by
+        rw [← Nat.pow_succ']; congr 1; omega
+      omega
+    omega
+  generalize hg : Nat.gcd (2 ^ m - 1) (2 ^ m + 1) = g
+  have h1 : g ∣ 2 ^ m - 1 := hg ▸ Nat.gcd_dvd_left _ _
+  have h2 : g ∣ 2 ^ m + 1 := hg ▸ Nat.gcd_dvd_right _ _
+  have h3 : g ∣ (2 ^ m + 1) - (2 ^ m - 1) := Nat.dvd_sub (by omega) h2 h1
+  have h4 : (2 ^ m + 1) - (2 ^ m - 1) = 2 := by omega
+  rw [h4] at h3
+  have hle : g ≤ 2 := Nat.le_of_dvd (by omega) h3
+  rcases (by omega : g = 0 ∨ g = 1 ∨ g = 2) with h | h | h
+  · subst h; rw [Nat.zero_dvd] at h3; omega
+  · exact h
+  · subst h
+    have := Nat.mod_eq_zero_of_dvd h2
+    omega
+
+/-- (x − 1)(x + 1) = x² − 1 over ℕ, for x ≥ 1. -/
+theorem sq_sub_one (x : Nat) (hx : 1 ≤ x) : (x - 1) * (x + 1) = x * x - 1 := by
+  have e1 : (x - 1) * (x + 1) = (x - 1) * x + (x - 1) := by rw [Nat.mul_add, Nat.mul_one]
+  have e2 : (x - 1) * x = x * x - x := by rw [Nat.sub_one_mul]
+  have e3 : x ≤ x * x := by
+    have : 1 * x ≤ x * x := Nat.mul_le_mul_right x hx
+    omega
+  omega
+
+/-- **Lemma E.2.**  Every prime power dividing 2^(2m) − 1 is at most 2^m + 1 (m ≥ 1). -/
+theorem lemma_E2 (p k m : Nat) (hp : IsPrimeN p) (hm : 1 ≤ m)
+    (hd : p ^ k ∣ 2 ^ (2 * m) - 1) : p ^ k ≤ 2 ^ m + 1 := by
+  have hx : 2 ≤ 2 ^ m := by
+    have := Nat.one_lt_two_pow (n := m) (by omega); omega
+  have hfac : 2 ^ (2 * m) - 1 = (2 ^ m - 1) * (2 ^ m + 1) := by
+    rw [sq_sub_one (2 ^ m) (by omega), Nat.mul_comm 2 m, Nat.pow_mul, Nat.pow_two]
+  rw [hfac] at hd
+  rcases prime_pow_dvd_coprime p k _ _ hp (gcd_two_pow_pm m hm) hd with h | h
+  · have := Nat.le_of_dvd (by omega) h; omega
+  · exact Nat.le_of_dvd (by omega) h
+
+/-- `orb r t` never exceeds r·t. -/
+theorem orb_le_mul (r t : Nat) (b : Bool) : orb r t b ≤ r * t := by
+  unfold orb
+  apply Nat.le_trans (Nat.min_le_left _ _)
+  split
+  · exact Nat.div_le_self _ _
+  · exact Nat.le_refl _
+
+/-- **The Mersenne window closes at a = 7.**  With a = 2m + 1, m ≥ 3, any foreign block
+worth at most (2^a − 1)·(2^m + 1) — Theorem E.1's Cap(a) under Lemma E.2 — sits below
+C(n,2)/25 at every n ≥ c + r = 2^(a+1) − 1.  (So the only Mersenne exponents E.5 must list
+are a ∈ {2, 3, 5}: its exceptions at c ∈ {4, 8, 32}.) -/
+theorem mersenne_window (m n B : Nat) (hm : 3 ≤ m)
+    (hB : B ≤ (2 ^ (2 * m + 1) - 1) * (2 ^ m + 1))
+    (hn : 2 ^ (2 * m + 2) - 1 ≤ n) : 25 * B < pairs n := by
+  generalize hx : 2 ^ m = x at hB hn
+  have hx8 : 8 ≤ x := by
+    have : 2 ^ 3 ≤ 2 ^ m := Nat.pow_le_pow_right (by omega) hm
+    omega
+  have hA : 2 ^ (2 * m + 1) = 2 * (x * x) := by
+    rw [Nat.pow_succ, Nat.mul_comm 2 m, Nat.pow_mul, Nat.pow_two, hx, Nat.mul_comm]
+  have hC : 2 ^ (2 * m + 2) = 4 * (x * x) := by
+    rw [Nat.pow_succ, Nat.pow_succ, Nat.mul_comm 2 m, Nat.pow_mul, Nat.pow_two, hx]; omega
+  rw [hA] at hB; rw [hC] at hn
+  generalize hX : x * x = X at hB hn
+  have hX8 : 8 * x ≤ X := by rw [← hX]; exact Nat.mul_le_mul_right x hx8
+  have h2n := two_pairs n
+  -- n(n−1) ≥ (4X−1)(4X−2) = 2·(4X−1)(2X−1)
+  have hnn : (4 * X - 1) * (4 * X - 2) ≤ n * (n - 1) := Nat.mul_le_mul hn (by omega)
+  have e : (4 * X - 1) * (4 * X - 2) = 2 * ((2 * X - 1) * (4 * X - 1)) := by
+    have : 4 * X - 2 = 2 * (2 * X - 1) := by omega
+    rw [this]; ac_rfl
+  -- 25(x+1) < 4X − 1, then multiply by 2X − 1 > 0
+  have hlin : 25 * (x + 1) < 4 * X - 1 := by omega
+  have hmul : (2 * X - 1) * (25 * (x + 1)) < (2 * X - 1) * (4 * X - 1) :=
+    (Nat.mul_lt_mul_left (by omega)).mpr hlin
+  have hB25 : 25 * B ≤ (2 * X - 1) * (25 * (x + 1)) := by
+    have := Nat.mul_le_mul_left 25 hB
+    calc 25 * B ≤ 25 * ((2 * X - 1) * (x + 1)) := this
+      _ = (2 * X - 1) * (25 * (x + 1)) := by ac_rfl
+  omega
+
+/-- The twist split used by E.1: a prime power dividing 2·Y with Y odd is ≤ 2 or divides Y. -/
+theorem twist_split (p k Y : Nat) (hp : IsPrimeN p) (hY : Y % 2 = 1) (hd : p ^ k ∣ 2 * Y) :
+    p ^ k ≤ 2 ∨ p ^ k ∣ Y := by
+  have hg : Nat.gcd 2 Y = 1 := by
+    rw [Nat.gcd_rec]
+    have : Y % 2 = 1 := hY
+    rw [this]; rfl
+  rcases prime_pow_dvd_coprime p k 2 Y hp hg hd with h | h
+  · left; exact Nat.le_of_dvd (by omega) h
+  · right; exact h
+
+/-- **Theorem E.1's cap, assembled.**  Mersenne pair c = 2^a, r = 2^a − 1, a = 2m + 1 ≥ 7.
+The foreign twist t is a prime power dividing r − 1 = 2·(2^(2m) − 1): either t ≤ 2 or it
+divides 2^(2m) − 1, so t ≤ 2^m + 1 by Lemma E.2, and SAFE ≤ orb(r, t) < C(n,2)/25. -/
+theorem e1_mersenne (m n p k : Nat) (hm : 3 ≤ m) (hp : IsPrimeN p)
+    (ht : p ^ k ≤ 2 ∨ p ^ k ∣ 2 ^ (2 * m) - 1)
+    (hn : 2 ^ (2 * m + 2) - 1 ≤ n) (b : Bool) :
+    25 * orb (2 ^ (2 * m + 1) - 1) (p ^ k) b < pairs n := by
+  have ht' : p ^ k ≤ 2 ^ m + 1 := by
+    rcases ht with h | h
+    · have : 2 ≤ 2 ^ m + 1 := by have := Nat.two_pow_pos m; omega
+      omega
+    · exact lemma_E2 p k m hp (by omega) h
+  apply mersenne_window m n _ hm _ hn
+  exact Nat.le_trans (orb_le_mul _ _ b) (Nat.mul_le_mul_left _ ht')
+
 /-! ### Non-vacuity: each hypothesis set is satisfiable, at a real configuration -/
 
 /-- The odd-q window is inhabited: q = 3, t = t′ = 3, r = 7, r′ = 13 = 2r − 1 (n = 35). -/
 example : (13 : Nat) = 2 * 7 - 1 :=
   window_odd_q 3 3 4 7 13 (by decide) (by decide) (Or.inl rfl) (by decide) (by decide)
     (Or.inr (Or.inl rfl)) (by decide) (by decide) (by decide)
+
+theorem prime_three : IsPrimeN 3 := by
+  refine ⟨by decide, fun d hd => ?_⟩
+  have h3 := Nat.le_of_dvd (by decide) hd
+  have hm := Nat.mod_eq_zero_of_dvd hd
+  rcases (by omega : d = 0 ∨ d = 1 ∨ d = 2 ∨ d = 3) with h | h | h | h <;> subst h
+  · simp at hm
+  · exact Or.inl rfl
+  · simp at hm
+  · exact Or.inr rfl
+
+/-- E.1 at the first exponent past the exceptions: a = 7, c = 128, r = 127, twist 9 = 3²
+(9 ∣ 2⁶ − 1 = 63), from n = 255. -/
+example : 25 * orb (2 ^ (2 * 3 + 1) - 1) (3 ^ 2) false < pairs 255 :=
+  e1_mersenne 3 255 3 2 (by decide) prime_three (Or.inr (by decide)) (by decide) false
 
 /-- The s-ladder at E.4's own pair: s = 3, r = 5, n = 21, B = 10 gives 16·10 < 210. -/
 example : (3 + 1) ^ 2 * 10 < pairs 21 :=

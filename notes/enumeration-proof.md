@@ -765,7 +765,7 @@ The survivors at 10⁴ before the multi-part check were themselves informative: 
 
 - **s ≥ 4.** The s-ladder of E′ gives s < 1/√δ − 1 strictly, so δ < 1/(s+1)² ≤ 1/25.
 - **s = 3.** Theorem E.4: the branch is the single pair (16, 5) with SAFE ≤ 10, which is below C(n,2)/25 at every n ≥ 23. It fails at n = 21, which is in the exception table, and at n = 22, where `fallback_sup.py` finds no configuration (`E5Core.lean` `e4_pair`, `e4_pair_sharp`).
-- **s = 1, and s = 2 with a ≥ 2.** Theorems E.1 and E.3(iii) give absolute caps Cap(a) and Cap′(a). Each fails to clear C(n,2)/25 outside a bounded window of n, and Lemma E.2's L(a) ≤ 2^{(a−1)/2} + 1 makes the windows empty from a = 13 (Mersenne) and a = 7 (repunit) upward. The surviving windows are the 12 exceptions.
+- **s = 1, and s = 2 with a ≥ 2.** Theorems E.1 and E.3(iii) give absolute caps Cap(a) and Cap′(a). Each fails to clear C(n,2)/25 outside a bounded window of n, and Lemma E.2's L(a) ≤ 2^{(a−1)/2} + 1 makes the windows empty from a = 7 upward in both branches (Mersenne: `E5Core.lean` `e1_mersenne`, which proves the bound at every n ≥ c + r = 2^{a+1} − 1). The surviving windows are the 12 exceptions.
 - **s = 2, a = 1**, the branch E.3(ii) declines. Here c = 2r + 1 is a safe prime and B ≤ min(F·C(c,2), orb(r,t)) ≤ r(r−1)/2. Four sub-cases, and each is a counting bound on n:
   - **F ≥ 2, any leftover.** n ≥ 2c + r = 5r + 2, so δ ≤ [r(r−1)/2] / C(5r+2, 2) = (r−1)/(5(5r+1)) < **1/25**.
   - **F = 1, leftover containing a p-characteristic part.** That part's block size is a power of p = c, hence ≥ c = 2r + 1, so again n ≥ c + r + c = 5r + 2 and the same bound applies. *This is the L = c shape, the one E.3(ii)'s promotion could not re-type, and it is the sharp case: δ = 1/25 − Θ(1/r).*
@@ -774,7 +774,7 @@ The survivors at 10⁴ before the multi-part check were themselves informative: 
 
   In every sub-case δ < 1/25, strictly. ∎
 
-> **Formalised in part, 2026-10-19:** `lean/E5Core.lean` proves the counting and congruence steps over ℕ in core Lean, with zero sorries — the s-ladder, every a = 1, s = 2 sub-case's count, the odd-q window, and the q = 2 divisibilities.
+> **Formalised in part, 2026-10-19:** `lean/E5Core.lean` proves the counting and congruence steps over ℕ in core Lean, with zero sorries — the s-ladder, every a = 1, s = 2 sub-case's count, the odd-q window, the q = 2 divisibilities, Lemma E.2, and Theorem E.1's Mersenne window from a = 7.
 >
 > **Second reading, 2026-10-19 (session-log-15 §45): sound, with one hypothesis to make explicit.** Every sub-case's arithmetic re-checks, and so do the exhaustiveness of the four a = 1, s = 2 sub-cases, the ratio window, the q = 2 divisibility (Fermat r ≥ 17 gives r ≡ 2 (mod 5), so 5 | c) and `fallback_sup.py`'s 12 exceptions (rerun to n = 3000, identical).
 > - **The hypothesis.** The last sub-case uses **r′ ≠ r**. With r′ = r allowed, the twist analysis also admits r′ = r: for odd q, 6·3^{e−1} + 1 = 2·3^e + 1. Then n = 4r + 1 and the counting bound gives only about 1/16.
