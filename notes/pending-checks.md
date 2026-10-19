@@ -326,6 +326,7 @@ python3 biclique_table.py --nmax 100000 --out biclique_table_100000.csv   # roug
 | **R8 items 1–3** | n = 2759, even F ≥ 4, a current two-part winner in the GAP battery | **done 2026-10-19** — all built and passing; recipe kept in R8, results in session-log-15 §§34–36 |
 | **A20 / A20a** | the density check must compare in exact arithmetic; a bound may not be quoted as a rounded decimal | **standing constraints, closed as items 2026-10-19** — `density_ok` in `validate_table_v3.py` compares exactly (string precision read off the string, integer fast path checked against `Fraction` on every row); its group-A note and the summary banner now say its FAIL means a mis-rounded presentation column, not a broken run (the open decision; control: one corrupted density string gives exactly that FAIL). The rounded-bound rule lives in `verification-lessons.md` §5 |
 | **A29** | second reading of the J0a-free bound t ≤ a | **done 2026-10-19 — holds**, for any stabiliser. One gap was found and closed: conjugation is a power map only modulo P, repaired by Sylow conjugacy in P⟨z′⟩. The three steps are now explicit in `ep` beside the argument. *Not yet acted on:* removing J0a from Corollary C′ and E.3(i)'s statement — a document decision; nothing currently rests on it |
+| **A44** | bi-resistance: rung, natural properties, the half-split criterion, the degree-12–14 census | **done 2026-10-19** — the census is complete: all 62 transitive groups of degree 12–14 above order 5,000 contain a transitive Oliver subgroup (`halfsplit_large.g`; M₁₂ via a regular C₆ × C₂), and 12T162 is confirmed as the sign kernel in S₄ ≀ C₂ (`t12_162_kernel.g`). Extending past degree 14 is `monotone-transitive-note.md`'s item 1, not a separate item |
 
 ## §2a. Needs human thought
 
@@ -613,10 +614,6 @@ Arguments: the largest orbital count t to check (12), and a wall-clock budget in
 ### A43. Self-duality of collapsibility and contractibility
 
 *Recorded* (`oen` §7.12): collapsible ⇒ K\* contractible (PL sketch); the dual-of-join formula; Lutz's 60-vertex complex has contractible dual; ~60,000 random collapsible complexes (N = 6–9) all had collapsible duals. *Open*: (1) collapsible ⇒ K\* collapsible, via a targeted search (not random expansions) or an argument; (2) contractible ⇒ K\* contractible — compute π₁ of the dual of a dunce hat, which needs a valid triangulation (the subdivided-triangle attempt fails at the corners); (3) write out the PL argument in full; (4) collapsibility of Lutz's complex or its dual.
-
-### A44. Bi-resistance
-
-*Recorded* (`oen` §7.13): definition, convexity, equality with the χ condition at two-orbital groups, strict place between Oliver-χ and Oliver-resistant, counts at n = 6 and natural properties at n = 10. *Done*: (1) rung BI added to `metaproperty_ladder_check.py`, no violations, self-dual; (2) K₄-free and 3-colourable both bi-resistant at n = 10. (3) *answered* (`oen` §7.13): an exact half-split criterion; the two-block form gives evasiveness at 12T162, the only such group found in degrees 4–14 (order ≤ 5,000 at 12–14). *Remaining*: scan degree 12–14 groups of order > 5,000 and larger degrees; confirm the sign-kernel identification of 12T162 by an isomorphism test.
 
 ### A45. Random monotone properties
 

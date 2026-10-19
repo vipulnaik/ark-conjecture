@@ -1371,3 +1371,17 @@ No semilinearity is used anywhere. This is consistent with `lemma_c_share.py`, w
 > ### A29. Second reading: the J0a-free bound t ≤ a
 >
 > Lemma C's coupling conclusion t \| ord_r(p) is proved via a Frobenius exponent and assumes a semilinear stabiliser at a ≥ 2. The **bound** it is consumed for — orb(r, t) ≤ r·a, which is all Corollary C′ and E.3(i) use — appears to need no such assumption: the r-element of the cyclic layer has r-th-root-of-unity eigenvalues on V = 𝔽_p^a, closed under Frobenius, hence at most a/ord_r(p) Frobenius orbits; conjugation is a power map whose reduction mod r is the induced multiplier, so the multiplier group permutes those orbits and M⟨p⟩/⟨p⟩ acts freely on cosets, giving \|M\| ≤ a. **One reading only, and nothing currently rests on it** — E.3(i) is theorem-side and `--no-theorems` closes every n without it, and Part E‴ does not use Lemma C at all. If it holds it removes J0a from Corollary C′ and weakens E.3(i)'s "worth at most c" only to "at most max(c, r·a)", still linear. → T1's queue, after Part 0.
+
+## 42. A44 closed: the degree-12–14 census and 12T162's identification
+
+- **`halfsplit_large.g`** takes the 62 transitive groups of degree 12–14 with order > 5,000. For each, it tests containment of every transitive solvable Oliver group of that degree (`ContainedConjugates` in S_d). **All 62 contain one** (witness orders 12–196), so none needs the half-split graph.
+  - **M₁₂ (12T295):** the witness was checked directly — a regular C₆ × C₂ subgroup, transitive, inside M₁₂, passing `OliverData`.
+  - So the "decide M₁₂ and 2⁶:S₇" item in `monotone-transitive-note.md` is answered.
+- **`t12_162_kernel.g`:** the sign kernel in S₄ ≀ C₂ on the two tetrahedra's edges has order 576 and TransitiveIdentification 162, and is isomorphic and S₁₂-conjugate to 12T162. The "unverified inference" in `oen` §7.13 is now confirmed.
+- **Gotcha:** the first scan run piped through `tail -70`, which cut off most of degree 12, and wrapped GAP lines broke a `grep` count. The rerun captures the full output and counts on the joined text: 62 groups, 62 settled.
+
+A44's old text, verbatim:
+
+> ### A44. Bi-resistance
+>
+> *Recorded* (`oen` §7.13): definition, convexity, equality with the χ condition at two-orbital groups, strict place between Oliver-χ and Oliver-resistant, counts at n = 6 and natural properties at n = 10. *Done*: (1) rung BI added to `metaproperty_ladder_check.py`, no violations, self-dual; (2) K₄-free and 3-colourable both bi-resistant at n = 10. (3) *answered* (`oen` §7.13): an exact half-split criterion; the two-block form gives evasiveness at 12T162, the only such group found in degrees 4–14 (order ≤ 5,000 at 12–14). *Remaining*: scan degree 12–14 groups of order > 5,000 and larger degrees; confirm the sign-kernel identification of 12T162 by an isomorphism test.
