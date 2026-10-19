@@ -1321,3 +1321,53 @@ Standing rule 6 was added: close an item in the same edit, with no in-place narr
 ## 39. `aod` §3.3's no-row-exceeds-its-cap check at 10⁶
 
 `validate_table_v3.py`'s group-B check "no winner exceeds cap_F(η) for its own F and η" already covers this, and it passes on the ladder table: 0 of 796,763 one-foreign rows exceed (closest approach 1.77·10⁻⁷ at n = 887,990). Every foreign-block winner in [6, 10⁶] is two-part, so this is the whole population. `aod` §3.3's "Upper" paragraph still quoted the 1,167-winner older-table run with a "recheck" note; it is now requoted. The scope note in `pending-checks.md`'s landing checklist is removed.
+
+## 40. A20's open decision; A20 and A20a closed as items
+
+- **Decision taken:** the check stays in group A, with its message amended rather than the check moved. `c_density` now carries a note saying its FAIL means a mis-rounded presentation column, not a broken run, and the summary banner says the same. Control: corrupting one density string in a 3,000-row copy gives exactly that FAIL, and the clean exact table still passes.
+- Both items are standing constraints whose content lives in the validator and in `verification-lessons.md` §5, so they are now one ledger row. Their old text follows, verbatim:
+
+> ### A20. The density check must compare in exact arithmetic
+>
+> *A standing constraint on `validate_table_v3.py`'s group-A density test. Why a float tolerance fails here: `verification-lessons.md` §2.*
+>
+> A stored decimal density with k places is a correct rounding of μ\*/C(n,2) iff |stored − B/C| ≤ ½·10⁻ᵏ, evaluated in **exact rational arithmetic**, with k **read off the string**:
+>
+> ```python
+> def density_ok(r):
+>     s = r.delta_str
+>     places = len(s.split(".")[1]) if "." in s else 0
+>     return abs(Fraction(s) - Fraction(r.B, r.C)) * 2 * 10 ** places <= 1
+> ```
+>
+> Needs `Fraction` imported and the raw string kept on the `Row` as `delta_str` — `float(d["density"])` discards exactly what the check needs. Worked boundary instance: 250978/3278080 = 49/640 = 0.0765625 exactly at n = 2561, where the float difference is 5.000000000005e-07.
+>
+> **What the test must still reject**, and what any change to it is re-checked against: one-in-the-last-place errors in *either* direction, truncation rather than rounding, and wholly wrong values — while accepting a tie rounded either way and strings at 4, 6 or 8 decimals at their own precision. Eleven such cases plus the full table are the standing behavioural check.
+>
+> **Open decision.** Group A's banner says a FAIL there means the run or parser is broken. That holds for its other four tests, not this one — it checks a presentation column no other check reads. Either move it to group B or amend the message.
+>
+> ### A20a. A bound may not be quoted as a rounded decimal
+>
+> *Companion constraint to A20, and the same root cause seen from the other side: rounding is symmetric and a bound is not.*
+>
+> The range minimum is **175813/3804661 = 0.04620989885…**, so the natural 5-place rounding **0.04621 lies above the true value** and "δ ≥ 0.04621" is false at the one n that attains it. Every quotation of a floor as a lower bound must use the exact rational, or truncate toward the bound; 0.04621 is fine as a *label* for the minimum and wrong after a `≥`. Fixed across five documents; the standing rule is in `verification-lessons.md` §5.
+>
+> **The same applies one level up, to any rounded scan output.** `ladder_verify.py` prints five places, so the file alone supports only "≥ printed − 5·10⁻⁶" at each entry. That is enough here — the next-lowest entry is 0.04801, hence at worst 0.048005, clear of the minimum by 0.0017 — but it is a margin to check, not a formality: had the two lowest entries been within 10⁻⁵ of each other, the printed file could not have established which was the minimiser. **On any ladder rerun whose two lowest values are close, print more digits before drawing a uniqueness conclusion.**
+
+## 41. A29: second reading of t ≤ a — holds
+
+**Setting.** Matching block V = 𝔽_p^a and foreign block Z_r, with r | d. Let z′ be the r-element of the cyclic layer, and M ≤ (ℤ/r)^× the group of multipliers the top induces on the foreign block (so t = |M|).
+1. **Conjugation is a power map up to P.** The cyclic layer is the quotient N/P, not a subgroup, so h z′ h⁻¹ = z′^{m_h}·u with u ∈ P, not z′^{m_h} itself. *This is a gap in `ep`'s one-line form, and it is closable.* P⟨z′⟩ is normal in Γ (its image is the characteristic r-part of the cyclic N/P), and its Sylow r-subgroups are P-conjugate. So h z′ h⁻¹ = x z′^{m_h} x⁻¹ for some x ∈ P. Taking linear parts L: L(h) L L(h)⁻¹ is conjugate to L^{m_h}, so **L and L^{m_h} have the same eigenvalue set**, which is all the argument uses.
+   - On Z_r, P acts trivially: its orbits are p-power blocks of a Γ-orbit of prime size r ≠ p. So m_h ≡ (h's multiplier on Z_r) mod r, z′ being a nontrivial translation there.
+2. **L ≠ 1.** An r-element (r ≠ p) with trivial linear part is trivial on V, and then r ∤ d, so there is no sharing.
+3. **M acts on the eigenvalues.** Let Λ be the nontrivial eigenvalues of L in 𝔽̄_p. Each is a primitive r-th root of 1, and |Λ| ≤ a. Λ is Frobenius-stable, so it splits into at most a/ord_r(p) orbits of size ord_r(p). If Lv = λv, then L(L(h)v) = λ^{m_h⁻¹} L(h)v, so Λ^{m} = Λ for every m ∈ M: M acts on Λ by powers and permutes the Frobenius orbits.
+4. **The stabiliser of an orbit.** If m fixes the orbit of λ, then λ^{m⁻¹} = λ^{p^j}. Since λ is primitive, m⁻¹ ≡ p^j, so m ∈ ⟨p⟩. The stabiliser is therefore M ∩ ⟨p⟩, and M/(M ∩ ⟨p⟩) acts freely.
+5. **Conclusion.** |M| ≤ |M ∩ ⟨p⟩| · a/ord_r(p) ≤ ord_r(p) · a/ord_r(p) = a.
+
+No semilinearity is used anywhere. This is consistent with `lemma_c_share.py`, where every realised t equals ord_r(p) ≤ a.
+
+`ep`'s paragraph now records the second reading and the three steps above. A29 has moved to the ledger. Its old text, verbatim:
+
+> ### A29. Second reading: the J0a-free bound t ≤ a
+>
+> Lemma C's coupling conclusion t \| ord_r(p) is proved via a Frobenius exponent and assumes a semilinear stabiliser at a ≥ 2. The **bound** it is consumed for — orb(r, t) ≤ r·a, which is all Corollary C′ and E.3(i) use — appears to need no such assumption: the r-element of the cyclic layer has r-th-root-of-unity eigenvalues on V = 𝔽_p^a, closed under Frobenius, hence at most a/ord_r(p) Frobenius orbits; conjugation is a power map whose reduction mod r is the induced multiplier, so the multiplier group permutes those orbits and M⟨p⟩/⟨p⟩ acts freely on cosets, giving \|M\| ≤ a. **One reading only, and nothing currently rests on it** — E.3(i) is theorem-side and `--no-theorems` closes every n without it, and Part E‴ does not use Lemma C at all. If it holds it removes J0a from Corollary C′ and weakens E.3(i)'s "worth at most c" only to "at most max(c, r·a)", still linear. → T1's queue, after Part 0.

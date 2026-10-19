@@ -470,7 +470,11 @@ def c_delta_provenance(R, base):
             bad[:5])
 
 
-@check("A", "density column agrees with mu_bound / C(n,2)", "table")
+@check("A", "density column agrees with mu_bound / C(n,2)", "table",
+       expect="the one group-A check whose FAIL does NOT mean the run is broken: it tests "
+              "a presentation column that no other check reads (they all use B/C).  A FAIL "
+              "here means the producer wrote a mis-rounded density string; every value "
+              "and every other verdict stands.  Fix the writer, not the table.")
 def c_density(R, base):
     bad = [r.n for r in R if not density_ok(r)]
     return ("FAIL" if bad else "PASS", f"{len(bad)} mismatches", bad[:5])
@@ -1765,7 +1769,9 @@ def main():
     print("  " + "  ".join(f"{k}: {tally[k]}" for k in ("PASS", "FAIL", "INFO", "SKIP")))
     if tally["FAIL"]:
         print("\n  A FAIL in group A means the run or the parser is broken; nothing else here")
-        print("  is meaningful until it is fixed. A FAIL in group B is a real contradiction")
+        print("  is meaningful until it is fixed -- EXCEPT the density-column check, which")
+        print("  tests a presentation column nothing else reads (see its note).")
+        print("  A FAIL in group B is a real contradiction")
         print("  between the table and the documents -- check whether the belief was scoped")
         print("  to an older table before editing either.")
     return 1 if tally["FAIL"] else 0

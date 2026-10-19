@@ -324,6 +324,8 @@ python3 biclique_table.py --nmax 100000 --out biclique_table_100000.csv   # roug
 | **R7** | consume the ladder worklist with `ladder_verify.py`'s adaptive branch-and-bound | **superseded** — `mu_ladder_exact.py` computes B exactly at 15 ms/n, so a lower-bound-and-prune loop saves nothing below 10⁶. The result survives: min μ\*(n)/C(n,2) over composite non-prime-power n ≤ 10⁶ is 175813/3804661 at n = 2759 alone (now also built by R8). *If the script is ever revived:* the window must be [0.10, 0.85], not [0.10, 0.55], and the fusion set 3..16 ∪ {25}, not 3..12 ∪ {16, 25} |
 | **R6 items 1–3** | foreign-block η, the inter-class term, Lemma C's foreign strip, against realised groups | **done 2026-10-17/18** — all clean; recipe kept in R6, results in session-log-15 §§31–33 |
 | **R8 items 1–3** | n = 2759, even F ≥ 4, a current two-part winner in the GAP battery | **done 2026-10-19** — all built and passing; recipe kept in R8, results in session-log-15 §§34–36 |
+| **A20 / A20a** | the density check must compare in exact arithmetic; a bound may not be quoted as a rounded decimal | **standing constraints, closed as items 2026-10-19** — `density_ok` in `validate_table_v3.py` compares exactly (string precision read off the string, integer fast path checked against `Fraction` on every row); its group-A note and the summary banner now say its FAIL means a mis-rounded presentation column, not a broken run (the open decision; control: one corrupted density string gives exactly that FAIL). The rounded-bound rule lives in `verification-lessons.md` §5 |
+| **A29** | second reading of the J0a-free bound t ≤ a | **done 2026-10-19 — holds**, for any stabiliser. One gap was found and closed: conjugation is a power map only modulo P, repaired by Sylow conjugacy in P⟨z′⟩. The three steps are now explicit in `ep` beside the argument. *Not yet acted on:* removing J0a from Corollary C′ and E.3(i)'s statement — a document decision; nothing currently rests on it |
 
 ## §2a. Needs human thought
 
@@ -514,33 +516,6 @@ Both coordinates of the joint optimum are settled without a search. The **F side
 
 *The fuller state notes, techniques and environment lessons are archived in session-log-15 §37.*
 
-### A20. The density check must compare in exact arithmetic
-
-*A standing constraint on `validate_table_v3.py`'s group-A density test. Why a float tolerance fails here: `verification-lessons.md` §2.*
-
-A stored decimal density with k places is a correct rounding of μ\*/C(n,2) iff |stored − B/C| ≤ ½·10⁻ᵏ, evaluated in **exact rational arithmetic**, with k **read off the string**:
-
-```python
-def density_ok(r):
-    s = r.delta_str
-    places = len(s.split(".")[1]) if "." in s else 0
-    return abs(Fraction(s) - Fraction(r.B, r.C)) * 2 * 10 ** places <= 1
-```
-
-Needs `Fraction` imported and the raw string kept on the `Row` as `delta_str` — `float(d["density"])` discards exactly what the check needs. Worked boundary instance: 250978/3278080 = 49/640 = 0.0765625 exactly at n = 2561, where the float difference is 5.000000000005e-07.
-
-**What the test must still reject**, and what any change to it is re-checked against: one-in-the-last-place errors in *either* direction, truncation rather than rounding, and wholly wrong values — while accepting a tie rounded either way and strings at 4, 6 or 8 decimals at their own precision. Eleven such cases plus the full table are the standing behavioural check.
-
-**Open decision.** Group A's banner says a FAIL there means the run or parser is broken. That holds for its other four tests, not this one — it checks a presentation column no other check reads. Either move it to group B or amend the message.
-
-### A20a. A bound may not be quoted as a rounded decimal
-
-*Companion constraint to A20, and the same root cause seen from the other side: rounding is symmetric and a bound is not.*
-
-The range minimum is **175813/3804661 = 0.04620989885…**, so the natural 5-place rounding **0.04621 lies above the true value** and "δ ≥ 0.04621" is false at the one n that attains it. Every quotation of a floor as a lower bound must use the exact rational, or truncate toward the bound; 0.04621 is fine as a *label* for the minimum and wrong after a `≥`. Fixed across five documents; the standing rule is in `verification-lessons.md` §5.
-
-**The same applies one level up, to any rounded scan output.** `ladder_verify.py` prints five places, so the file alone supports only "≥ printed − 5·10⁻⁶" at each entry. That is enough here — the next-lowest entry is 0.04801, hence at worst 0.048005, clear of the minimum by 0.0017 — but it is a margin to check, not a formality: had the two lowest entries been within 10⁻⁵ of each other, the printed file could not have established which was the minimiser. **On any ladder rerun whose two lowest values are close, print more digits before drawing a uniqueness conclusion.**
-
 ### A21. A fusion-aware penalty for the partition-factor table
 
 *The table itself now lives in `shape-counting.md` §4; this is the live remainder.*
@@ -568,10 +543,6 @@ The ceiling table is a theorem about the Oliver-admissible family **as currently
 - **Mismatch inside `aod`, not the note:** §3.6's table gives "all large n" for the Chowla and Elliott–Halberstam rungs, while its own blockquote says the 3/2 rungs carry O((log x)⁴) exceptional sets. Needs BBKN Thm 1.4(a) and Shparlinski Thm 1 to decide.
 - **Wording in the note:** §5 calls (BCG_{1/5}) "of Goldbach rather than Bateman–Horn difficulty" and then its prime-factor clause Sophie Germain-type. Say "Goldbach as well as Bateman–Horn".
 - **Keep out before circulation:** `aod`'s conditional PD(1) row (unrefereed).
-
-### A29. Second reading: the J0a-free bound t ≤ a
-
-Lemma C's coupling conclusion t \| ord_r(p) is proved via a Frobenius exponent and assumes a semilinear stabiliser at a ≥ 2. The **bound** it is consumed for — orb(r, t) ≤ r·a, which is all Corollary C′ and E.3(i) use — appears to need no such assumption: the r-element of the cyclic layer has r-th-root-of-unity eigenvalues on V = 𝔽_p^a, closed under Frobenius, hence at most a/ord_r(p) Frobenius orbits; conjugation is a power map whose reduction mod r is the induced multiplier, so the multiplier group permutes those orbits and M⟨p⟩/⟨p⟩ acts freely on cosets, giving \|M\| ≤ a. **One reading only, and nothing currently rests on it** — E.3(i) is theorem-side and `--no-theorems` closes every n without it, and Part E‴ does not use Lemma C at all. If it holds it removes J0a from Corollary C′ and weakens E.3(i)'s "worth at most c" only to "at most max(c, r·a)", still linear. → T1's queue, after Part 0.
 
 ### A34. Review the minimum-order result — answered, with three lemmas awaiting an independent reading
 
