@@ -973,3 +973,10 @@ With pieces in pairwise-trivially-intersecting subgroups, blocks meet in at most
 
 All three R6 items are now done.
 
+## 34. R8: battery completed; `OrbitalSizes` ported
+
+- **Full battery: 10/10 true**, including the three entangled-generator regressions that the last recorded run never reached. The `FTOP_SPLIT` control aborts at n = 78.
+- **`OrbitalSizes` now works from suborbits.** It is identical to the naive version on the eight rows with n ≤ 105; n = 247 and 308 are not yet rerun under it.
+- **n = 2759:** the run timed out at 7,000 s at the group-order and chain step, so it never reached the orbital step. That is the next bottleneck.
+- *Gotcha:* GAP launched outside `scripts/` reports `Could not read file` and exits 0.
+

@@ -289,11 +289,50 @@ CheckOliverChain := function(cfg, p, q, blocks)
 end;
 
 # -------------------------------------------------------------- u-orbital sizes
+# Unordered-pair orbit sizes via suborbits, so nothing of size C(n,2) is ever
+# materialised (R8: the Combinations version needed 3.8M sets at n = 2759).
+# For each point orbit O_i with representative x, the orbits of Stab(x) on the
+# points give the ordered orbitals (x, y)^G of size |O_i| * |y^Stab(x)|.
+#   y in O_j, j > i : one unordered orbit of that size (j < i is its reverse,
+#                     counted from the other side; skipped).
+#   y in O_i, y <> x: self-paired (y, x) in (x, y)^G  -> size |O_i||y^S|/2;
+#                     otherwise size |O_i||y^S|, and the paired suborbit gives
+#                     the same unordered orbit, so it is counted once.
+# The naive version stays available as ARK_ORBITALS_NAIVE=1 for cross-checks.
 OrbitalSizes := function(G, n)
-  local pairs, orbs;
-  pairs := Combinations([1..n], 2);
-  orbs  := Orbits(G, pairs, OnSets);
-  return SortedList(List(orbs, Length));
+  local pairs, orbs, P, res, i, j, x, S, sub, s, y, h, done, oi, k;
+  if IsBound(GAPInfo.SystemEnvironment.ARK_ORBITALS_NAIVE) then
+    pairs := Combinations([1..n], 2);
+    orbs  := Orbits(G, pairs, OnSets);
+    return SortedList(List(orbs, Length));
+  fi;
+  P := List(Orbits(G, [1..n]), Set);
+  oi := [];
+  for i in [1..Length(P)] do for y in P[i] do oi[y] := i; od; od;
+  res := [];
+  for i in [1..Length(P)] do
+    x := P[i][1];
+    S := Stabilizer(G, x);
+    sub := List(Orbits(S, [1..n]), Set);
+    done := [];
+    for k in [1..Length(sub)] do
+      s := sub[k];  y := s[1];
+      if y = x or k in done then continue; fi;
+      j := oi[y];
+      if j > i then
+        Add(res, Length(P[i]) * Length(s));
+      elif j = i then
+        h := RepresentativeAction(G, y, x);          # (x, y)^h = (x^h, x)
+        if x^h in s then
+          Add(res, Length(P[i]) * Length(s) / 2);    # self-paired
+        else
+          Add(res, Length(P[i]) * Length(s));
+          Add(done, PositionProperty(sub, t -> x^h in t));   # its pair: skip
+        fi;
+      fi;
+    od;
+  od;
+  return SortedList(res);
 end;
 
 # ------------------------------------------------------- the value formula terms
@@ -470,6 +509,9 @@ BATTERY := [
                                           # block at full efficiency; orbitals
                                           # {812, 841, 1081, 2726}.
 ];
+# R8 item 1: the range minimiser, binding class foreign at r*Q with Q = 11^2.
+# Not in the default battery (cost); run as
+#   WITNESS="p=653 q=11: 2x653 + 1x1453*" MUBOUND=175813 gap -q -A -o 8g verify_witness.g
 
 if IsBound(GAPInfo.SystemEnvironment.WITNESS) then
   VerifyWitness(GAPInfo.SystemEnvironment.WITNESS,
