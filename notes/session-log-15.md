@@ -980,3 +980,16 @@ All three R6 items are now done.
 - **n = 2759:** the run timed out at 7,000 s at the group-order and chain step, so it never reached the orbital step. That is the next bottleneck.
 - *Gotcha:* GAP launched outside `scripts/` reports `Could not read file` and exits 0.
 
+## 35. R8 item 1: n = 2759 witnessed
+
+- **The real bottleneck was `BuildConfig`, not `OrbitalSizes`.** It used c − 1 translation generators per block and a linear `Position` lookup, which is O(c³). Switching to a basis plus `PositionSorted` gives the same group.
+- **n = 2759 now verifies in 5 s:** every chain check true, minimum orbital 175,813 = B(2759), set by the foreign class 1453·121.
+- Added as the battery's 11th row. The full battery runs in 5 s, every earlier multiset is unchanged, and the control still aborts at n = 78.
+- *Gotcha:* single-row runs need `< /dev/null`.
+
+## 36. R8 items 2–3: F = 4 and current two-part winners
+
+- Six current F = 4 winners (n = 20, 52, 323, 455, 1343, 1403) all verify, with minimum = B and cross orbital (F/2)·c².
+- n = 52 and 323 were added to the battery, bringing it to 13 rows.
+- R8's three coverage items are all done.
+

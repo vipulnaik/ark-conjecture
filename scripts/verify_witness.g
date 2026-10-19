@@ -152,10 +152,16 @@ BuildConfig := function(w, twists)
     # The cyclic layer stays cyclic because r is coprime to every twist there,
     # which is exactly what Lemma C enforces and what the enumeration checks.
     for b in [0..F-1] do
-      for s in Filtered(elts, y -> y <> Zero(fld)) do
+      # A GENERATING set of translations, not all c - 1 of them: a basis of F_c
+      # over its prime field.  The full list gave c - 1 generators per block
+      # and, with a linear Position() per point, O(c^3) work in this loop
+      # alone -- which is why n = 2759 (c = 653, r = 1453) never reached
+      # |Gamma| in 7,000 s.  Same group either way.  Lookups use
+      # PositionSorted on the sorted element list, O(log c) instead of O(c).
+      for s in BasisVectors(Basis(fld)) do
         images := [1..n];
         for x in [1..c] do
-          images[base + b*c + x] := base + b*c + Position(elts, elts[x] + s);
+          images[base + b*c + x] := base + b*c + PositionSorted(elts, elts[x] + s);
         od;
         if cl.foreign then
           Add(gens.cyclic, PermList(images));
@@ -218,7 +224,7 @@ BuildConfig := function(w, twists)
       images := [1..n];
       for b in [0..F-1] do
         for x in [1..c] do
-          images[base + b*c + x] := base + b*c + Position(elts, elts[x] * u);
+          images[base + b*c + x] := base + b*c + PositionSorted(elts, elts[x] * u);
         od;
       od;
       Add(gens.top, PermList(images));
@@ -244,7 +250,7 @@ BuildConfig := function(w, twists)
         for x in [1..c] do
           if b + ftop >= F then           # the wrap step carries the multiplier
             images[base + b*c + x] :=
-              base + ((b + ftop) mod F)*c + Position(elts, elts[x] * u);
+              base + ((b + ftop) mod F)*c + PositionSorted(elts, elts[x] * u);
           else
             images[base + b*c + x] := base + ((b + ftop) mod F)*c + x;
           fi;
@@ -508,10 +514,21 @@ BATTERY := [
   [ "p=29 q=23: 2x29 + 1x47*",     812 ],   # n = 105, full twist beside a foreign
                                           # block at full efficiency; orbitals
                                           # {812, 841, 1081, 2726}.
+  [ "p=653 q=11: 2x653 + 1x1453*", 175813 ], # n = 2759, the range minimiser and
+                                          # B(2759) itself.  Binding class FOREIGN
+                                          # at r*Q = 1453*121 with Q = 11^2 a
+                                          # proper prime power -- the one stratum
+                                          # no other row reaches.  ~5 s once the
+                                          # translations became a basis; orbitals
+                                          # {175813 x6, 425756, 426409, 1897618}.
+  # --- even F = 4: cross coefficient (F/2)*c^2, not F*c^2 (R8 item 2) ---
+  [ "p=13 q=2: 4x13",              312 ],   # n = 52, B(52); cross 2*13^2 = 338
+  [ "p=43 q=5: 4x43 + 1x151*",    3612 ],   # n = 323 = 11 mod 12, B(323), the
+                                          # stratum F = 4 sets the ceiling on;
+                                          # cross 2*43^2 = 3698
 ];
-# R8 item 1: the range minimiser, binding class foreign at r*Q with Q = 11^2.
-# Not in the default battery (cost); run as
-#   WITNESS="p=653 q=11: 2x653 + 1x1453*" MUBOUND=175813 gap -q -A -o 8g verify_witness.g
+# Single rows: WITNESS="..." MUBOUND=... gap -q -A verify_witness.g < /dev/null
+# (without the redirect GAP waits for input after the row and looks hung).
 
 if IsBound(GAPInfo.SystemEnvironment.WITNESS) then
   VerifyWitness(GAPInfo.SystemEnvironment.WITNESS,
