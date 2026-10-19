@@ -8,6 +8,9 @@
 | | | | *hypothesis renamed `HypH` → `HypBCG`; see below* |
 | `Basic.lean` | compiles | n/a — needs Mathlib | **zero — every proof complete**, from 18 |
 | `ArkCore.lean` | compiles | compiles | **zero — every proof complete** |
+| `E5Core.lean` | not tried | compiles (2026-10-19) | **zero** — Theorem E.5's counting and congruence steps; imports `ArkCore` |
+
+*Container status re-reproduced 2026-10-19 from the recipe below: `ArkCore.lean` compiles silently in about 4 s, and a sorry-control copy warns as it should. Mathlib's cache hosts are still unreachable from the container, so `Note.lean` and `Basic.lean` remain laptop-only. To compile `E5Core.lean`: `lean -o <dir>/ArkCore.olean ArkCore.lean`, then `LEAN_PATH=<dir> lean E5Core.lean`.*
 
 **All three files are now sorry-free.** `Basic.lean` went 18 → 0 in one pass; what that pass actually bought is set out under *Phase 1* below, and it was not the proofs.
 

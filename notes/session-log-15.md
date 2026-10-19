@@ -1418,3 +1418,21 @@ I read the proof in full against its sub-cases.
 - **Corroboration:** `fallback_sup.py 3000` reproduces exactly the 12 exceptions, with largest n = 63. The closest non-bare a = 1, s = 2 approach is 0.99555 of 1/25, at n = 1797.
 - **One implicit hypothesis:** r′ ≠ r in the one-foreign-leftover case. Without it, r′ = r is in the window — for odd q, 6·3^{e−1} + 1 = 2·3^e + 1 — giving n = 4r + 1 and a bound near 1/16. It is supplied by the distinct-foreign-prime convention (enumerator, `fallback_sup.py` line 31), which Lemma D2's size-r same-position class justifies.
 - **Recorded in `ep` beside the proof**, with the suggested fix. The theorem's statement itself is unchanged; that edit is Vipul's call. This is a machine reading, the kind T1 says is weakest at "a step whose plausibility does the work".
+
+## 46. Lean: container reproduced; `E5Core.lean` started
+
+- **Reproduced:** Lean 4.15.0 from GitHub releases, per the README recipe. `ArkCore.lean` compiles silently in about 4 s, and a copy with an appended `sorry` warns. Mathlib's cache hosts time out from this container, so `Note.lean` and `Basic.lean` stay laptop-only.
+- **`lean/E5Core.lean`** (imports `ArkCore`, zero sorries, silent compile; a sorry-control copy warns) proves:
+  - **`sladder_strict`:** B ≤ C(r,2) and n ≥ (s+1)r + 1 give (s+1)²·B < C(n,2).
+  - **Instances of it:** `s_ge_four`, `count_5r1` (the F ≥ 2 and p-characteristic-leftover sub-cases) and `two_part_leftover`.
+  - **`count_5r`** (n = 5r) and **`odd_twist_forces_two`**.
+  - **`window_odd_q`:** r′ = 2r − 1 from the ratio window, given the hypothesis `PowRel` that two powers of one odd prime are equal or differ by an odd factor ≥ 3.
+  - **`fermat_c_div5`** and **`three_c_div3`**.
+  - **Finite checks:** `q2_survivors` and `e4_pair`.
+  - **Non-vacuity examples** at real configurations.
+- **Two prose slips found by formalising, both corrected in `ep`:**
+  - The q = 2 line said "SAFE ≤ 7 < C(n,2)/25" at n ∈ {15, 23}. At n = 15, 7 > 4.2; the true bound there is orb(3, 2) = 3.
+  - The s = 3 bullet said SAFE ≤ 10 is below C(n,2)/25 "at every n ≥ 21"; it fails at n = 21 and 22 and holds from n = 23.
+  - Neither affects the theorem: n = 21 is an exception, n = 22 has no configuration, and at n = 15 the real bound clears.
+  - My §45 reading missed both. The formalisation caught what the reading didn't.
+- **Not covered:** Lemma E.2's bound L(a) ≤ 2^{(a−1)/2} + 1, the E.1 and E.3(iii) windows, the twist classification behind `PowRel`, and the SAFE model.
