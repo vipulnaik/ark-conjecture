@@ -1389,3 +1389,17 @@ A44's old text, verbatim:
 ## 43. A43(2): contractible ⇒ K* contractible in codimension ≥ 3
 
 There is no need to triangulate the dunce hat. K sits in S^m with m = N − 2, and |K*| ≃ S^m ∖ |K|. When m − dim K ≥ 3, general position gives π₁ = 1, Alexander duality gives the complement acyclic, and Hurewicz plus Whitehead make it contractible. So the implication holds for every contractible K with dim K ≤ N − 5, including every dunce hat triangulation (dimension 2, at least 8 vertices). A43(2) is narrowed to dim K ≥ N − 4 and recorded in `oen` §7.12. *Not checked numerically*; the argument is standard.
+
+## 44. A42(3): secret-shuffler conjecture verified at n = 5
+
+`ss_evasive.py` generalises `ss_evasive_n4.py`:
+- It enumerates down-sets by recursion: 860 nontrivial monotone properties at n = 5, over 34 classes.
+- It adds a per-property budget, shards and a skip file.
+- It adds a `--heuristic` mode that tries only three splits of the free classes per query. That is sound for non-evasiveness, since any tree it finds is real.
+
+**Results.**
+- **n = 4 control:** reproduces 22 properties, with exactly the two trivial ones evasive.
+- **n = 5:** the exact search settled 613 properties as non-evasive in two parallel 7,100 s shards; 22 hit the 600 s budget and the rest were unreached. The heuristic then found trees for all 245 remaining, in under 4 minutes. That makes 858 distinct non-evasive properties, every nontrivial one except the two trivial ones, which are evasive by the certificate argument.
+- **Not checked:** the heuristic says nothing when it fails. At n = 4 it misses one non-trivial property that the exact search settles, so a heuristic failure is never evidence of evasiveness.
+
+**Gotcha:** the first full run was piped through `tail`, so a timeout killed it with no progress visible. Results now print per property, unbuffered.
