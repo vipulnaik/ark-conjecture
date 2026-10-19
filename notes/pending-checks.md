@@ -28,7 +28,7 @@ Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804
 
 ## Before the pause: the landing checklist
 
-*Nothing on this list is live.* Items 1–3 are done; item 2 stays for the recipe it leaves behind, and item 4 is a non-obligation recorded so it is not mistaken for one. **Run outputs still scoped to older tables, and not rerun:** `fallback_cert.py` (2,187 rows), `converse_check.py` and T8 ([6, 2600]), and `aod` §3.3's no-row-exceeds-its-cap check (1,167 winners). Each says so where it is quoted.
+*Nothing on this list is live.* Items 1–3 are done; item 2 stays for the recipe it leaves behind, and item 4 is a non-obligation recorded so it is not mistaken for one. **Run outputs still scoped to older tables, and not rerun:** `fallback_cert.py` (2,187 rows). It says so where it is quoted.
 
 1. **`mu_exact.py` to 10⁵ — done 2026-09:** validate gives 27 PASS / 0 FAIL, values ALL equal over all 90,299 common n, and the banners are updated.
 2. **`solvable-relaxation.md` at 10⁶ — done 2026-09** (22 PASS / 0 FAIL, every figure requoted). For any future extension, build the table once, after which every question takes seconds:
@@ -51,7 +51,6 @@ Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804
 | owed | kind | item |
 |---|---|---|
 | `wide_cert.py 100000`, both modes | rerun — the last complete run predates the fused rung's addition to B_lo | R1 |
-| `converse_check.py` over [6, 10⁶] | rerun — last run [6, 2600] | T8 |
 | items needing a human reading | judgement | §2a |
 
 ## The gap inventory
@@ -472,9 +471,10 @@ Both coordinates of the joint optimum are settled without a search. The **F side
 - **C(n,2) versus n²/2**, and the orb halving at even twist only (F·r·Q is tight at odd Q).
 
 **Open:**
-1. **Rerun `converse_check.py` over [6, 10⁶]** (last run [6, 2600]: 0 violations over three inequalities, max cofactor 12 at n = 221 and at n = 2759). It is in R1's command list because it reads the witness column. Control: `--delta0 0.35` gives violations and exit 1.
-2. **The sharpening question:** D(δ₀) = 2(1 − √δ₀)²/δ₀ = 25.4 against the measured cofactor 12, loose by about 2.1. The measurements test the inequalities, not the derivation.
-3. **(BCP)'s two asserted properties** (`aod` §6.8): that a floor implies it, and that it does not imply a floor. The second is open, not impossible; its blocker is the companion exponent (T4).
+*Last `converse_check.py` run: 2026-10-19, all of [6, 10⁶], 0 violations; the control fires (R1 runs it on every batch).*
+
+1. **The sharpening question:** D(δ₀) = 2(1 − √δ₀)²/δ₀ = 26.7 at the floor, against the measured maximum cofactor 12 — loose by about 2.2. The measurements test the inequalities, not the derivation.
+2. **(BCP)'s two asserted properties** (`aod` §6.8): that a floor implies it, and that it does not imply a floor. The second is open, not impossible; its blocker is the companion exponent (T4).
 
 ## §2b. Self-contained items
 

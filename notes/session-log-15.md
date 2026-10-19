@@ -1309,3 +1309,15 @@ Standing rule 6 was added: close an item in the same edit, with no in-place narr
 > 2. D₁₂ and C₂ × C₆ in the template search (35–45 orbits; needs a smarter enumeration than all unions).
 > 3. Solve the design equation with richer piece menus and test larger groups (orders 18, 20, 24, then A₅). Needs a decision-tree solver that uses the coset structure, since D on 2^|G| inputs is out of reach beyond about 16.
 > 4. Prove Illies-type non-evasiveness from the local structure at a point, so that order-12 genericity becomes a theorem, and find which other local configurations admit such a proof.
+
+## 38. T8: `converse_check.py` over [6, 10⁶]
+
+- **Result:** 0 violations over all 921,265 rows, covering 796,763 foreign primes and 124,502 rows with no foreign part. The maximum cofactor is still 12 (n = 221), and D(floor) = 26.7, so the slack is 2.2. The `--delta0 0.35` control fires (exit 1). Runtime 12 s.
+- **Stale figures fixed while requoting:**
+  - `ep` F.4's check box quoted 2,186-row counts while saying "requoted on the completed table". It now gives the 10⁶ counts and tightest cases.
+  - `aod` §6.7 had D(δ₀) = 26.1, an arithmetic slip; it is 26.6731…, now 26.7.
+- `pending-checks.md`: the owed row and T8's item are removed (rule 6).
+
+## 39. `aod` §3.3's no-row-exceeds-its-cap check at 10⁶
+
+`validate_table_v3.py`'s group-B check "no winner exceeds cap_F(η) for its own F and η" already covers this, and it passes on the ladder table: 0 of 796,763 one-foreign rows exceed (closest approach 1.77·10⁻⁷ at n = 887,990). Every foreign-block winner in [6, 10⁶] is two-part, so this is the whole population. `aod` §3.3's "Upper" paragraph still quoted the 1,167-winner older-table run with a "recheck" note; it is now requoted. The scope note in `pending-checks.md`'s landing checklist is removed.
