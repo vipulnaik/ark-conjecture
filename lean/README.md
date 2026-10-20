@@ -8,7 +8,7 @@
 | | | | *hypothesis renamed `HypH` → `HypBCG`; see below* |
 | `Basic.lean` | compiles | n/a — needs Mathlib | **zero — every proof complete**, from 18 |
 | `ArkCore.lean` | compiles | compiles | **zero — every proof complete** |
-| `E5Core.lean` | not tried | compiles (2026-10-19) | **zero** — Theorem E.5's counting and congruence steps, Lemma E.2, E.1's Mersenne window; imports `ArkCore` |
+| `E5Core.lean` | not tried | compiles (2026-10-19) | **zero** — Theorem E.5's counting and congruence steps, Lemma E.2 (bases 2 and 3), the Mersenne and repunit windows; imports `ArkCore` |
 
 *Container status re-reproduced 2026-10-19 from the recipe below: `ArkCore.lean` compiles silently in about 4 s, and a sorry-control copy warns as it should. Mathlib's cache hosts are still unreachable from the container, so `Note.lean` and `Basic.lean` remain laptop-only. To compile `E5Core.lean`: `lean -o <dir>/ArkCore.olean ArkCore.lean`, then `LEAN_PATH=<dir> lean E5Core.lean`.*
 
@@ -117,7 +117,29 @@ This is **not** part of the ARK Lean plan and does not gate it. Vipul's mathchec
 
 ### Phase 1b — Theorem E.5, added here because it postdates the phasing above
 
-Theorem E.5 did not exist when this list was drawn up and is now the most valuable target in it. `enumeration-proof.md` Part E‴'s Theorem E.5 caps the SAFE score of every fallback configuration below `C(n,2)/25`, and Corollary E.6 then gives `μ*(n) = B(n)` wherever `B(n) > C(n,2)/25` — which is what turned the per-n collapse certificate into a single theorem covering every `n ≤ 10⁶`. Three things make it the right next target. **It is arithmetic on stated quantities**: four counting sub-cases on SAFE terms, no Lemma C, no J0a — exactly the layer the table above says Lean catches. **It has had one human reading**, against three for Lemma B′, and it now carries more weight than anything else in the framework. **And its two boundary constants are the kind that drift**: the fifteen exceptions all at `n ≤ 63`, and the `1/25` line coinciding with the floor conjecture's — a Lean statement fixes both by type. Proposition 1 of `ladder-completeness.md` (above `1/25` the optimum is a menu shape or S6/S11; `cap_F(1) > 1/25 ⟺ F ≤ 16`) is the companion and is the same kind of argument. Together they are perhaps the size of phase 1 again.
+Theorem E.5 did not exist when this list was drawn up and is now the most valuable target in it. `enumeration-proof.md` Part E‴'s Theorem E.5 caps the SAFE score of every fallback configuration below `C(n,2)/25`, and Corollary E.6 then gives `μ*(n) = B(n)` wherever `B(n) > C(n,2)/25` — which is what turned the per-n collapse certificate into a single theorem covering every `n ≤ 10⁶`. Three things make it the right next target. **It is arithmetic on stated quantities**: four counting sub-cases on SAFE terms, no Lemma C, no J0a — exactly the layer the table above says Lean catches. **It has had one human reading**, against three for Lemma B′, and it now carries more weight than anything else in the framework. **And its two boundary constants are the kind that drift**: the twelve exceptions all at `n ≤ 63`, and the `1/25` line coinciding with the floor conjecture's — a Lean statement fixes both by type. Proposition 1 of `ladder-completeness.md` (above `1/25` the optimum is a menu shape or S6/S11; `cap_F(1) > 1/25 ⟺ F ≤ 16`) is the companion and is the same kind of argument. Together they are perhaps the size of phase 1 again.
+
+### Phase 1b status, and how `E5Core.lean` reconciles with Mathlib
+
+**Status.** `E5Core.lean` is a **core-Lean, machine-checked draft** of E.5's arithmetic. It compiles in the container with zero sorries. It is not meant as the final, conventional form. It defines its own versions of standard notions because the container cannot reach Mathlib:
+
+| `E5Core` / `ArkCore` | Mathlib equivalent |
+|---|---|
+| `IsPrimeN p` (`2 ≤ p ∧ ∀ d, d ∣ p → d = 1 ∨ d = p`) | `Nat.Prime p` — same content; Mathlib states this form as a characterisation lemma |
+| `prime_pow_dvd_coprime`, `dvd_of_dvd_mul_coprime`, `gcd_pow_eq_one`, `gcd_two_pow_pm`, `gcd_succ` | `Nat.Coprime` API (one-liners there) |
+| `isPrimeN_of_bounded`, `isPrimeN_three`, `isPrimeN_13` | `Nat.Prime` by `norm_num` / `decide` |
+| `pairs n` (`ArkCore`) | `n.choose 2`, already bridged in `Note.lean` |
+
+Mathlib convention is to use Mathlib's definitions wherever they exist. So this table lists the reconciliation work, which has two routes.
+
+1. **Import and bridge (minutes).** Keep `ArkCore.lean` and `E5Core.lean` as they are, imported by Mathlib-side files exactly as `Note.lean` already imports `ArkCore`. Add a short bridge file proving `E5Core.IsPrimeN p ↔ Nat.Prime p`, so Mathlib code can supply its own primes to `lemma_E2` and `e1_mersenne`. Everything stays checkable in the container. The cost is that the core files keep their own definitions.
+2. **Mathlib-native rewrite (an hour or two, laptop in the loop).** Restate the file against `Nat.Prime`, `Nat.Coprime` and `choose`, and delete the home-made coprimality lemmas, calling Mathlib's instead.
+   - **Carries over unchanged:** every proof's structure — inequality chains, case splits, witnesses — and the core tactics used (`omega`, `decide`, `rw`, `calc`).
+   - **Needs edits:** call sites of the deleted lemmas (Mathlib's argument order and form differ); the few places that unpack primality; and Mathlib name drift — see the lemma-names note above, which accounts for two of three build failures so far.
+
+   **This is not a find-and-replace.** The mathematics transfers; the mechanics need a compile-and-fix pass.
+
+**Until that is decided, keep the drafts reconcilable.** Stay inside the two namespaces. Prefix any helper whose bare name could also exist in Mathlib (`isPrimeN_three`, not `prime_three`), so that opening both namespaces never gives an ambiguous name. And add any new home-made notion to the table above in the same edit.
 
 ## The split that makes this tractable
 

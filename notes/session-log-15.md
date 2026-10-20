@@ -1452,3 +1452,20 @@ Results:
 - **Sharpening:** E.5's s = 1 bullet said the Mersenne windows are empty "from a = 13". The bound closes from a = 7 (numerically confirmed for every a ≤ 21). The text now reads a = 7.
 
 **Still uncovered:** the repunit window of E.3(iii), `PowRel`'s twist classification, and the SAFE model.
+
+## 48. Lean: the repunit window; README reconciliation section
+
+- **New in `E5Core.lean`:**
+  - **`gcd_succ`.**
+  - **`lemma_E2_three`:** with 3^m = 2A + 1, (3^(2m) − 1)/2 = 2A(A + 1), and every prime power dividing it is ≤ 3^m + 1. The 2-part needs its own case.
+  - **`twist_split3`.**
+  - **`repunit_window` / `e3_repunit`:** SAFE < C(n,2)/25 at every n ≥ c + r once a ≥ 5. The text's "a = 7 (repunit)" is now "a = 5"; a = 5 gives r = 121, which is not prime anyway.
+  - **Non-vacuity example:** at a = 7 (r = 1093, q = 13, n = 3280), the text's own Cap′(7) = 14,209 case.
+- **Checks:** silent compile; axioms only `propext`, `Quot.sound` and `Classical.choice`.
+- **Rename:** `prime_three` → `isPrimeN_three`.
+- **The Lean README gains "Phase 1b status, and how `E5Core.lean` reconciles with Mathlib":**
+  - the table of home-made notions against their Mathlib equivalents;
+  - the two routes — import and bridge (minutes), or a Mathlib-native rewrite (an hour or two, laptop in the loop, not a find-and-replace);
+  - the house rules for keeping drafts reconcilable.
+
+  Also fixed: "fifteen exceptions" → twelve in Phase 1b.

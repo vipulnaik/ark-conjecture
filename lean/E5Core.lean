@@ -24,11 +24,14 @@ the **counting and congruence steps** of that proof over ℕ, in the style of `A
 * `mersenne_window`, `e1_mersenne` — Theorem E.1's cap clears C(n,2)/25 at every n ≥ 2^(a+1) − 1
   once a = 2m + 1 ≥ 7, so the Mersenne exceptions are confined to a ∈ {2, 3, 5}; `twist_split`
   supplies E.1's case split on the twist.
+* `lemma_E2_three`, `repunit_window`, `e3_repunit` — Theorem E.3(iii)'s cap clears C(n,2)/25 at
+  every n ≥ c + r once a = 2m + 1 ≥ 5, so the only repunit exception is a = 3, the (27, 13) row;
+  `twist_split3` is its case split.
 
 **What is NOT here.** The group theory (Lemma B′, the SAFE terms themselves), the twist
 classification behind `PowRel` (that two powers of one prime are equal or differ by a factor
-≥ q), the repunit window of E.3(iii), and the a ∈ {2, 3, 5} Mersenne exceptions themselves
-(the table's 12 rows, checked by `fallback_sup.py`).  Those are stated as hypotheses where
+≥ q), and the exceptions themselves — a ∈ {2, 3, 5} Mersenne and a = 3 repunit, the
+table's 12 rows, checked by `fallback_sup.py`.  Those are stated as hypotheses where
 used, or not at all.
 
 Compile: `lean -o ArkCore.olean ArkCore.lean`, then `LEAN_PATH=<dir of ArkCore.olean> lean E5Core.lean`.
@@ -356,7 +359,7 @@ example : (13 : Nat) = 2 * 7 - 1 :=
   window_odd_q 3 3 4 7 13 (by decide) (by decide) (Or.inl rfl) (by decide) (by decide)
     (Or.inr (Or.inl rfl)) (by decide) (by decide) (by decide)
 
-theorem prime_three : IsPrimeN 3 := by
+theorem isPrimeN_three : IsPrimeN 3 := by
   refine ⟨by decide, fun d hd => ?_⟩
   have h3 := Nat.le_of_dvd (by decide) hd
   have hm := Nat.mod_eq_zero_of_dvd hd
@@ -366,10 +369,118 @@ theorem prime_three : IsPrimeN 3 := by
   · simp at hm
   · exact Or.inr rfl
 
+/-! ### Theorem E.3(iii): the repunit window -/
+
+/-- Consecutive numbers are coprime. -/
+theorem gcd_succ (A : Nat) : Nat.gcd A (A + 1) = 1 := by
+  have h1 : Nat.gcd A (A + 1) ∣ A := Nat.gcd_dvd_left _ _
+  have h2 : Nat.gcd A (A + 1) ∣ A + 1 := Nat.gcd_dvd_right _ _
+  have h3 : Nat.gcd A (A + 1) ∣ (A + 1) - A := Nat.dvd_sub (by omega) h2 h1
+  rw [show A + 1 - A = 1 by omega] at h3
+  exact Nat.eq_one_of_dvd_one h3
+
+/-- **Lemma E.2, base-3 form.**  Write 3^m = 2A + 1.  Then (3^(2m) − 1)/2 = 2·A·(A + 1), and
+every prime power dividing it is at most 3^m + 1. -/
+theorem lemma_E2_three (p k A : Nat) (hp : IsPrimeN p) (hA : 1 ≤ A) (hd : p ^ k ∣ 2 * (A * (A + 1))) :
+    p ^ k ≤ 2 * A + 2 := by
+  have hg := gcd_succ A
+  by_cases h2 : p = 2
+  · subst h2
+    rcases k with _ | k
+    · simp
+    · -- 2^(k+1) ∣ 2·A(A+1)  ⟹  2^k ∣ A(A+1)  ⟹  2^k ≤ A + 1
+      have hd' : 2 ^ k ∣ A * (A + 1) := by
+        rw [Nat.pow_succ, Nat.mul_comm] at hd
+        exact Nat.dvd_of_mul_dvd_mul_left (by omega) hd
+      rcases prime_pow_dvd_coprime 2 k A (A + 1) hp hg hd' with h | h
+      · have := Nat.le_of_dvd (by omega) h; rw [Nat.pow_succ]; omega
+      · have := Nat.le_of_dvd (by omega) h; rw [Nat.pow_succ]; omega
+  · -- p odd: p^k is coprime to 2, so p^k ∣ A(A+1)
+    have hg2 : Nat.gcd (p ^ k) 2 = 1 := by
+      rw [Nat.gcd_comm]
+      apply gcd_pow_eq_one
+      rcases hp.2 (Nat.gcd 2 p) (Nat.gcd_dvd_right 2 p) with h | h
+      · exact h
+      · exfalso
+        have h2p : p ∣ 2 := h ▸ Nat.gcd_dvd_left 2 p
+        have := Nat.le_of_dvd (by omega) h2p
+        have := hp.1; omega
+    have hd' : p ^ k ∣ A * (A + 1) :=
+      dvd_of_dvd_mul_coprime _ _ _ hg2 (by rw [Nat.mul_comm]; exact hd)
+    rcases prime_pow_dvd_coprime p k A (A + 1) hp hg hd' with h | h
+    · have := Nat.le_of_dvd (by omega) h; omega
+    · have := Nat.le_of_dvd (by omega) h; omega
+
+/-- **The repunit window closes at a = 5.**  Repunit pair c = 3^a, r = (3^a − 1)/2,
+a = 2m + 1 with y = 3^m ≥ 9 (m ≥ 2).  A foreign block worth at most r·(y + 1) — Cap′(a)
+under `lemma_E2_three` — sits below C(n,2)/25 at every n ≥ c + r.  (So the only repunit
+exponent E.5 must list is a = 3: its exception (27, 13) at n = 40.) -/
+theorem repunit_window (y r n B : Nat) (hy : 9 ≤ y) (hr : 2 * r + 1 = 3 * (y * y))
+    (hB : B ≤ r * (y + 1)) (hn : 3 * (y * y) + r ≤ n) : 25 * B < pairs n := by
+  generalize hY : y * y = Y at hr hn
+  have hY9 : 9 * y ≤ Y := by rw [← hY]; exact Nat.mul_le_mul_right y hy
+  have h2n := two_pairs n
+  have h4 : 4 * Y ≤ n := by omega
+  have hnn : (4 * Y) * (4 * Y - 1) ≤ n * (n - 1) := Nat.mul_le_mul h4 (by omega)
+  -- 2·25·B ≤ 50·r·(y+1) ≤ 75·Y·(y+1) < 4Y·(4Y − 1)
+  have hlin : 75 * (y + 1) < 4 * (4 * Y - 1) := by omega
+  have hY1 : 0 < Y := by omega
+  have hmul : Y * (75 * (y + 1)) < Y * (4 * (4 * Y - 1)) := (Nat.mul_lt_mul_left hY1).mpr hlin
+  have e1 : Y * (4 * (4 * Y - 1)) = (4 * Y) * (4 * Y - 1) := by ac_rfl
+  have h50 : 50 * B ≤ 50 * (r * (y + 1)) := Nat.mul_le_mul_left 50 hB
+  have h2r : (2 * r) * (y + 1) ≤ (3 * Y) * (y + 1) := Nat.mul_le_mul_right (y + 1) (by omega)
+  rw [Nat.mul_assoc, Nat.mul_assoc] at h2r
+  have e2 : Y * (75 * (y + 1)) = 75 * (Y * (y + 1)) := Nat.mul_left_comm _ _ _
+  omega
+
+/-- The repunit twist split: r − 1 = 3·X with 3 ∤ X, so a prime power dividing r − 1 is
+≤ 3 or divides X. -/
+theorem twist_split3 (p k X : Nat) (hp : IsPrimeN p) (hX : X % 3 ≠ 0) (hd : p ^ k ∣ 3 * X) :
+    p ^ k ≤ 3 ∨ p ^ k ∣ X := by
+  have hg : Nat.gcd 3 X = 1 := by
+    rcases isPrimeN_three.2 (Nat.gcd 3 X) (Nat.gcd_dvd_left 3 X) with h | h
+    · exact h
+    · exfalso; have : 3 ∣ X := h ▸ Nat.gcd_dvd_right 3 X
+      exact hX (Nat.mod_eq_zero_of_dvd this)
+  rcases prime_pow_dvd_coprime p k 3 X hp hg hd with h | h
+  · left; exact Nat.le_of_dvd (by omega) h
+  · right; exact h
+
+/-- **Theorem E.3(iii)'s cap, assembled.**  With 3^m = 2A + 1 (m ≥ 2, so A ≥ 4),
+r = (3^(2m+1) − 1)/2 and r − 1 = 3·X, X = 2·A·(A + 1).  The twist t = p^k divides r − 1,
+so t ≤ 3 or t ≤ 3^m + 1, and SAFE ≤ orb(r, t) < C(n,2)/25 at every n ≥ c + r. -/
+theorem e3_repunit (A r n p k : Nat) (hA : 4 ≤ A) (hp : IsPrimeN p)
+    (hr : 2 * r + 1 = 3 * ((2 * A + 1) * (2 * A + 1)))
+    (hX : (2 * (A * (A + 1))) % 3 ≠ 0)
+    (ht : p ^ k ∣ 3 * (2 * (A * (A + 1))))
+    (hn : 3 * ((2 * A + 1) * (2 * A + 1)) + r ≤ n) (b : Bool) :
+    25 * orb r (p ^ k) b < pairs n := by
+  have htb : p ^ k ≤ 2 * A + 2 := by
+    rcases twist_split3 p k _ hp hX ht with h | h
+    · omega
+    · exact lemma_E2_three p k A hp (by omega) h
+  apply repunit_window (2 * A + 1) r n _ (by omega) hr _ hn
+  apply Nat.le_trans (orb_le_mul r (p ^ k) b)
+  exact Nat.mul_le_mul_left r (by omega)
+
 /-- E.1 at the first exponent past the exceptions: a = 7, c = 128, r = 127, twist 9 = 3²
 (9 ∣ 2⁶ − 1 = 63), from n = 255. -/
 example : 25 * orb (2 ^ (2 * 3 + 1) - 1) (3 ^ 2) false < pairs 255 :=
-  e1_mersenne 3 255 3 2 (by decide) prime_three (Or.inr (by decide)) (by decide) false
+  e1_mersenne 3 255 3 2 (by decide) isPrimeN_three (Or.inr (by decide)) (by decide) false
+
+/-- Small primes by bounded search. -/
+theorem isPrimeN_of_bounded (p : Nat) (h2 : 2 ≤ p)
+    (h : ∀ d, d ≤ p → d ∣ p → d = 1 ∨ d = p) : IsPrimeN p :=
+  ⟨h2, fun d hd => h d (Nat.le_of_dvd (by omega) hd) hd⟩
+
+theorem isPrimeN_13 : IsPrimeN 13 := isPrimeN_of_bounded 13 (by decide) (by decide)
+
+/-- E.3(iii) at the first repunit past the exception: a = 7, c = 2187, r = 1093, q = 13
+(13 ∣ 2·13·14), from n = 3280 — the document's Cap′(7) = 1093·13 = 14,209 case. -/
+example : 25 * orb 1093 13 false < pairs 3280 := by
+  have h := e3_repunit 13 1093 3280 13 1 (by decide) isPrimeN_13 (by decide) (by decide)
+    (by decide) (by decide) false
+  simpa using h
 
 /-- The s-ladder at E.4's own pair: s = 3, r = 5, n = 21, B = 10 gives 16·10 < 210. -/
 example : (3 + 1) ^ 2 * 10 < pairs 21 :=
