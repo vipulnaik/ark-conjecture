@@ -15,7 +15,9 @@ the **counting and congruence steps** of that proof over ℕ, in the style of `A
 * `odd_twist_forces_two` — for odd q: (r−1)/t ≤ 3 with t odd forces r − 1 = 2t.
 * `window_odd_q` — the ratio-window step: with t, t′ powers of one odd q, r = 2t + 1,
   r′ = j′t′ + 1 (j′ ∈ {2, 4, 6}), 3r < 4r′, r′ < 2r and r′ ≠ r, the only possibility is
-  r′ = 2r − 1.  The power-of-q structure enters only through `PowRel` below.
+  r′ = 2r − 1, with the power-of-q structure abstracted as `PowRel`; `powRel_of_pow` proves
+  `PowRel` for any two powers of one odd q ≥ 3, and `odd_q_leftover` assembles the whole
+  odd-q sub-case from the cofactor bounds j ≤ 3 and j′ ≤ 7 to SAFE < C(n,2)/25.
 * `fermat_c_div5`, `three_c_div3` — the q = 2 divisibility facts.
 * finite checks: the q = 2 survivors n ∈ {15, 23}, and E.4's (16, 5) pair.
 * `lemma_E2` — every prime power dividing 2^(2m) − 1 is ≤ 2^m + 1 (via
@@ -28,9 +30,9 @@ the **counting and congruence steps** of that proof over ℕ, in the style of `A
   every n ≥ c + r once a = 2m + 1 ≥ 5, so the only repunit exception is a = 3, the (27, 13) row;
   `twist_split3` is its case split.
 
-**What is NOT here.** The group theory (Lemma B′, the SAFE terms themselves), the twist
-classification behind `PowRel` (that two powers of one prime are equal or differ by a factor
-≥ q), and the exceptions themselves — a ∈ {2, 3, 5} Mersenne and a = 3 repunit, the
+**What is NOT here.** The group theory (Lemma B′ — which is what makes both foreign twists
+powers of the same q — and the SAFE terms themselves), the assembly of the full E.5
+statement over a SAFE model, and the exceptions themselves — a ∈ {2, 3, 5} Mersenne and a = 3 repunit, the
 table's 12 rows, checked by `fallback_sup.py`.  Those are stated as hypotheses where
 used, or not at all.
 
@@ -158,6 +160,57 @@ theorem window_odd_q (t t' j' r r' : Nat) (ht : 1 ≤ t) (ht' : 1 ≤ t')
     · subst h3; rcases hj with h | h | h <;> subst h <;> omega
     · have : 5 * t' ≤ t := by rw [hm]; exact Nat.mul_le_mul_right t' h5
       rcases hj with h | h | h <;> subst h <;> omega
+
+/-! ### Discharging `PowRel` for powers of one odd prime -/
+
+/-- An odd number's powers are odd. -/
+theorem pow_odd (q j : Nat) (hq : q % 2 = 1) : q ^ j % 2 = 1 := by
+  induction j with
+  | zero => rfl
+  | succ j ih => rw [Nat.pow_succ, Nat.mul_mod, ih, hq]
+
+/-- A positive power of q ≥ 3 is ≥ 3. -/
+theorem pow_ge_three (q j : Nat) (hq : 3 ≤ q) (hj : 1 ≤ j) : 3 ≤ q ^ j := by
+  have : q ^ 1 ≤ q ^ j := Nat.pow_le_pow_right (by omega) hj
+  rw [Nat.pow_one] at this; omega
+
+/-- **`PowRel` holds for any two powers of one odd q ≥ 3** — the twist classification the
+odd-q window needs, so `window_odd_q` no longer rests on an assumption. -/
+theorem powRel_of_pow (q e f : Nat) (hq3 : 3 ≤ q) (hq : q % 2 = 1) : PowRel (q ^ e) (q ^ f) := by
+  rcases Nat.lt_trichotomy e f with h | h | h
+  · right; left
+    refine ⟨q ^ (f - e), pow_ge_three q _ hq3 (by omega), pow_odd q _ hq, ?_⟩
+    rw [← Nat.pow_add]; congr 1; omega
+  · left; rw [h]
+  · right; right
+    refine ⟨q ^ (e - f), pow_ge_three q _ hq3 (by omega), pow_odd q _ hq, ?_⟩
+    rw [← Nat.pow_add]; congr 1; omega
+
+/-- The second foreign block's cofactor: r′ − 1 = j′·t′ with t′ odd, r′ odd and j′ ≤ 7 forces
+j′ ∈ {2, 4, 6}. -/
+theorem odd_twist_le7 (r t j : Nat) (ht : t % 2 = 1) (hr : r % 2 = 1) (hr3 : 3 ≤ r)
+    (hj : r - 1 = j * t) (hj7 : j ≤ 7) : j = 2 ∨ j = 4 ∨ j = 6 := by
+  rcases (by omega : j = 0 ∨ j = 1 ∨ j = 2 ∨ j = 3 ∨ j = 4 ∨ j = 5 ∨ j = 6 ∨ j = 7)
+    with h | h | h | h | h | h | h | h <;> subst h <;> omega
+
+/-- **The odd-q leftover case, end to end.**  Both foreign twists are powers of the same odd
+q ≥ 3 (Lemma B′): t = q^e, t′ = q^f.  The first block clears C(n,2)/25 only with
+r − 1 = 2t (`odd_twist_forces_two`); the second has r′ − 1 = j′t′ with j′ ∈ {2, 4, 6}.  The
+ratio window then forces r′ = 2r − 1, so n = 3r + r′ + 1 = 5r, and `count_5r` gives
+SAFE < C(n,2)/25.  Distinct foreign primes (r′ ≠ r) as in the enumerator's convention. -/
+theorem odd_q_leftover (q e f j j' r r' n B : Nat) (hq3 : 3 ≤ q) (hq : q % 2 = 1)
+    (hro : r % 2 = 1) (hr3 : 3 ≤ r) (hro' : r' % 2 = 1) (hr3' : 3 ≤ r')
+    (hj : r - 1 = j * q ^ e) (hj1 : 1 ≤ j) (hj3 : j ≤ 3)
+    (hj' : r' - 1 = j' * q ^ f) (hj7 : j' ≤ 7)
+    (hlo : 3 * r < 4 * r') (hhi : r' < 2 * r) (hne : r' ≠ r)
+    (hn : n = 3 * r + r' + 1) (hB : B ≤ pairs r) : 25 * B < pairs n := by
+  have ht : 1 ≤ q ^ e := Nat.pos_pow_of_pos e (by omega)
+  have ht' : 1 ≤ q ^ f := Nat.pos_pow_of_pos f (by omega)
+  have h2 := odd_twist_forces_two r (q ^ e) j (pow_odd q e hq) hro hr3 hj hj3 hj1
+  have hjj := odd_twist_le7 r' (q ^ f) j' (pow_odd q f hq) hro' hr3' hj' hj7
+  have hw := window_odd_q (q ^ e) (q ^ f) j' r r' ht ht' (powRel_of_pow q e f hq3 hq)
+    (by omega) (by omega) hjj hlo hhi hne
+  exact count_5r r n B (by omega) hB (by omega)
 
 /-- q = 2, r a Fermat prime ≥ 17 (r = 2^(2^k) + 1, k ≥ 2): c = 2r + 1 is divisible by 5. -/
 theorem fermat_c_div5 (k : Nat) (hk : 2 ≤ k) : (2 * (2 ^ (2 ^ k) + 1) + 1) % 5 = 0 := by
@@ -481,6 +534,12 @@ example : 25 * orb 1093 13 false < pairs 3280 := by
   have h := e3_repunit 13 1093 3280 13 1 (by decide) isPrimeN_13 (by decide) (by decide)
     (by decide) (by decide) false
   simpa using h
+
+/-- The odd-q leftover case at q = 3: r = 7, r′ = 13, n = 35, with the full B = C(7,2). -/
+example : 25 * 21 < pairs 35 :=
+  odd_q_leftover 3 1 1 2 4 7 13 35 21 (by decide) (by decide) (by decide) (by decide) (by decide)
+    (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+    (by decide) (by decide) (by decide) (by decide)
 
 /-- The s-ladder at E.4's own pair: s = 3, r = 5, n = 21, B = 10 gives 16·10 < 210. -/
 example : (3 + 1) ^ 2 * 10 < pairs 21 :=

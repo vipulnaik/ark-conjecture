@@ -774,7 +774,7 @@ The survivors at 10⁴ before the multi-part check were themselves informative: 
 
   In every sub-case δ < 1/25, strictly. ∎
 
-> **Formalised in part, 2026-10-19:** `lean/E5Core.lean` proves the counting and congruence steps over ℕ in core Lean, with zero sorries — the s-ladder, every a = 1, s = 2 sub-case's count, the odd-q window, the q = 2 divisibilities, Lemma E.2 in bases 2 and 3, and both absolute-cap windows (Mersenne from a = 7, repunit from a = 5).
+> **Formalised in part, 2026-10-19:** `lean/E5Core.lean` proves the counting and congruence steps over ℕ in core Lean, with zero sorries — the s-ladder, every a = 1, s = 2 sub-case's count, the odd-q window, the q = 2 divisibilities, Lemma E.2 in bases 2 and 3, both absolute-cap windows (Mersenne from a = 7, repunit from a = 5), and the odd-q one-foreign-leftover sub-case end to end, from the cofactor bounds to SAFE < C(n,2)/25.
 >
 > **Second reading, 2026-10-19 (session-log-15 §45): sound, with one hypothesis to make explicit.** Every sub-case's arithmetic re-checks, and so do the exhaustiveness of the four a = 1, s = 2 sub-cases, the ratio window, the q = 2 divisibility (Fermat r ≥ 17 gives r ≡ 2 (mod 5), so 5 | c) and `fallback_sup.py`'s 12 exceptions (rerun to n = 3000, identical).
 > - **The hypothesis.** The last sub-case uses **r′ ≠ r**. With r′ = r allowed, the twist analysis also admits r′ = r: for odd q, 6·3^{e−1} + 1 = 2·3^e + 1. Then n = 4r + 1 and the counting bound gives only about 1/16.

@@ -1469,3 +1469,14 @@ Results:
   - the house rules for keeping drafts reconcilable.
 
   Also fixed: "fifteen exceptions" → twelve in Phase 1b.
+
+## 49. Lean: `PowRel` discharged; odd-q leftover assembled
+
+- **New in `E5Core.lean`:**
+  - **`pow_odd`** and **`pow_ge_three`.**
+  - **`powRel_of_pow`:** any two powers of one odd q ≥ 3 satisfy `PowRel`. Primality of q isn't needed.
+  - **`odd_twist_le7`:** r′ − 1 = j′t′ with t′ and r′ odd and j′ ≤ 7 forces j′ ∈ {2, 4, 6}.
+  - **`odd_q_leftover`:** from the cofactor bounds j ≤ 3 and j′ ≤ 7, odd r and r′, the ratio window and r′ ≠ r, it proves SAFE < C(n,2)/25. It chains `odd_twist_forces_two`, `odd_twist_le7`, `window_odd_q`, `powRel_of_pow` and `count_5r`.
+  - **Non-vacuity example:** q = 3, r = 7, r′ = 13, n = 35.
+- **Silent compile.**
+- **What's left for E.5 in Lean:** the SAFE model and the assembly of the full statement. That is a design question about representing configurations, so I'm holding it for discussion.

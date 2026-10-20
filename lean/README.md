@@ -8,7 +8,7 @@
 | | | | *hypothesis renamed `HypH` → `HypBCG`; see below* |
 | `Basic.lean` | compiles | n/a — needs Mathlib | **zero — every proof complete**, from 18 |
 | `ArkCore.lean` | compiles | compiles | **zero — every proof complete** |
-| `E5Core.lean` | not tried | compiles (2026-10-19) | **zero** — Theorem E.5's counting and congruence steps, Lemma E.2 (bases 2 and 3), the Mersenne and repunit windows; imports `ArkCore` |
+| `E5Core.lean` | not tried | compiles (2026-10-19) | **zero** — Theorem E.5's counting and congruence steps, Lemma E.2 (bases 2 and 3), the Mersenne and repunit windows, the odd-q leftover case end to end; imports `ArkCore` |
 
 *Container status re-reproduced 2026-10-19 from the recipe below: `ArkCore.lean` compiles silently in about 4 s, and a sorry-control copy warns as it should. Mathlib's cache hosts are still unreachable from the container, so `Note.lean` and `Basic.lean` remain laptop-only. To compile `E5Core.lean`: `lean -o <dir>/ArkCore.olean ArkCore.lean`, then `LEAN_PATH=<dir> lean E5Core.lean`.*
 
