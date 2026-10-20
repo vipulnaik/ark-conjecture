@@ -1480,3 +1480,10 @@ Results:
   - **Non-vacuity example:** q = 3, r = 7, r′ = 13, n = 35.
 - **Silent compile.**
 - **What's left for E.5 in Lean:** the SAFE model and the assembly of the full statement. That is a design question about representing configurations, so I'm holding it for discussion.
+
+## 50. A43(4): π₁ of Lutz's A is SL(2,5); greedy collapse of K inconclusive
+
+- **`lutzA_pi1.g`:** GAP builds the edge-path presentation of A's 2-skeleton and simplifies it to 2 generators and 2 relators. The group has trivial abelianisation and order 120, and is **SL(2,5)**. So A, though ℤ-acyclic, is not contractible and not collapsible. Random greedy collapses of A alone (300 seeds) also all stall, with at least 237 faces left.
+- **`lutz_join_collapse.py`:** greedy collapse on K = A ∗ A′ (about 868,000 faces) stalls at 214,000–217,000 faces in all 3 seeds. Inconclusive.
+- **A\* is contractible** by the §43 codimension argument.
+- Recorded in `oen` §7.12, `monotone-transitive-note.md` and A43(4).
