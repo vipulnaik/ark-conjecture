@@ -919,6 +919,42 @@ if A.only in ("all", "scope"):
         print("[ok] I11: the retired (SP) label appears nowhere except where the "
               "rename itself is described.")
 
+    # (I12) NO LIVE PRE-ENTANGLEMENT CLAIM ABOUT CYCLIC-LAYER FUSION.  The
+    # entangled generator (`aod` 3.2.3) keeps the full twist at every c and any
+    # F, so a cyclic-layer fusion is priced by no congruence on c and needs no
+    # coprimality between F and c - 1.  The old reading -- twist cut to the odd
+    # part of c - 1, a c mod 8 law, gcd(c - 1, F) = 1 to keep the layer cyclic
+    # -- survived in six sentences across three documents after the correction,
+    # all phrased so that I1 (which looks for an F_mid strip on the SAFE cap)
+    # could not see them.  A line that is ABOUT the retired reading says so.
+    i12 = 0
+    PRE_EG = re.compile(
+        r"twist cut to the odd part of c\s*[−-]\s*1"
+        r"|cyclic (?:rung|layer)[^.]{0,60}\blose[s]? the twist"
+        r"|with gcd\(c\s*[−-]\s*1,\s*F\)\s*=\s*1"
+        r"|split the range by a congruence on c"
+        r"|(?:gain|fusion)[^.]{0,40}depends on c mod 8", re.I)
+    RETIRED_EG = re.compile(r"\bvoid\b|\bfalse\b|no congruence|not needed|"
+                            r"\bonce\b|\bold\b|retired|DEPRECATED|tempting|"
+                            r"no coprimality|earlier|pre-entangle", re.I)
+    for d in DOCS:
+        try: txt = open(d).read()
+        except OSError: continue
+        if "DEPRECATED-EG" in txt[:2000]:
+            continue                      # archived as a whole, and says so
+        if "entangled-generator-finding" in d:
+            continue                      # the record of the correction itself
+        for ln, line in enumerate(txt.split("\n"), 1):
+            m = PRE_EG.search(line)
+            if m and not RETIRED_EG.search(line):
+                findings += 1; i12 += 1
+                print(f"{d} L{ln}  *** INVARIANT I12 *** pre-entanglement claim "
+                      f"about cyclic-layer fusion: '{m.group(0)}'; the entangled "
+                      f"generator keeps the full twist at every c (`aod` 3.2.3)")
+                print(f"   {line.strip()[:150]}\n")
+    if not i12:
+        print("[ok] I12: no live pre-entanglement claim about cyclic-layer fusion.")
+
 # --------------------------------------------------------------- PASS 7 tables
 #
 # A markdown table whose separator row has a different number of columns from
@@ -1020,6 +1056,7 @@ NOT_A_LABEL = {"E", "A", "I", "N", "X", "The", "It", "This", "That", "If", "For"
 # people's numbered results, which resolve against their papers and not against
 # anything here.  Checking them produces only noise.
 NOT_OURS = re.compile(r"session-log|pending-checks|README", re.I)
+LOG_SEC = re.compile(r"session-log[-\w.]*\s*$", re.I)
 # `literature-findings.md` is a special case rather than an exclusion.  It cites
 # BOTH our documents and other people's papers, in the same notation, and there
 # is no way to tell them apart from the number alone -- "section 5.1" is BBKN's
@@ -1044,7 +1081,10 @@ EXTERNAL_ATTR = re.compile(
     r"Chowla|Bombieri|Vinogradov|Elliott|Halberstam|Kahn|Saks|Sturtevant|Black|"
     r"Jones|Zvonkin|Skorobogatov|Sofos|Montgomery|Vaughan|Pintz|Scheidweiler|"
     r"Triesch|Santha|Yao|Huppert|Smith|Maynard|Lichtman|Friedlander|Iwaniec|"
-    r"Mikawa|Fouvry|Li|Bateman|Horn|Schinzel|Brun|Titchmarsh)"
+    r"Mikawa|Fouvry|Li|Bateman|Horn|Schinzel|Brun|Titchmarsh|"
+    # A possessive pronoun right before the label ("his Theorem 1") points back
+    # to the author named earlier in the sentence; ours are never cited that way.
+    r"his|her|their)"
     r"(?:'s|s'|--|\s*\(\d{4}\)|,)?\s*$", re.I)
 
 def norm(label):
@@ -1120,6 +1160,11 @@ if A.only in ("all", "refs"):
                 # A document name binds a following reference only if it is close
                 # by; "`aod.md` §6 ... and §9 of these notes" is a real sentence
                 # shape, and a greedy binding mis-attributes the second.
+                # "session-log-15 §45" cites a section of an archived log,
+                # which this pass does not resolve (NOT_OURS); without this it
+                # fell back to the citing document and reported as dangling.
+                if LOG_SEC.search(line[max(0, m.start() - 30):m.start()]):
+                    continue
                 names = [x for x in DOCNAME.finditer(line)
                          if 0 <= m.start() - x.end() <= 40]
                 names += [x for x in ALIAS_CITE.finditer(line)
@@ -1656,7 +1701,8 @@ if A.only in ("all", "witness"):
     # window is what made the first version of this pass unusable, reporting a
     # hit for every (n, number) pair in a sentence naming several of each.
     GAP = r"(?:(?!n\s*=|n\s*[≤<])[^.\n])"
-    NW = re.compile(r"n\s*=\s*(\d{2,6})\b" + GAP + r"{0,60}?`([0-9]+x[0-9]+[^`]{0,40})`")
+    # Thousands separators are read whole: "n = 999,958" is not n = 999.
+    NW = re.compile(r"n\s*=\s*(\d{1,3}(?:,\d{3})+|\d{2,7})(?![\d,]\d)" + GAP + r"{0,60}?`([0-9]+x[0-9]+[^`]{0,40})`")
     ND = re.compile(r"n\s*=\s*(\d{2,6})\b" + GAP + r"{0,50}?\b(0\.0\d{3,6})\b")
     # An explicitly labelled historical or cross-artefact citation is exempt:
     # "(v4: 0.045742 at n = 1817)" is a claim ABOUT a superseded table and is
@@ -1712,7 +1758,7 @@ if A.only in ("all", "witness"):
         shown = False
         for ln, line in enumerate(txt.split("\n"), 1):
             for m in NW.finditer(line):
-                n = int(m.group(1)); frag = m.group(2)
+                n = int(m.group(1).replace(",", "")); frag = m.group(2)
                 if n not in BY_N or "x" not in frag: continue
                 claimed = _shape(frag)
                 if not claimed: continue

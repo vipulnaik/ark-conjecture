@@ -44,7 +44,7 @@
 {"n": 75, "brute": 900, "table": 900}
 {"n": 76, "brute": 684, "table": 684}
 {"n": 77, "brute": 385, "table": 385}
-{"n": 78, "brute": 465, "table": 465}
+{"n": 78, "brute": 468, "table": 468}
 {"n": 80, "brute": 600, "table": 600}
 {"n": 82, "brute": 1640, "table": 1640}
 {"n": 84, "brute": 666, "table": 666}
@@ -64,7 +64,7 @@
 {"n": 100, "brute": 1200, "table": 1200}
 {"n": 102, "brute": 903, "table": 903}
 {"n": 104, "brute": 666, "table": 666}
-{"n": 105, "brute": 506, "table": 506}
+{"n": 105, "brute": 812, "table": 812}
 {"n": 106, "brute": 2756, "table": 2756}
 {"n": 108, "brute": 1404, "table": 1404}
 {"n": 110, "brute": 737, "table": 737}
@@ -73,7 +73,7 @@
 {"n": 114, "brute": 1081, "table": 1081}
 {"n": 115, "brute": 1265, "table": 1265}
 {"n": 116, "brute": 1624, "table": 1624}
-{"n": 117, "brute": 702, "table": 702}
+{"n": 117, "brute": 812, "table": 812}
 {"n": 118, "brute": 3422, "table": 3422}
 {"n": 119, "brute": 952, "table": 952}
 {"n": 120, "brute": 1711, "table": 1711}
@@ -84,7 +84,7 @@
 {"n": 129, "brute": 2709, "table": 2709}
 {"n": 130, "brute": 1711, "table": 1711}
 {"n": 132, "brute": 1711, "table": 1711}
-{"n": 133, "brute": 1197, "table": 1197}
+{"n": 133, "brute": 1332, "table": 1332}
 {"n": 134, "brute": 4422, "table": 4422}
 {"n": 135, "brute": 1755, "table": 1755}
 {"n": 136, "brute": 1378, "table": 1378}
@@ -99,7 +99,7 @@
 {"n": 147, "brute": 3528, "table": 3528}
 {"n": 148, "brute": 2664, "table": 2664}
 {"n": 150, "brute": 2211, "table": 2211}
-{"n": 152, "brute": 1368, "table": 1368}
+{"n": 152, "brute": 1395, "table": 1395}
 {"n": 153, "brute": 1711, "table": 1711}
 {"n": 154, "brute": 2485, "table": 2485}
 {"n": 155, "brute": 2325, "table": 2325}
@@ -129,7 +129,7 @@
 {"n": 186, "brute": 3403, "table": 3403}
 {"n": 187, "brute": 1806, "table": 1806}
 {"n": 188, "brute": 4324, "table": 4324}
-{"n": 189, "brute": 2457, "table": 2457}
+{"n": 189, "brute": 2756, "table": 2756}
 {"n": 190, "brute": 3403, "table": 3403}
 {"n": 192, "brute": 6048, "table": 6048}
 {"n": 194, "brute": 9312, "table": 9312}
@@ -137,6 +137,6 @@
 {"n": 196, "brute": 4704, "table": 4704}
 {"n": 198, "brute": 2943, "table": 2943}
 {"n": 200, "brute": 2400, "table": 2400}
-{"n": 247, "brute": 2525, "table": 2525}
-{"n": 285, "brute": 3916, "table": 3916}
-{"n": 308, "brute": 4134, "table": 4134}
+{"n": 247, "brute": 3280, "table": 3280}
+{"n": 285, "brute": 5671, "table": 5671}
+{"n": 308, "brute": 5671, "table": 5671}

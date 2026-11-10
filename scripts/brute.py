@@ -24,14 +24,13 @@ WHAT A CONFIGURATION IS (Part 0, corrected shape space)
                Lemma D2 forbids it for outside blocks.
       outside  classes are never fused at all, so F = 1 there (Lemma D2).
 
-  GLOBAL admissibility: the cyclic layer is one cyclic group carrying every
-  outside block's translation group C_c and every fused class's C_Fmid, so all
-  of those orders must be pairwise coprime.
+  GLOBAL admissibility: outside primes are pairwise distinct.  A fused class's
+  Fmid is NOT required coprime to them or to any twist -- the block rotation is
+  a quotient of the cyclic layer (entangled generator), not a subgroup of it.
 
 SCORING (SAFE mode, so a matching block always gets the unconditional F*C(c,2))
 
-      matching class      F * orb(c, dmax),  dmax = (q-part of c-1) times the
-                          largest divisor of the rest coprime to Fmid
+      matching class      F * C(c,2), the flat cap, at every Fmid
       outside class       orb(c, q-part of c-1)
       within-class cross  (F or F/2) * c^2, by the parity of F, when F > 1
       between classes     size_i * size_j
@@ -98,8 +97,10 @@ def score(n, p, q, classes):
     outside = [c for _, _, c, o in classes if o]
     if len(outside) != len(set(outside)):
         return None                       # C_r x C_r is not cyclic
-    if not pairwise_coprime(outside + [fm for fm, _, _, o in classes if not o]):
-        return None                       # the cyclic layer would not be cyclic
+    # No coprimality between a fused class's Fmid and anything else: the block
+    # rotation is a QUOTIENT of the cyclic layer, carried by an entangled
+    # generator, so the layer stays cyclic at any Fmid (Theorem 3.1's gotcha;
+    # groups built at n = 33, 78, 105).
 
     terms = []
     for fm, ft, c, o in classes:
@@ -107,14 +108,9 @@ def score(n, p, q, classes):
         if o:
             terms.append(orb(c, qpart(c - 1, q), False))
         else:
-            # SAFE, but not blind: the fused class C_Fmid and the cyclic part of
-            # the twist live in the SAME cyclic group, so they must be coprime.
-            # Crediting F*C(c,2) regardless would score a twist the group cannot
-            # have.  The twist splits by layer, d = d_cyc * d_q, and only d_cyc
-            # is constrained; d_q may be any q-power dividing c-1.
-            dq = qpart(c - 1, q)
-            dmax = dq * coprime_part((c - 1) // dq, fm)
-            terms.append(F * orb(c, dmax, p == 2))
+            # SAFE: the flat cap F*C(c,2).  The entangled generator realises
+            # the full twist at any Fmid, so nothing is stripped.
+            terms.append(F * comb(c, 2))
         if F > 1:
             terms.append((F if F % 2 else F // 2) * c * c)
     sizes = [fm * ft * c for fm, ft, c, _ in classes]

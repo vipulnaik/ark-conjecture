@@ -55,7 +55,7 @@ Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804
 
 ## The gap inventory
 
-*The daylight between what `enumeration-proof.md` proves and what it verifies. Six items; the document's Part J carries the full statement of each and this is the index.*
+*The daylight between what `enumeration-proof.md` proves and what it verifies. Seven items; the document's Part J carries the full statement of each and this is the index.*
 
 1. **Part 0 completeness** — a shape missing from the space fails silently. Three independent tests could see one; none has.
 2. **The two-part reduction of Theorem 2.3** — verified to n = 1200, Goldbach-tier to prove. Nothing rests on it but B₀'s O(n) cost claim.
@@ -63,6 +63,7 @@ Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804
 4. **The collapse's theorem-side residue** — **narrowed to δ ≤ 1/25 only**, by Theorem E.5. No row of either table is in that regime, so this is now a statement about hypothetical n rather than about the tables.
 5. **J0a's non-semilinear stabilisers** — discharged for every computed value; one theorem-side clause remains.
 6. **Lemma B′** — proved, and read three times independently, the third in 2026-09 with no prior exposure.
+7. **`ladder-completeness.md` Proposition 1** — proved by counting on SAFE terms, single-read. Between 10⁵ and 10⁶ it is the only route from the ladder table to B(n), so the claim "μ\* known exactly to 10⁶" is exactly as strong as it. A second, independent reading is owed.
 
 ## Where the residual risk sits
 
@@ -613,7 +614,7 @@ Arguments: the largest orbital count t to check (12), and a wall-clock budget in
 
 ### A43. Self-duality of collapsibility and contractibility
 
-*Recorded* (`oen` §7.12): collapsible ⇒ K\* contractible (PL sketch); the dual-of-join formula; Lutz's 60-vertex complex has contractible dual; ~60,000 random collapsible complexes (N = 6–9) all had collapsible duals. *Open*: (1) collapsible ⇒ K\* collapsible, via a targeted search (not random expansions) or an argument; (2) contractible ⇒ K\* contractible **when dim K ≥ N − 4** — below that it holds by general position plus Alexander duality (`oen` §7.12), which also settles the dunce hat; (3) write out the PL argument in full; (4) collapsibility of Lutz's complex K = A ∗ A′ or its dual. A itself is not collapsible (π₁ = SL(2,5)), and greedy collapses of K stall (`oen` §7.12).
+*Recorded* (`oen` §7.12): collapsible ⇒ K\* contractible (PL sketch); the dual-of-join formula; Lutz's 60-vertex complex has contractible dual; ~60,000 random collapsible complexes (N = 6–9) all had collapsible duals. *Open*: (1) collapsible ⇒ K\* collapsible, via a targeted search (not random expansions) or an argument; (2) *answered, negatively* (`oen` §7.12): the general-position lemma needs only ℤ-acyclicity, so Lutz's A makes A\* contractible with non-contractible dual, and A\* is not collapsible; (3) write out the PL argument in full; (4) collapsibility of Lutz's complex K = A ∗ A′ or its dual. A itself is not collapsible (π₁ = SL(2,5)), and greedy collapses of K stall (`oen` §7.12).
 
 ### A45. Random monotone properties
 
