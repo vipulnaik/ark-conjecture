@@ -37,7 +37,7 @@ a18_verify.py -- three verifications for Lemma D2 of enumeration-proof.md
           floor in FLOORS below.  The threshold is a function of the floor and
           NOTHING else, so it moves whenever the ladder does: the pre-repair
           0.02516 gives n >= 1582, and the current corrected ladder floor
-          0.04621 gives n >= 470.  Quote the line this run prints rather than a
+          0.04621 gives n >= 471.  Quote the line this run prints rather than a
           remembered number, and update `ep` Corollary D2-prime with it.
 
 Usage:  python3 a18_verify.py [path/to/mu_table.csv]

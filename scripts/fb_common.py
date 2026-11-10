@@ -50,9 +50,12 @@ below.  That is true of the Part E-prime THEOREMS, and it is what the switch
 buys, but two further dependencies sit underneath the conditions themselves and
 should be named wherever the slogan is quoted:
 
-  * UNFUSED FOREIGN PARTS.  Condition (3) scores a foreign part as a single
-    block, orb(r, t) >= B, and the leftover tests admit foreign parts only at
-    F = 1.  For a FUSED foreign class of F' blocks the intra term is
+  * UNFUSED, PAIRWISE DISTINCT FOREIGN PARTS.  Condition (3) scores a foreign
+    part as a single block, orb(r, t) >= B, and the leftover tests admit
+    foreign parts only at F = 1 and only at primes distinct from r and from
+    one another (`c2 != r`, `rj == r`, subset sums).  Two unfused foreign
+    orbits of the SAME prime can exist; they are excluded by the non-permuted
+    form of the same lemma, not by counting.  For a FUSED foreign class of F' blocks the intra term is
     F'*orb(r, t), so (3) is not necessary for it.  What excludes fused-foreign
     configurations is Lemma D2's domination (m* <= n*min(F',r)/2), whose
     range-scoped half is checked by `a18_verify.py` and which beyond the table

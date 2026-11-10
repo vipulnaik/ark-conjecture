@@ -422,7 +422,7 @@ This is the concrete gap. By §1.2 it cannot corrupt the μ\* results; it can on
 > | **n = 12** hand-built | 7,115 | 296 | 427 † |
 > | **n = 12** TOM | 6,211 | **441** (145 new, **0 lost**) | **711** |
 >
-> **So every conjugacy class of subgroups of Sₙ is represented and the hole is closed at both degrees.** The two batteries agreeing — on all 131 and all 296 partitions the hand-built stages produce, and on all 11 of the hand-built multi-prime partitions — is also the only independent check `IsOliverTop` has, and it now spans 427 conditions rather than 170.
+> **So every conjugacy class of subgroups of Sₙ is represented and the hole is closed at both degrees.** The two batteries agreeing — on all 131 and all 296 partitions the hand-built stages produce, and on all 11 of the hand-built multi-prime partitions — was for a time the only independent check `IsOliverTop` had, and it spans 427 conditions rather than 170. *A direct one now exists:* a second implementation that never enumerates normal subgroups — for each prime q, form O^q(G) as the normal closure of the Sylow subgroups at the other primes and test whether it is p-by-cyclic for some p — returns the same answer as `IsOliverTop` on all 1,554 groups of order ≤ 150 other than 128, and on all 546 transitive groups of degree 2–14 (27 of the former have two usable top primes; F₂₁ × D₁₀ returns {2, 3} from both).
 >
 > † §6.1 and §8.4 count 425 conditions in the same file. The likeliest explanation is the n = 10 one (§8.2a: rows retagged `2+3` on regeneration, same partitions), but it has not been checked; recount from the file before quoting either.
 >
