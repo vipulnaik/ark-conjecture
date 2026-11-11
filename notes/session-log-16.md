@@ -138,3 +138,9 @@ Vipul asked for μ\*_N to be certified or bounded at n ≤ 50 and at the first r
 ## 13. A notation collision removed
 
 Vipul: `threshold-beyond-mu.md` used s(P) for the largest number of edges of a member, while `orbital-evasiveness-notes.md` §9.7 uses s(n) for the biclique location — and the staging note's own §6 uses that s(n) and s\*_N(n). The property's edge budget is now **e_max(P)** throughout the note and in the docstrings of the three `global_chi` scripts; s is left to §9.7's sense. No statement changed.
+
+## 14. The staging note read against `aod` and against k ≥ 3
+
+- **`aod`, section by section** (`threshold-beyond-mu.md` §9). Nothing in `aod` is wrong; a χ-rung track would sit beside it. The six ceilings become 1/4 and 3 − 2√2, the same pair as `solvable-relaxation.md`. S5 gains nothing (q = 2 is exceptional at the odd indices 3, 5, 7). The feasibility criterion and the shape counts of §6 are unchanged for μ\*_cyc; just under the new ceilings the covering set is one shape per parity, with a disjunction over the cofactor. The converse stops at μ\*_cyc: above it the trivial group's G\* enters, with no shifted-prime content, and at the top rung ARK itself would make the projection C(n,2) with no arithmetic.
+- **k ≥ 3** (§10). The device spends the 2-homogeneity of the *normaliser* of the block group. At k = 3 AGL(1, r) has about r/6 orbits on triples, so a foreign block has that many types and χ can be tuned: computed at three blocks, the level-1 budget is the smallest orbit. The one exception is the block of 32, where AΓL(1, 32) is 3-homogeneous: AGL(1, 32)'s five orbits of 992 are one type and the budget is C(32,3), so the Galois escape's pinning of the top prime is waived there. No infinite family at any k ≥ 3.
+- **Flagged, not done:** G\*_k against μ\*_k at k ≥ 3, the one place an order of magnitude could move.

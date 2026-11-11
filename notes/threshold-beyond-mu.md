@@ -1,6 +1,6 @@
 # Numerical projections of the ladder, and μ\*_χ: the Oliver-χ rung reaches past μ\*
 
-*A finding of 2026-11-10, one sitting, not yet read by a second reader. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`, `cyc_certify.py`, `entangled_check.g`, `type_levels6.py`, `biclique_boost_scan.py`, `nstar_types.py`, `pgroup_levels.py`, `global_chi_min.py`, `global_chi_forced.py`, `verify_global_chi.py`. **This file is a staging area:** the finding is to be refined here before any of it is carried into the framework documents, and the short note is not to be changed on its account (decided 2026-11-10). Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
+*A finding of 2026-11-10, one sitting, not yet read by a second reader. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`, `cyc_certify.py`, `entangled_check.g`, `type_levels6.py`, `biclique_boost_scan.py`, `nstar_types.py`, `pgroup_levels.py`, `global_chi_min.py`, `global_chi_forced.py`, `verify_global_chi.py`, `kset_block_levels.py`. **This file is a staging area:** the finding is to be refined here before any of it is carried into the framework documents, and the short note is not to be changed on its account (decided 2026-11-10). Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
 
 ## 1. Projecting a rung to a number
 
@@ -122,7 +122,7 @@ So a foreign block with **r − 1 = 2kq^e, k ≤ 11 or k = 13, and q outside a f
 | 5 | 5 − 2√6 = 0.1010 | F = 2, η = 1/3 | **3 − 2√2 = 0.1716** | F = 2, d = 6 (k = 3) |
 | 11 | 7 − 4√3 = 0.0718 | F = 4, η = 1/3 | **3 − 2√2 = 0.1716** | F = 2, d = 12 (k = 6) |
 
-The right-hand column is 1/(1 + 1)² at even n and 1/(1 + √2)² at odd n; the worst class moves from 0.0718 to 0.1716. *Standing:* the μ\* column is the asymptotic value of μ\*, given the enumeration proof and the hypothesis. The right-hand column is the asymptotic value of μ\*_cyc and only a lower bound for μ\*_χ — there is no classification behind it (§9). It is arithmetic on the cap formula, spot-checked on n from 9,000 to 12,000, where the best one-foreign value in classes 2, 7 and 8 is 0.2495, 0.1715 and 0.2497, and classes 5 and 11 reach 0.207 and 0.198 at special n. The k = 6 row needs q ∉ {2, 5, 7} and the k = 3 rows q ≠ 2, automatic for large n.
+The right-hand column is 1/(1 + 1)² at even n and 1/(1 + √2)² at odd n; the worst class moves from 0.0718 to 0.1716. *Standing:* the μ\* column is the asymptotic value of μ\*, given the enumeration proof and the hypothesis. The right-hand column is the asymptotic value of μ\*_cyc and only a lower bound for μ\*_χ — there is no classification behind it (§11). It is arithmetic on the cap formula, spot-checked on n from 9,000 to 12,000, where the best one-foreign value in classes 2, 7 and 8 is 0.2495, 0.1715 and 0.2497, and classes 5 and 11 reach 0.207 and 0.198 at special n. The k = 6 row needs q ∉ {2, 5, 7} and the k = 3 rows q ≠ 2, automatic for large n.
 
 **On the table, to n = 4000** (`threshold_scan.py`, shapes n = Fc + r and n = Fc only). Under the old scoring this enumerator reproduces μ\* at all 3,410 rows. With qualifying foreign blocks at C(r,2): 1,847 rows improve; the floor rises from 0.0462 at n = 2759 to **0.0887 at n = 1159**; n = 2759 itself goes to 0.1568 (2 × 773 + 1213, 1212 = 12·101, k = 6, q = 101). At n = 1159 the binding orbital is the fused class 4·C(173,2), which the device does not touch. *The first rows where the two part* — none below 56:
 
@@ -235,7 +235,62 @@ So **μ\*_N = μ\* at n = 6, 10, 12, 14 and 18**, and the N level adds nothing t
 - **It fills the partial-index row of §7.9.** The per-shape conditions listed there are for full foreign index, and at those shapes m\*_χ(Γ) = m\*(Γ): the pattern "the smallest orbital alone" passes — {K_a} at S3, F·K_c at S2. A gain needs the smallest type to be repeated, which is the partial-index case.
 - **The search of §7.9 is M\*_OCR with no objective.** The CSP's models are the properties passing the battery; minimising s over them would compute the battery's projection, a lower bound on M\*_OCR(10), and μ\*_χ restricted to the battery is the largest single-group optimum.
 
-## 9. What is open, and what is owed
+## 9. What this would do to `arithmetic-of-density.md`
+
+*A reading of `aod` against §§1–7, section by section; nothing there is edited. `aod` is about μ\*, so none of it becomes false. Integration would add a second track, for the lower bound μ\*_cyc of the χ rung, beside it.*
+
+**§1, the thesis.** The two engines stand. On the second track a foreign block's efficiency η = 2/d stops being the currency: a block whose index k = d/2 is good for q counts as η = 1. The six constants keyed mod 12 collapse to two, 1/4 at even n and 3 − 2√2 at odd n. *These are the two constants `solvable-relaxation.md` reaches by relaxing Oliver's chain to solvability.* There the chain is dropped; here it is kept and its condition is used in full. That two different moves land on the same pair wants a sentence wherever it is recorded.
+
+**§2, the census.** The shapes are the same and the winners are not. S7 at F = 4 no longer sets the ceiling at n ≡ 11 (mod 12): F = 2 at d = 12 does, at cap₂(1). **S5 gains nothing:** top-layer fusion forces q = 2, its index is the odd part u of r − 1, and q = 2 is exceptional at k = 3, 5 and 7. S6 and S11 have two foreign blocks, two types, and the device does not apply to them (§3). The entangled group AΓL(1, c) on c + r points (§5) has r dividing c − 1, against clause 4 of (BCG), with the matching twist full; it is worth less than μ\* wherever it was scored, but it is a shape the census does not list.
+
+**§§3.1–3.3, efficiency and the ceiling table.** The local analysis is untouched: only ℓ = 2 and ℓ = 3 obstruct, and the table of admissible d by class is what it was. What changes is that d costs nothing while d/2 is good. The ceiling table has two rows; cap_F(η) is used at η = 1 and F ∈ {1, 2} only; the rung ladder A > B > C and the F = 4 analysis of §3.3.4a become statements about μ\* alone. New side conditions appear, each of density zero in q: q ≠ 2 at k = 3, q ≠ 3 at k = 4, q ∉ {2, 5, 7} at k = 6.
+
+**§3.4, the window.** Unchanged; F·width = 1 − √λ needs nothing from η.
+
+**§3.5, (BCG).** The same hypothesis with a larger conclusion. Clause 3's list d ∈ {2, 4, 6, 12} is exactly the range k ≤ 6 where the table of §4 is exact. The clause that `aod` calls load-bearing, F = 4 at class 11, is not needed on this track: class 11 uses n = 2c + r with r = 12q + 1, the system `aod` records as superseded.
+
+**§3.6, the shifted-prime ladder.** No relief. The device needs a bounded index, so it does nothing for a rung with θ < 1, where the cofactor is a power of r. (BCG) is still the θ = 1 endpoint.
+
+**§§3.7–3.8 and §5, the data and the floor.** A parallel scan is owed: `threshold_scan.py` reaches 4000 where `ladder_verify.py` reaches 10⁶. The floor row changes character. On `aod`'s track the minimiser n = 2759 is foreign-bound, at the boundary cofactor 12; on this one that block is at full capacity and the floor, 0.0887 at n = 1159, is bound on a fused matching class.
+
+**§4, the fates.** Unchanged for μ\*. The escapes matter less, since the ceilings they escape above are higher.
+
+**§6, the converse — where the tracks differ in kind.**
+
+- *The feasibility criterion Σ√F_i ≤ 1/√δ₀ carries over unchanged.* It uses only that each part's capacity is at most its size squared, and a rescored foreign block still needs a share of at least √δ₀. So the counts N(δ₀) of §6.1 and §6.4, and their growth as δ₀ falls, are the same on both tracks.
+- *At the new constants the covering set is small.* 3 − 2√2 = 1/(1 + √2)², so just below the odd ceiling the only feasible shape of odd parity with a foreign part is n = 2c + r, and just below 1/4 the feasible shapes are n = c + r and n = r₁ + r₂. The collapse of §6.6 to one shape comes without a margin argument. What is left is a disjunction over the cofactor d, which the admissible-d table cuts to one or two per class: d = 12 alone at class 11.
+- *The bounded cofactor of §6.7 changes character.* For μ\* a floor forces (r − 1)/Q ≤ D(δ₀) = 2(1 − √δ₀)²/δ₀, which loosens as δ₀ falls. For a rescored block the cofactor is bounded by which indices are good — d ≤ 14 on the exact table — whatever δ₀ is. That bound is a fact about what §4 has proved, not about the groups: it stands or falls with the open question of which k admit a cyclically symmetric complex of Euler characteristic 1.
+- *The converse does not reach μ\*_N or μ\*_χ.* Its first step is that the score is a minimum over orbitals, so every part clears δ₀ on its own. At level 1 that fails. The trivial group has no parts and its value is G\*(n) (§7), which is governed by congruences on Σ ± n!/|Aut| and by no shifted prime; a group fixing a points is governed by G\*(a). So "a high value forces one of finitely many prime systems to be soluble" holds for μ\* and for μ\*_cyc and is conditional on G\* above them. At n = 6, 10, 12, 14, 18, G\* ≤ μ\*, and nothing has broken.
+- *The round trip of §6.7 does not close on this track, and cannot.* Forward, (BCG) gives a larger evasiveness constant. Backward, a high evasiveness threshold forces no arithmetic: if ARK holds, the top projection is C(n,2) at every n with no hypothesis at all. The converse is a property of the low rungs, where the projection is a maximum over groups of a minimum over orbitals.
+- *Proposition 1 of `ladder-completeness.md`*, which cuts the covering set to 13 and 13 above 1/25, is proved for μ\* scoring. On this track §5's bound U(n) does part of that work without a menu; the proposition itself would need redoing.
+
+**§§7–8, the open problems.** Open Problem 1 asks whether a family of different local structure can beat the ℓ = 2 and ℓ = 3 efficiency losses. The answer here is sideways: for μ\* the losses stay, and for evasiveness they were not losses. §8's item on efficiency below 1 becomes the question of which indices are good.
+
+## 10. Arity k ≥ 3: what the device was spending
+
+*A reading of `three-uniform-note.md` and `general-k-note.md` against §§1–7; neither is edited.*
+
+**What transfers.** Everything stated without reference to pairs: the projections of §1, the three levels of §3, the Proposition of §4 (its proof never uses that the orbits are of pairs), and the reduction of §7 to types and the trivial group. The fixed complex is indexed by orbits on k-subsets, as `three-uniform-note.md` §1 says of the criterion itself.
+
+**What the device needed, and k = 2 supplied without being asked.** The Proposition wants every orbit under the budget to lie in *one* type. At k = 2 a foreign block's pair-orbits are a single orbit of the normaliser: AGL(1, r) is transitive on pairs. μ\* spends the 2-homogeneity of the group; the device spends the 2-homogeneity of its **normaliser**, which costs the group nothing. `aod` §5 calls the first a group-theoretic accident. The second is the same accident, one level up.
+
+**At k = 3 the normaliser is not 3-homogeneous, and the types multiply.** AGL(1, r) has about r/6 orbits on triples. So a foreign block ℤ/r ⋊ C_t has about r/6 types, each a free cycle of d = (r − 1)/t orbits with total r(r − 1), together with a few special ones. One type's total is the full-twist value, so a single-type statement would send η₃ to 1 and every ceiling of `three-uniform-note.md` §5.7 to cap_F(1)/2. **It does not hold.** With several free types, j of them taken as isolated vertices give χ = j·d, and since d is prime to q some j gives 1 (mod q); with pairs allowed, χ = d·(v − e) reaches every class. Computed at level 1 (`kset_block_levels.py`):
+
+| block | orbits on triples | types | least budget with χ ≡ 1 (mod q) |
+|---|---|---|---|
+| ℤ/23 ⋊ C₁₁, d = 2 | 7 of 253 | one of 1 orbit, three of 2 | 253, the smallest orbit |
+| ℤ/29 ⋊ C₇, d = 4 | 18 of 203 | one of 2, four of 4 | 203, the smallest orbit |
+| ℤ/13 ⋊ C₃, d = 4 | 4 of 13, 6 of 39 | one of 2, two of 4 | 13, the smallest orbit |
+
+So at level 1 a foreign block is worth its smallest orbit and no more: **μ\*_cyc has no analogue at k = 3**, and the shifted-prime efficiency η stays the currency there. *Level 2 is not examined;* a property generated by j pairwise non-embeddable orbits would pass when j·d ≡ 1 (mod q), which suggests it gives nothing either.
+
+**The exception is where the normaliser is 3-homogeneous**, and Kantor's list (`three-uniform-note.md` §3.1) says where: degrees 5, 8 and 32. At c = 32 the group AGL(1, 32) has five orbits of 992 on triples, one type under AΓL(1, 32), cycled by the Frobenius; computed, the least budget is **4960 = C(32, 3)**, at q = 31 and at q = 5. So a block of 32 is worth full density *without the Frobenius in the group*, whenever 5 is a good index for the top prime (q ∉ {2, 3}). The Galois escape of `three-uniform-note.md` §6.1 pays for that factor 5 by pinning the top prime to 5, after which every foreign block needs 5 | r − 1; at c = 32 the device waives the pinning. At c = 128 it does not: AGL(1, 128) has 21 free orbits on triples in three types of 7. This is a finite effect, on configurations with a block of 32.
+
+**General k.** `general-k-note.md` §3 records that the full-density blocks are finite at k = 3, degenerate at k = 4 and absent from k = 5 (Livingstone–Wagner). The device's supply is that same list, so it has no infinite family at any k ≥ 3. The ceilings β_k = cap_F(η)/2, the mod-12 table and the arithmetic of `aod` §§3.5–3.6 are untouched at every arity.
+
+**What might still have juice, and is not examined.** The reduction of §7 has an analogue: μ\*_{N,k} ≥ G\*_k(n), the least e_max of a k-uniform property with χ = 1. μ\*_k is capped by group orders, at O(n² log n); G\*_k is the trivial group's value and has no such cap in sight, its lower bounds coming from p-subgroups by Smith. Whether G\*_k is of the order of μ\*_k or larger is the one question here whose answer could change an order of magnitude. `global_chi_min.py` on 3-uniform hypergraphs at n = 6 would be the first data point.
+
+## 11. What is open, and what is owed
 
 - **Is the right-hand column the asymptotic value of μ\*_χ?** Unknown. An upper bound needs a cap on totals of isomorphism types in place of the flat cap on orbitals, and the obvious candidate — m\*_χ(Γ) is at most the smallest type total, by taking the property generated by that type's full union — fails as stated, because other orbitals can embed in that union and change χ (K_c embeds in K_r when c ≤ r). The guess is that 1/4 and 3 − 2√2 are right for generic n.
 - **How far apart are μ\*_χ(n) and M\*_OCR(n)?** At n = 6, 6 against 9. At n = 10 neither is known; μ\*_χ(10) is a finite computation of the same kind as `type_levels6.py`, which as written canonicalises graphs by brute force over S_n and would need a real isomorphism routine there.
