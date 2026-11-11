@@ -1,6 +1,6 @@
 # Numerical projections of the ladder, and μ\*_χ: the Oliver-χ rung reaches past μ\*
 
-*A finding of 2026-11-10, one sitting, not yet read by a second reader. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`. Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
+*A finding of 2026-11-10, one sitting, not yet read by a second reader. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`, `type_levels6.py`, `biclique_boost_scan.py`. **This file is a staging area:** the finding is to be refined here before any of it is carried into the framework documents, and the short note is not to be changed on its account (decided 2026-11-10). Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
 
 ## 1. Projecting a rung to a number
 
@@ -106,7 +106,7 @@ So a foreign block with **r − 1 = 2kq^e, k ≤ 11 or k = 13, and q outside a f
 
 ## 5. Consequences
 
-**For the short note, with its hypothesis unchanged.** (BCG₁/₅) takes d ∈ {2, 4, 6, 12}, that is k = d/2 ∈ {1, 2, 3, 6} with t = q an odd prime. All four qualify once q ∉ {2, 5, 7}, which holds for n ≥ 426. The foreign term r(r − 1)/24 becomes C(r,2), and min{C(c,2), C(r,2), cr} ≥ C(n,2)/26 for n ≥ 105. So under (BCG₁/₅), **μ\*_χ(n) ≥ C(n,2)/26 for all large n**, and every nontrivial monotone property with fewer than C(n,2)/26 edges is evasive — thirteen times the note's 1/350. The note's statement μ\*(n) = Θ(n²) is unaffected; what improves is the evasiveness corollary, and it now passes through the χ rung and not the resistance rung.
+**Under the short note's hypothesis, as a statement about μ\*_χ — not a change to the note.** (BCG₁/₅) takes d ∈ {2, 4, 6, 12}, that is k = d/2 ∈ {1, 2, 3, 6} with t = q an odd prime. All four qualify once q ∉ {2, 5, 7}, which holds for n ≥ 426. The foreign term r(r − 1)/24 becomes C(r,2), and min{C(c,2), C(r,2), cr} ≥ C(n,2)/26 for n ≥ 105. So under (BCG₁/₅), **μ\*_χ(n) ≥ C(n,2)/26 for all large n**, and every nontrivial monotone property with fewer than C(n,2)/26 edges is evasive — thirteen times the note's 1/350. The note is left as it is: its bound is deliberately simple and loose, there only to establish Θ(n²), and sharpening the more complicated half of it is not wanted. The 1/26 is a statement of this file.
 
 **Ceilings.** With every qualifying foreign block at efficiency 1 only the parity of n enters. Both columns are cap_F(η) = η/(1 + √(Fη))²; the μ\* column takes the η = 2/d the class allows (`arithmetic-of-density.md` §3.3.5), the other takes η = 1.
 
@@ -119,11 +119,45 @@ So a foreign block with **r − 1 = 2kq^e, k ≤ 11 or k = 13, and q outside a f
 | 5 | 5 − 2√6 = 0.1010 | F = 2, η = 1/3 | **3 − 2√2 = 0.1716** | F = 2, d = 6 (k = 3) |
 | 11 | 7 − 4√3 = 0.0718 | F = 4, η = 1/3 | **3 − 2√2 = 0.1716** | F = 2, d = 12 (k = 6) |
 
-The right-hand column is 1/(1 + 1)² at even n and 1/(1 + √2)² at odd n; the worst class moves from 0.0718 to 0.1716. *Standing:* the μ\* column is the asymptotic value of μ\*, given the enumeration proof and the hypothesis. The right-hand column is the asymptotic value of μ\*_cyc and only a lower bound for μ\*_χ — there is no classification behind it (§7). It is arithmetic on the cap formula, spot-checked on n from 9,000 to 12,000, where the best one-foreign value in classes 2, 7 and 8 is 0.2495, 0.1715 and 0.2497, and classes 5 and 11 reach 0.207 and 0.198 at special n. The k = 6 row needs q ∉ {2, 5, 7} and the k = 3 rows q ≠ 2, automatic for large n.
+The right-hand column is 1/(1 + 1)² at even n and 1/(1 + √2)² at odd n; the worst class moves from 0.0718 to 0.1716. *Standing:* the μ\* column is the asymptotic value of μ\*, given the enumeration proof and the hypothesis. The right-hand column is the asymptotic value of μ\*_cyc and only a lower bound for μ\*_χ — there is no classification behind it (§8). It is arithmetic on the cap formula, spot-checked on n from 9,000 to 12,000, where the best one-foreign value in classes 2, 7 and 8 is 0.2495, 0.1715 and 0.2497, and classes 5 and 11 reach 0.207 and 0.198 at special n. The k = 6 row needs q ∉ {2, 5, 7} and the k = 3 rows q ≠ 2, automatic for large n.
 
 **On the table, to n = 4000** (`threshold_scan.py`, shapes n = Fc + r and n = Fc only). Under the old scoring this enumerator reproduces μ\* at all 3,410 rows. With qualifying foreign blocks at C(r,2): 1,847 rows improve; the floor rises from 0.0462 at n = 2759 to **0.0887 at n = 1159**; n = 2759 itself goes to 0.1568 (2 × 773 + 1213, 1212 = 12·101, k = 6, q = 101). At n = 1159 the binding orbital is the fused class 4·C(173,2), which the device does not touch.
 
-## 6. How this sits in §7
+## 6. A required-subgraph projection: bicliques
+
+*Added 2026-11-10 (late), same sitting; a question of Vipul's.* §1 projects a rung to a number. A rung also projects to a family of graphs: call H **R-required at n** if every nontrivial monotone property satisfying R has H as a member. Every non-evasive property then contains every required graph of every rung below non-evasiveness. For Oliver-resistance this is `orbital-evasiveness-notes.md` §9.7's biclique box: H is required exactly when some Oliver group has H inside every orbital, and for H = K_{a,b} in the linear regime the answer is the triangle a + b ≤ s(n), with s(n) the largest smallest-block over groups whose minimal blocks are all 2-homogeneous. Groups with a pseudorandom foreign block are discarded there, since no single cyclotomic class holds a linear biclique.
+
+The device of §4 takes them back.
+
+> **Proposition (biclique form).** Let n = F·c + r with Γ of the constructed shape: matching blocks of size c with full twist, one foreign block of prime size r under top prime q, with k cyclotomic pair-orbitals. Suppose no C_k-invariant proper complex on k points has χ ≡ 1 (mod q) — the condition of §4. Then every nontrivial monotone property that omits some K_{a,b} with a + b ≤ min(c, r) is evasive.
+
+*Proof.* Let P omit K_{a,b}. The orbitals outside the foreign block are F·K_c, unions of K_{c,c} over block pairs, and K_{Fc,r}; each contains K_{a,b}, so none lies in P, and no face of Δ_P^Γ uses one. The union of all k foreign classes is K_r, which contains K_{a,b}, so the full simplex on the k classes is not a face. Δ_P^Γ is therefore a proper complex on the k classes, invariant under the multiplier that cycles them (§9.7), and by hypothesis its χ is not ≡ 1 (mod q). ∎
+
+Nothing is asked of the individual classes, and the hypothesis on P is membership of one graph, not an edge count: the property may be dense. The same proof gives every bipartite graph on at most min(c, r) vertices, as a subgraph of such a biclique.
+
+Write **s\*_N(n)** for the largest smallest-block over groups each of whose minimal blocks is 2-homogeneous or carries a good type. Then s(n) ≤ s\*_N(n), and a non-evasive property contains K_{a,b} whenever a + b ≤ s\*_N(n). *This is a sufficient region only.* The triangle of §9.7 is exact for the non-void argument; no upper bound for what the χ rung requires is claimed here.
+
+**Smallest instance, built.** n = 21 = 8 + 13 with q = 3 is the first n at which the scan below improves on s(n). The orbitals are K₈ (28 pairs), K₈,₁₃ (104) and two classes of 39 on the 13 points, each 6-regular. k = 2, where the only proper invariant complexes are empty or two points. So a non-evasive property on 21 vertices contains K_{a,b} for a + b ≤ 8, against s(21) = 7 from 3 × 7.
+
+**Predicted limits.** The fusion count needed is the one in §5's right-hand column, so only parity enters: with c ≈ r ≈ n/(F + 1),
+
+| n mod 12 | 0, 4, 6, 10 | 2, 8 | 1, 9 | 3, 7 | 5 | 11 |
+|---|---|---|---|---|---|---|
+| s(n)/n → | 1/2 | 1/4 | 1/3 | 1/5 | 1/7 | 1/13 |
+| lower bound for s\*_N(n)/n → | 1/2 | **1/2** | 1/3 | **1/3** | **1/3** | **1/3** |
+
+At the balanced point a = b the constant moves from 1/26 to 1/6 at the worst class. *Standing:* the top row is §9.7's, conditional on supply as stated there; the bottom row is the same arithmetic with qualifying blocks admitted, conditional on the same kind of supply, and a lower bound.
+
+**On the table, to n = 10⁴** (`biclique_boost_scan.py`; new groups from the shape n = Fc + r only, so the boosted figures are lower bounds for s\*_N). 5,625 of 9,995 values of n improve. The smallest ratio s/n is 0.0702 on [6, 1000] (at 527) and 0.0678 on [1000, 10⁴] (at 6887); boosted, the smallest ratios are 0.2387 (at 155 = 2 × 59 + 37) and 0.2073 (at 1703 = 2 × 353 + 997). The floor case 2759 goes from 271 to 881 (2 × 881 + 997, k = 6, q = 83). Medians over [5000, 10⁴] by class:
+
+| n mod 12 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| s/n | 0.490 | 0.331 | 0.250 | 0.198 | 0.490 | 0.213 | 0.490 | 0.200 | 0.246 | 0.330 | 0.496 | 0.195 |
+| boosted | 0.497 | 0.332 | 0.497 | 0.332 | 0.495 | 0.331 | 0.496 | 0.330 | 0.490 | 0.332 | 0.498 | 0.330 |
+
+The boosted medians sit at the predicted 1/2 and 1/3. The minima do not yet: class 11 has minimum 0.232 on that range, since supply rarely hits c = r. The admitted block has k = 2 through 8 at the improved rows (k = 3 most often, at 1,781; k = 8 at 29, which rest on the crude rule q > 2^k).
+
+## 7. How this sits in §7
 
 - **It is §7.3's direction (b).** Oliver's theorem is tight at a fixed group over all acyclic complexes: every value in 1 + n_G·ℤ occurs. §7.3 names "the restriction to Δ_P complexes" as the least explored place left to look, since Δ_P comes from an S_n-invariant family and the tightness says nothing about that subclass. The Proposition is an instance: for sparse graph properties the realisable values of χ(Δ_P^Γ) lie in the finite set of the k-table, which misses 1 + qℤ. m\*_χ(Γ) is the least budget at which the realisable set first meets Oliver's.
 - **It extends §9.7's "isomorphic orbitals".** That passage has the symmetry N\*, the all-or-none consequence, the count t_eff, and evasiveness for budgets up to m₁ + m₂. What is added is that a whole type is neutralised up to its total size, and the constants that follow.
@@ -132,10 +166,11 @@ The right-hand column is 1/(1 + 1)² at even n and 1/(1 + √2)² at odd n; the 
 - **It fills the partial-index row of §7.9.** The per-shape conditions listed there are for full foreign index, and at those shapes m\*_χ(Γ) = m\*(Γ): the pattern "the smallest orbital alone" passes — {K_a} at S3, F·K_c at S2. A gain needs the smallest type to be repeated, which is the partial-index case.
 - **The search of §7.9 is M\*_OCR with no objective.** The CSP's models are the properties passing the battery; minimising s over them would compute the battery's projection, a lower bound on M\*_OCR(10), and μ\*_χ restricted to the battery is the largest single-group optimum.
 
-## 7. What is open, and what is owed
+## 8. What is open, and what is owed
 
 - **Is the right-hand column the asymptotic value of μ\*_χ?** Unknown. An upper bound needs a cap on totals of isomorphism types in place of the flat cap on orbitals, and the obvious candidate — m\*_χ(Γ) is at most the smallest type total, by taking the property generated by that type's full union — fails as stated, because other orbitals can embed in that union and change χ (K_c embeds in K_r when c ≤ r). The guess is that 1/4 and 3 − 2√2 are right for generic n.
 - **How far apart are μ\*_χ(n) and M\*_OCR(n)?** At n = 6, 6 against 9. At n = 10 neither is known; μ\*_χ(10) is a finite computation of the same kind as `type_levels6.py`, which as written canonicalises graphs by brute force over S_n and would need a real isomorphism routine there.
 - **Where does the bounded-cofactor condition now live?** A foreign block with trivial twist has all (r − 1)/2 of its cycle-orbitals in one type, of total C(r,2), with no condition on r − 1 at all; what the condition on r − 1 buys is a twist large enough to leave k small enough to qualify. Which k qualify is the question of whether a cyclically symmetric monotone function on k points can have χ = 1 — the χ-level form of the transitive-group question of §7.5–7.6 and `pending-checks.md` A48.
 - **The same device elsewhere:** on the intra classes of a partial-twist matching block; on the cross distance classes of a fused class, of one type per divisor class by §9.7; on unfused isomorphic blocks, where the symmetry is all of S_F and the invariant complexes are skeleta of a simplex, never of Euler characteristic 1; at k ≥ 12 for budgets too small for the bad complexes to fit.
-- **Owed:** a second reading of the Proposition and of `cyclic_chi_values.py`; the device inside the exact enumerator, for μ\*_cyc over [6, 10⁶]; the right-hand column rescanned class by class. `pending-checks.md` A49.
+- **A matching upper bound on the biclique side.** §6 gives a sufficient region. Whether a + b ≤ s\*_N(n) is all the χ rung requires, and whether a group with two good types or a good type on a fused class does better, is not examined; nor are required graphs other than bipartite ones.
+- **Owed:** a second reading of both Propositions and of `cyclic_chi_values.py`; a second computation of §6's boosted column; the device inside the exact enumerator, for μ\*_cyc over [6, 10⁶]; the right-hand column rescanned class by class. `pending-checks.md` A49.
