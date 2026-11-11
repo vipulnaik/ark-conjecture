@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""global_chi_min.py -- G*(n), the least s(P) over monotone graph properties P
+"""global_chi_min.py -- G*(n), the least e_max(P) over monotone graph properties P
 on n vertices with chi(Delta_P) = 1 (`threshold-beyond-mu.md` section 9).
 
 This is m*_N = m*_chi of the trivial group, the one Oliver group with a single
-type.  A property with s(P) <= s is a family of isomorphism classes of graphs
+type.  A property with e_max(P) <= s is a family of isomorphism classes of graphs
 with at most s edges (no isolated vertices, at most n vertices), closed under
 deleting an edge, and
     chi = sum over classes H in P of (-1)^(e(H)-1) * (number of copies of H in K_n).

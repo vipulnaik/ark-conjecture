@@ -95,7 +95,7 @@ while layer:
                     nxt[c] = G
     forced.update(nxt); layer = nxt
 chi = sum((1 if len(H) % 2 else -1) * (factorial(n) // aut(H)) for H in list(forced.values()) + D)
-print(f"subgraph classes of H0: {len(forced)};  chi(Delta_P) = {chi};  s(P) = {max(len(H0), max(len(H) for H in D))}")
+print(f"subgraph classes of H0: {len(forced)};  chi(Delta_P) = {chi};  e_max(P) = {max(len(H0), max(len(H) for H in D))}")
 assert chi == 1
 tom = sys.argv[3] if len(sys.argv) > 3 else f"../outputs/tom{n}.txt"
 if os.path.exists(tom):

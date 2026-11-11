@@ -4,13 +4,13 @@
 
 ## 1. Projecting a rung to a number
 
-For a monotone graph property P on n vertices write **s(P)** for the largest number of edges of a member. Properties are as in §7.1: monotone decreasing with ∅ ∈ P, so the empty property is excluded by definition and the trivial property (K_n ∈ P, s = C(n,2)) is included. For a rung R of the ladder of `orbital-evasiveness-notes.md` §7.2, its **numerical projection** is
+For a monotone graph property P on n vertices write **e_max(P)** for the largest number of edges of a member. *(Not the s(n) of §9.7, the biclique location, which §6 uses in its own sense.)* Properties are as in §7.1: monotone decreasing with ∅ ∈ P, so the empty property is excluded by definition and the trivial property (K_n ∈ P, s = C(n,2)) is included. For a rung R of the ladder of `orbital-evasiveness-notes.md` §7.2, its **numerical projection** is
 
-> **M\*_R(n) = min { s(P) : P satisfies R }**.
+> **M\*_R(n) = min { e_max(P) : P satisfies R }**.
 
 The trivial property satisfies every rung, so **M\*_R(n) ≤ C(n,2)** always, with equality exactly when the ladder has collapsed at R: no nontrivial property reaches it. ARK at n is M\*_NE(n) = C(n,2). At a prime power every projection is C(n,2), μ\* included.
 
-Every property with s(P) < M\*_R(n) fails R; if R is implied by non-evasiveness it is evasive. An implication R ⇒ R′ between rungs projects to M\*_R ≥ M\*_R′. Two projections are already in the notes under other names, and one more is immediate.
+Every property with e_max(P) < M\*_R(n) fails R; if R is implied by non-evasiveness it is evasive. An implication R ⇒ R′ between rungs projects to M\*_R ≥ M\*_R′. Two projections are already in the notes under other names, and one more is immediate.
 
 | rung R | M\*_R(n) | standing |
 |---|---|---|
@@ -31,11 +31,11 @@ Every property with s(P) < M\*_R(n) fails R; if R is implied by non-evasiveness 
 
 **Per group.** For an Oliver group Γ let
 
-> **m\*_χ(Γ) = min { s(P) : P is Γ-χ-resistant }**,
+> **m\*_χ(Γ) = min { e_max(P) : P is Γ-χ-resistant }**,
 
 the least budget at which some property passes Γ's own condition. It depends only on Γ's orbitals, their sizes, and which unions of orbitals are isomorphic to or embed in which — more than the sizes m\*(Γ) uses, but still data of the group. Always m\*_χ(Γ) ≥ m\*(Γ), since χ-resistance implies resistance.
 
-**Max–min.** **μ\*_χ(n) = max over Oliver Γ ≤ S_n of m\*_χ(Γ)**. This is the analogue of μ\*(n) = max m\*(Γ): a property with s(P) < μ\*_χ(n) fails one specific group.
+**Max–min.** **μ\*_χ(n) = max over Oliver Γ ≤ S_n of m\*_χ(Γ)**. This is the analogue of μ\*(n) = max m\*(Γ): a property with e_max(P) < μ\*_χ(n) fails one specific group.
 
 **Min–max.** M\*_OCR(n), where a single property must pass every group. M\*_OCR(n) ≥ μ\*_χ(n), and nothing forces equality: χ-resistance is not monotone in P, so passing groups one at a time does not assemble.
 
@@ -45,7 +45,7 @@ the least budget at which some property passes Γ's own condition. It depends on
 - *Maximal groups are not enough.* For resistance they are (fact 2), which is why μ\* is governed by groups with few, large orbitals. χ-resistance does not pass to subgroups (fact 3), so m\*_χ can be larger on a smaller group, and the maximum defining μ\*_χ ranges over groups the enumeration proof rightly discards for μ\*.
 - *Where each is C(n,2).* At a prime power both are (AGL(1, n) is passed by the trivial property alone). At other n it is not known whether μ\*_χ(n) can reach C(n,2). M\*_OCR(n) = C(n,2) says exactly that the Oliver conditions alone prove ARK at n — false at n = 6, the first non-prime-power, and what the n = 10 search of §7.9 is deciding.
 
-**At n = 6 the two separate.** μ\*(6) = 6. The two Oliver-χ-resistant properties of §7.9 have s = 9 (largest member K₃,₃) and s = 12, and they are the only ones, so **M\*_OCR(6) = 9**. Computing m\*_χ(Γ) for each of the 50 Oliver classes (`type_levels6.py`) gives **μ\*_χ(6) = 6**: every group, taken alone, is passed by some property with at most 6 edges, and no property with fewer than 9 passes them all. *(At n = 10 the property the search currently holds, which passes every class with t ≤ 11 and part of t = 12, has s = 30; it was not minimised, so this bounds nothing.)*
+**At n = 6 the two separate.** μ\*(6) = 6. The two Oliver-χ-resistant properties of §7.9 have e_max = 9 (largest member K₃,₃) and e_max = 12, and they are the only ones, so **M\*_OCR(6) = 9**. Computing m\*_χ(Γ) for each of the 50 Oliver classes (`type_levels6.py`) gives **μ\*_χ(6) = 6**: every group, taken alone, is passed by some property with at most 6 edges, and no property with fewer than 9 passes them all. *(At n = 10 the property the search currently holds, which passes every class with t ≤ 11 and part of t = 12, has e_max = 30; it was not minimised, so this bounds nothing.)*
 
 ## 3. Three levels, and what symmetry alone can give
 
@@ -84,9 +84,9 @@ Symmetry alone never buys more than fusing each type once. *m\*_typ is a ceiling
 
 ## 4. The single good type: foreign blocks at full capacity
 
-> **Proposition.** Let Γ ≤ S_n be an Oliver group with top prime q (or trivial top), one of whose orbits is a block of prime size r on which Γ induces ℤ/r ⋊ C_t. Let k = C(r,2)/orb(r, t) be the number of pair-orbitals inside the block, and suppose that **no C_k-invariant simplicial complex on k points, other than the full simplex, has Euler characteristic ≡ 1 (mod q)** (= 1, if the top is trivial). Let M be the smaller of C(r,2) and the least orbital of Γ outside the block's own pairs. Then **m\*_N(Γ) ≥ M**, hence m\*_χ(Γ) ≥ M: no nontrivial monotone graph property with s(P) < M is Γ-χ-resistant.
+> **Proposition.** Let Γ ≤ S_n be an Oliver group with top prime q (or trivial top), one of whose orbits is a block of prime size r on which Γ induces ℤ/r ⋊ C_t. Let k = C(r,2)/orb(r, t) be the number of pair-orbitals inside the block, and suppose that **no C_k-invariant simplicial complex on k points, other than the full simplex, has Euler characteristic ≡ 1 (mod q)** (= 1, if the top is trivial). Let M be the smaller of C(r,2) and the least orbital of Γ outside the block's own pairs. Then **m\*_N(Γ) ≥ M**, hence m\*_χ(Γ) ≥ M: no nontrivial monotone graph property with e_max(P) < M is Γ-χ-resistant.
 
-*Proof.* Let s(P) < M. Every orbital outside the block has at least M edges, so no invariant graph in P contains one: the faces of Δ_P^Γ are sets of the block's own k orbitals whose union lies in P. Those orbitals are the circulants Cay(ℤ/r, ±aH), H the twist subgroup, and the multiplier x ↦ gx on the block — extended by the identity elsewhere — is a permutation of [n] that cycles them. P is invariant under every permutation of [n], so Δ_P^Γ is invariant under that cycle: a C_k-invariant complex on k points. It is not the full simplex, because the union of all k orbitals has C(r,2) ≥ M edges. By hypothesis its Euler characteristic is not 1 modulo q. ∎
+*Proof.* Let e_max(P) < M. Every orbital outside the block has at least M edges, so no invariant graph in P contains one: the faces of Δ_P^Γ are sets of the block's own k orbitals whose union lies in P. Those orbitals are the circulants Cay(ℤ/r, ±aH), H the twist subgroup, and the multiplier x ↦ gx on the block — extended by the identity elsewhere — is a permutation of [n] that cycles them. P is invariant under every permutation of [n], so Δ_P^Γ is invariant under that cycle: a C_k-invariant complex on k points. It is not the full simplex, because the union of all k orbitals has C(r,2) ≥ M edges. By hypothesis its Euler characteristic is not 1 modulo q. ∎
 
 Since the groups in question have a nontrivial top, the property also fails the *nontrivial-top* rung, so M bounds that projection too.
 
@@ -152,7 +152,7 @@ computable from the μ\* table (`cyc_certify.py`; μ\*(m) = C(m,2) at prime powe
 - At the other 1,025 rows the maximising r cannot qualify as a foreign block. Restricting U to primes r that can — r − 1 with a q-power twist t whose k is good — bounds the *foreign reading*, where R is not of the group's own prime p, and **that bound equals the scan at 3,403 rows**. The seven exceptions, where a complement with its own foreign block may do better than the shapes scanned: 689 (24,753 to 25,651), 1159, 1703, 2597, 2873, 3523, 3959.
 - What stays uncertified at those 1,025 rows is a block of the group's own prime carrying a partial twist. The first three, n = 110, 154 and 171 (r = 61, 73, 73; U = 1176, 2628, 2352), close by hand, so μ\*_cyc is 903, 2485 and 2016 there. The complement group is cyclic-by-q, and the bound to beat leaves it at most one orbital on 49 or 81 points, or at most two on 98. A cyclic-by-q group is 2-homogeneous only in prime degree: its normal cyclic subgroup must meet the socle trivially, hence centralise it, hence be trivial. On 98 points the normal cyclic subgroup has orbits of size 49 or 98, and the pairs inside an orbit at a difference of order 7 (or 2) form an invariant set of at most 294. *By hand, one reading; not automated for the rest.*
 
-**Nothing more comes from the witnessing group.** At n = 56 the property "embeds in K₂₇" has s = 351 and passes the group: its fixed complex is the single orbital K₂₇, since a class of 203 spans 29 vertices. At n = 63 "embeds in K₃₁" has s = 465 and its fixed complex is the full simplex on the three classes. So m\*_χ equals the certified value at these groups, and any excess of μ\*_χ over μ\*_cyc has to come from other groups.
+**Nothing more comes from the witnessing group.** At n = 56 the property "embeds in K₂₇" has e_max = 351 and passes the group: its fixed complex is the single orbital K₂₇, since a class of 203 spans 29 vertices. At n = 63 "embeds in K₃₁" has e_max = 465 and its fixed complex is the full simplex on the three classes. So m\*_χ equals the certified value at these groups, and any excess of μ\*_χ over μ\*_cyc has to come from other groups.
 
 ## 6. A required-subgraph projection: bicliques
 
@@ -197,7 +197,7 @@ The boosted medians sit at the predicted 1/2 and 1/3. The minima do not yet: cla
 Two numbers therefore carry the N level:
 
 - **ν\*(n) = the largest m\*_typ(Γ) over nontrivial Oliver Γ** — the maximum that §3 declined to take over all groups, taken where it means something;
-- **G\*(n) = m\*_N(1) = m\*_χ(1) = the least s(P) with χ(Δ_P) = 1.** For the trivial group the orbitals are the edges, N\* = S_n, and the invariant complexes are exactly the graph properties. G\* is the numerical projection, in the sense of §1, of the rung χ(Δ_P) = 1.
+- **G\*(n) = m\*_N(1) = m\*_χ(1) = the least e_max(P) with χ(Δ_P) = 1.** For the trivial group the orbitals are the edges, N\* = S_n, and the invariant complexes are exactly the graph properties. G\* is the numerical projection, in the sense of §1, of the rung χ(Δ_P) = 1.
 
 > **max( μ\*_cyc(n), G\*(n) ) ≤ μ\*_N(n) ≤ max( ν\*(n), G\*(n) )**, and **ν\*(n) ≤ (n/2)·⌊(n − 1)/2⌋**.
 

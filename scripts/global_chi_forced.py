@@ -5,13 +5,13 @@ contains a prescribed large graph (`threshold-beyond-mu.md` section 9).
 P = (all subgraphs of H0)  +  D,   D a family of classes with at most E edges
 that are not subgraphs of H0, the whole closed under deleting an edge.  H0 is
 the graph some p-subgroup forces into every property with chi = 1:
-   2km : H0 = 2K_m, n = 2m   (forced by Z_p on two p-cycles; s(P) = m(m-1))
-   star: H0 = K_{1,n-1}      (forced by Z_{n-1} when n - 1 is prime; s(P) = n-1)
+   2km : H0 = 2K_m, n = 2m   (forced by Z_p on two p-cycles; e_max(P) = m(m-1))
+   star: H0 = K_{1,n-1}      (forced by Z_{n-1} when n - 1 is prime; e_max(P) = n-1)
    2km+star: both
    tri, tri+star: H0 = (n/3)K_3   (forced at n = 18 by the translations of two blocks of 9)
 D is found by CP-SAT with
     chi = sum over classes H in P of (-1)^(e(H)-1) n!/((n-v(H))! |Aut H|) = 1,
-imposed modulo enough primes.  s(P) = max(e(H0), largest member of D).
+imposed modulo enough primes.  e_max(P) = max(e(H0), largest member of D).
 
 Usage: python3 global_chi_forced.py 2km|star|2km+star|tri|tri+star n E [check]
   check: recompute chi by brute force over all graphs (n = 6 only).
@@ -147,7 +147,7 @@ Dset = set(D)
 gens = [H for H in D if not any(H != G and len(G) == len(H) + 1 and
                                 any(canon(tuple(x for x in G if x != d))[0] == H for d in G) for G in D)]
 print(f"FOUND: |D| = {len(D)} classes, {len(gens)} maximal, largest {max(len(H) for H in D)} edges; chi = {chi}; "
-      f"s(P) = {max(S0, max(len(H) for H in D))}")
+      f"e_max(P) = {max(S0, max(len(H) for H in D))}")
 assert chi == 1
 print("   generators of D by edge count:", sorted({len(H): sum(1 for G in gens if len(G) == len(H)) for H in gens}.items()))
 import json

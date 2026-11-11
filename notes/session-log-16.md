@@ -134,3 +134,7 @@ Vipul asked for μ\*_N to be certified or bounded at n ≤ 50 and at the first r
 - **Certified:** μ\*_N = μ\* at 6, 10, 12, 14, 18. At 12 the table of marks was run for the first time in full (8,572 Oliver classes; the earlier n = 12 file holds only groups with few orbitals) and gives ν\*(12) = 18.
 - **Dead ends recorded:** a property "at most B − 1 edges plus some B-edge graphs" has χ = 1 only if a union of orbits has size C(N − 1, B − 1); impossible at n = 6 for every B, and at n = 10, B = 20 by a 3-adic count. At n = 14 and 18 the first searches failed modulo 9 until D was allowed 12 edges, respectively until 6K₃ was forced.
 - **Not reached:** G\* at 22, 26, 34, 38, 46, 50; ν\* away from 2·(prime power) — at n = 30 a group fixing 14 points has smallest type 91 > μ\* = 78, though its level is at most G\*(14) = 42; the rows from 56 on, where only 351 ≤ μ\*_N(56) ≤ max(756, G\*(56)) and the like are proved.
+
+## 13. A notation collision removed
+
+Vipul: `threshold-beyond-mu.md` used s(P) for the largest number of edges of a member, while `orbital-evasiveness-notes.md` §9.7 uses s(n) for the biclique location — and the staging note's own §6 uses that s(n) and s\*_N(n). The property's edge budget is now **e_max(P)** throughout the note and in the docstrings of the three `global_chi` scripts; s is left to §9.7's sense. No statement changed.
