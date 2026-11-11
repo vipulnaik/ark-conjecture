@@ -4,9 +4,11 @@
 
 ## 1. Projecting a rung to a number
 
-For a nontrivial monotone graph property P on n vertices write **s(P)** for the largest number of edges of a member. For a rung R of the ladder of `orbital-evasiveness-notes.md` §7.2, its **numerical projection** is
+For a monotone graph property P on n vertices write **s(P)** for the largest number of edges of a member. Properties are as in §7.1: monotone decreasing with ∅ ∈ P, so the empty property is excluded by definition and the trivial property (K_n ∈ P, s = C(n,2)) is included. For a rung R of the ladder of `orbital-evasiveness-notes.md` §7.2, its **numerical projection** is
 
-> **M\*_R(n) = min { s(P) : P nontrivial, P satisfies R }**, and ∞ if no nontrivial P satisfies R.
+> **M\*_R(n) = min { s(P) : P satisfies R }**.
+
+The trivial property satisfies every rung, so **M\*_R(n) ≤ C(n,2)** always, with equality exactly when the ladder has collapsed at R: no nontrivial property reaches it. ARK at n is M\*_NE(n) = C(n,2). At a prime power every projection is C(n,2), μ\* included.
 
 Every property with s(P) < M\*_R(n) fails R; if R is implied by non-evasiveness it is evasive. An implication R ⇒ R′ between rungs projects to M\*_R ≥ M\*_R′. Two projections are already in the notes under other names, and one more is immediate.
 
@@ -15,8 +17,8 @@ Every property with s(P) < M\*_R(n) fails R; if R is implied by non-evasiveness 
 | vertex-transitive Oliver-resistant | **n(q(n) − 1)/2**, q(n) the largest prime-power divisor of n | exact and unconditional — §7.2 fact 8, which calls it "the exact threshold" |
 | Oliver-resistant | **μ\*(n)** | exact; Θ(n²) under the bounded-cofactor hypothesis, with the six mod-12 ceilings |
 | bi-resistant (§7.13) | **μ\*(n)** again, at every non-prime-power n | below |
-| nontrivial-top Oliver-χ-resistant; Oliver-χ-resistant | ≥ **μ\*_χ(n)** (§2) ≥ the bound of §4; **9 at n = 6**; ∞ at prime powers | this note; otherwise open |
-| non-evasive | ∞ at every n, if ARK holds | — |
+| nontrivial-top Oliver-χ-resistant; Oliver-χ-resistant | ≥ **μ\*_χ(n)** (§2) ≥ the bound of §4; **9 at n = 6**; C(n,2) at prime powers | this note; otherwise open |
+| non-evasive | C(n,2) at every n, if ARK holds | — |
 
 *Why the first two are projections.* Resistance is monotone in P (fact 1), so the threshold property T_B = "at most B edges" is resistant as soon as B reaches the smallest orbital of each group in the class. Hence M\* is the largest, over the groups of the class, of the smallest orbital: a max–min over groups equal to a min–max over properties. For all Oliver groups that is μ\*(n); for the vertex-transitive ones fact 8 evaluates it. The implication Oliver-resistant ⇒ vertex-transitive Oliver-resistant projects to **μ\*(n) ≥ n(q(n) − 1)/2**, which is the unconditional n log n bound of the rewrite plan.
 
@@ -28,7 +30,7 @@ Every property with s(P) < M\*_R(n) fails R; if R is implied by non-evasiveness 
 
 **Per group.** For an Oliver group Γ let
 
-> **m\*_χ(Γ) = min { s(P) : P nontrivial, P is Γ-χ-resistant }**,
+> **m\*_χ(Γ) = min { s(P) : P is Γ-χ-resistant }**,
 
 the least budget at which some property passes Γ's own condition. It depends only on Γ's orbitals, their sizes, and which unions of orbitals are isomorphic to or embed in which — more than the sizes m\*(Γ) uses, but still data of the group. Always m\*_χ(Γ) ≥ m\*(Γ), since χ-resistance implies resistance.
 
@@ -40,7 +42,7 @@ the least budget at which some property passes Γ's own condition. It depends on
 
 - *Only trivial-top groups are needed.* If H is the core of Γ, a property passing H passes Γ (fact 5), so m\*_χ(H) ≥ m\*_χ(Γ). Hence μ\*_χ(n) is attained on p-by-cyclic groups, with the exact condition χ = 1 and no prime q in the definition. The same fact gives M\*_OCR for the trivial-top class alone.
 - *Maximal groups are not enough.* For resistance they are (fact 2), which is why μ\* is governed by groups with few, large orbitals. χ-resistance does not pass to subgroups (fact 3), so m\*_χ can be larger on a smaller group, and the maximum defining μ\*_χ ranges over groups the enumeration proof rightly discards for μ\*.
-- *Where each is infinite.* At a prime power both are ∞ (AGL(1, n) passes nothing). At other n, μ\*_χ(n) is finite. M\*_OCR(n) = ∞ says exactly that the Oliver conditions alone prove ARK at n — false at n = 6, the first non-prime-power, and what the n = 10 search of §7.9 is deciding.
+- *Where each is C(n,2).* At a prime power both are (AGL(1, n) is passed by the trivial property alone). At other n it is not known whether μ\*_χ(n) can reach C(n,2). M\*_OCR(n) = C(n,2) says exactly that the Oliver conditions alone prove ARK at n — false at n = 6, the first non-prime-power, and what the n = 10 search of §7.9 is deciding.
 
 **At n = 6 the two separate.** μ\*(6) = 6. The two Oliver-χ-resistant properties of §7.9 have s = 9 (largest member K₃,₃) and s = 12, and they are the only ones, so **M\*_OCR(6) = 9**. Computing m\*_χ(Γ) for each of the 50 Oliver classes (`type_levels6.py`) gives **μ\*_χ(6) = 6**: every group, taken alone, is passed by some property with at most 6 edges, and no property with fewer than 9 passes them all. *(At n = 10 the property the search currently holds, which passes every class with t ≤ 11 and part of t = 12, has s = 30; it was not minimised, so this bounds nothing.)*
 
@@ -121,7 +123,22 @@ So a foreign block with **r − 1 = 2kq^e, k ≤ 11 or k = 13, and q outside a f
 
 The right-hand column is 1/(1 + 1)² at even n and 1/(1 + √2)² at odd n; the worst class moves from 0.0718 to 0.1716. *Standing:* the μ\* column is the asymptotic value of μ\*, given the enumeration proof and the hypothesis. The right-hand column is the asymptotic value of μ\*_cyc and only a lower bound for μ\*_χ — there is no classification behind it (§8). It is arithmetic on the cap formula, spot-checked on n from 9,000 to 12,000, where the best one-foreign value in classes 2, 7 and 8 is 0.2495, 0.1715 and 0.2497, and classes 5 and 11 reach 0.207 and 0.198 at special n. The k = 6 row needs q ∉ {2, 5, 7} and the k = 3 rows q ≠ 2, automatic for large n.
 
-**On the table, to n = 4000** (`threshold_scan.py`, shapes n = Fc + r and n = Fc only). Under the old scoring this enumerator reproduces μ\* at all 3,410 rows. With qualifying foreign blocks at C(r,2): 1,847 rows improve; the floor rises from 0.0462 at n = 2759 to **0.0887 at n = 1159**; n = 2759 itself goes to 0.1568 (2 × 773 + 1213, 1212 = 12·101, k = 6, q = 101). At n = 1159 the binding orbital is the fused class 4·C(173,2), which the device does not touch.
+**On the table, to n = 4000** (`threshold_scan.py`, shapes n = Fc + r and n = Fc only). Under the old scoring this enumerator reproduces μ\* at all 3,410 rows. With qualifying foreign blocks at C(r,2): 1,847 rows improve; the floor rises from 0.0462 at n = 2759 to **0.0887 at n = 1159**; n = 2759 itself goes to 0.1568 (2 × 773 + 1213, 1212 = 12·101, k = 6, q = 101). At n = 1159 the binding orbital is the fused class 4·C(173,2), which the device does not touch. *The first rows where the two part* — none below 56:
+
+| n | C(n,2) | μ\* | μ\*_cyc ≥ | shape | block |
+|---|---|---|---|---|---|
+| 56 | 1540 | 203 | 351 | 27 + 29 | k = 2, q = 7 |
+| 60 | 1770 | 253 | 406 | 31 + 29 | k = 2, q = 7 |
+| 63 | 1953 | 252 | 272 | 2 × 17 + 29 | k = 2, q = 7 |
+| 66 | 2145 | 333 | 406 | 37 + 29 | k = 2, q = 7 |
+| 70 | 2415 | 301 | 406 | 41 + 29 | k = 2, q = 7 |
+| 72 | 2556 | 301 | 465 | 41 + 31 | k = 3, q = 5 |
+| 77 | 2926 | 385 | 465 | 2 × 23 + 31 | k = 3, q = 5 |
+| 78 | 3003 | 468 | 666 | 41 + 37 | k = 2, q = 3 |
+| 80 | 3160 | 600 | 666 | 43 + 37 | k = 2, q = 3 |
+| 84 | 3486 | 666 | 820 | 43 + 41 | k = 4, q = 5 |
+
+At n = 56 the group is the one that realises μ\*: its smallest orbital, one of two classes of 203 on the 29 points, is replaced by the pair at 406, and K₂₇ at 351 becomes binding. *The scan requires gcd(F(c − 1), r) = 1, so that the full twist on the matching blocks and the foreign translations share a cyclic layer, as `biclique_table.py` does.*
 
 ## 6. A required-subgraph projection: bicliques
 

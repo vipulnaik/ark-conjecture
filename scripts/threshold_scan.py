@@ -16,7 +16,7 @@ Usage: python3 threshold_scan.py N      (N = 4000 takes about ten minutes)
 Run from scripts/; reads ../outputs/mu_table_ladder.csv.
 """
 import sys, csv
-from math import comb
+from math import comb, gcd
 from sympy import primerange, factorint, divisors
 N=int(sys.argv[1])
 BAD={1:set(),2:set(),3:{2},4:{3},5:{2,3},6:{2,5,7},7:{2,3,5,13}}
@@ -59,7 +59,8 @@ for n in sorted(T):
         if m<2: break
         for F in divisors(m):
             c=m//F
-            if c in pp and pp[c]!=r:
+            # full twist on c and translations of r share the cyclic layer
+            if c in pp and pp[c]!=r and gcd(F*(c-1),r)==1:
                 vo=val(F,c,r,capold[r]); vn=val(F,c,r,capnew[r])
                 if vo>bo: bo=vo
                 if vn>bn: bn=vn; wn=(F,c,r)
