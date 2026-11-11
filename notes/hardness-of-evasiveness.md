@@ -27,7 +27,7 @@ Four corners, four imports from four unrelated deep theories, and no two of them
 
 ## 2a. A worked example: planarity, re-derived through the framework
 
-> **Planarity is not a new result, and this section does not claim it.** Best, van Emde Boas and Lenstra proved planarity evasive in **1974**, and Chakrabarti, Khot and Shi (2001) generalised it: **every minor-closed property is evasive for all sufficiently large n**. What follows is a *re-derivation*, kept because it illustrates something the literature results do not: how the framework's different routes partition a single property's domain, and which of them does the work. *(`literature-findings.md` item 18 already recorded the Chakrabarti–Khot–Shi result when this section was first written; the section was not checked against it.)*
+> **Planarity is not a new result, and this section does not claim it.** Best, van Emde Boas and Lenstra proved planarity evasive in **1974**, and Chakrabarti, Khot and Shi (2001) generalised it: **every minor-closed property is evasive for all sufficiently large n**. What follows is a *re-derivation*, kept because it illustrates something the literature results do not: how the framework's different routes partition a single property's domain, and which of them does the work. *(`literature-findings.md` item 18 records the Chakrabarti–Khot–Shi result; this section has not been checked against it.)*
 
 *Planarity is the natural test case — monotone, nontrivial, and sparse — and following it exposes both how afterthought-like the asymptotic route is and where the actual work happens.*
 

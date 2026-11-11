@@ -230,7 +230,7 @@ All [VERIFIED COMPUTATIONALLY], reproducible from the session log:
 
 Enumeration agrees at (p, k, r, Q) = (5,2,13,3), (7,2,13,3), (5,3,11,5), (5,4,13,3), (7,4,31,5), (11,1,7,3), and the even-Q control (5,4,13,4) gives 26 = rQ/2. This retires A27's item 1 as far as the orbital structure goes. The Oliver chain itself (Γ₂ = 𝔽_p^k, Γ₁/Γ₂ = ⟨g⟩ × C_r cyclic under gcd(k(p − 1), r) = 1, top C_Q) is as stated in §2.
 
-### 9a. The two steps formerly cited as standard
+### 9a. The two standard steps, written out
 
 **Dilation (minor arcs).** f(θ) = F(kθ), where F(φ) = Σ_{m ≤ X} Λ(m)e(mφ) and X ≍ x/k. By Dirichlet, kθ has a/q with q ≤ Q₀ := x/P and |kθ − a/q| ≤ 1/(qQ₀).
 - If q ≤ P/k, then |θ − a/(kq)| ≤ 1/(kqQ₀) ≤ P/x with kq ≤ P. Reducing a/(kq) only lowers the denominator, so θ ∈ 𝔐.

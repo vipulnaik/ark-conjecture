@@ -26,7 +26,7 @@ Define **μ\*_solv(n)** identically, but maximising over *all solvable groups of
 
 The second half is worth stating because it shows the framework's restriction to non-prime-powers is not bookkeeping: **at prime powers the solvable relaxation is vacuous**, δ_solv = 1, and any bound proved there says nothing. That the same n are exactly the ones ARK settles by other means is a coincidence of the two problems having the same easy case, not a shared mechanism.
 
-The ceiling is approached: at **n = 2q with q a prime power** a single orbit of two fused q-blocks gives classes q(q − 1) and q², so δ_solv = (q − 1)/(2q − 1) → 1/2. Verified: the maximum over all non-prime-power n ≤ 10⁶ is **0.50000 to five places**, along the same family — 0.49981 at n = 2594 over n ≤ 2600, 0.49999 at n ≤ 159,027, and now indistinguishable from the ceiling at the precision reported.
+The ceiling is approached: at **n = 2q with q a prime power** a single orbit of two fused q-blocks gives classes q(q − 1) and q², so δ_solv = (q − 1)/(2q − 1) → 1/2. Verified: the maximum over all non-prime-power n ≤ 10⁶ is **0.50000 to five places**, along the same family — 0.49981 at n = 2594 over n ≤ 2600, 0.499997 over n ≤ 159,027, and indistinguishable from the ceiling at that precision from there on.
 
 ## 2. The shape space collapses to one formula
 

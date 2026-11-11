@@ -119,7 +119,7 @@ Doubling the block count moves 2c ≡ 6 to 4c ≡ 4, hence r from 1 to 3 (mod 8)
 
 ### 3.5 The efficiencies, derived rather than sampled
 
-The η column of §4 was originally measured. It is derivable, and the derivation splits into two independent parts that multiply.
+The η column of §4 is derivable as well as measured, and the derivation splits into two independent parts that multiply.
 
 **The 2-adic part.** With c ≡ 3 (mod 4) — hence c ≡ 3 or 7 (mod 8) — the product F·c is determined mod 8: **6, 4, 2** for F = 2, 4, 6. So r = n − F·c (mod 8) is fixed by the residue class. Even F puts the prime 2 into the cyclic layer, so the foreign twist t must be odd, and the best case r − 1 = 2^v·q^e gives
 
@@ -195,7 +195,7 @@ Two load-bearing consequences rest on that clause:
 - **Only F ≤ 6 has been derived.** §2.1 excludes F ≥ 8 from η ≤ 1 alone, so the conclusion has no gap, but §3.5's bookkeeping covers F ∈ {2, 4, 6} only.
 - **Mixed three-part shapes** such as 4c + 2c′ + r lie outside both the two-part family and the three-part ladder, and nothing here bounds them.
 - **The class-11 comparison rests on 676 > 675**, the narrowest possible integer margin. Deriving the η removes the way that was most likely to go wrong, but the margin is what it is.
-- **The measurement had a subtle failure mode worth keeping in view**, since a future re-measurement could repeat it: an earlier version asked whether η was *available* without checking that the matching side still attained its share, and produced a table contradicting §3.3.5 where §3.3.5 was right. The current one restricts to c ≡ 3 (mod 4) and reproduces §3.3.5's η = 1/12 at F = 2 for class 23, which is the check that it took.
+- **The measurement had a subtle failure mode worth keeping in view**, since a future re-measurement could repeat it: a measurement that asks whether η is *available* without checking that the matching side still attains its share produces a table contradicting §3.3.5 where §3.3.5 is right. The current one restricts to c ≡ 3 (mod 4) and reproduces §3.3.5's η = 1/12 at F = 2 for class 23, which is the check that it took.
 
 **The asymptotic claim needs a supply heuristic** of the kind §3 already assumes: each n needs n = 4c + r near x\* with c ≡ 3 (mod 4) prime and r − 1 = 6q^e, whose expected count grows like εn/log³n. Observed values remain below the cap at 10⁶ — the sampled class-11-and-23 minimum reaches 0.0665 against 7 − 4√3 = 0.0718 in the last block — so the approach is slow but visible.
 

@@ -87,6 +87,48 @@ ap.add_argument("--quiet", action="store_true", help="findings only")
 A = ap.parse_args()
 DOCS = [d for d in A.docs if d.endswith(".md")]
 
+# ------------------------------------------------- which documents are checked
+#
+# Three classes, decided by what a document IS, not by which findings it draws.
+#
+#   by charter    session logs and anything under an archive/ directory.  Their
+#                 job is to record what was believed and done at the time, so a
+#                 superseded figure or a retired label in one is the record.
+#                 They are dropped from every pass: `*.md` can be passed on the
+#                 command line without them contributing a finding.
+#   archived      a note whose first lines carry the whole-document banner
+#                 "⟦ARCHIVED⟧".  Still checked for structure (tables, references,
+#                 hygiene, census blocks) but not for currency: the figures,
+#                 scope, invariant, prose, history and witness passes skip it.
+#                 "⟦ARCHIVED-NUMBERS⟧" is NOT this banner -- it retires a note's
+#                 numbers only, and such a note stays live for everything else.
+#   dated         a note whose first lines say when it was written ("Written
+#                 2026-08-16 during ..."): a memo or a finding record that
+#                 announces its own date.  Treated as archived -- structure only.
+#   live          everything else.
+#
+# A live document cannot buy silence with a word in its text; the banner has to
+# be the document's own opening statement about itself.
+_CHARTER = re.compile(r"(?:^|/)session-log[^/]*\.md$|(?:^|/)archive/", re.I)
+def _archived_whole(path):
+    try: head = open(path).read().split("\n")[:8]
+    except OSError: return False
+    return any("⟦ARCHIVED⟧" in l for l in head)
+def _dated(path):
+    try: head = open(path).read().split("\n")[:5]
+    except OSError: return False
+    return any(re.search(r"\bWritten 20\d\d", l) for l in head)
+BY_CHARTER = [d for d in DOCS if _CHARTER.search(d)]
+DOCS = [d for d in DOCS if d not in BY_CHARTER]
+ARCHIVED_DOCS = [d for d in DOCS if _archived_whole(d)]
+DATED_DOCS = [d for d in DOCS if d not in ARCHIVED_DOCS and _dated(d)]
+LIVE = [d for d in DOCS if d not in ARCHIVED_DOCS and d not in DATED_DOCS]
+if BY_CHARTER or ARCHIVED_DOCS or DATED_DOCS:
+    _names = lambda L: ", ".join(os.path.basename(d) for d in L) or "-"
+    print(f"documents: {len(LIVE)} live.  Structure only -- archived by banner: "
+          f"{_names(ARCHIVED_DOCS)}; self-dated: {_names(DATED_DOCS)}.  "
+          f"Skipped by charter (session logs, archive/): {len(BY_CHARTER)}.\n")
+
 # ------------------------------------------------------------------ the table
 
 rows = list(csv.DictReader(open(A.table)))
@@ -267,12 +309,85 @@ _EXTREMAL_KEYS = ("density floor", "density floor at n", "density max",
 def _extremal(k):
     return k in _EXTREMAL_KEYS or k.startswith("row count")
 
+# ---- what a checkpoint match cannot mean, by definition ----------------------
+#
+# PASS 1 fires when a number in the prose equals some quantity at an OLD frontier
+# and no quantity at the current one.  Four situations produce that match without
+# the sentence making any claim about the old range, and each is recognisable
+# from the line itself.  Every excuse below needs positive evidence in the line;
+# none is a whitelist of files or of numbers.
+#
+#  (a) THE SENTENCE NAMES THE FRONTIER.  "0.49981 at n = 2594 over n <= 2600" is
+#      a scoped historical citation, which is what the pass asks for.  Evidence:
+#      the checkpoint's own n appears in the line.
+#  (b) THE QUANTITY IS NOT THE ONE BEING TALKED ABOUT.  A share or a median is a
+#      two- or three-digit number and collides with unrelated ones -- 88.7% of
+#      orbital counts against 88.7% of densities above 1/9 at some old frontier.
+#      Evidence required for a match to stand: the line mentions the quantity
+#      (KEYWORD below).  Floors, maxima and counts get no such excuse.
+#  (c) THE NUMBER IS A CURRENT FIGURE THE CHECKPOINT TABLE DOES NOT CARRY.  The
+#      minimum of a decade, and the second-lowest density, are read off the
+#      current table and coincide with the floor of an older, shorter one.
+#  (d) THE NUMBER IS NOT A RANGE BOUND OR A TABLE COUNT.  "n max" matches any
+#      2,212; it stands only where the number is written as a bound on n.  A row
+#      count written "X of <current row count>" is a subset of the current
+#      table, and one written "(was X)" has already said it is past.
+KEYWORD = [("median", r"median"), ("pct fused", r"fus"), ("pct delta > 1/9", r"1/9"),
+           ("pct delta >= 1/4", r"1/4"), ("pct delta <= 1/16", r"1/16"),
+           ("pct omega", r"ω|omega")]
+def _decade_minima():
+    out = {}
+    for r in rows:
+        dec = len(str(r["n"])) - 1
+        if dec not in out or r["density"] < out[dec]["density"]: out[dec] = r
+    return list(out.values())
+# figure -> the n it is attained at.  The excuse needs that n, or the word
+# "decade", in the line: a bare "the minimum is 0.057034" is still reported.
+CURRENT_EXTRA = {}
+for _r in _decade_minima() + sorted(rows, key=lambda r: r["density"])[1:2]:
+    for _f in forms(round(_r["density"], 6)):
+        CURRENT_EXTRA.setdefault(_f, set()).add(_r["n"])
+_ROWS_NOW = f"{len(rows):,}"
+def _excused(k, c, m, line):
+    pre, post = line[max(0, m.start() - 16):m.start()], line[m.end():m.end() + 24]
+    if k == "n max":
+        if re.search(r"frontier|prefix", line[max(0, m.start() - 40):m.end() + 40]):
+            return "names a past frontier"
+        if not (re.search(r"n\s*(?:≤|<=|<|=|>|≥|>=)\s*\**$|\bto\s+\**$|\[6,\s*$", pre)
+                or re.match(r"\**\s*(?:rows\b|\])", post)):
+            return "not written as a bound on n"
+        return None
+    if re.search(r"(?<![\d,])(?:%d|%s)(?!\d|,\d)" % (c, f"{c:,}"), line):
+        return "names its frontier"
+    # "0.49999 at n <= 159,027": scoped to a range that is not a checkpoint.  Do
+    # not take the sentence's word for it -- recompute the extreme over that range.
+    sc = re.match(r"\**\s+(?:at|over|for|on)\s+n\s*(?:≤|<=)\s*([\d,]+)", post + line[m.end() + 24:m.end() + 40])
+    if sc and k in ("density max", "density floor"):
+        X = int(sc.group(1).replace(",", ""))
+        sub = [r["density"] for r in rows if r["n"] <= X]
+        if sub and X < NMAX:
+            v = max(sub) if k == "density max" else min(sub)
+            if m.group(1) in forms(round(v, 6)):
+                return "names its own range, and the table agrees"
+    for key, pat in KEYWORD:
+        if k.startswith(key) and not re.search(pat, line, re.I):
+            return "another quantity"
+    if k.startswith("density") and m.group(1) in CURRENT_EXTRA and (
+            re.search(r"decade", line, re.I)
+            or any(re.search(r"(?<![\d,])(?:%d|%s)(?!\d|,\d)" % (x, f"{x:,}"), line)
+                   for x in CURRENT_EXTRA[m.group(1)])):
+        return "a current decade minimum or runner-up"
+    if k.startswith("row count"):
+        if re.match(r"\**\s+of\s+\**" + _ROWS_NOW, post): return "a subset of the current table"
+        if re.search(r"\bwas\s+\**$", pre): return "says it is past"
+    return None
+
 FIG = re.compile(r"(?<![\d.,])(\d{1,3},\d{3}|\d\.\d{4,6}|\d{1,3}\.\d(?=%))(?![\d.,])")
 
 if A.only in ("all", "figures"):
     print("=" * 72); print("PASS 1  FIGURES"); print("=" * 72)
-    hit_any = False
-    for d in DOCS:
+    hit_any = False; excused_n = 0
+    for d in LIVE:
         try: txt = open(d).read()
         except OSError: continue
         stale = []
@@ -298,6 +413,12 @@ if A.only in ("all", "figures"):
                     continue
                 if any(c == NMAX and _extremal(k) for k, c in hits):
                     continue
+                why = {(k, c): _excused(k, c, m, line) for k, c in hits}
+                if any(w == "names its frontier" for w in why.values()):
+                    excused_n += 1; continue
+                hits = {h for h in hits if not why[h]}
+                if not hits:
+                    excused_n += 1; continue
                 where = ", ".join(sorted({f"{k} @ n<={c}" for k, c in hits}))
                 stale.append((ln, frag, where))
         if stale:
@@ -309,6 +430,8 @@ if A.only in ("all", "figures"):
                 print(f"   ... and {len(stale)-20} more")
     if not hit_any:
         print("no figure matches an old checkpoint without also matching the current one.")
+    print(f"\n{excused_n} checkpoint match(es) excused by the line itself (frontier named, "
+          f"another quantity, a current figure, or not a range bound).")
     print("\n(A match against an old checkpoint may be a deliberate historical citation.")
     print(" The point is that it is a claim about a past range and should say so.)")
 
@@ -369,7 +492,7 @@ if A.only in ("all", "scope"):
     floor = CUR["density floor"]
     print(f"current floor {floor} at n = {CUR['density floor at n']}\n")
     seen = False
-    for d in DOCS:
+    for d in LIVE:
         try: txt = open(d).read()
         except OSError: continue
         for ln, line in enumerate(txt.split("\n"), 1):
@@ -441,7 +564,7 @@ if A.only in ("all", "scope"):
     NEG = re.compile(r"\b(not|never|no |unsound|anti-permissive|invalid|"
                      r"illusory|false|tempting|must not|cannot)\b", re.I)
     i1 = 0
-    for d in DOCS:
+    for d in LIVE:
         try: txt = open(d).read()
         except OSError: continue
         for ln, line in enumerate(txt.split("\n"), 1):
@@ -467,7 +590,7 @@ if A.only in ("all", "scope"):
     WORDS = {"two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7,
              "eight": 8, "nine": 9, "ten": 10, "twelve": 12}
     ncap = nmod = None
-    for d in DOCS:
+    for d in LIVE:
         try: txt = open(d).read()
         except OSError: continue
         m = re.search(r"\| *n mod (\d+) *\|.*?\n(?:\|.*\n)+", txt)
@@ -492,7 +615,9 @@ if A.only in ("all", "scope"):
             # "seven mod-24 ceilings", "six mod-12 ceilings", "six ceilings"
             # The lookbehind matters: "the mod-12 ceilings" is a KEYING and not a
             # count, and without it the modulus is read as the cardinality.
-            re.compile(r"(?<!mod )(?<!mod-)\b(" + "|".join(WORDS) + r"|\d+)\b"
+            # ... and "the class-5 ceilings" names a class: a digit glued to a
+            # hyphen on its left is a label, never a cardinality.
+            re.compile(r"(?<!mod )(?<!mod-)(?<!class-)(?<!class )\b(" + "|".join(WORDS) + r"|\d+)\b"
                        r"(?: mod[- ](\d+))? (?:class )?ceilings\b", re.I),
             # "seven distinct delta_0", "six distinct constants"
             re.compile(r"\b(" + "|".join(WORDS) + r"|\d+)\b distinct "
@@ -504,7 +629,7 @@ if A.only in ("all", "scope"):
                        r"constants", re.I),
         ]
         i2 = 0
-        for d in DOCS:
+        for d in LIVE:
             try: txt = open(d).read()
             except OSError: continue
             for ln, line in enumerate(txt.split("\n"), 1):
@@ -550,7 +675,7 @@ if A.only in ("all", "scope"):
     #      way; it is the SET that must agree.
     if ncap and nmod:
         f4 = set()
-        for d in DOCS:
+        for d in LIVE:
             try: txt = open(d).read()
             except OSError: continue
             m = re.search(r"\| *n mod %d *\|.*?\n(?:\|.*\n)+" % nmod, txt)
@@ -576,7 +701,7 @@ if A.only in ("all", "scope"):
                 r"((?:\d+\s*(?:,|and|or)?\s*)+)"
                 r"\(mod\s*(\d+)\)", re.I)
             i3 = 0
-            for d in DOCS + [f for f in A.docs if f.endswith(".py")]:
+            for d in LIVE + [f for f in A.docs if f.endswith(".py")]:
                 try: txt = open(d).read()
                 except OSError: continue
                 # Scan the WHOLE text, not line by line: these claims wrap across
@@ -628,7 +753,7 @@ if A.only in ("all", "scope"):
                       r"|refut|old\s+(?:rule|form)|counterexample|correct(?:ed|ion)"
                       r"|F_mid|arbitrary integer", re.I)
     i4 = 0
-    for d in DOCS:
+    for d in LIVE:
         try: txt = open(d).read()
         except OSError: continue
         flat = re.sub(r"\n\s*(?:[#>*]\s*)?", " ", txt)
@@ -668,7 +793,7 @@ if A.only in ("all", "scope"):
                         r"|variant|locally soluble|/\(SP\)|\(BCG\)/"
                         r"|errors of statement", re.I)
     i5 = 0
-    for d in DOCS:
+    for d in LIVE:
         try: txt = open(d).read()
         except OSError: continue
         flat = re.sub(r"\n\s*(?:[#>*]\s*)?", " ", txt)
@@ -704,7 +829,7 @@ if A.only in ("all", "scope"):
     print()
     CRUDE_OK = re.compile(r"\b(crude|implies|weaker|follows|window|earlier)\b", re.I)
     i6 = 0
-    for d in DOCS:
+    for d in LIVE:
         try: txt = open(d).read()
         except OSError: continue
         for ln, line in enumerate(txt.split("\n"), 1):
@@ -717,6 +842,11 @@ if A.only in ("all", "scope"):
             if not re.search(r"\(r ?[-−] ?1\)/Q|F\.4|D\(δ|D\(delta|D = |D ≤ ", line):
                 continue
             if CRUDE_OK.search(line):
+                continue
+            # A line that writes the sharp constant out -- (1 - sqrt(delta_0))^2
+            # -- next to the crude one is stating the improvement, which is the
+            # opposite of the confusion this invariant exists for.
+            if re.search(r"\(1 ?[-−] ?√ ?(?:δ|delta)[₀_0]*\)\^?[²2]", line):
                 continue
             findings += 1; i6 += 1
             print(f"{d} L{ln}  *** INVARIANT I6 *** cofactor bound quoted as "
@@ -744,7 +874,7 @@ if A.only in ("all", "scope"):
     COUNTY = re.compile(r"\*\*(\d[\d,]{1,5})\*\* (?:winners|of them|rows)|"
                         r"(?:winners|winner count)[^.]{0,20}\*\*\d")
     i7 = 0
-    for d in DOCS:
+    for d in LIVE:
         try: txt = open(d).read()
         except OSError: continue
         for ln, line in enumerate(txt.split("\n"), 1):
@@ -782,7 +912,7 @@ if A.only in ("all", "scope"):
     ESCAPE_OK = re.compile(r"odd n|at odd|even n|co-?win|ties?\b|tie for|2, ?8 \(mod 12\)"
                            r"|parity of \*?\*?n|both parities", re.I)
     i8 = 0
-    for d in DOCS:
+    for d in LIVE:
         try: txt = open(d).read()
         except OSError: continue
         flat = re.sub(r"\n\s*(?:[#>*]\s*)?", " ", txt)
@@ -818,7 +948,7 @@ if A.only in ("all", "scope"):
                           r"|would|anti-?permissive|unread|supersed|used to|historical"
                           r"|no gate|is gone|survives only|former", re.I)
     i9 = 0
-    for d in DOCS:
+    for d in LIVE:
         try: txt = open(d).read()
         except OSError: continue
         flat = re.sub(r"\n\s*(?:[#>*]\s*)?", " ", txt)
@@ -854,7 +984,7 @@ if A.only in ("all", "scope"):
     print()
     WL = re.compile(r"\*\*([\d,]{5,7}) worklist entries")
     seen_wl = {}
-    for d in DOCS:
+    for d in LIVE:
         try: txt = open(d).read()
         except OSError: continue
         for ln, line in enumerate(txt.split("\n"), 1):
@@ -873,7 +1003,7 @@ if A.only in ("all", "scope"):
                       f"against {cur} in {len(seen_wl[cur])} other place(s); "
                       f"the banner is duplicated verbatim, so requote all of them")
     STALE_FLOOR = re.compile(r"0\.02516")
-    for d in DOCS:
+    for d in LIVE:
         try: txt = open(d).read()
         except OSError: continue
         for ln, line in enumerate(txt.split("\n"), 1):
@@ -905,7 +1035,7 @@ if A.only in ("all", "scope"):
     OLDNAME = re.compile(r"\(SP[\)_]|\bsp-to-floor\b")
     # A line that is ABOUT the rename may name the old label; it says so.
     RENAME = re.compile(r"renamed|retired|formerly|was \(SP\)|until 2026", re.I)
-    for d in DOCS:
+    for d in LIVE:
         try: txt = open(d).read()
         except OSError: continue
         for ln, line in enumerate(txt.split("\n"), 1):
@@ -937,7 +1067,7 @@ if A.only in ("all", "scope"):
     RETIRED_EG = re.compile(r"\bvoid\b|\bfalse\b|no congruence|not needed|"
                             r"\bonce\b|\bold\b|retired|DEPRECATED|tempting|"
                             r"no coprimality|earlier|pre-entangle", re.I)
-    for d in DOCS:
+    for d in LIVE:
         try: txt = open(d).read()
         except OSError: continue
         if "DEPRECATED-EG" in txt[:2000]:
@@ -1267,7 +1397,7 @@ STATUS_VERBOSE = {
 
 if A.only in ("all", "prose"):
     print("\n" + "=" * 72); print("PASS 3  PROSE"); print("=" * 72)
-    for d in DOCS:
+    for d in LIVE:
         try: txt = open(d).read()
         except OSError: continue
         found = collections.defaultdict(list)
@@ -1602,7 +1732,7 @@ if A.only in ("all", "history"):
         r"--baseline|`--|\.csv\b|\bbaseline\b", re.I)
 
     hist_hits = 0
-    for d in DOCS:
+    for d in LIVE:
         # Use the shared ARCHIVE list, not a private one: the set of files whose
         # charter is to carry history is the same set for figures and for prose,
         # and keeping two lists meant pending-checks.md and the state-tracking
@@ -1631,6 +1761,20 @@ if A.only in ("all", "history"):
                 hi = min((h for h in (line.find(c, m.end()) for c in ".!?")
                           if h != -1), default=len(line))
                 if EXEMPT.search(line[lo:hi + 1]):
+                    continue
+                # Three kinds of line narrate history BY DESIGN, and each is
+                # recognised by what it is rather than by where it sits:
+                #   * a status banner (the archive tags) -- its job is to say what
+                #     the note was written before;
+                #   * a rename notice -- invariant I11 requires the retired label
+                #     to appear exactly where the rename is described, so that
+                #     description cannot also be a history defect;
+                #   * a hypothetical -- "a figure taken at AN earlier frontier" warns
+                #     about any stale figure; the indefinite article is the
+                #     difference from "the old frontier table", which cites one.
+                if "⟦ARCHIVED" in line or re.match(r"\W*Renamed 20\d\d", line):
+                    continue
+                if re.match(r"an? ", m.group(0), re.I) and re.search(r"frontier$", m.group(0), re.I):
                     continue
                 if not shown:
                     print(f"\n{d}:"); shown = True
@@ -1748,7 +1892,7 @@ if A.only in ("all", "witness"):
         head = txt[:1500]
         return bool(OTHER_PROBLEM.search(head)) and "mu_table" not in head
     hits = 0
-    for d in DOCS:
+    for d in LIVE:
         try: txt = open(d).read()
         except OSError: continue
         if _other_problem(txt):
