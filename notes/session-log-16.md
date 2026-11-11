@@ -64,3 +64,15 @@ Run over `notes/*.md` the script reported 90 findings. It now reports none, by t
 - **Text fixed where the finding was real.** `ladder-completeness.md` still licensed reading the ladder "at n > 36,848"; `solvable-relaxation.md` quoted a truncated 0.49999 where the table has 0.499997; `entangled-generator-finding.md`'s status box said the battery had not reached rows it now carries. Some two dozen sentences narrating a document's own drafting were rewritten as statements of fact, across eleven notes.
 
 Controls: a note with a planted stale share, a stale range bound, a bare old minimum, a crude cofactor bound, a wrong constant count and an "earlier draft" sentence draws all six findings, and a planted session log draws none.
+
+## 5. The short note read for airtightness, and the bridge end to end
+
+The Theorem and its proof stand: Proposition 1 re-derived, both constructions built in GAP at n = 12, 17, 40, 45 (and the n = 2m family at m = 9), condition 4 and the diagonal twist each shown necessary by breaking them, the 48 entries of the admissible-d table re-derived, the singular-series bound recomputed, 1/350 valid from n = 29. The discussion around the hypothesis had four statements wrong as written and three that understated it; all are corrected in both versions of the note.
+
+- **Wrong:** "{2, 4, 6, 12} are exactly the even d with prime factors in {2, 3}" (8, 18, 24 qualify); "ℓ | d makes L3 degenerate" (not at ℓ = 2 for odd n with d ≡ 2 mod 4, where the obstruction is the covering mechanism); c − 1 ∈ {0, r, …, 4r} and "five values" (four); "δ(n) = 1/2 − o(1)" for n = 2m (an inequality, and false as an equality at m a power of 2).
+- **Understated:** "a disjunction over eight shapes" (at most four per n, exactly one at n ≡ 1, 5, 7, 11 mod 12); "of broadly Goldbach difficulty" (the hypothesis implies binary Goldbach at large even n and Lemoine's form at large odd n); "halve every constant" (the density doubles).
+- **Example replaced:** n = 17 = 2·5 + 7 uses d = 2 at a class whose table entry is d = 6 alone; the note now quotes n = 45 = 2·11 + 23.
+- **The bridge**, read in full: a wrong balance point (0.155 for 0.183), a wrong parity ("F of n's parity" for the opposite), exactness still credited to the per-n certificate in two places, a stale claim that the note omits the Elliott–Halberstam rung, and the same "one of the eight". `arithmetic-of-density.md` §3.5.2 had the eight-shapes sentence too.
+- **Sources:** Shparlinski's §5 on Elliott–Halberstam, Corollary 3 and the positive-proportion form of his hypothesis now read from the full text and agree with the note. Not confirmed: BBKN's remark on 3/2 as a barrier, and that Li's 0.679 comes in positive-proportion form.
+- **`bcg15_scan.py`:** (BCG₁/₅) holds at every n with 6179 < n ≤ 120,000; 26 failures below, 22 of them at n ≡ 7 or 11 (mod 12).
+- **For the rewrite plan:** the plan's μ\*(n) ≥ n(Q(n) − 1)/2 checks out (built at n = 30, 36, 40), but Q(n) ≥ log n is only asymptotic — it fails first at n = lcm(1..19) = 232,792,560.
