@@ -76,3 +76,13 @@ The Theorem and its proof stand: Proposition 1 re-derived, both constructions bu
 - **Sources:** Shparlinski's §5 on Elliott–Halberstam, Corollary 3 and the positive-proportion form of his hypothesis now read from the full text and agree with the note. Not confirmed: BBKN's remark on 3/2 as a barrier, and that Li's 0.679 comes in positive-proportion form.
 - **`bcg15_scan.py`:** (BCG₁/₅) holds at every n with 6179 < n ≤ 120,000; 26 failures below, 22 of them at n ≡ 7 or 11 (mod 12).
 - **For the rewrite plan:** the plan's μ\*(n) ≥ n(Q(n) − 1)/2 checks out (built at n = 30, 36, 40), but Q(n) ≥ log n is only asymptotic — it fails first at n = lcm(1..19) = 232,792,560.
+
+## 6. The sparse threshold is larger than μ\*
+
+Asked whether any direction was unmapped, one was, and it could be carried through in the sitting. `threshold-beyond-mu.md` has the statement and proof.
+
+- The k cyclotomic orbitals of a foreign block are isomorphic graphs cycled by a multiplier, so the part of the fixed complex they span is a C_k-invariant complex on k points; where no such proper complex has χ ≡ 1 (mod q), Oliver's congruence fails for every budget up to C(r,2), not only up to the orbital size. `orbital-evasiveness-notes.md` §9.7 had the symmetry and the all-or-none consequence; the full-capacity conclusion and its effect on the constants are new.
+- k = 2, …, 11 and 13 qualify outside a finite set of q (exact sets for k ≤ 7); k = 12 does not.
+- Under the short note's hypothesis as it stands the evasiveness constant becomes 1/26 in place of 1/350. The ceilings become 1/4 (even n) and 3 − 2√2 (odd n). To n = 4000 the floor of the threshold rises from 0.0462 to 0.0887 and 1,847 of 3,410 rows improve.
+- μ\* itself, the table and the classification are untouched: this is about what the congruence proves, not about the invariant.
+- Unread by anyone else; `pending-checks.md` A49 lists what is owed.
