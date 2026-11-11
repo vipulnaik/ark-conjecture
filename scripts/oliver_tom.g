@@ -62,5 +62,6 @@ RunTrans := function(n, file)
   CloseStream(out); Print("transitive degree ", n, ": ", NrTransitiveGroups(n), " groups, ", c, " Oliver\n");
 end;
 RunTom(4,"tom4.txt"); RunTom(5,"tom5.txt"); RunTom(6,"tom6.txt"); RunTom(10,"tom10.txt");
+# RunTom(12,"tom12.txt");   # 8,572 Oliver classes; about three minutes, a 4 MB file (not committed)
 RunTrans(14,"trans14.txt"); RunTrans(18,"trans18.txt"); RunTrans(22,"trans22.txt");
 QUIT;

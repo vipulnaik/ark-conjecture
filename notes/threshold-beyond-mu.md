@@ -1,6 +1,6 @@
 # Numerical projections of the ladder, and μ\*_χ: the Oliver-χ rung reaches past μ\*
 
-*A finding of 2026-11-10, one sitting, not yet read by a second reader. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`, `type_levels6.py`, `biclique_boost_scan.py`. **This file is a staging area:** the finding is to be refined here before any of it is carried into the framework documents, and the short note is not to be changed on its account (decided 2026-11-10). Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
+*A finding of 2026-11-10, one sitting, not yet read by a second reader. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`, `cyc_certify.py`, `entangled_check.g`, `type_levels6.py`, `biclique_boost_scan.py`, `nstar_types.py`, `pgroup_levels.py`, `global_chi_min.py`, `global_chi_forced.py`, `verify_global_chi.py`. **This file is a staging area:** the finding is to be refined here before any of it is carried into the framework documents, and the short note is not to be changed on its account (decided 2026-11-10). Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
 
 ## 1. Projecting a rung to a number
 
@@ -18,6 +18,7 @@ Every property with s(P) < M\*_R(n) fails R; if R is implied by non-evasiveness 
 | Oliver-resistant | **μ\*(n)** | exact; Θ(n²) under the bounded-cofactor hypothesis, with the six mod-12 ceilings |
 | bi-resistant (§7.13) | **μ\*(n)** again, at every non-prime-power n | below |
 | nontrivial-top Oliver-χ-resistant; Oliver-χ-resistant | ≥ **μ\*_χ(n)** (§2) ≥ the bound of §4; **9 at n = 6**; C(n,2) at prime powers | this note; otherwise open |
+| χ(Δ_P) = 1, the trivial group's condition | **G\*(n)**: 6, 20, 11, 42, 18 at n = 6, 10, 12, 14, 18 | §7; not comparable with the rungs above it in this table |
 | non-evasive | C(n,2) at every n, if ARK holds | — |
 
 *Why the first two are projections.* Resistance is monotone in P (fact 1), so the threshold property T_B = "at most B edges" is resistant as soon as B reaches the smallest orbital of each group in the class. Hence M\* is the largest, over the groups of the class, of the smallest orbital: a max–min over groups equal to a min–max over properties. For all Oliver groups that is μ\*(n); for the vertex-transitive ones fact 8 evaluates it. The implication Oliver-resistant ⇒ vertex-transitive Oliver-resistant projects to **μ\*(n) ≥ n(q(n) − 1)/2**, which is the unconditional n log n bound of the rewrite plan.
@@ -121,7 +122,7 @@ So a foreign block with **r − 1 = 2kq^e, k ≤ 11 or k = 13, and q outside a f
 | 5 | 5 − 2√6 = 0.1010 | F = 2, η = 1/3 | **3 − 2√2 = 0.1716** | F = 2, d = 6 (k = 3) |
 | 11 | 7 − 4√3 = 0.0718 | F = 4, η = 1/3 | **3 − 2√2 = 0.1716** | F = 2, d = 12 (k = 6) |
 
-The right-hand column is 1/(1 + 1)² at even n and 1/(1 + √2)² at odd n; the worst class moves from 0.0718 to 0.1716. *Standing:* the μ\* column is the asymptotic value of μ\*, given the enumeration proof and the hypothesis. The right-hand column is the asymptotic value of μ\*_cyc and only a lower bound for μ\*_χ — there is no classification behind it (§8). It is arithmetic on the cap formula, spot-checked on n from 9,000 to 12,000, where the best one-foreign value in classes 2, 7 and 8 is 0.2495, 0.1715 and 0.2497, and classes 5 and 11 reach 0.207 and 0.198 at special n. The k = 6 row needs q ∉ {2, 5, 7} and the k = 3 rows q ≠ 2, automatic for large n.
+The right-hand column is 1/(1 + 1)² at even n and 1/(1 + √2)² at odd n; the worst class moves from 0.0718 to 0.1716. *Standing:* the μ\* column is the asymptotic value of μ\*, given the enumeration proof and the hypothesis. The right-hand column is the asymptotic value of μ\*_cyc and only a lower bound for μ\*_χ — there is no classification behind it (§9). It is arithmetic on the cap formula, spot-checked on n from 9,000 to 12,000, where the best one-foreign value in classes 2, 7 and 8 is 0.2495, 0.1715 and 0.2497, and classes 5 and 11 reach 0.207 and 0.198 at special n. The k = 6 row needs q ∉ {2, 5, 7} and the k = 3 rows q ≠ 2, automatic for large n.
 
 **On the table, to n = 4000** (`threshold_scan.py`, shapes n = Fc + r and n = Fc only). Under the old scoring this enumerator reproduces μ\* at all 3,410 rows. With qualifying foreign blocks at C(r,2): 1,847 rows improve; the floor rises from 0.0462 at n = 2759 to **0.0887 at n = 1159**; n = 2759 itself goes to 0.1568 (2 × 773 + 1213, 1212 = 12·101, k = 6, q = 101). At n = 1159 the binding orbital is the fused class 4·C(173,2), which the device does not touch. *The first rows where the two part* — none below 56:
 
@@ -187,7 +188,45 @@ At the balanced point a = b the constant moves from 1/26 to 1/6 at the worst cla
 
 The boosted medians sit at the predicted 1/2 and 1/3. The minima do not yet: class 11 has minimum 0.232 on that range, since supply rarely hits c = r. The admitted block has k = 2 through 8 at the improved rows (k = 3 most often, at 1,782; k = 8 at 29, which rest on the crude rule q > 2^k). Two rows come from entangled groups (§5): n = 63, from 17 to 31, and n = 15 = 8 + 7, from 5 to 7. At n = 15 the block has k = 1 — AΓL(1, 8) on 8 + 7 points has orbitals K₇, K₈ and K₈,₇ — so the group is structured in §9.7's own sense and s(15) ≥ 7: `biclique_table.py` does not enumerate entangled groups.
 
-## 7. How this sits in §7
+## 7. Where the N level is decided: types, and the trivial group
+
+**N\* is a normaliser.** Let Γ̂ be the group of all permutations fixing every orbital of Γ. It has the same orbitals as Γ, it is the kernel of N\*(Γ) acting on the orbitals, and N\*(Γ) = N_{S_n}(Γ̂). A type's total is the size of an orbit of N\*(Γ) on pairs, so **m\*_typ(Γ) is the smallest pair-orbit of N\*(Γ)**.
+
+**Only the trivial group has a single type**, at every non-prime-power n. If N\*(Γ) is transitive on pairs it is 2-transitive and almost simple, and Γ̂ ≠ 1 is a normal subgroup, so it contains the socle. The socle is transitive on pairs (the one exception, PSL(2,8) on 28 points, has three pair-orbits of 126 and no soluble subgroup with the same orbits), so Γ has a single orbital, and an Oliver group with one orbital lives in prime-power degree.
+
+Two numbers therefore carry the N level:
+
+- **ν\*(n) = the largest m\*_typ(Γ) over nontrivial Oliver Γ** — the maximum that §3 declined to take over all groups, taken where it means something;
+- **G\*(n) = m\*_N(1) = m\*_χ(1) = the least s(P) with χ(Δ_P) = 1.** For the trivial group the orbitals are the edges, N\* = S_n, and the invariant complexes are exactly the graph properties. G\* is the numerical projection, in the sense of §1, of the rung χ(Δ_P) = 1.
+
+> **max( μ\*_cyc(n), G\*(n) ) ≤ μ\*_N(n) ≤ max( ν\*(n), G\*(n) )**, and **ν\*(n) ≤ (n/2)·⌊(n − 1)/2⌋**.
+
+*The bound on ν\*.* N\*(Γ) has at least two orbits on pairs. If it is transitive on points they are regular graphs whose valencies sum to n − 1, so the smallest has valency at most ⌊(n − 1)/2⌋. If not, some orbit on points has at most n/2 points, and the pairs inside it, or the pairs at a fixed point, are fewer still.
+
+> **Corollary.** For n = 2m with m a prime power, ν\*(n) ≤ m(m − 1) = μ\*(n), so **μ\*_N(n) = max( μ\*(n), G\*(n) )**: at these n the N level is decided by the trivial group alone.
+
+*Consistent with §5:* μ\*_cyc(n) = μ\*(n) at all 323 such n to 4000.
+
+**What bounds G\* from below.** If χ(Δ_P) = 1 then χ(Δ_P^Q) ≡ 1 (mod p) for every p-subgroup Q (Smith), and Δ_P^Q is N\*(Q)-invariant. So G\*(n) is at least the least budget at which a p-group's congruence can be met at level 1 (`pgroup_levels.py`). At n = 10 the group ℤ/5 on two 5-cycles gives 20: every property with χ = 1 contains 2K₅. At n = 12 the group ℤ/11 gives 11: the star K₁,₁₁. The translations of two blocks of m give m(m − 1) at m = 3, 5, 7 and only 18, 22, 26 at m = 9, 11, 13. There are finer conditions modulo prime powers, from orbit sizes: no property of the form "at most 19 edges, plus some 20-edge graphs" has χ = 1 at n = 10, because no 20-edge graph has 27 dividing its automorphism group, so every orbit of 20-edge graphs has size divisible by 9, while the size required, C(44,19), is not.
+
+**What bounds it from above.** A property found by search (`global_chi_forced.py`): all subgraphs of the graph the p-group forces, together with a family D of graphs of at most E edges, closed under deletion, with Σ ± n!/|Aut| = 1 solved modulo primes. Each property is rechecked by `verify_global_chi.py`: closure, χ recomputed with the classes listed another way, and Smith's congruence at every p-group with few orbitals, which uses membership only. At n = 6 the same pipeline is checked against a brute-force χ over all 2¹⁵ graphs.
+
+| n | μ\*(n) | ν\*(n) | G\*(n) | μ\*_N(n) | how |
+|---|---|---|---|---|---|
+| 6 | 6 | 6 | 6 | **6** | all 50 classes; G\* by exhaustion (`global_chi_min.py`) |
+| 10 | 20 | 20 | 20 | **20** | all 1,294 classes; G\* ≥ 20 from ℤ/5, ≤ 20 by a property: subgraphs of 2K₅ and 2,121 classes of at most 10 edges; Smith checked at 366 p-groups |
+| 12 | 18 | 18 | 11 | **18** | all 8,572 classes of S₁₂; G\* ≥ 11 from ℤ/11 and from exhaustion to 10 edges, ≤ 11 by a property: stars and 972 classes of at most 9 edges; Smith checked at 1,919 p-groups |
+| 14 | 42 | ≤ 42 | 42 | **42** | Corollary; G\* ≥ 42 from the translations of two blocks of 7, ≤ 42 by a property: subgraphs of 2K₇ and of K₁,₁₃ and 74 classes of at most 12 edges; χ recomputed over 544,727 classes; Smith checked at 44 odd p-groups |
+| 18 | 72 | ≤ 72 | 18 | **72** | Corollary; G\* ≥ 18 from the translations of two blocks of 9, ≤ 18 by a property: subgraphs of 6K₃, stars, and 32 classes of at most 7 edges; Smith checked at 284 p-groups (3-groups sampled) |
+| 22, 26, 34, 38, 46, 50 | m(m − 1) | ≤ m(m − 1) | not known | max(μ\*, G\*) | Corollary |
+
+So **μ\*_N = μ\* at n = 6, 10, 12, 14 and 18**, and the N level adds nothing there. G\* is below μ\* at 12 and 18 and equal to it at 6, 10, 14: the rung χ = 1 and Oliver-resistance are not comparable, and their projections cross. *The search needs the right forced graph and enough room in D:* at n = 14 with D of at most 10 edges, and at n = 18 with the star alone forced, the congruence modulo 9 has no solution.
+
+**ν\* is not μ\* in general.** At n = 30 take AGL(1, 16) on 16 points, fixing the other 14. Its types are the 91 single edges among the fixed points, K₁₆ (120) and the 14 stars (224), so m\*_typ = 91 > μ\*(30) = 78. But the first type carries all of S₁₄, and the invariant complexes on it are the graph properties on 14 vertices: m\*_N of this group is at most G\*(14). In general **m\*_N(Γ) ≤ G\*(a) when Γ fixes a ≥ 2 points**, so the N level at n feeds on G\* at smaller degrees, and ν\* overstates it.
+
+**At the other n.** For the fifteen remaining n ≤ 50 (15, 20, 21, 24, 28, …), and at the rows where μ\*_cyc leaves μ\*, what is proved is the displayed inequality with the crude bound on ν\*: at n = 56, 351 ≤ μ\*_N ≤ max(756, G\*(56)); at n = 63, 465 ≤ μ\*_N ≤ max(976, G\*(63)). Nothing bounds G\* above at these n except C(n,2).
+
+## 8. How this sits in §7
 
 - **It is §7.3's direction (b).** Oliver's theorem is tight at a fixed group over all acyclic complexes: every value in 1 + n_G·ℤ occurs. §7.3 names "the restriction to Δ_P complexes" as the least explored place left to look, since Δ_P comes from an S_n-invariant family and the tightness says nothing about that subclass. The Proposition is an instance: for sparse graph properties the realisable values of χ(Δ_P^Γ) lie in the finite set of the k-table, which misses 1 + qℤ. m\*_χ(Γ) is the least budget at which the realisable set first meets Oliver's.
 - **It extends §9.7's "isomorphic orbitals".** That passage has the symmetry N\*, the all-or-none consequence, the count t_eff, and evasiveness for budgets up to m₁ + m₂. What is added is that a whole type is neutralised up to its total size, and the constants that follow.
@@ -196,7 +235,7 @@ The boosted medians sit at the predicted 1/2 and 1/3. The minima do not yet: cla
 - **It fills the partial-index row of §7.9.** The per-shape conditions listed there are for full foreign index, and at those shapes m\*_χ(Γ) = m\*(Γ): the pattern "the smallest orbital alone" passes — {K_a} at S3, F·K_c at S2. A gain needs the smallest type to be repeated, which is the partial-index case.
 - **The search of §7.9 is M\*_OCR with no objective.** The CSP's models are the properties passing the battery; minimising s over them would compute the battery's projection, a lower bound on M\*_OCR(10), and μ\*_χ restricted to the battery is the largest single-group optimum.
 
-## 8. What is open, and what is owed
+## 9. What is open, and what is owed
 
 - **Is the right-hand column the asymptotic value of μ\*_χ?** Unknown. An upper bound needs a cap on totals of isomorphism types in place of the flat cap on orbitals, and the obvious candidate — m\*_χ(Γ) is at most the smallest type total, by taking the property generated by that type's full union — fails as stated, because other orbitals can embed in that union and change χ (K_c embeds in K_r when c ≤ r). The guess is that 1/4 and 3 − 2√2 are right for generic n.
 - **How far apart are μ\*_χ(n) and M\*_OCR(n)?** At n = 6, 6 against 9. At n = 10 neither is known; μ\*_χ(10) is a finite computation of the same kind as `type_levels6.py`, which as written canonicalises graphs by brute force over S_n and would need a real isomorphism routine there.
@@ -204,4 +243,5 @@ The boosted medians sit at the predicted 1/2 and 1/3. The minima do not yet: cla
 - **The same device elsewhere:** on the intra classes of a partial-twist matching block; on the cross distance classes of a fused class, of one type per divisor class by §9.7; on unfused isomorphic blocks, where the symmetry is all of S_F and the invariant complexes are skeleta of a simplex, never of Euler characteristic 1; at k ≥ 12 for budgets too small for the bad complexes to fit.
 - **A matching upper bound on the biclique side.** §6 gives a sufficient region. Whether a + b ≤ s\*_N(n) is all the χ rung requires, and whether a group with two good types or a good type on a fused class does better, is not examined; nor are required graphs other than bipartite ones.
 - **The matching-prime reading of μ\*_cyc** at the 1,022 rows to 4000 where U exceeds the scan and no hand argument has been made; and the seven rows where the foreign reading is open.
+- **G\*(n) beyond 18**, and with it μ\*_N at n = 22, 26, 34, 38, 46, 50: a property with χ = 1 and at most m(m − 1) edges, or a proof there is none. The method of §7 should reach 22 and 26 with the 4-regular circulants on 11 and 13 points as the forced graphs; not attempted. **ν\*(n) away from n = 2m**, or better a bound that uses m\*_N(Γ) ≤ G\*(a) for groups with fixed points. Whether μ\*_N ever exceeds μ\*_cyc.
 - **Owed:** a second reading of both Propositions and of `cyclic_chi_values.py`; a second computation of §6's boosted column; the device inside the exact enumerator, for μ\*_cyc over [6, 10⁶]; the right-hand column rescanned class by class. `pending-checks.md` A49.
