@@ -33,7 +33,18 @@ So a foreign block with **r − 1 = 2kq^e, k ≤ 11 or k = 13, and q outside a f
 
 **For the short note, with its hypothesis unchanged.** (BCG₁/₅) takes d ∈ {2, 4, 6, 12}, that is k = d/2 ∈ {1, 2, 3, 6} with t = q an odd prime. All four qualify once q ∉ {2, 5, 7}, which holds for n ≥ 426. The foreign term r(r − 1)/24 in the note's bounds becomes C(r,2), and min{C(c,2), C(r,2), cr} ≥ C(n,2)/26 for n ≥ 105. So under (BCG₁/₅) **every nontrivial monotone property with fewer than C(n,2)/26 edges is evasive for all large n** — thirteen times the note's 1/350, as a statement about evasiveness and not about μ\*.
 
-**For the ceilings.** With every foreign block at efficiency 1 the residue class no longer enters the constant: the cap is cap₁(1) = 1/4 at even n and cap₂(1) = 3 − 2√2 = 0.1716 at odd n, against the six μ\*-ceilings running down to 7 − 4√3 = 0.0718. This is arithmetic on the cap formula; it has not been rescanned class by class, and it needs the bounded-cofactor hypothesis in a form allowing every d = 2k with k qualifying — more values of d than before, so a weaker hypothesis.
+**For the ceilings.** With every qualifying foreign block at efficiency 1 the residue class no longer enters the constant, only the parity of n does. Both columns below are cap_F(η) = η/(1 + √(Fη))²; the μ\* column takes the efficiency η = 2/d the class allows (`arithmetic-of-density.md` §3.3.5), the E column takes η = 1.
+
+| n mod 12 | μ\*(n)/C(n,2) ceiling | attained by | E(n)/C(n,2) ceiling, lower bound | attained by |
+|---|---|---|---|---|
+| 0, 4, 6, 10 | 1/4 = 0.2500 | F = 1, η = 1 | 1/4 = 0.2500 | the same shape (d = 2) |
+| 2, 8 | (2 − √3)/2 = 0.1340 | F = 1, η = 1/3 | **1/4 = 0.2500** | F = 1, d = 6 (k = 3) |
+| 1, 9 | 3 − 2√2 = 0.1716 | F = 2, η = 1 | 3 − 2√2 = 0.1716 | the same shape (d = 2) |
+| 3, 7 | 1/8 = 0.1250 | F = 2, η = 1/2 | **3 − 2√2 = 0.1716** | F = 2, d = 4 (k = 2) |
+| 5 | 5 − 2√6 = 0.1010 | F = 2, η = 1/3 | **3 − 2√2 = 0.1716** | F = 2, d = 6 (k = 3) |
+| 11 | 7 − 4√3 = 0.0718 | F = 4, η = 1/3 | **3 − 2√2 = 0.1716** | F = 2, d = 12 (k = 6) |
+
+So the E column is 1/(1 + 1)² = 1/4 at even n and 1/(1 + √2)² = 3 − 2√2 at odd n, and the worst class moves from 0.0718 at n ≡ 11 to 0.1716 at every odd class. At n ≡ 11 the shape changes as well as the value: for μ\* the four-block shape wins there, for E the two-block shape with d = 12 does. *Standing of the E column:* a lower bound on E(n), conditional on the bounded-cofactor hypothesis at the listed d as the μ\* column is, and nothing bounds E from above; arithmetic on the cap formula, spot-checked on n from 9,000 to 12,000, where the best one-foreign value in classes 2, 7 and 8 is 0.2495, 0.1715 and 0.2497, and classes 5 and 11 reach 0.207 and 0.198 — above the tabulated value because of special n, so consistent with it without pinning it. As in the μ\* column these are ceilings for generic n; special n exceed them in both columns. The k = 6 row needs q ∉ {2, 5, 7} and the k = 3 rows q ≠ 2, automatic once n is large. The hypothesis may also be widened to every d = 2k with k qualifying, which only adds admissible d.
 
 **On the table, to n = 4000** (`threshold_scan.py`, one-foreign shapes n = Fc + r and pure fused shapes only). Under the old scoring this enumerator reproduces the table at all 3,410 rows, which checks the enumerator. Scoring qualifying foreign blocks at C(r,2): 1,847 rows improve; the floor rises from 0.0462 at n = 2759 to **0.0887 at n = 1159**; n = 2759 itself goes to 0.1568 (2 × 773 + 1213, 1212 = 12·101, k = 6, q = 101) and n = 2183 to 0.1613. At n = 1159 the binding orbital is the fused class 4·C(173,2), which this device does not touch.
 
