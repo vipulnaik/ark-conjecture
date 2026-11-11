@@ -11,7 +11,7 @@ k in {8,...,11,13} with q > 2^k (the same rule as `threshold_scan.py`).
 
 Shapes enumerated for the new groups: n = F*c + r only, c a prime power with
 full twist, r a prime different from c's prime, gcd(F*(c-1), r) = 1 as in
-`biclique_table.py`.  The value is max(s(n), largest min(c, r)), so it is a
+`biclique_table.py`, or the entangled case F = 1, r | c - 1.  The value is max(s(n), largest min(c, r)), so it is a
 LOWER bound for the quantity s*_N(n) of the note; nothing here bounds it above.
 
 Usage: python3 biclique_boost_scan.py [N]     (default 10000; about a minute)
@@ -20,7 +20,7 @@ Run from scripts/; reads ../outputs/biclique_table_10000.csv.
 import sys, csv, statistics
 from math import comb, gcd
 from collections import Counter
-from sympy import primerange, factorint, divisors
+from sympy import primerange, factorint, divisors, n_order
 
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 10000
 BAD = {1: set(), 2: set(), 3: {2}, 4: {3}, 5: {2, 3}, 6: {2, 5, 7}, 7: {2, 3, 5, 13}}
@@ -70,15 +70,26 @@ for n in old:
             continue
         for F in divisors(m):
             c = m // F
-            if c <= b[0] or c not in pp or pp[c] == r or gcd(F * (c - 1), r) != 1:
+            if c <= b[0] or c not in pp or pp[c] == r:
                 continue
-            b = (min(c, r), (F, c, r) + ok[r])
+            if gcd(F * (c - 1), r) == 1:
+                b = (min(c, r), (F, c, r) + ok[r])
+            elif F == 1 and (c - 1) % r == 0:
+                # entangled, as in threshold_scan.py: twist on r only from
+                # field automorphisms, a q-power dividing the order of p mod r
+                kq = [(comb(r, 2) // orb(r, q ** j), q)
+                      for q, e in factorint(n_order(pp[c], r)).items() for j in range(1, e + 1)]
+                kq = [x for x in kq if good(*x)]
+                if kq:
+                    b = (min(c, r), (F, c, r) + min(kq))
     new[n] = b
 
 imp = [n for n in old if new[n][0] > old[n]]
 print("rows improved:", len(imp), "of", len(old))
 print("k of the admitted block at improved rows:", dict(sorted(Counter(new[n][1][3] for n in imp).items())))
-for lo, hi in ((6, 1000), (1000, N), (N // 2, N)):
+for lo, hi in ((6, min(N, 1000)), (1000, N), (N // 2, N)):
+    if not any(lo <= n <= hi for n in old):
+        continue
     o = min((old[n] / n, n) for n in old if lo <= n <= hi)
     w = min((new[n][0] / n, n, new[n][1]) for n in old if lo <= n <= hi)
     print("[%d, %d]  min s/n: %.4f at n = %d   boosted: %.4f at n = %d %s" % (lo, hi, o[0], o[1], w[0], w[1], w[2]))

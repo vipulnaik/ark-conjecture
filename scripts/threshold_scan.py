@@ -12,12 +12,12 @@ scored C(r,2) in place of orb(r,t).
 Prints: agreement of the OLD rule with the table (a check on this enumerator),
 the old and new floors, and the number of rows that improve.
 
-Usage: python3 threshold_scan.py N      (N = 4000 takes about ten minutes)
+Usage: python3 threshold_scan.py N [out.csv]      (N = 4000 takes about ten seconds)
 Run from scripts/; reads ../outputs/mu_table_ladder.csv.
 """
 import sys, csv
 from math import comb, gcd
-from sympy import primerange, factorint, divisors
+from sympy import primerange, factorint, divisors, n_order
 N=int(sys.argv[1])
 BAD={1:set(),2:set(),3:{2},4:{3},5:{2,3},6:{2,5,7},7:{2,3,5,13}}
 def good(k,q):                    # q=None: trivial top
@@ -37,6 +37,18 @@ for r in primerange(3,N):
         k=comb(r,2)//o
         bn=max(bn, comb(r,2) if good(k,q) else o)
     capold[r]=bo; capnew[r]=bn
+def ent(r,p):
+    """r | c-1, c a power of p: the translation of the r points is tied to the
+    element of order r in the twist of F_c, so the cyclic layer stays cyclic
+    (AGammaL(1,c) acting on c + r points).  The twist on r can then only come
+    from field automorphisms: a q-power t dividing the order of p mod r."""
+    o=n_order(p,r); bo=bn=orb(r,1)
+    if good(comb(r,2)//orb(r,1),None): bn=comb(r,2)
+    for q,e in factorint(o).items():
+        for j in range(1,e+1):
+            t=q**j; x=orb(r,t); bo=max(bo,x)
+            bn=max(bn, comb(r,2) if good(comb(r,2)//x,q) else x)
+    return bo,bn
 pp={}
 for p in primerange(2,N):
     x=p
@@ -59,12 +71,23 @@ for n in sorted(T):
         if m<2: break
         for F in divisors(m):
             c=m//F
-            # full twist on c and translations of r share the cyclic layer
-            if c in pp and pp[c]!=r and gcd(F*(c-1),r)==1:
-                vo=val(F,c,r,capold[r]); vn=val(F,c,r,capnew[r])
+            if c not in pp or pp[c]==r: continue
+            if gcd(F*(c-1),r)==1:      # twist on c and translations of r independent
+                co,cn=capold[r],capnew[r]
+            elif F==1 and (c-1)%r==0:  # entangled: see ent()
+                co,cn=ent(r,pp[c])
+            else: continue
+            if True:
+                vo=val(F,c,r,co); vn=val(F,c,r,cn)
                 if vo>bo: bo=vo
                 if vn>bn: bn=vn; wn=(F,c,r)
     res[n]=(bo,bn,wn)
+if len(sys.argv)>2:
+    with open(sys.argv[2],'w') as fh:
+        fh.write("n,mu,cyc_lower,F,c,r\n")
+        for n in sorted(res):
+            w=res[n][2] if res[n][1]>T[n] else None
+            fh.write("%d,%d,%d,%s\n"%(n,T[n],max(res[n][1],T[n]),"%d,%d,%d"%w if w else ",,"))
 over=[n for n in res if res[n][0]>T[n]]
 eq=sum(1 for n in res if res[n][0]==T[n])
 print("old rule, this one-foreign family vs table: equal at",eq,"of",len(res),"; exceeding the table (must be 0):",len(over))

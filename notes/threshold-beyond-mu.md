@@ -129,7 +129,7 @@ The right-hand column is 1/(1 + 1)² at even n and 1/(1 + √2)² at odd n; the 
 |---|---|---|---|---|---|
 | 56 | 1540 | 203 | 351 | 27 + 29 | k = 2, q = 7 |
 | 60 | 1770 | 253 | 406 | 31 + 29 | k = 2, q = 7 |
-| 63 | 1953 | 252 | 272 | 2 × 17 + 29 | k = 2, q = 7 |
+| 63 | 1953 | 252 | 465 | 32 + 31, entangled | k = 3, q = 5 |
 | 66 | 2145 | 333 | 406 | 37 + 29 | k = 2, q = 7 |
 | 70 | 2415 | 301 | 406 | 41 + 29 | k = 2, q = 7 |
 | 72 | 2556 | 301 | 465 | 41 + 31 | k = 3, q = 5 |
@@ -138,7 +138,20 @@ The right-hand column is 1/(1 + 1)² at even n and 1/(1 + √2)² at odd n; the 
 | 80 | 3160 | 600 | 666 | 43 + 37 | k = 2, q = 3 |
 | 84 | 3486 | 666 | 820 | 43 + 41 | k = 4, q = 5 |
 
-At n = 56 the group is the one that realises μ\*: its smallest orbital, one of two classes of 203 on the 29 points, is replaced by the pair at 406, and K₂₇ at 351 becomes binding. *The scan requires gcd(F(c − 1), r) = 1, so that the full twist on the matching blocks and the foreign translations share a cyclic layer, as `biclique_table.py` does.*
+At n = 56 the group is the one that realises μ\*: its smallest orbital, one of two classes of 203 on the 29 points, is replaced by the pair at 406, and K₂₇ at 351 becomes binding. *The scan requires gcd(F(c − 1), r) = 1, so that the full twist on the matching blocks and the foreign translations share a cyclic layer — or, at F = 1 with r dividing c − 1, the entangled group: AΓL(1, c) acting on the c points and, through its quotient, on r more, the translation of the r points being the image of the element of order r in the twist. The twist on the r points is then a field automorphism, of order dividing the order of p mod r. To 4000 this occurs once: n = 63 = 32 + 31, where the Frobenius of 𝔽₃₂ acts on ℤ/31 as y ↦ 2y, of order 5, and the orbitals are 496, 992 and three classes of 155 (`entangled_check.g`).*
+
+**Is the scan's value the true μ\*_cyc?** Make the definition exact: μ\*_cyc(n) is the largest M of the Proposition over Oliver groups on [n] and at most one orbit R of prime size r — M = min(C(r,2), least orbital outside R's own pairs) — or the group's smallest orbital when no orbit is used. An upper bound needs no classification. The orbitals inside the complement of R are those of the image group there, which is an Oliver group on m = n − r points, so the least of them is at most μ\*(m); and a cross orbital is at most rm. Hence
+
+> **μ\*_cyc(n) ≤ U(n) = max( μ\*(n), max over primes r of min{ C(r,2), r·m, μ\*(m) } )**, m = n − r,
+
+computable from the μ\* table (`cyc_certify.py`; μ\*(m) = C(m,2) at prime powers). To n = 4000:
+
+- **U(n) = μ\*(n) at 1,341 rows, among them every n ≤ 55.** There the device gains nothing, whatever the group: μ\*_cyc(n) = μ\*(n).
+- **The scan's value equals U(n) at 2,385 of the 3,410 rows** — so it is μ\*_cyc(n) exactly there — among them all ten rows of the table above and 1,044 of the 1,847 improved rows.
+- At the other 1,025 rows the maximising r cannot qualify as a foreign block. Restricting U to primes r that can — r − 1 with a q-power twist t whose k is good — bounds the *foreign reading*, where R is not of the group's own prime p, and **that bound equals the scan at 3,403 rows**. The seven exceptions, where a complement with its own foreign block may do better than the shapes scanned: 689 (24,753 to 25,651), 1159, 1703, 2597, 2873, 3523, 3959.
+- What stays uncertified at those 1,025 rows is a block of the group's own prime carrying a partial twist. The first three, n = 110, 154 and 171 (r = 61, 73, 73; U = 1176, 2628, 2352), close by hand, so μ\*_cyc is 903, 2485 and 2016 there. The complement group is cyclic-by-q, and the bound to beat leaves it at most one orbital on 49 or 81 points, or at most two on 98. A cyclic-by-q group is 2-homogeneous only in prime degree: its normal cyclic subgroup must meet the socle trivially, hence centralise it, hence be trivial. On 98 points the normal cyclic subgroup has orbits of size 49 or 98, and the pairs inside an orbit at a difference of order 7 (or 2) form an invariant set of at most 294. *By hand, one reading; not automated for the rest.*
+
+**Nothing more comes from the witnessing group.** At n = 56 the property "embeds in K₂₇" has s = 351 and passes the group: its fixed complex is the single orbital K₂₇, since a class of 203 spans 29 vertices. At n = 63 "embeds in K₃₁" has s = 465 and its fixed complex is the full simplex on the three classes. So m\*_χ equals the certified value at these groups, and any excess of μ\*_χ over μ\*_cyc has to come from other groups.
 
 ## 6. A required-subgraph projection: bicliques
 
@@ -154,7 +167,7 @@ Nothing is asked of the individual classes, and the hypothesis on P is membershi
 
 Write **s\*_N(n)** for the largest smallest-block over groups each of whose minimal blocks is 2-homogeneous or carries a good type. Then s(n) ≤ s\*_N(n), and a non-evasive property contains K_{a,b} whenever a + b ≤ s\*_N(n). *This is a sufficient region only.* The triangle of §9.7 is exact for the non-void argument; no upper bound for what the χ rung requires is claimed here.
 
-**Smallest instance, built.** n = 21 = 8 + 13 with q = 3 is the first n at which the scan below improves on s(n). The orbitals are K₈ (28 pairs), K₈,₁₃ (104) and two classes of 39 on the 13 points, each 6-regular. k = 2, where the only proper invariant complexes are empty or two points. So a non-evasive property on 21 vertices contains K_{a,b} for a + b ≤ 8, against s(21) = 7 from 3 × 7.
+**Smallest instance, built.** n = 21 = 8 + 13 with q = 3 is the first n at which a qualifying block improves on s(n). The orbitals are K₈ (28 pairs), K₈,₁₃ (104) and two classes of 39 on the 13 points, each 6-regular. k = 2, where the only proper invariant complexes are empty or two points. So a non-evasive property on 21 vertices contains K_{a,b} for a + b ≤ 8, against s(21) = 7 from 3 × 7.
 
 **Predicted limits.** The fusion count needed is the one in §5's right-hand column, so only parity enters: with c ≈ r ≈ n/(F + 1),
 
@@ -165,14 +178,14 @@ Write **s\*_N(n)** for the largest smallest-block over groups each of whose mini
 
 At the balanced point a = b the constant moves from 1/26 to 1/6 at the worst class. *Standing:* the top row is §9.7's, conditional on supply as stated there; the bottom row is the same arithmetic with qualifying blocks admitted, conditional on the same kind of supply, and a lower bound.
 
-**On the table, to n = 10⁴** (`biclique_boost_scan.py`; new groups from the shape n = Fc + r only, so the boosted figures are lower bounds for s\*_N). 5,625 of 9,995 values of n improve. The smallest ratio s/n is 0.0702 on [6, 1000] (at 527) and 0.0678 on [1000, 10⁴] (at 6887); boosted, the smallest ratios are 0.2387 (at 155 = 2 × 59 + 37) and 0.2073 (at 1703 = 2 × 353 + 997). The floor case 2759 goes from 271 to 881 (2 × 881 + 997, k = 6, q = 83). Medians over [5000, 10⁴] by class:
+**On the table, to n = 10⁴** (`biclique_boost_scan.py`; new groups from the shape n = Fc + r only, so the boosted figures are lower bounds for s\*_N). 5,627 of 9,995 values of n improve. The smallest ratio s/n is 0.0702 on [6, 1000] (at 527) and 0.0678 on [1000, 10⁴] (at 6887); boosted, the smallest ratios are 0.2387 (at 155 = 2 × 59 + 37) and 0.2073 (at 1703 = 2 × 353 + 997). The floor case 2759 goes from 271 to 881 (2 × 881 + 997, k = 6, q = 83). Medians over [5000, 10⁴] by class:
 
 | n mod 12 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | s/n | 0.490 | 0.331 | 0.250 | 0.198 | 0.490 | 0.213 | 0.490 | 0.200 | 0.246 | 0.330 | 0.496 | 0.195 |
 | boosted | 0.497 | 0.332 | 0.497 | 0.332 | 0.495 | 0.331 | 0.496 | 0.330 | 0.490 | 0.332 | 0.498 | 0.330 |
 
-The boosted medians sit at the predicted 1/2 and 1/3. The minima do not yet: class 11 has minimum 0.232 on that range, since supply rarely hits c = r. The admitted block has k = 2 through 8 at the improved rows (k = 3 most often, at 1,781; k = 8 at 29, which rest on the crude rule q > 2^k).
+The boosted medians sit at the predicted 1/2 and 1/3. The minima do not yet: class 11 has minimum 0.232 on that range, since supply rarely hits c = r. The admitted block has k = 2 through 8 at the improved rows (k = 3 most often, at 1,782; k = 8 at 29, which rest on the crude rule q > 2^k). Two rows come from entangled groups (§5): n = 63, from 17 to 31, and n = 15 = 8 + 7, from 5 to 7. At n = 15 the block has k = 1 — AΓL(1, 8) on 8 + 7 points has orbitals K₇, K₈ and K₈,₇ — so the group is structured in §9.7's own sense and s(15) ≥ 7: `biclique_table.py` does not enumerate entangled groups.
 
 ## 7. How this sits in §7
 
@@ -190,4 +203,5 @@ The boosted medians sit at the predicted 1/2 and 1/3. The minima do not yet: cla
 - **Where does the bounded-cofactor condition now live?** A foreign block with trivial twist has all (r − 1)/2 of its cycle-orbitals in one type, of total C(r,2), with no condition on r − 1 at all; what the condition on r − 1 buys is a twist large enough to leave k small enough to qualify. Which k qualify is the question of whether a cyclically symmetric monotone function on k points can have χ = 1 — the χ-level form of the transitive-group question of §7.5–7.6 and `pending-checks.md` A48.
 - **The same device elsewhere:** on the intra classes of a partial-twist matching block; on the cross distance classes of a fused class, of one type per divisor class by §9.7; on unfused isomorphic blocks, where the symmetry is all of S_F and the invariant complexes are skeleta of a simplex, never of Euler characteristic 1; at k ≥ 12 for budgets too small for the bad complexes to fit.
 - **A matching upper bound on the biclique side.** §6 gives a sufficient region. Whether a + b ≤ s\*_N(n) is all the χ rung requires, and whether a group with two good types or a good type on a fused class does better, is not examined; nor are required graphs other than bipartite ones.
+- **The matching-prime reading of μ\*_cyc** at the 1,022 rows to 4000 where U exceeds the scan and no hand argument has been made; and the seven rows where the foreign reading is open.
 - **Owed:** a second reading of both Propositions and of `cyclic_chi_values.py`; a second computation of §6's boosted column; the device inside the exact enumerator, for μ\*_cyc over [6, 10⁶]; the right-hand column rescanned class by class. `pending-checks.md` A49.
