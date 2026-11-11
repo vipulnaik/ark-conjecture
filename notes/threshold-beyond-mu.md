@@ -2,6 +2,91 @@
 
 *A finding of 2026-11-10, one sitting, not yet read by a second reader. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`, `cyc_certify.py`, `entangled_check.g`, `type_levels6.py`, `biclique_boost_scan.py`, `nstar_types.py`, `pgroup_levels.py`, `global_chi_min.py`, `global_chi_forced.py`, `verify_global_chi.py`, `kset_block_levels.py`. **This file is a staging area:** the finding is to be refined here before any of it is carried into the framework documents, and the short note is not to be changed on its account (decided 2026-11-10). Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
 
+## Map of the quantities
+
+*Read A ---> B as A ≥ B: every arrowhead points at the smaller quantity. Definitions: M\*_R in §1; μ\*_χ and M\*_OCR in §2; the per-group levels and m\*_typ in §3; μ\*_cyc in §4 and U(n) in §5; s(n) and s\*_N(n) in §6; ν\* and G\* in §7.*
+
+```
+                          C(n,2)
+                            ||      equal exactly when ARK holds at n
+                            ||
+                            \/
+                          M*_NE
+                            ||
+                            ||
+                            \/
+                          M*_OCR                     9 at n = 6
+                            ||      min-max above, max-min below:
+                            ||      they part here (9 against 6 at n = 6)
+                            \/
+                          mu*_chi
+                            ||
+                            ||
+                            \/
+  max(nu*, G*)  ------->  mu*_N  ----------------->  G* = m*_N(1) = m*_chi(1)
+                            ||                       the trivial group;
+                            ||                       the rung chi = 1
+                            \/
+          U(n)  ------->  mu*_cyc
+                            ||
+                            ||
+                            \/
+                  mu*  =  M*_OR  =  M*_BR
+                            ||
+                            ||
+                            \/
+                          M*_vtOR  =  n(q(n) - 1)/2
+
+
+  (n/2) * floor((n-1)/2)  ------>  nu*        the left side is mu*(n) when
+                                              n = 2 * (prime power), so there
+                                              mu*_N = max(mu*, G*)
+
+  G*  and  mu*, mu*_cyc :  not comparable     G* < mu* at n = 12, 18
+                                              G* = mu* at n = 6, 10, 14
+```
+
+*Per group.* Each μ\*_X(n) is the maximum over Oliver groups Γ of the m\*_X(Γ) below it; ν\*(n) is the maximum of m\*_typ over Γ ≠ 1.
+
+```
+        m*_chi(G)                 m*_typ(G)
+            ||                       //
+            ||                      //
+            ||                     //
+            \/                    //
+         m*_N(G)  <==============+
+            ||
+            ||
+            \/
+          m*(G)
+
+     max over G:    mu*_chi          mu*_N          mu*
+                    (level 2)        (level 1)      (level 0)
+```
+
+*Required bicliques.* A non-evasive property contains K_{a,b} whenever a + b is at most the quantity shown.
+
+```
+            n                 the trivial cap on a + b
+            ||
+            ||
+            \/
+            ?                 what the chi rung requires: no upper bound known
+            ||
+            ||
+            \/
+          s*_N(n)             blocks 2-homogeneous, or carrying a good type
+            ||
+            ||                the step mu*_cyc ---> mu*, on the biclique side
+            \/
+           s(n)               blocks 2-homogeneous only; exact for Oliver-resistance
+
+
+     limit of  .../n     n mod 12:   0,4,6,10    2,8    1,9    3,7     5      11
+          s(n)                         1/2       1/4    1/3    1/5    1/7    1/13
+          s*_N(n)   at least           1/2       1/2    1/3    1/3    1/3    1/3
+```
+
 ## 1. Projecting a rung to a number
 
 For a monotone graph property P on n vertices write **e_max(P)** for the largest number of edges of a member. *(Not the s(n) of §9.7, the biclique location, which §6 uses in its own sense.)* Properties are as in §7.1: monotone decreasing with ∅ ∈ P, so the empty property is excluded by definition and the trivial property (K_n ∈ P, s = C(n,2)) is included. For a rung R of the ladder of `orbital-evasiveness-notes.md` §7.2, its **numerical projection** is
