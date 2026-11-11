@@ -86,3 +86,12 @@ Asked whether any direction was unmapped, one was, and it could be carried throu
 - Under the short note's hypothesis as it stands the evasiveness constant becomes 1/26 in place of 1/350. The ceilings become 1/4 (even n) and 3 − 2√2 (odd n). To n = 4000 the floor of the threshold rises from 0.0462 to 0.0887 and 1,847 of 3,410 rows improve.
 - μ\* itself, the table and the classification are untouched: this is about what the congruence proves, not about the invariant.
 - Unread by anyone else; `pending-checks.md` A49 lists what is owed.
+
+## 7. The finding restated as a projection of the ladder
+
+The first write-up measured the gain by E(n), the least size of a non-evasive property — tautological at the top and not what had been proved. Restated on Vipul's suggestion, in the terms of `orbital-evasiveness-notes.md` §7: each rung R projects to M\*_R(n), the least largest-member size of a property satisfying R, and μ\*(n) is the projection of Oliver-resistance. `threshold-beyond-mu.md` is rewritten around this; all new quantities carry the star.
+
+- **Already in the notes under other names:** fact 8's n(q(n) − 1)/2 is the projection of vertex-transitive Oliver-resistance, and the implication between the two resistance rungs projects to μ\*(n) ≥ n(q(n) − 1)/2. Bi-resistance projects to μ\*(n) as well: the threshold property is bi-resistant on the window μ\* ≤ B ≤ C(n,2) − 1 − μ\*, which at n = 10 is the measured 20–24.
+- **Why the χ rung is different:** a threshold property has χ = 1 − (−1)^B·C(N − 1, B), never 1, so the witness behind the resistance projections fails every χ rung. The max–min μ\*_χ(n) (per group) and the min–max M\*_OCR(n) (one property against all groups) separate, with M\*_OCR(6) = 9 against μ\*(6) = 6. By fact 5 both are determined by the p-by-cyclic groups; by fact 3 non-maximal groups matter.
+- **The Proposition is a lower bound on the per-group quantity**, and through it on μ\*_χ and on the nontrivial-top and Oliver-χ projections. The mod-12 column is a lower bound for μ\*_χ, not its asymptotic value: no classification stands behind it.
+- **Connections drawn:** §7.3's direction (b), restricting Oliver's tight set of χ values to graph-property complexes; §9.7's isomorphic orbitals; §7.13's two-block loop, which is the case k = 2; §7.9's per-shape conditions, where full-index shapes give no gain and the partial-index case was missing; the n = 10 search as M\*_OCR without an objective.
