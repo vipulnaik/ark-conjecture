@@ -148,3 +148,9 @@ Vipul: `threshold-beyond-mu.md` used s(P) for the largest number of edges of a m
 ## 15. A map of the quantities
 
 At Vipul's request `threshold-beyond-mu.md` opens with three ASCII diagrams: the spine from M\*_vtOR up to C(n,2) with G\*, ν\*, U(n) and the n = 2·(prime power) corollary attached; the per-group levels; and the biclique pair s(n) ≤ s\*_N(n). A ---> B reads A ≥ B: arrowheads point at the smaller quantity. The section is unnumbered so that no cross-reference moves.
+
+## 16. The floor of μ\*_cyc, and the hand-off
+
+- **Two questions answered in conversation, recorded here.** (i) The device stops when the index grows: a prime-power index k is good whenever q ≥ 2^k (every proper invariant complex has χ divisible by the prime, and |χ − 1| < 2^k), so the cofactor may be logarithmic in r but no more; with P⁺(r − 1) ≈ r^θ, θ < 1, the index is a power of r and the device gives nothing. *The prime-power statement is not yet in the note's §4.* (ii) PD(1) is a limit law at fixed θ and says nothing about cofactors of size (log r)^A, an event of vanishing proportion; extrapolating the Dickman density would give about x·log K/log² x primes with cofactor at most K, the Bateman–Horn order, but that is a prime-pair statement.
+- **`cyc_floor_scan.py`** — a floor scan that examines only rows whose μ\* is under a threshold. To 10⁵: infimum of the lower bound 0.0887 at n = 1159 (not lifted; true value at most 0.1001), next 0.0938 at 923 (exact). It agrees with `threshold_scan.py` on every shared row. The decade table is in the note's §5; the run above 10⁵ is **R14** in `pending-checks.md`.
+- **A50** in `pending-checks.md` is the integration item: which section of the staging note goes to which framework document, what is decided, and what to read first.

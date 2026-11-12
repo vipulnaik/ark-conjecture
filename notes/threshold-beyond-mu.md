@@ -1,6 +1,6 @@
 # Numerical projections of the ladder, and μ\*_χ: the Oliver-χ rung reaches past μ\*
 
-*A finding of 2026-11-10, one sitting, not yet read by a second reader. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`, `cyc_certify.py`, `entangled_check.g`, `type_levels6.py`, `biclique_boost_scan.py`, `nstar_types.py`, `pgroup_levels.py`, `global_chi_min.py`, `global_chi_forced.py`, `verify_global_chi.py`, `kset_block_levels.py`. **This file is a staging area:** the finding is to be refined here before any of it is carried into the framework documents, and the short note is not to be changed on its account (decided 2026-11-10). Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
+*A finding of 2026-11-10, one sitting, not yet read by a second reader. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`, `cyc_floor_scan.py`, `cyc_certify.py`, `entangled_check.g`, `type_levels6.py`, `biclique_boost_scan.py`, `nstar_types.py`, `pgroup_levels.py`, `global_chi_min.py`, `global_chi_forced.py`, `verify_global_chi.py`, `kset_block_levels.py`. **This file is a staging area:** the finding is to be refined here before any of it is carried into the framework documents, and the short note is not to be changed on its account (decided 2026-11-10). Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
 
 ## Map of the quantities
 
@@ -226,6 +226,17 @@ The right-hand column is 1/(1 + 1)² at even n and 1/(1 + √2)² at odd n; the 
 
 At n = 56 the group is the one that realises μ\*: its smallest orbital, one of two classes of 203 on the 29 points, is replaced by the pair at 406, and K₂₇ at 351 becomes binding. *The scan requires gcd(F(c − 1), r) = 1, so that the full twist on the matching blocks and the foreign translations share a cyclic layer — or, at F = 1 with r dividing c − 1, the entangled group: AΓL(1, c) acting on the c points and, through its quotient, on r more, the translation of the r points being the image of the element of order r in the twist. The twist on the r points is then a field automorphism, of order dividing the order of p mod r. To 4000 this occurs once: n = 63 = 32 + 31, where the Frobenius of 𝔽₃₂ acts on ℤ/31 as y ↦ 2y, of order 5, and the orbitals are 496, 992 and three classes of 155 (`entangled_check.g`).*
 
+**The floor on a longer range** (`cyc_floor_scan.py`). A row whose μ\* is already 0.12·C(n,2) cannot lower a floor below 0.12, so only the rows under that line are examined — 12,529 of the 90,299 to 10⁵, of which 12,519 are lifted — each over the shapes n = Fc + r with F ∈ {1, 2, 3, 4, 5, 6, 8}. The figures are lower bounds for μ\*_cyc; on the rows shared with `threshold_scan.py` the two scans agree.
+
+| n | least μ\*/C(n,2) | at | least lower bound for μ\*_cyc/C(n,2) | at |
+|---|---|---|---|---|
+| 6 – 99 | 0.1043 | 99 | at least 0.12 | — |
+| 100 – 999 | 0.0570 | 527 | 0.0938 | 923 = 5 × 128 + 283 |
+| 1000 – 9999 | 0.0462 | 2759 | 0.0887 | 1159, not lifted |
+| 10⁴ – 10⁵ | 0.0583 | 22139 | 0.1016 | 15515 = 4 × 2473 + 5623 |
+
+So **the infimum of μ\*_cyc(n)/C(n,2) over n ≤ 10⁵ lies between 0.0887 and 0.0938**, against 0.0462 for μ\*: the value at 923 is exact (U meets the scan), and at 1159 the foreign reading leaves 59512 ≤ μ\*_cyc ≤ 67161, densities 0.0887 to 0.1001. *Above 10⁵, a partial run only:* the 99,295 rows of (10⁵, 10⁶] with μ\* below 0.11·C(n,2) were examined and all were lifted, the least to 0.1396 at n = 130067, with medians 0.170 to 0.171 against the limit 3 − 2√2 = 0.1716 and the ten lowest all at n ≡ 11 (mod 12). Rows with μ\* between 0.11 and 0.14 were not examined, so for that decade only "at least 0.11" is established.
+
 **Is the scan's value the true μ\*_cyc?** Make the definition exact: μ\*_cyc(n) is the largest M of the Proposition over Oliver groups on [n] and at most one orbit R of prime size r — M = min(C(r,2), least orbital outside R's own pairs) — or the group's smallest orbital when no orbit is used. An upper bound needs no classification. The orbitals inside the complement of R are those of the image group there, which is an Oliver group on m = n − r points, so the least of them is at most μ\*(m); and a cross orbital is at most rm. Hence
 
 > **μ\*_cyc(n) ≤ U(n) = max( μ\*(n), max over primes r of min{ C(r,2), r·m, μ\*(m) } )**, m = n − r,
@@ -384,4 +395,5 @@ So at level 1 a foreign block is worth its smallest orbit and no more: **μ\*_cy
 - **A matching upper bound on the biclique side.** §6 gives a sufficient region. Whether a + b ≤ s\*_N(n) is all the χ rung requires, and whether a group with two good types or a good type on a fused class does better, is not examined; nor are required graphs other than bipartite ones.
 - **The matching-prime reading of μ\*_cyc** at the 1,022 rows to 4000 where U exceeds the scan and no hand argument has been made; and the seven rows where the foreign reading is open.
 - **G\*(n) beyond 18**, and with it μ\*_N at n = 22, 26, 34, 38, 46, 50: a property with χ = 1 and at most m(m − 1) edges, or a proof there is none. The method of §7 should reach 22 and 26 with the 4-regular circulants on 11 and 13 points as the forced graphs; not attempted. **ν\*(n) away from n = 2m**, or better a bound that uses m\*_N(Γ) ≤ G\*(a) for groups with fixed points. Whether μ\*_N ever exceeds μ\*_cyc.
+- **A statement for §4, not yet written in:** a prime-power index k is good for every q ≥ 2^k, since every proper invariant complex then has χ divisible by the prime while |χ − 1| < 2^k. So the cofactor may grow like log q and no faster by this argument; at a cofactor that is a power of r, which is all the unconditional shifted-prime results supply, the device gives nothing.
 - **Owed:** a second reading of both Propositions and of `cyclic_chi_values.py`; a second computation of §6's boosted column; the device inside the exact enumerator, for μ\*_cyc over [6, 10⁶]; the right-hand column rescanned class by class. `pending-checks.md` A49.
