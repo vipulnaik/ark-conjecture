@@ -47,6 +47,12 @@ which nothing else notices.  So this script runs five passes.
           compared across files, and any S-number present in one census but not
           the other, or carrying a different shape description, is reported.
 
+  PASS 12 BOUNDS.  A rounded floor quoted after >= (B1), a density below the
+          table floor in an unlabelled sentence (B2), per-parity counts of
+          ceiling constants (B3), and markdown rows keyed by n with a delta
+          column (B4) -- four classes a fresh read found unseen by the other
+          passes.
+
   PASS 7  TABLES.  Every markdown table's header, separator and body rows are
           checked for a consistent column count.  A mismatched separator makes
           the table render as a paragraph of pipes, which no other pass sees.
@@ -82,7 +88,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("table")
 ap.add_argument("docs", nargs="+")
 ap.add_argument("--pass", dest="only", default="all",
-                choices=["all", "figures", "scope", "prose", "hygiene", "census", "refs", "tables", "history", "s2", "witness", "pending"])
+                choices=["all", "figures", "scope", "prose", "hygiene", "census", "refs", "tables", "history", "s2", "witness", "pending", "bounds"])
 ap.add_argument("--quiet", action="store_true", help="findings only")
 A = ap.parse_args()
 DOCS = [d for d in A.docs if d.endswith(".md")]
@@ -2050,6 +2056,89 @@ if A.only in ("all", "pending"):
         if defined:
             print(f"\n[ok] tag still live: {TAG_TARGET - NMAX} short of the "
                   f"retirement frontier.")
+
+
+# ------------------------------------------------------------- PASS 12 BOUNDS
+#
+# Four staleness classes a fresh read found that no other pass sees.
+#   B1  a rounded floor quoted after >=.  The floor is a ratio of integers and
+#       its 5-place rounding lies ABOVE it, so "delta >= 0.04621" is false at
+#       the one n attaining it.  Quote the fraction or truncate.
+#   B2  a density quoted below the table floor, in a sentence that does not say
+#       it is a menu / lower-bound / historical figure.  Below the floor no n
+#       has that density, so the figure is either mislabelled or stale.
+#   B3  per-parity counts of ceiling constants ("N constants ... at odd n"),
+#       read against the ceiling table's actual split (I2 checks only totals).
+#   B4  markdown table rows keyed by n with a delta column, checked against the
+#       table (PASS 10 reads sentences only).
+if A.only in ("all", "bounds"):
+    print("\n" + "=" * 72 + "\nPASS 12  BOUNDS\n" + "=" * 72)
+    from fractions import Fraction
+    _byn = {r["n"]: r for r in rows}
+    _fl = min(rows, key=lambda r: Fraction(int(r["mu_bound"]), r["n"] * (r["n"] - 1) // 2))
+    FLOOR = Fraction(int(_fl["mu_bound"]), _fl["n"] * (_fl["n"] - 1) // 2)
+    GE = re.compile(r"(?:≥|>=)\s*(0\.\d{4,})")
+    DENS = re.compile(r"(?:density|δ)[^.|]{0,40}?\b(0\.0\d{2,})")
+    EXCUSE = re.compile(r"menu|lower bound|mu_fast|historic|pre-repair|old |earlier|once |"
+                        r"v[0-9]\b|frontier|scan reported|understat|ceiling|cap|1/\d|"
+                        r"collapse|Mersenne|other arity|k = 3|δ₃|S6|S11|μ\\\*_|B_lo|q-power-only|"
+                        r"Terms|configuration", re.I)
+    QUOTED_BAD = re.compile(r"literally false|never round|propagated", re.I)
+    NWORD = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7}
+    PAR = re.compile(r"\b(one|two|three|four|five|six|seven|\d+) (?:distinct )?constants?[^.]{0,30}?\bat (odd|even) n", re.I)
+    PAR2 = re.compile(r"\bat (odd|even) n[^.]{0,10}?\b(one|two|three|four|five|six|seven|\d+) constants?", re.I)
+    PAR3 = re.compile(r"\b(one|two|three|four|five|six|seven) at (odd|even) n", re.I)
+    EXPECT = {"even": 2, "odd": 4}
+    nb = 0
+    for d in LIVE:
+        try: txt = open(d).read()
+        except OSError: continue
+        hdr = None
+        for ln, line in enumerate(txt.split("\n"), 1):
+            for m in GE.finditer(line):
+                v = Fraction(m.group(1))
+                if v > FLOOR and v - FLOOR < Fraction(1, 10**4) and not QUOTED_BAD.search(line):
+                    nb += 1; findings += 1
+                    print(f"{d} L{ln}  B1 rounded floor after >=: {m.group(0)} exceeds {FLOOR}")
+            for m in DENS.finditer(line):
+                v = float(m.group(1))
+                pre = line[max(0, m.start(1) - 4):m.start(1)]
+                if v < float(FLOOR) - 1e-6 and not EXCUSE.search(line) \
+                        and not ("≥" in pre or ">=" in pre or float(FLOOR) - v < 1e-4):
+                    nb += 1; findings += 1
+                    print(f"{d} L{ln}  B2 density {v} below the table floor, unlabelled")
+            ms = list(PAR.finditer(line)) + list(PAR2.finditer(line))
+            if "constant" in line:
+                ms += [m for m in PAR3.finditer(line)
+                       if not any(o.start() <= m.start() < o.end() for o in ms)]
+            for m in ms:
+                g = m.groups()
+                num, par = (g[0], g[1]) if g[1].lower() in EXPECT else (g[1], g[0])
+                k = NWORD.get(num.lower(), int(num) if num.isdigit() else -1)
+                if k != EXPECT[par.lower()]:
+                    nb += 1; findings += 1
+                    print(f"{d} L{ln}  B3 '{m.group(0)}': the ceiling table has "
+                          f"{EXPECT[par.lower()]} constants at {par} n")
+            if line.startswith("|"):
+                cells = [c.strip().strip("*") for c in line.strip().strip("|").split("|")]
+                if hdr is None or set(cells[0]) <= set("-: "):
+                    if set(cells[0]) <= set("-: ") and cells[0]:
+                        continue
+                    hdr = cells; continue
+                if hdr and hdr[0] == "n" and "δ" in hdr and cells[0].isdigit():
+                    n = int(cells[0]); j = hdr.index("δ")
+                    if n in _byn and j < len(cells):
+                        try: v = float(cells[j])
+                        except ValueError: continue
+                        if abs(v - _byn[n]["density"]) > 5e-4:
+                            nb += 1; findings += 1
+                            print(f"{d} L{ln}  B4 table row n = {n}: δ {v} against "
+                                  f"{_byn[n]['density']:.6f} in the table")
+            else:
+                hdr = None
+    if not nb:
+        print("[ok] no rounded floor after >=, no unlabelled sub-floor density, "
+              "per-parity constant counts and n-keyed δ table rows agree.")
 
 
 print("\n" + "=" * 72)

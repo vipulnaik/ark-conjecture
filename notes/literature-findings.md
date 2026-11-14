@@ -357,7 +357,7 @@ The division we should state explicitly, in `arithmetic-of-density.md` §3's ope
 |---|---|---|
 | the mod-12 ceilings (§3.3) | **unconditional** | local obstructions at ℓ = 2, 3 and the balance-point optimisation |
 | the shape space being finite (`aod` §6) | **unconditional** | the feasibility criterion Σ√Fᵢ ≤ 1/√δ |
-| the collapse μ\*(n) = B(n) at computed n | **unconditional** | Corollary E.6 with the ladder floor δ ≥ 0.04621 over [6, 10⁶]; the per-n certificates are an independent second route |
+| the collapse μ\*(n) = B(n) at computed n | **unconditional** | Corollary E.6 with the ladder floor δ ≥ 0.046209 over [6, 10⁶]; the per-n certificates are an independent second route |
 | the escape densities (`aod` §4.3) | **conditional** | Bateman–Horn-type supply |
 | the fallback branch at δ > 1/25, every e and q | **unconditional** | `ep` Part E‴, Theorem E.5 (twelve listed small-n exceptions and the bare safe-prime pair) |
 | the fallback branch at δ ≤ 1/25 | **open**, and empty over the computed range | no row of [6, 10⁶] sits at or below 1/25 |
