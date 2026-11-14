@@ -201,3 +201,37 @@ The κ_c = 2 column of `three-uniform-note.md` §5.7 ("generic", bold) assumes a
 | shparlinski-constants | §1's (BH) hypothesis, the §5 table and §9 |
 
 **Deliberately unchanged.** `mu-theta-n2-note.md` and its LaTeX sibling (frozen by decision, and an unrefereed claim does not belong in the outward-facing note), `claude-understanding-of-project-plan.md` (a plan, no claim), and the archived logs.
+
+---
+
+# Part 5: `threshold-beyond-mu.md` read and corrected (staging file only)
+
+*The file is a staging area by decision. Nothing from it was carried into the framework documents.*
+
+## 17. Read and checked
+
+**Clean:**
+- The §4 k-table for k ≤ 7, with the complex counts and χ values recomputed by brute force, and the q column that follows from them.
+- The threshold-property χ formula.
+- §5's first-divergence table (n = 56 to 84), n = 2759 (0.1568), n = 1159 (0.0887 to 0.1001), the 1/26 constant, and the q ∉ {2, 5, 7} side condition holding from n ≥ 426.
+- §6's n = 21 orbitals.
+- §7:
+  - the count of 323 values of n;
+  - the claim that no 20-edge graph on 10 vertices has 27 dividing its automorphism group, with v₃(C(44,19)) = 1, so the mod-9 obstruction stands;
+  - the n = 30 counterexample;
+  - the single-type argument.
+- §10's orbit counts on triples.
+- `entangled_check.g` rerun.
+
+**Not rechecked:** the solver claims at k = 10 and k = 12.
+
+## 18. Corrections
+
+- **§1 table.** The nontrivial-top rung was merged with the Oliver-χ rung under "≥ μ\*_χ". μ\*_χ is attained on trivial-top groups, and a group's value is at most its core's, so the nontrivial-top rung is bounded only by §4's bound. The row is now split.
+- **§9.** Clause 3's d-list is k ∈ {1, 2, 3, 6}, inside the exhaustive range k ≤ 7. It was described as "exactly the range k ≤ 6".
+- **§7.** The 976 at n = 63 is now explained as (n/2)·⌊(n − 1)/2⌋ = 976.5, rounded down.
+
+## 19. The pending updates from session-log-16 §16, written in
+
+- **§4: prime-power indices.** A prime-power index k, prime k included, is good for every q ≥ 2^k. The cofactor may therefore grow like log q and no faster, and the device gives nothing at a cofactor that is a power of r. This now covers k = 8, 9, 11 and 13 without the solver. The placeholder in §11 is removed.
+- **§9, the §3.6 bullet: PD(1) gives no relief.** PD(1) is a limit law at fixed θ < 1 and does not see cofactors of size (log r)^A. Extrapolating Dickman gives the Bateman–Horn order, x·log K / log² x, but that is a statement about pairs of primes.

@@ -102,7 +102,8 @@ Every property with e_max(P) < M\*_R(n) fails R; if R is implied by non-evasiven
 | vertex-transitive Oliver-resistant | **n(q(n) − 1)/2**, q(n) the largest prime-power divisor of n | exact and unconditional — §7.2 fact 8, which calls it "the exact threshold" |
 | Oliver-resistant | **μ\*(n)** | exact; Θ(n²) under the bounded-cofactor hypothesis, with the six mod-12 ceilings |
 | bi-resistant (§7.13) | **μ\*(n)** again, at every non-prime-power n | below |
-| nontrivial-top Oliver-χ-resistant; Oliver-χ-resistant | ≥ **μ\*_χ(n)** (§2) ≥ the bound of §4; **9 at n = 6**; C(n,2) at prime powers | this note; otherwise open |
+| Oliver-χ-resistant | ≥ **μ\*_χ(n)** (§2) ≥ the bound of §4; **9 at n = 6**; C(n,2) at prime powers | this note; otherwise open |
+| nontrivial-top Oliver-χ-resistant | ≥ the bound of §4 (its groups have nontrivial top); **not** bounded by μ\*_χ(n) in general, since μ\*_χ is attained on trivial-top groups (§2) and a group's value is at most its core's | this note; otherwise open |
 | χ(Δ_P) = 1, the trivial group's condition | **G\*(n)**: 6, 20, 11, 42, 18 at n = 6, 10, 12, 14, 18 | §7; not comparable with the rungs above it in this table |
 | non-evasive | C(n,2) at every n, if ARK holds | — |
 
@@ -187,6 +188,8 @@ Since the groups in question have a nontrivial top, the property also fails the 
 | 7 | 99 | −14, −7, 0, 7, 14, 21 | 2, 3, 5, 13 |
 
 For k = 8, 9, 10, 11 and 13 a constraint solver finds χ = 1 unattainable; since |χ − 1| ≤ 2^k, every q > 2^k is then safe. **At k = 12 χ = 1 is attainable**, and the Proposition gives nothing there. At a prime power k = ℓ^a the reason is visible — every face orbit has size divisible by ℓ, so χ ≡ 0 (mod ℓ) — while at k = 6 and 10 it is a fact about the orbit census.
+
+**Prime-power indices are good for every large q.** If k = ℓ^a (prime k included), every proper C_k-invariant complex has χ ≡ 0 (mod ℓ), so χ ≠ 1. Since |χ − 1| < 2^k, the congruence χ ≡ 1 (mod q) then fails for every q ≥ 2^k. So the index, and with it the cofactor d = 2k, may grow like log q, but no faster by this argument. At a cofactor that is a power of r, which is all the unconditional shifted-prime results supply, the device gives nothing. This also covers k = 8, 9, 11 and 13 without the solver; k = 10 and 12 rest on `cyclic_chi_values.py` alone.
 
 So a foreign block with **r − 1 = 2kq^e, k ≤ 11 or k = 13, and q outside a finite set depending on k**, counts as C(r,2) — efficiency 1, whatever the framework's η = 1/k. The proof uses only N\*-invariance, so it is a level-1 statement: the block's own orbitals are one type, and M ≤ m\*_N(Γ). Write **μ\*_cyc(n)** for the resulting lower bound: μ\*(n) recomputed with every qualifying foreign block scored at C(r,2).
 
@@ -320,7 +323,7 @@ So **μ\*_N = μ\* at n = 6, 10, 12, 14 and 18**, and the N level adds nothing t
 
 **ν\* is not μ\* in general.** At n = 30 take AGL(1, 16) on 16 points, fixing the other 14. Its types are the 91 single edges among the fixed points, K₁₆ (120) and the 14 stars (224), so m\*_typ = 91 > μ\*(30) = 78. But the first type carries all of S₁₄, and the invariant complexes on it are the graph properties on 14 vertices: m\*_N of this group is at most G\*(14). In general **m\*_N(Γ) ≤ G\*(a) when Γ fixes a ≥ 2 points**, so the N level at n feeds on G\* at smaller degrees, and ν\* overstates it.
 
-**At the other n.** For the fifteen remaining n ≤ 50 (15, 20, 21, 24, 28, …), and at the rows where μ\*_cyc leaves μ\*, what is proved is the displayed inequality with the crude bound on ν\*: at n = 56, 351 ≤ μ\*_N ≤ max(756, G\*(56)); at n = 63, 465 ≤ μ\*_N ≤ max(976, G\*(63)). Nothing bounds G\* above at these n except C(n,2).
+**At the other n.** For the fifteen remaining n ≤ 50 (15, 20, 21, 24, 28, …), and at the rows where μ\*_cyc leaves μ\*, what is proved is the displayed inequality with the crude bound on ν\*: at n = 56, 351 ≤ μ\*_N ≤ max(756, G\*(56)); at n = 63, 465 ≤ μ\*_N ≤ max(976, G\*(63)) (the bound (n/2)·⌊(n − 1)/2⌋ = 976.5, rounded down since μ\*_N is an integer). Nothing bounds G\* above at these n except C(n,2).
 
 ## 8. How this sits in §7
 
@@ -343,9 +346,9 @@ So **μ\*_N = μ\* at n = 6, 10, 12, 14 and 18**, and the N level adds nothing t
 
 **§3.4, the window.** Unchanged; F·width = 1 − √λ needs nothing from η.
 
-**§3.5, (BCG).** The same hypothesis with a larger conclusion. Clause 3's list d ∈ {2, 4, 6, 12} is exactly the range k ≤ 6 where the table of §4 is exact. The clause that `aod` calls load-bearing, F = 4 at class 11, is not needed on this track: class 11 uses n = 2c + r with r = 12q + 1, the system `aod` records as superseded.
+**§3.5, (BCG).** The same hypothesis with a larger conclusion. Clause 3's list d ∈ {2, 4, 6, 12} gives k ∈ {1, 2, 3, 6}, all inside the range k ≤ 7 where the table of §4 is exhaustive. The clause that `aod` calls load-bearing, F = 4 at class 11, is not needed on this track: class 11 uses n = 2c + r with r = 12q + 1, the system `aod` records as superseded.
 
-**§3.6, the shifted-prime ladder.** No relief. The device needs a bounded index, so it does nothing for a rung with θ < 1, where the cofactor is a power of r. (BCG) is still the θ = 1 endpoint.
+**§3.6, the shifted-prime ladder.** No relief. The device needs a bounded index, so it does nothing for a rung with θ < 1, where the cofactor is a power of r. (BCG) is still the θ = 1 endpoint. *The conditional PD(1) row does not change this.* PD(1) is a limit law at fixed θ < 1. Cofactors of size (log r)^A are an event of vanishing proportion, which the law does not see. Extrapolating the Dickman density gives about x·log K / log² x primes with cofactor at most K. That is the Bateman–Horn order, but it is a statement about pairs of primes, so it is not a consequence of PD(1).
 
 **§§3.7–3.8 and §5, the data and the floor.** A parallel scan is owed: `threshold_scan.py` reaches 4000 where `ladder_verify.py` reaches 10⁶. The floor row changes character. On `aod`'s track the minimiser n = 2759 is foreign-bound, at the boundary cofactor 12; on this one that block is at full capacity and the floor, 0.0887 at n = 1159, is bound on a fused matching class.
 
@@ -395,5 +398,4 @@ So at level 1 a foreign block is worth its smallest orbit and no more: **μ\*_cy
 - **A matching upper bound on the biclique side.** §6 gives a sufficient region. Whether a + b ≤ s\*_N(n) is all the χ rung requires, and whether a group with two good types or a good type on a fused class does better, is not examined; nor are required graphs other than bipartite ones.
 - **The matching-prime reading of μ\*_cyc** at the 1,022 rows to 4000 where U exceeds the scan and no hand argument has been made; and the seven rows where the foreign reading is open.
 - **G\*(n) beyond 18**, and with it μ\*_N at n = 22, 26, 34, 38, 46, 50: a property with χ = 1 and at most m(m − 1) edges, or a proof there is none. The method of §7 should reach 22 and 26 with the 4-regular circulants on 11 and 13 points as the forced graphs; not attempted. **ν\*(n) away from n = 2m**, or better a bound that uses m\*_N(Γ) ≤ G\*(a) for groups with fixed points. Whether μ\*_N ever exceeds μ\*_cyc.
-- **A statement for §4, not yet written in:** a prime-power index k is good for every q ≥ 2^k, since every proper invariant complex then has χ divisible by the prime while |χ − 1| < 2^k. So the cofactor may grow like log q and no faster by this argument; at a cofactor that is a power of r, which is all the unconditional shifted-prime results supply, the device gives nothing.
 - **Owed:** a second reading of both Propositions and of `cyclic_chi_values.py`; a second computation of §6's boosted column; the device inside the exact enumerator, for μ\*_cyc over [6, 10⁶]; the right-hand column rescanned class by class. `pending-checks.md` A49.
