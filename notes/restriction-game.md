@@ -139,7 +139,7 @@ If topology is not the bottleneck, crossing is. The k-partite escape is crossed 
 
 **(e) The branch h(k·K_{n/k}) = 1.** Characterise which properties live there beyond "no isolated vertex", and find conditional leaves for them. By §5.5 this, not topology, is the whole gap between 1/3 and 1/2 within this family of arguments.
 
-## 6a. Result: the weighted game at n = 10 has value 40 (2026-10-17)
+## 6a. Result: the weighted game at n = 10 has value 40
 
 *`scripts/restriction_game10.py`, on the 1,294 Oliver classes of S₁₀ in `outputs/tom10.txt`.* The catalogue of §6(a) consists of the two peel intervals (value C₉ = 36), the bipartite escapes, and every orbital interval (U, U ∪ O) of every Oliver class. By Theorem 1 its value is the largest v for which the intervals of value ≥ v contain a descent. The forcing closure finds descents at every v ≤ 40 and none at 41, so **V = 40**, against the 25 that §6(a) anticipated.
 
@@ -154,9 +154,9 @@ If topology is not the bottleneck, crossing is. The k-partite escape is crossed 
 **Generalisation: n = 2p.** The same construction works whenever an Oliver group on 2m points has edge orbits exactly {perfect matching, the rest}. It then gives **D(f) ≥ C(n, 2) − n/2**. Solvability forces the action on the m pairs to be solvable and 2-homogeneous, so m is a prime power. For m = p prime the group on pairs is C_p ⋊ C_d, with d = p − 1 or d = (p − 1)/2 odd, and the Oliver condition needs C_d to be a prime power: p − 1 a power of 2 (Fermat primes), or (p − 1)/2 an odd prime power. *Searched* (`scripts/matching_descent.g`: E ⋊ H inside C₂ ≀ H for every solvable 2-homogeneous transitive H of degree m, E all flips or the even-weight ones, tested with the same Oliver routine as `oliver_tom.g`):
 - groups exist at **m = 3, 5, 7, 11, 17, 19, 23**, i.e. **n = 6, 10, 14, 22, 34, 38, 46**, and at m = 16, where n = 32 is a prime power already covered by KSS;
 - **none** at m = 9, 13, 25, 27, 29, 31, which agrees with the C_d condition at the primes and shows nothing new at the proper prime powers 9, 25, 27;
-- the run stopped at m = 32, the transitive-groups library's limit there; m = 47 ((47 − 1)/2 = 23) is predicted to work but was not run.
+- m = 47 ((47 − 1)/2 = 23) works as predicted: 2 groups, so n = 94 joins the list. m = 4 and 8 also have groups, but n = 8 and 16 are prime powers. `matching_descent.g` now defaults `MS` to that list of m.
 
-So **D(f) ≥ C(n,2) − n/2 at n = 10, 14, 22, 34, 38, 46**, plus n = 6, where full evasiveness is already known. In fraction terms that is 1 − 1/(n − 1) of the maximum, e.g. 84 of 91 at n = 14 and 220 of 231 at n = 22.
+So **D(f) ≥ C(n,2) − n/2 at n = 10, 14, 22, 34, 38, 46, 94**, plus n = 6, where full evasiveness is already known. In fraction terms that is 1 − 1/(n − 1) of the maximum, e.g. 84 of 91 at n = 14 and 220 of 231 at n = 22.
 
 **Checked:**
 - *Independent referee agent:* the logic is valid; the group is rebuilt in GAP (order, orbits and Oliver series all confirmed); the generalisation is derived independently.

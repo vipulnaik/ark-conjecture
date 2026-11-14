@@ -113,3 +113,67 @@ Satellite edits follow the same rule as the primaries. Dates, strikethrough "don
 - GAP-dependent claims, since there is no GAP here: the T(10,31) identification and 12T162's structure.
 - `ladder-completeness.md` Prop 1's three-foreign enumeration still covers only q ≤ 31, with the q > 31 exclusion unwritten. This is flagged but was not fixed.
 - No checker extensions this part.
+
+---
+
+# Part 3: the items Part 2 skipped for effort
+
+*After 55f6983. GAP 4 (with transgrp/TomLib) was installed in the workspace, which unblocked every GAP-dependent check.*
+
+## 12. A substantive finding: the k = 3 ceiling table needs a mod-3 column rule
+
+The κ_c = 2 column of `three-uniform-note.md` §5.7 ("generic", bold) assumes a block with 3 ∤ c − 1, i.e. c ≡ 2 (mod 3). That pins r ≡ n − F·c (mod 3), while the row's efficiency needs r ≡ 2 (mod 3) for d ∈ {2, 4} and r ≡ 1 (mod 3) for d ∈ {6, 12}.
+
+- At n ≡ 0, 1, 6, 7, 11 (mod 12) the bold cell is therefore locally obstructed. This answers §10 item 5's question, "obstructed or thin?": the cells are obstructed.
+- The reachable class ceilings at k = 3 are tabulated in a new box after §5.7's table, and `ceiling_rederive3.py` over [10⁴, 2·10⁴] attains each of them to 0.1%.
+- Class 11 at k = 3 is set by F = 2, d = 12, at **(2 − √3)/8 ≈ 0.03349**. The bold value (7 − 4√3)/2 ≈ 0.03590 comes from F = 4, which is obstructed.
+- Class 7 at k = 3 is set by κ_c = 2 at F = 4, at 1/18.
+- `general-k-note.md` §4's "the six mod-12 ceilings are the same at every arity" is corrected accordingly: the values of the generic column are arity-free, but its availability is not.
+
+## 13. Other fixes
+
+- **`ladder-completeness.md` Prop 1, three foreign primes.** The q ≥ 37 case is now written out: shares lie in (1/5, 3/5), η > 1/9 forces k_j ≤ 17, and q ≥ 29 forces a common exponent, after which min η·y² ≤ 2k_min/K² ≤ 0.028.
+- **`approach-rate-note.md`.** The log³ ratios were wrong: 1.29 → 1.44 over [8000, 25620], and 3.6 → 3.4 over [10⁴, 10⁶]. Also, `ladder-completeness.md` now points at its §6 third bullet, not the first.
+- **`restriction-game.md`.** m = 47 was run (2 groups, so n = 94 joins). `matching_descent.g` read an unset `MS` and now has a default.
+- **`monotone-transitive-note.md`.** T(10,31) is identified as M₁₀, the non-split A₆·2. A₆.2 alone is ambiguous with T(10,30) = PGL(2,9), which contains a regular C₁₀.
+- **`shparlinski-constants.md`.**
+  - The 0.679 improvement is credited to R. Li, arXiv:2508.18285, which uses an average Brun–Titchmarsh theorem, not Maynard's estimates.
+  - Maynard's 11/21 and Lichtman's 17/32 are confirmed against arXiv:2211.09641.
+  - The Friedlander–Granville III and Sárközy–Stewart II citations are confirmed.
+- **Scripts.**
+  - `halfsplit_scan.g` counted nothing: `ncand` was never incremented, and its label said 50000 where the cap is 5000.
+  - Three GAP scripts read `/tmp/g/ws_oliver.g`; they now read it relative to `scripts/`.
+- **`check_doc_figures.py` PASS 12.** Added B5, which recomputes quoted cap_F(η[; ε]) values, and B6, which recomputes "(caps a, b, c)" lists. Both use a ½-ulp tolerance. Regression: the old 0.0472 / 0.0447 / 0.0425 and a wrong cap₂(1/12) all fire.
+
+## 14. GAP reruns, all clean
+
+| script | result |
+|---|---|
+| `verify_witness.g` | 13 witnesses, every chain clause true, min orbital = μ_bound at each, including 175813 at n = 2759 |
+| `t12_162_structure.g`, `t12_162_loop.g`, `t12_162_kernel.g` | order 576, derived series 576 > 144 > 16 > 1, blocks 6 and 2, stabiliser C₂ × S₄; five loop classes (12, 24, 48, 96, 144); kernel is 12T162 |
+| `halfsplit_scan.g` | the no-transitive-Oliver groups at degrees 12–14 (order ≤ 5000) are 12T162 (loop), 14T10 and 14T30 (no loop) |
+| `halfsplit_large.g` | all 62 larger groups settled, including M₁₂ (order 12) and 14T54 |
+| `oliver_negative.g` | PASS |
+| `oliver_tom.g` | S₆ has 50 classes, S₁₀ has 1,294 |
+| `entangled_check.g` | ✓ |
+| `lutzA_pi1.g` | SL(2,5) |
+| `matching_descent.g` | matches §6a |
+
+## 15. Read, checked clean
+
+- **`approach-rate-note.md`.**
+  - Constants: C₀ = 0.6351664, recomputed; slopes 1.0718 / 1.2376; 1.7410; and 4·(9/8)·C₀ = 2.8582.
+  - Counts: 69.2% and 40,488 / 40,752.
+- **`restriction-game.md`.**
+  - §6a: the 320-group, Fermat / odd-prime-power C_d condition matched against the m list, C(n,2) − n/2 at 84 / 91 and 220 / 231, and 1 − 1/(n − 1).
+  - §4: Lemma 2's brute-force values.
+- **`three-uniform-note.md`.**
+  - §6.2's whole table, the k = 3 Kantor list (via `khomog_verify.py`), and the Galois gains (via `k3_galois.py`).
+  - Its §§1–4 and 7–9 were read only for cross-references against §5.7's finding.
+- **`mu-theta-n2-note.md`.** The 1/300 corner and 1/350, and the "16 times" figure.
+- **`small-degree-verification.md`.** The run list and status were checked against `small-degree-computation.md`: 242 / 186 / 131 / 55, V = 3,782, 17.9%, and 290 ms.
+
+## 16. Still not done
+
+- `small-degree-verification.md`'s per-item figures (for example, 1,061 full-capacity orbits and the 88 prime-sized ones) were not recomputed from the artefacts.
+- The full text of Baker–Harman and Balog–Sárközy remains unread, as the note itself records.

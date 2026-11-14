@@ -1,4 +1,4 @@
-Read("/tmp/g/ws_oliver.g");
+Read("ws_oliver.g");  # run from scripts/
 res := [];
 for deg in [12..14] do
   ncand := 0;
@@ -7,6 +7,7 @@ for deg in [12..14] do
     if Size(G) > 5000 then continue; fi; if k mod 50 = 0 then Print("progress deg ", deg, " T", k, "\n"); fi;
     cls := List(ConjugacyClassesSubgroups(G), Representative);
     if ForAny(cls, H -> IsTransitive(H, [1..deg]) and OliverData(H) <> fail) then continue; fi;
+    ncand := ncand + 1;
     half := Filtered(cls, H -> OliverData(H) <> fail and ForAll(Orbits(H,[1..deg]), o -> Length(o) = deg/2) and Length(Orbits(H,[1..deg])) = 2);
     # graph on G-orbits of half-sets
     reps := []; edges := []; loop := false; A := 0; B := 0;
@@ -39,6 +40,6 @@ for deg in [12..14] do
     Print("deg ", deg, " T", k, " |G|=", Size(G), ": no transitive Oliver subgroup; half-split Oliver classes ", Length(half),
           "; loop ", loop, "; odd cycle ", odd, " -> ", (function() if loop or odd then return "BI-RESISTANCE CLOSES THE GAP"; else return "bi-resistance possible"; fi; end)(), "\n");
   od;
-  Print("degree ", deg, ": ", ncand, " groups (order <= 50000) with no transitive Oliver subgroup\n");
+  Print("degree ", deg, ": ", ncand, " groups (order <= 5000) with no transitive Oliver subgroup\n");
 od;
 QUIT;

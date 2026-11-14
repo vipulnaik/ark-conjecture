@@ -1,4 +1,4 @@
-Read("/tmp/g/ws_oliver.g");
+Read("ws_oliver.g");  # run from scripts/
 G := TransitiveGroup(12,162); XX := [1..12];
 Print("G: ", StructureDescription(G), ", order ", Size(G), ", point stabiliser ", StructureDescription(Stabilizer(G,1)), "\n");
 Print("derived series orders: ", List(DerivedSeriesOfGroup(G), Size), "\n");

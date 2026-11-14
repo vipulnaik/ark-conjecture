@@ -4,6 +4,7 @@
 # Candidates: E : H inside C_2 wr H, H a solvable 2-homogeneous transitive group of degree m, E = C_2^m or its
 # even-weight subgroup.  Oliver test as in oliver_tom.g.
 LoadPackage("transgrp");;
+if not IsBound(MS) then MS := [3, 4, 5, 7, 8, 9, 11, 13, 16, 17, 19, 23, 25, 27, 29, 31, 47]; fi;
 OupperQ := function(Q, q)
   local rs, S;
   if Size(Q) = 1 then return Q; fi;

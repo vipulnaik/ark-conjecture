@@ -50,8 +50,9 @@ which nothing else notices.  So this script runs five passes.
   PASS 12 BOUNDS.  A rounded floor quoted after >= (B1), a density below the
           table floor in an unlabelled sentence (B2), per-parity counts of
           ceiling constants (B3), and markdown rows keyed by n with a delta
-          column (B4) -- four classes a fresh read found unseen by the other
-          passes.
+          column (B4), and quoted cap_F(eta) values and "(caps a, b, c)"
+          lists, recomputed (B5, B6) -- classes a fresh read found unseen by
+          the other passes.
 
   PASS 7  TABLES.  Every markdown table's header, separator and body rows are
           checked for a consistent column count.  A mismatched separator makes
@@ -2071,6 +2072,8 @@ if A.only in ("all", "pending"):
 #       read against the ceiling table's actual split (I2 checks only totals).
 #   B4  markdown table rows keyed by n with a delta column, checked against the
 #       table (PASS 10 reads sentences only).
+#   B5  quoted cap evaluations cap_F(eta) = value, recomputed.
+#   B6  "F1, F2, F3 (caps a, b, c)" lists, recomputed at eta = 1.
 if A.only in ("all", "bounds"):
     print("\n" + "=" * 72 + "\nPASS 12  BOUNDS\n" + "=" * 72)
     from fractions import Fraction
@@ -2136,9 +2139,43 @@ if A.only in ("all", "bounds"):
                                   f"{_byn[n]['density']:.6f} in the table")
             else:
                 hdr = None
+    # B5  explicit cap evaluations "cap_F(η) = 0.xxxx" (also capF / cap with
+    #     subscript digits, and the chiral form cap_F(η; ε)), recomputed from
+    #     cap_F(η; ε) = εη/(√ε + √(Fη))²; and B6, lists "F₁, F₂, F₃ (caps a, b, c)"
+    #     read at η = 1.  The fusion caps of ladder-completeness §6 drifted in
+    #     the third decimal with nothing to catch them.
+    SUB = str.maketrans("₀₁₂₃₄₅₆₇₈₉", "0123456789")
+    CAPV = re.compile(r"cap_?([0-9₀-₉]+)\(([0-9/½.]+)(?:;\s*([0-9/½.]+))?\)\s*=\s*(0\.\d{3,})")
+    CAPL = re.compile(r"\b(\d+), (\d+),? (?:and )?(\d+) \(caps (0\.\d+), (0\.\d+),? (?:and )?(0\.\d+)\)")
+    def _fr(t):
+        t = t.replace("½", "1/2")
+        return float(Fraction(t))
+    def _cap(F, eta, eps=1.0):
+        return eps * eta / (eps ** 0.5 + (F * eta) ** 0.5) ** 2
+    def _close(v, txt):
+        dec = len(txt.split(".")[1])
+        return abs(v - float(txt)) <= 0.5 * 10 ** (-dec) + 1e-9
+    for d in LIVE:
+        try: txt = open(d).read()
+        except OSError: continue
+        for ln, line in enumerate(txt.split("\n"), 1):
+            for m in CAPV.finditer(line):
+                F = int(m.group(1).translate(SUB))
+                eta = _fr(m.group(2)); eps = _fr(m.group(3)) if m.group(3) else 1.0
+                v = _cap(F, eta, eps)
+                if not _close(v, m.group(4)):
+                    nb += 1; findings += 1
+                    print(f"{d} L{ln}  B5 '{m.group(0)}': cap evaluates to {v:.6f}")
+            for m in CAPL.finditer(line):
+                for F, val in zip(m.groups()[:3], m.groups()[3:]):
+                    v = _cap(int(F), 1.0)
+                    if not _close(v, val):
+                        nb += 1; findings += 1
+                        print(f"{d} L{ln}  B6 cap_{F}(1) quoted {val}, evaluates to {v:.6f}")
     if not nb:
         print("[ok] no rounded floor after >=, no unlabelled sub-floor density, "
-              "per-parity constant counts and n-keyed δ table rows agree.")
+              "per-parity constant counts, n-keyed δ table rows and quoted cap "
+              "values agree.")
 
 
 print("\n" + "=" * 72)

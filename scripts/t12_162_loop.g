@@ -1,4 +1,4 @@
-Read("/tmp/g/ws_oliver.g");
+Read("ws_oliver.g");  # run from scripts/
 G := TransitiveGroup(12,162);
 Print("12T162: order ", Size(G), ", structure ", StructureDescription(G), ", transitive ", IsTransitive(G,[1..12]), "\n");
 cls := List(ConjugacyClassesSubgroups(G), Representative);

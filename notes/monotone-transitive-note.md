@@ -76,7 +76,7 @@ So failures can only occur at composite non-prime-power degrees. In the S_n worl
 |---|---|---|
 | 4, 5, 7, 8, 9, 11, 13 | none | Proposition 2 |
 | 6 | none | scan |
-| **10** | **T(10,7) = A₅ on the 10 pairs of {1..5}**; also T(10,26) = A₆ and T(10,31) = A₆.2 (order 720) | exhaustive search at A₅ finds no non-evasive property (§6 item 3); both contain A₅ acting transitively on the same 10 points (§6 item 0; checked in GAP) |
+| **10** | **T(10,7) = A₅ on the 10 pairs of {1..5}**; also T(10,26) = A₆ and T(10,31) = M₁₀ = A₆·2, the non-split extension (order 720) | exhaustive search at A₅ finds no non-evasive property (§6 item 3); both contain A₅ acting transitively on the same 10 points (§6 item 0; checked in GAP) |
 | **12** | **T(12,162)** | settled by bi-resistance (§4) |
 | **14** | T(14,10) = PSL(3,2), T(14,30) = PSL(2,13) | admit bi-resistant properties, so **open by these methods**; within the literature's N ≤ 14 |
 | 12–14, order > 5,000 | none — all 62 contain one, including M₁₂ = T(12,295) (a regular C₆ × C₂) and T(14,54) = 2⁶:S₇ | `halfsplit_large.g` (§6 item 1) |

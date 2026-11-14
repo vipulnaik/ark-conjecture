@@ -85,11 +85,11 @@ The uniform ~7% deficit is the size of the known second-order Bateman–Horn cor
 
 The ratio is constant to ±5% across the range, so the loss really does vary inversely with the local density, **including the dependence on the factorisations of n and n−1** through ∏(ℓ−2)/(ℓ−3). This is the singular series' own arithmetic content and it could not come from anywhere else. The constant offset of ≈0.28 is the competing-shape suppression of §4, which should rise toward 1 as those shapes thin out.
 
-**The log³ factor: not tested, and not testable over this range.** Over n ∈ [8000, 25620], log³n changes by a factor of only **1.29**. Distinguishing log³ from log² or log⁴ requires the normalised ratio to drift by about 1.2 across the range, and the by-n quartile split gives 0.265, 0.299, 0.244, 0.393 — noise of exactly that size. A naive fit of the exponent over the whole table returns 5.7 rather than 3, but that is dominated by the low-n bins where competing shapes suppress the loss, so it is confounded rather than contradictory.
+**The log³ factor: not tested, and not testable over this range.** Over n ∈ [8000, 25620], log³n changes by a factor of only **1.44**. Distinguishing log³ from log² or log⁴ requires the normalised ratio to drift by about 1.2 across the range, and the by-n quartile split gives 0.265, 0.299, 0.244, 0.393 — noise of exactly that size. A naive fit of the exponent over the whole table returns 5.7 rather than 3, but that is dominated by the low-n bins where competing shapes suppress the loss, so it is confounded rather than contradictory.
 
 **So the honest statement of what is established** is that the loss scales as 1/(S(n)·n) times a slowly varying factor, with the arithmetic confirmed and the logarithmic power untested. **Extending the table will not fix this**: even at 10⁶ the log³ signal is a factor ~1.2 per decade against comparable noise. What extending *does* test is the ≈0.28 offset, which the competing-shape account predicts should climb — that is the falsifiable part, and it is falsifiable at 10⁵.
 
-## 4b. The falsifiable part, tested at 10⁶ — and the offset was never going to reach 1
+## 4b. The falsifiable part, tested at 10⁶ — and why the offset's limit is ln 2, not 1
 
 *Added when μ\* became known exactly at every composite non-prime-power n ≤ 10⁶ (921,265 rows), which is the first data that can settle §4a's prediction.*
 
@@ -104,11 +104,11 @@ The ratio is constant to ±5% across the range, so the loss really does vary inv
 
 against ≈0.28 measured at n ≤ 25,620. And the mechanism is visible directly: among class-11 values below the ceiling, the **F = 4 share of winners** runs 63% on [5·10³, 10⁴), 87% on [10⁴, 10⁵) and **99.4%** on [10⁵, 10⁶] (40,488 of 40,752), while the fraction of the class falling below the ceiling at all rises 43% → 58% → 71%. The competing shapes thin out exactly as §4 said they would, and the suppression they caused goes with them.
 
-> **But the offset converges to 0.65, not to 1 — and that is the correct limit, which §4a got wrong.** The ratio above is a **median** observed loss against a **mean** model, and §3(a) establishes the loss/model ratio is Exp(1); the median of Exp(1) is **ln 2 = 0.6931**, not 1. So the target was never 1. Comparing like with like on the F = 4 population over [10⁵, 10⁶]: **median ratio 0.651 against ln 2 = 0.693, mean ratio 0.919 against 1** — both short by 6–8%, which is the *same uniform deficit* §3(a) already reports as the second-order Bateman–Horn correction at log ≈ 12. The quantile-by-quantile comparison on that population is flat at 0.91–0.97 across the whole Exp(1) curve, against 0.52–0.85 and sharply sloped on [10⁴, 10⁵) where competing shapes still bite.
+> **But the offset converges to 0.65, not to 1 — and that is the correct limit; §4a's "toward 1" compares a median with a mean.** The ratio above is a **median** observed loss against a **mean** model, and §3(a) establishes the loss/model ratio is Exp(1); the median of Exp(1) is **ln 2 = 0.6931**, not 1. So the target was never 1. Comparing like with like on the F = 4 population over [10⁵, 10⁶]: **median ratio 0.651 against ln 2 = 0.693, mean ratio 0.919 against 1** — both short by 6–8%, which is the *same uniform deficit* §3(a) already reports as the second-order Bateman–Horn correction at log ≈ 12. The quantile-by-quantile comparison on that population is flat at 0.91–0.97 across the whole Exp(1) curve, against 0.52–0.85 and sharply sloped on [10⁴, 10⁵) where competing shapes still bite.
 >
 > So the three numbers that were loose in §4a all close at once: the offset climbs as predicted, its limit is ln 2 rather than 1 for a reason that has nothing to do with this framework, and the residual is the known second-order correction. **Nothing here is new arithmetic — it is the same singular series measured on 13× more data with the contaminating population removed.**
 
-**The log³ factor is still not tested and still not testable**, and the extension does not change that: over [10⁴, 10⁶] log³n moves by a factor 3.6 while the Exp(1) spread is a factor 10 between its 10th and 90th percentiles. That remains §6's open item.
+**The log³ factor is still not tested and still not testable**, and the extension does not change that: over [10⁴, 10⁶] log³n moves by a factor 3.4 while the Exp(1) spread is a factor 10 between its 10th and 90th percentiles. That remains §6's open item.
 
 ## 5. What the singular series does and does not give
 
