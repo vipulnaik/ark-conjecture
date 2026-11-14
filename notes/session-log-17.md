@@ -177,3 +177,27 @@ The κ_c = 2 column of `three-uniform-note.md` §5.7 ("generic", bold) assumes a
 
 - `small-degree-verification.md`'s per-item figures (for example, 1,061 full-capacity orbits and the 88 prime-sized ones) were not recomputed from the artefacts.
 - The full text of Baker–Harman and Balog–Sárközy remains unread, as the note itself records.
+
+---
+
+# Part 4: the OpenAI PD(1) claim beside Baker–Harman
+
+**Status recheck (2026-11-14).** OpenAI family 011 claims the Ford–Konyagin–Luca conjecture: the PD(1) law for the prime factors of p − 1.
+
+- It is still unrefereed and unformalized. There is no `lean/docs/011.md` in openai/math, which is OpenAI's official per-family formalization page (checked by Vipul). Independent catalogues likewise list no Lean formalization, and the community-notes site carries no errata or verification for it.
+- The outside work found is limited to two items:
+  - A numerical probe to 3·10⁷. It fits the first two PD(1) components but not yet components 3–8 at that range, which is consistent with slow convergence and not decisive.
+  - A conditional count-to-supply reduction that explicitly does not verify the analytic theorem.
+- No strengthening was found, and no refutation.
+
+**Propagation.** Every live document that cites Baker–Harman as the shifted-prime input now names the PD(1) claim as the conditional strengthening (every θ < 1, relative density 1 − ρ(1/θ), still short of the endpoint):
+
+| document | where |
+|---|---|
+| aod §3.6 | status line updated |
+| oen §10 item 2 | the 0.679 attribution also fixed: Li's route is average Brun–Titchmarsh, not Maynard |
+| literature-findings | table row and the shifted-primes wall table |
+| note-to-framework-bridge | the θ-ladder paragraph |
+| shparlinski-constants | §1's (BH) hypothesis, the §5 table and §9 |
+
+**Deliberately unchanged.** `mu-theta-n2-note.md` and its LaTeX sibling (frozen by decision, and an unrefereed claim does not belong in the outward-facing note), `claude-understanding-of-project-plan.md` (a plan, no claim), and the archived logs.

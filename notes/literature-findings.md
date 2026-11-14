@@ -73,6 +73,7 @@ What he proves, with quantifiers, since this is where the comparison has to be c
 | Shparlinski Cor. 4 | all but O((log x)⁴) n ≤ x | c·n^{3/2} | none |
 | Shparlinski §5 remark (i) | all large n | n^{3/2−ε}, every ε > 0 | Elliott–Halberstam — extends the Bombieri–Vinogradov averaging to z^{1−ε}, upgrading his Thm 1 |
 | Shparlinski §5 remark (ii) | almost all n | n^{2−ε}, every ε > 0 | Elliott–Halberstam — gives any α < 1 in his Thm 2, whose unconditional α = 0.677 is Baker–Harman |
+| his Thm 2 fed the claimed PD(1) law (entry 24) | almost all n | n^{2−ε}, every ε > 0 | OpenAI's Ford–Konyagin–Luca claim, **unrefereed and unformalized** — any α < 1 at relative density 1 − ρ(1/α), with no Elliott–Halberstam |
 
 Three things follow.
 
@@ -494,7 +495,7 @@ and the orbital size is m\* ~ n^{1+θ} — which is exactly the ladder's edge bo
 |---|---|
 | Goldbach supply, binary and ternary | essentially solved; log-power cost; already combined with the ladder by Shparlinski |
 | shifted primes, θ ≤ 0.679 | positive relative density (Baker–Harman, Li); yields δ → 0 |
-| shifted primes, θ ∈ (0.679, 1) | **infinitude open**, not just density |
+| shifted primes, θ ∈ (0.679, 1) | **infinitude open**, not just density — unless OpenAI's PD(1) claim (entry 24) holds, which gives positive relative density 1 − ρ(1/θ) at every θ < 1; unrefereed |
 | shifted primes, θ = 1 (bounded cofactor) | Sophie Germain regime; Hardy–Littlewood / Bateman–Horn class |
 
 So there is **one wall, and it is not at the top rung** — it is the gap between the top rung and the endpoint, and no sieve improvement crosses it. This is also why (BCG-AL) belongs in the Bateman–Horn class rather than being a strengthened Baker–Harman, and why the Goldbach half becomes moot at the endpoint: one cannot average over a set not known to be infinite.
