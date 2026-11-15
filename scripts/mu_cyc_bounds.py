@@ -69,7 +69,8 @@ V9 = {-69, -60, -54, -51, -45, -42, -36, -33, -27, -24, -18, -15, -9, -6, 0, 3, 
       30, 36, 39, 45, 48, 54, 57}
 VALS[8], VALS[9] = V8, V9            # exact, by exhaustive enumeration (session-log-17 Part 9)
 VALS[1] = {0}                        # one point: the empty complex only
-ATT1 = {12, 30}                      # chi = 1 attained on k points: 12 by cyclic_chi_values.py, 30 by cyclic_chi_small.py (faces <= 5)
+ATT1 = {12, 30, 56, 63, 99, 105, 153, 176, 198, 200, 209, 230, 231, 261, 306, 315, 410, 414, 429, 440, 470, 473, 495, 530, 561, 590, 638, 774, 803, 1190, 1199, 1265, 1463, 1925}
+# chi = 1 attained on k points: 12 by cyclic_chi_values.py, 30 by cyclic_chi_small.py, the rest by cyclic_chi_product.py
 
 
 def _divs(k):

@@ -391,3 +391,19 @@ It is built in GAP at n = 1159 = 2 × 283 + 593. The group is Oliver with an exa
 - decide sufficiency: by a construction, or by CP-SAT at k = 56 and 63 with larger faces;
 - run `mu_cyc_bounds.py` beyond 4000;
 - an independent second reading of `mu_cyc_bounds.py`.
+
+---
+
+# Part 10: toward sufficiency, the product construction
+
+**The construction.** Take a coprime split k = a·b, so ℤ/k = ℤ/a × ℤ/b, and write vertices as pairs. P(A, B) = {S : π_a(S) ∈ A, π_b(S) ∈ B} is the simplicial (categorical) product, whose realisation is homotopy equivalent to |A| × |B|. So χ(P(A,B)) = χ(A)·χ(B). For C_a-complexes A₁ ⊆ A₂ and C_b-complexes B₁ ⊆ B₂, with A₁ and B₁ proper and A₂, B₂ not both full, the complex
+
+  X = P(A₁, Δ_b) ∪ P(Δ_a, B₁) ∪ P(A₂, B₂)
+
+is C_k-invariant and proper. By inclusion–exclusion, χ(X) = 1 exactly when (a₂ − a₁)(b₂ − b₁) = (a₁ − 1)(b₁ − 1).
+
+- **Explicit check at k = 56** (8·7): A₁ = the 8 vertices and A₂ a complex with χ = 2; B₁ = the 7 vertices and B₂ the 7-cycle. Enumerating the faces gives 5,839 faces, closed, invariant, proper, with χ = 1. So 56, which the reduction lemma could not decide, is BAD.
+- **`scripts/cyclic_chi_product.py`.** The A side is solved by CP-SAT on a ≤ 11 points, with A₁ ⊆ A₂ and the linear form of the equation. The B side uses graph chains (vertices plus edge orbits). Of the 218 undecided k below 2000, it certifies **32**: 56, 63, 99, 105, 153, 176, 198, 200, 209, 230, 231, 261, 306, 315, 410, 414, 429, 440, 470, 473, 495, 530, 561, 590, 638, 774, 803, 1190, 1199, 1265, 1463 and 1925. These are added to the χ = 1 set in `mu_cyc_bounds.py`, and pull-back extends them to all their multiples. Only 56 was checked by explicit face enumeration; the other 31 rest on the product lemma.
+- **Result to 4000.** **L′ = B^ at 2,744 of 3,410 rows**, every n < 527 included. B^'s floor now equals L′'s, 0.09378 at n = 923, so the minimum of μ\*_cyc/C(n,2) to 4000 is settled from both sides, relative to the classification. The first open row is n = 527.
+- **The marks test.** The Burnside congruences on the marks φ_H give a stronger-looking necessary condition: for every m | k, Σ_{j | k/m} φ(j)·φ_{mj} ≡ 0 (mod k/m), with φ₁ = 1 and φ_k = 0, and the odd-m marks drawn from the known value sets. It reproduces every known case: 6, 10, 14, 15, 18 and 20 infeasible; 12 and 30 feasible. But it is feasible at all the undecided k tested (56, 63, 99, 105). So it does not decide anything the reduction lemma doesn't.
+- **Open.** The other 186 undecided k, the smallest being 135, 140, 165, 189, 221 and 224. Each has either no coprime split with a small factor, or none for which graph chains on the large side suffice. The natural next step is to build the B side recursively from the product construction itself, which needs nested pairs rather than single values. A general proof that the reduction condition is sufficient is not in hand. Every k settled so far fits it: every undecided k tested so far has turned out BAD, and none GOOD.
