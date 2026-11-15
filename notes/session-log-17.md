@@ -235,3 +235,56 @@ The κ_c = 2 column of `three-uniform-note.md` §5.7 ("generic", bold) assumes a
 
 - **§4: prime-power indices.** A prime-power index k, prime k included, is good for every q ≥ 2^k. The cofactor may therefore grow like log q and no faster, and the device gives nothing at a cofactor that is a power of r. This now covers k = 8, 9, 11 and 13 without the solver. The placeholder in §11 is removed.
 - **§9, the §3.6 bullet: PD(1) gives no relief.** PD(1) is a limit law at fixed θ < 1 and does not see cofactors of size (log r)^A. Extrapolating Dickman gives the Bateman–Horn order, x·log K / log² x, but that is a statement about pairs of primes.
+
+---
+
+# Part 6: second check of the scripts behind `threshold-beyond-mu.md`
+
+*Staging file only. Nothing was propagated to the framework documents or to `pending-checks.md`.*
+
+## 20. What was done, script by script
+
+Every script was read line by line, then rerun against the figures the note quotes. Where noted, the result was also recomputed by code written independently for this check.
+
+| script | review | rerun | independent check |
+|---|---|---|---|
+| `cyclic_chi_values.py` | correct | k = 2–7 table; SAT at k = 8–13 (only 12 attainable) | k ≤ 7 and **k = 10 by exhaustive enumeration**: 292,592,828 complexes, χ ∈ [−125, 127], never 1. The **k = 12 SAT witness** (3,943 faces) rechecked for closure, invariance, properness and χ = 1. |
+| `threshold_scan.py` | correct; conservative in two places (only the full q-part twist is tried; k ≥ 14 is treated as bad) | 3,410/3,410 old-rule agreement, 1,847 improved, floor 0.0887 at n = 1159, n = 2759 at 0.1568; the CSV is byte-identical to the committed one | §5's divergence table (n = 56–84) by hand |
+| `cyc_certify.py` | correct (the U(n) argument) | 2,385 exact, 1,044 of the improved rows, 3,403 under the foreign reading with the seven exceptions as listed, 1,341 with no gain, every n ≤ 55 | — |
+| `cyc_floor_scan.py` | correct (window from §6.1, D0 = 0.078) | 12,529 rows examined, 12,519 lifted; decade table as quoted; agreement with the 4000 scan | — |
+| `entangled_check.g` | — | n = 63 orbitals 496, 992 and 3 × 155 | — |
+| `type_levels6.py` | correct | the maxima 6 / 15 / 6 / 6; row categories 34 / 11 / 6 / 1 with an overlap of 2 | — |
+| `nstar_types.py` | correct (N\* as the automorphism group of the points–pairs–orbitals graph) | ν\* = 6, 20, 18 at n = 6, 10, 12; at each, only the trivial group has a single type | — |
+| `pgroup_levels.py` | correct | Z/5 gives 20 at n = 10; the two-block translations give 6, 20, 42, 18, 22, 26 at m = 3, 5, 7, 9, 11, 13 | — |
+| `global_chi_min.py` | correct | G\*(6) = 6; n = 12 infeasible at every s ≤ 10 | the n = 6 property's χ by brute force over all 2¹⁵ graphs: χ = 1, e_max = 6 |
+| `global_chi_forced.py` | correct | n = 6 regenerated, and its brute-force check passes | — |
+| `verify_global_chi.py` | **bug, fixed** (below) | n = 6, 10, 12, 14, 18 all pass after the fix | — |
+| `kset_block_levels.py` | correct | all five cases as tabulated in §10 | — |
+| `biclique_boost_scan.py` | correct | 5,627 rows improved, all minima and medians and the k counts as quoted, 2759 → 881 | — |
+
+## 21. The bug
+
+`verify_global_chi.py`'s membership test for the H₀ = (n/3)K₃ mode ("tri", used at n = 18) checked only that every component has at most 3 vertices. A graph with more than n/3 such components does not embed in (n/3)K₃. The 7-edge matching at n = 18 is an example: it is not a member, but the test admitted it.
+
+The χ computation was unaffected, since it lists subgraphs of H₀ by deletion. But the closure check and the Smith check were made more permissive. With the test fixed (at most n/3 components), the n = 18 property passes closure, χ = 1 and Smith at 284 p-groups. The solver, `global_chi_forced.py`, builds the property correctly and never had the bug.
+
+## 22. Smith counts reconciled
+
+The counts quoted in §7 depend on TMAX, the cap on how many orbitals a p-group may have to be included:
+
+| n | TMAX | p-groups checked | source |
+|---|---|---|---|
+| 12 | 11 | 1,919 | as quoted |
+| 12 | 12 | 2,239 | extended in this check; all pass |
+| 14, 18 | 14 | 44 and 284 | quoted; `verify_global_chi.py` defaults to TMAX 12, which gives 30 and 280 |
+
+The usage line now says which TMAX gives which count. `tom12.txt` (8,572 Oliver classes) was regenerated with `oliver_tom.g` and, as before, is not committed.
+
+## 23. Edits
+
+- **`threshold-beyond-mu.md`:**
+  - the header now records the second check;
+  - §4's k = 10 / 12 sentence states the independent confirmations;
+  - §7's n = 12 Smith count gives both TMAX values;
+  - §11's "Owed" splits off what is now done. Still owed: the device inside the exact enumerator, and the right-hand column rescanned class by class.
+- **Scripts:** the `cyclic_chi_values.py` docstring records the recheck; `verify_global_chi.py` carries the fix and the usage note.

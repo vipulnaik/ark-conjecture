@@ -15,6 +15,10 @@ the top prime q, Oliver's congruence fails and the property is evasive.
                                           (CP-SAT; needs ortools)
 
 Output of 2026-11-10: chi = 1 is attainable at k = 12 and at no other k <= 13.
+Rechecked 2026-11-14 with independent code: k = 2..7 and k = 10 by exhaustive
+enumeration (k = 10: 292,592,828 complexes, chi in [-125, 127], never 1); the
+k = 12 solution (3,943 faces) verified closed, invariant, proper, chi = 1.
+k = 8, 9, 11, 13 also follow without a solver: chi = 0 mod the prime.
 """
 import sys
 

@@ -10,6 +10,9 @@
      orbitals, chi of the fixed complex Delta_P^Q is 1 modulo p.
 
 Usage: python3 verify_global_chi.py ../outputs/global_chi_2km_10.json [TMAX=12] [group file]
+  Smith counts quoted in threshold-beyond-mu.md: n = 10, TMAX 12: 366; n = 12, TMAX 11: 1,919
+  (TMAX 12: 2,239); n = 14 and 18, TMAX 14 with pgroups14.txt / pgroups18.txt: 44 and 284.
+  tom12.txt is not committed: RunTom(12, "tom12.txt") in oliver_tom.g, about three minutes.
   group file: default ../outputs/tom<n>.txt; at n = 14, the output of pgroups_small.g
 """
 import sys, json, itertools, os
@@ -49,7 +52,17 @@ def in_h0(edges):
         deg = {}
         for a, b in edges:
             deg.setdefault(a, set()).add(b); deg.setdefault(b, set()).add(a)
-        return all(len({v} | nb | set().union(*(deg[u] for u in nb))) <= 3 for v, nb in deg.items())
+        if not all(len({v} | nb | set().union(*(deg[u] for u in nb))) <= 3 for v, nb in deg.items()):
+            return False
+        # each component needs a triangle of its own: at most n/3 components
+        par = {}
+        def g(x):
+            while par.setdefault(x, x) != x:
+                x = par[x]
+            return x
+        for a, b in edges:
+            par[g(a)] = g(b)
+        return len({g(x) for x in deg}) <= n // 3
     par = list(range(n))
     def f(x):
         while par[x] != x:
