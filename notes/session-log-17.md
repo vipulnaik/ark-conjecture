@@ -577,3 +577,11 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **Small primes.** For j ≤ J, feasibility depends only on k mod p once k ≥ J, because the family list stabilises and the sizes are polynomials in k. So each prime p < 37 is a finite check. That check is not done. The computed cases with k ≤ 8 and p ∤ k (p = 5, 7, 11, 13) all have j ≤ 6.
 - **p | k.** Here χ ≡ 0 (mod p) below budget p², so s_Q ≥ p² (≤ n). Not covered.
 - **Where this leaves S(n) = O(n).** It is proved for block translations with p ≥ 37 and p ∤ k. Still open for small primes, p | k, and all other p-subgroups.
+
+## Part 19: the remaining block cases for S(n) = O(n)
+
+- **New script `scripts/smith_families.py`.** It computes j on families of faces (patterns of parts), so k is unrestricted. A family's size is a polynomial in k, periodic mod p while every multiplicity is below p, and the pattern list is stable for k ≥ J. It reproduces `smith_blocks.py` at ten (k, p) pairs.
+- **Small primes, done.** For every prime 5 ≤ p ≤ 31 and every k from 2 to 8 + p with p ∤ k (`outputs/smith_families.txt`), the least j is below 8 and below p. That covers a full period, so it covers every k. The largest j per p: 4, 6, 5, 6, 3, 3, 3, 3, 3 for p = 5, 7, 11, 13, 17, 19, 23, 29, 31. For p = 3 the closed form is χ = 1 − (−1)^J·C(k − 1, J), giving s_Q ∈ {3, 6} for 3 ∤ k.
+- **Proposition B″.** Translations of k ≥ 2 blocks of any prime p ≥ 3 with p ∤ k have s_Q ≤ 6p ≤ 3n. It combines B′ (p ≥ 37), the computation (5 ≤ p ≤ 31) and the formula (p = 3).
+- **p | k.** s_Q ≥ p², because families with fewer than p parts have size ≡ 0 (mod p). One data point: 6 blocks of 3 give s_Q = 18 = 2p². No general upper bound.
+- **Not attempted: other p-subgroups.** These are iterated wreath products, mixed block sizes and groups with fixed points. I see no reduction yet: the class-complex argument needs equal blocks of prime size with N\* = AGL(1, p) ≀ S_k.

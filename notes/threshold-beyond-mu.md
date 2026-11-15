@@ -1,6 +1,6 @@
 # Numerical projections of the ladder, and μ\*_χ: the Oliver-χ rung reaches past μ\*
 
-*A finding of 2026-11-10, one sitting. **Second check (2026-11-14):** both Propositions reread; every listed script reviewed line by line and rerun, reproducing every figure quoted here; the k-table, k = 10 and the k = 12 witness, and G\*(6) recomputed by independent code. One bug was found, in `verify_global_chi.py`'s membership test for the (n/3)K₃ property; it was fixed, and the n = 18 property still passes. Details in `session-log-17.md` Part 6. Still not a referee reading of the arguments. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`, `cyc_floor_scan.py`, `cyc_certify.py`, `entangled_check.g`, `type_levels6.py`, `biclique_boost_scan.py`, `nstar_types.py`, `pgroup_levels.py`, `global_chi_min.py`, `global_chi_forced.py`, `verify_global_chi.py`, `kset_block_levels.py`, `cyc_witness_check.g`, `mu_cyc_bounds.py`, `cyclic_chi_small.py`, `cyclic_chi_product.py`, `cyclic_chi_recursive.py`, `cyclic_chi_witness_check.py`, `cyclic_chi_good_recheck.py`, `cyc_density_one.py`, `nstar_transitive_check.g`, `nstar_transitive_check.py`, `socle_2homog_check.g`, `chi_level10.py`, `pgroup_levels_explicit.py`, `smith_blocks.py`. **This file is a staging area:** the finding is to be refined here before any of it is carried into the framework documents, and the short note is not to be changed on its account (decided 2026-11-10). Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
+*A finding of 2026-11-10, one sitting. **Second check (2026-11-14):** both Propositions reread; every listed script reviewed line by line and rerun, reproducing every figure quoted here; the k-table, k = 10 and the k = 12 witness, and G\*(6) recomputed by independent code. One bug was found, in `verify_global_chi.py`'s membership test for the (n/3)K₃ property; it was fixed, and the n = 18 property still passes. Details in `session-log-17.md` Part 6. Still not a referee reading of the arguments. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`, `cyc_floor_scan.py`, `cyc_certify.py`, `entangled_check.g`, `type_levels6.py`, `biclique_boost_scan.py`, `nstar_types.py`, `pgroup_levels.py`, `global_chi_min.py`, `global_chi_forced.py`, `verify_global_chi.py`, `kset_block_levels.py`, `cyc_witness_check.g`, `mu_cyc_bounds.py`, `cyclic_chi_small.py`, `cyclic_chi_product.py`, `cyclic_chi_recursive.py`, `cyclic_chi_witness_check.py`, `cyclic_chi_good_recheck.py`, `cyc_density_one.py`, `nstar_transitive_check.g`, `nstar_transitive_check.py`, `socle_2homog_check.g`, `chi_level10.py`, `pgroup_levels_explicit.py`, `smith_blocks.py`, `smith_families.py`. **This file is a staging area:** the finding is to be refined here before any of it is carried into the framework documents, and the short note is not to be changed on its account (decided 2026-11-10). Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
 
 ## Map of the quantities
 
@@ -515,14 +515,33 @@ The p = 3 column runs the class-complex model at p = 3, where the proof's N\*(Q)
 >
 > Further CP-SAT runs at (k, p) = (5, 37), (6, 37), (5, 41), (7, 41), (5, 43) and (6, 47) give j = 3, 2, 2, 3, 2, 3, so the bound 3p is sometimes attained.
 
-*Small primes.* For a fixed p and j ≤ J, the invariant families of faces with at most J classes span at most J blocks. Their list is the same for every k ≥ J, and their sizes are polynomials in k (kh, C(k,2)h², C(k,3)h³, …). So whether j ≤ J works depends only on k mod p once k ≥ J. Checking one period of k for each prime p < 37 would settle the small primes; that has not been done. What has been computed, for k ≤ 8 with p ∤ k:
-- p = 5: j ∈ {1, 2, 3, 4};
-- p = 7: j ≤ 3 except k = 2, where j = 6;
-- p = 11 and 13: j ≤ 3.
+*Small primes.* For a fixed p and j ≤ J, the invariant families of faces with at most J classes are determined by their pattern: a multiset of parts, one per block met, each a nonempty subset of C_h up to translation. With r parts, multiplicities m_c and part stabilisers s_i, a family has
 
-*Blocks with p | k* (so p² | n, n ≥ p²) are not covered. There every family above has size ≡ 0 (mod p), so χ ≡ 0 below budget p², and s_Q ≥ p². That is still at most n, but how far above p² it goes is not known.
+  k(k − 1)⋯(k − r + 1)/∏ m_c! · ∏ h/s_i
 
-> **If S(n) = O(n) and G\* is Smith-tight,** the monotonicity gap above disappears for large n. Each group fixing a ≥ 2 points has m\*_N ≤ G\*(a) = O(n), far below δ_cyc(n)·C(n,2), and one fixed point gives at most n − 1. So μ\*_N = μ\*_N^fpf for all large n, and with Conjecture P and (BH-SW), μ\*_N has μ\*_cyc's asymptotics. Both hypotheses are open. For the first, Propositions B and B′ prove s_Q ≤ 3p ≤ 3n/2 for the translations of blocks of a prime p ≥ 37 with p ∤ k. Still open for it: small primes (a finite check per prime, by periodicity in k), p | k, and every other p-subgroup.
+faces. When every m_c < p this is periodic in k mod p, and the list of patterns is the same for every k ≥ J.
+
+`smith_families.py` works on these families rather than on faces, so k is unrestricted. It reproduces `smith_blocks.py` at ten (k, p) pairs. For every prime 5 ≤ p ≤ 31 it computes j for every k from 2 to 8 + p with p ∤ k (`outputs/smith_families.txt`). That covers a full period beyond k = 8, and the least j it finds is below 8 and below p every time, so periodicity applies:
+
+| p | 5 | 7 | 11 | 13 | 17 | 19 | 23 | 29 | 31 |
+|---|---|---|---|---|---|---|---|---|---|
+| largest j over all k with p ∤ k | 4 | 6 | 5 | 6 | 3 | 3 | 3 | 3 | 3 |
+| k where it occurs | 2, 7, 12 | 2, 9 | 12 | 14 | many | many | many | many | many |
+
+*p = 3* falls outside the class-complex argument: a block's single orbital is K₃, so N\*(Q) = S₃ ≀ S_k acts on one class per block. The only invariant families are the r-subsets of blocks, so an invariant complex below budget 9 is a skeleton, with χ = 1 − (−1)^J·C(k − 1, J). This is ≡ 1 (mod 3) at J = 1 when k ≡ 1, and at J = 2 when k ≡ 2. So s_Q ∈ {3, 6} whenever 3 ∤ k.
+
+> **Proposition B″.** For the translations of k ≥ 2 blocks of a prime p ≥ 3 with p ∤ k: **s_Q ≤ 6p ≤ 3n.**
+> - **p ≥ 37:** Proposition B′, an explicit construction.
+> - **5 ≤ p ≤ 31:** the family computation with its periodicity, a computer check.
+> - **p = 3:** the skeleton formula.
+
+*Blocks with p | k* (so p² | n, n ≥ p²) are not covered.
+- **The lower bound.** Every family with fewer than p parts has size ≡ 0 (mod p), since p divides k(k − 1)⋯(k − r + 1)/∏ m_c! for r < p. So χ ≡ 0 below budget p², and s_Q ≥ p².
+- **Why the cost is about p².** A family with nonzero residue must be fixed by a Sylow p-subgroup of S_k, so it spreads over a whole p-cycle of blocks. One class in each of those p blocks already costs p·p = p², and from budget p² on, cross orbitals of p² pairs enter as well.
+- **One data point:** k = 6 blocks of 3 (n = 18) gives s_Q = 18 = 2p², from `pgroup_levels.level()` on the orbitals.
+- **The guess** is s_Q = O(p²) ≤ O(n), but there is no construction.
+
+> **If S(n) = O(n) and G\* is Smith-tight,** the monotonicity gap above disappears for large n. Each group fixing a ≥ 2 points has m\*_N ≤ G\*(a) = O(n), far below δ_cyc(n)·C(n,2), and one fixed point gives at most n − 1. So μ\*_N = μ\*_N^fpf for all large n, and with Conjecture P and (BH-SW), μ\*_N has μ\*_cyc's asymptotics. Both hypotheses are open. For the first, Propositions B and B′ prove s_Q ≤ 3p ≤ 3n/2 for the translations of blocks of a prime p ≥ 37 with p ∤ k. Proposition B″ extends this to every p ≥ 3 with p ∤ k, at s_Q ≤ 6p ≤ 3n. Still open for it: p | k, and every other p-subgroup.
 
 **ν\* is not μ\* in general.** At n = 30 take AGL(1, 16) on 16 points, fixing the other 14. Its types are the 91 single edges among the fixed points, K₁₆ (120) and the 14 stars (224), so m\*_typ = 91 > μ\*(30) = 78. But the first type carries all of S₁₄, and the invariant complexes on it are the graph properties on 14 vertices: m\*_N of this group is at most G\*(14). In general **m\*_N(Γ) ≤ G\*(a) when Γ fixes a ≥ 2 points**, so the N level at n feeds on G\* at smaller degrees, and ν\* overstates it.
 
@@ -653,9 +672,8 @@ So at level 1 a foreign block is worth its smallest orbit and no more: **μ\*_cy
 - **The matching-prime reading of μ\*_cyc** at the 1,022 rows to 4000 where U exceeds the scan and no hand argument has been made; and the seven rows where the foreign reading is open.
 - **Conjecture P (§7):** a soluble transitive Oliver group of non-prime-power degree has m\*_typ ≤ n(q(n) − 1)/2. Open only when N\* is primitive with non-abelian socle. Checked on all soluble transitive groups of degrees 6 to 30 except prime powers and 24. Two smaller items: the socle fact behind Step 2 is checked to degree 877, and the infinite families are not yet cited.
 - **Is the right-hand column the asymptotic value of μ\*_N?** Its fixed-point-free part, yes, conditionally (§7). The rest is whether groups with fixed points, through G\*(a) for a ≤ n, can beat δ_cyc(n)·C(n,2) on a set of positive density.
-- **Is S(n) = O(n)?** (§7) For the translations of blocks: s_Q = 2p for two blocks when p ≥ 11 (Proposition B), and s_Q ≤ 3p for any k ≥ 2 blocks when p ≥ 37 and p ∤ k (Proposition B′). Open:
-  - the primes p < 37, a finite check per prime;
-  - p | k;
+- **Is S(n) = O(n)?** (§7) For the translations of blocks: s_Q = 2p for two blocks when p ≥ 11 (Proposition B), s_Q ≤ 3p for any k ≥ 2 blocks when p ≥ 37 and p ∤ k (Proposition B′), and s_Q ≤ 6p ≤ 3n for every p ≥ 3 with p ∤ k (Proposition B″, by computation for 5 ≤ p ≤ 31). Open:
+  - p | k, where s_Q ≥ p² and the guess is O(p²);
   - all other p-subgroups.
 - **Smith-tightness of G\*** (§7): is G\*(n) always the largest Smith bound over its p-subgroups? It holds at all seven known n, two of them odd. A general construction would settle the fixed-point question.
 - **G\*(n) beyond 18**, and with it μ\*_N at n = 22, 26, 34, 38, 46, 50: a property with χ = 1 and at most m(m − 1) edges, or a proof there is none. The method of §7 should reach 22 and 26 with the 4-regular circulants on 11 and 13 points as the forced graphs; not attempted. **ν\*(n) away from n = 2m**, or better a bound that uses m\*_N(Γ) ≤ G\*(a) for groups with fixed points. Whether μ\*_N ever exceeds μ\*_cyc.
