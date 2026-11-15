@@ -73,6 +73,26 @@ ATT1 = {12, 30, 56, 63, 99, 105, 153, 176, 198, 200, 209, 230, 231, 261, 306, 31
 # chi = 1 attained on k points: 12 by cyclic_chi_values.py, 30 by cyclic_chi_small.py, the rest by cyclic_chi_product.py
 
 
+try:                                 # certificates of cyclic_chi_recursive.py
+    for _l in open(__import__('os').path.join(__import__('os').path.dirname(__import__('os').path.abspath(__file__)),
+                                              '..', 'outputs', 'cyclic_chi_certified.txt')):
+        if _l.strip() and not _l.startswith('#'):
+            ATT1.add(int(_l.split()[0]))
+except OSError:
+    pass
+
+
+MODQ = {}                            # decided (k, q) pairs, outputs/cyclic_chi_modq.txt
+try:
+    for _l in open(__import__('os').path.join(__import__('os').path.dirname(__import__('os').path.abspath(__file__)),
+                                              '..', 'outputs', 'cyclic_chi_modq.txt')):
+        if _l.strip() and not _l.startswith('#'):
+            _k, _q, _v = _l.split()[:3]
+            MODQ[(int(_k), int(_q))] = _v
+except OSError:
+    pass
+
+
 def _divs(k):
     return [d for d in range(1, k + 1) if k % d == 0]
 
@@ -95,7 +115,13 @@ def status(k, q):
     if key in _st:
         return _st[key]
     s = None
-    if k == 1:
+    if q is not None and (k, q) in MODQ:
+        s = GOOD if MODQ[(k, q)] == 'GOOD' else BAD
+    elif q == 2 and k > 1 and k & (k - 1) == 0:
+        s = GOOD                       # every proper invariant face set has even orbits: chi even
+    if s is not None:
+        pass
+    elif k == 1:
         s = GOOD
     elif q is None and is_pp(k):
         s = GOOD

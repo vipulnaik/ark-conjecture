@@ -407,3 +407,29 @@ is C_k-invariant and proper. By inclusion–exclusion, χ(X) = 1 exactly when (a
 - **Result to 4000.** **L′ = B^ at 2,744 of 3,410 rows**, every n < 527 included. B^'s floor now equals L′'s, 0.09378 at n = 923, so the minimum of μ\*_cyc/C(n,2) to 4000 is settled from both sides, relative to the classification. The first open row is n = 527.
 - **The marks test.** The Burnside congruences on the marks φ_H give a stronger-looking necessary condition: for every m | k, Σ_{j | k/m} φ(j)·φ_{mj} ≡ 0 (mod k/m), with φ₁ = 1 and φ_k = 0, and the odd-m marks drawn from the known value sets. It reproduces every known case: 6, 10, 14, 15, 18 and 20 infeasible; 12 and 30 feasible. But it is feasible at all the undecided k tested (56, 63, 99, 105). So it does not decide anything the reduction lemma doesn't.
 - **Open.** The other 186 undecided k, the smallest being 135, 140, 165, 189, 221 and 224. Each has either no coprime split with a small factor, or none for which graph chains on the large side suffice. The natural next step is to build the B side recursively from the product construction itself, which needs nested pairs rather than single values. A general proof that the reduction condition is sufficient is not in hand. Every k settled so far fits it: every undecided k tested so far has turned out BAD, and none GOOD.
+
+## Part 11: recursive certifier and the q-top pairs
+
+- **`scripts/cyclic_chi_recursive.py`.** It computes NP(m), the realisable nested pairs (χ(A₁), χ(A₂), A₂ full?) on m points. The sources are:
+  - exact DFS for m ≤ 8 (`outputs/cyclic_nested_pairs.pkl`, sizes 5, 6, 16, 12, 148, 42, 895);
+  - graph chains;
+  - prime and generic skeleton chains;
+  - pull-backs from divisors;
+  - products over coprime splits.
+
+  All values are capped at |χ| ≤ 1500. A k is certified when some coprime split a·b and a pair in NP(a) give b₂ = b₁ + (a₁−1)(b₁−1)/(a₂−a₁) with (b₁, b₂) in NP(b). It certifies **146 of the 160** undecided trivial-top k below 4000 (CAP 600 gives 133). The results are in `outputs/cyclic_chi_certified.txt`, and `mu_cyc_bounds.py` loads them.
+- **Sanity check (clean).** None of the 260 proved-GOOD k below 400 is certified.
+- **q-top pairs.** 107 (k, q) pairs were undecided.
+  - 87 are BAD by a realised χ value.
+  - CP-SAT (χ = 1 + qz on k points) finds 8 BAD: (10,41), (10,47), (10,53), (10,59), (11,73), (14,79), (14,127) and (16,113).
+  - It finds 8 GOOD (infeasible): (10,107), (10,131), (10,137), (10,173), (10,179), (10,191), (11,103) and (11,151).
+  - (16,2), (32,2), (64,2) and (128,2) are GOOD because every orbit has even size. This was argued, not run.
+
+  All are recorded in `outputs/cyclic_chi_modq.txt` and loaded by `status()`.
+- **Result.** **L′ = B^ at all 3,410 rows to 4000.** So μ\*_cyc is exact relative to the classification, and its floor is 0.09378 at n = 923.
+- **Caveats and open items.**
+  - The 14 trivial-top k the certifier leaves open turned out not to affect any row.
+  - Nested pairs were enumerated exactly only up to m = 8. The m = 9 run was not used.
+  - The CP-SAT verdicts are solver results, with no independent check.
+  - Certificates beyond k = 56 were not checked by explicit face enumeration.
+  - A general sufficiency proof is still open, as is extending beyond 4000.
