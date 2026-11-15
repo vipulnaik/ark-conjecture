@@ -4,7 +4,7 @@
 
 ## Map of the quantities
 
-*Read A ---> B as A ≥ B: every arrowhead points at the smaller quantity. Definitions: M\*_R in §1; μ\*_χ and M\*_OCR in §2; the per-group levels and m\*_typ in §3; μ\*_cyc in §4 and U(n) in §5; s(n) and s\*_N(n) in §6; ν\*, G\*, and the fixed-point-free parts ν\*_fpf and μ\*_N^fpf in §7.*
+*Read A ---> B as A ≥ B: every arrowhead points at the smaller quantity. Definitions: M\*_R in §1; μ\*_χ and M\*_OCR in §2; the per-group levels and m\*_typ in §3; μ\*_cyc in §4 and U(n) in §5; s(n) and s\*_N(n) in §6; ν\*, G\*, and the fixed-point-free parts ν\*_fpf and μ\*_N^fpf in §7. §12 argues, informally, that every quantity computable from orbit data is capped at δ_cyc on a set of density 1.*
 
 ```
                           C(n,2)
@@ -694,3 +694,41 @@ So at level 1 a foreign block is worth its smallest orbit and no more: **μ\*_cy
 - **Smith-tightness of G\*** (§7): is G\*(n) always the largest Smith bound over its p-subgroups? It holds at all seven known n, two of them odd. A general construction would settle the fixed-point question.
 - **G\*(n) beyond 18**, and with it μ\*_N at n = 22, 26, 34, 38, 46, 50: a property with χ = 1 and at most m(m − 1) edges, or a proof there is none. The method of §7 should reach 22 and 26 with the 4-regular circulants on 11 and 13 points as the forced graphs; not attempted. **ν\*(n) away from n = 2m**, or better a bound that uses m\*_N(Γ) ≤ G\*(a) for groups with fixed points. Whether μ\*_N ever exceeds μ\*_cyc.
 - **Done (2026-11-14):** a second reading of both Propositions; `cyclic_chi_values.py` checked by independent code; §6's boosted column and every scan figure reproduced by rerun, after a review of the code. The rerun is not an independent reimplementation. **Owed:** the device inside the exact enumerator, for μ\*_cyc over [6, 10⁶]; the right-hand column rescanned class by class. `pending-checks.md` A49.
+
+## 12. A barrier, informally
+
+*Not a theorem. An argument about a class of methods, with the propositions above as its proved instances.*
+
+**The class.** Call a lower-bound method for the evasiveness thresholds *orbit-local* if it does two things:
+1. It certifies evasiveness through one Oliver group Γ, or a family of them taken one at a time.
+2. It reads that certificate from data attached to Γ's orbits: orbital sizes; the grouping of orbitals into types under N\*(Γ); and congruences on fixed complexes whose χ is a signed count of face-orbits, read modulo primes.
+
+μ\*, μ\*_cyc, ν\*_fpf, the level-1 values m\*_N of fixed-point-free groups, and the Smith bounds S(n) are all orbit-local.
+
+> **The barrier (informal).** On a set of n of density 1, no orbit-local method certifies evasiveness of every property with e_max below δ_cyc(n)·C(n,2), where δ_cyc(n) is 1/4 at even n and 3 − 2√2 at odd n.
+
+**Why.** The cap is a counting fact, not an arithmetic one.
+- **Every credited unit is bounded by pair counts.** A unit that an orbit-local method can credit lies inside the pairs of one N\*-class of orbits. A class with share s of the points, made of F orbits, holds at most s²/F of all pairs. Minimising over the classes gives at most 1/(Σ√F_i)², the feasibility criterion of `arithmetic-of-density.md` §6.
+- **Full credit for an orbit needs 2-homogeneity, and that is sparse.** Exceeding that bound needs a single orbit to count in full, so its pairs must form one unit. That needs a 2-homogeneous action normalising a nontrivial solvable group, which forces prime-power size (§7, Step 2). The balance point lands on a prime power for only a density-0 set of n (the set E of §5).
+- **Number theory places nothing above the cap.** It decides whether the cap is reached, through the supply of primes at the balance point under (BH-SW) or (BCG-AL), never where the cap sits. The step from μ\* to μ\*_cyc stayed inside the barrier: it raised a foreign block's efficiency to 1, which reaches the cap without moving it.
+
+**Its proved instances.**
+- **Proposition U (§5):** the barrier for μ\*_cyc's scoring, unconditional.
+- **Proposition U_typ (§7):** the barrier at the type level, for fixed-point-free groups. It is proved except in Conjecture P's case.
+- **Propositions B, B′ and B″ (§7):** Smith certificates from block translations are linear in n, far below the cap.
+
+**Where it says nothing.** Fixed points are routed to G\*. If S(n) = O(n) and G\* is Smith-tight, they fall under the barrier too. Neither is proved.
+
+**What lies outside the class.** Each quantity that could exceed the cap couples orbits, or groups, in a way orbit-local data cannot express:
+- **embedding (μ\*_χ, §2):** which unions of orbitals, from different orbits, embed in which;
+- **the trivial group (G\*, §7):** the χ of an S_n-invariant complex, which no orbit decomposition simplifies;
+- **simultaneity (M\*_OCR, §2):** one property constrained by all groups at once. The separation at n = 6 (9 against 6) comes from a forced K₃,₃ that no single group requires.
+
+These are also the quantities that are doubly exponential to compute and have no number-theoretic asymptotics (Cost table). That is the substance of the barrier. Being orbit-local is what makes a quantity feasible to compute and estimable under number-theoretic hypotheses, and being orbit-local is what caps it at δ_cyc. Closing the gap from about 1/4 to 1 needs arguments that couple orbits or groups, or invariants finer than Euler characteristics and Smith congruences.
+
+**Caveats.**
+- "Orbit-local" is not defined precisely enough to prove anything about. A formal version would fix a class of certificates and prove the analogue of Proposition U for the whole class. One candidate class: certificates whose validity depends only on a group's coherent configuration together with mod-p counts.
+- The barrier concerns density-1 asymptotics. At individual n, and on E, orbit-local refinements can still raise values: several rescored orbits at once, or non-cyclic multiplier actions. None has been found to beat μ\*_cyc at any n ≤ 4000 (§11).
+- It does not bear on whether ARK is true. It locates where further progress would have to come from.
+- The topological method of Kahn, Saks and Sturtevant fixes one group and uses its fixed-point χ. Its general lower bound is of order n²/4, a constant fraction short of C(n,2). The barrier is consistent with that, but the quantities differ, and this note does not compare them directly.
+

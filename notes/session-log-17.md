@@ -616,3 +616,11 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - At n = 6 the forced graph K₃,₃ (9 edges) is required by no single group, since K₃,₃ ⊄ K₃. So the separation is an interaction: passing one group's congruence forces members that another group's congruence then needs completed.
   - **The lower bounds available for M\*_OCR** are μ\*_χ, G\* (the trivial group) and the required graphs of §6. A required K_{a,b} with a + b ≤ s\*_N(n) gives e_max ≥ ⌊s\*_N/2⌋·⌈s\*_N/2⌉. With s\*_N ≈ n/2 at even n and n/3 at odd n (shapes c + r and 2c + r), that is about 1/8 and 1/18 of C(n,2): below δ_cyc.
   - **No known lower bound on M\*_OCR exceeds the conjectured μ\*_N^fpf asymptotics.** One would need a forcing-chain argument across groups.
+
+## Part 22: the barrier, written up
+
+- **New threshold-beyond-mu.md §12, "A barrier, informally".** It defines orbit-local methods: certification through one Oliver group at a time, read from orbit data (orbital sizes, N\*-types, mod-p counts of face-orbits). It argues that such methods are capped at δ_cyc on a set of density 1, because the cap comes from pair counting plus "2-homogeneous ⇒ prime power", and number theory decides only whether the cap is reached.
+- **Proved instances:** Propositions U, U_typ (except Conjecture P's case), and B, B′, B″.
+- **Outside the class:** embedding (μ\*_χ), G\*, and simultaneity (M\*_OCR). These are the doubly-exponential quantities.
+- **Caveats recorded:** no formal definition; density-1 only; no bearing on ARK's truth; KSS's order-n²/4 bound mentioned as consistent but not compared.
+- The map legend points to §12. Nothing was carried to the framework documents.
