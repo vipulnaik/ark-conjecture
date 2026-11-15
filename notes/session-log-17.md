@@ -309,3 +309,20 @@ The usage line now says which TMAX gives which count. `tom12.txt` (8,572 Oliver 
   - a comparison against a rescored full enumeration at small n.
 
   Neither has been run.
+
+---
+
+# Part 8: two cleanups, and a diagnosis of the L–U gap
+
+- **§1 of `threshold-beyond-mu.md`.** Removed the parenthetical distinguishing e_max from §9.7's s(n); it dates from when e_max was called s. The bi-resistance row now reads simply "μ\*(n) again".
+- **Diagnosis of the 1,025 rows to 4000 where L < U.** At every one of them, U's maximising prime r cannot carry a good foreign type. The complement m = n − r is:
+  - composite at 449 rows;
+  - prime at 401;
+  - a proper prime power at 175.
+
+  So the whole gap is the reading in which R is a block of the group's own prime p = r, with a twist from the cyclic layer. The scan never rescores matching blocks. U, meanwhile, bounds the complement by μ\*(m) as if it were an arbitrary Oliver group. That ignores two constraints: the complement must share R's chain (blocks of size a power of r, or foreign primes with translations in the cyclic layer), and R's twist must leave room in that layer.
+- **The route to closing it (proposed, not started).** L(n) ≥ 0.0887·C(n,2) at every n ≤ 10⁶. So any configuration beating L must pass the feasibility criterion Σ√F_i ≤ 1/√δ₀ (`aod` §6.1), which carries over to μ\*_cyc unchanged.
+  - At δ₀ = 0.0887 that leaves 19 fusion-count multisets.
+  - Per n, at δ₀ = L(n)/C(n,2), typically 8 or fewer (at 0.15: {1}, {1,1}, {1,2}, and single fused classes up to F = 6).
+  - Enumerating those shapes exactly, with both readings (foreign R, and matching R of prime size with a partial twist) and the framework's chain rules, gives a classification-relative exact value. Call it B_cyc.
+  - Wherever B_cyc = L, the value is attained by a constructed witness, so no SAFE-type realisability question arises, and μ\*_cyc = L follows from the classification alone.

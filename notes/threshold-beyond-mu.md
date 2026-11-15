@@ -139,7 +139,7 @@
 
 ## 1. Projecting a rung to a number
 
-For a monotone graph property P on n vertices write **e_max(P)** for the largest number of edges of a member. *(Not the s(n) of §9.7, the biclique location, which §6 uses in its own sense.)* Properties are as in §7.1: monotone decreasing with ∅ ∈ P, so the empty property is excluded by definition and the trivial property (K_n ∈ P, s = C(n,2)) is included. For a rung R of the ladder of `orbital-evasiveness-notes.md` §7.2, its **numerical projection** is
+For a monotone graph property P on n vertices write **e_max(P)** for the largest number of edges of a member. Properties are as in §7.1: monotone decreasing with ∅ ∈ P, so the empty property is excluded by definition and the trivial property (K_n ∈ P, s = C(n,2)) is included. For a rung R of the ladder of `orbital-evasiveness-notes.md` §7.2, its **numerical projection** is
 
 > **M\*_R(n) = min { e_max(P) : P satisfies R }**.
 
@@ -151,7 +151,7 @@ Every property with e_max(P) < M\*_R(n) fails R; if R is implied by non-evasiven
 |---|---|---|
 | vertex-transitive Oliver-resistant | **n(q(n) − 1)/2**, q(n) the largest prime-power divisor of n | exact and unconditional — §7.2 fact 8, which calls it "the exact threshold" |
 | Oliver-resistant | **μ\*(n)** | exact; Θ(n²) under the bounded-cofactor hypothesis, with the six mod-12 ceilings |
-| bi-resistant (§7.13) | **μ\*(n)** again, at every non-prime-power n | below |
+| bi-resistant (§7.13) | **μ\*(n)** again | below |
 | Oliver-χ-resistant | ≥ **μ\*_χ(n)** (§2) ≥ the bound of §4; **9 at n = 6**; C(n,2) at prime powers | this note; otherwise open |
 | nontrivial-top Oliver-χ-resistant | ≥ the bound of §4 (its groups have nontrivial top); **not** bounded by μ\*_χ(n) in general, since μ\*_χ is attained on trivial-top groups (§2) and a group's value is at most its core's | this note; otherwise open |
 | χ(Δ_P) = 1, the trivial group's condition | **G\*(n)**: 6, 20, 11, 42, 18 at n = 6, 10, 12, 14, 18 | §7; not comparable with the rungs above it in this table |
