@@ -18,7 +18,7 @@ The entangled shape of section 5 is not scored.
 Usage: python3 cyc_floor_scan.py [N=100000] [THR=0.12] [out.csv]
        (run from scripts/; 15 s at 10^5 with THR 0.12, about 5 min at 10^6 with
         THR 0.11; reads ../outputs/mu_table_ladder.csv)
-If ../outputs/threshold_scan_4000.csv is present the rows it shares are compared.
+If ../outputs/mu_cyc_bounds_4000.csv is present the rows it shares are compared with its L_new.
 A decade's minimum is printed as exact (for this lower bound) when it is below
 THR, and as ">= THR" otherwise.
 """
@@ -32,17 +32,13 @@ THR = float(sys.argv[2]) if len(sys.argv) > 2 else 0.12
 OUT = sys.argv[3] if len(sys.argv) > 3 else None
 FS = (1, 2, 3, 4, 5, 6, 8)
 D0 = 0.078
-BAD = {1: set(), 2: set(), 3: {2}, 4: {3}, 5: {2, 3}, 6: {2, 5, 7}, 7: {2, 3, 5, 13}}
+import os as _os
+sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+from mu_cyc_bounds import status as _status, GOOD as _GOOD
 
 
-def good(k, q):                       # q = None: trivial top
-    if k == 1:
-        return True
-    if k in BAD:
-        return q is None or q not in BAD[k]
-    if k in (8, 9, 10, 11, 13):
-        return q is None or q > 2 ** k
-    return False
+def good(k, q):                       # q = None: trivial top.  GOOD only: a lower bound
+    return _status(k, q) == _GOOD
 
 
 def orb(r, t):
@@ -116,15 +112,15 @@ while lo < N:
             cyc = f">= {THR}"
         print(f"   [{lo}, {hi - 1}]  {dens(a, allT[a]):.5f} at {a}  |  {cyc}")
     lo = hi
-ref = '../outputs/threshold_scan_4000.csv'
+ref = '../outputs/mu_cyc_bounds_4000.csv'
 if os.path.exists(ref):
     eq = lower = higher = 0
     for r in csv.DictReader(open(ref)):
         n = int(r['n'])
         if n in res:
-            d = res[n][1] - int(r['cyc_lower'])
+            d = res[n][1] - int(r['L_new'])
             eq += d == 0; lower += d < 0; higher += d > 0
-    print(f"against threshold_scan_4000.csv on the shared rows: equal {eq}, lower here {lower} "
+    print(f"against mu_cyc_bounds_4000.csv (L_new) on the shared rows: equal {eq}, lower here {lower} "
           f"(shapes not scored here), higher here {higher} (must be 0)")
     assert higher == 0
 if OUT:

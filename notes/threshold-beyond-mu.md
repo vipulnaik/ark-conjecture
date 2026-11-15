@@ -1,6 +1,6 @@
 # Numerical projections of the ladder, and μ\*_χ: the Oliver-χ rung reaches past μ\*
 
-*A finding of 2026-11-10, one sitting. **Second check (2026-11-14):** both Propositions reread; every listed script reviewed line by line and rerun, reproducing every figure quoted here; the k-table, k = 10 and the k = 12 witness, and G\*(6) recomputed by independent code. One bug was found, in `verify_global_chi.py`'s membership test for the (n/3)K₃ property; it was fixed, and the n = 18 property still passes. Details in `session-log-17.md` Part 6. Still not a referee reading of the arguments. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`, `cyc_floor_scan.py`, `cyc_certify.py`, `entangled_check.g`, `type_levels6.py`, `biclique_boost_scan.py`, `nstar_types.py`, `pgroup_levels.py`, `global_chi_min.py`, `global_chi_forced.py`, `verify_global_chi.py`, `kset_block_levels.py`, `cyc_witness_check.g`. **This file is a staging area:** the finding is to be refined here before any of it is carried into the framework documents, and the short note is not to be changed on its account (decided 2026-11-10). Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
+*A finding of 2026-11-10, one sitting. **Second check (2026-11-14):** both Propositions reread; every listed script reviewed line by line and rerun, reproducing every figure quoted here; the k-table, k = 10 and the k = 12 witness, and G\*(6) recomputed by independent code. One bug was found, in `verify_global_chi.py`'s membership test for the (n/3)K₃ property; it was fixed, and the n = 18 property still passes. Details in `session-log-17.md` Part 6. Still not a referee reading of the arguments. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`, `cyc_floor_scan.py`, `cyc_certify.py`, `entangled_check.g`, `type_levels6.py`, `biclique_boost_scan.py`, `nstar_types.py`, `pgroup_levels.py`, `global_chi_min.py`, `global_chi_forced.py`, `verify_global_chi.py`, `kset_block_levels.py`, `cyc_witness_check.g`, `mu_cyc_bounds.py`, `cyclic_chi_small.py`. **This file is a staging area:** the finding is to be refined here before any of it is carried into the framework documents, and the short note is not to be changed on its account (decided 2026-11-10). Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
 
 ## Map of the quantities
 
@@ -130,12 +130,23 @@
 >   - L(n) = U(n), so μ\*_cyc is known exactly, at 2,385 of 3,410 rows.
 >   - L(n) = U_for(n) at 3,403; the seven exceptions are listed in §5.
 >   - At 1,025 rows the gap is the "matching-prime reading" (R of the group's own prime with a partial twist), which only U bounds; three of these (n = 110, 154, 171) are closed by hand.
->   - To 10⁵ the infimum of μ\*_cyc/C(n,2) lies in [0.0887, 0.0938]. The lower end is L at n = 1159, where L equals μ\*. The upper end is n = 923, where L = U.
+>   - To 10⁵ the infimum of μ\*_cyc/C(n,2) is **0.09378, at n = 923**, where L = U. The rule for good types now includes the trivial-top case of the update below. Under it n = 1159 lifts to 0.1189, and every other row to 10⁵ has L ≥ 0.0972 (at 5219, not lifted).
 > - **Audit so far:**
 >   - one author pass, plus one second check (2026-11-14): the code read line by line and rerun, every figure reproduced, and the U argument and the Proposition reread;
 >   - not done: an independent reimplementation of L or U;
 >   - Oliver groups built at only four witnesses;
 >   - no check of the conservative choices against a full enumeration at small n. Comparing `mu_exact.py`'s shape space, rescored, at n ≤ 200 would be the natural one.
+>
+> **Update (2026-11-14; `session-log-17.md` Part 9): the gap reduced to one combinatorial question.** `mu_cyc_bounds.py` replaces U by a bound **B^(n)** taken over the framework's shape space. That space has at most one matching class, credited flat at F·C(c,2), and up to three foreign primes at a common top prime. A winner above 0.0887·C(n,2) has at most three parts. B^ credits a foreign block with C(r,2) unless its type is *proved* bad. The matching-prime reading is subsumed, since rescoring a prime matching block gives C(c,2), which is already its flat credit.
+>
+> The lower bound **L'(n)** uses the same shapes with only proved-good types and the scan's chain rules. Goodness is decided by three facts, proved in Part 9:
+> - **Pull-back.** A value of χ attained on m points is attained on every multiple of m. χ = 1 is attained at k = 12 and at k = 30 (`cyclic_chi_small.py`, faces ≤ 5).
+> - **Reduction.** For an odd prime p | k, with k′ = k/p^{v_p(k)}, χ(X) ≡ χ(Y) mod p, where Y is the complex of p-Sylow-coset unions viewed on k′ points. So χ = 1 needs, at every odd p | k, a C_{k′}-complex on k′ points with χ ≡ 1 (mod p). The value sets are known exactly for k′ ≤ 9.
+> - **Skeleta.** The s-skeleton gives χ = 1 − (−1)^s C(k − 1, s).
+>
+> A consequence: a **trivial-top foreign block** with k = (r − 1)/2 a prime power, or failing the reduction (for example k = 296 = 8·37 at r = 593), counts at C(r,2). This lifts L at 158 rows to 4000.
+>
+> **Status to 4000:** L′ = B^, so μ\*_cyc is exact relative to the classification, at **2,590 of 3,410 rows**. At every remaining row the gap is a single trivial-top foreign block whose k is undecided. There are 218 such k below 2000: 56, 63, 99, 105, 135, …. All pass the reduction test, and at 56 and 63 no χ = 1 complex exists with faces of at most 5 vertices. **If every such k attains χ = 1, then L′ = B^ at all 3,410 rows** (checked by rerunning with the undecided k treated as bad), and μ\*_cyc = L′. So the whole gap is one question: *does the reduction condition characterise the k at which a C_k-invariant proper complex has χ = 1?*
 
 ## 1. Projecting a rung to a number
 
@@ -285,10 +296,10 @@ At n = 56 the group is the one that realises μ\*: its smallest orbital, one of 
 |---|---|---|---|---|
 | 6 – 99 | 0.1043 | 99 | at least 0.12 | — |
 | 100 – 999 | 0.0570 | 527 | 0.0938 | 923 = 5 × 128 + 283 |
-| 1000 – 9999 | 0.0462 | 2759 | 0.0887 | 1159, not lifted |
+| 1000 – 9999 | 0.0462 | 2759 | 0.0972 | 5219, not lifted |
 | 10⁴ – 10⁵ | 0.0583 | 22139 | 0.1016 | 15515 = 4 × 2473 + 5623 |
 
-So **the infimum of μ\*_cyc(n)/C(n,2) over n ≤ 10⁵ lies between 0.0887 and 0.0938**, against 0.0462 for μ\*: the value at 923 is exact (U meets the scan), and at 1159 the foreign reading leaves 59512 ≤ μ\*_cyc ≤ 67161, densities 0.0887 to 0.1001. *Above 10⁵, a partial run only:* the 99,295 rows of (10⁵, 10⁶] with μ\* below 0.11·C(n,2) were examined and all were lifted, the least to 0.1396 at n = 130067, with medians 0.170 to 0.171 against the limit 3 − 2√2 = 0.1716 and the ten lowest all at n ≡ 11 (mod 12). Rows with μ\* between 0.11 and 0.14 were not examined, so for that decade only "at least 0.11" is established.
+So **the infimum of μ\*_cyc(n)/C(n,2) over n ≤ 10⁵ is 0.09378, at n = 923**. μ\*'s own floor is 0.0462, at n = 2759. The value at 923 is exact, because U meets the scan there. n = 1159, the floor under the rule for good types first used, is lifted to 79,806 = 2·C(283,2) (density 0.1189) by a trivial-top foreign block of 593: k = 296, good by the reduction lemma (box after the cost table; built in GAP). *Above 10⁵, a partial run only:* the 99,295 rows of (10⁵, 10⁶] with μ\* below 0.11·C(n,2) were examined and all were lifted, the least to 0.1396 at n = 130067, with medians 0.170 to 0.171 against the limit 3 − 2√2 = 0.1716 and the ten lowest all at n ≡ 11 (mod 12). Rows with μ\* between 0.11 and 0.14 were not examined, so for that decade only "at least 0.11" is established.
 
 **Is the scan's value the true μ\*_cyc?** Make the definition exact: μ\*_cyc(n) is the largest M of the Proposition over Oliver groups on [n] and at most one orbit R of prime size r — M = min(C(r,2), least orbital outside R's own pairs) — or the group's smallest orbital when no orbit is used. An upper bound needs no classification. The orbitals inside the complement of R are those of the image group there, which is an Oliver group on m = n − r points, so the least of them is at most μ\*(m); and a cross orbital is at most rm. Hence
 
@@ -400,7 +411,7 @@ So **μ\*_N = μ\* at n = 6, 10, 12, 14 and 18**, and the N level adds nothing t
 
 **§3.6, the shifted-prime ladder.** No relief. The device needs a bounded index, so it does nothing for a rung with θ < 1, where the cofactor is a power of r. (BCG) is still the θ = 1 endpoint. *The conditional PD(1) row does not change this.* PD(1) is a limit law at fixed θ < 1. Cofactors of size (log r)^A are an event of vanishing proportion, which the law does not see. Extrapolating the Dickman density gives about x·log K / log² x primes with cofactor at most K. That is the Bateman–Horn order, but it is a statement about pairs of primes, so it is not a consequence of PD(1).
 
-**§§3.7–3.8 and §5, the data and the floor.** A parallel scan is owed: `threshold_scan.py` reaches 4000 where `ladder_verify.py` reaches 10⁶. The floor row changes character. On `aod`'s track the minimiser n = 2759 is foreign-bound, at the boundary cofactor 12; on this one that block is at full capacity and the floor, 0.0887 at n = 1159, is bound on a fused matching class.
+**§§3.7–3.8 and §5, the data and the floor.** A parallel scan is owed: `threshold_scan.py` reaches 4000 where `ladder_verify.py` reaches 10⁶. The floor row changes character. On `aod`'s track the minimiser n = 2759 is foreign-bound, at the boundary cofactor 12; on this one that block is at full capacity, and the floor, 0.0938 at n = 923 (exact), is bound on a fused matching class.
 
 **§4, the fates.** Unchanged for μ\*. The escapes matter less, since the ceilings they escape above are higher.
 

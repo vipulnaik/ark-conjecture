@@ -326,3 +326,68 @@ The usage line now says which TMAX gives which count. `tom12.txt` (8,572 Oliver 
   - Per n, at δ₀ = L(n)/C(n,2), typically 8 or fewer (at 0.15: {1}, {1,1}, {1,2}, and single fused classes up to F = 6).
   - Enumerating those shapes exactly, with both readings (foreign R, and matching R of prime size with a partial twist) and the framework's chain rules, gives a classification-relative exact value. Call it B_cyc.
   - Wherever B_cyc = L, the value is attained by a constructed witness, so no SAFE-type realisability question arises, and μ\*_cyc = L follows from the classification alone.
+
+---
+
+# Part 9: closing L against U, the first round
+
+## 24. The tool
+
+**`scripts/mu_cyc_bounds.py`.** For n ≤ N it computes two bounds over the framework's shape space:
+- shapes A: F·c, B: F·c + r, C: r₁ + r₂, D: F·c + r₁ + r₂, E: r₁ + r₂ + r₃;
+- foreign primes at a common top q, at most one of them rescored.
+
+Why this shape space suffices:
+- Two matching classes of one prime merge (`ladder-completeness.md` Prop. 1's merge step, which uses matching-class scores only).
+- A part whose own pairs fall below the running best cannot be in a winner. Since L ≥ 0.0887·C(n,2), that leaves at most three parts.
+- Matching classes are credited flat at F·C(c,2). This subsumes the "R = a prime matching block with a partial twist" reading of Part 8: rescoring such a block gives C(c,2), which is already its flat credit.
+
+The two bounds:
+- **B^(n)** credits a foreign block with C(r,2) unless its type is proved BAD, with no gcd condition.
+- **L'(n)** credits only proved-GOOD types, under the scan's chain rules. It is taken as the maximum with the old L.
+
+**`scripts/cyclic_chi_small.py`** is CP-SAT for χ = 1 on C_k with faces of at most S vertices.
+
+## 25. Three facts about C_k-invariant proper complexes X on k points
+
+1. **Pull-back.** Suppose m | k and Y is such a complex on m points. Then X = {S : π(S) ∈ Y}, where π : ℤ/k → ℤ/m, is invariant and proper. X is Y with each vertex inflated to its fibre. The duplicated vertices are dominated, so X strong-collapses to Y and χ(X) = χ(Y). *Consequence:* every value attained at m is attained at each multiple of m.
+2. **Reduction.** Let p | k, let S be the Sylow p-subgroup of C_k, and let k′ = k/p^{v_p(k)}. The faces of X not fixed by S fall into S-orbits of size divisible by p. So χ(X) ≡ Σ over the S-fixed faces, which are the unions of S-cosets. Those form a C_{k′}-invariant proper complex Y on the k′ cosets.
+   - For p odd, the signs agree, so χ(X) ≡ χ(Y) (mod p).
+   - For p = 2, every such face has even size, so χ(X) ≡ −#faces(Y) (mod 2). Since k′ is odd, this never obstructs anything.
+
+   *Consequence:* χ(X) = 1 needs, at every odd p | k, a C_{k′}-complex on k′ points with χ ≡ 1 (mod p). The same holds for χ ≡ 1 (mod q) when q | k, taking p = q.
+3. **Skeleta.** The s-skeleton of the simplex, for s ≤ k − 2, is invariant and proper, with χ = 1 − (−1)^s C(k − 1, s). So q | C(k − 1, s) for some s makes the type BAD for q.
+
+**Exact value sets**, by exhaustive enumeration:
+- k = 8: every even integer from −34 to 36.
+- k = 9: {−69, −60, −54, −51, −45, −42, −36, −33, −27, −24, −18, −15, −9, −6, 0, 3, 9, 12, 18, 21, 27, 30, 36, 39, 45, 48, 54, 57}.
+
+**χ = 1 attained:**
+- k = 12 (Part 6's witness);
+- **k = 30**: CP-SAT with faces of at most 5 vertices, and the witness of 55,651 faces checked independently. Its orbit sizes 15, 10 and 6 satisfy 10 + 6 − 15 = 1.
+
+**χ = 1 not attained:**
+- k = 14, 15 and 18 (CP-SAT, unrestricted), as the reduction predicts. 14 = 2·7 and 18 = 2·9 have k′ = 2; 15 has k′ = 3 at p = 5.
+- k = 20 timed out in CP-SAT, but the reduction decides it: at p = 5, k′ = 4, and no value in {−2, 0, 2, 4} is ≡ 1 (mod 5).
+
+## 26. What the trivial top gives, and the results
+
+With a trivial top, the type's condition is χ = 1 exactly. So a foreign prime r scores C(r,2) whenever k = (r − 1)/2 is a prime power, or fails the reduction test. One example is r = 593: k = 296 = 8·37, and at p = 37 the value set of k′ = 8 has nothing ≡ 1. This is new: the earlier rule only credited k ≤ 13.
+
+It is built in GAP at n = 1159 = 2 × 283 + 593. The group is Oliver with an exact (trivial-top) reading. Its orbitals are 296 × 593, 79,806, 80,089 and 335,638, so M = 79,806. The old floor row of μ\*_cyc rises from 0.0887 to 0.1189.
+
+**Results:**
+- **To 4000.** L′ rises above the old L at 158 rows. **L′ = B^ at 2,590 of 3,410 rows**, so μ\*_cyc is exact there, relative to the classification. At each of the other 820 rows, B^'s witness is a trivial-top foreign block whose k is undecided. There are 218 distinct undecided k below 2000; the smallest are 56, 63, 99, 105 and 135. All pass the reduction test. At 56 and 63 there is no χ = 1 complex with faces of at most 5 vertices; larger faces are needed there, since Y's faces have size divisible by 7.
+- **The conditional collapse.** Rerunning with every undecided k treated as BAD gives **L′ = B^ at all 3,410 rows**. So the gap is exactly the question of whether the reduction condition is sufficient for χ = 1. If it is, μ\*_cyc = L′ at every n ≤ 4000. If some undecided k turns out GOOD, L′ rises there instead. Either way, the value is determined by this one question.
+- **The floor to 10⁵.** `cyc_floor_scan.py` now imports this goodness rule. The infimum of μ\*_cyc/C(n,2) is **0.09378 at n = 923**, which is exact. The next rows are 5219 (0.0972), 3959 and 3523, which are not lifted. Its comparison file is now `outputs/mu_cyc_bounds_4000.csv`. Against it: 511 rows equal, none higher.
+
+## 27. Edits, and what is still owed
+
+**Edits:**
+- **`threshold-beyond-mu.md`.** An update paragraph in the μ\*_cyc box. The floor statements in the box and in §5 are revised: 1159 is lifted, and the infimum is 0.09378 at 923. The scripts list in the header is extended.
+- **Scripts.** `cyc_floor_scan.py` now uses the shared goodness rule. `threshold_scan.py`, `cyc_certify.py` and `biclique_boost_scan.py` still use the older, more conservative rule. Their outputs remain valid lower bounds.
+
+**Still owed:**
+- decide sufficiency: by a construction, or by CP-SAT at k = 56 and 63 with larger faces;
+- run `mu_cyc_bounds.py` beyond 4000;
+- an independent second reading of `mu_cyc_bounds.py`.
