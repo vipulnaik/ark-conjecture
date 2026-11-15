@@ -585,3 +585,22 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **Proposition B″.** Translations of k ≥ 2 blocks of any prime p ≥ 3 with p ∤ k have s_Q ≤ 6p ≤ 3n. It combines B′ (p ≥ 37), the computation (5 ≤ p ≤ 31) and the formula (p = 3).
 - **p | k.** s_Q ≥ p², because families with fewer than p parts have size ≡ 0 (mod p). One data point: 6 blocks of 3 give s_Q = 18 = 2p². No general upper bound.
 - **Not attempted: other p-subgroups.** These are iterated wreath products, mixed block sizes and groups with fixed points. I see no reduction yet: the class-complex argument needs equal blocks of prime size with N\* = AGL(1, p) ≀ S_k.
+
+## Part 20: Smith bounds of other p-subgroups (survey)
+
+- **New scripts.** `scripts/smith_pgroups.g` exports orbitals of two sets of groups, with `scripts/smith_pgroups.py` computing s_Q by `pgroup_levels.level()` (`outputs/smith_pgroups.txt`):
+  - the Sylow p-subgroups of S_n at 28 pairs (n, p), n ≤ 96;
+  - 429 random subgroups of them, n ≤ 44, kept when they have ≤ 18 orbitals and a new (sizes, order) pair, seed 17. The GAP run is reproducible.
+- **Result: s_Q ≤ 3n everywhere.**
+  - The maximum, 3n, is at n = 14 (two blocks of 7, 42).
+  - 2n occurs at n = 10 and at n = 50, where the Sylow 5-subgroup on 25 + 25 gives 100.
+  - Sylow 2-subgroups give at most 16 (n = 96).
+  - The per-n maximum otherwise always comes from equal prime blocks.
+- **Caveats.**
+  - The random sample favours large groups, since few orbitals means a large group.
+  - The Sylow list has one group per (n, p).
+  - No family seen grows faster than linearly, but nothing is proved beyond Propositions B to B″.
+- **Where S(n) = O(n) stands.**
+  - Proved for translations of equal prime blocks with p ∤ k.
+  - Lower bound p² and one data point for p | k.
+  - The survey above for everything else.
