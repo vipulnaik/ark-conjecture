@@ -604,3 +604,15 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - Proved for translations of equal prime blocks with p ∤ k.
   - Lower bound p² and one data point for p | k.
   - The survey above for everything else.
+
+## Part 21: looking for μ\*_N^fpf > μ\*_cyc, and how M\*_OCR separates
+
+- **Search for a separation.** All three searches checked whether μ\*_N^fpf > μ\*_cyc at some n ≤ 4000, against L_new of `mu_cyc_bounds_4000.csv`. New script: `scripts/fpf_separation_search.py`.
+  - **Two foreign primes, both rescored.** n = r₁ + r₂, with G = (C_{r₁} ⋊ C_{q^{e₁}}) × (C_{r₂} ⋊ C_{q^{e₂}}). G is Oliver, with P = C_{r₁}, H = C_{r₁} × C_{r₂} and a q-group on top, and its cross orbital is all r₁r₂ pairs. Only n = 240 and 812 give C(min r, 2) > μ\*_cyc, and both fail joint goodness: the vertex complex of one block already has χ ≡ 1 (mod q). With joint goodness by CP-SAT for k₁ + k₂ ≤ 22: no hits.
+  - **Two isomorphic prime blocks plus a foreign prime, k = 1.** n = 2r + r′ with r − 1 = 2q^e and r′ − 1 = 2q^{e′}, which needs no device beyond N\* merging the two r-blocks. No n ≤ 4000 has such a pair with value above μ\*_cyc.
+  - **2r + r′ with general k.** 1,009 triples would beat μ\*_cyc if the merged types were jointly good. CP-SAT checks with 2k + k′ ≤ 18 find none good. The common top primes are small (3, 5, 7), and small q makes χ ≡ 1 easy to reach.
+  - **Conclusion.** No separation found. Possible routes: exact μ\*_N^fpf at n = 15, 20 or 21, or devices with non-cyclic multiplier actions.
+- **How M\*_OCR separates from μ\*_χ (discussion, nothing filed in the note).** μ\*_χ is max–min: each group may be passed by a different property. M\*_OCR is min–max: one property must pass all groups at once.
+  - At n = 6 the forced graph K₃,₃ (9 edges) is required by no single group, since K₃,₃ ⊄ K₃. So the separation is an interaction: passing one group's congruence forces members that another group's congruence then needs completed.
+  - **The lower bounds available for M\*_OCR** are μ\*_χ, G\* (the trivial group) and the required graphs of §6. A required K_{a,b} with a + b ≤ s\*_N(n) gives e_max ≥ ⌊s\*_N/2⌋·⌈s\*_N/2⌉. With s\*_N ≈ n/2 at even n and n/3 at odd n (shapes c + r and 2c + r), that is about 1/8 and 1/18 of C(n,2): below δ_cyc.
+  - **No known lower bound on M\*_OCR exceeds the conjectured μ\*_N^fpf asymptotics.** One would need a forcing-chain argument across groups.
