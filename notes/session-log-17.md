@@ -489,3 +489,26 @@ The question was whether, conditional on a (BCG-AL)-type supply hypothesis, the 
   - The transfer of bcp-to-floor §§4 and 9b to the cyc cells and windows is a reading of which steps use the window and the cell, not a recheck of the circle method.
   - Proposition U's proof has had one reading, mine.
   - The lower-bound samples are short intervals.
+
+## Part 14: the fixed-point-free part of the N level
+
+The question: can the part of μ\*_N that doesn't come from fixed points be isolated, given that ν\* is a loose upper bound for it? It can. threshold-beyond-mu.md §7 now has *The fixed-point-free part*, and the map and cost table has a new row.
+
+- **Definitions and how μ\*_N splits.**
+  - μ\*_N^fpf is the largest m\*_N over fixed-point-free Oliver groups, and ν\*_fpf is the largest m\*_typ over the same groups. They satisfy μ\*_cyc ≤ μ\*_N^fpf ≤ ν\*_fpf ≤ ν\*.
+  - μ\*_N ≤ max(μ\*_N^fpf, n − 1, max over 2 ≤ a ≤ n of G\*(a)). The n − 1 bounds groups with exactly one fixed point: Γ̂ fixes that point, so N\* does too, and the pairs at it form a type of n − 1 pairs.
+- **The type-level ceiling argument (Steps 1–5).**
+  - Γ̂ has Γ's orbits, and N\* = N(Γ̂) permutes them.
+  - A 2-homogeneous type forces a prime-power orbit. The proof goes through Γ̂ normal in N\*, with the socle of a 2-homogeneous almost simple group being 2-homogeneous except for PΓL(2,8) on 28 points; the existing note already shows that one's socle orbitals belong to no soluble group.
+  - **Intransitive Γ:** the Σ√F_i argument over N\*-classes of orbits.
+  - **Transitive Γ with N\* imprimitive:** a block argument.
+  - **Transitive Γ with N\* primitive, non-abelian socle, rank ≥ 3:** open. This is Conjecture P, fact 8 lifted to types.
+- **Corollary (conditional on (BH-SW) and Proposition U_typ).** μ\*_N^fpf and ν\*_fpf tend to 1/4 or 3 − 2√2 on a set of density 1. So any asymptotic excess of μ\*_N over μ\*_cyc comes from fixed points, that is, from G\*.
+- **Checks.**
+  - `nstar_types.py` now reports ν\*_fpf: it equals ν\* = μ\* at n = 6 and 10.
+  - `nstar_transitive_check.g` and `.py` cover all 7,315 soluble transitive groups of degree 6, 10, 12, 14, 15, 18, 20, 21, 22, 26, 28 and 30. Degree 24 was skipped because it has about 25,000 transitive groups. m\*_typ never exceeds n(q(n) − 1)/2, and the maximum attains it at every degree. Soluble is a superset of Oliver, so the test is wider than needed.
+  - `socle_2homog_check.g` runs over 2-homogeneous primitive groups of non-prime-power degree, skipping natural A_a and S_a. Only PΓL(2,8) on 28 has a socle that is not 2-homogeneous, up to degree 877. The script's full range, 2,500, was too slow; it was stopped by hand.
+- **Not done.**
+  - Conjecture P, which is Step 5. It looks like it needs the classification of primitive groups containing a soluble transitive subgroup.
+  - The infinite families in the socle fact rest on their standard actions, not on a citation.
+  - Steps 1–5 have had one reading, mine.

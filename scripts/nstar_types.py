@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """nstar_types.py -- the types of every Oliver class at small degree, and
-nu*(n) = the largest m*_typ over NONTRIVIAL Oliver groups
+nu*(n) = the largest m*_typ over NONTRIVIAL Oliver groups, and nu*_fpf(n) = the
+largest over fixed-point-free ones
 (`threshold-beyond-mu.md` section 9).
 
 N*(Gamma) is the group of permutations of [n] carrying every orbital onto an
@@ -45,7 +46,10 @@ for line in open(f"../outputs/tom{n}.txt"):
         continue
     orbs = json.loads(p[5])
     tt, nstar = types(orbs)
-    rows.append((int(p[0]), p[1] == "true", len(orbs), min(len(o) for o in orbs), tt, nstar))
+    # fixed points: x is fixed iff every orbital meeting x has x in all its pairs
+    fixed = sum(1 for x in range(1, n + 1)
+                if all(all(x in e for e in o) for o in orbs if any(x in e for e in o)))
+    rows.append((int(p[0]), p[1] == "true", len(orbs), min(len(o) for o in orbs), tt, nstar, fixed))
 print("classes:", len(rows))
 single = [r for r in rows if len(r[4]) == 1]
 print("groups with a single type:", [(r[0], r[2]) for r in single], "(order, orbitals)")
@@ -57,4 +61,6 @@ print("groups attaining nu*: (order, transitive, orbitals, m*, type totals, |N*|
 for r in nontriv:
     if r[4][0] == nu:
         print("  ", r)
+fpf = [r for r in nontriv if r[6] == 0]
+print("fixed-point-free classes:", len(fpf), "  nu*_fpf = max m*_typ over them =", max(r[4][0] for r in fpf))
 print("groups with m*_typ > m*:", sum(1 for r in rows if r[4][0] > r[3]))

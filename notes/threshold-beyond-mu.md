@@ -1,10 +1,10 @@
 # Numerical projections of the ladder, and μ\*_χ: the Oliver-χ rung reaches past μ\*
 
-*A finding of 2026-11-10, one sitting. **Second check (2026-11-14):** both Propositions reread; every listed script reviewed line by line and rerun, reproducing every figure quoted here; the k-table, k = 10 and the k = 12 witness, and G\*(6) recomputed by independent code. One bug was found, in `verify_global_chi.py`'s membership test for the (n/3)K₃ property; it was fixed, and the n = 18 property still passes. Details in `session-log-17.md` Part 6. Still not a referee reading of the arguments. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`, `cyc_floor_scan.py`, `cyc_certify.py`, `entangled_check.g`, `type_levels6.py`, `biclique_boost_scan.py`, `nstar_types.py`, `pgroup_levels.py`, `global_chi_min.py`, `global_chi_forced.py`, `verify_global_chi.py`, `kset_block_levels.py`, `cyc_witness_check.g`, `mu_cyc_bounds.py`, `cyclic_chi_small.py`. **This file is a staging area:** the finding is to be refined here before any of it is carried into the framework documents, and the short note is not to be changed on its account (decided 2026-11-10). Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
+*A finding of 2026-11-10, one sitting. **Second check (2026-11-14):** both Propositions reread; every listed script reviewed line by line and rerun, reproducing every figure quoted here; the k-table, k = 10 and the k = 12 witness, and G\*(6) recomputed by independent code. One bug was found, in `verify_global_chi.py`'s membership test for the (n/3)K₃ property; it was fixed, and the n = 18 property still passes. Details in `session-log-17.md` Part 6. Still not a referee reading of the arguments. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`, `cyc_floor_scan.py`, `cyc_certify.py`, `entangled_check.g`, `type_levels6.py`, `biclique_boost_scan.py`, `nstar_types.py`, `pgroup_levels.py`, `global_chi_min.py`, `global_chi_forced.py`, `verify_global_chi.py`, `kset_block_levels.py`, `cyc_witness_check.g`, `mu_cyc_bounds.py`, `cyclic_chi_small.py`, `cyclic_chi_product.py`, `cyclic_chi_recursive.py`, `cyclic_chi_witness_check.py`, `cyclic_chi_good_recheck.py`, `cyc_density_one.py`, `nstar_transitive_check.g`, `nstar_transitive_check.py`, `socle_2homog_check.g`. **This file is a staging area:** the finding is to be refined here before any of it is carried into the framework documents, and the short note is not to be changed on its account (decided 2026-11-10). Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
 
 ## Map of the quantities
 
-*Read A ---> B as A ≥ B: every arrowhead points at the smaller quantity. Definitions: M\*_R in §1; μ\*_χ and M\*_OCR in §2; the per-group levels and m\*_typ in §3; μ\*_cyc in §4 and U(n) in §5; s(n) and s\*_N(n) in §6; ν\* and G\* in §7.*
+*Read A ---> B as A ≥ B: every arrowhead points at the smaller quantity. Definitions: M\*_R in §1; μ\*_χ and M\*_OCR in §2; the per-group levels and m\*_typ in §3; μ\*_cyc in §4 and U(n) in §5; s(n) and s\*_N(n) in §6; ν\*, G\*, and the fixed-point-free parts ν\*_fpf and μ\*_N^fpf in §7.*
 
 ```
                           C(n,2)
@@ -27,6 +27,10 @@
                             ||                       the trivial group;
                             ||                       the rung chi = 1
                             \/
+       nu*_fpf  ------->  mu*_N^fpf                  no fixed point; above it,
+                            ||                       mu*_N <= max(mu*_N^fpf,
+                            ||                       n - 1, G*(a) for a <= n)
+                            \/
           U(n)  ------->  mu*_cyc
                             ||
                             ||
@@ -42,11 +46,15 @@
                                               n = 2 * (prime power), so there
                                               mu*_N = max(mu*, G*)
 
+  nu*  ------>  nu*_fpf                       at density 1, mu*_N^fpf and
+                                              nu*_fpf are delta_cyc(n) C(n,2),
+                                              under (BH-SW) and Conjecture P
+
   G*  and  mu*, mu*_cyc :  not comparable     G* < mu* at n = 12, 18
                                               G* = mu* at n = 6, 10, 14
 ```
 
-*Per group.* Each μ\*_X(n) is the maximum over Oliver groups Γ of the m\*_X(Γ) below it; ν\*(n) is the maximum of m\*_typ over Γ ≠ 1.
+*Per group.* Each μ\*_X(n) is the maximum over Oliver groups Γ of the m\*_X(Γ) below it; ν\*(n) is the maximum of m\*_typ over Γ ≠ 1, and ν\*_fpf(n) and μ\*_N^fpf(n) are the maxima of m\*_typ and m\*_N over fixed-point-free Γ.
 
 ```
         m*_chi(G)                 m*_typ(G)
@@ -62,6 +70,9 @@
 
      max over G:    mu*_chi          mu*_N          mu*
                     (level 2)        (level 1)      (level 0)
+
+     max over G
+     without a fixed point:          mu*_N^fpf      (m*_typ: nu*_fpf)
 ```
 
 *Required bicliques.* A non-evasive property contains K_{a,b} whenever a + b is at most the quantity shown.
@@ -100,6 +111,7 @@
 | **μ\*_cyc**, lower bound L(n) | `threshold_scan.py`, `cyc_floor_scan.py`: the μ\* shapes, rescored (box below) | N = 4000 in about 10 s; floor scan 10⁵ in 5 s, 10⁶ in about 5 min (thresholded rows) | polynomial, as μ\* | conditional on (BCG-AL); limits 1/4 and 3 − 2√2 (§5); unconditionally no better than μ\* |
 | **U(n)**, upper bound for μ\*_cyc | `cyc_certify.py`: one pass over primes r < n, reading the μ\* table | seconds for 3,410 rows | polynomial: O(n/log n) per n, given the table | meets L(n) at 2,385 of 3,410 rows to 4000 |
 | **ν\*** | `nstar_types.py`: per Oliver class, nauty on points–pairs–orbitals | S₁₂, all 8,572 classes, about 5 min | polynomial per group in practice; **super-exponential** over all classes | at most (n/2)⌊(n − 1)/2⌋ |
+| **ν\*_fpf**, **μ\*_N^fpf** | `nstar_types.py` (fixed-point-free classes), `nstar_transitive_check.py` | as ν\* and μ\*_N | as ν\* and μ\*_N | μ\*_cyc ≤ μ\*_N^fpf ≤ ν\*_fpf ≤ ν\*; δ_cyc at density 1 under (BH-SW) and Proposition U\_typ (§7) |
 | **μ\*_N** (level 1) | `pgroup_levels.py`, `type_levels6.py`: per group, CP-SAT over N\*-orbits of sets of orbitals | 399 p-groups with t ≤ 14 at n = 10: about 2 min; n = 6, all 50 classes: 1 min | per group 2^t (t ≤ C(n,2)); over all groups **doubly exponential** | max(μ\*_cyc, G\*) ≤ μ\*_N ≤ max(ν\*, G\*) |
 | **μ\*_χ** (level 2) | `type_levels6.py`, with embedding among unions of orbitals | n = 6 only (canonical forms by brute force over S₆) | per group 2^t subgraph-isomorphism tests; **doubly exponential** | known only at n = 6 |
 | **G\*** | `global_chi_min.py` (exhaustive up to s edges), `global_chi_forced.py` and `verify_global_chi.py` (a forced graph plus a congruence solve) | n = 6 in seconds; n = 12 infeasible to 10 edges in minutes; n = 14 on 544,727 subgraph classes, minutes; n = 18 fast given the forced graph | classes up to s edges ≈ C(C(n,2), s)/n!, so 2^{Θ(n²)} at s ~ n²; properties are subsets: **doubly exponential** | known for n ≤ 18; asymptotics unknown; no number theory |
@@ -254,7 +266,9 @@ For k = 8, 9, 10, 11 and 13 a constraint solver finds χ = 1 unattainable; since
 
 So a foreign block with **r − 1 = 2kq^e, k ≤ 11 or k = 13, and q outside a finite set depending on k**, counts as C(r,2) — efficiency 1, whatever the framework's η = 1/k. The proof uses only N\*-invariance, so it is a level-1 statement: the block's own orbitals are one type, and M ≤ m\*_N(Γ). Write **μ\*_cyc(n)** for the resulting lower bound: μ\*(n) recomputed with every qualifying foreign block scored at C(r,2).
 
-> μ\*(n) = M\*_OR(n) ≤ μ\*_cyc(n) ≤ μ\*_N(n) ≤ μ\*_χ(n) ≤ M\*_OCR(n) ≤ M\*_NE(n).
+> μ\*(n) = M\*_OR(n) ≤ μ\*_cyc(n) ≤ μ\*_N^fpf(n) ≤ μ\*_N(n) ≤ μ\*_χ(n) ≤ M\*_OCR(n) ≤ M\*_NE(n).
+
+The step μ\*_cyc ≤ μ\*_N^fpf (§7) holds because a group with a fixed point has an orbital of at most n − 1 pairs. Since μ\*_cyc(n) ≥ μ\*(n) ≥ n at every row of the table (n ≥ 6), the witness of μ\*_cyc(n) has no fixed point.
 
 ## 5. Consequences
 
@@ -262,7 +276,7 @@ So a foreign block with **r − 1 = 2kq^e, k ≤ 11 or k = 13, and q outside a f
 
 **Ceilings.** With every qualifying foreign block at efficiency 1 only the parity of n enters. Both columns are cap_F(η) = η/(1 + √(Fη))²; the μ\* column takes the η = 2/d the class allows (`arithmetic-of-density.md` §3.3.5), the other takes η = 1.
 
-| n mod 12 | μ\*(n)/C(n,2) ceiling | attained by | μ\*_cyc(n)/C(n,2) ceiling — a **lower bound** for μ\*_N and μ\*_χ | attained by |
+| n mod 12 | μ\*(n)/C(n,2) ceiling | attained by | μ\*_cyc(n)/C(n,2) ceiling — a **lower bound** for μ\*_N^fpf, μ\*_N and μ\*_χ, and at density 1 the value of μ\*_N^fpf (§7, conditional) | attained by |
 |---|---|---|---|---|
 | 0, 4, 6, 10 | 1/4 = 0.2500 | F = 1, η = 1 | 1/4 = 0.2500 | the same shape (d = 2) |
 | 2, 8 | (2 − √3)/2 = 0.1340 | F = 1, η = 1/3 | **1/4 = 0.2500** | F = 1, d = 6 (k = 3) |
@@ -419,18 +433,69 @@ Two numbers therefore carry the N level:
 
 **What bounds it from above.** A property found by search (`global_chi_forced.py`): all subgraphs of the graph the p-group forces, together with a family D of graphs of at most E edges, closed under deletion, with Σ ± n!/|Aut| = 1 solved modulo primes. Each property is rechecked by `verify_global_chi.py`: closure, χ recomputed with the classes listed another way, and Smith's congruence at every p-group with few orbitals, which uses membership only. At n = 6 the same pipeline is checked against a brute-force χ over all 2¹⁵ graphs.
 
-| n | μ\*(n) | ν\*(n) | G\*(n) | μ\*_N(n) | how |
-|---|---|---|---|---|---|
-| 6 | 6 | 6 | 6 | **6** | all 50 classes; G\* by exhaustion (`global_chi_min.py`) |
-| 10 | 20 | 20 | 20 | **20** | all 1,294 classes; G\* ≥ 20 from ℤ/5, ≤ 20 by a property: subgraphs of 2K₅ and 2,121 classes of at most 10 edges; Smith checked at 366 p-groups |
-| 12 | 18 | 18 | 11 | **18** | all 8,572 classes of S₁₂; G\* ≥ 11 from ℤ/11 and from exhaustion to 10 edges, ≤ 11 by a property: stars and 972 classes of at most 9 edges; Smith checked at 1,919 p-groups with at most 11 orbitals, and at 2,239 with at most 12 |
-| 14 | 42 | ≤ 42 | 42 | **42** | Corollary; G\* ≥ 42 from the translations of two blocks of 7, ≤ 42 by a property: subgraphs of 2K₇ and of K₁,₁₃ and 74 classes of at most 12 edges; χ recomputed over 544,727 classes; Smith checked at 44 odd p-groups |
-| 18 | 72 | ≤ 72 | 18 | **72** | Corollary; G\* ≥ 18 from the translations of two blocks of 9, ≤ 18 by a property: subgraphs of 6K₃, stars, and 32 classes of at most 7 edges; Smith checked at 284 p-groups (3-groups sampled) |
-| 22, 26, 34, 38, 46, 50 | m(m − 1) | ≤ m(m − 1) | not known | max(μ\*, G\*) | Corollary |
+| n | μ\*(n) | ν\*(n) | ν\*_fpf(n) = μ\*_N^fpf(n) | G\*(n) | μ\*_N(n) | how |
+|---|---|---|---|---|---|---|
+| 6 | 6 | 6 | 6 | 6 | **6** | all 50 classes; G\* by exhaustion (`global_chi_min.py`) |
+| 10 | 20 | 20 | 20 | 20 | **20** | all 1,294 classes; G\* ≥ 20 from ℤ/5, ≤ 20 by a property: subgraphs of 2K₅ and 2,121 classes of at most 10 edges; Smith checked at 366 p-groups |
+| 12 | 18 | 18 | 18 | 11 | **18** | all 8,572 classes of S₁₂; G\* ≥ 11 from ℤ/11 and from exhaustion to 10 edges, ≤ 11 by a property: stars and 972 classes of at most 9 edges; Smith checked at 1,919 p-groups with at most 11 orbitals, and at 2,239 with at most 12 |
+| 14 | 42 | ≤ 42 | 42 | 42 | **42** | Corollary; G\* ≥ 42 from the translations of two blocks of 7, ≤ 42 by a property: subgraphs of 2K₇ and of K₁,₁₃ and 74 classes of at most 12 edges; χ recomputed over 544,727 classes; Smith checked at 44 odd p-groups |
+| 18 | 72 | ≤ 72 | 72 | 18 | **72** | Corollary; G\* ≥ 18 from the translations of two blocks of 9, ≤ 18 by a property: subgraphs of 6K₃, stars, and 32 classes of at most 7 edges; Smith checked at 284 p-groups (3-groups sampled) |
+| 22, 26, 34, 38, 46, 50 | m(m − 1) | ≤ m(m − 1) | m(m − 1) | not known | max(μ\*, G\*) | Corollary |
 
-So **μ\*_N = μ\* at n = 6, 10, 12, 14 and 18**, and the N level adds nothing there. G\* is below μ\* at 12 and 18 and equal to it at 6, 10, 14: the rung χ = 1 and Oliver-resistance are not comparable, and their projections cross. *The search needs the right forced graph and enough room in D:* at n = 14 with D of at most 10 edges, and at n = 18 with the star alone forced, the congruence modulo 9 has no solution.
+So **μ\*_N = μ\* at n = 6, 10, 12, 14 and 18**, and the N level adds nothing there. The fixed-point-free column is squeezed: μ\* ≤ μ\*_cyc ≤ μ\*_N^fpf ≤ ν\*_fpf ≤ ν\*, and ν\* = μ\* at every row, so μ\*_N^fpf = ν\*_fpf = μ\* at all of them, n = 22 to 50 included. Wherever G\* is unknown, μ\*_N is therefore decided by fixed points alone. G\* is below μ\* at 12 and 18 and equal to it at 6, 10, 14: the rung χ = 1 and Oliver-resistance are not comparable, and their projections cross. *The search needs the right forced graph and enough room in D:* at n = 14 with D of at most 10 edges, and at n = 18 with the star alone forced, the congruence modulo 9 has no solution.
 
 **ν\* is not μ\* in general.** At n = 30 take AGL(1, 16) on 16 points, fixing the other 14. Its types are the 91 single edges among the fixed points, K₁₆ (120) and the 14 stars (224), so m\*_typ = 91 > μ\*(30) = 78. But the first type carries all of S₁₄, and the invariant complexes on it are the graph properties on 14 vertices: m\*_N of this group is at most G\*(14). In general **m\*_N(Γ) ≤ G\*(a) when Γ fixes a ≥ 2 points**, so the N level at n feeds on G\* at smaller degrees, and ν\* overstates it.
+
+**The fixed-point-free part.** ν\* mixes two things: groups with fixed points, whose excess is G\* at a smaller degree, and the gap between m\*_typ and m\*_N. Separate the first:
+
+- **μ\*_N^fpf(n)** = the largest m\*_N(Γ) over Oliver groups Γ on [n] with no fixed point.
+- **ν\*_fpf(n)** = the largest m\*_typ(Γ) over the same groups.
+
+Then
+
+> **μ\*_cyc(n) ≤ μ\*_N^fpf(n) ≤ ν\*_fpf(n) ≤ ν\*(n)**, and **μ\*_N(n) = max( μ\*_N^fpf(n), the largest m\*_N(Γ) over Γ with a fixed point )**.
+
+The first inequality holds because the witnesses of μ\*_cyc, the shapes F·c + r, have no fixed point. In the second term, a group fixing a ≥ 2 points contributes at most G\*(a). A group fixing exactly one point x has its pairs at x forming a union of orbitals, and N\* permutes its fixed points, so it has a type of at most n − 1 pairs. So:
+
+> **μ\*_N(n) ≤ max( μ\*_N^fpf(n), n − 1, max over 2 ≤ a ≤ n of G\*(a) )**,
+
+and everything about μ\*_N beyond the fixed-point-free part is G\* at some degree. *(`nstar_types.py`: ν\*_fpf = ν\* = μ\* at n = 6 and 10, over 33 and 851 fixed-point-free classes.)*
+
+**What the ceiling argument gives at the type level.** Write δ_cyc(n) = 1/4 at even n and 3 − 2√2 at odd n, and let E be the exceptional set of §5's Proposition U.
+
+*Step 1: Γ̂ has Γ's orbits, and N\* permutes them.* Let Γ be fixed-point-free, and take a Γ-orbit O. An orbital inside O has O as its set of vertices. Γ̂ fixes that orbital, so it maps O to itself. So Γ̂ ⊇ Γ has exactly Γ's orbits, and its orbits on pairs are Γ's orbitals. N\*(Γ) = N(Γ̂) permutes the orbits of its normal subgroup Γ̂.
+
+*Step 2: a 2-homogeneous type forces a prime power.* Suppose some type takes in all the pairs inside an orbit O. Then N\*_O, the stabiliser of O, acts 2-homogeneously on O, and Γ̂^O is a nontrivial normal subgroup of that action.
+- If N\*_O^O is affine, |O| is a prime power.
+- Otherwise N\*_O^O is almost simple, and Γ̂^O contains its socle.
+  - The socle is 2-homogeneous. This holds for every 2-homogeneous almost simple group except PΓL(2,8) on 28 points. That is checked over all primitive groups of non-prime-power degree up to 877 (`socle_2homog_check.g`, natural A_a and S_a skipped), and holds in the infinite families by their standard actions. So Γ̂^O, and hence Γ, has a single orbital on O, and solvability makes |O| a prime power.
+  - In the PΓL(2,8) case, the three socle orbits of 126 are the orbitals of no soluble group (the paragraph above).
+
+*Step 3: Γ intransitive.* Group Γ's orbits into N\*-classes, class i holding F_i orbits of size a_i. Then:
+- The pairs inside the orbits of a class are N\*-invariant, with total F_i·C(a_i,2). So some type has at most min over i of s_i²/F_i of C(n,2), where s_i is the class's share of the points. This is at most 1/(Σ√F_i)², as in the feasibility criterion.
+- If those pairs split into two or more types, the bound halves.
+- Exceeding δ_cyc needs Σ√F_i < 2 at even n, or < 1 + √2 at odd n, with no splitting.
+- By Step 2, that leaves:
+  - a single class (n = F·a, a a prime power, F ≤ 5). Its type total is at most (q(n) − 1)/(n − 1) of C(n,2), below δ_cyc off E.
+  - two classes at odd n, each a single orbit of prime-power size, which is E's second clause.
+  - The pair Σ√F = √2 + 1 is the boundary, and gives strictly less.
+
+*Step 4: Γ transitive, N\* imprimitive.* Take any block system of N\*, with m blocks of size b.
+- The intra-block pairs are N\*-invariant, with total n(b − 1)/2. That is below 1/m of C(n,2), so it settles m ≥ 4 at even n and m ≥ 7 at odd n.
+- For m = 2 or 3 (even n) and m = 3 or 5 (odd n): if N\*'s action on a block is not 2-homogeneous, the intra-block pairs split, and the smaller part is below 1/(2m) of C(n,2).
+- If it is 2-homogeneous, Step 2 runs with the block in place of an orbit. Γ̂_B^B is normal and transitive, and pairs inside B lying in one Γ-orbital means Γ_B is 2-homogeneous on B. So b is a prime power, and the bound (b − 1)/(n − 1) ≤ (q(n) − 1)/(n − 1) applies.
+
+*Step 5: Γ transitive, N\* primitive.* If N\* is affine, or 2-homogeneous, then n is a prime power, by the paragraph above. What remains is **N\* primitive with non-abelian socle, of rank at least 3**. Its smallest orbit on pairs is at most 1/(rank − 1) of C(n,2), and nothing here makes that small.
+
+> **Conjecture P.** A soluble transitive Oliver group Γ of non-prime-power degree has m\*_typ(Γ) ≤ n(q(n) − 1)/2. This is `orbital-evasiveness-notes.md` §7.2 fact 8, lifted from orbitals to types. Only Step 5's case is open: the other steps give δ_cyc off E, which is all that is used below.
+>
+> *Checked* (`nstar_transitive_check.g`, `nstar_transitive_check.py`; `outputs/nstar_transitive_check.txt`): every soluble transitive group of degree 6, 10, 12, 14, 15, 18, 20, 21, 22, 26, 28 and 30, which is 7,315 groups. Degree 24 was not run. **None exceeds the bound, and the maximum attains it at every degree.** Soluble is a superset of Oliver, so this over-tests.
+
+> **Proposition U\_typ (unconditional for intransitive Γ and for transitive Γ with N\* imprimitive; for the rest, conditional on Conjecture P or on Step 5 at δ_cyc).** For n ∉ E, ν\*_fpf(n) < δ_cyc(n)·C(n,2).
+
+> **Corollary (conditional on (BH-SW) and Proposition U\_typ).** μ\*_N^fpf(n)/C(n,2) and ν\*_fpf(n)/C(n,2) tend to 1/4 along even n and 3 − 2√2 along odd n on a set of density 1. The lower bound is Proposition L through μ\*_cyc ≤ μ\*_N^fpf.
+>
+> **So the N level splits cleanly.** Its fixed-point-free part has the asymptotics of μ\*_cyc, though computing it still needs every subgroup of S_n. Any asymptotic excess of μ\*_N over μ\*_cyc comes from groups with fixed points, that is, from G\* at degrees up to n.
 
 **At the other n.** For the fifteen remaining n ≤ 50 (15, 20, 21, 24, 28, …), and at the rows where μ\*_cyc leaves μ\*, what is proved is the displayed inequality with the crude bound on ν\*: at n = 56, 351 ≤ μ\*_N ≤ max(756, G\*(56)); at n = 63, 465 ≤ μ\*_N ≤ max(976, G\*(63)) (the bound (n/2)·⌊(n − 1)/2⌋ = 976.5, rounded down since μ\*_N is an integer). Nothing bounds G\* above at these n except C(n,2).
 
@@ -468,7 +533,7 @@ So **μ\*_N = μ\* at n = 6, 10, 12, 14 and 18**, and the N level adds nothing t
 - *The feasibility criterion Σ√F_i ≤ 1/√δ₀ carries over unchanged.* It uses only that each part's capacity is at most its size squared, and a rescored foreign block still needs a share of at least √δ₀. So the counts N(δ₀) of `arithmetic-of-density.md` §6.1 and `arithmetic-of-density.md` §6.4, and their growth as δ₀ falls, are the same on both tracks.
 - *At the new constants the covering set is small.* 3 − 2√2 = 1/(1 + √2)², so just below the odd ceiling the only feasible shape of odd parity with a foreign part is n = 2c + r, and just below 1/4 the feasible shapes are n = c + r and n = r₁ + r₂. The collapse of `arithmetic-of-density.md` §6.6 to one shape comes without a margin argument. What is left is a disjunction over the cofactor d, which the admissible-d table cuts to one or two per class: d = 12 alone at class 11.
 - *The bounded cofactor of `arithmetic-of-density.md` §6.7 changes character.* For μ\* a floor forces (r − 1)/Q ≤ D(δ₀) = 2(1 − √δ₀)²/δ₀, which loosens as δ₀ falls. For a rescored block the cofactor is bounded by which indices are good — d ≤ 14 on the exact table — whatever δ₀ is. That bound is a fact about what §4 has proved, not about the groups: it stands or falls with the open question of which k admit a cyclically symmetric complex of Euler characteristic 1.
-- *The converse does not reach μ\*_N or μ\*_χ.* Its first step is that the score is a minimum over orbitals, so every part clears δ₀ on its own. At level 1 that fails. The trivial group has no parts and its value is G\*(n) (§7), which is governed by congruences on Σ ± n!/|Aut| and by no shifted prime; a group fixing a points is governed by G\*(a). So "a high value forces one of finitely many prime systems to be soluble" holds for μ\* and for μ\*_cyc and is conditional on G\* above them. At n = 6, 10, 12, 14, 18, G\* ≤ μ\*, and nothing has broken.
+- *The converse does not reach μ\*_N or μ\*_χ, but its type-level form reaches μ\*_N^fpf* (§7, Proposition U\_typ, with Conjecture P for one case). Its first step is that the score is a minimum over orbitals, so every part clears δ₀ on its own. At level 1 that fails. The trivial group has no parts and its value is G\*(n) (§7), which is governed by congruences on Σ ± n!/|Aut| and by no shifted prime; a group fixing a points is governed by G\*(a). So "a high value forces one of finitely many prime systems to be soluble" holds for μ\* and for μ\*_cyc and is conditional on G\* above them. At n = 6, 10, 12, 14, 18, G\* ≤ μ\*, and nothing has broken.
 - *The round trip of `arithmetic-of-density.md` §6.7 does not close on this track, and cannot.* Forward, (BCG) gives a larger evasiveness constant. Backward, a high evasiveness threshold forces no arithmetic: if ARK holds, the top projection is C(n,2) at every n with no hypothesis at all. The converse is a property of the low rungs, where the projection is a maximum over groups of a minimum over orbitals.
 - *`ladder-completeness.md` Proposition 1*, which cuts the covering set to 13 and 13 above 1/25, is proved for μ\* scoring. On this track §5's bound U(n) does part of that work without a menu; the proposition itself would need redoing.
 
@@ -506,5 +571,7 @@ So at level 1 a foreign block is worth its smallest orbit and no more: **μ\*_cy
 - **The same device elsewhere:** on the intra classes of a partial-twist matching block; on the cross distance classes of a fused class, of one type per divisor class by `orbital-evasiveness-notes.md` §9.7; on unfused isomorphic blocks, where the symmetry is all of S_F and the invariant complexes are skeleta of a simplex, never of Euler characteristic 1; at k ≥ 12 for budgets too small for the bad complexes to fit.
 - **A matching upper bound on the biclique side.** §6 gives a sufficient region. Whether a + b ≤ s\*_N(n) is all the χ rung requires, and whether a group with two good types or a good type on a fused class does better, is not examined; nor are required graphs other than bipartite ones.
 - **The matching-prime reading of μ\*_cyc** at the 1,022 rows to 4000 where U exceeds the scan and no hand argument has been made; and the seven rows where the foreign reading is open.
+- **Conjecture P (§7):** a soluble transitive Oliver group of non-prime-power degree has m\*_typ ≤ n(q(n) − 1)/2. Open only when N\* is primitive with non-abelian socle. Checked on all soluble transitive groups of degrees 6 to 30 except prime powers and 24. Two smaller items: the socle fact behind Step 2 is checked to degree 877, and the infinite families are not yet cited.
+- **Is the right-hand column the asymptotic value of μ\*_N?** Its fixed-point-free part, yes, conditionally (§7). The rest is whether groups with fixed points, through G\*(a) for a ≤ n, can beat δ_cyc(n)·C(n,2) on a set of positive density.
 - **G\*(n) beyond 18**, and with it μ\*_N at n = 22, 26, 34, 38, 46, 50: a property with χ = 1 and at most m(m − 1) edges, or a proof there is none. The method of §7 should reach 22 and 26 with the 4-regular circulants on 11 and 13 points as the forced graphs; not attempted. **ν\*(n) away from n = 2m**, or better a bound that uses m\*_N(Γ) ≤ G\*(a) for groups with fixed points. Whether μ\*_N ever exceeds μ\*_cyc.
 - **Done (2026-11-14):** a second reading of both Propositions; `cyclic_chi_values.py` checked by independent code; §6's boosted column and every scan figure reproduced by rerun, after a review of the code. The rerun is not an independent reimplementation. **Owed:** the device inside the exact enumerator, for μ\*_cyc over [6, 10⁶]; the right-hand column rescanned class by class. `pending-checks.md` A49.

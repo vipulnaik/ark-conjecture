@@ -1,0 +1,482 @@
+# socle_2homog_check.g output, stopped by hand: complete for every non-prime-power degree 5..877 (the script's range is 5..2500).
+6 1 PSL(2,5)  socle 2-homogeneous: true
+6 2 PGL(2,5)  socle 2-homogeneous: true
+10 3 PSL(2, 9)  socle 2-homogeneous: true
+10 4 PGL(2, 9)  socle 2-homogeneous: true
+10 5 PSigmaL(2, 9)  socle 2-homogeneous: true
+10 6 M(10)  socle 2-homogeneous: true
+10 7 PGammaL(2, 9)  socle 2-homogeneous: true
+12 1 M(11)  socle 2-homogeneous: true
+12 2 M(12)  socle 2-homogeneous: true
+12 3 PSL(2, 11)  socle 2-homogeneous: true
+12 4 PGL(2, 11)  socle 2-homogeneous: true
+14 1 PSL(2,13)  socle 2-homogeneous: true
+14 2 PGL(2,13)  socle 2-homogeneous: true
+15 1 A(7)  socle 2-homogeneous: true
+15 4 PSL(4, 2)  socle 2-homogeneous: true
+18 1 PSL(2,17)  socle 2-homogeneous: true
+18 2 PGL(2,17)  socle 2-homogeneous: true
+20 1 PSL(2,19)  socle 2-homogeneous: true
+20 2 PGL(2,19)  socle 2-homogeneous: true
+21 4 PSL(3, 4)=M(21)  socle 2-homogeneous: true
+21 5 PSigmaL(3, 4)  socle 2-homogeneous: true
+21 6 PGL(3, 4)  socle 2-homogeneous: true
+21 7 PGammaL(3, 4)  socle 2-homogeneous: true
+22 1 M(22)  socle 2-homogeneous: true
+22 2 M(22):2  socle 2-homogeneous: true
+24 1 M(24)  socle 2-homogeneous: true
+24 2 PSL(2, 23)  socle 2-homogeneous: true
+24 3 PGL(2, 23)  socle 2-homogeneous: true
+26 1 PSL(2, 25)  socle 2-homogeneous: true
+26 2 PGL(2, 25)  socle 2-homogeneous: true
+26 3 PSigmaL(2, 25)  socle 2-homogeneous: true
+26 4 PSL(2, 25).2_3  socle 2-homogeneous: true
+26 5 PGammaL(2, 25)  socle 2-homogeneous: true
+28 3 PGammaL(2, 8)  socle 2-homogeneous: false
+28 4 PSU(3, 3)  socle 2-homogeneous: true
+28 5 PGammaU(3, 3)  socle 2-homogeneous: true
+28 6 PSp(6, 2)  socle 2-homogeneous: true
+28 9 PSL(2, 27)  socle 2-homogeneous: true
+28 10 PGL(2, 27)  socle 2-homogeneous: true
+28 11 PSL(2, 27):3  socle 2-homogeneous: true
+28 12 PGammaL(2, 27)  socle 2-homogeneous: true
+30 1 PSL(2,29)  socle 2-homogeneous: true
+30 2 PGL(2,29)  socle 2-homogeneous: true
+33 1 PSL(2, 32)  socle 2-homogeneous: true
+33 2 PGammaL(2, 32)  socle 2-homogeneous: true
+36 10 PSp(6, 2)  socle 2-homogeneous: true
+38 1 PSL(2,37)  socle 2-homogeneous: true
+38 2 PGL(2,37)  socle 2-homogeneous: true
+40 5 PSL(4, 3)  socle 2-homogeneous: true
+40 6 PGL(4, 3)  socle 2-homogeneous: true
+42 1 PSL(2,41)  socle 2-homogeneous: true
+42 2 PGL(2,41)  socle 2-homogeneous: true
+44 1 PSL(2,43)  socle 2-homogeneous: true
+44 2 PGL(2,43)  socle 2-homogeneous: true
+48 1 PSL(2,47)  socle 2-homogeneous: true
+48 2 PGL(2,47)  socle 2-homogeneous: true
+50 3 PSL(2, 49)  socle 2-homogeneous: true
+50 4 PGL(2, 49)  socle 2-homogeneous: true
+50 5 PSigmaL(2, 49)  socle 2-homogeneous: true
+50 6 PSL(2, 49).2_3  socle 2-homogeneous: true
+50 7 PGammaL(2, 49)  socle 2-homogeneous: true
+54 1 PSL(2,53)  socle 2-homogeneous: true
+54 2 PGL(2,53)  socle 2-homogeneous: true
+57 2 PSL(3, 7)  socle 2-homogeneous: true
+57 3 PSL(3, 7).3  socle 2-homogeneous: true
+60 6 PSL(2,59)  socle 2-homogeneous: true
+60 7 PGL(2,59)  socle 2-homogeneous: true
+62 1 PSL(2,61)  socle 2-homogeneous: true
+62 2 PGL(2,61)  socle 2-homogeneous: true
+63 6 PSL(6, 2)  socle 2-homogeneous: true
+65 3 PSU(3, 4)  socle 2-homogeneous: true
+65 4 PSU(3, 4).2  socle 2-homogeneous: true
+65 5 PGammaU(3, 4)  socle 2-homogeneous: true
+65 6 PSz(8)  socle 2-homogeneous: true
+65 7 PSz(8).3  socle 2-homogeneous: true
+65 8 PSL(2, 2^6)  socle 2-homogeneous: true
+65 9 PSL(2, 2^6).2  socle 2-homogeneous: true
+65 10 PSL(2, 2^6).3  socle 2-homogeneous: true
+65 11 PGammaL(2, 2^6)  socle 2-homogeneous: true
+68 4 PSL(2,67)  socle 2-homogeneous: true
+68 5 PGL(2,67)  socle 2-homogeneous: true
+72 1 PSL(2,71)  socle 2-homogeneous: true
+72 2 PGL(2,71)  socle 2-homogeneous: true
+74 1 PSL(2,73)  socle 2-homogeneous: true
+74 2 PGL(2,73)  socle 2-homogeneous: true
+80 1 PSL(2,79)  socle 2-homogeneous: true
+80 2 PGL(2,79)  socle 2-homogeneous: true
+82 1 PSL(2, 3^4)  socle 2-homogeneous: true
+82 2 PSL(2, 3^4).2  socle 2-homogeneous: true
+82 3 PSL(2, 3^4).2  socle 2-homogeneous: true
+82 4 PSL(2, 3^4).2  socle 2-homogeneous: true
+82 5 PSL(2, 3^4).2^2  socle 2-homogeneous: true
+82 6 PSL(2, 3^4).4  socle 2-homogeneous: true
+82 7 PSL(2, 3^4).4  socle 2-homogeneous: true
+82 8 PGammaL(2, 3^4)  socle 2-homogeneous: true
+84 3 PSL(2,83)  socle 2-homogeneous: true
+84 4 PGL(2,83)  socle 2-homogeneous: true
+85 3 PSL(4, 4)  socle 2-homogeneous: true
+85 4 PSigmaL(4, 4)  socle 2-homogeneous: true
+90 1 PSL(2,89)  socle 2-homogeneous: true
+90 2 PGL(2,89)  socle 2-homogeneous: true
+91 7 PSL(3, 9)  socle 2-homogeneous: true
+91 8 PGammaL(3, 9)  socle 2-homogeneous: true
+98 1 PSL(2,97)  socle 2-homogeneous: true
+98 2 PGL(2,97)  socle 2-homogeneous: true
+102 2 PSL(2, 101)  socle 2-homogeneous: true
+102 3 PGL(2, 101)  socle 2-homogeneous: true
+104 1 PSL(2,103)  socle 2-homogeneous: true
+104 2 PGL(2,103)  socle 2-homogeneous: true
+108 1 PSL(2,107)  socle 2-homogeneous: true
+108 2 PGL(2,107)  socle 2-homogeneous: true
+110 1 PSL(2,109)  socle 2-homogeneous: true
+110 2 PGL(2,109)  socle 2-homogeneous: true
+114 1 PSL(2,113)  socle 2-homogeneous: true
+114 2 PGL(2,113)  socle 2-homogeneous: true
+120 15 PSp(8, 2)  socle 2-homogeneous: true
+122 1 PSL(2, 11^2)  socle 2-homogeneous: true
+122 2 PGL(2, 11^2)  socle 2-homogeneous: true
+122 3 PSigmaL(2, 11^2)  socle 2-homogeneous: true
+122 4 PSL(2, 11^2).2_3  socle 2-homogeneous: true
+122 5 PGammaL(2, 11^2)  socle 2-homogeneous: true
+126 3 PSU(3, 5)  socle 2-homogeneous: true
+126 4 PSigmaU(3, 5)  socle 2-homogeneous: true
+126 5 PGU(3, 5)  socle 2-homogeneous: true
+126 6 PGammaU(3, 5)  socle 2-homogeneous: true
+126 14 PSL(2, 5^3)  socle 2-homogeneous: true
+126 15 PGL(2, 5^3)  socle 2-homogeneous: true
+126 16 PSigmaL(2, 5^3)  socle 2-homogeneous: true
+126 17 PGammaL(2, 5^3)  socle 2-homogeneous: true
+129 1 PSL(2, 2^7)  socle 2-homogeneous: true
+129 2 PGammaL(2, 2^7)  socle 2-homogeneous: true
+132 1 PSL(2,131)  socle 2-homogeneous: true
+132 2 PGL(2,131)  socle 2-homogeneous: true
+133 1 PSL(3, 11)  socle 2-homogeneous: true
+136 6 PSp(8, 2)  socle 2-homogeneous: true
+138 1 PSL(2,137)  socle 2-homogeneous: true
+138 2 PGL(2,137)  socle 2-homogeneous: true
+140 1 PSL(2,139)  socle 2-homogeneous: true
+140 2 PGL(2,139)  socle 2-homogeneous: true
+150 1 PSL(2,149)  socle 2-homogeneous: true
+150 2 PGL(2,149)  socle 2-homogeneous: true
+152 1 PSL(2,151)  socle 2-homogeneous: true
+152 2 PGL(2,151)  socle 2-homogeneous: true
+156 5 PSL(4, 5)  socle 2-homogeneous: true
+156 6 PSL(4, 5).2  socle 2-homogeneous: true
+156 7 PGL(4, 5)  socle 2-homogeneous: true
+158 1 PSL(2,157)  socle 2-homogeneous: true
+158 2 PGL(2,157)  socle 2-homogeneous: true
+164 1 PSL(2,163)  socle 2-homogeneous: true
+164 2 PGL(2,163)  socle 2-homogeneous: true
+168 6 PSL(2,167)  socle 2-homogeneous: true
+168 7 PGL(2,167)  socle 2-homogeneous: true
+170 1 PSL(2, 13^2)  socle 2-homogeneous: true
+170 2 PGL(2, 13^2)  socle 2-homogeneous: true
+170 3 PSigmaL(2, 13^2)  socle 2-homogeneous: true
+170 4 PSL(2, 13^2).2_3  socle 2-homogeneous: true
+170 5 PGammaL(2, 13^2)  socle 2-homogeneous: true
+174 1 PSL(2,173)  socle 2-homogeneous: true
+174 2 PGL(2,173)  socle 2-homogeneous: true
+176 4 HS  socle 2-homogeneous: true
+180 1 PSL(2,179)  socle 2-homogeneous: true
+180 2 PGL(2,179)  socle 2-homogeneous: true
+182 1 PSL(2,181)  socle 2-homogeneous: true
+182 2 PGL(2,181)  socle 2-homogeneous: true
+183 1 PSL(3, 13)  socle 2-homogeneous: true
+183 2 PGammaL(3, 13)  socle 2-homogeneous: true
+192 1 PSL(2,191)  socle 2-homogeneous: true
+192 2 PGL(2,191)  socle 2-homogeneous: true
+194 1 PSL(2,193)  socle 2-homogeneous: true
+194 2 PGL(2,193)  socle 2-homogeneous: true
+198 1 PSL(2,197)  socle 2-homogeneous: true
+198 2 PGL(2,197)  socle 2-homogeneous: true
+200 1 PSL(2,199)  socle 2-homogeneous: true
+200 2 PGL(2,199)  socle 2-homogeneous: true
+212 1 PSL(2,211)  socle 2-homogeneous: true
+212 2 PGL(2,211)  socle 2-homogeneous: true
+224 1 PSL(2,223)  socle 2-homogeneous: true
+224 2 PGL(2,223)  socle 2-homogeneous: true
+228 1 PSL(2,227)  socle 2-homogeneous: true
+228 2 PGL(2,227)  socle 2-homogeneous: true
+230 1 PSL(2,229)  socle 2-homogeneous: true
+230 2 PGL(2,229)  socle 2-homogeneous: true
+234 3 PSL(2,233)  socle 2-homogeneous: true
+234 4 PGL(2,233)  socle 2-homogeneous: true
+240 1 PSL(2,239)  socle 2-homogeneous: true
+240 2 PGL(2,239)  socle 2-homogeneous: true
+242 1 PSL(2,241)  socle 2-homogeneous: true
+242 2 PGL(2,241)  socle 2-homogeneous: true
+244 1 PSL(2, 3^5)  socle 2-homogeneous: true
+244 2 PGL(2, 3^5)  socle 2-homogeneous: true
+244 3 PSigmaL(2, 3^5)  socle 2-homogeneous: true
+244 4 PGammaL(2, 3^5)  socle 2-homogeneous: true
+252 1 PSL(2,251)  socle 2-homogeneous: true
+252 2 PGL(2,251)  socle 2-homogeneous: true
+255 2 PSL(8, 2)  socle 2-homogeneous: true
+258 1 PSL(2,257)  socle 2-homogeneous: true
+258 2 PGL(2,257)  socle 2-homogeneous: true
+264 1 PSL(2,263)  socle 2-homogeneous: true
+264 2 PGL(2,263)  socle 2-homogeneous: true
+270 1 PSL(2,269)  socle 2-homogeneous: true
+270 2 PGL(2,269)  socle 2-homogeneous: true
+272 1 PSL(2,271)  socle 2-homogeneous: true
+272 2 PGL(2,271)  socle 2-homogeneous: true
+273 1 PSL(3, 16)  socle 2-homogeneous: true
+273 2 PSL(3, 16).2  socle 2-homogeneous: true
+273 3 PSL(3, 16).3  socle 2-homogeneous: true
+273 4 PSL(3, 16).4  socle 2-homogeneous: true
+273 5 PSL(3, 16).6  socle 2-homogeneous: true
+273 6 PGammaL(3, 16)  socle 2-homogeneous: true
+276 3 Co_3  socle 2-homogeneous: true
+278 1 PSL(2,277)  socle 2-homogeneous: true
+278 2 PGL(2,277)  socle 2-homogeneous: true
+282 1 PSL(2,281)  socle 2-homogeneous: true
+282 2 PGL(2,281)  socle 2-homogeneous: true
+284 1 PSL(2,283)  socle 2-homogeneous: true
+284 2 PGL(2,283)  socle 2-homogeneous: true
+290 1 PSL(2, 17^2)  socle 2-homogeneous: true
+290 2 PGL(2, 17^2)  socle 2-homogeneous: true
+290 3 PSigmaL(2, 17^2)  socle 2-homogeneous: true
+290 4 PSL(2, 17^2).2_3  socle 2-homogeneous: true
+290 5 PGammaL(2, 17^2)  socle 2-homogeneous: true
+294 1 PSL(2,293)  socle 2-homogeneous: true
+294 2 PGL(2,293)  socle 2-homogeneous: true
+308 1 PSL(2,307)  socle 2-homogeneous: true
+308 2 PGL(2,307)  socle 2-homogeneous: true
+312 1 PSL(2,311)  socle 2-homogeneous: true
+312 2 PGL(2,311)  socle 2-homogeneous: true
+314 1 PSL(2,313)  socle 2-homogeneous: true
+314 2 PGL(2,313)  socle 2-homogeneous: true
+318 1 PSL(2,317)  socle 2-homogeneous: true
+318 2 PGL(2,317)  socle 2-homogeneous: true
+332 1 PSL(2,331)  socle 2-homogeneous: true
+332 2 PGL(2,331)  socle 2-homogeneous: true
+338 1 PSL(2,337)  socle 2-homogeneous: true
+338 2 PGL(2,337)  socle 2-homogeneous: true
+341 1 PSL(5, 2^2)  socle 2-homogeneous: true
+341 2 PGammaL(5, 2^2)  socle 2-homogeneous: true
+344 1 PSU(3, 7)  socle 2-homogeneous: true
+344 2 PGammaU(3, 7)  socle 2-homogeneous: true
+344 3 PSL(2, 7^3)  socle 2-homogeneous: true
+344 4 PGL(2, 7^3)  socle 2-homogeneous: true
+344 5 PSigmaL(2, 7^3)  socle 2-homogeneous: true
+344 6 PGammaL(2, 7^3)  socle 2-homogeneous: true
+348 1 PSL(2,347)  socle 2-homogeneous: true
+348 2 PGL(2,347)  socle 2-homogeneous: true
+350 1 PSL(2,349)  socle 2-homogeneous: true
+350 2 PGL(2,349)  socle 2-homogeneous: true
+354 1 PSL(2,353)  socle 2-homogeneous: true
+354 2 PGL(2,353)  socle 2-homogeneous: true
+360 17 PSL(2,359)  socle 2-homogeneous: true
+360 18 PGL(2,359)  socle 2-homogeneous: true
+362 1 PSL(2, 19^2)  socle 2-homogeneous: true
+362 2 PGL(2, 19^2)  socle 2-homogeneous: true
+362 3 PSigmaL(2, 19^2)  socle 2-homogeneous: true
+362 4 PSL(2, 19^2).2_3  socle 2-homogeneous: true
+362 5 PGammaL(2, 19^2)  socle 2-homogeneous: true
+364 8 PSL(6, 3)  socle 2-homogeneous: true
+364 9 PGL(6, 3)  socle 2-homogeneous: true
+368 1 PSL(2,367)  socle 2-homogeneous: true
+368 2 PGL(2,367)  socle 2-homogeneous: true
+374 1 PSL(2,373)  socle 2-homogeneous: true
+374 2 PGL(2,373)  socle 2-homogeneous: true
+380 1 PSL(2,379)  socle 2-homogeneous: true
+380 2 PGL(2,379)  socle 2-homogeneous: true
+381 1 PSL(3, 19)  socle 2-homogeneous: true
+381 2 PGammaL(3, 19)  socle 2-homogeneous: true
+384 1 PSL(2,383)  socle 2-homogeneous: true
+384 2 PGL(2,383)  socle 2-homogeneous: true
+390 1 PSL(2,389)  socle 2-homogeneous: true
+390 2 PGL(2,389)  socle 2-homogeneous: true
+398 1 PSL(2,397)  socle 2-homogeneous: true
+398 2 PGL(2,397)  socle 2-homogeneous: true
+400 5 PSL(4, 7)  socle 2-homogeneous: true
+400 6 PSL(4, 7).2  socle 2-homogeneous: true
+402 1 PSL(2,401)  socle 2-homogeneous: true
+402 2 PGL(2,401)  socle 2-homogeneous: true
+410 1 PSL(2,409)  socle 2-homogeneous: true
+410 2 PGL(2,409)  socle 2-homogeneous: true
+420 1 PSL(2,419)  socle 2-homogeneous: true
+420 2 PGL(2,419)  socle 2-homogeneous: true
+422 1 PSL(2,421)  socle 2-homogeneous: true
+422 2 PGL(2,421)  socle 2-homogeneous: true
+432 1 PSL(2,431)  socle 2-homogeneous: true
+432 2 PGL(2,431)  socle 2-homogeneous: true
+434 1 PSL(2,433)  socle 2-homogeneous: true
+434 2 PGL(2,433)  socle 2-homogeneous: true
+440 1 PSL(2,439)  socle 2-homogeneous: true
+440 2 PGL(2,439)  socle 2-homogeneous: true
+444 1 PSL(2,443)  socle 2-homogeneous: true
+444 2 PGL(2,443)  socle 2-homogeneous: true
+450 1 PSL(2,449)  socle 2-homogeneous: true
+450 2 PGL(2,449)  socle 2-homogeneous: true
+458 1 PSL(2,457)  socle 2-homogeneous: true
+458 2 PGL(2,457)  socle 2-homogeneous: true
+462 5 PSL(2,461)  socle 2-homogeneous: true
+462 6 PGL(2,461)  socle 2-homogeneous: true
+464 1 PSL(2,463)  socle 2-homogeneous: true
+464 2 PGL(2,463)  socle 2-homogeneous: true
+468 1 PSL(2,467)  socle 2-homogeneous: true
+468 2 PGL(2,467)  socle 2-homogeneous: true
+480 1 PSL(2,479)  socle 2-homogeneous: true
+480 2 PGL(2,479)  socle 2-homogeneous: true
+488 1 PSL(2,487)  socle 2-homogeneous: true
+488 2 PGL(2,487)  socle 2-homogeneous: true
+492 1 PSL(2,491)  socle 2-homogeneous: true
+492 2 PGL(2,491)  socle 2-homogeneous: true
+496 3 PSp(10, 2)  socle 2-homogeneous: true
+500 1 PSL(2,499)  socle 2-homogeneous: true
+500 2 PGL(2,499)  socle 2-homogeneous: true
+504 5 PSL(2,503)  socle 2-homogeneous: true
+504 6 PGL(2,503)  socle 2-homogeneous: true
+510 1 PSL(2,509)  socle 2-homogeneous: true
+510 2 PGL(2,509)  socle 2-homogeneous: true
+511 1 PSL(9, 2)  socle 2-homogeneous: true
+513 1 PSU(3, 2^3)  socle 2-homogeneous: true
+513 2 PSU(3, 2^3).2  socle 2-homogeneous: true
+513 3 PSU(3, 2^3).3  socle 2-homogeneous: true
+513 4 PSU(3, 2^3).3  socle 2-homogeneous: true
+513 5 PSU(3, 2^3).3  socle 2-homogeneous: true
+513 6 PSU(3, 2^3).6  socle 2-homogeneous: true
+513 7 PSU(3, 2^3).Sym(3)  socle 2-homogeneous: true
+513 8 PSU(3, 2^3).3^2  socle 2-homogeneous: true
+513 9 PGammaU(3, 2^3)  socle 2-homogeneous: true
+513 10 PSL(2, 2^9)  socle 2-homogeneous: true
+513 11 PSL(2, 2^9).3  socle 2-homogeneous: true
+513 12 PGammaL(2, 2^9)  socle 2-homogeneous: true
+522 1 PSL(2,521)  socle 2-homogeneous: true
+522 2 PGL(2,521)  socle 2-homogeneous: true
+524 1 PSL(2,523)  socle 2-homogeneous: true
+524 2 PGL(2,523)  socle 2-homogeneous: true
+528 3 PSp(10, 2)  socle 2-homogeneous: true
+530 1 PSL(2, 23^2)  socle 2-homogeneous: true
+530 2 PGL(2, 23^2)  socle 2-homogeneous: true
+530 3 PSigmaL(2, 23^2)  socle 2-homogeneous: true
+530 4 PSL(2, 23^2).2_3  socle 2-homogeneous: true
+530 5 PGammaL(2, 23^2)  socle 2-homogeneous: true
+542 1 PSL(2,541)  socle 2-homogeneous: true
+542 2 PGL(2,541)  socle 2-homogeneous: true
+548 1 PSL(2,547)  socle 2-homogeneous: true
+548 2 PGL(2,547)  socle 2-homogeneous: true
+553 1 PSL(3, 23)  socle 2-homogeneous: true
+558 1 PSL(2,557)  socle 2-homogeneous: true
+558 2 PGL(2,557)  socle 2-homogeneous: true
+564 1 PSL(2,563)  socle 2-homogeneous: true
+564 2 PGL(2,563)  socle 2-homogeneous: true
+570 1 PSL(2,569)  socle 2-homogeneous: true
+570 2 PGL(2,569)  socle 2-homogeneous: true
+572 1 PSL(2,571)  socle 2-homogeneous: true
+572 2 PGL(2,571)  socle 2-homogeneous: true
+578 1 PSL(2,577)  socle 2-homogeneous: true
+578 2 PGL(2,577)  socle 2-homogeneous: true
+585 3 PSL(4, 2^3)  socle 2-homogeneous: true
+585 4 PGammaL(4, 2^3)  socle 2-homogeneous: true
+588 1 PSL(2,587)  socle 2-homogeneous: true
+588 2 PGL(2,587)  socle 2-homogeneous: true
+594 1 PSL(2,593)  socle 2-homogeneous: true
+594 2 PGL(2,593)  socle 2-homogeneous: true
+600 1 PSL(2,599)  socle 2-homogeneous: true
+600 2 PGL(2,599)  socle 2-homogeneous: true
+602 1 PSL(2,601)  socle 2-homogeneous: true
+602 2 PGL(2,601)  socle 2-homogeneous: true
+608 1 PSL(2,607)  socle 2-homogeneous: true
+608 2 PGL(2,607)  socle 2-homogeneous: true
+614 1 PSL(2,613)  socle 2-homogeneous: true
+614 2 PGL(2,613)  socle 2-homogeneous: true
+618 1 PSL(2,617)  socle 2-homogeneous: true
+618 2 PGL(2,617)  socle 2-homogeneous: true
+620 2 PSL(2,619)  socle 2-homogeneous: true
+620 3 PGL(2,619)  socle 2-homogeneous: true
+626 1 PSL(2, 5^4)  socle 2-homogeneous: true
+626 2 PSL(2, 5^4).2  socle 2-homogeneous: true
+626 3 PSL(2, 5^4).2  socle 2-homogeneous: true
+626 4 PSL(2, 5^4).2  socle 2-homogeneous: true
+626 5 PSL(2, 5^4).2^2  socle 2-homogeneous: true
+626 6 PSL(2, 5^4).4  socle 2-homogeneous: true
+626 7 PSL(2, 5^4).4  socle 2-homogeneous: true
+626 8 PGammaL(2, 5^4)  socle 2-homogeneous: true
+632 1 PSL(2,631)  socle 2-homogeneous: true
+632 2 PGL(2,631)  socle 2-homogeneous: true
+642 1 PSL(2,641)  socle 2-homogeneous: true
+642 2 PGL(2,641)  socle 2-homogeneous: true
+644 1 PSL(2,643)  socle 2-homogeneous: true
+644 2 PGL(2,643)  socle 2-homogeneous: true
+648 1 PSL(2,647)  socle 2-homogeneous: true
+648 2 PGL(2,647)  socle 2-homogeneous: true
+651 2 PSL(3, 5^2)  socle 2-homogeneous: true
+651 3 PSigmaL(3, 5^2)  socle 2-homogeneous: true
+651 4 PGL(3, 5^2)  socle 2-homogeneous: true
+651 5 PGammaL(3, 5^2)  socle 2-homogeneous: true
+654 1 PSL(2,653)  socle 2-homogeneous: true
+654 2 PGL(2,653)  socle 2-homogeneous: true
+660 6 PSL(2,659)  socle 2-homogeneous: true
+660 7 PGL(2,659)  socle 2-homogeneous: true
+662 1 PSL(2,661)  socle 2-homogeneous: true
+662 2 PGL(2,661)  socle 2-homogeneous: true
+674 1 PSL(2,673)  socle 2-homogeneous: true
+674 2 PGL(2,673)  socle 2-homogeneous: true
+678 1 PSL(2,677)  socle 2-homogeneous: true
+678 2 PGL(2,677)  socle 2-homogeneous: true
+684 1 PSL(2,683)  socle 2-homogeneous: true
+684 2 PGL(2,683)  socle 2-homogeneous: true
+692 1 PSL(2,691)  socle 2-homogeneous: true
+692 2 PGL(2,691)  socle 2-homogeneous: true
+702 1 PSL(2,701)  socle 2-homogeneous: true
+702 2 PGL(2,701)  socle 2-homogeneous: true
+710 1 PSL(2,709)  socle 2-homogeneous: true
+710 2 PGL(2,709)  socle 2-homogeneous: true
+720 1 PSL(2,719)  socle 2-homogeneous: true
+720 2 PGL(2,719)  socle 2-homogeneous: true
+728 1 PSL(2,727)  socle 2-homogeneous: true
+728 2 PGL(2,727)  socle 2-homogeneous: true
+730 1 PSU(3, 9)  socle 2-homogeneous: true
+730 2 PSU(3, 9).2  socle 2-homogeneous: true
+730 3 PGammaU(3, 9)  socle 2-homogeneous: true
+730 4 PSL(2, 3^6)  socle 2-homogeneous: true
+730 5 PSL(2, 3^6).2  socle 2-homogeneous: true
+730 6 PSL(2, 3^6).2  socle 2-homogeneous: true
+730 7 PSL(2, 3^6).2  socle 2-homogeneous: true
+730 8 PSL(2, 3^6).3  socle 2-homogeneous: true
+730 9 PSL(2, 3^6).2^2  socle 2-homogeneous: true
+730 10 PSL(2, 3^6).6  socle 2-homogeneous: true
+730 11 PSL(2, 3^6).6  socle 2-homogeneous: true
+730 12 PSL(2, 3^6).6  socle 2-homogeneous: true
+730 13 PGammaL(2, 3^6)  socle 2-homogeneous: true
+734 1 PSL(2,733)  socle 2-homogeneous: true
+734 2 PGL(2,733)  socle 2-homogeneous: true
+740 1 PSL(2,739)  socle 2-homogeneous: true
+740 2 PGL(2,739)  socle 2-homogeneous: true
+744 1 PSL(2,743)  socle 2-homogeneous: true
+744 2 PGL(2,743)  socle 2-homogeneous: true
+752 1 PSL(2,751)  socle 2-homogeneous: true
+752 2 PGL(2,751)  socle 2-homogeneous: true
+758 1 PSL(2,757)  socle 2-homogeneous: true
+758 2 PGL(2,757)  socle 2-homogeneous: true
+762 1 PSL(2,761)  socle 2-homogeneous: true
+762 2 PGL(2,761)  socle 2-homogeneous: true
+770 1 PSL(2,769)  socle 2-homogeneous: true
+770 2 PGL(2,769)  socle 2-homogeneous: true
+774 1 PSL(2,773)  socle 2-homogeneous: true
+774 2 PGL(2,773)  socle 2-homogeneous: true
+781 1 PSL(5, 5)  socle 2-homogeneous: true
+788 1 PSL(2,787)  socle 2-homogeneous: true
+788 2 PGL(2,787)  socle 2-homogeneous: true
+798 1 PSL(2,797)  socle 2-homogeneous: true
+798 2 PGL(2,797)  socle 2-homogeneous: true
+810 1 PSL(2,809)  socle 2-homogeneous: true
+810 2 PGL(2,809)  socle 2-homogeneous: true
+812 1 PSL(2,811)  socle 2-homogeneous: true
+812 2 PGL(2,811)  socle 2-homogeneous: true
+820 12 PSL(4, 3^2)  socle 2-homogeneous: true
+820 13 PSL(4, 3^2).2  socle 2-homogeneous: true
+820 14 PSL(4, 3^2).2  socle 2-homogeneous: true
+820 15 PSL(4, 3^2).2  socle 2-homogeneous: true
+820 16 PSL(4, 3^2).2^2  socle 2-homogeneous: true
+820 17 PSL(4, 3^2).4  socle 2-homogeneous: true
+820 18 PSL(4, 3^2).2^2  socle 2-homogeneous: true
+820 19 PGammaL(4, 3^2)  socle 2-homogeneous: true
+822 1 PSL(2,821)  socle 2-homogeneous: true
+822 2 PGL(2,821)  socle 2-homogeneous: true
+824 1 PSL(2,823)  socle 2-homogeneous: true
+824 2 PGL(2,823)  socle 2-homogeneous: true
+828 1 PSL(2,827)  socle 2-homogeneous: true
+828 2 PGL(2,827)  socle 2-homogeneous: true
+830 1 PSL(2,829)  socle 2-homogeneous: true
+830 2 PGL(2,829)  socle 2-homogeneous: true
+840 5 PSL(2,839)  socle 2-homogeneous: true
+840 6 PGL(2,839)  socle 2-homogeneous: true
+842 1 PSL(2, 29^2)  socle 2-homogeneous: true
+842 2 PGL(2, 29^2)  socle 2-homogeneous: true
+842 3 PSigmaL(2, 29^2)  socle 2-homogeneous: true
+842 4 PSL(2, 29^2).2_3  socle 2-homogeneous: true
+842 5 PGammaL(2, 29^2)  socle 2-homogeneous: true
+854 1 PSL(2,853)  socle 2-homogeneous: true
+854 2 PGL(2,853)  socle 2-homogeneous: true
+858 1 PSL(2,857)  socle 2-homogeneous: true
+858 2 PGL(2,857)  socle 2-homogeneous: true
+860 1 PSL(2,859)  socle 2-homogeneous: true
+860 2 PGL(2,859)  socle 2-homogeneous: true
+864 1 PSL(2,863)  socle 2-homogeneous: true
+864 2 PGL(2,863)  socle 2-homogeneous: true
+871 1 PSL(3, 29)  socle 2-homogeneous: true
