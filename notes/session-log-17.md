@@ -563,3 +563,17 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - A proof that j is bounded for k ≥ 3.
   - Other p-subgroups: iterated wreath products, mixed block sizes, groups with fixed points.
   - Prime-power block sizes.
+
+## Part 18: Proposition B′, the Smith bound of block translations for large p
+
+- **Proposition B′.** For k ≥ 2 blocks of a prime p ≥ 37 with p ∤ k, p ≤ s_Q ≤ 3p, with s_Q = p iff k ≡ −2 (mod p).
+  - *The construction.* Take every class, every within-block pair, and t generic within-block triangle families of kh triangles each. Then χ = kh − k·C(h,2) + t·kh. Since p ∤ kh, t can be chosen in [0, p − 1].
+  - *Why p ≥ 37.* There are G(h) ≥ (h − 1)(h − 2)/6 − 1 generic families, and this is at least 2h once h ≥ 18.
+- **Checks (`smith_blocks.py --construct`; `outputs/smith_blocks_construct.txt`), clean.**
+  - The congruence and t ≤ G(h) hold for all 37 ≤ p < 400 and 2 ≤ k < min(p, 61).
+  - G(h) matches enumeration at h = 18, 20, 21, 30.
+  - Explicit complexes at (2,37), (3,41), (5,43) and (7,53) are closed and invariant, with χ ≡ 1 (mod p).
+  - CP-SAT at six larger (k, p) gives j ∈ {2, 3}.
+- **Small primes.** For j ≤ J, feasibility depends only on k mod p once k ≥ J, because the family list stabilises and the sizes are polynomials in k. So each prime p < 37 is a finite check. That check is not done. The computed cases with k ≤ 8 and p ∤ k (p = 5, 7, 11, 13) all have j ≤ 6.
+- **p | k.** Here χ ≡ 0 (mod p) below budget p², so s_Q ≥ p² (≤ n). Not covered.
+- **Where this leaves S(n) = O(n).** It is proved for block translations with p ≥ 37 and p ∤ k. Still open for small primes, p | k, and all other p-subgroups.

@@ -1,0 +1,9 @@
+Proposition B' arithmetic: p in [37, 400), 2 <= k < min(p, 61): failures 0; largest t needed 395
+  G(h) by enumeration at h = 18: 45 (formula 45)
+  G(h) by enumeration at h = 20: 57 (formula 57)
+  G(h) by enumeration at h = 21: 63 (formula 63)
+  G(h) by enumeration at h = 30: 135 (formula 135)
+  explicit k = 2, p = 37: t = 25, faces 36 + 306 + 900, chi = 630 = 1 mod p, closed True, invariant True
+  explicit k = 3, p = 41: t = 1, faces 60 + 570 + 60, chi = -450 = 1 mod p, closed True, invariant True
+  explicit k = 5, p = 43: t = 0, faces 105 + 1050 + 0, chi = -945 = 1 mod p, closed True, invariant True
+  explicit k = 7, p = 53: t = 15, faces 182 + 2275 + 2730, chi = 637 = 1 mod p, closed True, invariant True

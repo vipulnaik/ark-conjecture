@@ -13,7 +13,14 @@ and s_Q = p * j, j the least face size that works.  (If no j with jp < p^2 works
 
 Checks: --compare reruns pgroup_levels.level() on the orbitals themselves for small (k, p).
 
-usage: python3 smith_blocks.py [KMAX=4] [PMAX=43] [JMAX=4] [--compare]
+--construct checks Proposition B' (threshold-beyond-mu.md section 7): for p >= 37 and
+p not dividing k, the complex with every class, every within-block pair of classes and t
+generic within-block triangle families (each of size kh) has chi = kh - k C(h,2) + t kh,
+and some t <= G(h) = the number of generic families makes it 1 mod p.  It checks the
+arithmetic for all such p < 400 and k < min(p, 61), counts G(h) by enumeration, and builds
+the complex explicitly and counts its faces for a few (k, p).
+
+usage: python3 smith_blocks.py [KMAX=4] [PMAX=43] [JMAX=4] [--compare] [--construct]
 """
 import sys, itertools
 from ortools.sat.python import cp_model
@@ -71,7 +78,60 @@ def least_j(k, p, JMAX):
     return f'>{JMAX}'
 
 
+def generic_families(h):
+    """within-block triples of classes up to translation in C_h with trivial stabiliser"""
+    seen = set(); g = 0
+    for T in itertools.combinations(range(h), 3):
+        if T in seen: continue
+        orb = {tuple(sorted((x + i) % h for x in T)) for i in range(h)}
+        seen |= orb
+        g += len(orb) == h
+    return g, sorted(seen)
+
+
+def construct():
+    bad = 0; worst = 0
+    for p in primes(37, 400):
+        h = (p - 1) // 2; G = (h * (h - 1) * (h - 2) // 6 - (h // 3 if h % 3 == 0 else 0)) // h
+        for k in range(2, min(p, 61)):
+            base = k * h - k * h * (h - 1) // 2
+            t = ((1 - base) * pow(k * h, -1, p)) % p
+            ok = t <= G and (base + t * k * h - 1) % p == 0
+            bad += not ok; worst = max(worst, t)
+    print(f"Proposition B' arithmetic: p in [37, 400), 2 <= k < min(p, 61): failures {bad}; "
+          f"largest t needed {worst}")
+    for h in (18, 20, 21, 30):
+        g, _ = generic_families(h)
+        G = (h * (h - 1) * (h - 2) // 6 - (h // 3 if h % 3 == 0 else 0)) // h
+        print(f"  G(h) by enumeration at h = {h}: {g} (formula {G})")
+    for k, p in [(2, 37), (3, 41), (5, 43), (7, 53)]:
+        h = (p - 1) // 2
+        fams = [T for T in generic_families(h)[1] if T[0] == 0]
+        # one representative per generic family: the triples through class 0 of block 0
+        reps, seen = [], set()
+        for T in itertools.combinations(range(h), 3):
+            orb = frozenset(tuple(sorted((x + i) % h for x in T)) for i in range(h))
+            if len(orb) == h and orb not in seen:
+                seen.add(orb); reps.append(orb)
+        base = k * h - k * h * (h - 1) // 2
+        t = ((1 - base) * pow(k * h, -1, p)) % p
+        V = [(b, c) for b in range(k) for c in range(h)]
+        E = [((b, x), (b, y)) for b in range(k) for x, y in itertools.combinations(range(h), 2)]
+        T = [tuple((b, x) for x in tri) for b in range(k) for orb in reps[:t] for tri in orb]
+        Tset = {frozenset(x) for x in T}; Eset = {frozenset(e) for e in E}
+        closed = all(frozenset(pr) in Eset for tri in T for pr in itertools.combinations(tri, 2))
+        # invariance: rotate classes of block 0, and swap blocks 0 and 1
+        rot = lambda v: (v[0], (v[1] + 1) % h) if v[0] == 0 else v
+        sw = lambda v: ((1 - v[0]) if v[0] < 2 else v[0], v[1])
+        inv = all(frozenset(map(f, x)) in Tset for x in Tset for f in (rot, sw))
+        chi = len(V) - len(E) + len(T)
+        print(f"  explicit k = {k}, p = {p}: t = {t}, faces {len(V)} + {len(E)} + {len(T)}, chi = {chi} "
+              f"= {chi % p} mod p, closed {closed}, invariant {inv}")
+
+
 if __name__ == '__main__':
+    if '--construct' in sys.argv:
+        construct(); sys.exit()
     print(f"least j (s_Q = p*j) for k blocks of p, k <= {KMAX}, 3 <= p <= {PMAX}, j <= {JMAX}")
     for k in range(2, KMAX + 1):
         row = {p: least_j(k, p, JMAX) for p in primes(3, PMAX)}
