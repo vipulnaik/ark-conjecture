@@ -1,0 +1,2 @@
+classes by edges: [1, 2, 5, 11, 26, 68, 177, 497, 1476, 4613]
+n = 21: no solution with s <= 10: ['no', 'no', 'no', 'no', 'no', 'no', 'no', 'no', 'no', 'no']

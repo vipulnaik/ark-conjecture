@@ -1,0 +1,3 @@
+n = 21, H0 mode circ: |D| = 147; members of D with a deleted-edge subgraph outside P: 0
+subgraph classes of H0: 471;  chi(Delta_P) = 1;  e_max(P) = 14
+Smith: 7 p-groups with at most 21 orbitals; congruence failing at 0

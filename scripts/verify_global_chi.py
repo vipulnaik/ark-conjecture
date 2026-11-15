@@ -10,6 +10,7 @@
      orbitals, chi of the fixed complex Delta_P^Q is 1 modulo p.
 
 Usage: python3 verify_global_chi.py ../outputs/global_chi_2km_10.json [TMAX=12] [group file]
+  mode circ: set CIRC as for global_chi_forced.py
   Smith counts quoted in threshold-beyond-mu.md: n = 10, TMAX 12: 366; n = 12, TMAX 11: 1,919
   (TMAX 12: 2,239); n = 14 and 18, TMAX 14 with pgroups14.txt / pgroups18.txt: 44 and 284.
   tom12.txt is not committed: RunTom(12, "tom12.txt") in oliver_tom.g, about three minutes.
@@ -32,14 +33,41 @@ def cert(edges):
 
 
 def aut(edges):
-    adj = {i: [] for i in range(n)}
+    """|Aut| of the graph on all n vertices, exactly: nauty on the non-isolated vertices
+    (a small group, whose float size is exact) times (n - v)! for the isolated ones.
+    Taking nauty's float size on all n vertices loses precision once (n - v)! passes
+    about 10^15 (it did at n = 21)."""
+    vs = sorted({x for e in edges for x in e}); ix = {v: i for i, v in enumerate(vs)}
+    adj = {i: [] for i in range(len(vs))}
     for a, b in edges:
-        adj[a].append(b); adj[b].append(a)
-    _, m1, m2, _, _ = pynauty.autgrp(pynauty.Graph(n, adjacency_dict=adj))
-    return round(m1 * 10 ** m2)
+        adj[ix[a]].append(ix[b]); adj[ix[b]].append(ix[a])
+    _, m1, m2, _, _ = pynauty.autgrp(pynauty.Graph(len(vs), adjacency_dict=adj))
+    return round(m1 * 10 ** m2) * factorial(n - len(vs))
+
+
+_circ_cache = {}
+def circ_graphs():
+    gs = []
+    for spec in os.environ["CIRC"].split(";"):           # as in global_chi_forced.py, '+' joins parts
+        out, base = set(), 0
+        for part in spec.split("+"):
+            cm, cc, cj = part.split(":"); cm, cj = int(cm), int(cj); cc = [int(x) for x in cc.split(",")]
+            for j in range(cj):
+                out |= {tuple(sorted((base + x, base + (x + c) % cm))) for x in range(cm) for c in cc}
+                base += cm
+        gs.append(sorted(out))
+    return gs
 
 
 def in_h0(edges):
+    if MODE.startswith("circ"):            # a subgraph of one of the CIRC graphs (networkx VF2)
+        import networkx as nx
+        from networkx.algorithms.isomorphism import GraphMatcher
+        c = cert(edges)
+        if c not in _circ_cache:
+            g = nx.Graph(edges)
+            _circ_cache[c] = any(GraphMatcher(nx.Graph(h), g).subgraph_is_monomorphic() for h in circ_graphs())
+        return _circ_cache[c]
     if MODE.endswith("star"):
         common = set(edges[0])
         for e in edges:
@@ -96,6 +124,8 @@ if MODE.startswith("2km"):
     H0s.append(list(itertools.combinations(range(m), 2)) + list(itertools.combinations(range(m, n), 2)))
 if MODE.startswith("tri"):
     H0s.append([e for i in range(n // 3) for e in ((3 * i, 3 * i + 1), (3 * i, 3 * i + 2), (3 * i + 1, 3 * i + 2))])
+if MODE.startswith("circ"):
+    H0s.extend(circ_graphs())
 H0 = max(H0s, key=len)
 layer = {cert(H): H for H in H0s}; forced = dict(layer)
 while layer:

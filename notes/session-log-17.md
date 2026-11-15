@@ -530,3 +530,21 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **Not done.**
   - Per-class exact m\*_χ for all classes. Only the bound ≤ 20 matters for the maximum.
   - M\*_OCR(10).
+
+## Part 16: G\* at odd n, and whether fixed points ever decide μ\*_N
+
+- **G\*(15) = 7**, against μ\*(15) = 30.
+  - `global_chi_min.py 9 15` finds a property at s = 7 and proves every s < 7 infeasible (`outputs/global_chi_min_15.txt`).
+  - The Smith bound 7 comes from ℤ/7 on two 7-cycles with one fixed point.
+- **G\*(21) = 14**, against μ\*(21) = 63.
+  - **Lower bounds.** Exhaustion proves G\* ≥ 11 (`outputs/global_chi_min_21.txt`), and Smith at ℤ/7³ proves ≥ 14.
+  - **Upper bound.** `global_chi_forced.py` has a new mode, `circ`, with forced graphs C₇(1,2) and 2C₇ and D of at most 10 edges. It finds |D| = 147 and e_max = 14 (`outputs/global_chi_circ_21.json`). With only one of the two forced graphs it is infeasible. The ℤ/7³ Smith complex explains why: all 9 intra-block 7-cycles plus all 36 pairs, χ = −27 ≡ 1 (mod 7).
+  - **Verified** by `verify_global_chi.py`: closure, χ = 1, and Smith at 7 hand-picked p-groups (`outputs/verify_global_chi_circ_21.txt`, with the groups written by `pgroup_levels_explicit.py 21 ../outputs/pgroups21_explicit.txt`).
+- **A fix to `verify_global_chi.py`.** It took nauty's floating-point group size on all n vertices. At n = 21 that is (n − v)!·|Aut| ≈ 8.5·10¹⁵, past exact float range, so it got χ = 2 instead of 1. It now multiplies the small group's exact size by (n − v)!. Earlier runs (n ≤ 18) were within range; n = 10 rerun, still passing.
+- **New script `pgroup_levels_explicit.py`.** Smith bounds from hand-picked p-subgroups at n = 15, 21, 33 and 35, where no table of marks is stored. It reuses `pgroup_levels.py`'s level().
+- **n = 33.** ℤ/11³ gives G\*(33) ≥ 33 (μ\*(33) = 165). The upper-bound search with the forced graphs C₁₁(1,2) + C₁₁ and C₁₁(1,3) + C₁₁ was stopped after more than 30 minutes, while it was still listing subgraph classes.
+- **Observation: Smith-tightness of G\*.** At all seven known n (6, 10, 12, 14, 15, 18, 21), G\*(n) equals the largest Smith bound. Even if that holds in general, it does not by itself show fixed points never decide μ\*_N. An induction on n fails because μ\*_N^fpf is not monotone (μ\*(14) = 42, μ\*(15) = 30), so G\*(a) at a good a < n can exceed the fixed-point-free value at n. What's needed is a per-group bound that also uses the moved points, Proposition U's Σ√F bookkeeping with the fixed block as a part. That is not done. Recorded in threshold-beyond-mu.md §7 and §11 as an observation only.
+- **Not done.**
+  - The n = 33 upper bound.
+  - A general construction of χ = 1 properties at the Smith bound.
+  - The Smith checks at n = 21 cover only hand-picked groups, since there is no table of marks at 21.

@@ -9,11 +9,15 @@ the graph some p-subgroup forces into every property with chi = 1:
    star: H0 = K_{1,n-1}      (forced by Z_{n-1} when n - 1 is prime; e_max(P) = n-1)
    2km+star: both
    tri, tri+star: H0 = (n/3)K_3   (forced at n = 18 by the translations of two blocks of 9)
+   circ: the forced graphs are given in the environment, separated by ';', each as
+         CIRC="m:c_1,...,c_r:j" = j disjoint copies of the circulant C_m(c_1, ..., c_r),
+         with '+' joining such parts on disjoint vertices.  n = 21:
+         CIRC="7:1,2:1;7:1:2" (forced by the translations of three blocks of 7)
 D is found by CP-SAT with
     chi = sum over classes H in P of (-1)^(e(H)-1) n!/((n-v(H))! |Aut H|) = 1,
 imposed modulo enough primes.  e_max(P) = max(e(H0), largest member of D).
 
-Usage: python3 global_chi_forced.py 2km|star|2km+star|tri|tri+star n E [check]
+Usage: python3 global_chi_forced.py 2km|star|2km+star|tri|tri+star|circ n E [check]
   check: recompute chi by brute force over all graphs (n = 6 only).
 Writes D to ../outputs/global_chi_<mode>_<n>.json; `verify_global_chi.py` rechecks it.
 """
@@ -35,6 +39,18 @@ def canon(edges):
     lab = pynauty.canon_label(g); pos = {v: i for i, v in enumerate(lab)}
     _, m1, m2, _, _ = pynauty.autgrp(g)
     return tuple(sorted(tuple(sorted((pos[ix[a]], pos[ix[b]]))) for a, b in edges)), len(vs), round(m1 * 10 ** m2)
+
+
+def circ_spec(spec):
+    """'m:c1,c2:j' is j disjoint copies of the circulant C_m(c1, c2, ...); parts joined
+    by '+' sit on disjoint vertex sets, e.g. '11:1,2:1+11:1:1' = C_11(1,2) + C_11"""
+    out, base = set(), 0
+    for part in spec.split("+"):
+        cm, cc, cj = part.split(":"); cm, cj = int(cm), int(cj); cc = [int(x) for x in cc.split(",")]
+        for j in range(cj):
+            out |= {tuple(sorted((base + x, base + (x + c) % cm))) for x in range(cm) for c in cc}
+            base += cm
+    return sorted(out)
 
 
 def in_2km(H, v):
@@ -96,9 +112,18 @@ if MODE.startswith("2km"):
                 k, w, a = canon(H); info.setdefault(k, (w, a)); forced.add(k)
     S0 = m * (m - 1); NAME = f"2K_{m}"
     assert all(in_2km(H, info[H][0]) == (H in forced) for H in info if len(H) <= E)
-if MODE.startswith("tri"):                 # H0 = (n/3) K_3, subgraphs listed by edge deletion
-    H0 = tuple(e for i in range(n // 3) for e in ((3 * i, 3 * i + 1), (3 * i, 3 * i + 2), (3 * i + 1, 3 * i + 2)))
-    k, w, a = canon(H0); info.setdefault(k, (w, a)); layer = {k}; forced.add(k)
+if MODE.startswith("tri") or MODE.startswith("circ"):   # H0 listed down by edge deletion
+    if MODE.startswith("tri"):
+        H0S = [tuple(e for i in range(n // 3) for e in ((3 * i, 3 * i + 1), (3 * i, 3 * i + 2), (3 * i + 1, 3 * i + 2)))]
+    else:                                  # CIRC may list several graphs, separated by ';'
+        import os
+        H0S = []
+        for spec in os.environ["CIRC"].split(";"):
+            H0S.append(tuple(circ_spec(spec)))
+    H0 = max(H0S, key=len)
+    layer = set()
+    for G0 in H0S:
+        k, w, a = canon(G0); info.setdefault(k, (w, a)); layer.add(k); forced.add(k)
     while layer:
         nxt = set()
         for H in layer:
@@ -108,7 +133,7 @@ if MODE.startswith("tri"):                 # H0 = (n/3) K_3, subgraphs listed by
                     if k not in forced:
                         info.setdefault(k, (w, a)); forced.add(k); nxt.add(k)
         layer = nxt
-    S0 = n; NAME = f"{n // 3}K_3"
+    S0, NAME = (n, f"{n // 3}K_3") if MODE.startswith("tri") else (len(H0), "circulant " + os.environ["CIRC"])
 if MODE.endswith("star"):
     for j in range(1, n):
         k, w, a = canon(tuple((0, i) for i in range(1, j + 1))); info.setdefault(k, (w, a)); forced.add(k)
