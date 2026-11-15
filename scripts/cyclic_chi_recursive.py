@@ -5,7 +5,7 @@ with BOTH sides built recursively (session-log-17 Part 11).
 NP[m] is a set of triples (x, y, f): there are C_m-invariant complexes A1 <= A2 on m
 points with chi(A1) = x, chi(A2) = y, A1 proper, and f = (A2 is the full simplex).
 Sources, each a theorem or an exhaustive computation:
-  * exact: every nested pair on m <= 8 points (np.py-style enumeration, cached in
+  * exact: every nested pair on m <= 9 points (np.py-style enumeration, cached in
     ../outputs/cyclic_nested_pairs.pkl if present) -- here f = (y == 1), since no
     proper complex on m <= 11 points has chi = 1;
   * graph chains: vertices plus edge orbits, nested by adding orbits;
@@ -169,6 +169,14 @@ if __name__ == "__main__":
     print("certified:", [k for k, _ in cert])
     print("open:", [k for k, _ in fail])
     out = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'outputs', 'cyclic_chi_certified.txt')
+    # mu_cyc_bounds already reads the certificates in `out`, so ks holds only the k
+    # still open: merge, keeping the earlier certificates
+    old = []
+    if os.path.exists(out):
+        import ast
+        old = [(int(l.split()[0]), ast.literal_eval(l.split(None, 1)[1])) for l in open(out)
+               if l.strip() and not l.startswith('#')]
+    cert = sorted(set(old) | set(cert))
     with open(out, 'w') as fh:
         fh.write("# k, then the certificate (a, b, a1, a2, b1, b2): chi = 1 on k points by the product construction\n")
         for k, c in cert:

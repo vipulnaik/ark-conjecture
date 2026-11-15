@@ -597,7 +597,14 @@ if A.only in ("all", "scope"):
     WORDS = {"two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7,
              "eight": 8, "nine": 9, "ten": 10, "twelve": 12}
     ncap = nmod = None
-    for d in LIVE:
+    # The ceiling table is arithmetic-of-density.md's.  Other documents may carry
+    # an "n mod 12" table of a different quantity (threshold-beyond-mu.md's μ*_cyc
+    # ceilings, whose last column is not μ*'s), so aod is read first and, when
+    # it is in reach, alone.
+    _aod = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "notes",
+                        "arithmetic-of-density.md")
+    _src = [_aod] if os.path.exists(_aod) else LIVE
+    for d in _src:
         try: txt = open(d).read()
         except OSError: continue
         m = re.search(r"\| *n mod (\d+) *\|.*?\n(?:\|.*\n)+", txt)

@@ -1,0 +1,249 @@
+# cyclic_chi_witness_check.py output (--product --pullback --modq --cert), runs of 2026-11-14/15.
+# The --cert run first tries small faces and pull-backs per side; the five it left
+# (140, 308, 615, 1295, 1694) were rerun with derivation trees (1694, 615, 1295 with --secs 300).
+  distinct (x1, x2, y1, y2): 59; faces of X from 0 to 1934
+product: 192 random cases, chi(P(A,B)) = chi(A)chi(B) and the union formula hold; closed and invariant
+pullback: 300 random cases (11 distinct chi, up to 780 faces), closed, invariant, proper and chi preserved
+modq 10 23: witness chi = 70, max face 4
+modq 11 13: witness chi = 66, max face 3
+modq 11 19: witness chi = 77, max face 3
+modq 11 31: witness chi = -154, max face 4
+modq 11 43: witness chi = 44, max face 3
+modq 11 109: witness chi = 110, max face 3
+modq 13 17: witness chi = 52, max face 3
+modq 13 23: witness chi = 208, max face 3
+modq 13 47: witness chi = -234, max face 4
+modq 13 71: witness chi = 143, max face 3
+modq 13 113: witness chi = -338, max face 4
+modq 13 131: witness chi = -130, max face 4
+modq 14 61: witness chi = 245, max face 3
+modq 14 67: witness chi = -133, max face 4
+modq 15 19: witness chi = -75, max face 2
+modq 15 23: witness chi = -45, max face 2
+modq 15 41: witness chi = 165, max face 3
+modq 15 43: witness chi = -85, max face 3
+modq 15 61: witness chi = -60, max face 2
+modq 15 67: witness chi = 135, max face 3
+modq 15 71: witness chi = -70, max face 3
+modq 15 79: witness chi = 80, max face 3
+modq 15 89: witness chi = 90, max face 3
+modq 15 109: witness chi = 110, max face 3
+modq 15 113: witness chi = -225, max face 4
+modq 15 131: witness chi = -130, max face 4
+modq 16 53: witness chi = 160, max face 3
+modq 16 59: witness chi = 296, max face 3
+modq 16 71: witness chi = 72, max face 3
+modq 16 83: witness chi = 84, max face 4
+modq 17 19: witness chi = 153, max face 3
+modq 17 37: witness chi = 408, max face 3
+modq 17 79: witness chi = 238, max face 3
+modq 17 97: witness chi = -969, max face 4
+modq 18 31: witness chi = 63, max face 3
+modq 18 71: witness chi = 72, max face 3
+modq 18 101: witness chi = 405, max face 3
+modq 18 103: witness chi = -102, max face 3
+modq 18 107: witness chi = 108, max face 3
+modq 19 29: witness chi = -57, max face 2
+modq 19 41: witness chi = 247, max face 3
+modq 19 47: witness chi = 95, max face 3
+modq 19 59: witness chi = 532, max face 3
+modq 19 71: witness chi = 285, max face 3
+modq 20 37: witness chi = -110, max face 2
+modq 20 43: witness chi = 130, max face 3
+modq 20 61: witness chi = -60, max face 2
+modq 20 97: witness chi = 680, max face 3
+modq 21 23: witness chi = 70, max face 3
+modq 21 31: witness chi = 63, max face 3
+modq 21 41: witness chi = 42, max face 3
+modq 21 73: witness chi = 147, max face 3
+modq 21 79: witness chi = 238, max face 3
+modq 21 89: witness chi = 357, max face 3
+modq 22 23: witness chi = -22, max face 2
+modq 22 29: witness chi = 88, max face 3
+modq 22 47: witness chi = -187, max face 2
+modq 22 53: witness chi = 319, max face 3
+modq 22 89: witness chi = -88, max face 2
+modq 23 31: witness chi = -92, max face 2
+modq 23 43: witness chi = 345, max face 3
+modq 23 67: witness chi = 805, max face 3
+modq 23 73: witness chi = 1242, max face 3
+modq 25 29: witness chi = 175, max face 3
+modq 25 47: witness chi = 800, max face 3
+modq 26 31: witness chi = -247, max face 2
+modq 26 43: witness chi = 130, max face 3
+modq 26 73: witness chi = 585, max face 3
+modq 27 59: witness chi = 414, max face 3
+modq 27 73: witness chi = -72, max face 3
+modq 28 41: witness chi = 42, max face 3
+modq 28 47: witness chi = -140, max face 2
+modq 28 53: witness chi = 266, max face 3
+modq 29 61: witness chi = 1160, max face 3
+modq 31 41: witness chi = 124, max face 3
+modq 31 59: witness chi = 1240, max face 3
+modq 32 43: witness chi = -128, max face 2
+modq 33 41: witness chi = 165, max face 3
+modq 33 53: witness chi = -264, max face 2
+modq 34 41: witness chi = -204, max face 2
+modq 35 37: witness chi = 630, max face 3
+modq 35 43: witness chi = 560, max face 3
+modq 37 53: witness chi = -370, max face 2
+modq 40 47: witness chi = -140, max face 2
+modq 41 43: witness chi = 861, max face 3
+modq 42 43: witness chi = -42, max face 2
+modq 143 13: witness chi = 66, max face 3 on Z/11, pulled back
+modq 10 41: witness chi = -40, max face 4
+modq 10 47: witness chi = -93, max face 5
+modq 10 53: witness chi = -105, max face 4
+modq 10 59: witness chi = 60, max face 4
+modq 11 73: witness chi = 220, max face 5
+modq 14 79: witness chi = 238, max face 4
+modq 14 127: witness chi = -126, max face 4
+modq 16 113: witness chi = 340, max face 4
+modq: 95 BAD pairs witnessed and verified, 0 unwitnessed
+cert 135: both sides witnessed and verified (B: Z/9 pulled back)
+cert 165: both sides witnessed and verified
+cert 221: both sides witnessed and verified
+cert 260: both sides witnessed and verified
+cert 273: both sides witnessed and verified (B: Z/13 pulled back)
+cert 285: both sides witnessed and verified
+cert 299: both sides witnessed and verified
+cert 320: both sides witnessed and verified (B: Z/16 pulled back)
+cert 323: both sides witnessed and verified
+cert 341: both sides witnessed and verified
+cert 345: both sides witnessed and verified
+cert 350: both sides witnessed and verified (B: Z/10 pulled back)
+cert 380: both sides witnessed and verified
+cert 405: both sides witnessed and verified (B: Z/9 pulled back)
+cert 455: both sides witnessed and verified (B: Z/13 pulled back)
+cert 464: both sides witnessed and verified
+cert 476: both sides witnessed and verified (B: Z/14 pulled back)
+cert 483: both sides witnessed and verified
+cert 506: both sides witnessed and verified
+cert 546: both sides witnessed and verified (B: Z/7 pulled back)
+cert 551: both sides witnessed and verified
+cert 558: both sides witnessed and verified
+cert 575: both sides witnessed and verified
+cert 585: both sides witnessed and verified (B: Z/9 pulled back)
+cert 608: both sides witnessed and verified (B: Z/16 pulled back)
+cert 611: both sides witnessed and verified
+cert 629: both sides witnessed and verified
+cert 644: both sides witnessed and verified (B: Z/14 pulled back)
+cert 645: both sides witnessed and verified
+cert 650: both sides witnessed and verified
+cert 651: both sides witnessed and verified
+cert 663: both sides witnessed and verified (B: Z/17 pulled back)
+cert 680: both sides witnessed and verified (B: Z/8 pulled back)
+cert 713: both sides witnessed and verified
+cert 714: both sides witnessed and verified (B: Z/7 pulled back)
+cert 725: both sides witnessed and verified
+cert 740: both sides witnessed and verified
+cert 741: both sides witnessed and verified (B: Z/19 pulled back)
+cert 779: both sides witnessed and verified
+cert 798: both sides witnessed and verified (B: Z/7 pulled back)
+cert 806: both sides witnessed and verified (B: Z/31 pulled back)
+cert 833: both sides witnessed and verified
+cert 846: both sides witnessed and verified
+cert 848: both sides witnessed and verified
+cert 854: both sides witnessed and verified
+cert 860: both sides witnessed and verified
+cert 861: both sides witnessed and verified
+cert 893: both sides witnessed and verified
+cert 915: both sides witnessed and verified
+cert 923: both sides witnessed and verified
+cert 935: both sides witnessed and verified (B: Z/17 pulled back)
+cert 938: both sides witnessed and verified
+cert 944: both sides witnessed and verified
+cert 950: both sides witnessed and verified (B: Z/25 pulled back)
+cert 966: both sides witnessed and verified (B: Z/7 pulled back)
+cert 975: both sides witnessed and verified (B: Z/15 pulled back)
+cert 986: both sides witnessed and verified (B: Z/29 pulled back)
+cert 989: both sides witnessed and verified
+cert 999: both sides witnessed and verified
+cert 1001: both sides witnessed and verified (B: Z/13 pulled back)
+cert 1005: both sides witnessed and verified
+cert 1026: both sides witnessed and verified (B: Z/18 pulled back)
+cert 1034: both sides witnessed and verified
+cert 1040: both sides witnessed and verified (B: Z/16 pulled back)
+cert 1065: both sides witnessed and verified
+cert 1118: both sides witnessed and verified
+cert 1121: both sides witnessed and verified
+cert 1125: both sides witnessed and verified (B: Z/25 pulled back)
+cert 1136: both sides witnessed and verified
+cert 1148: both sides witnessed and verified (A: Z/14 pulled back)
+cert 1166: both sides witnessed and verified
+cert 1173: both sides witnessed and verified (B: Z/23 pulled back)
+cert 1175: both sides witnessed and verified
+cert 1178: both sides witnessed and verified
+cert 1185: both sides witnessed and verified
+cert 1196: both sides witnessed and verified (B: Z/46 pulled back)
+cert 1218: both sides witnessed and verified (B: Z/7 pulled back)
+cert 1220: both sides witnessed and verified
+cert 1269: both sides witnessed and verified
+cert 1271: both sides witnessed and verified
+cert 1274: both sides witnessed and verified (B: Z/14 pulled back)
+cert 1275: both sides witnessed and verified (B: Z/15 pulled back)
+cert 1278: both sides witnessed and verified
+cert 1316: both sides witnessed and verified
+cert 1328: both sides witnessed and verified
+cert 1335: both sides witnessed and verified
+cert 1343: both sides witnessed and verified
+cert 1349: both sides witnessed and verified
+cert 1353: both sides witnessed and verified
+cert 1364: both sides witnessed and verified (B: Z/62 pulled back)
+cert 1376: both sides witnessed and verified (A: Z/16 pulled back)
+cert 1394: both sides witnessed and verified
+cert 1395: both sides witnessed and verified (B: Z/9 pulled back)
+cert 1421: both sides witnessed and verified
+cert 1425: both sides witnessed and verified (B: Z/25 pulled back)
+cert 1430: both sides witnessed and verified (B: Z/11 pulled back)
+cert 1443: both sides witnessed and verified (B: Z/37 pulled back)
+cert 1484: both sides witnessed and verified (A: Z/14 pulled back)
+cert 1505: both sides witnessed and verified
+cert 1518: both sides witnessed and verified
+cert 1520: both sides witnessed and verified (B: Z/16 pulled back)
+cert 1533: both sides witnessed and verified
+cert 1539: both sides witnessed and verified (B: Z/27 pulled back)
+cert 1541: both sides witnessed and verified
+cert 1554: both sides witnessed and verified (B: Z/7 pulled back)
+cert 1581: both sides witnessed and verified (B: Z/31 pulled back)
+cert 1593: both sides witnessed and verified
+cert 1595: both sides witnessed and verified (B: Z/29 pulled back)
+cert 1625: both sides witnessed and verified (B: Z/25 pulled back)
+cert 1628: both sides witnessed and verified (B: Z/74 pulled back)
+cert 1635: both sides witnessed and verified
+cert 1653: both sides witnessed and verified
+cert 1659: both sides witnessed and verified
+cert 1664: both sides witnessed and verified (B: Z/16 pulled back)
+cert 1665: both sides witnessed and verified (B: Z/9 pulled back)
+cert 1679: both sides witnessed and verified
+cert 1703: both sides witnessed and verified
+cert 1749: both sides witnessed and verified
+cert 1755: both sides witnessed and verified (B: Z/9 pulled back)
+cert 1763: both sides witnessed and verified
+cert 1769: both sides witnessed and verified
+cert 1806: both sides witnessed and verified (B: Z/7 pulled back)
+cert 1815: both sides witnessed and verified (B: Z/11 pulled back)
+cert 1818: both sides witnessed and verified
+cert 1829: both sides witnessed and verified
+cert 1845: both sides witnessed and verified (B: Z/9 pulled back)
+cert 1850: both sides witnessed and verified (B: Z/37 pulled back)
+cert 1854: both sides witnessed and verified
+cert 1859: both sides witnessed and verified (B: Z/13 pulled back)
+cert 1863: both sides witnessed and verified (B: Z/27 pulled back)
+cert 1869: both sides witnessed and verified
+cert 1898: both sides witnessed and verified
+cert 1911: both sides witnessed and verified (B: Z/21 pulled back)
+cert 1926: both sides witnessed and verified
+cert 1938: both sides witnessed and verified
+cert 1940: both sides witnessed and verified
+cert 1955: both sides witnessed and verified (B: Z/23 pulled back)
+cert 1958: both sides witnessed and verified (B: Z/89 pulled back)
+cert 1961: both sides witnessed and verified
+cert 1965: both sides witnessed and verified
+cert 1971: both sides witnessed and verified
+cert 615: derived and checked: A = leaf(Z/15); B = leaf(Z/41)
+cert 1295: derived and checked: A = leaf(Z/35); B = leaf(Z/37)
+cert 1694: derived and checked: A = leaf(Z/7); B = pull(Z/242 <- prod(Z/2 x Z/11: leaf(Z/2), full(Z/11; leaf(Z/11))))
+cert 140: derived and checked: A = leaf(Z/5); B = prod(Z/4 x Z/7: leaf(Z/4), full(Z/7; leaf(Z/7)))
+cert 308: derived and checked: A = leaf(Z/7); B = prod(Z/4 x Z/11: leaf(Z/4), full(Z/11; leaf(Z/11)))
+cert: 146 of 146 certificates have explicit verified sides or checked derivation trees

@@ -433,3 +433,27 @@ is C_k-invariant and proper. By inclusion–exclusion, χ(X) = 1 exactly when (a
   - The CP-SAT verdicts are solver results, with no independent check.
   - Certificates beyond k = 56 were not checked by explicit face enumeration.
   - A general sufficiency proof is still open, as is extending beyond 4000.
+
+## Part 12: `check_doc_figures` findings, and the checks Part 11 left open
+
+- **`check_doc_figures` on threshold-beyond-mu.md and this log: 33 findings, all resolved.**
+  - **32 dangling references.** Bare §-references to `orbital-evasiveness-notes.md` (§7.1–7.13, §9.7) and `arithmetic-of-density.md` (§§1–8 in the section-by-section reading), and "Theorem E.5". The note has its own §7 and §9, so these were genuinely ambiguous. Each now names its document, as does the §8 heading.
+  - **One I2 false positive.** The checker read threshold-beyond-mu.md's μ\*_cyc ceiling table, whose last column has 5 distinct constants, as *the* ceiling table. `check_doc_figures.py` now takes the table from `arithmetic-of-density.md`, which has 6.
+  - After the fixes: 0 findings on the two files.
+  - Across all of notes/ there is 1 finding: pending-checks.md L18 "2,186". It is a historical count of rows screened, not a row-count claim, and was left as it is.
+- **New script `scripts/cyclic_chi_witness_check.py`.** Its output is in `outputs/cyclic_chi_witness_check.txt`. Witnesses are found by CP-SAT and then checked by separate code: it lists every face and checks closure, invariance under x ↦ x + 1, properness and χ.
+  - **Product lemma (`--product`).** 192 random nested pairs on Z/a × Z/b (ab ≤ 12) were listed face by face. χ(P(A,B)) = χ(A)χ(B) held in every case. So did the union formula χ(X) = x₁ + y₁ + x₂y₂ − x₁y₂ − x₂y₁, which gives χ = 1 iff (x₂−x₁)(y₂−y₁) = (x₁−1)(y₁−1). X was closed, invariant and proper each time.
+  - **Pull-back lemma (`--pullback`).** 300 random cases with k ≤ 12, every face listed. χ was preserved, and the result was closed, invariant and proper.
+  - **BAD (k, q) pairs (`--modq`).** All 95 have an explicit verified witness. 94 have faces of at most 5 vertices. (143, 13) is a χ = 66 complex on Z/11, pulled back.
+  - **GOOD (k, q) pairs.** The eight CP-SAT infeasibility verdicts, (10,107), (10,131), (10,137), (10,173), (10,179), (10,191), (11,103) and (11,151), are confirmed by HiGHS (scipy.milp, `scripts/cyclic_chi_good_recheck.py`). The orbit code was written afresh. Controls (10,41) and (11,73) are feasible. (k, 2) with k a power of 2 is a proof, not a computation: a proper nonempty subset has a proper stabiliser in a 2-group, so its orbit size is even.
+  - **Certificates (`--cert`).** All 146 check out.
+    - 141 have explicit sides: small faces, or a pull-back from a divisor.
+    - 5 (140, 308, 615, 1295, 1694) needed more. 615 and 1295 have small-face sides once CP-SAT gets 300 s. 140, 308 and 1694 use derivation trees whose leaves are listed face by face and whose inner steps are a pull-back, a product, or "A₂ = full simplex". For example, 140's B side is the product over Z/4 × Z/7 of an explicit pair and (an explicit complex ⊆ the full simplex).
+    - In every case A₂ and B₂ are not both full.
+  - **Why the 5 matter.** With them withdrawn, L′ = B^ at only 3,358 of 3,410 rows (first open row n = 552). With them checked, L′ = B^ at all 3,410 rows to 4000 rests on explicit witnesses plus the two tested lemmas.
+- **Exact nested pairs at m = 9.** The enumeration finished: 812 pairs, about 41 minutes. It was added to `outputs/cyclic_nested_pairs.pkl`. Rerunning the certifier on the 14 open trivial-top k (1070, 1106, 1133, 1310, 1370, 1469, 1649, 1661, 1695, 1730, 1778, 1790, 1808, 1910) certifies none of them. The certifier now merges with the existing certificate file instead of overwriting it, since `mu_cyc_bounds` already reads that file.
+- **Still not done.**
+  - The two lemmas are tested, not formally reproved. Their proofs are in Parts 9–10.
+  - The CP-SAT and HiGHS GOOD verdicts are solver results with no proof certificate.
+  - Two runs make up the full `--cert` record: the second was a targeted rerun, not a clean single pass.
+  - Open: the 14 k, a general sufficiency proof, and n > 4000.
