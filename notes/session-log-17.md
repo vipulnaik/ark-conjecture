@@ -512,3 +512,21 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - Conjecture P, which is Step 5. It looks like it needs the classification of primitive groups containing a soluble transitive subgroup.
   - The infinite families in the socle fact rest on their standard actions, not on a citation.
   - Steps 1–5 have had one reading, mine.
+
+## Part 15: μ\*_χ at n = 10
+
+- **New script `scripts/chi_level10.py`.** It computes level 2 at n = 10 using nauty certificates for the union graphs and `emb.c` (via ctypes) for embedding. Brute-force canonicalisation over S₆, as in `type_levels6.py`, doesn't scale.
+  - **Main pass:** one CP-SAT feasibility call per class at B = 20, cheapest classes first.
+  - **Ladder mode:** for heavy classes, budgets b = 2, 4, … until the first feasible one. Feasibility is monotone in the budget.
+- **Result: μ\*_χ(10) = 20 = μ\*_N(10) = μ\*(10).**
+  - Every Oliver class but the trivial group is feasible at budget ≤ 20: 1,211 in the main pass, 82 by the ladder.
+  - The heaviest cases are the groups of order 3 and 6 that move 3 points. They needed a cap of 3·10⁷, with 2.8 M invariant graphs and 1,340 classes at b = 10.
+  - The trivial group is G\*(10) = 20 (§7).
+- **Level-2 lifts.** ℤ/5, D₅ and F₂₀ on 5 points, fixing 5, have m\* = 1 and m\*_χ = 20 exactly, confirmed with steps of 1. Level 2 lifts weak groups to the maximum and no further, as at n = 6.
+- **Checks (clean).**
+  - CHI_N=6 reproduces `type_levels6.py`'s m\*_χ for all 50 classes.
+  - The embedding test agrees with networkx VF2 on 6,000 random pairs: 3,000 against my first Python backtracker, 3,000 against `emb.c`.
+  - The seven classes with m\* = 20 are exactly 20.
+- **Not done.**
+  - Per-class exact m\*_χ for all classes. Only the bound ≤ 20 matters for the maximum.
+  - M\*_OCR(10).
