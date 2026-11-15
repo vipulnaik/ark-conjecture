@@ -1,6 +1,6 @@
 # Numerical projections of the ladder, and μ\*_χ: the Oliver-χ rung reaches past μ\*
 
-*A finding of 2026-11-10, one sitting. **Second check (2026-11-14):** both Propositions reread; every listed script reviewed line by line and rerun, reproducing every figure quoted here; the k-table, k = 10 and the k = 12 witness, and G\*(6) recomputed by independent code. One bug was found, in `verify_global_chi.py`'s membership test for the (n/3)K₃ property; it was fixed, and the n = 18 property still passes. Details in `session-log-17.md` Part 6. Still not a referee reading of the arguments. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`, `cyc_floor_scan.py`, `cyc_certify.py`, `entangled_check.g`, `type_levels6.py`, `biclique_boost_scan.py`, `nstar_types.py`, `pgroup_levels.py`, `global_chi_min.py`, `global_chi_forced.py`, `verify_global_chi.py`, `kset_block_levels.py`. **This file is a staging area:** the finding is to be refined here before any of it is carried into the framework documents, and the short note is not to be changed on its account (decided 2026-11-10). Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
+*A finding of 2026-11-10, one sitting. **Second check (2026-11-14):** both Propositions reread; every listed script reviewed line by line and rerun, reproducing every figure quoted here; the k-table, k = 10 and the k = 12 witness, and G\*(6) recomputed by independent code. One bug was found, in `verify_global_chi.py`'s membership test for the (n/3)K₃ property; it was fixed, and the n = 18 property still passes. Details in `session-log-17.md` Part 6. Still not a referee reading of the arguments. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`, `cyc_floor_scan.py`, `cyc_certify.py`, `entangled_check.g`, `type_levels6.py`, `biclique_boost_scan.py`, `nstar_types.py`, `pgroup_levels.py`, `global_chi_min.py`, `global_chi_forced.py`, `verify_global_chi.py`, `kset_block_levels.py`, `cyc_witness_check.g`. **This file is a staging area:** the finding is to be refined here before any of it is carried into the framework documents, and the short note is not to be changed on its account (decided 2026-11-10). Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
 
 ## Map of the quantities
 
@@ -86,6 +86,56 @@
           s(n)                         1/2       1/4    1/3    1/5    1/7    1/13
           s*_N(n)   at least           1/2       1/2    1/3    1/3    1/3    1/3
 ```
+
+## Cost of computing each quantity
+
+*Added 2026-11-14. A companion to the map: for each quantity, what the code computes, what it cost in practice, and its complexity class. Exponents inside "polynomial" depend on the implementation and are indicative only. Where there is no working algorithm, the bound is the obvious combinatorial one.*
+
+| quantity | what is computed, and by what | measured | complexity class | size as a function of n, and its standing |
+|---|---|---|---|---|
+| **M\*_vtOR** = n(q(n) − 1)/2 | factor n | instant | polynomial | small; exact and unconditional |
+| **μ\* = B**, above 1/25 | `mu_ladder_exact.py`: the menu shapes plus S6 and S11, about O(n/log n) candidates each; exact by Theorem E.5 and `ladder-completeness.md` Prop. 1 | 4.3 ms/n at 2.5·10⁵, 15 ms/n at 10⁶; the table to 10⁶ in about 3 h single-threaded | **polynomial**: about n per value, N² for a table to N | Θ(n²) for all large n under (BCG-AL); unconditionally n^{5/4} for all large n and n^{1.679} for almost all n; n^{2−ε} for almost all n if PD(1) holds |
+| μ\* = B, without the collapse theorem | `mu_exact.py`: the whole shape space | about n^2.3 per value, tail near n^2.9; about 3 h per value at 10⁶ | polynomial, steep | — |
+| μ\*, from its definition | enumerate the Oliver subgroups of S_n | S₁₀: 1,294 classes; S₁₂: 8,572, in 3 min from the table of marks (the library stops at S₁₃) | **super-exponential**: 2^{Θ(n²)} subgroups (Pyber), already from elementary abelian 2-groups, which are Oliver | — |
+| **μ\*_cyc**, lower bound L(n) | `threshold_scan.py`, `cyc_floor_scan.py`: the μ\* shapes, rescored (box below) | N = 4000 in about 10 s; floor scan 10⁵ in 5 s, 10⁶ in about 5 min (thresholded rows) | polynomial, as μ\* | conditional on (BCG-AL); limits 1/4 and 3 − 2√2 (§5); unconditionally no better than μ\* |
+| **U(n)**, upper bound for μ\*_cyc | `cyc_certify.py`: one pass over primes r < n, reading the μ\* table | seconds for 3,410 rows | polynomial: O(n/log n) per n, given the table | meets L(n) at 2,385 of 3,410 rows to 4000 |
+| **ν\*** | `nstar_types.py`: per Oliver class, nauty on points–pairs–orbitals | S₁₂, all 8,572 classes, about 5 min | polynomial per group in practice; **super-exponential** over all classes | at most (n/2)⌊(n − 1)/2⌋ |
+| **μ\*_N** (level 1) | `pgroup_levels.py`, `type_levels6.py`: per group, CP-SAT over N\*-orbits of sets of orbitals | 399 p-groups with t ≤ 14 at n = 10: about 2 min; n = 6, all 50 classes: 1 min | per group 2^t (t ≤ C(n,2)); over all groups **doubly exponential** | max(μ\*_cyc, G\*) ≤ μ\*_N ≤ max(ν\*, G\*) |
+| **μ\*_χ** (level 2) | `type_levels6.py`, with embedding among unions of orbitals | n = 6 only (canonical forms by brute force over S₆) | per group 2^t subgraph-isomorphism tests; **doubly exponential** | known only at n = 6 |
+| **G\*** | `global_chi_min.py` (exhaustive up to s edges), `global_chi_forced.py` and `verify_global_chi.py` (a forced graph plus a congruence solve) | n = 6 in seconds; n = 12 infeasible to 10 edges in minutes; n = 14 on 544,727 subgraph classes, minutes; n = 18 fast given the forced graph | classes up to s edges ≈ C(C(n,2), s)/n!, so 2^{Θ(n²)} at s ~ n²; properties are subsets: **doubly exponential** | known for n ≤ 18; asymptotics unknown; no number theory |
+| **M\*_OCR** | the n = 10 CSP (`small-degree-computation.md`): one property passing a battery | V = 3,782 classes at t ≤ 12; stage 3 projected at about 27 h on 8 cores; n = 12 projected at weeks | classes ≈ 2^{C(n,2)}/n! (about 1.2·10⁷ at n = 10); properties are down-sets: **doubly exponential** | known only at n = 6 (9) |
+| **M\*_NE** | none: needs the decision-tree depth of every candidate | exact depth on 2¹⁵ subsets is easy at n = 6; n = 7 already needs a symmetry-reduced solver | 2^{2^{Θ(n²)}} properties, each a recursion on the 2^{C(n,2)} cube: **at least doubly exponential** | C(n,2) exactly if ARK holds |
+
+**Two features of this table matter.**
+
+- **The cliff is between U(n) and ν\*.** Up to there everything is polynomial and has been run to 10⁵ or 10⁶. From ν\* on, every quantity needs all subgroups of S_n or all graph classes, 2^{Θ(n²)} either way, and a solver over subsets of those. There is no intermediate tier. The data beyond the cliff reaches n = 18 at best, and only by pruning (orbital caps, a forced graph), which does not change the class.
+- **What makes μ\* polynomial is the framework, not number theory.** From its definition μ\* is a 2^{Θ(n²)} group enumeration; the classification and the collapse theorem reduce it to a near-linear scan per n. Number theory enters the cost only through constants: near-optimal shapes are dense, so the scans find their witnesses early.
+
+> **μ\*_cyc and U(n), precisely.** These are the two polynomial quantities that have had the fewest rounds of audit, both of the code and of the argument.
+>
+> - **Definition.** μ\*_cyc(n) is the largest value, over Oliver groups Γ on [n], of:
+>   - Γ's smallest orbital; or
+>   - for one orbit R of Γ of prime size r on which the induced group ℤ/r ⋊ C_t has a **good** index k = C(r,2)/orb(r, t) for Γ's top prime, the value M = min(C(r,2), the least orbital of Γ outside R's own pairs). "Good" means that no C_k-invariant proper complex has χ ≡ 1 (mod q), or χ = 1 when the top is trivial.
+>
+>   By the Proposition of §4, μ\*(n) ≤ μ\*_cyc(n) ≤ μ\*_N(n). Restricting to one orbit is a choice of definition: a group whose two orbits both carry good types lies outside it, though level 1 may still credit it.
+> - **The lower bound L(n)** is the maximum of μ\*(n) and the best of a menu:
+>   - shapes n = F·c + r, with c a prime power of a prime other than r, full twist on the matching blocks, and gcd(F(c − 1), r) = 1;
+>   - the entangled case F = 1, r | c − 1 (`threshold_scan.py` only);
+>   - foreign twist t equal to the full q-part of r − 1, or trivial;
+>   - value min{F·C(c,2), F·c·r, cross-block term, foreign term}, the foreign term being C(r,2) when k is good and orb(r, t) otherwise.
+>
+>   "Good" is decided by a table: the exact sets for k ≤ 7, q > 2^k for k ∈ {8, 9, 10, 11, 13}, and never for k = 12 or k ≥ 14. Every choice errs low: only one t per prime, no k ≥ 14, prime-power k refused for q ≤ 2^k, and no two-foreign or two-matching-class shapes. So L(n) ≤ μ\*_cyc(n), *provided each scanned shape is a genuine Oliver group with the stated orbitals.* That proviso rests on the gcd rule, and it has been checked by building the group only at four witnesses: n = 63 (`entangled_check.g`), and n = 70, 77 and 84 (`cyc_witness_check.g`). At each the group is Oliver and its orbitals give exactly the scanned value: 406, 465 and 820 respectively, the n = 77 case being a fused pair.
+> - **The upper bound U(n)** uses no classification. If R is used, every orbital inside the complement of R (m = n − r points) is an orbital of the induced group there, which is a quotient of Γ and so Oliver; the least of them is at most μ\*(m). A cross orbital between R and the complement has at most r·m pairs. Hence M ≤ min(C(r,2), r·m, μ\*(m)), and taking every prime r gives U(n). U_for restricts r to those that can carry a good foreign type. The step from "the least orbital inside the complement" to μ\*(m) treats the induced group as an arbitrary Oliver group on m points; that is correct, and generous.
+> - **Status to 4000**:
+>   - L(n) = U(n), so μ\*_cyc is known exactly, at 2,385 of 3,410 rows.
+>   - L(n) = U_for(n) at 3,403; the seven exceptions are listed in §5.
+>   - At 1,025 rows the gap is the "matching-prime reading" (R of the group's own prime with a partial twist), which only U bounds; three of these (n = 110, 154, 171) are closed by hand.
+>   - To 10⁵ the infimum of μ\*_cyc/C(n,2) lies in [0.0887, 0.0938]. The lower end is L at n = 1159, where L equals μ\*. The upper end is n = 923, where L = U.
+> - **Audit so far:**
+>   - one author pass, plus one second check (2026-11-14): the code read line by line and rerun, every figure reproduced, and the U argument and the Proposition reread;
+>   - not done: an independent reimplementation of L or U;
+>   - Oliver groups built at only four witnesses;
+>   - no check of the conservative choices against a full enumeration at small n. Comparing `mu_exact.py`'s shape space, rescored, at n ≤ 200 would be the natural one.
 
 ## 1. Projecting a rung to a number
 

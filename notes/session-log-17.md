@@ -288,3 +288,24 @@ The usage line now says which TMAX gives which count. `tom12.txt` (8,572 Oliver 
   - §7's n = 12 Smith count gives both TMAX values;
   - §11's "Owed" splits off what is now done. Still owed: the device inside the exact enumerator, and the right-hand column rescanned class by class.
 - **Scripts:** the `cyclic_chi_values.py` docstring records the recheck; `verify_global_chi.py` carries the fix and the usage note.
+
+---
+
+# Part 7: a cost table, and μ\*_cyc / U(n) stated precisely
+
+- **New unnumbered section "Cost of computing each quantity"** in `threshold-beyond-mu.md`, after the map. For each quantity it records what is computed and by which script, measured costs, and the complexity class, alongside size and standing as functions of n.
+  - Main observations: everything up to U(n) is polynomial; from ν\* on, everything is super-exponential or doubly exponential, with no middle tier.
+  - μ\* is polynomial only because of the classification and the collapse theorem.
+- **A box stating μ\*_cyc, L(n) and U(n) precisely.** It covers:
+  - the definition, including that the one-orbit restriction is a choice of definition;
+  - every way L(n) errs low (one twist per prime, no k ≥ 14, prime-power k refused for q ≤ 2^k, no two-foreign or two-matching-class shapes);
+  - the proviso that each scanned shape is a genuine Oliver group;
+  - the U argument;
+  - the status to 4000;
+  - the audit state.
+- **New `scripts/cyc_witness_check.g`**, which builds three scanned witnesses as permutation groups: n = 70 (41 + 29\*, q = 7), 77 (2 × 23 + 31\*, q = 5) and 84 (43 + 41\*, q = 5). All are Oliver, and their orbitals give exactly the scanned values 406, 465 and 820. With n = 63 (`entangled_check.g`) that makes four witnesses built in GAP.
+- **Still owed for μ\*_cyc:**
+  - an independent reimplementation of L and U;
+  - a comparison against a rescored full enumeration at small n.
+
+  Neither has been run.
