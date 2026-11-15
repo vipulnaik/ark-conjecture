@@ -1,6 +1,6 @@
 # Numerical projections of the ladder, and μ\*_χ: the Oliver-χ rung reaches past μ\*
 
-*A finding of 2026-11-10, one sitting. **Second check (2026-11-14):** both Propositions reread; every listed script reviewed line by line and rerun, reproducing every figure quoted here; the k-table, k = 10 and the k = 12 witness, and G\*(6) recomputed by independent code. One bug was found, in `verify_global_chi.py`'s membership test for the (n/3)K₃ property; it was fixed, and the n = 18 property still passes. Details in `session-log-17.md` Part 6. Still not a referee reading of the arguments. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`, `cyc_floor_scan.py`, `cyc_certify.py`, `entangled_check.g`, `type_levels6.py`, `biclique_boost_scan.py`, `nstar_types.py`, `pgroup_levels.py`, `global_chi_min.py`, `global_chi_forced.py`, `verify_global_chi.py`, `kset_block_levels.py`, `cyc_witness_check.g`, `mu_cyc_bounds.py`, `cyclic_chi_small.py`, `cyclic_chi_product.py`, `cyclic_chi_recursive.py`, `cyclic_chi_witness_check.py`, `cyclic_chi_good_recheck.py`, `cyc_density_one.py`, `nstar_transitive_check.g`, `nstar_transitive_check.py`, `socle_2homog_check.g`, `chi_level10.py`, `pgroup_levels_explicit.py`. **This file is a staging area:** the finding is to be refined here before any of it is carried into the framework documents, and the short note is not to be changed on its account (decided 2026-11-10). Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
+*A finding of 2026-11-10, one sitting. **Second check (2026-11-14):** both Propositions reread; every listed script reviewed line by line and rerun, reproducing every figure quoted here; the k-table, k = 10 and the k = 12 witness, and G\*(6) recomputed by independent code. One bug was found, in `verify_global_chi.py`'s membership test for the (n/3)K₃ property; it was fixed, and the n = 18 property still passes. Details in `session-log-17.md` Part 6. Still not a referee reading of the arguments. Nothing here changes μ\*(n), B(n), the table or the classification. Scripts: `cyclic_chi_values.py`, `threshold_scan.py`, `cyc_floor_scan.py`, `cyc_certify.py`, `entangled_check.g`, `type_levels6.py`, `biclique_boost_scan.py`, `nstar_types.py`, `pgroup_levels.py`, `global_chi_min.py`, `global_chi_forced.py`, `verify_global_chi.py`, `kset_block_levels.py`, `cyc_witness_check.g`, `mu_cyc_bounds.py`, `cyclic_chi_small.py`, `cyclic_chi_product.py`, `cyclic_chi_recursive.py`, `cyclic_chi_witness_check.py`, `cyclic_chi_good_recheck.py`, `cyc_density_one.py`, `nstar_transitive_check.g`, `nstar_transitive_check.py`, `socle_2homog_check.g`, `chi_level10.py`, `pgroup_levels_explicit.py`, `smith_blocks.py`. **This file is a staging area:** the finding is to be refined here before any of it is carried into the framework documents, and the short note is not to be changed on its account (decided 2026-11-10). Notation: every new quantity carries the star of μ\*, marking a max–min or min–max.*
 
 ## Map of the quantities
 
@@ -464,6 +464,43 @@ What would close it is a bound that uses the moved points as well: for Γ fixing
 
 That is the Σ√F bookkeeping of Proposition U with the fixed block as one part, and it has not been worked out. Only with it in hand would Smith-tightness, Conjecture P and (BH-SW) give **μ\*_N μ\*_cyc's asymptotics outright**. This is an observation from seven values, not a conjecture with a mechanism behind it. The upper-bound side would need a general construction of χ = 1 properties sitting exactly at the Smith bound.
 
+**The Smith bound, and its size for translations of blocks.** For a p-subgroup Q ≤ S_n, let s_Q be the least B at which some N\*(Q)-invariant complex on Q's orbitals, every face of total at most B, has χ ≡ 1 (mod p). In other words, s_Q = m\*_N(Q) under Q's own condition. Write **S(n) = max over p-subgroups Q of s_Q**. Smith's theorem gives **G\*(n) ≥ S(n)**, and the observation above says equality has held at every n computed.
+
+*The class complex.* Let Q = (ℤ/p)^k translate k blocks of p points independently, p ≥ 5 prime, and write h = (p − 1)/2.
+- **Orbitals.** Q has h difference classes in each block, of p pairs each, and one cross orbital of p² pairs for each pair of blocks.
+- **N\*(Q).** The group fixing every orbital is Q̂ = D_p^k. On a block, the permutations preserving every circulant C_p(d) form D_p. So N\*(Q) = N(Q̂) = AGL(1, p) ≀ S_k, which acts on the kh classes as C_h ≀ S_k, with the multipliers ℤ_p^\*/{±1} regular on each block's classes.
+- **The reduction.** Below budget p² no face can hold a cross orbital. So s_Q = p·j, where j is the least face size for which a (C_h ≀ S_k)-invariant complex on kh points reaches χ ≡ 1 (mod p). If no j < p works, s_Q ≥ p².
+
+> **Proposition B (two blocks).** For Q = (ℤ/p)² on two blocks of p, s_Q = 2p for every prime p ≥ 11. The small primes give s_Q = 6, 20, 42 at p = 3, 5, 7.
+>
+> *Proof.*
+> - *j = 1 fails.* An invariant complex with one class per face must contain all 2h = p − 1 classes, so χ = p − 1 ≢ 1.
+> - *The j = 2 complexes.* With all vertices and some edges, the edges come in invariant families:
+>   - a family of all pairs at a given difference ±δ ∈ C_h within each block, of size 2h, for 1 ≤ δ < h/2;
+>   - at δ = h/2 when h is even, a family of size h;
+>   - the cross-block family, of size h².
+>
+>   So χ = 2h − 2h·x − h·y − h²·z, with 0 ≤ x ≤ ⌊(h − 1)/2⌋ and y, z ∈ {0, 1}.
+> - *The congruence.* Modulo p, 2h ≡ −1 and h² ≡ 1/4. So χ ≡ 1 becomes x + y/2 − z/4 ≡ 2 (mod p).
+> - *Large p.* For p ≥ 11, h ≥ 5 and x = 2, y = z = 0 is allowed. That gives an explicit complex with s_Q ≤ 2p, and j = 1 failing gives the reverse.
+> - *Small p.* At p = 5 and 7 no choice of (x, y, z) works. ∎
+
+*Computed, for more blocks* (`smith_blocks.py`; `outputs/smith_blocks.txt`). This is the least j for k blocks of p, with s_Q = p·j:
+
+| k | p = 3 | 5 | 7 | 11 | 13 | 17 | 19 | 23 | 29 | 31 | 37 | 41 | 43 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2 | 2 | 4 | 6 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 |
+| 3 | ≥ p | 1 | 2 | 3 | 2 | 3 | 3 | 3 | 2 | 3 | 3 | 2 | 3 |
+| 4 | 1 | 3 | 3 | 3 | 2 | 2 | 3 | 3 | 2 | 3 | 2 | 2 | 3 |
+
+The p = 3 column runs the class-complex model at p = 3, where the proof's N\*(Q) argument does not apply. The (k = 2, p = 7) entry is 6 from `pgroup_levels.py`; the script, capped at j = 4, reports more than 4. Seven entries were rechecked by `pgroup_levels.level()` on the orbitals themselves: (k, p) = (2, 3), (2, 5), (2, 7), (2, 11), (3, 5), (3, 7) and (3, 11), giving 6, 20, 42, 22, 5, 14 and 33.
+
+**So for p ≥ 11 every entry has j ≤ 3, and these groups give a Smith bound of at most 3p ≤ 3n/k.** That is linear in n, against μ\* ~ n².
+- **Where the quadratic values come from.** They are the small-prime cases (p ≤ 7, two blocks): there are too few classes to correct the residue below the top of the skeleton.
+- **What this does not cover.** Other p-subgroups: iterated-wreath Sylow subgroups, mixed block sizes, groups with fixed points. Their s_Q is bounded only by μ\*_N(n).
+
+> **If S(n) = O(n) and G\* is Smith-tight,** the monotonicity gap above disappears for large n. Each group fixing a ≥ 2 points has m\*_N ≤ G\*(a) = O(n), far below δ_cyc(n)·C(n,2), and one fixed point gives at most n − 1. So μ\*_N = μ\*_N^fpf for all large n, and with Conjecture P and (BH-SW), μ\*_N has μ\*_cyc's asymptotics. Both hypotheses are open. Proposition B and the table are the evidence for the first, for the translations of blocks only.
+
 **ν\* is not μ\* in general.** At n = 30 take AGL(1, 16) on 16 points, fixing the other 14. Its types are the 91 single edges among the fixed points, K₁₆ (120) and the 14 stars (224), so m\*_typ = 91 > μ\*(30) = 78. But the first type carries all of S₁₄, and the invariant complexes on it are the graph properties on 14 vertices: m\*_N of this group is at most G\*(14). In general **m\*_N(Γ) ≤ G\*(a) when Γ fixes a ≥ 2 points**, so the N level at n feeds on G\* at smaller degrees, and ν\* overstates it.
 
 **The fixed-point-free part.** ν\* mixes two things: groups with fixed points, whose excess is G\* at a smaller degree, and the gap between m\*_typ and m\*_N. Separate the first:
@@ -593,6 +630,7 @@ So at level 1 a foreign block is worth its smallest orbit and no more: **μ\*_cy
 - **The matching-prime reading of μ\*_cyc** at the 1,022 rows to 4000 where U exceeds the scan and no hand argument has been made; and the seven rows where the foreign reading is open.
 - **Conjecture P (§7):** a soluble transitive Oliver group of non-prime-power degree has m\*_typ ≤ n(q(n) − 1)/2. Open only when N\* is primitive with non-abelian socle. Checked on all soluble transitive groups of degrees 6 to 30 except prime powers and 24. Two smaller items: the socle fact behind Step 2 is checked to degree 877, and the infinite families are not yet cited.
 - **Is the right-hand column the asymptotic value of μ\*_N?** Its fixed-point-free part, yes, conditionally (§7). The rest is whether groups with fixed points, through G\*(a) for a ≤ n, can beat δ_cyc(n)·C(n,2) on a set of positive density.
+- **Is S(n) = O(n)?** (§7) Proposition B settles two blocks of a prime p ≥ 11, at s_Q = 2p; up to k = 4 blocks and p ≤ 43, j ≤ 3 once p ≥ 11. A general bound on j, and the other p-subgroups, are open.
 - **Smith-tightness of G\*** (§7): is G\*(n) always the largest Smith bound over its p-subgroups? It holds at all seven known n, two of them odd. A general construction would settle the fixed-point question.
 - **G\*(n) beyond 18**, and with it μ\*_N at n = 22, 26, 34, 38, 46, 50: a property with χ = 1 and at most m(m − 1) edges, or a proof there is none. The method of §7 should reach 22 and 26 with the 4-regular circulants on 11 and 13 points as the forced graphs; not attempted. **ν\*(n) away from n = 2m**, or better a bound that uses m\*_N(Γ) ≤ G\*(a) for groups with fixed points. Whether μ\*_N ever exceeds μ\*_cyc.
 - **Done (2026-11-14):** a second reading of both Propositions; `cyclic_chi_values.py` checked by independent code; §6's boosted column and every scan figure reproduced by rerun, after a review of the code. The rerun is not an independent reimplementation. **Owed:** the device inside the exact enumerator, for μ\*_cyc over [6, 10⁶]; the right-hand column rescanned class by class. `pending-checks.md` A49.

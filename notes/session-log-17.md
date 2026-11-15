@@ -548,3 +548,18 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - The n = 33 upper bound.
   - A general construction of χ = 1 properties at the Smith bound.
   - The Smith checks at n = 21 cover only hand-picked groups, since there is no table of marks at 21.
+
+## Part 17: the Smith bound for translations of blocks
+
+- **Definition**, now in threshold-beyond-mu.md §7: S(n) = max over p-subgroups Q of s_Q, where s_Q = m\*_N(Q) under Q's own condition χ ≡ 1 (mod p). Smith gives G\*(n) ≥ S(n).
+- **The class complex.** For Q = (ℤ/p)^k translating k blocks of a prime p ≥ 5:
+  - Q̂ = D_p^k, so N\*(Q) = AGL(1, p) ≀ S_k, which acts on the k(p − 1)/2 intra classes as C_h ≀ S_k.
+  - Cross orbitals have p² pairs, so below budget p² the problem reduces to a (C_h ≀ S_k)-invariant complex on the classes, and s_Q = p·j.
+- **Proposition B.** Two blocks: s_Q = 2p for all primes p ≥ 11. The proof is an explicit j = 2 complex: χ = 2h − 2hx − hy − h²z ≡ 1 (mod p) reduces to x + y/2 − z/4 ≡ 2, solved by x = 2 once h ≥ 5. The small primes give 6, 20, 42 at p = 3, 5, 7.
+- **New script `scripts/smith_blocks.py`** (`outputs/smith_blocks.txt`): the least j for k = 2, 3, 4 and p ≤ 43. Once p ≥ 11, j ≤ 3 everywhere.
+- **Checks (clean).** Seven (k, p) pairs agree with `pgroup_levels.level()` on the orbitals themselves, where nauty computes N\* independently: (2,3), (2,5), (2,7), (2,11), (3,5), (3,7), (3,11).
+- **Consequence, recorded conditionally.** If S(n) = O(n) and G\* is Smith-tight, then every group fixing a ≥ 2 points has m\*_N ≤ G\*(a) = O(n). That bypasses the monotonicity gap of Part 16, so μ\*_N = μ\*_N^fpf for large n.
+- **Not done.**
+  - A proof that j is bounded for k ≥ 3.
+  - Other p-subgroups: iterated wreath products, mixed block sizes, groups with fixed points.
+  - Prime-power block sizes.
