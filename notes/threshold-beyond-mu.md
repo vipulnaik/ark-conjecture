@@ -271,7 +271,55 @@ So a foreign block with **r − 1 = 2kq^e, k ≤ 11 or k = 13, and q outside a f
 | 5 | 5 − 2√6 = 0.1010 | F = 2, η = 1/3 | **3 − 2√2 = 0.1716** | F = 2, d = 6 (k = 3) |
 | 11 | 7 − 4√3 = 0.0718 | F = 4, η = 1/3 | **3 − 2√2 = 0.1716** | F = 2, d = 12 (k = 6) |
 
-The right-hand column is 1/(1 + 1)² at even n and 1/(1 + √2)² at odd n; the worst class moves from 0.0718 to 0.1716. *Standing:* the μ\* column is the asymptotic value of μ\*, given the enumeration proof and the hypothesis. The right-hand column is the asymptotic value of μ\*_cyc and only a lower bound for μ\*_χ — there is no classification behind it (§11). It is arithmetic on the cap formula, spot-checked on n from 9,000 to 12,000, where the best one-foreign value in classes 2, 7 and 8 is 0.2495, 0.1715 and 0.2497, and classes 5 and 11 reach 0.207 and 0.198 at special n. The k = 6 row needs q ∉ {2, 5, 7} and the k = 3 rows q ≠ 2, automatic for large n.
+The right-hand column is 1/(1 + 1)² at even n and 1/(1 + √2)² at odd n; the worst class moves from 0.0718 to 0.1716. *Standing:* the μ\* column is the asymptotic value of μ\*, given the enumeration proof and the hypothesis. The right-hand column is the asymptotic value of μ\*_cyc and only a lower bound for μ\*_χ — there is no classification behind it (§11). At almost every n it is the value of μ\*_cyc, conditionally: *Density one* below. The table itself is arithmetic on the cap formula, spot-checked on n from 9,000 to 12,000, where the best one-foreign value in classes 2, 7 and 8 is 0.2495, 0.1715 and 0.2497, and classes 5 and 11 reach 0.207 and 0.198 at special n. The k = 6 row needs q ∉ {2, 5, 7} and the k = 3 rows q ≠ 2, automatic for large n.
+
+**Density one: the right-hand column is the value of μ\*_cyc at almost every n.** Write δ_cyc(n) = 1/4 at even n and 3 − 2√2 at odd n. The statement has an unconditional upper half, a conditional lower half, and an exceptional set of size O(N/log N).
+
+> **Proposition U (unconditional).** Let E be the set of composite non-prime-power n such that either
+> - (q(n) − 1)/(n − 1) ≥ δ_cyc(n), where q(n) is the largest prime-power divisor of n; or
+> - n is odd and n = 2^j + m, with m a prime power and both C(2^j, 2) and C(m, 2) greater than δ_cyc(n)·C(n,2).
+>
+> Then **μ\*_cyc(n) < δ_cyc(n)·C(n,2) for every n ∉ E**, and #(E ∩ [1, N]) = O(N/log N).
+>
+> *Proof.* Let G be an Oliver group on n points. G is solvable, since its Oliver chain has p-group, cyclic and q-group factors, and so is each of its constituents. The rescoring changes only the orbitals inside one prime orbit R, which count C(r,2). So it is enough to find an orbital of size below δ_cyc·C(n,2) inside some orbit other than R, or to bound C(r,2). Throughout, C(sn, 2) < s²·C(n,2) for 0 < s < 1. An orbit that is a single point is joined to the rest by an orbital of at most n − 1 edges, which is below δ_cyc·C(n,2) for n ≥ 12 (smaller n are covered by the table check below). So assume every orbit has at least two points.
+> - *G transitive.* R would be the whole vertex set, so n would be prime, which is excluded. By `orbital-evasiveness-notes.md` §7.2 fact 8, G has an orbital of at most n(q(n) − 1)/2 edges. That is at most (q(n) − 1)/(n − 1) of C(n,2), and this is below δ_cyc unless n ∈ E by the first clause.
+> - *Three or more orbits.* The smallest orbit has share s ≤ 1/3, and an orbital inside it has fewer than s²·C(n,2) ≤ C(n,2)/9 edges. Either way this is below δ_cyc.
+> - *Two orbits, sizes a + b = n.* Every orbital inside an orbit has at most C(a,2) or C(b,2) edges. At even n, min(a, b) ≤ n/2 gives an orbital below C(n,2)/4. At odd n, suppose the constituent on an orbit O ≠ R is not 2-homogeneous. Then O carries at least two orbitals, so one has at most C(|O|,2)/2 edges. The score is then below min(s₁²/2, s₂²)·C(n,2) ≤ (3 − 2√2)·C(n,2), the maximum of that minimum over s₁ + s₂ = 1. Otherwise each orbit is R or carries a solvable 2-homogeneous group. A solvable 2-homogeneous group has prime-power degree: it is affine (Huppert) or lies in AΓL(1, q) (Kantor). So a and b are prime powers summing to an odd n, one of them is 2^j, and the score exceeds δ_cyc only under the second clause of E.
+>
+> The count: by fact 8's own remark, {n : n/q(n) ≤ 5} lies in the union of F·{prime powers} for F ≤ 5, which is O(N/log N). The second clause confines 2^j to the window (0.414 n, 0.586 n). The geometric-sum count of `arithmetic-of-density.md` §4.3 then gives O(N/log N), and prime powers m that are not primes add only O(√N). ∎
+
+So the upper half needs neither the classification nor any hypothesis. Prime powers m cover the device's prime r. The proposition uses the Oliver condition only through solvability.
+
+> **Proposition L (conditional on (BH-SW) of `bcp-to-floor.md` for the pairs {Q, dQ + 1}, d ∈ {2, 4, 6, 12}).** For every ε > 0 and A > 0, **μ\*_cyc(n) ≥ (δ_cyc(n) − ε)·C(n,2) for all but O(x/(log x)^A) of the n ≤ x.**
+>
+> *Proof.* This is the route of `bcp-to-floor.md` §§2–4, with the foreign orbital rescored.
+> - *The group.* The Reduction Lemma's group Γ = (𝔽_p^k ⋊ ⟨g⟩) × (C_r ⋊ C_Q), with k ∈ {1, 2}, r = dQ + 1 and Q the top prime. Its foreign block carries d/2 orbital classes. Under the reduction lemma (§4, box after the cost table), k = d/2 ∈ {1, 2, 3, 6} is good for every top prime Q ∉ {2, 5, 7}.
+> - *The score.* The score is at least min{k·C(p,2), p²·[k = 2], k·p·r, C(r,2)}. The intra-block and cross orbitals are as in that Lemma, and the foreign orbital is now C(r,2) instead of rQ.
+> - *The window.* In the Lemma's variables the objective is min{u²/k, 2αu, α²}. It balances at u = √k·α, where the cross term 2√k·α² ≥ α² does not bind, and gives 1/(1 + √k)²: 1/4 at k = 1 and 3 − 2√2 at k = 2.
+> - *The cells.* The Local Lemma's two pins act unchanged. Parity forces k odd at even n and k even at odd n. The residue mod 4 then fixes d mod 4, and at n ≡ 11 (mod 12) the mod-3 pin needs 3 | kd. The cheapest feasible cell at each class is:
+>   - (1, 2) at n ≡ 0, 4, 6, 10 (mod 12) and (1, 6) at n ≡ 2, 8;
+>   - (2, 2) at n ≡ 1, 9; (2, 4) at 3, 7; (2, 6) at 5; and **(2, 12) at 11**.
+>
+>   Here δ depends on k alone, unlike the μ\* objective, so the cheapest cell takes the least k the parity allows.
+> - *The circle method.* §§4 and 9b of `bcp-to-floor.md` go through verbatim. They use only k ∈ {1, 2, 4}, d ∈ {2, 4, 6, 12}, a window of positive measure, and solvability of the local congruences. §9b's uniform lower bound for the singular series is stated for all of those (k, d).
+>
+> Each of these cells lies in the grid that §7 of `bcp-to-floor.md` already checks. ∎
+
+> **Corollary (conditional on (BH-SW)).** μ\*_cyc(n)/C(n,2) → δ_cyc(n) on a set of n of density 1: the limit is **1/4 along even n and 3 − 2√2 along odd n**, outside a set of size O(N/log N). Under the all-large-n form of the supply hypothesis at the cells above, a (BCG-AL) for the cyc cells, the lower bound holds at every large n. The exceptions are then exactly E, where the value can be higher but not lower.
+
+*Checked* (`cyc_density_one.py`).
+- **Proposition U against the exact table.** Of the 3,410 rows to 4000, 884 are in E and 792 of those reach δ_cyc. **No row outside E reaches δ_cyc.**
+- **Size of E.** Its share of the domain is 33.9%, 23.1%, 16.2% and 13.0% at N = 10³, 10⁴, 10⁵ and 10⁶. That is |E| ≈ 1.7·N/log N, about three quarters transitive, so the decline is logarithmic, as in `arithmetic-of-density.md` §4.3.
+- **The Local Lemma** is solvable at all six cyc cells, every class, modulo 16, 9, 5, 7, 11 and 13.
+- **The lower bound, by direct search.** Over every n in a sample interval, the best Reduction-Lemma representation is scored for μ\*_cyc as a fraction of δ_cyc·C(n,2):
+
+| n in | worst fraction | n below 0.95 |
+|---|---|---|
+| (10⁵, 10⁵ + 600] | 0.906 | 12 |
+| (10⁶, 10⁶ + 1200] | 0.978 | 0 |
+| (10⁷, 10⁷ + 600] | 0.9965 | 0 |
+
+*Not checked.* The transfer of `bcp-to-floor.md`'s analysis rests on reading which of its steps use the window and the cell. That analysis has had one independent recheck (its §9), at the μ\* cells, not at the cyc cells.
 
 **On the table, to n = 4000** (`threshold_scan.py`, shapes n = Fc + r and n = Fc only). Under the old scoring this enumerator reproduces μ\* at all 3,410 rows. With qualifying foreign blocks at C(r,2): 1,847 rows improve; the floor rises from 0.0462 at n = 2759 to **0.0887 at n = 1159**; n = 2759 itself goes to 0.1568 (2 × 773 + 1213, 1212 = 12·101, k = 6, q = 101). At n = 1159 the binding orbital is the fused class 4·C(173,2), which the device does not touch. *The first rows where the two part* — none below 56:
 

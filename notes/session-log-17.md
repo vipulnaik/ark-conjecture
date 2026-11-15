@@ -457,3 +457,35 @@ is C_k-invariant and proper. By inclusion–exclusion, χ(X) = 1 exactly when (a
   - The CP-SAT and HiGHS GOOD verdicts are solver results with no proof certificate.
   - Two runs make up the full `--cert` record: the second was a targeted rerun, not a clean single pass.
   - Open: the 14 k, a general sufficiency proof, and n > 4000.
+
+## Part 13: density one for μ\*_cyc
+
+The question was whether, conditional on a (BCG-AL)-type supply hypothesis, the constants 1/4 (even n) and 3 − 2√2 (odd n) hold on a set of density 1, with the escapes of density 0. Before this part they were arithmetic on the cap formula plus a spot check. They are now a proposition pair in threshold-beyond-mu.md §5, *Density one*. Nothing was carried to the framework documents.
+
+- **Upper half: Proposition U, unconditional.** μ\*_cyc(n) < δ_cyc(n)·C(n,2) outside an explicit set E, with |E ∩ [1, N]| = O(N/log N). E is:
+  - n/q(n) small, the transitive groups, via `orbital-evasiveness-notes.md` §7.2 fact 8;
+  - odd n = 2^j + (prime power) with both parts in the balance window.
+
+  The proof uses only the orbit structure:
+  - Oliver groups are solvable.
+  - Three or more orbits give at most 1/9.
+  - Two orbits give below 1/4 at even n, and at odd n need two solvable 2-homogeneous constituents, hence prime-power sizes (Huppert, Kantor), one of them a power of 2.
+  - A non-2-homogeneous orbit caps the score at max min(s²/2, (1−s)²) = 3 − 2√2.
+
+  It needs neither the classification nor the good-k question. So the 4000-row work of Parts 9–12 is not an input; it serves as a test.
+- **Lower half: Proposition L, conditional on (BH-SW).** This is `bcp-to-floor.md`'s route with the foreign orbital rescored from rQ to C(r,2). The objective becomes min{u²/k, 2αu, α²}, so δ = 1/(1+√k)² depends on k alone, and the cheapest cells are:
+  - (1, 2) and (1, 6) at even n;
+  - (2, 2), (2, 4) and (2, 6) at odd n;
+  - (2, 12) at n ≡ 11.
+
+  Goodness of k = d/2 ∈ {1, 2, 3, 6} for Q ∉ {2, 5, 7} comes from the note's reduction lemma. bcp-to-floor's §9b singular-series bound already covers every (k, d) used.
+- **Corollary.** Under (BH-SW), μ\*_cyc(n)/C(n,2) → 1/4 along even n and → 3 − 2√2 along odd n, on a set of density 1. An all-large-n hypothesis at the cyc cells would make the lower bound hold at every large n, leaving E as the only exceptions, and only upward.
+- **Checks (`scripts/cyc_density_one.py`), clean.**
+  - On the exact 4000 table, no row outside E reaches δ_cyc; 792 of the 884 rows in E do.
+  - |E| share: 33.9 / 23.1 / 16.2 / 13.0% at 10³ to 10⁶, ≈ 1.7·N/log N.
+  - The local congruences are solvable at all six cyc cells.
+  - Best Reduction-Lemma value as a fraction of δ_cyc: worst 0.906, 0.978 and 0.9965 on samples at 10⁵, 10⁶ and 10⁷.
+- **Not checked.**
+  - The transfer of bcp-to-floor §§4 and 9b to the cyc cells and windows is a reading of which steps use the window and the cell, not a recheck of the circle method.
+  - Proposition U's proof has had one reading, mine.
+  - The lower-bound samples are short intervals.
