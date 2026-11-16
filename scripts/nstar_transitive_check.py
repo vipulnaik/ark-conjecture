@@ -13,7 +13,7 @@ def qn(n):
             while n%(pk*p)==0: pk*=p
             best=max(best,pk)
     return best
-for n in [6,10,12,14,15,18,20,21,22,26,28,30]:
+for n in ([int(x) for x in sys.argv[1:]] or [6,10,12,14,15,18,20,21,22,26,28,30]):
     PAIRS=list(itertools.combinations(range(1,n+1),2)); PID={p:i for i,p in enumerate(PAIRS)}; NP=len(PAIRS)
     d0=0.25 if n%2==0 else 3-2*math.sqrt(2); C=n*(n-1)//2; q=qn(n); f8=n*(q-1)//2
     worst=0; arg=None; over=[]; cnt=0

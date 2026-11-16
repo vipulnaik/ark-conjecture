@@ -1,0 +1,24 @@
+n = 6: mu*_cyc = 6, U_fpf = 6 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 10: mu*_cyc = 20, U_fpf = 20 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 12: mu*_cyc = 18, U_fpf = 18 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 14: mu*_cyc = 42, U_fpf = 42 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 15: mu*_cyc = 30, U_fpf = 30 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 18: mu*_cyc = 72, U_fpf = 72 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 20: mu*_cyc = 40, U_fpf = 40 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 21: mu*_cyc = 63, U_fpf = 63 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 22: mu*_cyc = 110, U_fpf = 110 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 24: mu*_cyc = 84, U_fpf = 84 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 26: mu*_cyc = 156, U_fpf = 156 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 28: mu*_cyc = 84, U_fpf = 84 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 30: mu*_cyc = 78, U_fpf = 78 (from (17, 13)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 33: mu*_cyc = 165, U_fpf = 165 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 34: mu*_cyc = 272, U_fpf = 272 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 35: mu*_cyc = 120, U_fpf = 120 (from (19, 16)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 36: mu*_cyc = 144, U_fpf = 144 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 38: mu*_cyc = 342, U_fpf = 342 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 39: mu*_cyc = 234, U_fpf = 234 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 40: mu*_cyc = 140, U_fpf = 140 (from (8, 8, 8, 8, 8)); undecided: tau(40) not computed
+n = 42: mu*_cyc = 171, U_fpf = 171 (from (23, 19)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 44: mu*_cyc = 220, U_fpf = 220 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 45: mu*_cyc = 180, U_fpf = 180 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc
+n = 46: mu*_cyc = 506, U_fpf = 506 (from ('transitive',)); mu*_N^fpf = nu*_fpf = mu*_cyc

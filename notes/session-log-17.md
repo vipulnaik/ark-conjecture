@@ -624,3 +624,10 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **Outside the class:** embedding (μ\*_χ), G\*, and simultaneity (M\*_OCR). These are the doubly-exponential quantities.
 - **Caveats recorded:** no formal definition; density-1 only; no bearing on ARK's truth; KSS's order-n²/4 bound mentioned as consistent but not compared.
 - The map legend points to §12. Nothing was carried to the framework documents.
+
+## Part 23: μ\*_N^fpf = ν\*_fpf = μ\*_cyc for every non-prime-power n ≤ 46 except 40
+
+- **The orbit-data bound (new script `scripts/fpf_upper.py`; `outputs/fpf_upper.txt`).** For an orbit O of size a, N\*(Γ) restricted to O lies in N\*(Γ^O). So Γ's types inside O are refined by N\*(Γ^O)'s pair-orbits, and some type has at most F·τ(a) pairs, with τ(a) the largest m\*_typ over soluble transitive groups of degree a (C(a,2) if a is a prime power). Maximising over orbit shapes, with equal sizes merged into one class, gives U_fpf(n) ≥ ν\*_fpf ≥ μ\*_N^fpf ≥ μ\*_cyc.
+- **τ computed** by `nstar_transitive_check.py`, which now takes degrees as arguments, at every non-prime-power degree from 6 to 46 except 40. The new degrees are 24 (24,193 groups), 33, 34, 35, 38, 39, 42, 44, 45, 46 (16,737) and 36 (118,027, about 1 h 50 min). In every degree τ equals fact 8's bound, so Conjecture P holds to degree 46 apart from 40.
+- **Result.** U_fpf = μ\*_cyc at all 23 non-prime-power n ≤ 46 except 40, so there μ\*_N^fpf = ν\*_fpf = μ\*_cyc = μ\*. No separation. n = 40 needs τ(40), from about 315,000 transitive groups, not run.
+- **Where to look next for a separation:** n = 56, 63, …, the first rows where μ\*_cyc > μ\*. There τ is out of reach of the transitive-group library, which stops at degree 47.
