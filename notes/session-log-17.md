@@ -631,3 +631,10 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **τ computed** by `nstar_transitive_check.py`, which now takes degrees as arguments, at every non-prime-power degree from 6 to 46 except 40. The new degrees are 24 (24,193 groups), 33, 34, 35, 38, 39, 42, 44, 45, 46 (16,737) and 36 (118,027, about 1 h 50 min). In every degree τ equals fact 8's bound, so Conjecture P holds to degree 46 apart from 40.
 - **Result.** U_fpf = μ\*_cyc at all 23 non-prime-power n ≤ 46 except 40, so there μ\*_N^fpf = ν\*_fpf = μ\*_cyc = μ\*. No separation. n = 40 needs τ(40), from about 315,000 transitive groups, not run.
 - **Where to look next for a separation:** n = 56, 63, …, the first rows where μ\*_cyc > μ\*. There τ is out of reach of the transitive-group library, which stops at degree 47.
+
+## Part 24: the orbit-data bound to n = 4000, given Conjecture P
+
+- **New script `scripts/fpf_upper_scan.py`** (`outputs/fpf_upper_scan.txt`, 50 s). It runs fpf_upper's bound with τ(a) = a(q(a) − 1)/2 at non-prime-power degrees (Conjecture P), searching shapes of up to three orbit classes. A subset-sum check over all shapes, with any number of classes, finds exactly the same 977 gap rows.
+- **Result.** 2,433 of 3,410 rows are settled: μ\*_N^fpf = ν\*_fpf = μ\*_cyc there, given Conjecture P. 977 rows are gaps, starting at n = 110 (49 + 61). Every gap witness has two classes, each credited at its full intra-pair count, and no transitive term exceeds μ\*_cyc.
+- **Reading.** The bound ignores Oliver structure (a common top q) and goodness. Gap rows can separate only through two-class configurations outside μ\*_cyc: two rescored blocks that are jointly good, or a rescored prime-power block. Part 21's searches found none.
+- **Next step, if pursued.** A level-1 analysis of two-class shapes under P ⊴ H ⊴ Γ, the analogue of the classification's two-part cases.
