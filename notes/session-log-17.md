@@ -667,3 +667,16 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - *Ceilings.* The chiral μ\*_cyc analogue reaches 1/4 and 3 − 2√2 under Proposition L's hypotheses plus c ≡ 3 (mod 4) for the unfused matching block at even n. Proposition U applies verbatim.
   - *Status.* Argued, not checked.
 - `check_doc_figures`: two dangling references (Theorem D1, Theorem 1) were fixed by naming their documents; 0 findings.
+
+## Part 27: general theory in the (N, G) setting; a level-1 filter; bi-resistance
+
+- **threshold-beyond-mu.md §13, "What is general theory, and what is not".** "No theory" holds for values: there is no family index. Three structural results are general:
+  - the inequalities between the projections;
+  - a level-1 closure criterion, with t = 1 (Proposition 1), the single-type case and the §7.13 loop as instances;
+  - Smith lower bounds for G\*_G.
+- **New scripts `scripts/ws_level1_filter.g` and `.py`** (`outputs/ws_level1_filter.txt`). The criterion was run over every Oliver subgroup class of the six groups without a transitive Oliver subgroup:
+  - 12T162: settled by 8 classes, including orders 4 and 8 with six orbits of size 2, not only the known loop;
+  - 10T31: settled by the trivial group;
+  - 10T7, 10T26: not settled at level 1, but already settled by the A₅ search and inclusion;
+  - **14T10 and 14T30: not settled at level 1.** Level 2 is the next filter.
+- **Bi-resistance.** T_B is bi-resistant iff μ\*_G ≤ B ≤ N − 1 − μ\*_G. So M\*_BR = M\*_OR whenever μ\*_G < N/2. They can differ only at a half-split (an Oliver subgroup with two orbits of size N/2), where M\*_BR is N/2 or N according to the half-split graph. 12T162 separates them, with μ\*_G = 6 and M\*_BR = 12. For graphs, μ\* < C(n,2)/2 by `monotone-transitive-note.md` §5's case analysis of two-orbital Oliver groups, so M\*_BR = μ\*. The cases are imprimitive vertex-transitive (2K_p and K_{p,p} at n = 2p; in general valencies b − 1 and n − b, equal only if n = 2b − 1), a star plus a clique, and primitive affine at prime powers. None has two equal orbitals at a non-prime-power n. A first draft said "star + clique only", which wrongly omitted the imprimitive case; Vipul caught it. "No isomorphic swapped orbitals" is the special case; the basic reason is "no half-split".
