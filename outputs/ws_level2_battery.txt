@@ -1,0 +1,7 @@
+14T10: 156 G-orbits on subsets, 14 Oliver subgroup classes
+  level 2, one group at a time: settled by 0 classes ([])
+  battery of all 14 classes at once: feasible
+  least e_max of an Oliver-chi-resistant 14T10-invariant property (M*_OCR): 7 of 14
+14T30: 52 G-orbits on subsets, 15 Oliver subgroup classes
+  level 2, one group at a time: settled by 0 classes ([])
+  battery of all 15 classes at once: INFEASIBLE

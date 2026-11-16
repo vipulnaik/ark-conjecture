@@ -692,3 +692,23 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - **c = 2^j escapes.** It gives d ≡ 2 (mod 4), so the cell is (2, 6) and the value is 3 − 2√2, but only along powers of two, a density-0 set.
   - **q = 3 twists give only density-0 families** (r = 4·3^e + 1).
   - **What would close the gap:** the directed version of the two-class level-1 classification.
+
+## Part 29: the two degree-14 groups settled
+
+- **New scripts `scripts/ws_level2_battery.g` and `.py`** (`outputs/ws_level2_battery.txt`). One variable per G-orbit on subsets of the coordinates. Downward closure, ∅ in, full set out, and each Oliver H's χ(Δ_P^H) is linear in the variables.
+  - **Level 2 (one H):** no class settles 14T10 or 14T30 alone.
+  - **The battery (all H):** 14T30 = PSL(2,13) is **infeasible**, so settled. 14T10 is feasible, with least e_max 7.
+  - **Controls:** 12T162 is infeasible (level 2 settles 13 classes, against 8 at level 1); 10T31 is infeasible; A₅ on 10 points is feasible (e_max 5).
+- **New script `scripts/ws_14t10_exhaust.py`** (`outputs/ws_14t10_exhaust.txt`, about 6 min). It enumerates all 4,224 battery solutions at 14T10, and `dtree.c` gives D = 14 for every one. So 14T10 is settled.
+- **Both degree-14 groups are now settled by Oliver methods plus one exact check.** That agrees with the literature's N ≤ 14. Recorded in threshold-beyond-mu.md §13. `monotone-transitive-note.md` itself is not edited.
+
+## Part 30: a first pass at two-class shapes on the gap rows
+
+- **New script `scripts/ws_gapclose.py`** (`outputs/ws_gapclose.txt`). For the prime-pair witnesses on the 977 gap rows, it enumerates the twist configurations allowed by the Oliver structure and tries to certify each one BAD with a complex meeting over-approximated readings.
+- **First attempt, requiring χ = 1 exactly:** this closed 0 of 489 pairs.
+- **With readings taken mod q:** 240 of 489 pairs are closed and 1,190 configurations are open, the first at n = 638.
+- **Not done:**
+  - the 210 prime-power pairs;
+  - joins and richer value sets;
+  - a rigorous re-derivation of the reading model.
+- No row is promoted. Recorded in threshold-beyond-mu.md §7.
