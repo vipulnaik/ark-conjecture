@@ -666,7 +666,7 @@ So **no n ≤ 46 separates μ\*_N^fpf from μ\*_cyc** where it is decided, and a
 
 *A reading of `three-uniform-note.md` and `general-k-note.md` against §§1–7; neither is edited.*
 
-**What transfers.** Everything stated without reference to pairs: the projections of §1, the three levels of §3, the Proposition of §4 (its proof never uses that the orbits are of pairs), and the reduction of §7 to types and the trivial group. The fixed complex is indexed by orbits on k-subsets, as `three-uniform-note.md` §1 says of the criterion itself.
+**What transfers.** Everything stated without reference to pairs: the projections of §1, the three levels of §3, the Proposition of §4 (its proof never uses that the orbits are of pairs), the reduction of §7 to types and the trivial group, and §7's split of the N level into its fixed-point-free part and groups with fixed points, the latter bounded by G\*_k at the number of fixed points. The fixed complex is indexed by orbits on k-subsets, as `three-uniform-note.md` §1 says of the criterion itself.
 
 **What the device needed, and k = 2 supplied without being asked.** The Proposition wants every orbit under the budget to lie in *one* type. At k = 2 a foreign block's pair-orbits are a single orbit of the normaliser: AGL(1, r) is transitive on pairs. μ\* spends the 2-homogeneity of the group; the device spends the 2-homogeneity of its **normaliser**, which costs the group nothing. `aod` §5 calls the first a group-theoretic accident. The second is the same accident, one level up.
 
@@ -684,7 +684,16 @@ So at level 1 a foreign block is worth its smallest orbit and no more: **μ\*_cy
 
 **General k.** `general-k-note.md` §3 records that the full-density blocks are finite at k = 3, degenerate at k = 4 and absent from k = 5 (Livingstone–Wagner). The device's supply is that same list, so it has no infinite family at any k ≥ 3. The ceilings β_k = cap_F(η)/2, the mod-12 table and the arithmetic of `aod` §§3.5–3.6 are untouched at every arity.
 
-**What might still have juice, and is not examined.** The reduction of §7 has an analogue: μ\*_{N,k} ≥ G\*_k(n), the least e_max of a k-uniform property with χ = 1. μ\*_k is capped by group orders, at O(n² log n); G\*_k is the trivial group's value and has no such cap in sight, its lower bounds coming from p-subgroups by Smith. Whether G\*_k is of the order of μ\*_k or larger is the one question here whose answer could change an order of magnitude. `global_chi_min.py` on 3-uniform hypergraphs at n = 6 would be the first data point.
+**The barrier of §12 at arity k.** At k = 2 the barrier's mechanism has two parts: units are bounded by pair counts within classes of orbits, and crediting a whole orbit needs a 2-homogeneous normaliser. At arity k these become:
+- **Units.** A class of F orbits with share s holds at most about s^k/F^{k−1} of the k-sets.
+- **Whole orbits.** Crediting a whole orbit needs a k-homogeneous normaliser. For k ≥ 3 that is Kantor's and Livingstone–Wagner's finite list.
+
+So the step that took k = 2 up to the barrier, μ\* → μ\*_cyc with foreign blocks at efficiency 1, has no infinite supply at k ≥ 3. The level-1 computations above show the cost: a foreign block is worth its smallest orbit. The computable quantities stay at μ\*_k = Ω(n²) and O(n² log n) (`general-k-note.md` §5), which is a vanishing fraction of C(n,k). At k = 2 orbit-local methods reach a constant fraction of C(n,2) and stall there. At k ≥ 3 the computed quantities, μ\*_k and the level-1 block values above, never leave the Ω(n²), O(n² log n) range. *Whether every orbit-local method at k ≥ 3 is o(C(n,k)) is not proved:* the type-level version of Proposition U would need a bound on N\*-orbits on k-sets that this note does not have.
+
+**What might still have juice: G\*_k, now with the k = 2 evidence.** The reduction of §7 gives μ\*_{N,k} ≥ G\*_k(n), the least e_max of a k-uniform property with χ = 1. Whether G\*_k is of the order of μ\*_k or larger is still the one question here that could change an order of magnitude. The pair case now gives evidence on how it might go.
+- **What k = 2 shows.** G\* never exceeded μ\* where known (n = 6, 10, 12, 14, 15, 18, 21; §7). At every one of those n it equals the largest Smith bound over p-subgroups, and the Smith bounds of block translations are linear in n (Propositions B, B′ and B″).
+- **The analogue at arity k.** A group of translations of blocks of p has every orbit on k-sets of size p^i for some i ≤ k. The binding faces are built from its smallest orbits, those of size p, so the same mechanism suggests Smith bounds of order p times a small j. That is O(n), far below μ\*_k.
+- **If Smith-tightness held at arity k,** G\*_k would therefore not change the order of magnitude. But Smith-tightness is an observation from seven values at k = 2, and no k-uniform value of G\* has been computed. `global_chi_min.py` on 3-uniform hypergraphs at n = 6 would be the first data point, and `smith_blocks.py`'s class complex has a direct k-set analogue.
 
 ## 11. What is open, and what is owed
 

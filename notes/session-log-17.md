@@ -638,3 +638,16 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **Result.** 2,433 of 3,410 rows are settled: μ\*_N^fpf = ν\*_fpf = μ\*_cyc there, given Conjecture P. 977 rows are gaps, starting at n = 110 (49 + 61). Every gap witness has two classes, each credited at its full intra-pair count, and no transitive term exceeds μ\*_cyc.
 - **Reading.** The bound ignores Oliver structure (a common top q) and goodness. Gap rows can separate only through two-class configurations outside μ\*_cyc: two rescored blocks that are jointly good, or a rescored prime-power block. Part 21's searches found none.
 - **Next step, if pursued.** A level-1 analysis of two-class shapes under P ⊴ H ⊴ Γ, the analogue of the classification's two-part cases.
+
+## Part 25: §10 (arity k ≥ 3) updated with this session's findings
+
+- **"What transfers"** now includes §7's split into the fixed-point-free part and groups with fixed points, the latter bounded by G\*_k at the number of fixed points.
+- **New paragraph: the barrier at arity k.**
+  - The two parts of the mechanism become k-set counting (about s^k/F^{k−1}) and a k-homogeneous normaliser, which is a finite list for k ≥ 3. So the μ\* → μ\*_cyc step has no infinite supply.
+  - The computable quantities stay at μ\*_k = Ω(n²), O(n² log n) (`general-k-note.md` §5), a vanishing fraction of C(n,k).
+  - That every orbit-local method is o(C(n,k)) at k ≥ 3 is stated as not proved: it would need a type-level bound at arity k.
+- **"What might still have juice" rewritten with the k = 2 evidence.**
+  - G\* ≤ μ\* wherever known, it equals the largest Smith bound, and block-translation Smith bounds are O(n).
+  - Heuristically, the arity-k block-translation Smith bounds are also O(n), so Smith-tightness at arity k would leave G\*_k far below μ\*_k.
+  - Recorded as a heuristic, with the first data points named: 3-uniform G\* at n = 6, and a k-set class complex.
+- `three-uniform-note.md` and `general-k-note.md` themselves are not edited (staging-area rule).
