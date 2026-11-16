@@ -4,7 +4,7 @@
 
 ## Map of the quantities
 
-*Read A ---> B as A ≥ B: every arrowhead points at the smaller quantity. Definitions: M\*_R in §1; μ\*_χ and M\*_OCR in §2; the per-group levels and m\*_typ in §3; μ\*_cyc in §4 and U(n) in §5; s(n) and s\*_N(n) in §6; ν\*, G\*, and the fixed-point-free parts ν\*_fpf and μ\*_N^fpf in §7. §12 argues, informally, that every quantity computable from orbit data is capped at δ_cyc on a set of density 1.*
+*Read A ---> B as A ≥ B: every arrowhead points at the smaller quantity. Definitions: M\*_R in §1; μ\*_χ and M\*_OCR in §2; the per-group levels and m\*_typ in §3; μ\*_cyc in §4 and U(n) in §5; s(n) and s\*_N(n) in §6; ν\*, G\*, and the fixed-point-free parts ν\*_fpf and μ\*_N^fpf in §7. §12 argues, informally, that every quantity computable from orbit data is capped at δ_cyc on a set of density 1. §13 sorts the definitions by the generality they need; §14 and §15 take the directed and chiral variants.*
 
 ```
                           C(n,2)
@@ -627,7 +627,7 @@ So **no n ≤ 46 separates μ\*_N^fpf from μ\*_cyc** where it is decided, and a
 - **It is `orbital-evasiveness-notes.md` §7.3's direction (b).** Oliver's theorem is tight at a fixed group over all acyclic complexes: every value in 1 + n_G·ℤ occurs. `orbital-evasiveness-notes.md` §7.3 names "the restriction to Δ_P complexes" as the least explored place left to look, since Δ_P comes from an S_n-invariant family and the tightness says nothing about that subclass. The Proposition is an instance: for sparse graph properties the realisable values of χ(Δ_P^Γ) lie in the finite set of the k-table, which misses 1 + qℤ. m\*_χ(Γ) is the least budget at which the realisable set first meets Oliver's.
 - **It extends `orbital-evasiveness-notes.md` §9.7's "isomorphic orbitals".** That passage has the symmetry N\*, the all-or-none consequence, the count t_eff, and evasiveness for budgets up to m₁ + m₂. What is added is that a whole type is neutralised up to its total size, and the constants that follow.
 - **It is the χ-level, k-cycle form of `orbital-evasiveness-notes.md` §7.13's loop.** There: if an Oliver subgroup H has exactly two orbits that the ambient group swaps, the fixed complex is two points or empty and every invariant function is evasive. That is k = 2 with the swap in place of the multiplier. The pentagon and pentagram under A₅ are the same mechanism failing because the identifying permutation is not in the ambient group. For graph properties the ambient group is S_n, so every multiplier is available — which is why the device is so effective here.
-- **Chiral properties.** A multiplier of full order on a block of size r is an (r − 1)-cycle, an odd permutation. It can be corrected by any odd permutation inside Γ, which fixes every orbital; the note's groups contain one (the generator of C_{c−1} on a matching block). So the Proposition should hold for A_n-invariant properties wherever Γ contains an odd permutation. *Argued, not checked.*
+- **Chiral properties:** see §15.
 - **It fills the partial-index row of `orbital-evasiveness-notes.md` §7.9.** The per-shape conditions listed there are for full foreign index, and at those shapes m\*_χ(Γ) = m\*(Γ): the pattern "the smallest orbital alone" passes — {K_a} at S3, F·K_c at S2. A gain needs the smallest type to be repeated, which is the partial-index case.
 - **The search of `orbital-evasiveness-notes.md` §7.9 is M\*_OCR with no objective.** The CSP's models are the properties passing the battery; minimising s over them would compute the battery's projection, a lower bound on M\*_OCR(10), and μ\*_χ restricted to the battery is the largest single-group optimum.
 
@@ -750,3 +750,83 @@ These are also the quantities that are doubly exponential to compute and have no
 - It does not bear on whether ARK is true. It locates where further progress would have to come from.
 - The topological method of Kahn, Saks and Sturtevant fixes one group and uses its fixed-point χ. Its general lower bound is of order n²/4, a constant fraction short of C(n,2). The barrier is consistent with that, but the quantities differ, and this note does not compare them directly.
 
+## 13. Scope: which definitions need graphs
+
+*`monotone-transitive-note.md` works with a nontrivial monotone function on N coordinates, invariant under a group G ≤ S_N (weakly symmetric when G is transitive). Graph properties are the case N = C(n,2), G = S_n acting on pairs. This section sorts the quantities of this note by what they use.*
+
+**Defined for any (N, G).** These need only a group acting on the coordinates and Oliver subgroups of G:
+- The **ladder of rungs and its projections** M\*_R (§1). These include M\*_OCR and M\*_NE, and the χ rung's G\* = the least e_max of a G-invariant P with χ(Δ_P) = 1.
+- The **per-group levels** (§3), with "orbital" read as "Γ-orbit on coordinates":
+  - **m\*(Γ)**, the least orbit;
+  - **N\*(Γ)**, the elements of G carrying Γ-orbits to Γ-orbits;
+  - **types and m\*_typ**;
+  - **m\*_N**, level 1;
+  - **m\*_χ**, level 2, where embedding becomes "some element of G carries one union of orbits into another".
+
+  Their maxima over Oliver Γ ≤ G (μ\*_G, μ\*_{N,G}, μ\*_{χ,G}) are `monotone-transitive-note.md` §2's μ\*_Γ and its refinements.
+- The **single-good-type Proposition of §4**, stated for a Γ-orbit set cycled by N\*. Its proof never uses pairs (§10).
+- **Smith bounds** s_Q and S (§7), for p-subgroups Q ≤ G.
+
+The general setting can be much easier. If G contains a transitive Oliver subgroup, every rung closes at once (`monotone-transitive-note.md` §1), and μ\*_G = N.
+
+**Needs a vertex set: the action on coordinates is induced from an action on [n].** This covers graphs, k-uniform hypergraphs, digraphs (§14) and chiral graphs (§15):
+- **Block structure.** Blocks, shapes, twists, the classification, the cap formula and the ceiling tables, and with them the number theory: (BH-SW), the balance points, Propositions L and U.
+- **Fixed points.** The fixed-point-free split (§7), with fixed points meaning fixed vertices, and the bound m\*_N ≤ G\*(a) for a group fixing a points.
+- **Required graphs.** The biclique form (§6).
+- **The barrier.** §12's barrier, whose "orbit-local" counts are counts within vertex orbits.
+
+In the general setting there is no orbit-shape space, so none of these has an analogue. That is `monotone-transitive-note.md` §2's "no theory behind it".
+
+**Needs the arity, or pairs specifically.**
+- **Full credit for a vertex orbit.** It needs a 2-homogeneous normaliser at k = 2, k-homogeneous at arity k (§10). So μ\*_cyc's infinite supply exists at k = 2 only.
+- **The constants.** 1/4 and 3 − 2√2 come from the exponent 2 in s²/F. At arity k the counts are s^k/F^{k−1}.
+- **Type-level orbit lemmas.** Proposition U_typ and Conjecture P are about pair-orbits of soluble transitive groups.
+- **The block-translation Smith bounds** (Propositions B to B″) count difference classes of pairs.
+
+## 14. Directed graph properties
+
+*`directed-graph-properties.md`: monotone S_n-invariant properties of the n(n − 1) ordered pairs. The action is still induced from vertices, so everything in §13's second group applies.*
+
+**What that note establishes for μ\*.** μ\*_dir ≥ μ\*, so δ_dir ≥ δ/2 (`directed-graph-properties.md` Theorem D1). An orbital is self-paired iff its twist order is even. So a foreign block at odd top prime q has directed efficiency η_dir = t/(r − 1), half its undirected η, and the directed ceilings are the undirected ones, or halves of them (its §3).
+
+**The device repairs that halving, except at one class.** On a foreign block of prime r with twist T of odd order t = (r − 1)/d:
+- **The orbitals.** The ordered-pair orbitals are the d cosets of T in ℤ_r^\*, each of r·t pairs.
+- **The cycling.** AGL(1, r) is 2-transitive, so it is transitive on ordered pairs, and its multipliers cycle the d classes regularly.
+
+So §4's Proposition applies with k = d (not d/2), and a good index makes the block count r(r − 1), at efficiency 1. Reading `bcp-to-floor.md`'s cells at k = d:
+
+| n mod 12 | cell (F, d) | k = d | goodness for large q | directed device ceiling |
+|---|---|---|---|---|
+| 0, 4, 6, 10 | (1, 2) | 2 | prime power: good | 1/4 |
+| 2, 8 | (1, 6) | 6 | good for q ∉ {2, 5, 7} (§4) | 1/4 |
+| 1, 9 | (2, 2) | 2 | good | 3 − 2√2 |
+| 3, 7 | (2, 4) | 4 | good | 3 − 2√2 |
+| 5 | (2, 6) | 6 | good | 3 − 2√2 |
+| 11 | (2, 12) | 12 | **bad at every q** | — |
+| 11 | (4, 6) | 6 | good | **1/9** |
+
+At n ≡ 11 (mod 12) the undirected device uses k = 6. Directed, the same cell needs k = 12, and 12 is bad at every q: a C₁₂-invariant proper complex with χ = 1 exactly exists (session-log-17 Part 10), and so is every multiple of 12, by pull-back. So the F = 2 shape is lost there. The best available is (4, 6), at 1/(1 + 2)² = 1/9.
+- **Classes away from 11.** On a density-1 set of n, and conditional on (BH-SW) as in Proposition L, the directed analogue of μ\*_cyc sits at **1/4 and 3 − 2√2 of n(n − 1)**, the undirected constants, with no halving.
+- **Class 11.** It sits at 1/9 or more.
+- **The upper half.** Proposition U's counting ports verbatim: ordered pairs inside an orbit of share s are about s²·n(n − 1). So 1/4 and 3 − 2√2 are the orbit-local ceilings. Whether some other configuration closes the class-11 gap between 1/9 and 3 − 2√2 is open.
+
+*Argued, not computed:* no directed witness group has been built and checked, and the goodness of k = 6 at the relevant q rests on §4's statement.
+
+**Oriented graphs** (`directed-graph-properties.md` §§4–5b) change the coordinate set itself, through the 2-cycle fiat. They are not examined here.
+
+## 15. Chiral graph properties
+
+*`chiral-graph-properties.md`: monotone A_n-invariant properties of E(K_n). Every group must consist of even permutations, and P is invariant only under A_n.*
+
+**What that note establishes for μ\*.** A factor of two at worst (`chiral-graph-properties.md` Theorem 1). Beyond that, a chirality efficiency ε(c) for matching blocks, with ε = 1/2 only for unfused blocks at prime powers c ≡ 1 (mod 4). And the foreign efficiency is halved only on the Fermat branch (q = 2). The mod-12 ceilings survive unscaled at odd n, and at even n subject to choosing c ≡ 3 (mod 4) (its §5).
+
+**The device.** Δ_P^Γ is invariant only under N\*(Γ) ∩ A_n. The multiplier that cycles a foreign block's classes is an (r − 1)-cycle, which is odd. It can be corrected by any odd element of Γ̂, which fixes every orbital: the product is even and acts on the classes as the multiplier does.
+
+Γ̂ contains an odd permutation whenever some vertex orbit carries a 2-homogeneous constituent of Γ, because Γ̂ then acts on that orbit as its full symmetric group. Every shape with a matching block has one. So in those shapes N\*(Γ) ∩ A_n cycles the classes as N\*(Γ) does, and §4's Proposition holds for A_n-invariant properties.
+
+So, on the same density-1 set and under the same hypotheses as Proposition L, the chiral analogue of μ\*_cyc reaches **1/4 and 3 − 2√2**:
+- **No penalty at odd top prime q.** The foreign device works there, and its efficiency is not halved.
+- **One supply condition at even n.** The unfused matching block of the c + r shape must have c ≡ 3 (mod 4) or c = 2^a to avoid ε = 1/2. That is a positive-density congruence condition, and Proposition L's circle method would carry it as one more local condition.
+- **The upper half.** Proposition U applies verbatim, since even groups are a subset.
+
+*Argued, not checked:* the correcting element is not exhibited group by group, and Proposition L with the extra condition c ≡ 3 (mod 4) has not been rerun.

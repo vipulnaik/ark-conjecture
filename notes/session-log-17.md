@@ -651,3 +651,19 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - Heuristically, the arity-k block-translation Smith bounds are also O(n), so Smith-tightness at arity k would leave G\*_k far below μ\*_k.
   - Recorded as a heuristic, with the first data points named: 3-uniform G\* at n = 6, and a k-set class complex.
 - `three-uniform-note.md` and `general-k-note.md` themselves are not edited (staging-area rule).
+
+## Part 26: scope of the definitions; directed and chiral sections
+
+- **threshold-beyond-mu.md §13, "Scope: which definitions need graphs".** It sorts the quantities into three groups:
+  - **Defined for any (N, G), as in `monotone-transitive-note.md`:** the rungs and projections, G\*, the per-group levels and types, μ\*_{X,G}, §4's Proposition, and the Smith bounds.
+  - **Needing a vertex set:** blocks, shapes, the cap formula, the number theory, Propositions L and U, the fixed-point-free split, bicliques, and the barrier.
+  - **Needing pairs or the arity:** full orbit credit (2-homogeneous versus k-homogeneous), the constants, U_typ, Conjecture P, and the B Propositions.
+- **§14, directed graph properties** (`directed-graph-properties.md`).
+  - *Rescoring.* On a foreign block at odd q, the ordered orbitals are the d cosets of T, cycled regularly by multipliers, so the device applies with k = d (not d/2). It undoes the directed halving at every class except n ≡ 11 (mod 12). There the cell (2, 12) needs k = 12, which is bad at every q: 12 is in ATT1, so χ = 1 is attained. The best is (4, 6), at 1/9.
+  - *Ceilings.* The directed device ceilings are 1/4 at even n and 3 − 2√2 at odd n except class 11. Proposition U's counting gives the same orbit-local ceilings, so class 11 has a gap between 1/9 and 3 − 2√2.
+  - *Status.* Argued, not computed. Oriented graphs are not examined.
+- **§15, chiral graph properties** (`chiral-graph-properties.md`). The bullet in §8 is replaced by a pointer.
+  - *Device.* The odd multiplier is corrected by an odd element of Γ̂, which exists whenever some orbit has a 2-homogeneous constituent, as in every shape with a matching block.
+  - *Ceilings.* The chiral μ\*_cyc analogue reaches 1/4 and 3 − 2√2 under Proposition L's hypotheses plus c ≡ 3 (mod 4) for the unfused matching block at even n. Proposition U applies verbatim.
+  - *Status.* Argued, not checked.
+- `check_doc_figures`: two dangling references (Theorem D1, Theorem 1) were fixed by naming their documents; 0 findings.
