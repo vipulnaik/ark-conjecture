@@ -721,3 +721,18 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **New `ws_gaprows_kinds.py`** sorts the 977 gap rows by witness kind. 335 rows are prime+prime only, so they are settled at level 1, given Conjecture P. The other 642 have prime-power (semilinear), merged or non-prime-power witnesses and are not handled.
 - **Checked:** the script's count matches the witness list of `fpf_upper_scan.py`. For n = 904 I checked the union residues by hand.
 - **Not checked:** an independent reimplementation; the subgroups' readings beyond Γ's own (level 2).
+
+## Part 32: a sign bug, and the pp+pp gap rows
+
+- **A sign bug in Part 31's layered complexes.** The faces added in a layer were given sign (−1)^s instead of (−1)^(s−1), where s is the number of classes in a face. The formula is now checked by brute force at m = 5 and 6.
+  - With the fix, 487 of the 489 prime pairs close. Joins (1 − χ = (1 − x)(1 − y)) close the last 2 (n = 1632, 3586). So the claim of Part 31 stands, on a corrected argument.
+- **Readings completed.** An orientation also gives a mod-p_Y reading when p_Y divides |M_X| and M_Y = 1. Every pair of twists is now enumerated, and a configuration with no reading counts as not Oliver.
+- **New `ws_blockdata.g`** (about 50 min of GAP) and **`ws_gapclose_pp.py`**. These handle the pp+pp witnesses with ΓL(1) twists. The readings are assembled exactly as `OliverData` computes them. On blocks of rank at least 2 only full skeleta are used, so N\*'s action does not need to be known.
+  - **Result:** 181 of 210 pairs close; 173 configurations stay open, in 29 rows. Every open configuration has an exact reading and a regular prime block (Z_p, k = (p − 1)/2), where χ = 1 has to be reached exactly.
+- **Rows settled at level 1, given Conjecture P:** 462 of 977. That is 335 prime+prime-only rows, plus 127 with prime-power witnesses within ΓL(1). Still open: 19 rows with regular prime blocks, and 496 rows with merged or non-prime-power witnesses.
+- **Checked:** the layered χ formula, by brute force; the witness kinds, against `fpf_upper_scan.py`.
+- **Not checked:**
+  - an independent reimplementation;
+  - affine twists outside ΓL(1);
+  - subgroup readings (level 2);
+  - whether the open regular-prime configurations are truly GOOD or only beyond these complex families.

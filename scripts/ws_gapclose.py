@@ -36,13 +36,14 @@ def orbit_counts(m,s):
     _OC[(m,s)]=out; return out
 def layered_ok(k,test_res,target_exact):
     """complexes pulled back from C_m on m points (m | k): the full (s-1)-skeleton plus any union of
-    C_m-orbits of s-faces, 1 <= s <= m-1 (all proper).  chi = base + (-1)^s t, t a sum of orbit sizes.
+    C_m-orbits of s-sets (all sets of < s points present), 1 <= s <= m-1 (all proper).
+    chi = base + (-1)^(s-1) t, base = 1 + (-1)^s C(m-1, s-1), t a sum of orbit sizes.
     test_res(q) -> residues r with chi = r mod q acceptable; target_exact: require chi = 1."""
     for m in divisors(k):
         if m<2: continue
         for s_ in range(1,m):
             base=1-(-1)**(s_-1)*comb(m-1,s_-1) if s_>=1 else 0
-            oc=orbit_counts(m,s_); sg=(-1)**s_
+            oc=orbit_counts(m,s_); sg=(-1)**(s_-1)
             if target_exact:
                 t=(1-base)*sg; tot=sum(d*c for d,c in oc.items())
                 if t<0 or t>tot or t>5_000_000: continue
@@ -66,7 +67,7 @@ def resset(k,Q):
     for m in divisors(k):
         if m<2: continue
         for s_ in range(1,m):
-            base=1-(-1)**(s_-1)*comb(m-1,s_-1); sg=(-1)**s_
+            base=1-(-1)**(s_-1)*comb(m-1,s_-1); sg=(-1)**(s_-1)
             reach={0}
             for d,c in orbit_counts(m,s_).items():
                 for _ in range(min(c,Q)):
@@ -87,14 +88,11 @@ for n,l in rows:
             if len(factorint(a))==1 and len(factorint(b))==1: pp_witness+=1
             continue
         pairs+=1; ok=True
-        for A,B in ((a,b),(b,a)):                 # P = T_A ; B's twist a q-power
+        for A,B in ((a,b),):                      # every pair of twists; readings below decide Oliver-ness
             for dB in divisors(B-1):
-                f=factorint(dB)
-                if len(f)>1: continue
-                q=list(f)[0] if f else None        # dB = 1: no twist on B
+                q=None
                 kB=classes(B,dB)
                 for dA in divisors(A-1):
-                    if dA%B==0: continue           # H/P cyclic needs gcd(|M_A|, B) = 1
                     kA=classes(A,dA)
                     if kA==1 and kB==1: continue   # both 2-homogeneous: a mu* group
                     # a complex with chi = 1 exactly (satisfies every reading), from one side or a disjoint union
@@ -104,11 +102,15 @@ for n,l in rows:
                     # Gamma/C = M_Y is a q-group; exact when M_Y = 1, otherwise mod q
                     exact=False; R=set()
                     for (pX,dX,pY,dY) in ((A,dA,B,dB),(B,dB,A,dA)):
-                        if gcd(dX,pY)!=1: continue
                         fY=factorint(dY)
                         if len(fY)>1: continue
+                        if gcd(dX,pY)!=1:
+                            # C = (p_Y'-part of M_X) x T_Y, Gamma/H = (p_Y-part of M_X) x M_Y: a p_Y-group only if M_Y = 1
+                            if dY==1: R.add(pY)
+                            continue
                         if dY==1: exact=True
                         else: R|=set(fY)
+                    if not exact and not R: continue   # no Oliver structure P <| H <| Gamma: no credit
                     good=lambda x: (x==1) if exact else all((x-1)%r==0 for r in R)
                     if any(good(x) for x in VA) or any(good(y) for y in VB) or any(good(x+y) for x in VA for y in VB):
                         continue
@@ -123,7 +125,10 @@ for n,l in rows:
                     if not exact:                  # disjoint union of a layered complex on each side
                         from functools import reduce
                         Q=reduce(lambda a,b:a*b,R,1); RB=resset(kB,Q)
-                        if any((1-x)%Q in RB for x in resset(kA,Q)): continue
+                        RA=resset(kA,Q)
+                        if any((1-x)%Q in RB for x in RA): continue
+                        # join of a complex on each side: chi = x + y - xy, i.e. 1 - chi = (1 - x)(1 - y)
+                        if any((1-x)*(1-y)%Q==0 for x in RA for y in RB): continue
                     ok=False; open_cfg.append((n,T,A,dA,kA,B,dB,kB,q))
         closed_pairs+=ok
 print('gap rows',len(rows),'prime pairs above T',pairs,'closed (every configuration has a complex meeting all its readings)',closed_pairs,
