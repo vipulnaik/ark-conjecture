@@ -712,3 +712,12 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - joins and richer value sets;
   - a rigorous re-derivation of the reading model.
 - No row is promoted. Recorded in threshold-beyond-mu.md §7.
+
+## Part 31: the prime+prime gap rows, settled at level 1
+
+- **Readings re-derived.** The readings are now derived from the Oliver structure itself: an orientation is available when gcd(dX, Y) = 1 and M_Y is a q-group. The reading is exact if M_Y = 1, and mod q otherwise. The 240 closures of Part 30 are unchanged.
+- **Two new kinds of closing complex.** First, layered complexes pulled back from C_m on m | k points: a full skeleton plus any orbits of the next layer. Second, disjoint unions of one such complex on each side, compared by residues.
+- **All 489 prime pairs close**, 485 of them without unions. The last 4 (n = 904, 1888, 2522, 3678) need a union, because two top primes apply there.
+- **New `ws_gaprows_kinds.py`** sorts the 977 gap rows by witness kind. 335 rows are prime+prime only, so they are settled at level 1, given Conjecture P. The other 642 have prime-power (semilinear), merged or non-prime-power witnesses and are not handled.
+- **Checked:** the script's count matches the witness list of `fpf_upper_scan.py`. For n = 904 I checked the union residues by hand.
+- **Not checked:** an independent reimplementation; the subgroups' readings beyond Γ's own (level 2).

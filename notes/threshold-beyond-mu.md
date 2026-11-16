@@ -622,14 +622,25 @@ So **no n ≤ 46 separates μ\*_N^fpf from μ\*_cyc** where it is decided, and a
 
 **At the other n.** For the fifteen remaining n ≤ 50 (15, 20, 21, 24, 28, …), and at the rows where μ\*_cyc leaves μ\*, what is proved is the displayed inequality with the crude bound on ν\*: at n = 56, 351 ≤ μ\*_N ≤ max(756, G\*(56)); at n = 63, 465 ≤ μ\*_N ≤ max(976, G\*(63)) (the bound (n/2)·⌊(n − 1)/2⌋ = 976.5, rounded down since μ\*_N is an integer). Nothing bounds G\* above at these n except C(n,2).
 
-**Two-class shapes at level 1, a first pass** (`ws_gapclose.py`; `outputs/ws_gapclose.txt`). This applies only to the 489 gap-row witnesses that are pairs of primes (A, B) with both cliques above the budget. Take P = T_A. Then B's twist is a q-power (possibly trivial), and A's twist has order prime to B. Each configuration (dA, dB) gives class counts kA, kB.
-- **How a configuration is closed:** the script lists over-approximated Oliver readings. A reading is exact when the other block has no twist and the orders are coprime. Otherwise it is taken mod each prime of the other twist, or of the small primes involved. A configuration counts as closed (BAD) when some complex from the known value sets (exact sets, skeleta, χ = 1 for BAD cyclic types) meets every reading, using one side or a disjoint union.
-- **Result:** **240 of 489 prime pairs** have every configuration closed. **1,190 configurations stay open.** The first open one is n = 638 (307 + 331, twists 17 and 11).
-- **What this does not show:**
-  - A closed pair is evidence, not yet a proof. The readings model is an ad hoc superset argument and has not been re-derived against the full Oliver rules.
-  - The 210 prime-power witness pairs (semilinear twists) are not handled.
-  - Joins and richer value sets are not used.
-  - So none of the 977 rows is promoted to settled.
+**Two-class shapes at level 1: the prime+prime rows** (`ws_gapclose.py`, `outputs/ws_gapclose.txt`; `ws_gaprows_kinds.py`, `outputs/ws_gaprows_kinds.txt`).
+- **Kinds of gap row.** Sorted by the kinds of witness they carry, the 977 gap rows fall into these groups:
+  - **335** have only *prime+prime* witnesses: two single orbits of prime sizes A < B, both credited at C(·,2). The first is n = 240.
+  - **106** have only *pp+pp* witnesses: prime-power blocks, not both prime. The first is n = 110.
+  - **40** mix those two kinds.
+  - **496** have a witness with a merged class (several orbits of one size) or a non-prime-power block credited τ(a). Eight of these have three-class witnesses.
+- **The configurations.** Each prime+prime witness gives Γ = (T_A ⋊ M_A) × (T_B ⋊ M_B), with twists of orders dA | A − 1 and dB | B − 1, and kA, kB classes on the two blocks. Every pair of twists is a configuration. The cross orbital is never counted: it does not fit under the budget.
+- **Γ's own readings.** An orientation (X, Y) is available when two things hold:
+  - C = M_X × T_Y is cyclic, so gcd(dX, Y) = 1;
+  - Γ/C ≅ M_Y is a q-group.
+  
+  Then P = T_X ⊴ H = P·C ⊴ Γ is an Oliver structure. The reading is exact (χ = 1) when M_Y = 1, and χ ≡ 1 (mod q) otherwise. Configurations with neither orientation available are not Oliver in this way and earn no credit.
+- **The closing complexes.** On a block with k classes, take m | k and pull back from C_m acting on m points. The complex is the full (s − 1)-skeleton plus any union of C_m-orbits of s-faces, for 1 ≤ s ≤ m − 1. Its χ is 1 − (−1)^(s−1)·C(m−1, s−1) + (−1)^s·t, where t is a sum of orbit sizes (the orbit counts come from Möbius inversion). The script uses such a complex on one side, or a disjoint union of one on each side.
+- **Result:** every configuration of all 489 prime pairs has a complex meeting all of Γ's readings. So at level 1, none of these configurations certifies a separation, and **the 335 prime+prime-only rows have μ\*_N^fpf = μ\*_cyc at level 1, given Conjecture P.**
+  - **Earlier, thinner attempts:** requiring χ = 1 exactly, with skeleta only, closes 0 pairs. Adding the readings mod q closes 240. Adding the layered complexes closes 485. Adding disjoint unions closes the last 4: n = 904, 1888, 2522 and 3678, where both orientations are available, two different top primes q apply, and no one-sided complex works.
+- **What this rests on, and what is not shown:**
+  - *Level 1* means Γ's own readings only. Subgroups' readings (the battery, §13) could only add constraints. So this settles the level-1 question, not μ\*_N^fpf itself. The level-1 criterion also asks for invariance under N\*_Γ(H); here that is the normaliser in AΓL(1, A) × AΓL(1, B), which acts on each block's classes as a cyclic group of order k.
+  - The pull-back step keeps χ and invariance, as for the cyclic types elsewhere in this note.
+  - Not handled: the 106 + 40 rows with prime-power blocks (semilinear twists), and the 496 rows with merged or non-prime-power classes. Those 642 rows stay open.
 
 ## 8. How this sits in `orbital-evasiveness-notes.md` §7
 
@@ -714,7 +725,7 @@ So the step that took k = 2 up to the barrier, μ\* → μ\*_cyc with foreign bl
 - **The matching-prime reading of μ\*_cyc** at the 1,022 rows to 4000 where U exceeds the scan and no hand argument has been made; and the seven rows where the foreign reading is open.
 - **Conjecture P (§7):** a soluble transitive Oliver group of non-prime-power degree has m\*_typ ≤ n(q(n) − 1)/2. Open only when N\* is primitive with non-abelian socle. Checked on all soluble transitive groups of degrees 6 to 30 except prime powers and 24. Two smaller items: the socle fact behind Step 2 is checked to degree 877, and the infinite families are not yet cited.
 - **Is the right-hand column the asymptotic value of μ\*_N?** Its fixed-point-free part, yes, conditionally (§7). The rest is whether groups with fixed points, through G\*(a) for a ≤ n, can beat δ_cyc(n)·C(n,2) on a set of positive density.
-- **Does μ\*_N^fpf ever exceed μ\*_cyc?** Not at any non-prime-power n ≤ 46 except possibly 40 (§7, *Small n*: there the two are equal, by an orbit-data upper bound). Beyond that range, two constructions with two rescored blocks were searched to n = 4000 (`fpf_separation_search.py`), with joint goodness checked by CP-SAT, and neither ever beats μ\*_cyc. The 2r + r′ shape has 1,009 triples that would beat it if the types were good, but the small common top primes (q = 3, 5, 7) defeat joint goodness. Given Conjecture P, an orbit-data bound leaves 977 rows to 4000 undecided, all with two-class witnesses (§7). Settling them needs the Oliver structure imposed on two-class shapes at level 1.
+- **Does μ\*_N^fpf ever exceed μ\*_cyc?** Not at any non-prime-power n ≤ 46 except possibly 40 (§7, *Small n*: there the two are equal, by an orbit-data upper bound). Beyond that range, two constructions with two rescored blocks were searched to n = 4000 (`fpf_separation_search.py`), with joint goodness checked by CP-SAT, and neither ever beats μ\*_cyc. The 2r + r′ shape has 1,009 triples that would beat it if the types were good, but the small common top primes (q = 3, 5, 7) defeat joint goodness. Given Conjecture P, an orbit-data bound leaves 977 rows to 4000 undecided, all with two-class witnesses (§7). At level 1 (Γ's own readings), the 335 rows whose witnesses are all prime+prime are now settled (§7). The 642 rows with prime-power, merged or non-prime-power witnesses are still open.
 - **Is S(n) = O(n)?** (§7) For the translations of blocks: s_Q = 2p for two blocks when p ≥ 11 (Proposition B), s_Q ≤ 3p for any k ≥ 2 blocks when p ≥ 37 and p ∤ k (Proposition B′), and s_Q ≤ 6p ≤ 3n for every p ≥ 3 with p ∤ k (Proposition B″, by computation for 5 ≤ p ≤ 31). Open:
   - p | k, where s_Q ≥ p² and the guess is O(p²);
   - all other p-subgroups: a survey of 28 Sylow subgroups and 429 random p-subgroups (n ≤ 96) finds s_Q ≤ 3n throughout, but there is no proof.
