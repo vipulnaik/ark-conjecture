@@ -680,3 +680,15 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - 10T7, 10T26: not settled at level 1, but already settled by the A₅ search and inclusion;
   - **14T10 and 14T30: not settled at level 1.** Level 2 is the next filter.
 - **Bi-resistance.** T_B is bi-resistant iff μ\*_G ≤ B ≤ N − 1 − μ\*_G. So M\*_BR = M\*_OR whenever μ\*_G < N/2. They can differ only at a half-split (an Oliver subgroup with two orbits of size N/2), where M\*_BR is N/2 or N according to the half-split graph. 12T162 separates them, with μ\*_G = 6 and M\*_BR = 12. For graphs, μ\* < C(n,2)/2 by `monotone-transitive-note.md` §5's case analysis of two-orbital Oliver groups, so M\*_BR = μ\*. The cases are imprimitive vertex-transitive (2K_p and K_{p,p} at n = 2p; in general valencies b − 1 and n − b, equal only if n = 2b − 1), a star plus a clique, and primitive affine at prime powers. None has two equal orbitals at a non-prime-power n. A first draft said "star + clique only", which wrongly omitted the imprimitive case; Vipul caught it. "No isomorphic swapped orbitals" is the special case; the basic reason is "no half-split".
+
+## Part 28: directed and chiral claims on a witness; the directed class-11 gap
+
+- **New script `scripts/dir_chiral_witness.py`** (`outputs/dir_chiral_witness.txt`). It uses Γ = (C₇ ⋊ C₃) × (C₁₃ ⋊ C₃) on 20 points, which is Oliver with q = 3 and consists of even permutations.
+  - **Undirected:** orbitals 21, 39, 39, 91; m\*_N = 21.
+  - **Directed:** orbitals 21, 21, 39 ×4, 91, 91. The types are 42 (7-block, k = 2, good), 156 (13-block, k = 4, bad at q = 3), and 91 twice. m\*_N = 39 > 21: the device undoes the 7-block's halving and fails on the 13-block, as predicted.
+  - **Chiral:** under N\* ∩ A_n (even elements of the nauty group, enumerated with sympy) the 13-block's classes still merge into one type of 78. The odd order-12 multiplier is corrected by an odd element of Γ̂ (S₇ on the 7-block), as §15 claimed.
+- **Directed class 11.**
+  - **Odd matching blocks force d ≡ 0 (mod 12)**, which is bad at every q. That leaves 1/9 on a density-1 set.
+  - **c = 2^j escapes.** It gives d ≡ 2 (mod 4), so the cell is (2, 6) and the value is 3 − 2√2, but only along powers of two, a density-0 set.
+  - **q = 3 twists give only density-0 families** (r = 4·3^e + 1).
+  - **What would close the gap:** the directed version of the two-class level-1 classification.

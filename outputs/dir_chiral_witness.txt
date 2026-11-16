@@ -1,0 +1,5 @@
+directed orbitals [21, 21, 39, 39, 39, 39, 91, 91]
+undirected orbitals [21, 39, 39, 91]
+undirected: least orbital 21, type totals [21, 78, 91], level-1 m*_N = 21
+directed: least orbital 21, type totals [42, 91, 91, 156], level-1 m*_N = 39
+chiral (N* ∩ A_n): least orbital 21, type totals [21, 78, 91], level-1 m*_N = 21
