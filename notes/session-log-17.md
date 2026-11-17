@@ -736,3 +736,12 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - affine twists outside ΓL(1);
   - subgroup readings (level 2);
   - whether the open regular-prime configurations are truly GOOD or only beyond these complex families.
+
+## Part 33: χ = 1 on a regular prime block
+
+- **The question.** Every configuration left open in Part 32 needs a C_k-invariant proper complex on k points with χ = 1, where k = (p − 1)/2.
+- **New `cyc_chi_one_cpsat.py`** (exact, by CP-SAT): χ = 1 is impossible at m = 6, 10, 14, 15, 18 and 20, and possible at m = 12.
+- **The Smith test.** It is necessary: for every prime r | m, some value in V(m/r) is ≡ 1 (mod r). It agrees with all seven exact answers. It does not rule out any of the 18 open k (99 through 891).
+- **New `cyc_pullback_union.py`.** It computes χ of a union of two pull-backs by a closed formula, checked against 280 explicit complexes. Such unions reach χ = 1 at m = 12, 30 and 36, but not at 44, 45, 66, 99, 176 or 230 (random search). At m = 99, a hand argument shows that a pull-back of a 0-skeleton combined with one other pull-back cannot reach χ = 1.
+- **Status.** The 173 configurations (29 rows) stay undecided: neither ruled out nor constructed. Recorded in threshold-beyond-mu.md §7.
+- **Not checked.** Exact searches at the open k are out of reach: their orbit counts are about 2^k/k.

@@ -654,7 +654,13 @@ So **no n ≤ 46 separates μ\*_N^fpf from μ\*_cyc** where it is decided, and a
   - **181 pairs close completely.**
   - **173 configurations stay open, in 29 rows** (the first is n = 368).
   - Every open configuration has an exact reading and a prime block with trivial twist (Γ_Y = Z_p, with k = (p − 1)/2 classes). There χ = 1 has to be reached exactly by a C_k-invariant complex, and the layered and skeleton families do not reach it.
-  - Smith congruences constrain these cases strongly. For example, at k = 99, χ(Δ) ≡ χ(Δ^{C_11}) (mod 11), and the latter is a C_9-complex whose χ is ≡ 0 (mod 3). So whether χ = 1 is attainable is a real question, not a gap in the search alone.
+  - **Can χ = 1 be reached on a regular prime block?** (`cyc_chi_one_cpsat.py`, `cyc_pullback_union.py`; `outputs/cyc_chi_one.txt`.) The question is whether a C_m-invariant proper complex on m points can have χ = 1.
+    - **Exact answers for small m (CP-SAT):** no at m = 6, 10, 14, 15, 18 and 20; yes at m = 12.
+    - **A Smith test.** If χ = 1, then for every prime r | m some value in V(m/r) is ≡ 1 (mod r), where V(d) is the set of χ values on d points; this is because χ(Δ) ≡ χ(Δ^{C_r}) (mod r). The test agrees with CP-SAT at all seven sizes. The failures come from small quotients: V(2) = {0, 2}, V(3) = {0, 3}, V(4) = {−2, 0, 2, 4}, and V(6) has no value ≡ 1 (mod 3).
+    - **The open sizes all pass the test.** They are k = 99, 153, 176, 230, 410, 459, 464, 470, 473, 483, 530, 575, 590, 615, 704, 803, 833, 891, each with at least two prime factors. So the Smith congruences do not rule χ = 1 out.
+    - **No construction is known either.** Unions of two pull-backs reach χ = 1 at m = 12, 30 and 36. χ of the intersection is −Σ_S (−1)^|S| a_S b_S over S ⊆ Z_gcd, a formula checked against 280 explicit complexes. A random search finds no χ = 1 at 44, 45, 66, 99, 176 or 230. At m = 99, when one of the two pieces is the 0-skeleton pulled back from a quotient, every choice of quotients reduces to needing χ = 1 on a smaller C_d, or contradicts a Smith congruence.
+    - **So these 173 configurations are undecided.** If χ = 1 is unreachable, each one is a level-1 candidate for μ\*_N^fpf > μ\*_cyc.
+    - **The budget is set aside here, as elsewhere in §7:** each face's edge count against T is not checked.
 - **Rows:** 481 gap rows have only prime+prime or pp+pp witnesses. **462 of them are settled at level 1**, given Conjecture P, and for the 127 of these with a prime-power block, within the ΓL(1) scope. The other 19, together with the 496 rows with merged or non-prime-power witnesses, stay open.
 
 ## 8. How this sits in `orbital-evasiveness-notes.md` §7

@@ -1,0 +1,11 @@
+chi = 1 for a C_m-invariant proper complex on m points (m points = the classes of a regular prime block, m = (p-1)/2)
+
+Exact (cyc_chi_one_cpsat.py, CP-SAT over all orbits):  m = 6 no, 10 no, 12 YES, 14 no, 15 no, 18 no, 20 no.
+Smith test (necessary: for every prime r | m, some chi in V(m/r) is = 1 mod r, V(d) the values on d points):
+  decides all seven the same way as CP-SAT (V(2) = {0,2}, V(3) = {0,3}, V(4) = {-2,0,2,4}, V(6) has no 1).
+  Further predicted impossible: 21, 22, 28, 33, 35, 44, 66 (not run by CP-SAT).
+Two-pull-back unions (cyc_pullback_union.py; formula checked against 280 explicit complexes):
+  chi = 1 found at m = 12, 30, 36; not found (random search) at 44, 45, 66, 99, 176, 230.
+Open k of the pp+pp gap rows (k = (p-1)/2 for the regular prime block): 99, 153, 176, 230, 410, 459, 464, 470,
+  473, 483, 530, 575, 590, 615, 704, 803, 833, 891.  Every one passes the Smith test (layered complexes on m/r
+  give a value = 1 mod r for every prime r | k), so the test does not rule chi = 1 out; no construction is known.
