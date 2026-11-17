@@ -1,0 +1,18 @@
+99 {'k': 99, 'a': 9, 'b': 11, 'sX': 3, 'X': 5, 'x': 12, 'sY': 2, 'Y': 5, 'y': -44, 'chi0': 496, 'correction': 5, 't': 4} verified chi = 1
+153 {'k': 153, 'a': 9, 'b': 17, 'sX': 3, 'X': 5, 'x': 18, 'sY': 2, 'Y': 2, 'y': -17, 'chi0': 307, 'correction': 2, 't': 4} verified chi = 1
+176 {'k': 176, 'a': 11, 'b': 16, 'sX': 3, 'X': 7, 'x': 33, 'sY': 2, 'Y': 3, 'y': -32, 'chi0': 1057, 'correction': 6, 't': 4} verified chi = 1
+230 {'k': 230, 'a': 10, 'b': 23, 'sX': 4, 'X': 13, 'x': -45, 'sY': 3, 'Y': 12, 'y': 46, 'chi0': 2071, 'correction': 9, 't': 4} verified chi = 1
+410 {'k': 410, 'a': 10, 'b': 41, 'sX': 4, 'X': 13, 'x': -40, 'sY': 1, 'Y': 1, 'y': 41, 'chi0': 1641, 'correction': 4, 't': 4} verified chi = 1
+459 pull-back of the construction for 153
+464 {'k': 464, 'a': 16, 'b': 29, 'sX': 4, 'X': 31, 'x': -28, 'sY': 3, 'Y': 18, 'y': 145, 'chi0': 4177, 'correction': 9, 't': 4} verified chi = 1
+470 {'k': 470, 'a': 10, 'b': 47, 'sX': 5, 'X': 22, 'x': 95, 'sY': 2, 'Y': 3, 'y': -94, 'chi0': 8931, 'correction': 19, 't': 6} verified chi = 1
+473 {'k': 473, 'a': 11, 'b': 43, 'sX': 3, 'X': 8, 'x': 44, 'sY': 2, 'Y': 2, 'y': -43, 'chi0': 1893, 'correction': 4, 't': 4} verified chi = 1
+483 {'k': 483, 'a': 21, 'b': 23, 'sX': 3, 'X': 13, 'x': 70, 'sY': 2, 'Y': 4, 'y': -69, 'chi0': 4831, 'correction': 10, 't': 4} verified chi = 1
+530 {'k': 530, 'a': 10, 'b': 53, 'sX': 4, 'X': 19, 'x': -105, 'sY': 3, 'Y': 27, 'y': 106, 'chi0': 11131, 'correction': 21, 't': 4} verified chi = 1
+575 {'k': 575, 'a': 23, 'b': 25, 'sX': 3, 'X': 22, 'x': 276, 'sY': 2, 'Y': 12, 'y': -275, 'chi0': 75901, 'correction': 132, 't': 4} verified chi = 1
+590 {'k': 590, 'a': 10, 'b': 59, 'sX': 4, 'X': 3, 'x': 60, 'sY': 2, 'Y': 2, 'y': -59, 'chi0': 3541, 'correction': 6, 't': 4} verified chi = 1
+615 {'k': 615, 'a': 15, 'b': 41, 'sX': 3, 'X': 4, 'x': -40, 'sY': 2, 'Y': 5, 'y': -164, 'chi0': -6764, 'correction': -11, 't': 3} verified chi = 1
+704 pull-back of the construction for 176
+803 {'k': 803, 'a': 11, 'b': 73, 'sX': 5, 'X': 39, 'x': 220, 'sY': 2, 'Y': 4, 'y': -219, 'chi0': 48181, 'correction': 60, 't': 6} verified chi = 1
+833 {'k': 833, 'a': 17, 'b': 49, 'sX': 4, 'X': 56, 'x': -391, 'sY': 3, 'Y': 31, 'y': 392, 'chi0': 153273, 'correction': 184, 't': 4} verified chi = 1
+891 pull-back of the construction for 99

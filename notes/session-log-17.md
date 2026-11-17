@@ -745,3 +745,17 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **New `cyc_pullback_union.py`.** It computes χ of a union of two pull-backs by a closed formula, checked against 280 explicit complexes. Such unions reach χ = 1 at m = 12, 30 and 36, but not at 44, 45, 66, 99, 176 or 230 (random search). At m = 99, a hand argument shows that a pull-back of a 0-skeleton combined with one other pull-back cannot reach χ = 1.
 - **Status.** The 173 configurations (29 rows) stay undecided: neither ruled out nor constructed. Recorded in threshold-beyond-mu.md §7.
 - **Not checked.** Exact searches at the open k are out of reach: their orbit counts are about 2^k/k.
+
+## Part 34: χ = 1 on regular prime blocks, so all pp+pp rows close
+
+- **New `cyc_chi_one_construct.py`.** For a coprime split k = ab it takes layered X on Z_a and Y on Z_b and forms Δ₀, the union of their pull-backs. Then 1 − χ = (1 − x)(1 − y), and the search arranges χ(Δ₀) = 1 + ck. Adding |c| free orbits of minimal non-faces of one size, with the right parity, brings χ to exactly 1.
+  - m = 99 matches the hand construction: x = 12, y = −44, χ₀ = 496, plus 5 orbits of size 4.
+  - Pull-back from a divisor keeps χ. That covers 459 (from 153), 704 (from 176) and 891 (from 99); no split works at 704 or 891.
+- **Each construction is checked independently.** χ(Δ₀) is recomputed by summing over exact supports, with the signed count brute-forced for small sizes, and each correction orbit is re-tested. All 18 open sizes are realised.
+- **`ws_gapclose_pp.py` now uses these complexes.** It reads `outputs/cyc_chi_one_construct.txt` and accepts χ = 1 on a prime block whose k has a constructed divisor. All 210 pp+pp pairs close, with 0 configurations open.
+- **Rows settled at level 1, given Conjecture P:** 481 of 977. That is 335 prime+prime-only rows, plus 146 rows with prime-power witnesses, within ΓL(1). Still open: 496 rows with merged or non-prime-power witnesses.
+- **Checked:** every construction's χ, independently, as above.
+- **Not checked:**
+  - affine twists outside ΓL(1);
+  - subgroup readings (level 2);
+  - the edge budget on faces, set aside throughout §7.

@@ -113,10 +113,17 @@ def layered_exact(k, target):
 def skel(k):
     # empty complex, and the full skeleta: all sets of at most j classes, 1 <= j <= k - 1
     return frozenset({0} | {1 + (-1) ** (j - 1) * comb(k - 1, j) for j in range(1, k)}) if k > 1 else frozenset({0})
+CHI1 = set()       # class counts k with a constructed C_k-complex of chi = 1 (cyc_chi_one_construct.py)
+if os.path.exists('../outputs/cyc_chi_one_construct.txt'):
+    for l in open('../outputs/cyc_chi_one_construct.txt'):
+        if 'verified chi = 1' in l or 'pull-back' in l: CHI1.add(int(l.split()[0]))
+def chi1(k):
+    return any(k % d == 0 for d in CHI1)       # pull-back from Z_d keeps chi
 @lru_cache(maxsize=None)
 def side_hits(x, k, target, Q):
     """some closing complex on block x (k classes) with chi = target (Q None) or = target mod Q"""
     S = skel(k)
+    if isprime(x) and k > 1 and chi1(k) and (target == 1 if Q is None else (target - 1) % Q == 0): return True
     if Q is None:
         if target in S: return True
         if isprime(x) and k > 1 and layered_exact(k, target): return True
