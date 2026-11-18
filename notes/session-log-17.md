@@ -876,3 +876,22 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - twists outside ΓL(1);
   - the 496 merged and non-prime-power rows;
   - the general two-block argument.
+
+## Part 45: `threshold-beyond-mu-v2.md`, a reorganised version
+
+- **New `notes/threshold-beyond-mu-v2.md`.** `threshold-beyond-mu.md` is untouched until the new version has been checked against it.
+- **New order:**
+  - §0: the program, in brief.
+  - §1: all definitions. It covers the general (N, G) setting first (from old §13), max–min against min–max as a general notion, the projections (old §1), the χ rung (old §2), the levels (old §3), μ\*_cyc (the box from the old map), and a new subsection collecting the fixed-point-free and trivial-group definitions that were inside old §7. It then sorts what is graph-, pair- or arity-specific (old §13, with bi-resistance) and ends with the map of inequalities.
+  - §2: the collapse program, as a table of links and their status.
+  - §§3–6: old §§4–7.
+  - §7: relation to the other notes (old §§8–9).
+  - §8: beyond graph properties. This is the criterion runs on specific groups (old §13), arity (old §10), directed (old §14) and chiral (old §15).
+  - §9: cost (old map section) and barrier (old §12).
+  - §10: open items (old §11).
+- **Old body text kept verbatim.** Internal section references were renumbered by a script, and those that point to other notes were left alone. A list of every changed reference on a line that also names another note was reviewed by hand, and 10 were corrected.
+- **Coverage, checked by script:** every non-empty line of the old document appears in the new one, up to section numbers, except the 18 old section headings.
+- **`check_doc_figures`:** 0 findings on the new file.
+- **Not done:**
+  - smoothing the forward references that remain inside reused text (for example, old §3's mention of §4's table);
+  - a reading pass for flow.
