@@ -17,14 +17,14 @@ with ARK at n being M\*_NE(n) = C(n,2). μ\*, the bottom, is fully understood: e
 **The question.** Which links of this chain collapse to equalities, and where do the others separate? Each collapse moves a quantity into the tractable world of μ\*. Each separation is a source of strength for evasiveness proofs beyond μ\*.
 
 **What is established here:**
-- **μ\*_cyc > μ\* on a positive-density set** (§3, §4). One rescored "foreign block" (an orbit of prime size r, of a prime other than the group's own; §1.5) is credited at full capacity. The asymptotic ceilings rise to 1/4 (even n) and 3 − 2√2 (odd n) on a density-1 set, under (BH-SW) (Propositions L and U). This was the original finding.
+- **μ\*_cyc > μ\* on a positive-density set** (§3, §4). One rescored "foreign block" (an orbit of prime size r, of a prime other than the group's own; §1.5) is credited at full capacity. The asymptotic ceilings rise to 1/4 (even n) and 3 − 2√2 (odd n) on a density-1 set, under (BH-SW) (Propositions L and U). This was the original finding. To 4000, μ\*_cyc is computed exactly relative to the classification (§4).
 - **The fixed-point-free N level matches μ\*_cyc, as far as checked** (§6):
   - μ\*_N^fpf = μ\*_cyc at every non-prime-power n ≤ 46, unconditionally;
   - given Conjecture P, at 2,433 of 3,410 rows up to 4000 by an orbit-data bound;
-  - at 481 more rows, those whose witnesses are prime or prime-power blocks, at level 1 with the budget. For the rows with prime-power blocks this is within ΓL(1) twists.
+  - at 481 more rows, those whose witnesses are prime or prime-power blocks, at level 1 with the budget. For the rows with prime-power blocks this is within ΓL(1) twists, and prime blocks are assumed to have the cyclic N\* action on their classes.
   
   At density one both quantities are δ_cyc·C(n,2), conditionally (Proposition U_typ). A proof strategy for equality is in place for cyclic blocks (Lemmas F, R, G and the pure-piece criterion, §6). 496 gap rows are unexamined.
-- **Above the N level**, μ\*_χ = μ\* at n = 6 and 10, while M\*_OCR(6) = 9 > 6 = μ\*_χ(6). The min–max and max–min quantities separate (§1.3). G\*, the trivial group's rung, is known for n ≤ 18 (§6).
+- **Above the N level**, μ\*_χ = μ\* at n = 6 and 10, while M\*_OCR(6) = 9 > 6 = μ\*_χ(6). The min–max and max–min quantities separate (§1.3). G\*, the trivial group's rung, is known at n = 6, 10, 12, 14, 15, 18 and 21 (§6).
 
 **Where the obstacles sit.** Everything up to the N level is *orbit-local*. An informal barrier (§9.2) says orbit-local methods are capped at δ_cyc on a density-1 set. Going further needs coupling across orbits or groups: embedding (μ\*_χ), the trivial group (G\*), or simultaneity (M\*_OCR).
 
@@ -91,7 +91,7 @@ Every property with e_max(P) < M\*_R(n) fails R; if R is implied by non-evasiven
 | bi-resistant (`orbital-evasiveness-notes.md` §7.13) | **μ\*(n)** again | below |
 | Oliver-χ-resistant | ≥ **μ\*_χ(n)** (§1.3 below) ≥ the bound of §3 below; **9 at n = 6**; C(n,2) at prime powers | this note; otherwise open |
 | nontrivial-top Oliver-χ-resistant | ≥ the bound of §3 below (its groups have nontrivial top); **not** bounded by μ\*_χ(n) in general, since μ\*_χ is attained on trivial-top groups (§1.3 below) and a group's value is at most its core's | this note; otherwise open |
-| χ(Δ_P) = 1, the trivial group's condition | **G\*(n)**: 6, 20, 11, 42, 18 at n = 6, 10, 12, 14, 18 | defined in §1.6 below, computed in §6; not comparable with the rungs above it in this table |
+| χ(Δ_P) = 1, the trivial group's condition | **G\*(n)**: 6, 20, 11, 42, 7, 18, 14 at n = 6, 10, 12, 14, 15, 18, 21 | defined in §1.6 below, computed in §6; not comparable with the rungs above it in this table |
 | non-evasive | C(n,2) at every n, if ARK holds | — |
 
 *Why the first two are projections.* Resistance is monotone in P (fact 1 of `orbital-evasiveness-notes.md` §7.2; "fact N" below always refers to that list), so the threshold property T_B = "at most B edges" is resistant as soon as B reaches the smallest orbital of each group in the class. Hence M\* is the largest, over the groups of the class, of the smallest orbital: a max–min over groups equal to a min–max over properties. For all Oliver groups that is μ\*(n); for the vertex-transitive ones fact 8 evaluates it. The implication Oliver-resistant ⇒ vertex-transitive Oliver-resistant projects to **μ\*(n) ≥ n(q(n) − 1)/2**, which is the unconditional n log n bound of the rewrite plan.
@@ -174,7 +174,7 @@ Symmetry alone never buys more than fusing each type once. *m\*_typ is a ceiling
 >   - for one orbit R of Γ of prime size r on which the induced group ℤ/r ⋊ C_t has a **good** index k = C(r,2)/orb(r, t) for Γ's top prime, the value M = min(C(r,2), the least orbital of Γ outside R's own pairs). "Good" means that no C_k-invariant proper complex has χ ≡ 1 (mod q), or χ = 1 when the top is trivial.
 >
 >   By the Proposition of §3 below, μ\*(n) ≤ μ\*_cyc(n) ≤ μ\*_N(n). Restricting to one orbit is a choice of definition: a group whose two orbits both carry good types lies outside it, though level 1 may still credit it.
-> - **The lower bound L(n)** is the maximum of μ\*(n) and the best of a menu:
+> - **The lower bound L(n)** (the first menu; the refined L′ and the matching upper bound B^ of §4 below supersede it, and make μ\*_cyc exact relative to the classification at every row to 4000) is the maximum of μ\*(n) and the best of a menu:
 >   - shapes n = F·c + r, with c a prime power of a prime other than r, full twist on the matching blocks, and gcd(F(c − 1), r) = 1;
 >   - the entangled case F = 1, r | c − 1 (`threshold_scan.py` only);
 >   - foreign twist t equal to the full q-part of r − 1, or trivial;
@@ -348,11 +348,11 @@ In that picture the whole max–min part above μ\*_cyc collapses onto μ\*_cyc,
 - **μ\*_cyc = μ\*_N^fpf**, the link being worked on (§6.4, §6.5). Equal wherever decided. The tools for a proof on cyclic blocks are in place; prime-power and merged blocks are not.
 - **μ\*_N^fpf = μ\*_N**, that is, fixed points never win. This would follow, for all large n, from two hypotheses: **S(n) = O(n)** (Propositions B–B″ prove it for block translations), and **Smith-tightness of G\*** (true at all seven n where G\* is known). It is equal at every n computed (§6.1). It is not being attacked now.
 - **μ\*_N = μ\*_χ**, that is, embedding relations among unions of orbitals never raise the maximum, although they raise individual groups (§1.4). Equal at n = 6 and 10. The obstacle to an upper bound is that the natural type-total bound fails for m\*_χ, because smaller orbitals can embed in a type's union (§10). It is not being attacked now.
-- **ν\*_fpf = μ\*_N^fpf**, that is, the type ceiling is attained. This is equal at density 1 under (BH-SW) and Conjecture P (both are δ_cyc·C(n,2)), and at every n ≤ 46. It is a weaker statement than the first item, and comes with it.
+- **ν\*_fpf = μ\*_N^fpf**, that is, the type ceiling is attained. This is equal at density 1 under (BH-SW) and Conjecture P (both are δ_cyc·C(n,2)), and at every n ≤ 46. It is the upper end of the same squeeze as the first item: on the rows where the orbit-data bound already meets μ\*_cyc, both equalities hold at once.
 - **Exactness at every n, not just density 1.** The density-1 statements leave the exceptional set E (§4) and the gap rows. Each link above can be asked in both forms.
 - **The strict inequality μ\*_χ < M\*_OCR** is known only at n = 6 (6 against 9). Whether it persists, and at what growth, is open; M\*_OCR(10) is unknown.
 
-If all the equalities hold, every max–min quantity above μ\*_cyc is computable in polynomial time and has μ\*_cyc's asymptotics. All the remaining strength of the topological method would then lie in the min–max quantity M\*_OCR. The full list of open questions is §10 below.
+If all the equalities hold, every max–min quantity above μ\*_cyc would be computable in polynomial time and would have μ\*_cyc's asymptotics. Today only the quantities up to U(n) are polynomial, and everything from ν\* upward needs a super-exponential enumeration. §9.1 below records what each quantity costs and what its asymptotics rest on, so a collapse can be read off there as a quantity moving across the cliff. All the remaining strength of the topological method would then lie in the min–max quantity M\*_OCR. The full list of open questions is §10 below.
 
 **The current program** is the link μ\*_cyc ≤ μ\*_N^fpf. If it is an equality, the whole fixed-point-free N level becomes as computable as μ\*_cyc. A proof needs two things for every fixed-point-free Oliver Γ:
 1. **an orbit-data bound,** which handles most n;
@@ -395,7 +395,7 @@ The step μ\*_cyc ≤ μ\*_N^fpf (see also §6 below) holds because a group with
 
 **μ\*_cyc: computation and status.** *(The definitions of μ\*_cyc, L(n) and U(n) are in §1.5.)*
 
-> - **Status to 4000**:
+> - **First-pass status to 4000** (superseded by the update below, which makes μ\*_cyc exact relative to the classification at all 3,410 rows; kept for the per-row details):
 >   - L(n) = U(n), so μ\*_cyc is known exactly, at 2,385 of 3,410 rows.
 >   - L(n) = U_for(n) at 3,403; the seven exceptions are listed below.
 >   - At 1,025 rows the gap is the "matching-prime reading" (R of the group's own prime with a partial twist), which only U bounds; three of these (n = 110, 154, 171) are closed by hand.
@@ -452,7 +452,7 @@ So the upper half needs neither the classification nor any hypothesis. Prime pow
 > **Proposition L (conditional on (BH-SW) of `bcp-to-floor.md` for the pairs {Q, dQ + 1}, d ∈ {2, 4, 6, 12}).** For every ε > 0 and A > 0, **μ\*_cyc(n) ≥ (δ_cyc(n) − ε)·C(n,2) for all but O(x/(log x)^A) of the n ≤ x.**
 >
 > *Proof.* This is the route of `bcp-to-floor.md` §§2–4, with the foreign orbital rescored.
-> - *The group.* The Reduction Lemma's group Γ = (𝔽_p^k ⋊ ⟨g⟩) × (C_r ⋊ C_Q), with k ∈ {1, 2}, r = dQ + 1 and Q the top prime. Its foreign block carries d/2 orbital classes. Under the reduction lemma (§3, box after the cost table), k = d/2 ∈ {1, 2, 3, 6} is good for every top prime Q ∉ {2, 5, 7}.
+> - *The group.* The Reduction Lemma's group Γ = (𝔽_p^k ⋊ ⟨g⟩) × (C_r ⋊ C_Q), with k ∈ {1, 2}, r = dQ + 1 and Q the top prime. Its foreign block carries d/2 orbital classes. By the reduction fact in the update on goodness (start of this section), k = d/2 ∈ {1, 2, 3, 6} is good for every top prime Q ∉ {2, 5, 7}.
 > - *The score.* The score is at least min{k·C(p,2), p²·[k = 2], k·p·r, C(r,2)}. The intra-block and cross orbitals are as in that Lemma, and the foreign orbital is now C(r,2) instead of rQ.
 > - *The window.* In the Lemma's variables the objective is min{u²/k, 2αu, α²}. It balances at u = √k·α, where the cross term 2√k·α² ≥ α² does not bind, and gives 1/(1 + √k)²: 1/4 at k = 1 and 3 − 2√2 at k = 2.
 > - *The cells.* The Local Lemma's two pins act unchanged. Parity forces k odd at even n and k even at odd n. The residue mod 4 then fixes d mod 4, and at n ≡ 11 (mod 12) the mod-3 pin needs 3 | kd. The cheapest feasible cell at each class is:
@@ -506,9 +506,9 @@ At n = 56 the group is the one that realises μ\*: its smallest orbital, one of 
 | 1000 – 9999 | 0.0462 | 2759 | 0.0972 | 5219, not lifted |
 | 10⁴ – 10⁵ | 0.0583 | 22139 | 0.1016 | 15515 = 4 × 2473 + 5623 |
 
-So **the infimum of μ\*_cyc(n)/C(n,2) over n ≤ 10⁵ is 0.09378, at n = 923**. μ\*'s own floor is 0.0462, at n = 2759. The value at 923 is exact, because U meets the scan there. n = 1159, the floor under the rule for good types first used, is lifted to 79,806 = 2·C(283,2) (density 0.1189) by a trivial-top foreign block of 593: k = 296, good by the reduction lemma (box after the cost table; built in GAP). *Above 10⁵, a partial run only:* the 99,295 rows of (10⁵, 10⁶] with μ\* below 0.11·C(n,2) were examined and all were lifted, the least to 0.1396 at n = 130067, with medians 0.170 to 0.171 against the limit 3 − 2√2 = 0.1716 and the ten lowest all at n ≡ 11 (mod 12). Rows with μ\* between 0.11 and 0.14 were not examined, so for that decade only "at least 0.11" is established.
+So **the infimum of μ\*_cyc(n)/C(n,2) over n ≤ 10⁵ is 0.09378, at n = 923**. μ\*'s own floor is 0.0462, at n = 2759. The value at 923 is exact, because U meets the scan there. n = 1159, the floor under the rule for good types first used, is lifted to 79,806 = 2·C(283,2) (density 0.1189) by a trivial-top foreign block of 593: k = 296, good by the reduction lemma (the update on goodness at the start of this section; the group was built in GAP). *Above 10⁵, a partial run only:* the 99,295 rows of (10⁵, 10⁶] with μ\* below 0.11·C(n,2) were examined and all were lifted, the least to 0.1396 at n = 130067, with medians 0.170 to 0.171 against the limit 3 − 2√2 = 0.1716 and the ten lowest all at n ≡ 11 (mod 12). Rows with μ\* between 0.11 and 0.14 were not examined, so for that decade only "at least 0.11" is established.
 
-**Is the scan's value the true μ\*_cyc?** Make the definition exact: μ\*_cyc(n) is the largest M of the Proposition over Oliver groups on [n] and at most one orbit R of prime size r — M = min(C(r,2), least orbital outside R's own pairs) — or the group's smallest orbital when no orbit is used. An upper bound needs no classification. The orbitals inside the complement of R are those of the image group there, which is an Oliver group on m = n − r points, so the least of them is at most μ\*(m); and a cross orbital is at most rm. Hence
+**Is the scan's value the true μ\*_cyc?** *(U(n) is the first-pass bound; B^ and L′, at the start of this section, settle every row to 4000. The per-row detail below remains useful.)* Make the definition exact: μ\*_cyc(n) is the largest M of the Proposition over Oliver groups on [n] and at most one orbit R of prime size r — M = min(C(r,2), least orbital outside R's own pairs) — or the group's smallest orbital when no orbit is used. An upper bound needs no classification. The orbitals inside the complement of R are those of the image group there, which is an Oliver group on m = n − r points, so the least of them is at most μ\*(m); and a cross orbital is at most rm. Hence
 
 > **μ\*_cyc(n) ≤ U(n) = max( μ\*(n), max over primes r of min{ C(r,2), r·m, μ\*(m) } )**, m = n − r,
 
@@ -523,7 +523,7 @@ computable from the μ\* table (`cyc_certify.py`; μ\*(m) = C(m,2) at prime powe
 
 ## 5. A required-subgraph projection: bicliques
 
-*Added 2026-11-10 (late), same sitting; a question of Vipul's.* §1.2 projects a rung to a number. A rung also projects to a family of graphs: call H **R-required at n** if every nontrivial monotone property satisfying R has H as a member. Every non-evasive property then contains every required graph of every rung below non-evasiveness. For Oliver-resistance this is `orbital-evasiveness-notes.md` §9.7's biclique box: H is required exactly when some Oliver group has H inside every orbital, and for H = K_{a,b} in the linear regime the answer is the triangle a + b ≤ s(n), with s(n) the largest smallest-block over groups whose minimal blocks are all 2-homogeneous. Groups with a pseudorandom foreign block are discarded there, since no single cyclotomic class holds a linear biclique.
+§1.2 projects a rung to a number. A rung also projects to a family of graphs: call H **R-required at n** if every nontrivial monotone property satisfying R has H as a member. Every non-evasive property then contains every required graph of every rung below non-evasiveness. For Oliver-resistance this is `orbital-evasiveness-notes.md` §9.7's biclique box: H is required exactly when some Oliver group has H inside every orbital, and for H = K_{a,b} in the linear regime the answer is the triangle a + b ≤ s(n), with s(n) the largest smallest-block over groups whose minimal blocks are all 2-homogeneous. Groups with a pseudorandom foreign block are discarded there, since no single cyclotomic class holds a linear biclique.
 
 The device of §3 takes them back.
 
@@ -589,8 +589,8 @@ Two numbers therefore carry the N level:
 | 12 | 18 | 18 | 18 | 11 | **18** | all 8,572 classes of S₁₂; G\* ≥ 11 from ℤ/11 and from exhaustion to 10 edges, ≤ 11 by a property: stars and 972 classes of at most 9 edges; Smith checked at 1,919 p-groups with at most 11 orbitals, and at 2,239 with at most 12 |
 | 14 | 42 | ≤ 42 | 42 | 42 | **42** | Corollary; G\* ≥ 42 from the translations of two blocks of 7, ≤ 42 by a property: subgraphs of 2K₇ and of K₁,₁₃ and 74 classes of at most 12 edges; χ recomputed over 544,727 classes; Smith checked at 44 odd p-groups |
 | 18 | 72 | ≤ 72 | 72 | 18 | **72** | Corollary; G\* ≥ 18 from the translations of two blocks of 9, ≤ 18 by a property: subgraphs of 6K₃, stars, and 32 classes of at most 7 edges; Smith checked at 284 p-groups (3-groups sampled) |
-| 15 | 30 | not known | not known | 7 | ≥ 30; G\* is not the deciding term | G\* by exhaustion (`global_chi_min.py`, every s < 7 infeasible); the Smith bound 7 comes from ℤ/7 on two 7-cycles with a fixed point (`pgroup_levels_explicit.py`) |
-| 21 | 63 | not known | not known | 14 | ≥ 63; G\* is not the deciding term | G\* ≥ 11 by exhaustion and ≥ 14 from the translations of three blocks of 7. G\* ≤ 14 by a property: the subgraphs of C₇(1,2) and of 2C₇, together with 147 classes of at most 10 edges (`global_chi_forced.py circ`). Smith is checked at 7 hand-picked p-groups |
+| 15 | 30 | not known | 30 (§6.4) | 7 | ≥ 30; G\* is not the deciding term | G\* by exhaustion (`global_chi_min.py`, every s < 7 infeasible); the Smith bound 7 comes from ℤ/7 on two 7-cycles with a fixed point (`pgroup_levels_explicit.py`) |
+| 21 | 63 | not known | 63 (§6.4) | 14 | ≥ 63; G\* is not the deciding term | G\* ≥ 11 by exhaustion and ≥ 14 from the translations of three blocks of 7. G\* ≤ 14 by a property: the subgraphs of C₇(1,2) and of 2C₇, together with 147 classes of at most 10 edges (`global_chi_forced.py circ`). Smith is checked at 7 hand-picked p-groups |
 | 22, 26, 34, 38, 46, 50 | m(m − 1) | ≤ m(m − 1) | m(m − 1) | not known | max(μ\*, G\*) | Corollary |
 
 So **μ\*_N = μ\* at n = 6, 10, 12, 14 and 18**, and the N level adds nothing there. The fixed-point-free column is squeezed: μ\* ≤ μ\*_cyc ≤ μ\*_N^fpf ≤ ν\*_fpf ≤ ν\*, and ν\* = μ\* at every row, so μ\*_N^fpf = ν\*_fpf = μ\* at all of them, n = 22 to 50 included. Wherever G\* is unknown, μ\*_N is therefore decided by fixed points alone. G\* is below μ\* at 12 and 18 and equal to it at 6, 10, 14: the rung χ = 1 and Oliver-resistance are not comparable, and their projections cross. *The search needs the right forced graph and enough room in D:* at n = 14 with D of at most 10 edges, and at n = 18 with the star alone forced, the congruence modulo 9 has no solution.
@@ -746,7 +746,7 @@ and everything about μ\*_N beyond the fixed-point-free part is G\* at some degr
 
 > **Conjecture P.** A soluble transitive Oliver group Γ of non-prime-power degree has m\*_typ(Γ) ≤ n(q(n) − 1)/2. This is `orbital-evasiveness-notes.md` §7.2 fact 8, lifted from orbitals to types. Only Step 5's case is open: the other steps give δ_cyc off E, which is all that is used below.
 >
-> *Checked* (`nstar_transitive_check.g`, `nstar_transitive_check.py`; `outputs/nstar_transitive_check.txt`): every soluble transitive group of degree 6, 10, 12, 14, 15, 18, 20, 21, 22, 26, 28 and 30, which is 7,315 groups. Degree 24 was not run. **None exceeds the bound, and the maximum attains it at every degree.** Soluble is a superset of Oliver, so this over-tests.
+> *Checked* (`nstar_transitive_check.g`, `nstar_transitive_check.py`; `outputs/nstar_transitive_check.txt`): every soluble transitive group of every non-prime-power degree from 6 to 46: 7,315 groups to degree 30, and the larger degrees as listed under *Small n* in §6.4 below (degree 40 as the bound m\*_typ ≤ 140, by `nstar_t40.py`). **None exceeds the bound, and the maximum attains it at every degree where it was computed exactly.** Soluble is a superset of Oliver, so this over-tests.
 
 > **Proposition U\_typ (unconditional for intransitive Γ and for transitive Γ with N\* imprimitive; for the rest, conditional on Conjecture P or on Step 5 at δ_cyc).** For n ∉ E, ν\*_fpf(n) < δ_cyc(n)·C(n,2).
 
@@ -765,9 +765,9 @@ and everything about μ\*_N beyond the fixed-point-free part is G\* at some degr
 So **no n ≤ 46 separates μ\*_N^fpf from μ\*_cyc**, and at those n the type level adds nothing over μ\*. The separations μ\*_cyc > μ\* begin at n = 56, beyond this range.
 
 **To n = 4000, given Conjecture P** (`fpf_upper_scan.py`; `outputs/fpf_upper_scan.txt`). The same bound with τ(a) = a(q(a) − 1)/2 at every non-prime-power degree a, which is Conjecture P, leaves **977 of the 3,410 rows** where U_fpf > μ\*_cyc. The other 2,433 rows have μ\*_N^fpf = ν\*_fpf = μ\*_cyc, given Conjecture P. The first gap row is n = 110.
-- **Every gap row has the same kind of witness:** two orbit classes, each credited at its full intra-pair count. Typically these are two prime-power or prime blocks near the balance point, such as 49 + 61 at n = 110 or 113 + 127 at n = 240. The transitive term never exceeds μ\*_cyc.
+- **The witnesses are multi-class shapes:** almost all have two orbit classes, each credited at its full intra-pair count (a few have three; the sorting by kind is below). Typical are two prime-power or prime blocks near the balance point, such as 49 + 61 at n = 110 or 113 + 127 at n = 240. The transitive term never exceeds μ\*_cyc.
 - **What the bound ignores.** It counts orbits only. It ignores the Oliver structure, which forces a common top prime q, and goodness. μ\*_cyc already covers 2-homogeneous blocks with one rescored prime orbit, so a gap row can separate only through a two-class configuration μ\*_cyc does not cover: two rescored blocks that are jointly good, or a rescored prime-power block. The two-block searches recorded in §10 below found no such configuration to 4000.
-- **What it would take to settle the 977 rows:** a level-1 version of the classification's analysis of two-class shapes, with the Oliver structure P ⊴ H ⊴ Γ imposed on both constituents.
+- **What it takes to settle the 977 rows:** a level-1 analysis of the witnessing shapes, with the Oliver structure P ⊴ H ⊴ Γ imposed on both constituents and the edge budget respected. The rest of this subsection carries it out for the 481 rows whose witnesses are prime or prime-power blocks.
 
 **At the other n.** For the fifteen remaining n ≤ 50 (15, 20, 21, 24, 28, …), and at the rows where μ\*_cyc leaves μ\*, what is proved is the displayed inequality with the crude bound on ν\*: at n = 56, 351 ≤ μ\*_N ≤ max(756, G\*(56)); at n = 63, 465 ≤ μ\*_N ≤ max(976, G\*(63)) (the bound (n/2)·⌊(n − 1)/2⌋ = 976.5, rounded down since μ\*_N is an integer). Nothing bounds G\* above at these n except C(n,2).
 
@@ -852,7 +852,10 @@ So **no n ≤ 46 separates μ\*_N^fpf from μ\*_cyc**, and at those n the type l
 
 ### 6.5 Toward a proof for cyclic blocks: Lemma C and its parts
 
-**Toward a proof of μ\*_N^fpf = μ\*_cyc: Lemma C** (`lemma_c_check.py`, `lemma_c_data.py`; `outputs/lemma_c_check.txt`, `outputs/lemma_c_data.txt`). A proof must give every fixed-point-free Oliver Γ a complex within budget that meets its condition. Every closure found above came from cyclic actions on the classes of a block. So the engine is a description of which χ values a cyclic action admits.
+**Toward a proof of μ\*_N^fpf = μ\*_cyc: Lemma C** (`lemma_c_check.py`, `lemma_c_data.py`; `outputs/lemma_c_check.txt`, `outputs/lemma_c_data.txt`). A proof must give every fixed-point-free Oliver Γ a complex within budget that meets its condition. Most closures in §6.4 come from cyclic actions on the classes of a prime block (the rest use weight-threshold complexes on prime-power blocks, which need no knowledge of N\*). So the engine is a description of which χ values a cyclic action admits within a cap on face sizes.
+
+
+**The question, and what is true for small k.**
 - **Setting.** C_k acts on Z_k by translation, and a complex Δ is allowed faces of at most c points. Its **data vector** is ψ(f) = χ(Δ^{C_f}) for f | k: a C_f-invariant face F is a cell of dimension |F|/f − 1, and ψ(k) = 0.
 - **Two necessary conditions:**
   - **(R)** For each prime r | k, (ψ(re))_{e | k/r} is the data vector of a complex on the k/r cosets of C_r with faces of at most ⌊c/r⌋ cosets. That complex is Δ^{C_r}.
@@ -868,13 +871,11 @@ So **no n ≤ 46 separates μ\*_N^fpf from μ\*_cyc**, and at those n the type l
   - (B) and (R) say that the gap between the target data and any complex already built lies in the lattice spanned by these vectors. This is the Burnside-ring form of the Lefschetz condition.
   - So it remains to find minimal non-faces and maximal faces of each stabiliser type, of the needed parity and within the cap. That is a "room" lemma. The misses at the ends of the range are where room runs out, which is consistent with this route.
   - The split constructions and free-orbit corrections of `cyc_chi_one_construct.py` are special cases.
+
+
+**Room: adjusting χ by multiples of k.**
 - **Lemma F (free adjustment; proved).** Let L be a C_k-invariant complex with faces of at most c points. Fix s ≤ c, and let A_s be the set of C_k-orbits of *free* s-sets (trivial stabiliser) that are not faces of L but all of whose proper subsets are. Then for any subfamily B ⊆ A_s, the union L ∪ ⋃B is a C_k-invariant complex with faces of at most c points. Its data agree with L's at every f > 1, and χ changes by (−1)^(s−1)·k·|B|. The same holds, with the opposite sign, when free orbits of maximal faces are removed.
   - *Proof.* L ∪ ⋃B is closed under subsets, because every proper subset of a member of B is in L, and members of B of the same size do not contain one another. A free set is fixed by no C_f with f > 1, so no fixed complex Δ^{C_f} gains a cell. Each orbit has k members of dimension s − 1. ∎
-- **Corollary (only the residue matters, given room).** χ = 1 is realisable within cap c whenever some invariant L within cap c has χ(L) ≡ 1 (mod k) and enough room: |χ(L) − 1|/k free orbits in a single A_s, with s even if χ(L) > 1 and s odd if χ(L) < 1. By (B), χ(L) mod k is fixed by L's data at f > 1: χ(L) ≡ −Σ_{f > 1} μ(f)·ψ_L(f) (mod k). So **whether χ = 1 is realisable on k points is decided by which proper fixed-point data can occur together**, and these are complexes on the quotients Z_{k/r}. That is the induction.
-  - The constructions of `cyc_chi_one_construct.py` are instances: Δ₀ supplies the residue, and the corrections draw on A_3 or A_4. Every one of the 18 constructions found its corrections at once.
-- **What remains for Lemma C, in this form:**
-  1. **Gluing.** Given realisable quotient complexes Δ_r on Z_{k/r} (one for each prime r | k) whose data agree on overlaps, find one complex L on Z_k with L^{C_r} having those data. Unions of pull-backs give some combinations, and their data come from the pull-back and union formulas, but not all. The exact test above, in which every predicted vector of moderate χ is realised, says gluing never failed for k ≤ 12.
-  2. **Room.** Show that the L produced by gluing has |χ(L) − 1|/k free minimal non-faces of one parity within the cap. Free s-sets number about C(k, s)/k orbits per size, while L's faces are unions of cosets and their subsets, so for c ≥ 4 room should be plentiful except when c is small or χ(L) is far from 1. The misses at the ends of the range are exactly where room fails.
 - **Lemma R (room; proved).** Let L be C_k-invariant with faces of at most c ≥ 3 points, containing every vertex. Count two kinds of orbits missing from L:
   - *e*: orbits of edges {x, x + d} with 2d ≢ 0 (mod k);
   - *t*: orbits of 3-sets with trivial stabiliser and no two points at difference k/2.
@@ -882,34 +883,25 @@ So **no n ≤ 46 separates μ\*_N^fpf from μ\*_cyc**, and at those n the type l
   Then for every integer j with −e ≤ j ≤ t − e there is an invariant complex within the cap, with the same fixed complexes Δ^{C_f} for all f > 1, and χ = χ(L) + jk.
   - *Proof.* By Lemma F with s = 2, add any a ≤ e of the missing edge orbits: each such edge is free, and both its points are faces. Then add all e. Every counted triangle now has all three edges and is free, so by Lemma F with s = 3 any b ≤ t of them can be added. That gives χ(L) − ak and χ(L) − ek + bk. ∎
   - So **room holds whenever χ(L) − ek ≤ 1 ≤ χ(L) + (t − e)k**. Here t is about (k − 1)(k − 2)/6 minus the triangles already in L, so for a moderate L the window is about ±k²/6 around χ(L).
-- **Gluing, tested** (`gluing_check.py`; `outputs/gluing_check.txt`). For every k ≤ 12 and every cap 2 ≤ c ≤ k − 1, compare two residue sets mod k:
-  - the residues of χ over *all* invariant complexes within the cap (CP-SAT, one call per residue);
-  - the residues over *unions of pull-backs* ∪_{r | k prime} π_r^{-1}(X_r), with X_r any invariant complex on Z_{k/r} within ⌊c/r⌋ (faces listed explicitly).
-  
-  **The two sets agree in all 54 cases.** So, up to k = 12, pull-back unions reach every residue that any complex reaches, and with Lemmas F and R the gluing question reduces to residues.
-  - **The residue sets are CRT products.** In all 54 cases the realised set is the product, over prime powers p^a ∥ k, of its own reductions mod p^a. For example, at k = 12 and c = 4 it is {all classes mod 4} × {0, 1 mod 3}, and at k = 10 and c ≥ 5 it is {0, 1 mod 2} × {0, 2 mod 5}.
-  - **Conjectured consequence.** χ ≡ 1 (mod k) is reachable within cap c iff, for each p^a ∥ k, some reachable complex has χ ≡ 1 (mod p^a). That is a separate condition for each prime, the condition the split constructions satisfy. With Lemma R it becomes a criterion for χ = 1 that can be checked prime by prime.
+- **Corollary (only the residue matters, given room).** χ = 1 is realisable within cap c whenever some invariant L within cap c has χ(L) ≡ 1 (mod k) and enough room: |χ(L) − 1|/k free orbits in a single A_s, with s even if χ(L) > 1 and s odd if χ(L) < 1. By (B), χ(L) mod k is fixed by L's data at f > 1: χ(L) ≡ −Σ_{f > 1} μ(f)·ψ_L(f) (mod k). So **whether χ = 1 is realisable on k points is decided by which proper fixed-point data can occur together**, and these are complexes on the quotients Z_{k/r}. That is the induction.
+  - The constructions of `cyc_chi_one_construct.py` are instances: Δ₀ supplies the residue, and the corrections draw on A_3 or A_4. Every one of the 18 constructions found its corrections at once.
+
+
+**Residues, prime by prime, and gluing them.**
 - **Gluing lemma (proved).**
   - **Congruence.** For a C_k-complex X and a prime power q^b ∥ k, χ(X) ≡ χ(X^{C_q}) (mod q^b). *Proof:* restrict to the cyclic q-subgroup C_{q^b}. Its Lefschetz function is a Z-combination of permutation characters, and the Burnside congruence at e = 1 reads ψ(1) − ψ(q) ≡ 0 (mod q^b), since every nontrivial subgroup of C_{q^b} contains C_q. ∎
   - **Union.** Let complexes A_p be indexed by the primes p | k, all within cap c, and suppose A_{p′}^{C_p} ⊆ A_p whenever p′ ≠ p. Then Δ = ∪_p A_p is within cap c, and χ(Δ) ≡ χ(A_p) (mod p^a) for every p^a ∥ k. *Proof:* Δ^{C_p} = ∪_{p′} A_{p′}^{C_p} = A_p^{C_p}, and apply the congruence to Δ and to A_p. ∎
   - So the CRT-product property follows whenever each prime's residues can be realised by complexes satisfying the containments.
-- **The simplest way to get the containments fails** (`crt_pure_check.py`; `outputs/crt_pure_check.txt`).
-  - The idea: call A_p *p-pure* if no face of it is a union of C_q-cosets for a prime q ≠ p. The containments are then automatic. Property (S) asks that p-pure complexes realise every residue mod p^a that any complex does.
-  - (S) holds for k = 6 and 10 at every cap, and for k = 12 with c ≤ 5.
-  - **It fails at k = 12 with c ≥ 6 and p = 3:** χ ≡ 2 (mod 3) needs faces fixed by C_2. Yet the full residue set is still the CRT product there, all of Z_12.
-  - So the gluing must let the A_p share their cross-fixed faces, A_{p′}^{C_p} ⊆ A_p, not avoid them. Making that inductive is the next step: build the A_p over a common core containing every cross-fixed face.
 - **Each prime's residues come from the quotient (proved).** For p^a ∥ k, the residues mod p^a of χ over all complexes on Z_k within cap c are exactly {χ(Y) mod p^a : Y a C_{k/p}-complex on Z_{k/p} within cap ⌊c/p⌋}.
   - *Proof.* In one direction χ(Δ) ≡ χ(Δ^{C_p}) (mod p^a), and Δ^{C_p} is such a Y. In the other, the pull-back π_p^{-1}(Y) has π_p^{-1}(Y)^{C_p} = Y: its C_p-invariant faces are the unions of cosets over faces of Y. Its faces have at most p⌊c/p⌋ ≤ c points. ∎
   - So each prime's residue set is decided on the quotient. That is the recursion.
+- **Pure pieces (proved).** Suppose that for each prime power ℓ^e ∥ k there is a complex Z_ℓ on Z_{k/ℓ}, within cap ⌊c/ℓ⌋, none of whose faces contains a C_{ℓ′}-coset for a prime ℓ′ ≠ ℓ dividing k, with χ(Z_ℓ) ≡ 1 (mod ℓ^e). Then Δ = ∪_ℓ π_ℓ^{-1}(Z_ℓ) is within cap c and χ(Δ) ≡ 1 (mod k).
+  - *Proof.* Δ^{C_ℓ} = Z_ℓ ∪ ⋃_{ℓ′ ≠ ℓ} π_{ℓ′}^{-1}(Z_{ℓ′})^{C_ℓ}. A C_ℓ-invariant face of π_{ℓ′}^{-1}(Z_{ℓ′}) contains a C_ℓ-coset, whose image is a C_ℓ-coset inside a face of Z_{ℓ′}; there is none. So Δ^{C_ℓ} = Z_ℓ, and the congruence gives χ(Δ) ≡ χ(Z_ℓ) (mod ℓ^e). ∎
+  - This is the p-pure route tested by `crt_pure_check.py` (under *Evidence beyond what is proved* below), which fails only through lack of room at k = 12. Lemma G (below) adds a single orbit in the same coset-free way.
 - **Core gluing (proved, given compatibility).** Pick Y_p on Z_{k/p}, within cap ⌊c/p⌋, for each prime p | k, and let Δ = ∪_p π_p^{-1}(Y_p). Then Δ^{C_p} = Y_p ∪ W_p, where W_p is the union over p′ ≠ p of π_{p′}^{-1}(Y_{p′})^{C_p}, a complex on Z_{k/p}.
   - **If W_p ⊆ Y_p for every p, then χ(Δ) ≡ χ(Y_p) (mod p^a) for every p**, and Δ is within the cap.
   - **Test** (`core_gluing_check.py`; `outputs/core_gluing_check.txt`): run for k = 6, 10, 12, 14 and 15 at every cap, and for k = 18 with c ≤ 7, where the run stopped. For every tuple of residues (r_p), with r_p in its prime's residue set, some compatible family (Y_p) exists. **That is every tuple, in every case run.**
   - At k = 12 and c = 6, residue 2 mod 3 needs a Y_3 with C_2-fixed faces. The compatible Y_2 then contains their pull-back, and still reaches every class mod 4.
-- **The reduction, at its current stage:**
-  - **Proved:** the per-prime description, the core-gluing implication, and Lemmas F and R.
-  - **Tested, not proved:** that compatible families always exist (k ≤ 15, and k = 18 with c ≤ 7).
-  
-  Granted compatibility and room, **χ = 1 is realisable on Z_k within cap c iff, for each p^a ∥ k, some complex on Z_{k/p} within cap ⌊c/p⌋ has χ ≡ 1 (mod p^a).** That is an explicit recursion on smaller cyclic actions.
 - **Lemma G (adjusting a prime that divides k exactly; proved).** Let q ∥ k, and let Δ′ be C_k-invariant within cap c. Let T ⊆ Z_{k/q} satisfy:
   - T is free under C_{k/q};
   - T contains no C_p-coset of Z_{k/q} for any prime p ≠ q dividing k;
@@ -926,9 +918,9 @@ So **no n ≤ 46 separates μ\*_N^fpf from μ\*_cyc**, and at those n the type l
   - **Every one of the 18 open k from the pp+pp rows has this shape:** 99 = 3²·11, 153 = 3²·17, 176 = 2⁴·11, 459 = 3³·17, 464 = 2⁴·29, 575 = 5²·23, 704 = 2⁶·11, 833 = 7²·17, 891 = 3⁴·11, and the square-free 230, 410, 470, 473, 483, 530, 590, 615.
 - **Criterion for χ = 1 (proved, given room).** For such k, combine Theorem G with Lemmas F and R. **χ = 1 is realisable within cap c iff some complex on Z_{k/p} within cap ⌊c/p⌋ has χ ≡ 1 (mod p^a)**, plus room. For square-free k, a = 0 and the condition is empty: χ = 1 is realisable given room alone.
   - The small exact cases are consistent with this. The residue restrictions at k = 10 ({0, 2} mod 5) and at k = 12 with c ≤ 5 (only {0, 1} mod 3) are room failures: Z_{k/q} has too few points, or 2q > c.
-- **Pure pieces (proved).** Suppose that for each prime power ℓ^e ∥ k there is a complex Z_ℓ on Z_{k/ℓ}, within cap ⌊c/ℓ⌋, none of whose faces contains a C_{ℓ′}-coset for a prime ℓ′ ≠ ℓ dividing k, with χ(Z_ℓ) ≡ 1 (mod ℓ^e). Then Δ = ∪_ℓ π_ℓ^{-1}(Z_ℓ) is within cap c and χ(Δ) ≡ 1 (mod k).
-  - *Proof.* Δ^{C_ℓ} = Z_ℓ ∪ ⋃_{ℓ′ ≠ ℓ} π_{ℓ′}^{-1}(Z_{ℓ′})^{C_ℓ}. A C_ℓ-invariant face of π_{ℓ′}^{-1}(Z_{ℓ′}) contains a C_ℓ-coset, whose image is a C_ℓ-coset inside a face of Z_{ℓ′}; there is none. So Δ^{C_ℓ} = Z_ℓ, and the congruence gives χ(Δ) ≡ χ(Z_ℓ) (mod ℓ^e). ∎
-  - This is the p-pure route of `crt_pure_check.py`, which fails only through lack of room at k = 12. Lemma G is the special case where a piece is a single orbit.
+
+
+**Constructions.**
 - **Building the pieces (proved, given the stated room).**
   - **e = 1.** Take the vertices of Z_m (m = k/ℓ, χ = m) and add j ≤ ℓ − 1 free edge orbits (−m each). Since m is a unit mod ℓ, some j gives χ ≡ 1 (mod ℓ). Free edges contain no coset: a C_2-coset is a pair at difference m/2, and cosets of larger primes have at least three points. *Room:* ⌊(m − 1)/2⌋ ≥ ℓ − 1 and cap ≥ 2.
   - **e ≥ 2 (digits).** Work on the levels Z_{uℓ^i}, i = 0, …, e − 1, with u = k/ℓ^e coprime to ℓ.
@@ -937,16 +929,40 @@ So **no n ≤ 46 separates μ\*_N^fpf from μ\*_cyc**, and at those n the type l
     - *Room:* at each level the free edge orbits must outnumber those already used. At level i at most E_i are used, with E_i ≤ ℓE_{i−1} + ⌊ℓ/2⌋ + (ℓ − 1). The cap must satisfy 2ℓ^{e−1} ≤ ⌊c/ℓ⌋.
   - **Lemma S (split; proved).** For k = mq with gcd(m, q) = 1, pull back X from Z_m (cap ⌊c/q⌋) and Y from Z_q (cap ⌊c/m⌋). Then 1 − χ = (1 − χ(X))(1 − χ(Y)). With χ(X) ≡ 1 (mod q), and χ(Y) ≡ 1 (mod m) obtained from the vertices of Z_q plus some edges, this gives χ ≡ 1 (mod k). It does not need purity.
   - **Lemma R** then moves χ from 1 + jk to exactly 1. Its window is about ±k²/6 around a χ of size O(k), so it holds for every k ≥ 9.
+
+
+**Evidence beyond what is proved.**
+- **Gluing, tested** (`gluing_check.py`; `outputs/gluing_check.txt`). For every k ≤ 12 and every cap 2 ≤ c ≤ k − 1, compare two residue sets mod k:
+  - the residues of χ over *all* invariant complexes within the cap (CP-SAT, one call per residue);
+  - the residues over *unions of pull-backs* ∪_{r | k prime} π_r^{-1}(X_r), with X_r any invariant complex on Z_{k/r} within ⌊c/r⌋ (faces listed explicitly).
+  
+  **The two sets agree in all 54 cases.** So, up to k = 12, pull-back unions reach every residue that any complex reaches, and with Lemmas F and R the gluing question reduces to residues.
+  - **The residue sets are CRT products.** In all 54 cases the realised set is the product, over prime powers p^a ∥ k, of its own reductions mod p^a. For example, at k = 12 and c = 4 it is {all classes mod 4} × {0, 1 mod 3}, and at k = 10 and c ≥ 5 it is {0, 1 mod 2} × {0, 2 mod 5}.
+  - **Conjectured consequence.** χ ≡ 1 (mod k) is reachable within cap c iff, for each p^a ∥ k, some reachable complex has χ ≡ 1 (mod p^a). That is a separate condition for each prime, the condition the split constructions satisfy. With Lemma R it becomes a criterion for χ = 1 that can be checked prime by prime.
+- **The simplest way to get the containments fails** (`crt_pure_check.py`; `outputs/crt_pure_check.txt`).
+  - The idea: call A_p *p-pure* if no face of it is a union of C_q-cosets for a prime q ≠ p. The containments are then automatic. Property (S) asks that p-pure complexes realise every residue mod p^a that any complex does.
+  - (S) holds for k = 6 and 10 at every cap, and for k = 12 with c ≤ 5.
+  - **It fails at k = 12 with c ≥ 6 and p = 3:** χ ≡ 2 (mod 3) needs faces fixed by C_2. Yet the full residue set is still the CRT product there, all of Z_12.
+  - So the gluing must let the A_p share their cross-fixed faces, A_{p′}^{C_p} ⊆ A_p, not avoid them. Core gluing and Theorem G (above) do this.
+
+
+**Application.**
 - **The 29 rows whose configurations needed χ = 1 on a regular prime block, with the budget** (`room_check.py`, `pure_criterion_check.py`; `outputs/room_check.txt`, `outputs/pure_criterion_check.txt`). For each regular prime block Z_P (k = (P − 1)/2 classes of P edges, cap c = ⌊T/P⌋), the conditions are checked.
   - **All 29 meet them.**
     - 24 meet them through pure pieces: digits for the repeated prime, and edges or a CP-SAT solution on the small quotient for the others.
     - The 5 with k = 10·q (q = 23, 41, 47, 53, 59) meet them through Lemma S: no coset-free complex on Z_10 reaches 1 mod q, but an unrestricted X on Z_10 does.
   - So **χ = 1 is realisable within the budget on each of these blocks, and their configurations close.** This rests on the lemmas above together with finite checks, of which the CP-SAT solutions are certificates. It replaces the budget-free closure of these 29 rows.
   - An edge-only room check (`room_check.py`) fails for all 29: it needs q − 1 edge moves on quotients as small as Z_10. Digits and Lemma S remove that need.
-- **Remaining for Lemma C:**
-  1. Prove the CRT-product property for pull-back unions. *(Now proved, given room, when at most one prime divides k to a power above 1: Theorem G. Still open in general.)* A union of pull-backs from pairwise coprime moduli satisfies 1 − χ = ∏(1 − χ_i), which already factorises over primes; the general case needs the intersection formula for moduli that share factors.
-  2. Describe each prime's residue set: which χ mod p^a occur for C_{p^a}-actions within a cap, together with the factor coprime to p.
-  3. Check Lemma R's window in the configurations that matter.
+
+
+**Status, and what Lemma C would give.**
+- **Status of Lemma C.**
+  - *Proved:* Lemmas F, R and G; the congruence and the per-prime description; the union, pure-piece and core-gluing implications; Theorem G (compatibility when at most one prime is repeated); the piece constructions and Lemma S, each given its stated room.
+  - *Tested, not proved:* compatibility in general (k ≤ 15 at every cap, and k = 18 with c ≤ 7); Lemma C in data form for small |ψ(1)| (k ≤ 11 at every cap, and k = 12 with c ≤ 5).
+  - *Open:*
+    1. compatibility (the CRT-product property) when two or more primes are repeated. Pull-backs from pairwise coprime moduli satisfy 1 − χ = ∏(1 − χ_i); the general case needs the intersection formula for moduli that share factors.
+    2. a uniform room bound, with an explicit cap in terms of k, so that the piece constructions apply without case checks;
+    3. the per-prime residue sets themselves: which χ mod p^a occur within a cap.
 - **What Lemma C would give.** On cyclic blocks, closing a configuration becomes arithmetic on data vectors, the same arithmetic that defines goodness in μ\*_cyc. Two further steps would remain:
   1. the room lemma, with an explicit cap;
   2. the two-block arithmetic, showing it fails only on μ\*_cyc's good shapes.
@@ -988,12 +1004,12 @@ So **no n ≤ 46 separates μ\*_N^fpf from μ\*_cyc**, and at those n the type l
 
 - *The feasibility criterion Σ√F_i ≤ 1/√δ₀ carries over unchanged.* It uses only that each part's capacity is at most its size squared, and a rescored foreign block still needs a share of at least √δ₀. So the counts N(δ₀) of `arithmetic-of-density.md` §6.1 and `arithmetic-of-density.md` §6.4, and their growth as δ₀ falls, are the same on both tracks.
 - *At the new constants the covering set is small.* 3 − 2√2 = 1/(1 + √2)², so just below the odd ceiling the only feasible shape of odd parity with a foreign part is n = 2c + r, and just below 1/4 the feasible shapes are n = c + r and n = r₁ + r₂. The collapse of `arithmetic-of-density.md` §6.6 to one shape comes without a margin argument. What is left is a disjunction over the cofactor d, which the admissible-d table cuts to one or two per class: d = 12 alone at class 11.
-- *The bounded cofactor of `arithmetic-of-density.md` §6.7 changes character.* For μ\* a floor forces (r − 1)/Q ≤ D(δ₀) = 2(1 − √δ₀)²/δ₀, which loosens as δ₀ falls. For a rescored block the cofactor is bounded by which indices are good — d ≤ 14 on the exact table — whatever δ₀ is. That bound is a fact about what §3 has proved, not about the groups: it stands or falls with the open question of which k admit a cyclically symmetric complex of Euler characteristic 1.
+- *The bounded cofactor of `arithmetic-of-density.md` §6.7 changes character.* For μ\* a floor forces (r − 1)/Q ≤ D(δ₀) = 2(1 − √δ₀)²/δ₀, which loosens as δ₀ falls. For a rescored block the cofactor is bounded by which indices are good, whatever δ₀ is: d = 2k with k good for the top prime. Which k are good is decided in §3 (small k, and prime powers for large q), §4 (the update on goodness) and §6.5 (a criterion for χ = 1 on cyclic actions, proved when at most one prime divides k to a higher power). The bound is a fact about cyclic complexes, not about the groups.
 - *The converse does not reach μ\*_N or μ\*_χ, but its type-level form reaches μ\*_N^fpf* (§6, Proposition U\_typ, with Conjecture P for one case). Its first step is that the score is a minimum over orbitals, so every part clears δ₀ on its own. At level 1 that fails. The trivial group has no parts and its value is G\*(n) (§6), which is governed by congruences on Σ ± n!/|Aut| and by no shifted prime; a group fixing a points is governed by G\*(a). So "a high value forces one of finitely many prime systems to be soluble" holds for μ\* and for μ\*_cyc and is conditional on G\* above them. At n = 6, 10, 12, 14, 18, G\* ≤ μ\*, and nothing has broken.
 - *The round trip of `arithmetic-of-density.md` §6.7 does not close on this track, and cannot.* Forward, (BCG) gives a larger evasiveness constant. Backward, a high evasiveness threshold forces no arithmetic: if ARK holds, the top projection is C(n,2) at every n with no hypothesis at all. The converse is a property of the low rungs, where the projection is a maximum over groups of a minimum over orbitals.
 - *`ladder-completeness.md` Proposition 1*, which cuts the covering set to 13 and 13 above 1/25, is proved for μ\* scoring. On this track §4's bound U(n) does part of that work without a menu; the proposition itself would need redoing.
 
-**`arithmetic-of-density.md` §§7–8, the open problems.** Open Problem 1 asks whether a family of different local structure can beat the ℓ = 2 and ℓ = 3 efficiency losses. The answer here is sideways: for μ\* the losses stay, and for evasiveness they were not losses. the item of `arithmetic-of-density.md` §8 on efficiency below 1 becomes the question of which indices are good.
+**`arithmetic-of-density.md` §§7–8, the open problems.** Open Problem 1 asks whether a family of different local structure can beat the ℓ = 2 and ℓ = 3 efficiency losses. The answer here is sideways: for μ\* the losses stay, and for evasiveness they were not losses. The item of `arithmetic-of-density.md` §8 on efficiency below 1 becomes the question of which indices are good.
 
 ## 8. Beyond graph properties
 
@@ -1018,7 +1034,7 @@ So **both degree-14 groups are settled by these methods**. That agrees with the 
 
 *A reading of `three-uniform-note.md` and `general-k-note.md` against §§1–6; neither is edited.*
 
-**What transfers.** Everything stated without reference to pairs: the projections of §1.2, the three levels of §1.4, the Proposition of §3 (its proof never uses that the orbits are of pairs), the reduction of §6 to types and the trivial group, and §6's split of the N level into its fixed-point-free part and groups with fixed points, the latter bounded by G\*_k at the number of fixed points. The fixed complex is indexed by orbits on k-subsets, as `three-uniform-note.md` §1 says of the criterion itself.
+**What transfers.** Everything stated without reference to pairs: the projections of §1.2, the three levels of §1.4, the Proposition of §3 (its proof never uses that the orbits are of pairs), the reduction of §6 to types and the trivial group, the cyclic-action calculus of §6.5 (Lemmas F, R and G and the χ = 1 criterion, which are about complexes on classes and never use pairs), and §6's split of the N level into its fixed-point-free part and groups with fixed points, the latter bounded by G\*_k at the number of fixed points. The fixed complex is indexed by orbits on k-subsets, as `three-uniform-note.md` §1 says of the criterion itself.
 
 **What the device needed, and k = 2 supplied without being asked.** The Proposition wants every orbit under the budget to lie in *one* type. At k = 2 a foreign block's pair-orbits are a single orbit of the normaliser: AGL(1, r) is transitive on pairs. μ\* spends the 2-homogeneity of the group; the device spends the 2-homogeneity of its **normaliser**, which costs the group nothing. `aod` §4 calls the first a group-theoretic accident. The second is the same accident, one level up.
 
@@ -1109,7 +1125,7 @@ So, on the same density-1 set and under the same hypotheses as Proposition L, th
 
 ### 9.1 Cost of computing each quantity
 
-*Added 2026-11-14. A companion to the map: for each quantity, what the code computes, what it cost in practice, and its complexity class. Exponents inside "polynomial" depend on the implementation and are indicative only. Where there is no working algorithm, the bound is the obvious combinatorial one.*
+*A companion to the map: for each quantity, what the code computes, what it cost in practice, and its complexity class. Exponents inside "polynomial" depend on the implementation and are indicative only. Where there is no working algorithm, the bound is the obvious combinatorial one.*
 
 | quantity | what is computed, and by what | measured | complexity class | size as a function of n, and its standing |
 |---|---|---|---|---|
@@ -1117,20 +1133,29 @@ So, on the same density-1 set and under the same hypotheses as Proposition L, th
 | **μ\* = B**, above 1/25 | `mu_ladder_exact.py`: the menu shapes plus S6 and S11, about O(n/log n) candidates each; exact by `enumeration-proof.md` Theorem E.5 and `ladder-completeness.md` Prop. 1 | 4.3 ms/n at 2.5·10⁵, 15 ms/n at 10⁶; the table to 10⁶ in about 3 h single-threaded | **polynomial**: about n per value, N² for a table to N | Θ(n²) for all large n under (BCG-AL); unconditionally n^{5/4} for all large n and n^{1.679} for almost all n; n^{2−ε} for almost all n if PD(1) holds |
 | μ\* = B, without the collapse theorem | `mu_exact.py`: the whole shape space | about n^2.3 per value, tail near n^2.9; about 3 h per value at 10⁶ | polynomial, steep | — |
 | μ\*, from its definition | enumerate the Oliver subgroups of S_n | S₁₀: 1,294 classes; S₁₂: 8,572, in 3 min from the table of marks (the library stops at S₁₃) | **super-exponential**: 2^{Θ(n²)} subgroups (Pyber), already from elementary abelian 2-groups, which are Oliver | — |
-| **μ\*_cyc**, lower bound L(n) | `threshold_scan.py`, `cyc_floor_scan.py`: the μ\* shapes, rescored (box below) | N = 4000 in about 10 s; floor scan 10⁵ in 5 s, 10⁶ in about 5 min (thresholded rows) | polynomial, as μ\* | conditional on (BCG-AL); limits 1/4 and 3 − 2√2 (§4); unconditionally no better than μ\* |
+| **μ\*_cyc**, lower bound L(n) | `threshold_scan.py`, `cyc_floor_scan.py`: the μ\* shapes, rescored (§1.5) | N = 4000 in about 10 s; floor scan 10⁵ in 5 s, 10⁶ in about 5 min (thresholded rows) | polynomial, as μ\* | conditional on (BCG-AL); limits 1/4 and 3 − 2√2 (§4); unconditionally no better than μ\* |
 | **U(n)**, upper bound for μ\*_cyc | `cyc_certify.py`: one pass over primes r < n, reading the μ\* table | seconds for 3,410 rows | polynomial: O(n/log n) per n, given the table | meets L(n) at 2,385 of 3,410 rows to 4000 |
+| **B^(n)** and **L′(n)**, exact μ\*_cyc relative to the classification | `mu_cyc_bounds.py` over the shape space, with goodness from `cyclic_chi_recursive.py` and `outputs/cyclic_chi_modq.txt` | 3,410 rows in minutes | polynomial per row, given the goodness tables | L′ = B^ at all 3,410 rows to 4000 (§4) |
+| **U_fpf(n)**, orbit-data upper bound for μ\*_N^fpf | `fpf_upper.py`, `fpf_upper_scan.py`: orbit shapes credited F·τ(a) | seconds to 4000 | polynomial, given τ; τ(a) = a(q(a) − 1)/2 under Conjecture P (else one transitive-group census per degree) | meets μ\*_cyc at 2,433 of 3,410 rows (§6.4) |
+| **gap-row closures** at level 1 with the budget | `ws_budget_*.py`, `roomy_close.py`, `pp_roomy_close.py`: per witness and twist configuration, constructions (§6.5), else CP-SAT | about 2.5·10⁵ configurations in about an hour | polynomial per configuration when a construction applies; CP-SAT is exponential in the usable classes but they are few when tight | all 481 prime and prime-power rows close (§6.4) |
 | **ν\*** | `nstar_types.py`: per Oliver class, nauty on points–pairs–orbitals | S₁₂, all 8,572 classes, about 5 min | polynomial per group in practice; **super-exponential** over all classes | at most (n/2)⌊(n − 1)/2⌋ |
 | **ν\*_fpf**, **μ\*_N^fpf** | `nstar_types.py` (fixed-point-free classes), `nstar_transitive_check.py` | as ν\* and μ\*_N | as ν\* and μ\*_N | μ\*_cyc ≤ μ\*_N^fpf ≤ ν\*_fpf ≤ ν\*; δ_cyc at density 1 under (BH-SW) and Proposition U\_typ (§6) |
 | **μ\*_N** (level 1) | `pgroup_levels.py`, `type_levels6.py`: per group, CP-SAT over N\*-orbits of sets of orbitals | 399 p-groups with t ≤ 14 at n = 10: about 2 min; n = 6, all 50 classes: 1 min | per group 2^t (t ≤ C(n,2)); over all groups **doubly exponential** | max(μ\*_cyc, G\*) ≤ μ\*_N ≤ max(ν\*, G\*) |
 | **μ\*_χ** (level 2) | `type_levels6.py`, with embedding among unions of orbitals; `chi_level10.py` (nauty certificates, `emb.c`) | n = 6 in a minute; n = 10, all 1,294 classes, about 45 min | per group 2^t subgraph-isomorphism tests; **doubly exponential** | known at n = 6 and 10, where it equals μ\* |
-| **G\*** | `global_chi_min.py` (exhaustive up to s edges), `global_chi_forced.py` and `verify_global_chi.py` (a forced graph plus a congruence solve) | n = 6 in seconds; n = 12 infeasible to 10 edges in minutes; n = 14 on 544,727 subgraph classes, minutes; n = 18 fast given the forced graph | classes up to s edges ≈ C(C(n,2), s)/n!, so 2^{Θ(n²)} at s ~ n²; properties are subsets: **doubly exponential** | known for n ≤ 18; asymptotics unknown; no number theory |
+| **G\*** | `global_chi_min.py` (exhaustive up to s edges), `global_chi_forced.py` and `verify_global_chi.py` (a forced graph plus a congruence solve) | n = 6 in seconds; n = 12 infeasible to 10 edges in minutes; n = 14 on 544,727 subgraph classes, minutes; n = 18 fast given the forced graph | classes up to s edges ≈ C(C(n,2), s)/n!, so 2^{Θ(n²)} at s ~ n²; properties are subsets: **doubly exponential** | known at n = 6, 10, 12, 14, 15, 18, 21; asymptotics unknown; no number theory |
 | **M\*_OCR** | the n = 10 CSP (`small-degree-computation.md`): one property passing a battery | V = 3,782 classes at t ≤ 12; stage 3 projected at about 27 h on 8 cores; n = 12 projected at weeks | classes ≈ 2^{C(n,2)}/n! (about 1.2·10⁷ at n = 10); properties are down-sets: **doubly exponential** | known only at n = 6 (9) |
 | **M\*_NE** | none: needs the decision-tree depth of every candidate | exact depth on 2¹⁵ subsets is easy at n = 6; n = 7 already needs a symmetry-reduced solver | 2^{2^{Θ(n²)}} properties, each a recursion on the 2^{C(n,2)} cube: **at least doubly exponential** | C(n,2) exactly if ARK holds |
 
 **Two features of this table matter.**
 
 - **The cliff is between U(n) and ν\*.** Up to there everything is polynomial and has been run to 10⁵ or 10⁶. From ν\* on, every quantity needs all subgroups of S_n or all graph classes, 2^{Θ(n²)} either way, and a solver over subsets of those. There is no intermediate tier. The data beyond the cliff reaches n = 18 at best, and only by pruning (orbital caps, a forced graph), which does not change the class.
+- **The program of §2 moves quantities across the cliff.** μ\*_cyc crossed it through the classification (L′ = B^). μ\*_N^fpf is being moved across row by row: U_fpf, and the gap-row closures with their constructions, are polynomial per row. If μ\*_N^fpf = μ\*_cyc is proved, the fixed-point-free N level is polynomial, whatever its definition costs.
 - **What makes μ\* polynomial is the framework, not number theory.** From its definition μ\* is a 2^{Θ(n²)} group enumeration; the classification and the collapse theorem reduce it to a near-linear scan per n. Number theory enters the cost only through constants: near-optimal shapes are dense, so the scans find their witnesses early.
+
+**Beyond graph properties.** The table is for graphs.
+- **Directed and chiral properties** (§§8.3–8.4) keep the vertex-induced shape space. Their μ\* and μ\*_cyc analogues stay on the polynomial side, and the higher rows are as hard as for graphs.
+- **At arity k ≥ 3** (§8.2), μ\*_k is computed from its own shape space (`general-k-note.md`). There is no μ\*_cyc analogue, so the polynomial tier stops at μ\*_k. G\*_k has no data and is doubly exponential like G\*.
+- **For a single (N, G)** (§1.1, §8.1) there is no family and no shape space, so every quantity is a finite search over the subgroup lattice of G. What varies is only which search is feasible. At N ≤ 14 the level-1 criterion and the full Oliver battery run in minutes by CP-SAT, and in that setting even the min–max quantity M\*_OCR is computable (PSL(2,13), PSL(3,2)). The cliff of the graph case is an artefact of letting n grow.
 
 ### 9.2 A barrier, informally
 
@@ -1161,7 +1186,12 @@ So, on the same density-1 set and under the same hypotheses as Proposition L, th
 - **the trivial group (G\*, §6):** the χ of an S_n-invariant complex, which no orbit decomposition simplifies;
 - **simultaneity (M\*_OCR, §1.3):** one property constrained by all groups at once. The separation at n = 6 (9 against 6) comes from a forced K₃,₃ that no single group requires.
 
-These are also the quantities that are doubly exponential to compute and have no number-theoretic asymptotics (Cost table). That is the substance of the barrier. Being orbit-local is what makes a quantity feasible to compute and estimable under number-theoretic hypotheses, and being orbit-local is what caps it at δ_cyc. Closing the gap from about 1/4 to 1 needs arguments that couple orbits or groups, or invariants finer than Euler characteristics and Smith congruences.
+These are also the quantities that are doubly exponential to compute and have no number-theoretic asymptotics (§9.1). That is the substance of the barrier. Being orbit-local is what makes a quantity feasible to compute and estimable under number-theoretic hypotheses, and being orbit-local is what caps it at δ_cyc. Closing the gap from about 1/4 to 1 needs arguments that couple orbits or groups, or invariants finer than Euler characteristics and Smith congruences.
+
+**The barrier beyond graph properties.**
+- **Directed and chiral.** The counting ports verbatim, so the same caps 1/4 and 3 − 2√2 apply (Proposition U, §§8.3–8.4). The directed class 11 sits strictly inside them for the cell constructions (1/9 against 3 − 2√2), which is a supply question, not a breach.
+- **Arity k ≥ 3.** The unit bound becomes s^k/F^{k−1}, and full credit for an orbit needs a k-homogeneous normaliser, of which there are finitely many (§8.2). So orbit-local methods there seem to stay at Ω(n²) to O(n² log n), a vanishing fraction of C(n,k). This is suggested, not proved.
+- **A single (N, G).** "Density 1" has no meaning, but the dichotomy behind the barrier shows up concretely. The level-1 criterion is orbit-local, and it settles 12T162 and 10T31 but not the degree-14 groups. PSL(2,13) falls only to the full battery, that is, to simultaneity (M\*_OCR) across 15 Oliver classes (§8.1). That is the barrier's prediction at one N: the step beyond orbit-local data is a step to coupling groups.
 
 **Caveats.**
 - "Orbit-local" is not defined precisely enough to prove anything about. A formal version would fix a class of certificates and prove the analogue of Proposition U for the whole class. One candidate class: certificates whose validity depends only on a group's coherent configuration together with mod-p counts.
@@ -1173,16 +1203,21 @@ These are also the quantities that are doubly exponential to compute and have no
 
 - **Is the right-hand column the asymptotic value of μ\*_χ?** Unknown. An upper bound needs a cap on totals of isomorphism types in place of the flat cap on orbitals, and the obvious candidate — m\*_χ(Γ) is at most the smallest type total, by taking the property generated by that type's full union — fails as stated, because other orbitals can embed in that union and change χ (K_c embeds in K_r when c ≤ r). The guess is that 1/4 and 3 − 2√2 are right for generic n. The data support it so far: μ\*_χ = μ\* at n = 6 and 10, and in both, level 2 lifts weak groups up to the maximum but never past it.
 - **How far apart are μ\*_χ(n) and M\*_OCR(n)?** At n = 6, 6 against 9. At n = 10, μ\*_χ(10) = 20 (§1.4), and M\*_OCR(10) is not known.
-- **Where does the bounded-cofactor condition now live?** A foreign block with trivial twist has all (r − 1)/2 of its cycle-orbitals in one type, of total C(r,2), with no condition on r − 1 at all; what the condition on r − 1 buys is a twist large enough to leave k small enough to qualify. Which k qualify is the question of whether a cyclically symmetric monotone function on k points can have χ = 1 — the χ-level form of the transitive-group question of `orbital-evasiveness-notes.md` §7.5–7.6 and `pending-checks.md` A48.
+- **Where does the bounded-cofactor condition now live?** A foreign block with trivial twist has all (r − 1)/2 of its cycle-orbitals in one type, of total C(r,2), with no condition on r − 1 at all; what the condition on r − 1 buys is a twist large enough to leave k small enough to qualify. Which k qualify is the question of whether a cyclically symmetric monotone function on k points can have χ = 1 — the χ-level form of the transitive-group question of `orbital-evasiveness-notes.md` §7.5–7.6 and `pending-checks.md` A48. §6.5 answers it within a cap, by a criterion proved when at most one prime divides k to a power above 1.
 - **The same device elsewhere:** on the intra classes of a partial-twist matching block; on the cross distance classes of a fused class, of one type per divisor class by `orbital-evasiveness-notes.md` §9.7; on unfused isomorphic blocks, where the symmetry is all of S_F and the invariant complexes are skeleta of a simplex, never of Euler characteristic 1; at k ≥ 12 for budgets too small for the bad complexes to fit.
 - **A matching upper bound on the biclique side.** §5 gives a sufficient region. Whether a + b ≤ s\*_N(n) is all the χ rung requires, and whether a group with two good types or a good type on a fused class does better, is not examined; nor are required graphs other than bipartite ones.
-- **The matching-prime reading of μ\*_cyc** at the 1,022 rows to 4000 where U exceeds the scan and no hand argument has been made; and the seven rows where the foreign reading is open.
+- **μ\*_cyc beyond 4000.** To 4000, μ\*_cyc is exact relative to the classification (L′ = B^ at every row, §4); the 14 undecided trivial-top k below 4000 decide no row. Beyond 4000 there are only floor scans (to 10⁵, partly to 10⁶).
 - **Conjecture P (§6):** a soluble transitive Oliver group of non-prime-power degree has m\*_typ ≤ n(q(n) − 1)/2. Open only when N\* is primitive with non-abelian socle. Checked on all soluble transitive groups of every non-prime-power degree from 6 to 46 (at 40 as the bound m\*_typ ≤ 140). Two smaller items: the socle fact behind Step 2 is checked to degree 877, and the infinite families are not yet cited.
-- **Is the right-hand column the asymptotic value of μ\*_N?** Its fixed-point-free part, yes, conditionally (§6). The rest is whether groups with fixed points, through G\*(a) for a ≤ n, can beat δ_cyc(n)·C(n,2) on a set of positive density.
-- **Does μ\*_N^fpf ever exceed μ\*_cyc?** Not at any non-prime-power n ≤ 46 (§6, *Small n*: there the two are equal, by an orbit-data upper bound). Beyond that range, two constructions with two rescored blocks were searched to n = 4000 (`fpf_separation_search.py`), with joint goodness checked by CP-SAT, and neither ever beats μ\*_cyc. The 2r + r′ shape has 1,009 triples that would beat it if the types were good, but the small common top primes (q = 3, 5, 7) defeat joint goodness. Given Conjecture P, an orbit-data bound leaves 977 rows to 4000 undecided, all with two-class witnesses (§6). The level-1 closures of §6 for the 481 prime+prime and pp+pp rows did not check the budget. Rechecked with it, every configuration with few usable classes closes, but most configurations are roomy and only partly rechecked (§6, *The budget*). With the budget, all 481 are settled again (§6, *The budget*): the 335 prime+prime-only rows outright, and the 146 rows with prime-power witnesses within ΓL(1) twists. The 496 rows with merged or non-prime-power witnesses are unexamined. No separation has been found.
+- **Is the right-hand column the asymptotic value of μ\*_N?** Its fixed-point-free part, yes, conditionally (§6.3). The rest is whether groups with fixed points, through G\*(a) for a ≤ n, can beat δ_cyc(n)·C(n,2) on a set of positive density.
+- **Does μ\*_N^fpf ever exceed μ\*_cyc?** No separation is known. The two are equal at every non-prime-power n ≤ 46 (§6.4, *Small n*), and, given Conjecture P, at 2,433 of the 3,410 rows to 4000 by the orbit-data bound. Of the 977 gap rows, the 481 whose witnesses are prime or prime-power blocks close at level 1 with the budget (§6.4). The 146 of these with prime-power blocks are covered only within ΓL(1) twists, and prime blocks are assumed to have the cyclic N\* action on their classes. Searches for two rescored blocks to n = 4000 (`fpf_separation_search.py`) found none that beats μ\*_cyc: the 2r + r′ shape has 1,009 triples that would, if the types were good, but the small common top primes (q = 3, 5, 7) defeat joint goodness. Open:
+  - the 496 gap rows with merged or non-prime-power witnesses;
+  - affine twists outside ΓL(1) on prime-power blocks;
+  - whether N\* can act on a prime block's classes through more than the cyclic group C_k (fewer invariant complexes; a closure could then fail);
+  - Lemma C beyond Theorem G: compatibility with two or more repeated primes, a uniform room bound, and the per-prime residue sets (§6.5, *Status*);
+  - a proof for all n, which needs the two-block arithmetic to fail only on μ\*_cyc's good shapes.
 - **Is S(n) = O(n)?** (§6) For the translations of blocks: s_Q = 2p for two blocks when p ≥ 11 (Proposition B), s_Q ≤ 3p for any k ≥ 2 blocks when p ≥ 37 and p ∤ k (Proposition B′), and s_Q ≤ 6p ≤ 3n for every p ≥ 3 with p ∤ k (Proposition B″, by computation for 5 ≤ p ≤ 31). Open:
   - p | k, where s_Q ≥ p² and the guess is O(p²);
   - all other p-subgroups: a survey of 28 Sylow subgroups and 429 random p-subgroups (n ≤ 96) finds s_Q ≤ 3n throughout, but there is no proof.
 - **Smith-tightness of G\*** (§6): is G\*(n) always the largest Smith bound over its p-subgroups? It holds at all seven known n, two of them odd. A general construction would settle the fixed-point question.
-- **G\*(n) beyond 18**, and with it μ\*_N at n = 22, 26, 34, 38, 46, 50: a property with χ = 1 and at most m(m − 1) edges, or a proof there is none. The method of §6 should reach 22 and 26 with the 4-regular circulants on 11 and 13 points as the forced graphs; not attempted. **ν\*(n) away from n = 2m**, or better a bound that uses m\*_N(Γ) ≤ G\*(a) for groups with fixed points. Whether μ\*_N ever exceeds μ\*_cyc.
-- **Done (2026-11-14):** a second reading of both Propositions; `cyclic_chi_values.py` checked by independent code; §5's boosted column and every scan figure reproduced by rerun, after a review of the code. The rerun is not an independent reimplementation. **Owed:** the device inside the exact enumerator, for μ\*_cyc over [6, 10⁶]; the right-hand column rescanned class by class. `pending-checks.md` A49.
+- **G\*(n) at further n**, known so far at n = 6, 10, 12, 14, 15, 18 and 21, and with it μ\*_N at n = 22, 26, 34, 38, 46, 50: a property with χ = 1 and at most m(m − 1) edges, or a proof there is none. The method of §6 should reach 22 and 26 with the 4-regular circulants on 11 and 13 points as the forced graphs; not attempted. **ν\*(n) away from n = 2m**, or better a bound that uses m\*_N(Γ) ≤ G\*(a) for groups with fixed points, which would decide whether μ\*_N ever exceeds μ\*_N^fpf (§2).
+- **Audit owed.** Both Propositions have had a second reading; `cyclic_chi_values.py` is checked by independent code; §5's boosted column and every scan figure are reproduced by rerun, which is not an independent reimplementation. Still owed: the device inside the exact enumerator, for μ\*_cyc over [6, 10⁶]; the right-hand column rescanned class by class. `pending-checks.md` A49.

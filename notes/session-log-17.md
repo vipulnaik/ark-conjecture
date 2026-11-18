@@ -915,3 +915,27 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **Checked:**
   - coverage: every old line is present, or reworded on purpose (45 lines, listed by script and reviewed);
   - `check_doc_figures` reports 0 findings.
+
+## Part 47: a full read-through of `threshold-beyond-mu-v2.md`
+
+- **Outdated statements corrected:**
+  - G\* is known at n = 6, 10, 12, 14, 15, 18 and 21, not "n ≤ 18" (§0, §1.2, §9.1, §10).
+  - μ\*_N^fpf at n = 15 and 21 is filled in from §6.4 (30 and 63).
+  - Conjecture P is checked at every non-prime-power degree ≤ 46, not "to 30, 24 not run".
+  - The gap-row witnesses are described as multi-class, not uniformly two-class.
+  - The first-pass L(n), U(n) status and the "is the scan's value the true μ\*_cyc" paragraph are marked as superseded by L′ = B^.
+  - Two references to "the box after the cost table" now point to §4's update on goodness.
+  - The cofactor discussion in §7.2 now points to §3, §4 and §6.5 instead of "d ≤ 14 on the exact table".
+- **§10 rewritten where stale:** the μ\*_N^fpf item states the current status and lists what is open; the matching-prime reading item becomes μ\*_cyc beyond 4000; the G\* item is updated; "Done (2026-11-14)" becomes "Audit owed". The cofactor item points to the §6.5 criterion.
+- **§6.5 reordered by logic:** the question and the small-k evidence; room (Lemmas F and R, the corollary); residues prime by prime and gluing (congruence, per-prime description, pure pieces, core gluing, Lemma G, Theorem G, the criterion); constructions; evidence beyond the proofs; application; and a single *Status* item replacing three overlapping ones.
+- **Flow edits:**
+  - §5's dated preface removed;
+  - §0 notes that μ\*_cyc is exact to 4000;
+  - §8.2 adds the §6.5 calculus to what transfers to arity k.
+- **§2 points to §9.1** where it discusses computability and asymptotics.
+- **§9.1:**
+  - rows added for B^/L′, U_fpf and the gap-row closures;
+  - a bullet on the program as moving quantities across the cliff;
+  - a paragraph on cost beyond graphs (directed and chiral, arity, a single (N, G)).
+- **§9.2:** a paragraph on the barrier beyond graphs, including PSL(2,13) as a concrete case where the battery (simultaneity) succeeds where orbit-local level 1 does not.
+- **Checked:** `check_doc_figures` reports 0 findings.
