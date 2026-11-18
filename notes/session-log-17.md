@@ -788,3 +788,14 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - the proof itself;
   - an explicit room bound;
   - the two-block arithmetic.
+
+## Part 37: Lemma F, and the reduction to residues
+
+- **Lemma F (free adjustment), proved.** Adding orbits of free minimal non-faces of a single size s leaves every fixed complex Δ^{C_f} with f > 1 unchanged, and shifts χ by (−1)^(s−1)·k per orbit. Removing free maximal faces works the same way with the opposite sign.
+- **Corollary.** χ = 1 is realisable whenever some complex within the cap has χ ≡ 1 (mod k) and enough room. By the Burnside congruence that residue is fixed by the proper fixed-point data. So realising χ = 1 on k points reduces to which data on the quotients Z_{k/r} can occur together.
+- **What remains:**
+  - gluing: realising compatible quotient data in a single complex;
+  - room: a quantitative supply of free minimal non-faces.
+  
+  Both are recorded in threshold-beyond-mu.md §7.
+- **Not done:** a proof of gluing, or an explicit room bound.
