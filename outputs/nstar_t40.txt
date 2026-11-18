@@ -1,0 +1,1 @@
+n=40: 291598 soluble transitive; (groups with a size class of total <= 140 skipped) max m*_typ among the rest = 60 (T40,10); bound 140; above: 0 []

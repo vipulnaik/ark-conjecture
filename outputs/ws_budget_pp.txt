@@ -1,0 +1,1 @@
+pp+pp configurations (GammaL(1)): {'roomy': 159556, 'complex': 1790}  (roomy = more than 14 usable classes, not decided here)

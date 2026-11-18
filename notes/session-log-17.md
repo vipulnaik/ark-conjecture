@@ -759,3 +759,20 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - affine twists outside ΓL(1);
   - subgroup readings (level 2);
   - the edge budget on faces, set aside throughout §7.
+
+## Part 35: the budget, and n = 40
+
+- **The budget had been ignored.** m\*_N(Γ) bounds the size of every face (§3), and the level-1 closures of Parts 30–34 never checked face sizes. So they do not settle any row, and the 481-row claim of Part 34 is withdrawn.
+- **New `ws_budget_exact.py`: exact CP-SAT for prime+prime configurations with few usable classes.** It searches every C_kA × C_kB-invariant complex whose faces fit the budget. 1,312 configurations are decided and every one has a complex. Seven needed χ fixed to each admissible value (n = 3156, 3216, 3220 ×2, 3310, 3376 ×2); all close. 84,663 are too large to search.
+- **New `ws_budget_scan.py`: construction families with the budget.** Of 85,975 configurations, 147 roomy ones in 48 rows are not closed.
+- **New `ws_budget_pp.py`: pp+pp with ΓL(1) twists, at most 14 usable classes, no symmetry imposed.** All 1,790 have a complex; 159,556 roomy configurations are not checked.
+- **n = 40 settled.** New `nstar_t40_export.g` (about 30 min of GAP) and `nstar_t40.py`. They cover all 291,598 soluble transitive groups of degree 40, using the fact that N\* preserves orbital sizes. Every group has m\*_typ ≤ 140: either a size class has total ≤ 140, or nauty finds a type total of at most 60.
+  - So τ(40) ≤ 140 and U_fpf(40) = 140 = μ\*_cyc(40). With that, μ\*_N^fpf = ν\*_fpf = μ\*_cyc at every non-prime-power n ≤ 46, and Conjecture P is checked at every non-prime-power degree ≤ 46.
+- **No separation found.**
+- **Checked:**
+  - the seven slow cases by targeted runs;
+  - that degree 40's export covers every index up to 314,565, the last soluble group.
+- **Not checked:**
+  - the roomy configurations, with the budget;
+  - the 496 merged or non-prime-power rows;
+  - twists outside ΓL(1).
