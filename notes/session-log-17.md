@@ -895,3 +895,23 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **Not done:**
   - smoothing the forward references that remain inside reused text (for example, old §3's mention of §4's table);
   - a reading pass for flow.
+
+## Part 46: a read pass of `threshold-beyond-mu-v2.md`
+
+- **Renumbering fixed.** References ending a sentence ("§5.") had been missed by the renumbering script. It was rerun with a corrected pattern, and the 10 hand corrections to other notes' sections were reapplied.
+- **Forward references marked.** Each reference to a later section, outside the overview in §0 and the status table in §2, now says *below* and, where useful, whether it points to a definition (§1.x) or to a proof or computation. A script confirms that no unmarked forward reference remains in §§1 and 3–10.
+- **Definitions completed in §1:**
+  - a terminology paragraph in §1.5 (top prime, trivial top, block, twist, index, foreign, matching, fused);
+  - "fact N" tied to `orbital-evasiveness-notes.md` §7.2;
+  - nTm notation;
+  - pointers for (BCG-AL), (BH-SW), the short note's (BCG₁/₅) and η;
+  - "the device" defined at the head of §3.
+  
+  The duplicated italic preface of §1.1 is merged.
+- **§1.5 slimmed.** The status, audit and update parts of the μ\*_cyc box move to the head of §4. §1.5 keeps the definitions of μ\*_cyc, L(n) and U(n).
+- **§6 subsections added**, with a reading guide: 6.1 types, ν\* and G\*; 6.2 Smith bounds; 6.3 the fixed-point-free part; 6.4 row by row and the budget; 6.5 toward a proof.
+- **Narrative of the work removed.** The withdrawn-claim wording and the "earlier", "before … were added" and first-person phrasing in §6.4 are replaced by statements of what each step shows. The level-1 closures without the budget are labelled as such, and they point to the budgeted check that settles the rows.
+- **§2 gains "the most collapsed picture consistent with what is known":** μ\* ≤ μ\*_cyc = μ\*_N^fpf = μ\*_N = μ\*_χ < M\*_OCR, with G\* ≤ μ\*_N^fpf for large n. Each link has its support and what it would need, and the links not being attacked now are named. There is a pointer to §10.
+- **Checked:**
+  - coverage: every old line is present, or reworded on purpose (45 lines, listed by script and reviewed);
+  - `check_doc_figures` reports 0 findings.
