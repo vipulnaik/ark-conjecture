@@ -829,3 +829,24 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - a proof that compatible families exist;
   - the remaining caps at k = 18;
   - k > 18.
+
+## Part 41: Lemma G and Theorem G
+
+- **Proved: Lemma G.** For q ∥ k, adding the orbit of the full simplex on U = π_q^{-1}(T) changes χ by ±k/q mod q and leaves every other prime's residue unchanged. Here T is free and contains no C_p-coset for any other prime p.
+- **Proved, given room: Theorem G.** If at most one prime divides k to a power above 1, every residue tuple is realised. So χ = 1 is realisable iff some complex on Z_{k/p} has χ ≡ 1 (mod p^a), plus room; for square-free k, room alone suffices.
+- **All 18 open k of the pp+pp rows have this shape.**
+- **Not done:**
+  - the general case, with two or more repeated primes;
+  - an explicit room bound, which is still needed to apply Lemmas G and R to particular configurations.
+
+## Part 42: pure pieces, digits, the split lemma, and the 29 rows with the budget
+
+- **Proved:**
+  - pure pieces glue: Δ^{C_ℓ} = Z_ℓ;
+  - the e = 1 pieces (vertices plus j free edges) and the e ≥ 2 digit construction contain no coset, given room;
+  - Lemma S: 1 − χ = (1 − x)(1 − y) for coprime pull-backs.
+- **New `room_check.py` (an edge-only check, which fails everywhere) and `pure_criterion_check.py`.** All 29 regular prime blocks of the formerly-open pp+pp rows meet the conditions within their budgets: 24 by pure pieces, and 5 (k = 10·q) by Lemma S. So χ = 1 is realisable within budget there, and those configurations close.
+- **Not done:**
+  - the roomy configurations elsewhere;
+  - k with two or more repeated primes;
+  - affine twists outside ΓL(1), and the merged and non-prime-power rows.
