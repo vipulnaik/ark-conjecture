@@ -1,0 +1,44 @@
+k=6 c=2 p=2: all mod p^a [0, 1] ; p-pure [0, 1] ; (S) holds
+k=6 c=2 p=3: all mod p^a [0] ; p-pure [0] ; (S) holds
+k=6 c=3 p=2: all mod p^a [0, 1] ; p-pure [0, 1] ; (S) holds
+k=6 c=3 p=3: all mod p^a [0, 2] ; p-pure [0, 2] ; (S) holds
+k=6 c=4 p=2: all mod p^a [0, 1] ; p-pure [0, 1] ; (S) holds
+k=6 c=4 p=3: all mod p^a [0, 2] ; p-pure [0, 2] ; (S) holds
+k=6 c=5 p=2: all mod p^a [0, 1] ; p-pure [0, 1] ; (S) holds
+k=6 c=5 p=3: all mod p^a [0, 2] ; p-pure [0, 2] ; (S) holds
+k=10 c=2 p=2: all mod p^a [0, 1] ; p-pure [0, 1] ; (S) holds
+k=10 c=2 p=5: all mod p^a [0] ; p-pure [0] ; (S) holds
+k=10 c=3 p=2: all mod p^a [0, 1] ; p-pure [0, 1] ; (S) holds
+k=10 c=3 p=5: all mod p^a [0] ; p-pure [0] ; (S) holds
+k=10 c=4 p=2: all mod p^a [0, 1] ; p-pure [0, 1] ; (S) holds
+k=10 c=4 p=5: all mod p^a [0] ; p-pure [0] ; (S) holds
+k=10 c=5 p=2: all mod p^a [0, 1] ; p-pure [0, 1] ; (S) holds
+k=10 c=5 p=5: all mod p^a [0, 2] ; p-pure [0, 2] ; (S) holds
+k=10 c=6 p=2: all mod p^a [0, 1] ; p-pure [0, 1] ; (S) holds
+k=10 c=6 p=5: all mod p^a [0, 2] ; p-pure [0, 2] ; (S) holds
+k=10 c=7 p=2: all mod p^a [0, 1] ; p-pure [0, 1] ; (S) holds
+k=10 c=7 p=5: all mod p^a [0, 2] ; p-pure [0, 2] ; (S) holds
+k=10 c=8 p=2: all mod p^a [0, 1] ; p-pure [0, 1] ; (S) holds
+k=10 c=8 p=5: all mod p^a [0, 2] ; p-pure [0, 2] ; (S) holds
+k=10 c=9 p=2: all mod p^a [0, 1] ; p-pure [0, 1] ; (S) holds
+k=10 c=9 p=5: all mod p^a [0, 2] ; p-pure [0, 2] ; (S) holds
+k=12 c=2 p=2: all mod p^a [0, 2] ; p-pure [0, 2] ; (S) holds
+k=12 c=2 p=3: all mod p^a [0] ; p-pure [0] ; (S) holds
+k=12 c=3 p=2: all mod p^a [0, 2] ; p-pure [0, 2] ; (S) holds
+k=12 c=3 p=3: all mod p^a [0, 1] ; p-pure [0, 1] ; (S) holds
+k=12 c=4 p=2: all mod p^a [0, 1, 2, 3] ; p-pure [0, 1, 2, 3] ; (S) holds
+k=12 c=4 p=3: all mod p^a [0, 1] ; p-pure [0, 1] ; (S) holds
+k=12 c=5 p=2: all mod p^a [0, 1, 2, 3] ; p-pure [0, 1, 2, 3] ; (S) holds
+k=12 c=5 p=3: all mod p^a [0, 1] ; p-pure [0, 1] ; (S) holds
+k=12 c=6 p=2: all mod p^a [0, 1, 2, 3] ; p-pure [0, 1, 2, 3] ; (S) holds
+k=12 c=6 p=3: all mod p^a [0, 1, 2] ; p-pure [0, 1] ; (S) FAILS
+k=12 c=7 p=2: all mod p^a [0, 1, 2, 3] ; p-pure [0, 1, 2, 3] ; (S) holds
+k=12 c=7 p=3: all mod p^a [0, 1, 2] ; p-pure [0, 1] ; (S) FAILS
+k=12 c=8 p=2: all mod p^a [0, 1, 2, 3] ; p-pure [0, 1, 2, 3] ; (S) holds
+k=12 c=8 p=3: all mod p^a [0, 1, 2] ; p-pure [0, 1] ; (S) FAILS
+k=12 c=9 p=2: all mod p^a [0, 1, 2, 3] ; p-pure [0, 1, 2, 3] ; (S) holds
+k=12 c=9 p=3: all mod p^a [0, 1, 2] ; p-pure [0, 1] ; (S) FAILS
+k=12 c=10 p=2: all mod p^a [0, 1, 2, 3] ; p-pure [0, 1, 2, 3] ; (S) holds
+k=12 c=10 p=3: all mod p^a [0, 1, 2] ; p-pure [0, 1] ; (S) FAILS
+k=12 c=11 p=2: all mod p^a [0, 1, 2, 3] ; p-pure [0, 1, 2, 3] ; (S) holds
+k=12 c=11 p=3: all mod p^a [0, 1, 2] ; p-pure [0, 1] ; (S) FAILS

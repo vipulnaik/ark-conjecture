@@ -809,3 +809,12 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - a proof of the CRT-product property;
   - each prime's residue set;
   - k > 12.
+
+## Part 39: a gluing lemma, and where purity fails
+
+- **Proved:**
+  - χ(X) ≡ χ(X^{C_q}) (mod q^b) for each q^b ∥ k, from the Burnside congruence for the cyclic q-subgroup;
+  - for complexes A_p with A_{p′}^{C_p} ⊆ A_p, the union has χ ≡ χ(A_p) (mod p^a) for every p.
+- **New `crt_pure_check.py`.** The "p-pure" route, with no faces fixed by other primes, realises every residue for k = 6 and 10, and for k = 12 with c ≤ 5. It fails at k = 12 with c ≥ 6 and p = 3, where residue 2 mod 3 needs C_2-fixed faces, though the CRT product still holds there.
+- **What this means:** a proof needs a common core of cross-fixed faces, not pure pieces.
+- **Not done:** the core construction, and its proof.
