@@ -2,7 +2,7 @@
 """nstar_types.py -- the types of every Oliver class at small degree, and
 nu*(n) = the largest m*_typ over NONTRIVIAL Oliver groups, and nu*_fpf(n) = the
 largest over fixed-point-free ones
-(`threshold-beyond-mu.md` section 9).
+(`threshold-beyond-mu.md` §6.1).
 
 N*(Gamma) is the group of permutations of [n] carrying every orbital onto an
 orbital; its orbits on the orbitals are the types, and m*_typ(Gamma) is the

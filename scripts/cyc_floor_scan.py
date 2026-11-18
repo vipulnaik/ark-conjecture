@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """cyc_floor_scan.py -- the floor of mu*_cyc(n)/C(n,2) on a long range
-(`threshold-beyond-mu.md` section 5).
+(`threshold-beyond-mu.md` §4).
 
 `threshold_scan.py` scores every shape at every n and is quadratic.  A floor
 needs less: a row whose mu* is already THR*C(n,2) or more cannot lower a floor

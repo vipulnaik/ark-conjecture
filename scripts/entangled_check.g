@@ -1,5 +1,5 @@
 # entangled_check.g -- AGammaL(1,c) acting on c + r points, r a prime dividing
-# c - 1 (`threshold-beyond-mu.md` section 5).  The c points are GF(c); the r
+# c - 1 (`threshold-beyond-mu.md` §4).  The c points are GF(c); the r
 # points are Z/r, on which multiplication by a primitive element acts as a
 # translation and the Frobenius x -> x^p acts as y -> p*y.  So the translations
 # of the r points are tied to the twist of GF(c), and the cyclic layer stays

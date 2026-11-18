@@ -301,7 +301,7 @@ python3 biclique_table.py --nmax 100000 --out biclique_table_100000.csv   # roug
 
 ## R14. `cyc_floor_scan.py` above 10⁵ — the floor of μ\*_cyc on the full table
 
-Lower-bounds μ\*_cyc(n) (`threshold-beyond-mu.md` §§4–5) on the rows whose μ\* is below THR·C(n,2), over the shapes n = Fc + r with F ∈ {1, 2, 3, 4, 5, 6, 8}, and prints the least value by decade beside μ\*'s. **Run to 10⁵ at THR = 0.12 in 9 s** — the decade table is in the note's §5; the infimum to 10⁵ is in [0.0887, 0.0938].
+Lower-bounds μ\*_cyc(n) (`threshold-beyond-mu.md` §§3–4) on the rows whose μ\* is below THR·C(n,2), over the shapes n = Fc + r with F ∈ {1, 2, 3, 4, 5, 6, 8}, and prints the least value by decade beside μ\*'s. **Run to 10⁵ at THR = 0.12 in 9 s** — the decade table is in the note's §4; the infimum to 10⁵ is in [0.0887, 0.0938].
 
 ```bash
 cd scripts

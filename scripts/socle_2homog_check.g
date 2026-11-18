@@ -1,5 +1,5 @@
 # socle_2homog_check.g -- every 2-homogeneous primitive group of non-prime-power degree 5..2500,
-# natural A_a and S_a skipped: is its socle 2-homogeneous?  (threshold-beyond-mu.md section 7)
+# natural A_a and S_a skipped: is its socle 2-homogeneous?  (threshold-beyond-mu.md §6.3)
 LoadPackage("primgrp");;
 cnt:=0;;
 for a in [5..2500] do

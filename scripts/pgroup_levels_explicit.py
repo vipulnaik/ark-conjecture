@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """pgroup_levels_explicit.py -- Smith lower bounds for G*(n) from hand-picked p-subgroups,
-for n whose table of marks is not in outputs/ (threshold-beyond-mu.md section 7).
+for n whose table of marks is not in outputs/ (threshold-beyond-mu.md §6.1).
 
 Same computation as pgroup_levels.py (its level() is reused): the least budget at which
 an N*(Q)-invariant complex on Q's orbitals has chi = 1 (mod p).  Groups with more than

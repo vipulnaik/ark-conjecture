@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """fpf_upper.py -- an upper bound U_fpf(n) for nu*_fpf(n), hence for mu*_N^fpf(n), from orbit
-data alone (threshold-beyond-mu.md section 7, "Small n: no separation").
+data alone (threshold-beyond-mu.md §6.4, "Small n: no separation").
 
 For a fixed-point-free Oliver group Gamma and an orbit O of size a, the types of Gamma inside O
 are refined by the orbits of N*(Gamma^O) on pairs of O, because N*(Gamma)_O restricted to O

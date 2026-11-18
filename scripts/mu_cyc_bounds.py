@@ -7,7 +7,7 @@ mu*_cyc(n): the largest, over Oliver groups on [n], of the smallest orbital, or 
 M = min(C(r,2), least orbital outside R's pairs) for ONE orbit R of prime size r
 whose k = C(r,2)/orb(r,t) cyclotomic classes form a GOOD type for the top prime:
 no C_k-invariant proper complex has chi = 1 (mod q), or chi = 1 if the top is
-trivial (`threshold-beyond-mu.md` section 4).
+trivial (`threshold-beyond-mu.md` §4).
 
 THE SHAPE SPACE.  Every Oliver group meeting the density floor lies in the
 framework's shape space (enumeration-proof.md Part 0): one matching class F*c

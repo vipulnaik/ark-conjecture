@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """cyc_density_one.py -- checks for the density-one statement on mu*_cyc
-(threshold-beyond-mu.md section 5, "Density one").
+(threshold-beyond-mu.md §4, "Density one").
 
   delta_cyc(n) = 1/4 at even n,  3 - 2 sqrt 2 at odd n.
 

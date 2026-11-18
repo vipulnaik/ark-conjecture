@@ -1,4 +1,4 @@
-# smith_pgroups.g -- p-subgroups of S_n for the Smith-bound survey (threshold-beyond-mu.md section 7):
+# smith_pgroups.g -- p-subgroups of S_n for the Smith-bound survey (threshold-beyond-mu.md §6.2):
 # Sylow p-subgroups at 28 (n, p), and random subgroups of the Sylow (1-3 random generators, 300 tries per (n, p),
 # seed 17, kept when they have at most 18 orbitals and a new (orbital sizes, order) pair).  Writes the
 # orbitals to /tmp/sy/syl.txt and /tmp/sy/rnd.txt; smith_pgroups.py computes s_Q for each.

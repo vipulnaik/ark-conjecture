@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """biclique_boost_scan.py -- the biclique location with qualifying foreign
-blocks admitted (`threshold-beyond-mu.md` section 6), against the structured
+blocks admitted (`threshold-beyond-mu.md` §5), against the structured
 s(n) of `biclique_table.py`.
 
 s(n) keeps only groups whose minimal blocks are all 2-homogeneous.  Here a

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """pure_criterion_check.py -- the pure-piece sufficient condition for chi = 1, on the regular prime blocks of the
-29 formerly-open pp+pp rows (threshold-beyond-mu.md section 7, "Pure pieces").
+29 formerly-open pp+pp rows (threshold-beyond-mu.md §6.5, "Pure pieces").
 
 Sufficient condition (proved): for each prime power l^e || k, a complex Z_l on Z_{k/l} within cap floor(c/l),
 no face of which contains a C_{l'}-coset (l' != l a prime dividing k), with chi(Z_l) = 1 (mod l^e).

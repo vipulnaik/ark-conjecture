@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """cyc_certify.py -- an upper bound for mu*_cyc(n), against the lower bound of
-`threshold_scan.py` (`threshold-beyond-mu.md` section 5).
+`threshold_scan.py` (`threshold-beyond-mu.md` §4).
 
 mu*_cyc(n) is the largest M of the Proposition over Oliver groups on [n] and at
 most one orbit R of prime size r: M = min(C(r,2), least orbital outside R's own

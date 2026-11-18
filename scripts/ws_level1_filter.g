@@ -1,4 +1,4 @@
-# ws_level1_filter.g -- the general level-1 criterion (threshold-beyond-mu.md section 13) on the transitive groups
+# ws_level1_filter.g -- the general level-1 criterion (threshold-beyond-mu.md §1.1, run in §8.1) on the transitive groups
 # that the weakly-symmetric scan left without a transitive Oliver subgroup (orbital-evasiveness-notes.md section 7.13).
 # For each Oliver subgroup H of G: its orbits on the m coordinates, its condition (OliverData), and the action of
 # the partition stabiliser N*_G(H) on the orbits.  Writes /tmp/ws/lvl1.txt for ws_level1_filter.py.  Run from scripts/.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """crt_pure_check.py -- property (S) behind the CRT-product structure of chi residues.
 
-Gluing lemma (proved in threshold-beyond-mu.md section 7): for a C_k-complex X and a prime power q^b || k,
+Gluing lemma (proved in threshold-beyond-mu.md §6.5): for a C_k-complex X and a prime power q^b || k,
 chi(X) = chi(X^{C_q}) (mod q^b).  So if, for each prime p | k, A_p is "p-pure" (no face is a union of
 C_q-cosets for a prime q != p dividing k), then Delta = union of the A_p has chi(Delta) = chi(A_p) (mod p^a)
 for every p, and the residues mod k realised are the full CRT product of the residues mod p^a of p-pure complexes.

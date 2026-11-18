@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """pgroup_levels.py -- lower bounds for G*(n) from p-subgroups
-(`threshold-beyond-mu.md` section 9).
+(`threshold-beyond-mu.md` §6.1).
 
 If chi(Delta_P) = 1 then chi(Delta_P^Q) = 1 (mod p) for every p-subgroup Q
 (Smith), and Delta_P^Q is an N*(Q)-invariant complex on Q's orbitals.  So

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ws_level1_filter.py -- for each Oliver subgroup H in /tmp/ws/lvl1.txt (from ws_level1_filter.g): is there an
 N*_G(H)-invariant proper complex on H-orbits meeting H's condition (chi = 1 if exact, chi = 1 mod each q)?  If not,
-every nontrivial monotone G-invariant function is evasive (threshold-beyond-mu.md section 13)."""
+every nontrivial monotone G-invariant function is evasive (threshold-beyond-mu.md §1.1, run in §8.1)."""
 import json, itertools
 from ortools.sat.python import cp_model
 from collections import defaultdict

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""room_check.py -- the hypotheses of Theorem G + Lemmas F, R (threshold-beyond-mu.md section 7) for the regular
+"""room_check.py -- the hypotheses of Theorem G + Lemmas F, R (threshold-beyond-mu.md §6.5) for the regular
 prime blocks of the pp+pp gap rows (Gamma_Y = Z_P, k = (P - 1)/2 classes of P edges each), with the budget.
 
 Cap: c = floor(T / P) classes per face.  For k = p^a q_1 ... q_s (q_i exactly dividing k):

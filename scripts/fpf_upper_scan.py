@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """fpf_upper_scan.py -- fpf_upper.py's orbit-data bound over the whole mu*_cyc table, n <= 4000,
 with tau(a) = a(q(a) - 1)/2 at every non-prime-power degree a.  That value is fact 8's bound
-on m*_typ for soluble transitive groups, i.e. Conjecture P (threshold-beyond-mu.md section 7),
+on m*_typ for soluble transitive groups, i.e. Conjecture P (threshold-beyond-mu.md §6.4),
 checked by computation at every non-prime-power degree <= 46 but 40.  So the conclusions
 here are conditional on Conjecture P.
 

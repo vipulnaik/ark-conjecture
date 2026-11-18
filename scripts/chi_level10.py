@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """chi_level10.py -- level 2 (m*_chi) at n = 10, at the budget B = mu*(10) = 20.
 
-threshold-beyond-mu.md section 3 defines, per Oliver group, the level-2 value m*_chi:
+threshold-beyond-mu.md §1.4 defines, per Oliver group, the level-2 value m*_chi:
 the least budget B at which some family of Gamma-invariant graphs, every one with at
 most B edges, closed under isomorphism and EMBEDDING (a graph property's fixed
 complex), meets the group's Euler-characteristic condition (chi = 1 for a trivial-top

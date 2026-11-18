@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """global_chi_forced.py -- a graph property on n vertices with chi = 1 that
-contains a prescribed large graph (`threshold-beyond-mu.md` section 9).
+contains a prescribed large graph (`threshold-beyond-mu.md` §6.1).
 
 P = (all subgraphs of H0)  +  D,   D a family of classes with at most E edges
 that are not subgraphs of H0, the whole closed under deleting an edge.  H0 is

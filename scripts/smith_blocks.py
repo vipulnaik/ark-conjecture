@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """smith_blocks.py -- the Smith bound s_Q for Q = (Z/p)^k, the translations of k blocks of p
-points (n = kp, p an odd prime), via the class complex (threshold-beyond-mu.md section 7).
+points (n = kp, p an odd prime), via the class complex (threshold-beyond-mu.md §6.2).
 
 Q's orbitals are the (p - 1)/2 = h difference classes in each block, of p pairs each, and
 one cross orbital of p^2 pairs per pair of blocks.  N*(Q) acts on the kh intra classes
@@ -13,7 +13,7 @@ and s_Q = p * j, j the least face size that works.  (If no j with jp < p^2 works
 
 Checks: --compare reruns pgroup_levels.level() on the orbitals themselves for small (k, p).
 
---construct checks Proposition B' (threshold-beyond-mu.md section 7): for p >= 37 and
+--construct checks Proposition B' (threshold-beyond-mu.md §6.2): for p >= 37 and
 p not dividing k, the complex with every class, every within-block pair of classes and t
 generic within-block triangle families (each of size kh) has chi = kh - k C(h,2) + t kh,
 and some t <= G(h) = the number of generic families makes it 1 mod p.  It checks the

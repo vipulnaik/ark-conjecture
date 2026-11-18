@@ -1,7 +1,7 @@
 """nstar_transitive_check.py -- for every soluble transitive group of degree n (files from
 nstar_transitive_check.g), the type totals (orbits of N* on pairs, nauty on
 points--pairs--orbitals), and m*_typ against fact 8 of orbital-evasiveness-notes.md 7.2,
-n(q(n) - 1)/2.  Tests Conjecture P of threshold-beyond-mu.md section 7.
+n(q(n) - 1)/2.  Tests Conjecture P of threshold-beyond-mu.md §6.3.
 Run with python3 -I (the file name must not shadow a stdlib module)."""
 import sys, json, itertools, math, pynauty
 from collections import Counter

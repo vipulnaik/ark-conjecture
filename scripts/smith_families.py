@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """smith_families.py -- the least face size j for the Smith bound of k blocks of a prime p
-(threshold-beyond-mu.md section 7, Propositions B and B'), computed on FAMILIES of faces.
+(threshold-beyond-mu.md §6.2, Propositions B and B'), computed on FAMILIES of faces.
 
 smith_blocks.py lists the faces of the class complex (k blocks of h = (p - 1)/2 classes,
 group C_h wr S_k) and so is limited to small kh.  Here a family (an orbit of faces) is a

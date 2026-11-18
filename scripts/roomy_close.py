@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """roomy_close.py -- the 147 prime+prime configurations that ws_budget_scan.py's families left open, closed by the
-chi = 1 criterion (pure pieces / digits / Lemma S, then Lemma R; threshold-beyond-mu.md section 7).
+chi = 1 criterion (pure pieces / digits / Lemma S, then Lemma R; threshold-beyond-mu.md §6.5).
 
 A block of k classes (cyclic action of Z_p^* / (+-M)), each of weight w, gets cap c = floor(T / w) classes per face.
 chi = 1 on one block meets every reading (exact or mod q).  chi1_ok(k, c) tests the criterion for any k:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""dir_chiral_witness.py -- an explicit witness for threshold-beyond-mu.md sections 14 and 15.
+"""dir_chiral_witness.py -- an explicit witness for threshold-beyond-mu.md §§8.3 and 8.4.
 Gamma = (C_7 x| C_3) x (C_13 x| C_3) on 20 points (Oliver: P = C_7, H = C_7 x C_13, top q = 3).
 Computes, on unordered pairs, ordered pairs, and unordered pairs under N* intersected with A_n:
 the orbitals, the N*-types (nauty), and the level-1 value m*_N (least budget with an invariant

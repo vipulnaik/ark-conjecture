@@ -939,3 +939,34 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - a paragraph on cost beyond graphs (directed and chiral, arity, a single (N, G)).
 - **§9.2:** a paragraph on the barrier beyond graphs, including PSL(2,13) as a concrete case where the battery (simultaneity) succeeds where orbit-local level 1 does not.
 - **Checked:** `check_doc_figures` reports 0 findings.
+
+## Part 48: after the move to `threshold-beyond-mu.md`
+
+- **The move.** The reorganised note now lives at `notes/threshold-beyond-mu.md` (commit by Vipul). Its preface no longer calls itself "version 2". It states the 2026-11-18 renumbering and that older session-log entries use the old numbers.
+- **Old-to-new section map:**
+
+  | old | new |
+  |---|---|
+  | §1 | §1.2 |
+  | §2 | §1.3 |
+  | §3 | §1.4 |
+  | the μ\*_cyc box | §1.5 (definitions) and the head of §4 (status) |
+  | §4 | §3 |
+  | §5 | §4 |
+  | §6 | §5 |
+  | §7 | §6, split into 6.1 G\*, 6.2 Smith, 6.3 fixed-point-free part, 6.4 row by row, 6.5 Lemma C |
+  | §8 | §7.1 |
+  | §9 | §7.2 |
+  | §10 | §8.2 |
+  | §11 | §10 |
+  | §12 | §9.2 |
+  | §13 | §1.1 and §1.7, with the group runs in §8.1 |
+  | §14 | §8.3 |
+  | §15 | §8.4 |
+  | cost table | §9.1 |
+  | map | §1.8 |
+
+- **References updated to the new numbering:**
+  - the docstrings of 30 scripts, including some that still cited a pre-Part-6 "section 9" for G\*, now §6.1;
+  - `pending-checks.md` R14: old §§4–5 → §§3–4.
+- **Checked:** `check_doc_figures` over all notes reports 0 dangling references.

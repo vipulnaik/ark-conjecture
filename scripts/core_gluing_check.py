@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """core_gluing_check.py -- the core-based gluing for the CRT-product property.
 
-Facts used (threshold-beyond-mu.md section 7):
+Facts used (threshold-beyond-mu.md §6.5):
  (i)  chi(Delta) = chi(Delta^{C_p}) (mod p^a), and Delta^{C_p} is a complex on Z_{k/p} (cap floor(c/p));
       every complex Y on Z_{k/p} arises, as pi_p^{-1}(Y)^{C_p} = Y.  So R(k, c) mod p^a = { chi(Y) mod p^a }.
  (ii) For Delta = union over primes p of pi_p^{-1}(Y_p):  Delta^{C_p} = Y_p  union  W_p, where W_p is the union
