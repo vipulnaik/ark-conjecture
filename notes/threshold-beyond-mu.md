@@ -76,6 +76,10 @@ The general setting can be much easier. If G contains a transitive Oliver subgro
 
 The min–max quantity is always at least the max–min one. They are equal when passing a group's condition is monotone in the property, because then the threshold property at the max–min budget passes every group. That holds for resistance (non-voidness), and it is why μ\* has both descriptions. It fails for the χ conditions, because adding members can change χ either way, so groups passed one at a time need not assemble into one property. This is the general reason the hierarchy splits at the χ rung (§1.3 below: 9 against 6 at n = 6), and it holds for any (N, G).
 
+**What each form needs.** The two forms do not apply to the same rungs.
+- **A max–min quantity needs a rung that is a conjunction of per-group conditions:** a metaproperty of properties obtained by letting the group range over Oliver group actions, such as "for every Oliver Γ, the fixed complex is non-void", or "… meets Γ's χ condition". Only then does "the least budget for one group" make sense: m\*(Γ), m\*_N(Γ) and m\*_χ(Γ) are its instances, and μ\*, μ\*_N and μ\*_χ are their maxima.
+- **A min–max quantity is defined for any metaproperty R** of graph properties: M\*_R is just the least e_max of a property satisfying R (the numerical projection, defined next). So it can be formulated all the way up the ladder to non-evasiveness (M\*_NE), with no group in sight. It also applies at the intermediate topological layers between the Oliver conditions and non-evasiveness: Δ_P collapsible, contractible, ℤ-acyclic, or ℤ_p-acyclic for the relevant p. Non-evasive ⇒ collapsible ⇒ contractible ⇒ acyclic ⇒ Oliver-χ-resistant, so their projections sit in order between M\*_OCR and M\*_NE. This note does not compute or study those intermediate projections; they are natural rungs to add to the chain of §1.8.
+
 For a monotone graph property P on n vertices write **e_max(P)** for the largest number of edges of a member. Properties are as in `orbital-evasiveness-notes.md` §7.1: monotone decreasing with ∅ ∈ P, so the empty property is excluded by definition and the trivial property (K_n ∈ P, s = C(n,2)) is included. For a rung R of the ladder of `orbital-evasiveness-notes.md` §7.2, its **numerical projection** is
 
 > **M\*_R(n) = min { e_max(P) : P satisfies R }**.
@@ -792,6 +796,12 @@ So **no n ≤ 46 separates μ\*_N^fpf from μ\*_cyc**, and at those n the type l
   - The pull-back step keeps χ and invariance, as for the cyclic types elsewhere in this note.
   - Prime-power blocks are treated next, under *pp+pp rows*. The 496 rows with merged or non-prime-power classes are not handled.
 
+**The merged and non-prime-power rows: one prime orbit is not enough** (`merged_rows_scan.py`; `outputs/merged_rows_scan.txt`). Of the 496 rows, take each witness that is not prime+prime or pp+pp: 2,389 witnesses in all.
+- 221 have no prime orbit too large to fit (C(r, 2) > T). Example: n = 175, witness (47, 2), (81, 1).
+- The other 2,168 have one. On it, for each twist d | r − 1, the test asks for χ = 1 on that orbit's classes alone, faces within the budget (`roomy_close.chi1_ok`, cap ⌊T/(rc/2)⌋). χ = 1 meets every reading whatever the rest of the group, so a twist that passes is closed.
+- **No witness closes this way.** The twist d = r − 1 (one class of C(r, 2) > T edges, k = 1) can never pass, so this route alone cannot settle a row; the configuration with the full twist must use the other blocks. Beyond that, 2,011 witnesses also fail at some twist with k not a prime power: the cap, not the arithmetic of k, is what fails. Example: n = 171, (49, 2), (73, 1), twist d = 4: k = 18 classes of 146 edges, cap 13.
+- So these rows need complexes that mix the prime orbit's classes with the merged or non-prime-power classes, including the cross orbitals between isomorphic orbits; that is not yet done.
+
 **Two-class shapes at level 1: the pp+pp rows** (`ws_gapclose_pp.py`, `ws_blockdata.g`; `outputs/ws_gapclose_pp.txt`).
 - **Scope:** block groups Γ_X = T_X ⋊ M_X with M_X ≤ ΓL(1, ·), that is, semilinear twists ⟨ω^c, ω^d φ^t⟩ up to conjugacy by F\*. **Affine M_X outside ΓL(1) are not covered.**
 - **The readings are Γ's own, as `OliverData` computes them.** They are built from data on each block, computed by GAP for each subgroup: Q = Γ/O_p(Γ) = Q_A × Q_B, and O^q(Q) = O^q(Q_A) × O^q(Q_B), which is cyclic exactly when both factors are cyclic of coprime orders.
@@ -1210,7 +1220,7 @@ These are also the quantities that are doubly exponential to compute and have no
 - **Conjecture P (§6):** a soluble transitive Oliver group of non-prime-power degree has m\*_typ ≤ n(q(n) − 1)/2. Open only when N\* is primitive with non-abelian socle. Checked on all soluble transitive groups of every non-prime-power degree from 6 to 46 (at 40 as the bound m\*_typ ≤ 140). Two smaller items: the socle fact behind Step 2 is checked to degree 877, and the infinite families are not yet cited.
 - **Is the right-hand column the asymptotic value of μ\*_N?** Its fixed-point-free part, yes, conditionally (§6.3). The rest is whether groups with fixed points, through G\*(a) for a ≤ n, can beat δ_cyc(n)·C(n,2) on a set of positive density.
 - **Does μ\*_N^fpf ever exceed μ\*_cyc?** No separation is known. The two are equal at every non-prime-power n ≤ 46 (§6.4, *Small n*), and, given Conjecture P, at 2,433 of the 3,410 rows to 4000 by the orbit-data bound. Of the 977 gap rows, the 481 whose witnesses are prime or prime-power blocks close at level 1 with the budget (§6.4). The 146 of these with prime-power blocks are covered only within ΓL(1) twists, and prime blocks are assumed to have the cyclic N\* action on their classes. Searches for two rescored blocks to n = 4000 (`fpf_separation_search.py`) found none that beats μ\*_cyc: the 2r + r′ shape has 1,009 triples that would, if the types were good, but the small common top primes (q = 3, 5, 7) defeat joint goodness. Open:
-  - the 496 gap rows with merged or non-prime-power witnesses;
+  - the 496 gap rows with merged or non-prime-power witnesses (a single prime orbit closes none of them: §6.4, *The merged and non-prime-power rows*);
   - affine twists outside ΓL(1) on prime-power blocks;
   - whether N\* can act on a prime block's classes through more than the cyclic group C_k (fewer invariant complexes; a closure could then fail);
   - Lemma C beyond Theorem G: compatibility with two or more repeated primes, a uniform room bound, and the per-prime residue sets (§6.5, *Status*);

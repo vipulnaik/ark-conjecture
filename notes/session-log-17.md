@@ -970,3 +970,11 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - the docstrings of 30 scripts, including some that still cited a pre-Part-6 "section 9" for G\*, now §6.1;
   - `pending-checks.md` R14: old §§4–5 → §§3–4.
 - **Checked:** `check_doc_figures` over all notes reports 0 dangling references.
+
+## Part 49: max–min versus min–max; the merged rows, first pass
+
+- **§1.2, "What each form needs."** The max–min needs a metaproperty obtained by varying over Oliver group actions (a conjunction of per-group conditions). The min–max M\*_R is defined for any graph metaproperty, so it can be formulated as far up as non-evasiveness and at intermediate layers (collapsible, contractible, ℤ-acyclic, ℤ_p-acyclic), which are not computed here.
+- **Item 1, first pass** (`merged_rows_scan.py`, about 15 minutes; `outputs/merged_rows_scan.txt`). On the 496 gap rows with merged or non-prime-power witnesses (2,389 witnesses), χ = 1 on a single large prime orbit's classes within the budget closes none: the full twist (k = 1) is always left, and 2,011 witnesses also fail at a twist with non-prime-power k because of the cap. 221 witnesses have no large prime orbit. Recorded in §6.4 and §10.
+- **Next:** complexes mixing the prime orbit's classes with merged classes and cross orbitals, modelled on concrete groups (first n = 171, (49, 2), (73, 1)).
+- **Checked:** the 496-row count is reproduced (every row has a residual witness). `check_doc_figures` result below.
+- **Not done:** the concrete-group modelling itself.
