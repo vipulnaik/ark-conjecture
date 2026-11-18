@@ -799,3 +799,13 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   
   Both are recorded in threshold-beyond-mu.md §7.
 - **Not done:** a proof of gluing, or an explicit room bound.
+
+## Part 38: Lemma R, and gluing by pull-back unions
+
+- **Lemma R (room), proved.** Starting from L with every vertex, add missing free edge orbits (e of them), then missing free triangles that avoid difference k/2 (t of them). This reaches χ(L) + jk for every −e ≤ j ≤ t − e, with the proper fixed data unchanged.
+- **New `gluing_check.py`.** For k ≤ 12 and every cap, the residues of χ mod k reached by unions of pull-backs along prime quotients equal those reached by all invariant complexes. They agree in all 54 cases.
+- **Observed: every realised residue set is a CRT product over prime powers.** If this holds in general, χ ≡ 1 (mod k) is decided prime by prime.
+- **Not done:**
+  - a proof of the CRT-product property;
+  - each prime's residue set;
+  - k > 12.
