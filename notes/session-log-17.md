@@ -818,3 +818,14 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **New `crt_pure_check.py`.** The "p-pure" route, with no faces fixed by other primes, realises every residue for k = 6 and 10, and for k = 12 with c ≤ 5. It fails at k = 12 with c ≥ 6 and p = 3, where residue 2 mod 3 needs C_2-fixed faces, though the CRT product still holds there.
 - **What this means:** a proof needs a common core of cross-fixed faces, not pure pieces.
 - **Not done:** the core construction, and its proof.
+
+## Part 40: a recursive criterion for χ = 1
+
+- **Proved: the residues mod p^a over Z_k are the χ values mod p^a of complexes on Z_{k/p} within cap ⌊c/p⌋.** One direction is the congruence; the other is pull-back, which has C_p-fixed part exactly Y.
+- **Proved: core gluing.** For Δ = ∪ π_p^{-1}(Y_p), Δ^{C_p} = Y_p ∪ W_p. If W_p ⊆ Y_p for every p, then χ(Δ) ≡ χ(Y_p) (mod p^a) for every p.
+- **New `core_gluing_check.py`.** For k = 6, 10, 12, 14 and 15 at every cap, and k = 18 with c ≤ 7 (the run stopped there), compatible families reach every residue tuple.
+- **Consequence, granted compatibility and room:** χ = 1 is realisable iff, for each p^a ∥ k, some complex on Z_{k/p} has χ ≡ 1 (mod p^a).
+- **Not done:**
+  - a proof that compatible families exist;
+  - the remaining caps at k = 18;
+  - k > 18.
