@@ -1,0 +1,1 @@
+X on Z_9: 102 faces, chi 30, largest 3 points; Y: vertices + 5 edge orbits, chi -116; chi(Delta0) = 3394 = 1 + 13*261; free minimal non-face orbits found by size: {2: 0, 4: 13}; closed: True (size 4, faces of at most 116 classes <= 132)

@@ -13,7 +13,7 @@ sys.path.insert(0, '.')
 with contextlib.redirect_stdout(io.StringIO()):
     import pure_criterion_check as PC
 from digits_explicit import digits
-def chi1_ok(k, c):
+def chi1_ok(k, c, target=1):
     f = factorint(k)
     if len(f) < 2 or c < 3: return False, 'prime power or cap < 3'
     ps = list(f); why = []
@@ -21,12 +21,13 @@ def chi1_ok(k, c):
     for l, e in f.items():
         other = [p for p in ps if p != l]; capl = c // l
         if e >= 2:
-            r = digits(k, l, capl); g = r is not None; w = f'digits {r}'
-        elif (k // l - 1) // 2 >= l - 1 and capl >= 2: g, w = True, 'edges'
+            r = digits(k, l, capl, target=target); g = r is not None; w = f'digits {r}'
+        elif (k // l - 1) // 2 >= l - 1 and capl >= 2 and target == 1: g, w = True, 'edges'
+        elif capl >= 3 and digits(k, l, capl, target=target) is not None: g, w = True, 'edges and triangles'
         else:
-            g = PC.eq1_check(k // l, capl, l, other) if capl >= 1 else False; w = f'CP-SAT on Z_{k // l}'
+            g = PC.eq1_check(k // l, capl, l, other, target) if capl >= 1 else False; w = f'CP-SAT on Z_{k // l}'
         why.append((l, e, g, w)); ok = ok and bool(g)
-    if not ok and all(e == 1 for e in f.values()):
+    if not ok and target == 1 and all(e == 1 for e in f.values()):
         q = max(ps); g, w = PC.split_check(k, q, c); why.append(('split', g, w)); ok = bool(g)
     return ok, why
 lines = open('../outputs/ws_budget_scan.txt').read().strip().split('\n')[2:]

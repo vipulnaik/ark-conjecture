@@ -862,3 +862,17 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - twists outside ΓL(1);
   - the 496 merged and non-prime-power rows;
   - the general two-block arithmetic.
+
+## Part 44: every pp+pp configuration (ΓL(1)) closes within its budget
+
+- **Extended:**
+  - `digits_explicit.py`: a target value, and the composite move (all edges, then triangles);
+  - `roomy_close.chi1_ok`: a target value, and `digits_explicit.py` for primes dividing k once.
+- **New `pp_roomy_close.py`, using weight-threshold complexes Δ_W (N\*-invariant for any N\*).** Of the 159,556 roomy configurations: 107,057 close by χ = 1 on the prime block, 52,492 by Δ_W, 4 by unions, and 3 are left.
+  - New `pp_roomy_pass2.py` closes 2 of the 3 with targets 1 − y.
+  - New `case_1035.py` closes the last by Lemma S, 261 = 9·29, with 13 checked correction orbits.
+- **Result:** all 481 rows with prime+prime or pp+pp witnesses are settled at level 1 with the budget, given Conjecture P. For the 146 with prime-power blocks this is within ΓL(1) twists, and prime blocks are assumed to have cyclic N\* action.
+- **Not done:**
+  - twists outside ΓL(1);
+  - the 496 merged and non-prime-power rows;
+  - the general two-block argument.

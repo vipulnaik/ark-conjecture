@@ -10,7 +10,7 @@ s l^{e-1-i} points at the top level Z_{k/l}.  Returns the list of moves, or None
 usage: python3 digits_explicit.py k l cap"""
 import random, sys
 from sympy import factorint
-def digits(k, l, cap, seed=1, samples=20000):
+def digits(k, l, cap, seed=1, samples=20000, target=1):
     rng = random.Random(seed); f = factorint(k); e = f[l]; u = k // l ** e
     others = [p for p in f if p != l]
     levels = [u * l ** i for i in range(e)]
@@ -38,11 +38,36 @@ def digits(k, l, cap, seed=1, samples=20000):
     for i, n in enumerate(levels):
         added.append(set())
         scale = l ** (e - 1 - i)
-        need = (1 - chi) % l ** (i + 1)              # chi + delta = 1 mod l^{i+1}; delta a multiple of n
+        need = (target - chi) % l ** (i + 1)              # chi + delta = 1 mod l^{i+1}; delta a multiple of n
         assert need % l ** i == 0 or i == 0
         unit = (n // l ** i) % l                     # n = u l^i
         t = (need // l ** i) * pow(unit, -1, l) % l  # need delta = t * n (mod l^{i+1})
-        for sign, size, j in ((-1, 2, (-t) % l), (1, 3, t)):
+        options = [(-1, 2, (-t) % l), (1, 3, t), ('E+T', None, None)]
+        for sign, size, j in options:
+            if sign == 'E+T':
+                # add every available free coset-free edge orbit (E of them), then j' triangles, j' = t + E (mod l)
+                if 3 * scale > cap: continue
+                E = []
+                for x in range(1, n // 2 + 1):
+                    S = (0, x)
+                    if member(S, i) or not free(S, n) or not coset_free(S, n): continue
+                    orb = frozenset(frozenset((y + d) % n for y in S) for d in range(n))
+                    if orb not in E: E.append(orb)
+                for orb in E: added[i] |= set(orb)
+                jp = (t + len(E)) % l; got = []
+                for _ in range(samples):
+                    if len(got) >= jp: break
+                    S = tuple(sorted(rng.sample(range(n), 3)))
+                    if member(S, i) or not free(S, n) or not coset_free(S, n): continue
+                    if not all(member([x for x in S if x != y], i) for y in S): continue
+                    orb = frozenset(frozenset((x + d) % n for x in S) for d in range(n))
+                    if any(orb == g for g in got): continue
+                    got.append(orb)
+                if len(got) < jp:
+                    for orb in E: added[i] -= set(orb)
+                    continue
+                for orb in got: added[i] |= set(orb)
+                chi += (jp - len(E)) * n; moves.append((n, 'E+T', len(E), jp)); break
             if size * scale > cap: continue
             got = []
             for _ in range(samples):
@@ -58,7 +83,7 @@ def digits(k, l, cap, seed=1, samples=20000):
                 chi += sign * j * n; moves.append((n, size, j)); break
         else:
             return None
-        assert (chi - 1) % l ** (i + 1) == 0, (chi, i)
+        assert (chi - target) % l ** (i + 1) == 0, (chi, i)
     return chi, moves
 if __name__ == "__main__":
     k, l, cap = map(int, sys.argv[1:4]); print(digits(k, l, cap))
