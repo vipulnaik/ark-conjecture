@@ -850,3 +850,15 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - the roomy configurations elsewhere;
   - k with two or more repeated primes;
   - affine twists outside ΓL(1), and the merged and non-prime-power rows.
+
+## Part 43: every prime+prime configuration closes within its budget
+
+- **New `digits_explicit.py`.** It carries out the digit construction explicitly, using edge and triangle moves, with every added orbit checked.
+- **New `roomy_close.py`.** It closes 144 of the 147 roomy configurations by χ = 1 on one block. Of the other three, the exact search closes n = 1632, and joins close n = 2412 and 3586 (new `join_close.py`).
+- **Checked: `split_chi1` in `ws_budget_scan.py` is sound by Lemma R.**
+- **Result:** the 335 prime+prime-only rows are settled at level 1 with the budget, given Conjecture P and the cyclic N\* action on classes.
+- **Not done:**
+  - the roomy pp+pp configurations (about 160,000);
+  - twists outside ΓL(1);
+  - the 496 merged and non-prime-power rows;
+  - the general two-block arithmetic.
