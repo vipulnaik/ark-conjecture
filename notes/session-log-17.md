@@ -776,3 +776,15 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - the roomy configurations, with the budget;
   - the 496 merged or non-prime-power rows;
   - twists outside ΓL(1).
+
+## Part 36: Lemma C, Smith completeness for cyclic actions
+
+- **New `lemma_c_check.py`.** It compares exact χ sets of C_k-invariant complexes (faces of at most c points) with the prime-by-prime Smith prediction. They agree at prime k and at most composite (k, c). At prime powers they do not: χ ≡ 6 (mod 9) is allowed by the prediction but never realised at k = 9, and similar gaps appear at k = 8. (k = 2 to 9.)
+- **New `lemma_c_data.py`.** It uses full data vectors ψ(f) = χ(Δ^{C_f}) with conditions (R), realised quotient data, and (B), the Burnside congruence. It runs over k ≤ 11 with every c, and k = 12 with c ≤ 5.
+  - All predicted vectors are realised except a few near the ends of the χ range: |ψ(1)| ≥ 8, and at least 60% of that side of the range.
+  - k = 12 with c ≥ 6 is not run (too slow).
+- **Lemma C (conjectural) and a proof route.** The route is equivariant cell attachment by stabiliser type, plus a room lemma. Recorded in threshold-beyond-mu.md §7.
+- **Not done:**
+  - the proof itself;
+  - an explicit room bound;
+  - the two-block arithmetic.

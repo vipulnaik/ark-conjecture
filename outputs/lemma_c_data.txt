@@ -1,0 +1,60 @@
+k=2 c=1 divisors=[1, 2] realised vectors 2, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=3 c=1 divisors=[1, 3] realised vectors 2, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=3 c=2 divisors=[1, 3] realised vectors 2, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=4 c=1 divisors=[1, 2, 4] realised vectors 2, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=4 c=2 divisors=[1, 2, 4] realised vectors 4, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=4 c=3 divisors=[1, 2, 4] realised vectors 4, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=5 c=1 divisors=[1, 5] realised vectors 2, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=5 c=2 divisors=[1, 5] realised vectors 3, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=5 c=3 divisors=[1, 5] realised vectors 3, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=5 c=4 divisors=[1, 5] realised vectors 3, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=6 c=1 divisors=[1, 2, 3, 6] realised vectors 2, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=6 c=2 divisors=[1, 2, 3, 6] realised vectors 6, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=6 c=3 divisors=[1, 2, 3, 6] realised vectors 13, predicted-not-realised 1 (chi values never realised: [8]), undecided 0  e.g. [(8, 0, 2, 0)]
+k=6 c=4 divisors=[1, 2, 3, 6] realised vectors 14, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=6 c=5 divisors=[1, 2, 3, 6] realised vectors 14, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=7 c=1 divisors=[1, 7] realised vectors 2, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=7 c=2 divisors=[1, 7] realised vectors 4, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=7 c=3 divisors=[1, 7] realised vectors 6, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=7 c=4 divisors=[1, 7] realised vectors 6, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=7 c=5 divisors=[1, 7] realised vectors 6, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=7 c=6 divisors=[1, 7] realised vectors 6, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=8 c=1 divisors=[1, 2, 4, 8] realised vectors 2, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=8 c=2 divisors=[1, 2, 4, 8] realised vectors 8, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=8 c=3 divisors=[1, 2, 4, 8] realised vectors 13, predicted-not-realised 2 (chi values never realised: [24, 32]), undecided 0  e.g. [(24, 0, 0, 0), (32, 0, 0, 0)]
+k=8 c=4 divisors=[1, 2, 4, 8] realised vectors 36, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=8 c=5 divisors=[1, 2, 4, 8] realised vectors 36, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=8 c=6 divisors=[1, 2, 4, 8] realised vectors 36, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=8 c=7 divisors=[1, 2, 4, 8] realised vectors 36, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=9 c=1 divisors=[1, 3, 9] realised vectors 2, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=9 c=2 divisors=[1, 3, 9] realised vectors 5, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=9 c=3 divisors=[1, 3, 9] realised vectors 20, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=9 c=4 divisors=[1, 3, 9] realised vectors 28, predicted-not-realised 1 (chi values never realised: [-63]), undecided 0  e.g. [(-63, 0, 0)]
+k=9 c=5 divisors=[1, 3, 9] realised vectors 28, predicted-not-realised 1 (chi values never realised: [-63]), undecided 0  e.g. [(-63, 0, 0)]
+k=9 c=6 divisors=[1, 3, 9] realised vectors 28, predicted-not-realised 1 (chi values never realised: [-63]), undecided 0  e.g. [(-63, 0, 0)]
+k=9 c=7 divisors=[1, 3, 9] realised vectors 28, predicted-not-realised 1 (chi values never realised: [-63]), undecided 0  e.g. [(-63, 0, 0)]
+k=9 c=8 divisors=[1, 3, 9] realised vectors 28, predicted-not-realised 1 (chi values never realised: [-63]), undecided 0  e.g. [(-63, 0, 0)]
+k=10 c=1 divisors=[1, 2, 5, 10] realised vectors 2, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=10 c=2 divisors=[1, 2, 5, 10] realised vectors 10, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=10 c=3 divisors=[1, 2, 5, 10] realised vectors 22, predicted-not-realised 3 (chi values never realised: [60, 70, 80]), undecided 0  e.g. [(60, 0, 0, 0), (70, 0, 0, 0), (80, 0, 0, 0)]
+k=10 c=4 divisors=[1, 2, 5, 10] realised vectors 63, predicted-not-realised 2 (chi values never realised: []), undecided 0  e.g. [(-125, 5, 0, 0), (85, -5, 0, 0)]
+k=10 c=5 divisors=[1, 2, 5, 10] realised vectors 139, predicted-not-realised 15 (chi values never realised: [110, 112, 120, 122]), undecided 0  e.g. [(-125, 5, 0, 0), (-123, 5, 2, 0), (87, 5, 2, 0)]
+k=10 c=6 divisors=[1, 2, 5, 10] realised vectors 150, predicted-not-realised 4 (chi values never realised: []), undecided 0  e.g. [(-125, 5, 0, 0), (-123, 5, 2, 0), (125, 5, 0, 0)]
+k=10 c=7 divisors=[1, 2, 5, 10] realised vectors 150, predicted-not-realised 4 (chi values never realised: []), undecided 0  e.g. [(-125, 5, 0, 0), (-123, 5, 2, 0), (125, 5, 0, 0)]
+k=10 c=8 divisors=[1, 2, 5, 10] realised vectors 150, predicted-not-realised 4 (chi values never realised: []), undecided 0  e.g. [(-125, 5, 0, 0), (-123, 5, 2, 0), (125, 5, 0, 0)]
+k=10 c=9 divisors=[1, 2, 5, 10] realised vectors 150, predicted-not-realised 4 (chi values never realised: []), undecided 0  e.g. [(-125, 5, 0, 0), (-123, 5, 2, 0), (125, 5, 0, 0)]
+k=11 c=1 divisors=[1, 11] realised vectors 2, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=11 c=2 divisors=[1, 11] realised vectors 6, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=11 c=3 divisors=[1, 11] realised vectors 16, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=11 c=4 divisors=[1, 11] realised vectors 31, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=11 c=5 divisors=[1, 11] realised vectors 43, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=11 c=6 divisors=[1, 11] realised vectors 43, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=11 c=7 divisors=[1, 11] realised vectors 43, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=11 c=8 divisors=[1, 11] realised vectors 43, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=11 c=9 divisors=[1, 11] realised vectors 43, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=11 c=10 divisors=[1, 11] realised vectors 43, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=12 c=1 divisors=[1, 2, 3, 4, 6, 12] realised vectors 2, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=12 c=2 divisors=[1, 2, 3, 4, 6, 12] realised vectors 12, predicted-not-realised 0 (chi values never realised: []), undecided 0
+k=12 c=3 divisors=[1, 2, 3, 4, 6, 12] realised vectors 66, predicted-not-realised 8 (chi values never realised: [120, 124, 132, 136, 144, 148, 156, 160]), undecided 0  e.g. [(120, 0, 0, 0, 0, 0), (124, 0, 4, 0, 0, 0), (132, 0, 0, 0, 0, 0)]
+k=12 c=4 divisors=[1, 2, 3, 4, 6, 12] realised vectors 474, predicted-not-realised 23 (chi values never realised: [-327, -324, -321, -318, -315, -312, -309, -306, -303, -300]...), undecided 0  e.g. [(-329, 3, 4, 3, 0, 0), (-327, -3, 0, 3, 0, 0), (-326, 6, 4, 0, 0, 0)]
+k=12 c=5 divisors=[1, 2, 3, 4, 6, 12] realised vectors 676, predicted-not-realised 118 (chi values never realised: [-327, -324, -321, -318, -315, -312, -309, -306, -303, -300]...), undecided 0  e.g. [(-329, 3, 4, 3, 0, 0), (-327, -3, 0, 3, 0, 0), (-326, 6, 4, 0, 0, 0)]
