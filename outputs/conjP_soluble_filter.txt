@@ -1,0 +1,467 @@
+15 2 none 120 1 "A(6)"
+15 3 none 120 3 "S(6)"
+21 2 none 210 1 "A(7)"
+21 3 none 210 2 "S(7)"
+28 2 none 252 1 "PSL(2, 8)"
+28 7 none 420 3 "A(8)"
+28 8 none 420 4 "S(8)"
+35 1 none 630 2 "A(8)"
+35 2 none 630 5 "S(8)"
+36 2 none 504 2 "PGammaL(2, 8)"
+36 6 none 756 1 "PSU(3, 3)"
+36 7 none 756 2 "PGammaU(3, 3)"
+36 8 none 720 1 "PSp(4, 3)"
+36 9 none 720 3 "PSp(4, 3):2"
+36 11 none 756 3 "A(9)"
+36 12 none 756 4 "S(9)"
+36 13 none 900 30 "(A(6) x A(6)):2"
+36 14 none 900 295 "(A(6) x A(6)):2^2"
+36 15 none 900 205 "(A(6) x A(6)):4"
+36 16 none 900 3095 "(S(6) x S(6)):2"
+36 17 none 900 2 "(A(5) x A(5)):2"
+36 18 none 900 9 "(A(5) x A(5)).4"
+36 19 none 900 5 "((A(5) x A(5)):2)2"
+36 20 none 900 39 "(S(5) x S(5)):2"
+40 1 none 1080 1 "PSp(4, 3)"
+40 2 none 1080 4 "PSp(4, 3):2"
+40 3 none 1080 1 "PSp(4, 3)"
+40 4 none 1080 3 "PSp(4, 3):2"
+45 4 none 1440 1 "PSp(4, 3)"
+45 5 none 1440 2 "PSp(4, 3):2"
+45 6 none 1260 1 "A(10)"
+45 7 none 1260 3 "S(10)"
+55 4 none 1980 1 "M(11)"
+55 5 none 1980 3 "Alt(11)"
+55 6 none 1980 4 "Sym(11)"
+56 1 none 2520 1 "PSL(3, 4)"
+56 2 none 2520 2 "PSL(3, 4).2_3"
+56 3 none 2520 2 "PSL(3, 4).2_1"
+56 4 none 2520 2 "PSL(3, 4).2_2"
+56 5 none 2520 7 "PSL(3, 4).2^2"
+56 6 none 1680 1 "Alt(8)"
+56 7 none 1680 2 "Sym(8)"
+60 1 none 1200 1 "Alt(5)^2"
+60 2 none 1200 6 "Alt(5)^2.2"
+60 3 none 1200 2 "Alt(5) wreath Sym(2)"
+60 4 none 1200 2 "Alt(5) wreath Sym(2)"
+60 5 none 1200 11 "Alt(5)^2.2^2"
+63 5 none 2016 3 "PSp(6, 2)"
+66 2 none 1980 1 "M(11)"
+66 3 none 2970 2 "M(12)"
+66 4 none 2970 5 "Alt(12)"
+66 5 none 2970 6 "Sym(12)"
+77 1 none 4620 1 "M(22)"
+77 2 none 4620 2 "M(22).2"
+78 3 skipped-large-alt 4290
+78 4 skipped-large-alt 4290
+84 1 none 3780 1 "Alt(9)"
+84 2 none 3780 2 "Sym(9)"
+85 1 none 5440 2 "PSp(4, 4)"
+85 2 none 5440 5 "PSp(4, 4).2"
+91 5 skipped-large-alt 6006
+91 6 skipped-large-alt 6006
+100 1 none 6300 1 "J_2"
+100 2 none 6300 2 "J_2.2"
+105 1 none 6720 2 "PSL(3, 4).2"
+105 2 none 6720 2 "PSL(3, 4).2"
+105 3 none 6720 7 "PSL(3, 4).2^2"
+105 4 none 6720 5 "PSL(3, 4).Sym(3)"
+105 5 none 6720 5 "PSL(3, 4).6"
+105 6 none 6720 23 "PSL(3, 4).D_12"
+105 7 none 3360 3 "Sym(8)"
+105 8 skipped-large-alt 8190
+105 9 skipped-large-alt 8190
+112 1 none 9072 1 "PSU(4, 3)"
+112 2 none 9072 3 "PSU(4, 3).2"
+112 3 none 9072 5 "PSU(4, 3).2"
+112 4 none 9072 4 "PSU(4, 3).2"
+112 5 none 9072 16 "PSU(4, 3).2^2"
+112 6 none 9072 8 "PSU(4, 3).4"
+112 7 none 9072 24 "PSU(4, 3).2^2"
+112 8 none 9072 60 "PSU(4, 3).D_8"
+117 2 none 9360 3 "PSL(4, 3)"
+117 3 none 9360 5 "PSL(4, 3).2"
+119 1 none 7616 1 "O-(8, 2)"
+120 2 none 7560 2 "Alt(9)"
+120 3 none 2040 1 "PSL(2, 16)"
+120 4 none 2040 2 "PSL(2, 16).2"
+120 5 none 2040 3 "PSigmaL(2, 16)"
+120 6 none 6720 1 "PSL(3, 4)"
+120 7 none 6720 2 "PSL(3, 4).2"
+120 8 none 6720 2 "PSL(3, 4).2"
+120 9 none 6720 2 "PSL(3, 4).2"
+120 10 none 6720 7 "PSL(3, 4).2^2"
+120 11 none 3360 3 "Sym(8)"
+120 12 none 8160 3 "PSp(4, 4)"
+120 13 none 8160 10 "PSp(4, 4).2"
+120 14 none 7560 7 "PSp(6, 2)"
+120 16 none 7560 67 "O+(8, 2)"
+119 2 walltime
+120 18 none 7560 1 "Alt(10)"
+120 19 none 7560 2 "Sym(10)"
+120 20 skipped-large-alt 10920
+120 21 skipped-large-alt 10920
+126 1 none 12600 2 "Alt(10)"
+126 2 none 12600 5 "Sym(10)"
+126 7 none 10080 3 "PSU(4, 3)"
+126 8 none 10080 5 "PSU(4, 3).2"
+120 17 walltime
+126 10 none 10080 9 "PSU(4, 3).2"
+126 9 none 10080 5 "PSU(4, 3).2"
+130 1 none 10530 1 "PSL(4, 3)"
+130 2 none 10530 2 "PSL(4, 3).2"
+130 3 none 10530 2 "PGL(4, 3)"
+130 4 none 10530 2 "PSL(4, 3).2"
+126 11 none 10080 24 "PSU(4, 3).2^2"
+135 2 none 9450 19 "O+(8, 2)"
+130 5 none 10530 7 "PSL(4, 3).2^2"
+136 7 none 10200 1 "PSp(4, 4)"
+136 8 none 10200 4 "PSp(4, 4).2"
+136 9 none 9792 1 "O-(8, 2)"
+135 3 walltime
+136 11 skipped-large-alt 14280
+136 12 skipped-large-alt 14280
+144 3 none 9504 1 "M(12)"
+144 4 none 9504 2 "M(12).2"
+144 5 none 9504 2 "M(12).2"
+144 6 none 17424 58 "M(11) wreath Sym(2)"
+136 10 walltime
+144 8 skipped-index 114721266401280000 17424
+144 9 skipped-index 229442532802560000 17424
+144 10 skipped-index 229442532802560000 17424
+144 11 skipped-index 458885065605120000 17424
+144 12 none 17424 6 "PSL(2, 11) wreath Sym(2)"
+144 13 none 17424 19 "PSL(2, 11)^2.2^2"
+144 14 none 17424 7 "PSL(2, 11)^2.4"
+144 15 none 17424 58 "PGL(2, 11) wreath Sym(2)"
+153 3 skipped-large-alt 18360
+153 4 skipped-large-alt 18360
+155 1 none 17360 1 "PSL(5, 2)"
+156 1 none 19500 1 "PSp(4, 5)"
+156 2 none 19500 3 "PSp(4, 5).2"
+156 3 none 19500 1 "PSp(4, 5)"
+156 4 none 19500 2 "PSp(4, 5).2"
+165 1 none 21120 1 "PSU(5, 2)"
+165 2 none 21120 2 "PGammaU(5, 2)"
+165 4 none 13860 1 "Alt(11)"
+144 7 walltime
+168 1 none 9408 1 "PSL(2, 7)^2"
+165 5 none 13860 2 "Sym(11)"
+168 2 none 9408 2 "PSL(2, 7)^2.2"
+168 3 none 9408 2 "PSL(2, 7) wreath 2"
+168 4 none 9408 2 "PSL(2, 7) wreath 2"
+171 3 skipped-large-alt 23256
+171 4 skipped-large-alt 23256
+168 5 none 9408 7 "PSL(2, 7)^2.2^2"
+175 1 none 9800 1 "PSL(2, 7^2)"
+176 1 none 23760 1 "PSU(5, 2)"
+175 2 none 9800 2 "PSigmaL(2, 7^2)"
+176 3 none 18480 1 "M(22)"
+190 3 skipped-large-alt 29070
+190 4 skipped-large-alt 29070
+210 1 none 18900 1 "Alt(10)"
+210 2 none 18900 2 "Sym(10)"
+210 3 skipped-large-alt 35910
+210 4 skipped-large-alt 35910
+220 1 none 23760 1 "M(12)"
+220 2 none 23760 3 "Alt(12)"
+220 3 none 23760 4 "Sym(12)"
+225 1 none 44100 14 "Alt(7) wreath Sym(2)"
+176 2 none 23760 2 "PGammaU(5, 2)"
+225 7 skipped-index 855006126362099712000000 44100
+225 8 skipped-index 1710012252724199424000000 44100
+225 9 skipped-index 1710012252724199424000000 44100
+225 10 skipped-index 3420024505448398848000000 44100
+231 1 none 36960 1 "M(22)"
+231 2 none 36960 2 "M(22).2"
+231 3 skipped-large-alt 43890
+231 4 skipped-large-alt 43890
+253 4 none 53130 1 "M(23)"
+253 5 none 35420 1 "M(23)"
+253 6 skipped-large-alt 53130
+253 7 skipped-large-alt 53130
+255 1 none 32640 3 "PSp(8, 2)"
+275 1 none 44550 1 "McL"
+275 2 none 44550 2 "McL:2"
+276 4 none 63756 1 "M(24)"
+276 5 skipped-large-alt 63756
+276 6 skipped-large-alt 63756
+280 1 none 45360 1 "Alt(9)"
+280 2 none 45360 2 "Sym(9)"
+280 3 none 20160 1 "PSL(3, 4)"
+280 4 none 20160 2 "PSL(3, 4).2"
+280 5 none 20160 2 "PSL(3, 4).2"
+280 6 none 20160 2 "PSL(3, 4).2"
+280 7 none 20160 2 "PSL(3, 4).3"
+280 8 none 20160 7 "PSL(3, 4).2^2"
+280 9 none 20160 5 "PSL(3, 4).Sym(3)"
+280 10 none 20160 5 "PSL(3, 4).Sym(3)"
+280 11 none 20160 5 "PSL(3, 4).6"
+225 6 none 44100 327 "Alt(8) wreath Sym(2)"
+280 13 none 68040 1 "PSU(4, 3)"
+280 12 none 20160 23 "PSL(3, 4).D_12"
+280 15 none 68040 2 "PSU(4, 3).2"
+280 16 none 68040 2 "PSU(4, 3).2"
+280 14 none 68040 2 "PSU(4, 3).2"
+280 18 none 68040 3 "PSU(4, 3).4"
+280 19 none 68040 9 "PSU(4, 3).2^2"
+280 17 none 68040 7 "PSU(4, 3).2^2"
+280 21 none 37800 1 "J_2"
+280 22 none 37800 2 "J_2.2"
+286 1 skipped-large-alt 38610
+286 2 skipped-large-alt 38610
+297 1 none 76032 1 "PSU(5, 2)"
+297 2 none 76032 2 "PGammaU(5, 2)"
+300 6 none 39000 1 "PSp(4, 5)"
+300 7 none 39000 3 "PSp(4, 5).2"
+300 8 skipped-large-alt 75900
+300 9 skipped-large-alt 75900
+315 1 none 45360 1 "PSp(6, 2)"
+315 2 none 50400 1 "J_2"
+315 3 none 50400 2 "J_2.2"
+325 1 none 46800 1 "PSp(4, 5)"
+325 2 none 46800 2 "PSp(4, 5).2"
+280 20 walltime
+325 4 walltime
+325 3 walltime
+325 11 skipped-large-alt 89700
+325 12 skipped-large-alt 89700
+330 3 none 46200 1 "Alt(11)"
+330 4 none 46200 2 "Sym(11)"
+336 4 none 20160 5 "PSL(3, 4).Sym(3)"
+336 5 none 20160 5 "PSL(3, 4).6"
+336 6 none 20160 23 "PSL(3, 4).D_12"
+336 7 none 60480 1 "PSp(6, 2)"
+351 5 none 78624 4 "O(7, 3)"
+325 5 walltime
+351 7 none 78624 1 "G(2, 3)"
+351 8 skipped-large-alt 105300
+351 9 skipped-large-alt 105300
+351 6 walltime
+357 1 walltime
+357 2 walltime
+357 3 walltime
+357 4 walltime
+360 1 none 32400 1 "Alt(6)^2"
+360 2 none 32400 6 "Alt(6)^2.2"
+360 3 none 32400 2 "Alt(6)^2.2"
+360 4 none 32400 2 "Alt(6)^2.2"
+360 5 none 32400 2 "Alt(6) wreath Sym(2)"
+360 6 none 32400 2 "Alt(6) wreath Sym(2)"
+360 7 none 32400 2 "Alt(6) wreath Sym(2)"
+360 8 none 32400 2 "Alt(6) wreath Sym(2)"
+360 9 none 32400 13 "Alt(6)^2.2^2"
+360 10 none 32400 7 "Alt(6)^2.2^2"
+360 11 none 32400 11 "Alt(6)^2.2^2"
+357 5 walltime
+360 12 none 32400 7 "Alt(6)^2.2^2"
+360 13 none 32400 7 "Alt(6)^2.2^2"
+360 15 none 32400 7 "Alt(6)^2.2^2"
+360 14 none 32400 11 "Alt(6)^2.2^2"
+364 1 none 88452 1 "PSp(6, 3)"
+360 16 none 32400 64 "Alt(6)^2.2^3"
+364 3 none 88452 3 "O(7, 3)"
+364 2 walltime
+364 6 skipped-large-alt 60060
+364 7 skipped-large-alt 60060
+378 5 none 98280 9 "O(7, 3)"
+364 4 walltime
+378 7 none 78624 1 "G(2, 3)"
+378 8 skipped-large-alt 122850
+378 9 skipped-large-alt 122850
+396 1 none 47520 1 "M(12)"
+396 2 none 47520 2 "M(12).2"
+378 6 walltime
+400 1 walltime
+400 2 walltime
+400 3 walltime
+400 7 skipped-index 2959506090694963842708720844800000000 144400
+400 8 skipped-index 5919012181389927685417441689600000000 144400
+400 9 skipped-index 5919012181389927685417441689600000000 144400
+400 10 skipped-index 11838024362779855370834883379200000000 144400
+400 11 none 144400 6 "PSL(2, 19) wreath Sym(2)"
+400 12 none 144400 19 "PSL(2, 19)^2.2^2"
+400 13 none 144400 7 "PSL(2, 19)^2.4"
+400 14 none 144400 56 "PGL(2, 19) wreath Sym(2)"
+406 3 skipped-large-alt 142506
+406 4 skipped-large-alt 142506
+400 4 walltime
+416 7 none 131040 1 "G(2, 4)"
+435 3 skipped-large-alt 164430
+435 4 skipped-large-alt 164430
+455 1 skipped-large-alt 100100
+455 2 skipped-large-alt 100100
+462 1 none 103950 2 "Alt(12)"
+462 2 none 103950 5 "Sym(12)"
+465 4 skipped-large-alt 188790
+465 5 skipped-large-alt 188790
+495 1 none 126720 4 "O-(10, 2)"
+495 2 walltime
+495 7 none 110880 1 "Alt(12)"
+495 8 none 110880 2 "Sym(12)"
+496 4 none 126480 7 "O+(10, 2)"
+416 4 walltime
+496 6 none 16368 1 "PSL(2, 2^5)"
+496 7 none 16368 2 "PGammaL(2, 2^5)"
+496 9 skipped-large-alt 215760
+496 10 skipped-large-alt 215760
+504 1 none 36288 1 "PSL(2, 8)^2"
+504 2 none 36288 2 "PSL(2, 8) wreath Sym(2)"
+504 3 none 36288 4 "PSL(2, 8)^2.3"
+504 4 none 36288 7 "PSL(2, 8)^2.6"
+520 1 none 37440 1 "PSL(2, 2^6)"
+520 2 none 37440 2 "PSL(2, 2^6).2"
+520 3 none 37440 2 "PSL(2, 2^6).3"
+520 4 none 37440 5 "PGammaL(2, 2^6)"
+520 5 none 126360 2 "PSL(4, 3).2"
+496 5 walltime
+520 6 none 126360 2 "PSL(4, 3).2"
+527 1 none 142290 1 "O+(10, 2)"
+520 7 walltime
+528 1 none 32736 1 "PSL(2, 2^5)"
+528 2 none 32736 2 "PGammaL(2, 2^5)"
+528 4 none 143616 3 "O-(10, 2)"
+527 2 walltime
+528 6 skipped-large-alt 245520
+528 7 skipped-large-alt 245520
+540 1 none 136080 1 "PSU(4, 3)"
+540 2 none 136080 2 "PSU(4, 3).2"
+540 3 none 136080 2 "PSU(4, 3).2"
+540 4 none 136080 2 "PSU(4, 3).2"
+540 5 none 136080 7 "PSU(4, 3).2^2"
+540 6 none 136080 3 "PSU(4, 3).4"
+528 5 walltime
+540 7 walltime
+560 2 none 29120 2 "PSz(8).3"
+560 3 skipped-large-alt 160160
+560 4 skipped-large-alt 160160
+561 1 skipped-large-alt 278256
+561 2 skipped-large-alt 278256
+540 8 walltime
+585 1 walltime
+595 1 skipped-large-alt 314160
+595 2 skipped-large-alt 314160
+616 1 none 221760 1 "M(22)"
+616 2 none 221760 2 "M(22).2"
+630 1 skipped-large-alt 353430
+630 2 skipped-large-alt 353430
+651 1 none 364560 1 "PSL(6, 2)"
+660 1 none 87120 1 "PSL(2, 11)^2"
+660 2 none 87120 2 "PSL(2, 11)^2.2"
+660 3 none 87120 2 "PSL(2, 11) wreath Sym(2)"
+660 4 none 87120 2 "PSL(2, 11) wreath Sym(2)"
+660 5 none 87120 7 "PSL(2, 11)^2.2^2"
+666 3 skipped-large-alt 396270
+666 4 skipped-large-alt 396270
+671 1 none 88572 1 "PSL(2, 11^2)"
+671 2 none 88572 2 "PSigmaL(2, 11^2)"
+585 2 walltime
+672 1 walltime
+672 2 walltime
+672 3 walltime
+672 5 none 221760 1 "M(22)"
+672 6 none 221760 2 "M(22).2"
+680 1 skipped-large-alt 247520
+680 2 skipped-large-alt 247520
+672 4 walltime
+693 1 walltime
+693 2 walltime
+693 3 walltime
+703 3 skipped-large-alt 442890
+703 4 skipped-large-alt 442890
+715 1 skipped-large-alt 240240
+715 2 skipped-large-alt 240240
+741 1 skipped-large-alt 493506
+741 2 skipped-large-alt 493506
+693 4 walltime
+756 1 walltime
+756 2 walltime
+756 3 walltime
+756 4 walltime
+759 1 none 340032 1 "M(24)"
+765 1 none 391680 1 "O-(8, 2)"
+756 5 walltime
+780 1 skipped-large-alt 548340
+780 2 skipped-large-alt 548340
+784 5 none 63504 7 "PSL(2, 8)^2.6"
+784 6 none 63504 7 "PSL(2, 8)^2.Sym(3)"
+784 7 none 63504 42 "PGammaL(2, 8) wreath Sym(2)"
+784 12 none 571536 4 "PSU(3, 3) wreath 2"
+784 13 none 571536 17 "PSU(3, 3)^2.2^2"
+784 14 none 571536 9 "PSU(3, 3)^2.4"
+784 15 none 571536 66 "PGammaU(3, 3) wreath Sym(2)"
+765 2 walltime
+784 17 skipped-index 46478451340035594117247487634202747771193131008000000000000 571536
+784 18 skipped-index 92956902680071188234494975268405495542386262016000000000000 571536
+784 19 skipped-index 92956902680071188234494975268405495542386262016000000000000 571536
+784 20 skipped-index 185913805360142376468989950536810991084772524032000000000000 571536
+784 21 none 571536 2 "PSL(2, 27) wreath Sym(2)"
+784 22 none 571536 7 "PSL(2, 27)^2:2^2"
+784 23 none 571536 3 "PSL(2, 27)^2.4"
+784 24 none 571536 7 "PSL(2, 27)^2.Sym(3)"
+784 25 none 571536 7 "PSL(2, 27)^2.6"
+784 26 none 571536 20 "PGL(2, 27) wreath Sym(2)"
+784 16 walltime
+784 27 none 571536 35 "PSL(2, 27)^2.(2 x 6)"
+784 28 none 571536 35 "PSL(2, 27)^2.D_12"
+784 29 none 571536 17 "PSL(2, 27)^2.12"
+784 30 none 571536 17 "PSL(2, 27)^2.Q_12"
+784 31 none 571536 42 "PSigmaL(2, 27) wreath Sym(2)"
+784 32 walltime
+784 33 walltime
+784 34 walltime
+784 35 none 571536 161 "PSL(2, 27)^2.(3 x Q_12)"
+792 1 none 277200 1 "Alt(12)"
+792 2 none 277200 2 "Sym(12)"
+806 1 none 503750 1 "PSL(4, 5)"
+806 2 walltime
+806 3 walltime
+784 36 walltime
+806 4 walltime
+806 5 walltime
+806 6 walltime
+806 7 walltime
+816 1 skipped-large-alt 371280
+816 2 skipped-large-alt 371280
+819 5 none 419328 1 "3D(4, 2)"
+806 8 walltime
+819 6 walltime
+820 3 walltime
+820 4 walltime
+820 6 walltime
+820 5 walltime
+820 7 walltime
+820 9 walltime
+820 10 skipped-large-alt 607620
+820 11 skipped-large-alt 607620
+820 8 walltime
+820 22 walltime
+820 23 walltime
+840 1 none 181440 1 "Alt(9)"
+840 2 none 181440 2 "Sym(9)"
+840 3 none 302400 1 "J_2"
+840 4 none 302400 2 "J_2.2"
+861 3 skipped-large-alt 671580
+861 4 skipped-large-alt 671580
+900 1 skipped-index 35179539819272941187344623390328059788016080859955200000000000000 756900
+900 2 skipped-index 70359079638545882374689246780656119576032161719910400000000000000 756900
+900 3 skipped-index 70359079638545882374689246780656119576032161719910400000000000000 756900
+900 4 skipped-index 140718159277091764749378493561312239152064323439820800000000000000 756900
+900 5 none 756900 2 "PSL(2, 29) wreath Sym(2)"
+900 6 none 756900 7 "PSL(2, 29)^2.2^2"
+900 7 none 756900 3 "PSL(2, 29)^2.4"
+900 8 none 756900 24 "PGL(2, 29) wreath Sym(2)"
+903 3 skipped-large-alt 740460
+903 4 skipped-large-alt 740460
+820 24 walltime
+910 1 none 663390 2 "PSL(3, 9).2"
+910 2 none 663390 2 "PSL(3, 9).2"
+946 3 skipped-large-alt 814506
+946 4 skipped-large-alt 814506
+960 7 none 537600 5 "O+(8, 2)"
+910 3 walltime
+969 1 skipped-large-alt 542640
+969 2 skipped-large-alt 542640
+990 1 skipped-large-alt 893970
+990 2 skipped-large-alt 893970
+960 8 walltime

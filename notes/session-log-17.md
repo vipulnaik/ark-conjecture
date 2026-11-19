@@ -998,3 +998,22 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - the final script rerun from scratch over every witness gives the counts above;
   - the hand examples at n = 171 (Lucas, C(47, 6) ≡ 0 mod 7) and n = 1463 (692 + 3 ≡ 1 mod 694).
 - **Not checked:** the linked-copies (subdirect product) case is outside the model. The non-prime-power witnesses are not modelled.
+
+## Part 51: Conjecture P, Step 5 through the primitive groups library
+
+- **Assessment.** Gap-row closing is paused. The remaining 489 rows all rest on non-prime-power blocks, and they don't affect the asymptotics. Conjecture P underlies the 2,433 rows and the density-one result, so it comes first.
+- **Reduction.** N\* = N(Γ̂), and Γ̂ ⊴ N\* contains a minimal normal subgroup L of N\*. So the open case asks for a primitive group with non-abelian socle containing a soluble transitive Γ whose orbitals are unions of L-orbitals. The literature: the 2-closure of a soluble group can be non-soluble (O'Brien–Ponomarenko–Vasil'ev–Vdovin), and almost simple groups with a soluble factor are classified by Li–Xia.
+- **Scan** (`conjP_prim_scan.g`, about 5 minutes). There are 467 primitive groups of non-prime-power degree ≤ 1000 with non-abelian socle, not 2-homogeneous, whose smallest orbit on 2-sets exceeds n(q(n) − 1)/2.
+- **Filter** (`conjP_soluble_filter.g/.sh`, about 2.5 hours, one GAP process per group, 300 s each):
+  - 294 have no soluble transitive Γ passing the necessary test (each L_x-orbit inside a Γ_x-orbit; |Γ| ≥ n·d_max(L));
+  - 82 Sym/Alt(k) on j-sets are decided by hand (Kantor; Huppert; the order bound);
+  - 91 are undecided (71 hit the time limit, 20 have index over 10⁹): classical groups in rank-3 actions and rank-3 product actions.
+- **Error caught:** the filter first tested against the whole socle. That is too strong for type HS, which has two minimal normal subgroups. Rerun per minimal normal subgroup, the necessary test is vacuous for the regular ones, and it gave hits at n = 60, 168, 360, 504 and 660. `conjP_hs_check.g` computes TwoClosure for every hit: none contains a minimal normal subgroup of N, so there are no counterexamples. (For n = 60, N\*(Γ) was also computed for each hit: imprimitive, with m\*_typ ≤ 120.)
+- **Checked:**
+  - the HS hits, by TwoClosure;
+  - the hand bound for k = 25: 25·|GL(2,5)| = k(k−1)(k−5) < k(k−1)(k−2).
+- **Not checked / open:**
+  - the 91 groups;
+  - the product-action projection argument, which is only sketched;
+  - degrees above 1000;
+  - the necessary test treats only "none" as decisive. A future hit among the 91 would need the TwoClosure check before it counts.
