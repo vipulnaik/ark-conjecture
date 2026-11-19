@@ -1043,3 +1043,20 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - rerunning `fpf_upper_scan.py` without PMAX reproduces the committed output byte for byte;
   - the induction's two facts: restricted orbitals are Γ_B^B's orbitals; and a prime-power b dividing n is at most q(n).
 - **Note:** the old §10 wording "open only when N\* is primitive" was right for the δ_cyc form but unproved for P's exact bound in Step 4's case. The induction now makes it right for the exact bound too.
+
+## Part 55: almost simple N* with an imprimitive socle
+
+- **Through Li–Xia.** A soluble transitive Γ ≤ N\* gives a factorisation N\* = Γ·N\*_α. K = N\*_α is maximal and K ∩ L is not normal, so K = N(K ∩ L) and K ∩ L = N_L(K ∩ L). Remark (i) then makes K ∩ L maximal in L, so L is primitive, in the whole classical case except Table 1.2 rows 6 and 11. Proposition 4.1(a) (PSL₂(q)) and Proposition 4.3(a)–(e) (alternating) also give a primitive socle. What remains is a finite list of socles.
+- **The finite list** (`conjP_as_novelty.g`, CtblLib maxes; `conjP_as_novelty2.g`, Aut(L) built for L₃(4), L₃(8), U₃(8), L₄(3) and A₆; together about 35 minutes). Novelty point stabilisers of index above 1000:
+  - M₁₂.2 (1584), HS.2 (22176), He.2 (279888 and 437325): the Hall test, with no elements of order 33, 77 or 119 (checked in the character tables);
+  - L₃(8).X (4672): a Hall {2, 73} argument by hand;
+  - L₄(3).X (5265): the Hall test with {5, 13};
+  - L₄(3).X (1080): Table 1.2 row 6, |Γ ∩ L| prime to 3.
+  
+  None gives a counterexample.
+- **Checked:** the element orders (GAP); the Hall-subgroup lemma (a Sylow s-subgroup is normal, so the r-part centralises it); both GAP runs completed without error.
+- **Flagged, not checked:**
+  - Li–Xia's Propositions 4.1, 4.3, 4.4 and Table 1.2 rows 6 and 11 come from a summary of the memoir, not a first-hand reading;
+  - the CtblLib novelty test is by order only;
+  - the claim that an almost simple primitive group has a non-regular socle is standard but not re-proved.
+- **Open at general degree:** HS, HC, TW, diagonal with k ≥ 3, and product actions with k ≥ 3 or a non-2-transitive component.

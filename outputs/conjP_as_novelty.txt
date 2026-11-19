@@ -1,0 +1,120 @@
+L2(11).2 11:10 |K|=110 |KcapL|=55 deg=12 novelty=false solubleK=true
+L2(11).2 s4 |K|=24 |KcapL|=12 deg=55 novelty=false solubleK=true
+L2(11).2 D24 |K|=24 |KcapL|=12 deg=55 novelty=false solubleK=true
+L2(11).2 D20 |K|=20 |KcapL|=10 deg=66 novelty=true solubleK=true
+L3(3).2 3^(1+2):D8 |K|=216 |KcapL|=108 deg=52 novelty=true solubleK=true
+L3(3).2 group6 |K|=96 |KcapL|=48 deg=117 novelty=true solubleK=true
+L3(3).2 13:6 |K|=78 |KcapL|=39 deg=144 novelty=false solubleK=true
+L3(3).2 2xSymm(4) |K|=48 |KcapL|=24 deg=234 novelty=false solubleK=true
+L3(4).2^2: no maxes in CtblLib
+L3(4).2_1: no maxes in CtblLib
+L3(4).2_2: no maxes in CtblLib
+L3(4).2_3: no maxes in CtblLib
+L3(4).3: no maxes in CtblLib
+L3(4).3.2_2: no maxes in CtblLib
+L3(4).3.2_3: no maxes in CtblLib
+L3(4).6: no maxes in CtblLib
+L3(4).D12 L3(4).3.2_3 |K|=120960 |KcapL|=10080 deg=2 novelty=true solubleK=false
+L3(4).D12 L3(4).6 |K|=120960 |KcapL|=10080 deg=2 novelty=true solubleK=false
+L3(4).D12 L3(4).3.2_2 |K|=120960 |KcapL|=10080 deg=2 novelty=true solubleK=false
+L3(4).D12 L3(4).2^2 |K|=80640 |KcapL|=6720 deg=3 novelty=true solubleK=false
+L3(4).D12 2^(2+4):(S3xS3) |K|=2304 |KcapL|=192 deg=105 novelty=true solubleK=true
+L3(4).D12 2x3^2.2.S4 |K|=864 |KcapL|=72 deg=280 novelty=false solubleK=true
+L3(4).D12 S5xS3 |K|=720 |KcapL|=60 deg=336 novelty=true solubleK=false
+L3(4).D12 S3x7:6 |K|=252 |KcapL|=21 deg=960 novelty=true solubleK=true
+L3(8).2: no maxes in CtblLib
+L3(8).3: no maxes in CtblLib
+L3(8).6: no maxes in CtblLib
+U3(8).2: no maxes in CtblLib
+U3(8).3_1: no maxes in CtblLib
+U3(8).3_2: no maxes in CtblLib
+U3(8).3_3: no maxes in CtblLib
+U3(8).6: no maxes in CtblLib
+U3(8).S3: no maxes in CtblLib
+U3(8).3^2: no maxes in CtblLib
+U3(8).(S3x3): no maxes in CtblLib
+U4(2).2 mo62 |K|=1920 |KcapL|=960 deg=27 novelty=false solubleK=false
+U4(2).2 S6x2 |K|=1440 |KcapL|=720 deg=36 novelty=false solubleK=false
+U4(2).2 3^(1+2)+:2S4 |K|=1296 |KcapL|=648 deg=40 novelty=false solubleK=true
+U4(2).2 s3wrs3 |K|=1296 |KcapL|=648 deg=40 novelty=false solubleK=true
+U4(2).2 w(f4) |K|=1152 |KcapL|=576 deg=45 novelty=false solubleK=true
+L4(3).2_1: no maxes in CtblLib
+L4(3).2_2: no maxes in CtblLib
+L4(3).2_3: no maxes in CtblLib
+L4(3).2^2: no maxes in CtblLib
+A6.2_1M3: no maxes in CtblLib
+A6.2^2: no maxes in CtblLib
+A6.2_1 A5.2 |K|=120 |KcapL|=60 deg=6 novelty=false solubleK=false
+A6.2_1 A6.2_1M3 |K|=120 |KcapL|=60 deg=6 novelty=false solubleK=false
+A6.2_1 s3wrs2 |K|=72 |KcapL|=36 deg=10 novelty=false solubleK=true
+A6.2_1 2xSymm(4) |K|=48 |KcapL|=24 deg=15 novelty=false solubleK=true
+A6.2_1 s2wrs3 |K|=48 |KcapL|=24 deg=15 novelty=false solubleK=true
+A6.2_2: no maxes in CtblLib
+A6.2_3 3^2:Q8 |K|=72 |KcapL|=36 deg=10 novelty=false solubleK=true
+A6.2_3 5:4 |K|=20 |KcapL|=10 deg=36 novelty=true solubleK=true
+A6.2_3 M11N2 |K|=16 |KcapL|=8 deg=45 novelty=true solubleK=true
+A8.2 A7.2 |K|=5040 |KcapL|=2520 deg=8 novelty=false solubleK=false
+A8.2 S6x2 |K|=1440 |KcapL|=720 deg=28 novelty=false solubleK=false
+A8.2 mo61 |K|=1152 |KcapL|=576 deg=35 novelty=false solubleK=true
+A8.2 S5xS3 |K|=720 |KcapL|=360 deg=56 novelty=false solubleK=false
+A8.2 s2wrs4 |K|=384 |KcapL|=192 deg=105 novelty=true solubleK=true
+A8.2 L3(2).2 |K|=336 |KcapL|=168 deg=120 novelty=true solubleK=false
+M12.2M3: no maxes in CtblLib
+M12.2 L2(11).2 |K|=1320 |KcapL|=660 deg=144 novelty=false solubleK=false
+M12.2 M12.2M3 |K|=1320 |KcapL|=660 deg=144 novelty=false solubleK=false
+M12.2 (2^2xA5):2 |K|=480 |KcapL|=240 deg=396 novelty=false solubleK=false
+M12.2 2^3.(S4x2) |K|=384 |KcapL|=192 deg=495 novelty=false solubleK=true
+M12.2 4^2:D12.2 |K|=384 |KcapL|=192 deg=495 novelty=false solubleK=true
+M12.2 3^(1+2):D8 |K|=216 |KcapL|=108 deg=880 novelty=true solubleK=true
+M12.2 S4xS3 |K|=144 |KcapL|=72 deg=1320 novelty=false solubleK=true
+M12.2 A5.2 |K|=120 |KcapL|=60 deg=1584 novelty=true solubleK=false
+M22.2 L3(4).2_2 |K|=40320 |KcapL|=20160 deg=22 novelty=false solubleK=false
+M22.2 M22.2M3 |K|=11520 |KcapL|=5760 deg=77 novelty=false solubleK=false
+M22.2 M22.2M4 |K|=3840 |KcapL|=1920 deg=231 novelty=false solubleK=false
+M22.2 2x2^3:L3(2) |K|=2688 |KcapL|=1344 deg=330 novelty=false solubleK=false
+M22.2 A6.2^2 |K|=1440 |KcapL|=720 deg=616 novelty=false solubleK=false
+M22.2 L2(11).2 |K|=1320 |KcapL|=660 deg=672 novelty=false solubleK=false
+J2.2 U3(3).2 |K|=12096 |KcapL|=6048 deg=100 novelty=false solubleK=false
+J2.2 3.A6.2^2 |K|=4320 |KcapL|=2160 deg=280 novelty=false solubleK=false
+J2.2 2^(1+4).S5 |K|=3840 |KcapL|=1920 deg=315 novelty=false solubleK=false
+J2.2 2^(2+4):(S3xS3) |K|=2304 |KcapL|=1152 deg=525 novelty=false solubleK=true
+J2.2 (A4xA5):2 |K|=1440 |KcapL|=720 deg=840 novelty=false solubleK=false
+J2.2 (A5xD10).2 |K|=1200 |KcapL|=600 deg=1008 novelty=false solubleK=false
+J2.2 L3(2).2x2 |K|=672 |KcapL|=336 deg=1800 novelty=false solubleK=false
+J2.2 5^2:(4xS3) |K|=600 |KcapL|=300 deg=2016 novelty=false solubleK=true
+J2.2 A5.2 |K|=120 |KcapL|=60 deg=10080 novelty=false solubleK=false
+HS.2 M22.2 |K|=887040 |KcapL|=443520 deg=100 novelty=false solubleK=false
+HS.2 L3(4).2^2 |K|=80640 |KcapL|=40320 deg=1100 novelty=false solubleK=false
+HS.2 S8x2 |K|=80640 |KcapL|=40320 deg=1100 novelty=false solubleK=false
+HS.2 2^5.S6 |K|=23040 |KcapL|=11520 deg=3850 novelty=false solubleK=false
+HS.2 4^3:(L3(2)x2) |K|=21504 |KcapL|=10752 deg=4125 novelty=false solubleK=false
+HS.2 2^(1+6)_+:S5 |K|=15360 |KcapL|=7680 deg=5775 novelty=false solubleK=false
+HS.2 (2xA6.2^2).2 |K|=5760 |KcapL|=2880 deg=15400 novelty=false solubleK=false
+HS.2 HS.2N5 |K|=4000 |KcapL|=2000 deg=22176 novelty=true solubleK=true
+HS.2 5:4xS5 |K|=2400 |KcapL|=1200 deg=36960 novelty=false solubleK=false
+He.2 S4(4).4 |K|=3916800 |KcapL|=1958400 deg=2058 novelty=false solubleK=false
+He.2 2^2.L3(4).D12 |K|=967680 |KcapL|=483840 deg=8330 novelty=false solubleK=false
+He.2 2^(1+6)_+.L3(2).2 |K|=43008 |KcapL|=21504 deg=187425 novelty=false solubleK=false
+He.2 7^2:2.L2(7).2 |K|=32928 |KcapL|=16464 deg=244800 novelty=false solubleK=false
+He.2 3.s7x2 |K|=30240 |KcapL|=15120 deg=266560 novelty=false solubleK=false
+He.2 s5wrs2 |K|=28800 |KcapL|=14400 deg=279888 novelty=true solubleK=false
+He.2 2^(4+4).(S3xS3).2 |K|=18432 |KcapL|=9216 deg=437325 novelty=true solubleK=true
+He.2 7^(1+2):(S3x6) |K|=12348 |KcapL|=6174 deg=652800 novelty=false solubleK=true
+He.2 S4xL3(2).2 |K|=8064 |KcapL|=4032 deg=999600 novelty=false solubleK=false
+He.2 7:6xL3(2) |K|=7056 |KcapL|=3528 deg=1142400 novelty=false solubleK=false
+He.2 Fi22N5 |K|=2400 |KcapL|=1200 deg=3358656 novelty=false solubleK=true
+Suz.2 G2(4).2 |K|=503193600 |KcapL|=251596800 deg=1782 novelty=false solubleK=false
+Suz.2 3_2.U4(3).(2^2)_{133} |K|=39191040 |KcapL|=19595520 deg=22880 novelty=false solubleK=false
+Suz.2 U5(2).2 |K|=27371520 |KcapL|=13685760 deg=32760 novelty=false solubleK=false
+Suz.2 2^(1+6)_-.U4(2).2 |K|=6635520 |KcapL|=3317760 deg=135135 novelty=false solubleK=false
+Suz.2 3^5:(M11x2) |K|=3849120 |KcapL|=1924560 deg=232960 novelty=false solubleK=false
+Suz.2 J2.2x2 |K|=2419200 |KcapL|=1209600 deg=370656 novelty=false solubleK=false
+Suz.2 2^(4+6):3S6 |K|=2211840 |KcapL|=1105920 deg=405405 novelty=false solubleK=false
+Suz.2 (A4xL3(4):2_3):2 |K|=967680 |KcapL|=483840 deg=926640 novelty=false solubleK=false
+Suz.2 2^(2+8):(S5xS3) |K|=737280 |KcapL|=368640 deg=1216215 novelty=false solubleK=false
+Suz.2 M12.2x2 |K|=380160 |KcapL|=190080 deg=2358720 novelty=false solubleK=false
+Suz.2 3^(2+4):2(S4xD8) |K|=279936 |KcapL|=139968 deg=3203200 novelty=false solubleK=true
+Suz.2 (A6:2_2xA5).2 |K|=86400 |KcapL|=43200 deg=10378368 novelty=false solubleK=false
+Suz.2 (3^2:8xA6).2 |K|=51840 |KcapL|=25920 deg=17297280 novelty=false solubleK=false
+Suz.2 L2(25).2_2 |K|=15600 |KcapL|=7800 deg=57480192 novelty=false solubleK=false
+Suz.2 A7.2 |K|=5040 |KcapL|=2520 deg=177914880 novelty=false solubleK=false

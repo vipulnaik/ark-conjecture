@@ -1,0 +1,8 @@
+L3(8) |L|=16482816 |G:L|=2 |K|=7056 deg=4672 solubleK=false hall=fail
+L3(8) |L|=16482816 |G:L|=6 |K|=21168 deg=4672 solubleK=false hall=fail
+L4(3) |L|=6065280 |G:L|=2 |K|=11232 deg=1080 solubleK=false hall=fail
+L4(3) |L|=6065280 |G:L|=2 |K|=2304 deg=5265 solubleK=true hall=[ 5, 13 ]
+L4(3) |L|=6065280 |G:L|=2 |K|=11232 deg=1080 solubleK=false hall=fail
+L4(3) |L|=6065280 |G:L|=2 |K|=2304 deg=5265 solubleK=true hall=[ 5, 13 ]
+L4(3) |L|=6065280 |G:L|=4 |K|=22464 deg=1080 solubleK=false hall=fail
+L4(3) |L|=6065280 |G:L|=4 |K|=4608 deg=5265 solubleK=true hall=[ 5, 13 ]
