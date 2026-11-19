@@ -1,0 +1,3 @@
+witnesses: {'closed: every configuration': 1219, 'non-prime-power block: not modelled': 1170}
+configurations: {'not Oliver': 1258227, 'closed by thresholds': 67452, 'closed by a union with a prime block': 50}
+rows with an open witness: 489 of 496
