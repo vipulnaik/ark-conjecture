@@ -1,0 +1,3 @@
+alternating A_n, 5 <= n <= 3000: failures []
+sporadic and Tits: failures []
+Lie type |T| < |T|_p^3, q < 200 (families above; orders by formula, small non-simple cases included harmlessly): failures []

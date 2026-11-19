@@ -1081,3 +1081,27 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **SD and CD, at every degree,** by projection induction down to T² on T, which is primitive.
 - **Shortcut checked and dropped:** "2-closures of primitive soluble groups are soluble" is false, since soluble 2-transitive groups have closure Sym (O'Brien–Ponomarenko–Vasil'ev–Vdovin, arXiv:2012.14166). Recorded as a reduction idea for TW: Γ's top quotient would have to be affine with a non-soluble 2-closure containing a transitive image of T^k.
 - **Open:** TW, and product actions with a novelty component.
+
+## Part 58: every product action; twisted wreath is all that is left
+
+- **One-coordinate lemma.**
+  - Y = π₁(Γ_{(1)}) is transitive on Δ. An invariant count on C × Δ would otherwise separate two points of Ω.
+  - soc(H) ≤ TwoClosure(Y). A pair of points differing only in coordinate 1 can be carried to another such pair only by elements fixing coordinate 1.
+  
+  Then: a primitive component socle gives a prime-power m; a diagonal component is excluded by Part 57; a novelty component is excluded by Part 55 above degree 1000 and by `conjP_nov_small.g` up to 1000. So every product action and every compound diagonal type is settled at every degree.
+- **Open: twisted wreath only.** The plan is a direct bound: m\*_typ ≤ n·k(|T| − 1) ≤ n(q(n) − 1)/2 needs 2k(|T| − 1) < q(|T|)^k. That needs a lower bound on k in terms of T; alternating T is the case to watch.
+- **Checked:** both halves of the one-coordinate lemma, including that σ(1) = 1 is forced because Γ preserves the set of coordinates where two points differ.
+
+## Part 59: twisted wreath type, and Conjecture P at every degree
+
+- **Twisted wreath by a direct bound.** P only needs a small type. The P-orbit of t ∈ T₁ gives an N\*-orbit on 2-sets of at most n·k(|T| − 1) pairs, and 2k(|T| − 1) < q(|T|)^k holds because:
+  - P is faithful on k and T is a composition factor of P₁ ≤ S_{k−1} (Baddeley, via Fawcett arXiv:2102.02190), so |T| | (k − 1)! and k ≥ 6;
+  - Lie type: |T| < |T|_p³;
+  - alternating: Bertrand gives k > n/2 + 1, checked to n = 3000 and asymptotically beyond;
+  - sporadic and Tits: checked (`conjP_tw_bound.py`, seconds).
+- **So Conjecture P holds at every degree**, given CFSG and the cited results, and so does Proposition U_typ's conditional part. The 2,433 rows to 4000 rest on it.
+- **Verification items, before calling it proved:**
+  - Li–Xia's statements (Props. 4.1, 4.3, 4.4, Table 1.2 rows 6 and 11) checked first-hand;
+  - the order-only novelty test in `conjP_as_novelty.g`;
+  - |T| < |T|_p³ for the twisted families in general (checked for q < 200, and for E-types by counting);
+  - a cold read of Parts 52–59.
