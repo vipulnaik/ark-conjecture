@@ -1017,3 +1017,10 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - the product-action projection argument, which is only sketched;
   - degrees above 1000;
   - the necessary test treats only "none" as decisive. A future hit among the 91 would need the TwoClosure check before it counts.
+
+## Part 52: the primitivity lemma
+
+- **Lemma.** Γ is primitive iff Γ̂ is, because they have the same orbitals and Higman's criterion depends only on the orbital graphs. A soluble primitive group has prime-power degree. Γ̂ contains a minimal normal subgroup M of N\*. So if every minimal normal subgroup of N\* is primitive, Step 5 has no counterexample, at **every** degree. What survives: regular minimal normal subgroups (HS, HC, TW), diagonal T^k with k ≥ 3, product actions, and almost simple groups with an imprimitive socle.
+- **To degree 1000** (`conjP_minnormal_prim.g`, under a minute): the lemma settles 368 of the 467 candidates, including 63 of the 91 the search could not decide. What remains: 26 rank-3 product actions, PSL(4, 3).2² on 520 and PSL(3, 9).2² on 910.
+- **Checked:** the lemma's three steps (Higman's criterion; a soluble primitive group is affine; an overgroup of a primitive group is primitive). Cross-tabulated against the search: of the 99 with an imprimitive minimal normal subgroup, 71 were already decided by the search (HS ones by TwoClosure), and 28 were not (8 time limit, 20 index). The lemma settles 223 groups the search also settled, 82 decided by hand, and 63 the search could not decide.
+- **Not done:** the 28 groups; the projection argument for product actions; the infinite families of the surviving types.
