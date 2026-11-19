@@ -837,6 +837,7 @@ and everything about μ\*_N beyond the fixed-point-free part is G\* at some degr
   - *Sporadic groups and the Tits group:* checked at k = 6 (or the least k with |T| dividing (k − 1)!).
   
   So twisted wreath type satisfies P's bound for every soluble Γ, whether or not Γ̂ contains the socle.
+- **A standalone write-up of the proof is `conjecture-p-proof.md`** (statement, reduction, one lemma per O'Nan–Scott type, appendices of computations and citations); the bullets here are the working record.
 - **Conjecture P therefore holds at every non-prime-power degree**, given CFSG and the results cited above: Li and Xia's factorisations, Baddeley's structure of twisted wreath products, Scott's lemma, Kantor's and Huppert's classifications of soluble j-homogeneous groups, and Higman's criterion. The steps are: the induction through Step 4; the primitivity lemma; almost simple groups with an imprimitive socle; the one-coordinate lemma for product and compound diagonal actions; the diagonal induction; the centraliser argument for HS and HC; and the twisted wreath bound. *Verification:* the cited Li–Xia statements were checked against the memoir, which turned up the interchanged PSL₂(q) case, now handled. The order-only novelty test is resolved case by case. The bound |T| < |T|_p³ is proved in general. A re-read of the lemmas tightened two points: K ∩ L ≠ 1, and the HC components. **Outstanding: an independent cold read.**
   
   Almost simple groups with an imprimitive socle, the flag family included, are settled above through Li–Xia.

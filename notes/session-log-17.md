@@ -1116,3 +1116,16 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **Item 3, |T| < |T|_p³ in general:** |T| < 2q^{2N+ℓ} ≤ q^{3N} when N > ℓ, and the rank-1 cases directly.
 - **Item 4, re-read (mine, not independent).** Tightened: K ∩ L ≠ 1 (no regular socle in almost simple type), and HC goes through the one-coordinate lemma with HS-type components. **An independent cold read is outstanding.**
 - **Checked:** every GAP run listed completed without error. The one GAP syntax warning (an unbound variable in a closure in `conjP_as_novelty_chk.g`) is benign: the variable is bound before the closure is called.
+
+## Part 61: standalone write-up of the proof of P
+
+- **`notes/conjecture-p-proof.md`.** It contains:
+  - the statement, with no Oliver hypothesis;
+  - basic facts F1–F5 (2-closure, Higman, soluble primitive implies affine, monotonicity, quotients and blocks);
+  - Lemma 1, the induction through imprimitive N\*;
+  - Lemma 2, the primitivity lemma;
+  - Lemmas 3–7: HS/HC, diagonal, one coordinate (PA/CD), almost simple with an imprimitive socle (Li–Xia), and TW;
+  - Appendix A, the computations, each tied to its lemma; Appendix B, the cited results.
+- **Organisation change.** Lemma 6 is stated once, as "no soluble transitive Y ≤ H with soc(H) ≤ Ŷ", and used both for N\* almost simple and for PA components. So the degree-≤ 1000 primitive-group scans are no longer needed by the proof; they stand as an independent check.
+- **Checked:** `check_doc_figures` reports 0 findings on both notes. The write-up was compared against Parts 52–60 for every case.
+- **Outstanding:** an independent read.
