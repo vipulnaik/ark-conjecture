@@ -1060,3 +1060,17 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - the CtblLib novelty test is by order only;
   - the claim that an almost simple primitive group has a non-regular socle is standard but not re-proved.
 - **Open at general degree:** HS, HC, TW, diagonal with k ≥ 3, and product actions with k ≥ 3 or a non-2-transitive component.
+
+## Part 56: product actions, HS and HC
+
+- **Product actions with a primitive component socle, at every degree.** The overgroups of ∏M_i in S^k are products, so L's block systems are the P_J. Γ preserves some P_J, and projecting to Δ^J keeps TwoClosure ⊇ S^J. By induction this comes down to |J| = 1, where Γ^J would be primitive. This covers compound diagonal type with two-factor components and supersedes Part 53's k = 2 lemma.
+- **HS and HC, at every degree:** a centraliser argument. Either Γ̂ contains the socle (primitive, or a product action settled above), or Γ̂ ≤ C(M₂) = M₁ and Γ = M₁ is not soluble.
+- **Novelty components to degree 1000** (`conjP_nov_small.g`, about 25 minutes): none of the 51 groups has a soluble transitive Y with T ≤ TwoClosure(Y).
+- **Open:**
+  - TW;
+  - diagonal type (the overgroup lemma for D_π, i.e. that the overgroups are partial diagonals, needs proof or a reference);
+  - product actions with a novelty component.
+- **Checked:**
+  - the overgroup-product lemma (normality argument);
+  - the monotonicity of TwoClosure used to stop the descent;
+  - the centraliser of a regular group being the other regular group.

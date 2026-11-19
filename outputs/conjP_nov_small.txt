@@ -1,0 +1,51 @@
+21 1 "PGL(2, 7)" solubleTransitiveMaximalSoluble=2 anyWithTinClosure=false visited=4
+28 1 "PGL(2, 7)" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+36 3 "M(10)" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+36 4 "PGL(2, 9)" solubleTransitiveMaximalSoluble=1 anyWithTinClosure=false visited=3
+36 5 "PGammaL(2, 9)" solubleTransitiveMaximalSoluble=3 anyWithTinClosure=false visited=10
+45 1 "PGL(2, 9)" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+45 2 "M(10)" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+45 3 "PGammaL(2, 9)" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=7
+52 1 "PSL(3, 3).2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+55 3 "PGL(2, 11)" solubleTransitiveMaximalSoluble=2 anyWithTinClosure=false visited=4
+66 1 "PGL(2, 11)" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+105 1 "PSL(3, 4).2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+105 2 "PSL(3, 4).2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+105 3 "PSL(3, 4).2^2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=7
+105 4 "PSL(3, 4).Sym(3)" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=5
+105 5 "PSL(3, 4).6" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=5
+105 6 "PSL(3, 4).D_12" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=23
+105 7 "Sym(8)" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=5
+117 1 "PSL(3, 3).2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+120 1 "Sym(7)" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=10
+120 11 "Sym(8)" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=40
+144 5 "M(12).2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+186 1 "PSL(3, 5).2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+285 1 "PGL(2, 19)" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+336 1 "PSL(3, 4).2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+336 2 "PSL(3, 4).2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+336 3 "PSL(3, 4).2^2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=7
+336 4 "PSL(3, 4).Sym(3)" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=5
+336 5 "PSL(3, 4).6" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=5
+336 6 "PSL(3, 4).D_12" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=23
+425 1 "PSp(4, 4).4" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=3
+456 1 "PSL(3, 7).2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+456 2 "PSL(3, 7).Sym(3)" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=5
+465 3 "PSL(5, 2).2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+496 8 "PSL(5, 2).2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+520 5 "PSL(4, 3).2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+520 6 "PSL(4, 3).2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+520 7 "PSL(4, 3).2^2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=7
+657 1 "PSL(3, 8).2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+657 2 "PSL(3, 8).6" solubleTransitiveMaximalSoluble=2 anyWithTinClosure=false visited=7
+750 1 "PSigmaU(3, 5)" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+775 1 "PSL(3, 5).2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+880 1 "M(12).2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+910 1 "PSL(3, 9).2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+910 2 "PSL(3, 9).2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=2
+910 3 "PSL(3, 9).2^2" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=7
+960 1 "PGL(3, 2^2)" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=4
+960 2 "PSL(3, 2^2).6" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=7
+960 3 "PSL(3, 2^2).Sym(3)" solubleTransitiveMaximalSoluble=0 anyWithTinClosure=false visited=7
+960 4 "PGammaL(3, 2^2)" solubleTransitiveMaximalSoluble=2 anyWithTinClosure=false visited=13
+960 5 "PSL(3, 2^2).D_12" solubleTransitiveMaximalSoluble=2 anyWithTinClosure=false visited=35
