@@ -1034,3 +1034,12 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **Not done:**
   - what this means for the gap rows ≤ 1000 that were "given Conjecture P". They use Conjecture P through the orbit-data bound; whether Steps 1–4 already supply P's bound there, or only the δ_cyc form, needs reading before any row is called unconditional;
   - the general-degree cases (HS, HC, TW, diagonal with k ≥ 3, product actions with k ≥ 3 or a non-2-transitive component, almost simple groups with an imprimitive socle).
+
+## Part 54: P to degree 1000, and what it gives the rows
+
+- **Step 4 by induction.** For an N\*-block system with blocks of size b: the Γ-orbitals restricted to a block B are Γ_B^B's orbitals, so N\*_B^B ≤ N\*(Γ_B^B). Some in-block type then has at most m·m\*_typ(Γ_B^B) ≤ n(q(b) − 1)/2 ≤ n(q(n) − 1)/2 pairs, by P at degree b (or C(b, 2) at a prime-power b). So P reduces to Step 5 together with P at smaller degrees. With Part 53, **Conjecture P holds at every non-prime-power degree ≤ 1000**, without using the Oliver hypothesis.
+- **The rows** (`fpf_upper_scan.py 4000 1000`, about 10 minutes). With P used only up to 1000 and C(a, 2) above, the gap rows ≤ 1000 are unchanged (138), so **668 of the 806 rows ≤ 1000 are unconditional**. Above 1000 the trivial bound adds 1,611 gap rows.
+- **Checked:**
+  - rerunning `fpf_upper_scan.py` without PMAX reproduces the committed output byte for byte;
+  - the induction's two facts: restricted orbitals are Γ_B^B's orbitals; and a prime-power b dividing n is at most q(n).
+- **Note:** the old §10 wording "open only when N\* is primitive" was right for the δ_cyc form but unproved for P's exact bound in Step 4's case. The induction now makes it right for the exact bound too.

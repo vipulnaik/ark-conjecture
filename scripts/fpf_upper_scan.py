@@ -10,21 +10,25 @@ a class is (a, m), m orbits of size a merged, worth m * tau(a).  Such a shape (o
 transitive tau(n) > T) is a GAP ROW: there U_fpf > mu*_cyc and orbit data alone cannot rule
 out a separation.  Elsewhere mu*_N^fpf = nu*_fpf = mu*_cyc, given Conjecture P.
 
-usage: python3 fpf_upper_scan.py [NMAX=4000]     (run from scripts/)
-writes ../outputs/fpf_upper_scan.txt
+With a second argument PMAX, Conjecture P is used only at degrees a <= PMAX (where it is proved, §6.3: Step 5 to
+degree 1000 and the induction through Step 4), and the trivial tau(a) = C(a, 2) stands in above PMAX.
+
+usage: python3 fpf_upper_scan.py [NMAX=4000] [PMAX]     (run from scripts/)
+writes ../outputs/fpf_upper_scan.txt, or ../outputs/fpf_upper_scan_P<PMAX>.txt with PMAX
 """
 import sys, csv
 from math import comb
 from sympy import factorint
 
 NMAX = int(sys.argv[1]) if len(sys.argv) > 1 else 4000
+PMAX = int(sys.argv[2]) if len(sys.argv) > 2 else None
 L = {int(r['n']): int(r['L_new']) for r in csv.DictReader(open('../outputs/mu_cyc_bounds_4000.csv'))}
 fac = {a: factorint(a) for a in range(2, NMAX + 1)}
 pp = lambda a: len(fac[a]) == 1
 qn = lambda a: max(p ** e for p, e in fac[a].items())
-tau = {a: comb(a, 2) if pp(a) else a * (qn(a) - 1) // 2 for a in range(2, NMAX + 1)}
+tau = {a: comb(a, 2) if pp(a) or (PMAX is not None and a > PMAX) else a * (qn(a) - 1) // 2 for a in range(2, NMAX + 1)}
 
-out = open('../outputs/fpf_upper_scan.txt', 'w')
+out = open('../outputs/fpf_upper_scan.txt' if PMAX is None else f'../outputs/fpf_upper_scan_P{PMAX}.txt', 'w')
 gaps = 0; rows = 0
 for n in sorted(L):
     if n > NMAX: break
