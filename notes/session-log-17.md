@@ -1024,3 +1024,13 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **To degree 1000** (`conjP_minnormal_prim.g`, under a minute): the lemma settles 368 of the 467 candidates, including 63 of the 91 the search could not decide. What remains: 26 rank-3 product actions, PSL(4, 3).2² on 520 and PSL(3, 9).2² on 910.
 - **Checked:** the lemma's three steps (Higman's criterion; a soluble primitive group is affine; an overgroup of a primitive group is primitive). Cross-tabulated against the search: of the 99 with an imprimitive minimal normal subgroup, 71 were already decided by the search (HS ones by TwoClosure), and 28 were not (8 time limit, 20 index). The lemma settles 223 groups the search also settled, 82 decided by hand, and 63 the search could not decide.
 - **Not done:** the 28 groups; the projection argument for product actions; the infinite families of the surviving types.
+
+## Part 53: Step 5 settled to degree 1000
+
+- **Product actions with k = 2 and a 2-transitive component, at every degree.** Λ (pairs differing in both coordinates) is one Γ-orbital. Without a swap, π₁(Γ) is soluble and 2-transitive. With a swap, π₁(Γ₀) has at most 2 orbits on P, and two orbits would give at least 4 Γ₀-orbits on Λ ≅ P × P. This settles the 26 product actions to degree 1000.
+- **Flag groups** (`conjP_flag_points.g`, under a minute). PSL(4, 3).2² on 520 and PSL(3, 9).2² on 910: projecting to points gives a soluble transitive group of rank ≤ 3 inside PΓL. There is none on PG(3, 3) (40 points) or PG(2, 9) (91 points).
+- **Result:** no Step 5 counterexample at any non-prime-power degree ≤ 1000.
+- **Checked:** the projection arguments (Λ is Γ-invariant; the orbit counts; the duality keeps the points distinct for the chosen Λ).
+- **Not done:**
+  - what this means for the gap rows ≤ 1000 that were "given Conjecture P". They use Conjecture P through the orbit-data bound; whether Steps 1–4 already supply P's bound there, or only the δ_cyc form, needs reading before any row is called unconditional;
+  - the general-degree cases (HS, HC, TW, diagonal with k ≥ 3, product actions with k ≥ 3 or a non-2-transitive component, almost simple groups with an imprimitive socle).

@@ -1,0 +1,2 @@
+PGammaL(4,3) on 40 points: soluble transitive subgroups of rank <= 3: 0 (29 subgroups visited, order bound 780)
+PGammaL(3,9) on 91 points: soluble transitive subgroups of rank <= 3: 0 (2 subgroups visited, order bound 4095)
