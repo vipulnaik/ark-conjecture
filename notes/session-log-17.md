@@ -1074,3 +1074,10 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - the overgroup-product lemma (normality argument);
   - the monotonicity of TwoClosure used to stop the descent;
   - the centraliser of a regular group being the other regular group.
+
+## Part 57: diagonal types
+
+- **Overgroup lemma, proved.** The overgroups of a partial diagonal D_π in T^k are partial diagonals D_σ, σ refining π. The proof uses normality of X ∩ T_i under D_π and Scott's lemma on subdirect products of simple groups.
+- **SD and CD, at every degree,** by projection induction down to T² on T, which is primitive.
+- **Shortcut checked and dropped:** "2-closures of primitive soluble groups are soluble" is false, since soluble 2-transitive groups have closure Sym (O'Brien–Ponomarenko–Vasil'ev–Vdovin, arXiv:2012.14166). Recorded as a reduction idea for TW: Γ's top quotient would have to be affine with a non-soluble 2-closure containing a transitive image of T^k.
+- **Open:** TW, and product actions with a novelty component.
