@@ -1,0 +1,3 @@
+J2.2 on 1800: |K| = 672, K cap L maximal in L: true; soluble transitive subgroup: false
+HS.2 on 1100: |K| = 80640, K cap L maximal in L: true; soluble transitive subgroup: false
+HS.2 on 1100: |K| = 80640, K cap L maximal in L: true; soluble transitive subgroup: false

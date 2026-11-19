@@ -1105,3 +1105,14 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - the order-only novelty test in `conjP_as_novelty.g`;
   - |T| < |T|_p³ for the twisted families in general (checked for q < 200, and for E-types by counting);
   - a cold read of Parts 52–59.
+
+## Part 60: the verification items
+
+- **Item 1, Li–Xia first-hand** (the memoir's text via the fetch tool; the shell cannot reach arXiv). Thm 1.1, Remark (i), Props. 4.1, 4.3, 4.4 and Table 1.2 rows 6 and 11 match what was used, with one gap: Prop. 4.1 holds "interchanging H and K if necessary". The other orientation, K ∩ L ≤ D_{2(q+1)/d}, is now handled: a self-normalising D_{2r} gives K ≤ N_G(D\*), so only D = D\* survives, and it is maximal except at q = 7, 9 (degrees 21, 36). Tables 4.1–4.3 were seen only in summary. Their socles are all in the computation, after adding PSL₂(23) (from Table 4.1) to `conjP_as_novelty.g`; PGL₂(23) has no novelty above 1000 (`conjP_as_novelty2.g`).
+- **Item 2, the order-only novelty test.** 36 ambiguous cases above degree 1000:
+  - 22 are not novelties, by permutation characters (`conjP_as_novelty_chk.g`);
+  - 12 have no soluble transitive subgroup, by the Hall test (`conjP_hall_chk.g`);
+  - J₂.2 on 1800 and HS.2 on 1100 are not novelties and have no soluble transitive subgroup (`conjP_two_cases.g`, direct).
+- **Item 3, |T| < |T|_p³ in general:** |T| < 2q^{2N+ℓ} ≤ q^{3N} when N > ℓ, and the rank-1 cases directly.
+- **Item 4, re-read (mine, not independent).** Tightened: K ∩ L ≠ 1 (no regular socle in almost simple type), and HC goes through the one-coordinate lemma with HS-type components. **An independent cold read is outstanding.**
+- **Checked:** every GAP run listed completed without error. The one GAP syntax warning (an unbound variable in a closure in `conjP_as_novelty_chk.g`) is benign: the variable is bound before the closure is called.

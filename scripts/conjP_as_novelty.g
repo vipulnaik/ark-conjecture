@@ -2,11 +2,12 @@
 # By Li-Xia (arXiv:1408.0350, Thm 1.1 with Props 4.1, 4.3, 4.4 and Remark (i)), a soluble transitive subgroup forces
 # the socle L to be primitive except for finitely many socles: Table 1.2 rows 6, 11 (L4(3), S4(3)); Prop 4.1(b) (L2(7),
 # L2(11), L3(3), L3(4), L3(8), U3(8), U4(2), M11); Prop 4.3(f) (A6, A8); Table 4.3 (M11, M12, M22, M23, J2, HS, He, Suz).
+# (L2(23) added: Table 4.1 has PSL2(23) rows.)
 # For every almost simple G with one of these socles whose table of marks / maxes is in CtblLib, list the maximal
 # subgroups K != L with K cap L not of the order of any maximal subgroup of L (a novelty), with the degree |G:K|.
 # usage: gap -q conjP_as_novelty.g -> ../outputs/conjP_as_novelty.txt
 LoadPackage("ctbllib");;
-socs := ["L2(7)","L2(11)","L3(3)","L3(4)","L3(8)","U3(8)","U4(2)","M11","L4(3)","A6","A8","M12","M22","M23","J2","HS","He","Suz"];;
+socs := ["L2(7)","L2(11)","L2(23)","L3(3)","L3(4)","L3(8)","U3(8)","U4(2)","M11","L4(3)","A6","A8","M12","M22","M23","J2","HS","He","Suz"];;
 out := OutputTextFile("../outputs/conjP_as_novelty.txt", false);; SetPrintFormattingStatus(out, false);;
 all := AllCharacterTableNames();;
 for s in socs do

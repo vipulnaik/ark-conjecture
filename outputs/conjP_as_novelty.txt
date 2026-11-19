@@ -2,6 +2,7 @@ L2(11).2 11:10 |K|=110 |KcapL|=55 deg=12 novelty=false solubleK=true
 L2(11).2 s4 |K|=24 |KcapL|=12 deg=55 novelty=false solubleK=true
 L2(11).2 D24 |K|=24 |KcapL|=12 deg=55 novelty=false solubleK=true
 L2(11).2 D20 |K|=20 |KcapL|=10 deg=66 novelty=true solubleK=true
+L2(23).2: no maxes in CtblLib
 L3(3).2 3^(1+2):D8 |K|=216 |KcapL|=108 deg=52 novelty=true solubleK=true
 L3(3).2 group6 |K|=96 |KcapL|=48 deg=117 novelty=true solubleK=true
 L3(3).2 13:6 |K|=78 |KcapL|=39 deg=144 novelty=false solubleK=true
