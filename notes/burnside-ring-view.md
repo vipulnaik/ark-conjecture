@@ -135,4 +135,7 @@ The N-level system differs from the true one in two ways only:
 
 Coupling therefore needs **coherent forcing**: one labelled copy of a forced graph that is invariant under the next group in the chain. Through a common subgroup H this is automatic, which is why stars work. Groups whose only common subgroup is trivial need either a chain of stars or the trivial group, and the trivial group is the whole χ level.
 
-**For the asymptotics,** the star bound at n = 2p, p ≡ 3 (mod 4), is μ\* + p. That raises the density by about 1/(2n), and its limit stays at 1/2. A larger gain would need forcing chains whose lengths or forced graphs grow with n.
+**For the asymptotics,** the star bound at n = 2p, p ≡ 3 (mod 4), is p² = μ\* + p.
+- **It crosses one half.** As a fraction of C(2p, 2) it is p/(2p − 1) > 1/2, while μ\*(2p) = p(p − 1) gives (p − 1)/(2p − 1) < 1/2.
+- **What is new is the family.** μ\*(n)/C(n,2) < 1/2 at every non-prime-power n in the table to 10⁵ (largest value 0.499995). M\*_OCR was already above 1/2 at n = 6 and 14 individually, but this is a principled break above 1/2 on an infinite family of non-prime-power n, conditional on the pattern holding beyond p = 11.
+- **The limit is still 1/2.** The excess p is about 1/(2n) of C(n,2). A gain in the limit would need forcing chains whose lengths or forced graphs grow with n.

@@ -135,10 +135,10 @@ There are three levels of what one may use about the fixed complex, and each giv
 | level | what is used about Δ_P^Γ | per-group quantity |
 |---|---|---|
 | 0 | it is not void | m\*(Γ), the smallest orbital |
-| 1 | it is N\*-invariant, and meets Γ's χ condition | **m\*_N(Γ)**: the least B at which some N\*-invariant complex on the orbitals, not the full simplex, with every face of total size at most B, meets the condition |
+| 1 | it is N\*-invariant, and meets Γ's χ condition | **m\*_N(Γ)**: the least B at which some N\*-invariant complex on the orbitals, with every face of total size at most B, meets the condition |
 | 2 | which unions of orbitals are isomorphic to, or embed in, which | m\*_χ(Γ) of §1.3 |
 
-Each level's admissible complexes contain the next level's, so **m\*(Γ) ≤ m\*_N(Γ) ≤ m\*_χ(Γ)**, and with **μ\*_N(n) = max over Γ of m\*_N(Γ)**, μ\*(n) ≤ μ\*_N(n) ≤ μ\*_χ(n). The level-1 quantity depends only on the orbital set, the sizes and the N\*-action.
+The full simplex is admitted: it is the fixed complex of the trivial property, has χ = 1, and has a face of C(n,2) edges. So m\*_N(Γ) ≤ C(n,2) always, and **m\*_N(Γ) = C(n,2) is the collapse** in which nothing short of the trivial property passes Γ at level 1, as m\*_χ(Γ) = C(n,2) is at level 2. Each level's admissible complexes contain the next level's, so **m\*(Γ) ≤ m\*_N(Γ) ≤ m\*_χ(Γ)**, and with **μ\*_N(n) = max over Γ of m\*_N(Γ)**, μ\*(n) ≤ μ\*_N(n) ≤ μ\*_χ(n). The level-1 quantity depends only on the orbital set, the sizes and the N\*-action.
 
 **What level 1 can give at most: one fusion per type.** Let **m\*_typ(Γ)** be the smallest total size of a type — the smallest orbital one would have if each type were fused into a single orbital. The full simplex on one type is N\*-invariant and has χ = 1, so
 

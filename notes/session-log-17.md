@@ -1218,3 +1218,8 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - p = 5, 13 and n = 12, 18: nothing above μ\*. At n = 10 seven cyclic stars give nothing.
 - **Error caught:** the first `nlevel_coupled6.py` imposed normaliser invariance element by element and ran out of memory; it now uses generators.
 - **Not done:** a proof of the p ≡ 3 (mod 4) family; p = 19 (n = 38, 2^19 graphs); chains of stars at n = 10.
+
+## Part 71: m*_N without the full-simplex exclusion; the one-half crossing
+
+- **m\*_N(Γ)** (`threshold-beyond-mu.md` §1.4) now admits the full simplex, the fixed complex of the trivial property. So m\*_N(Γ) ≤ C(n,2), with C(n,2) the collapse, as at level 2. No computed value changes: every computed m\*_N is below C(n,2). The "proper complex" hypotheses elsewhere (the closure criterion in §1, the type and block arguments) are statements about nontrivial properties or about complexes on one type, and stay.
+- **One half:** the ℤ/2p star bound p² is p/(2p − 1) > 1/2 of C(2p, 2), against (p − 1)/(2p − 1) for μ\*(2p). This is recorded in `burnside-ring-view.md` §7.4. The p ≡ 3 (mod 4) pattern was first noticed by Vipul from the p = 3, 7 values; the N-level star supplies a mechanism, with a proof still to do.
