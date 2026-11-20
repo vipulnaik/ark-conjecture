@@ -1,0 +1,1 @@
+core rebuilt: 14 groups (exact readings: [False, True, True, True, True, True, True, True, True, True, False, False, False, True]), 108 classes; HiGHS MILP over down-closed assignments meeting every condition: INFEASIBLE (networkx monomorphism, no CP-SAT, no emb.c)

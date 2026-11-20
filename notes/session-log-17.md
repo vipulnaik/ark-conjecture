@@ -1182,3 +1182,12 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **Computation at n = 6** (`burnside_marks.g`, `burnside_ocr.py`, under a minute): M\*_OCR(6) = 9 and max per-group = 6 = μ\*_χ(6), both matching §1.3.
 - **The forcing chain:** a minimal infeasible set at B = 8 is C₂ × A₄ (forces 3K₂), (C₃ × C₃):C₄ (forces 2K₃) and C₆ (its fixed complex is then overloaded).
 - **Not done:** n = 10 (about 1.2·10⁷ classes, beyond the direct program); the homology rung (Oliver's acyclicity of the fixed complexes).
+
+## Part 67: forcing at n = 10, so M*_OCR(10) ≥ 22
+
+- **`forcing10.py`:** the coupled system over many Oliver classes of S₁₀, reusing `chi_level10.py`'s nauty certificates and embedding test. It is validated at n = 6 (infeasible at 8, feasible at 9).
+- **n = 10:** infeasible at B = 20 and 21; feasible at 22, 25, 28, 30. So **M\*_OCR(10) ≥ 22 > μ\*_χ(10) = 20**; the separation persists at n = 10.
+- **Forcing core at B = 21:** seven exact-reading groups, of orders 12, 12, 12, 20, 25, 36 and 192 (edge-orbit sizes in `burnside-ring-view.md` §5).
+- **Independent check:** networkx monomorphism and the HiGHS MILP, with neither CP-SAT nor `emb.c`, on the exact conditions of the 14 classes matching the core's keys: infeasible.
+- **Error caught:** the first check imposed χ = 1 on four groups whose readings are only modular. Corrected to exact conditions only; still infeasible.
+- **Not known:** any upper bound on M\*_OCR(10).

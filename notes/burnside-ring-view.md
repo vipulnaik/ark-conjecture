@@ -48,3 +48,29 @@ Both agree with `threshold-beyond-mu.md` §1.3.
 - **C₆** (C₆, 2K₃ and 3K₂, of 6, 6 and 3 edges): with 2K₃ and 3K₂ both in P, and no union of two of its orbits below 9 edges, its fixed complex is two or three points, so χ ≠ 1.
 
 So the min–max gap at n = 6 is a **forcing chain**. Groups with one or two small orbitals force specific classes into P, and those classes then overload the fixed complex of a group with more orbitals. The mechanism to look for at larger n is many few-orbital Oliver groups whose forced classes are jointly incompatible with a third group's condition. At n = 10 there are about 1.2·10⁷ graph classes, so this direct program does not reach M\*_OCR(10). There the frame must be used structurally, for example through question 3, or with classes restricted to a template.
+
+## 5. Forcing at n = 10: M\*_OCR(10) ≥ 22
+
+`forcing10.py` builds the coupled system for many groups at once. For a budget B it takes every Oliver class of S₁₀ (`outputs/tom10.txt`) with at most CAP invariant graphs of at most B edges.
+- One variable per isomorphism class of those graphs (nauty certificates).
+- Embedding closure among them.
+- Each group's condition on its fixed complex: χ = 1 for an exact reading, ≡ 1 mod each top prime otherwise.
+
+These are necessary conditions on any property with e_max ≤ B, so infeasibility at B proves M\*_OCR(10) > B. The same code at n = 6 gives infeasible at B = 8 and feasible at B = 9, matching M\*_OCR(6) = 9.
+
+Results (`outputs/forcing10.txt`):
+- **B = 20 and 21: infeasible.** At 21 this holds with 961 groups (CAP 500) and with 1,154 groups and 5,080 classes (CAP 5000).
+- **B = 22, 25, 28, 30: feasible** (856 groups at CAP 500, 1,154 at CAP 5000 for B = 22).
+
+So **M\*_OCR(10) ≥ 22 > 20 = μ\*_χ(10)**: the min–max separates from the max–min at n = 10 as well as at n = 6. This method gives nothing higher with these groups.
+
+**The forcing chain at n = 10** (`forcing10.py 21 500 --core`): a minimal infeasible set of seven groups, all with exact readings. Their edge-orbit sizes are:
+- three groups of order 12: (2, 2, 2, 3, 6, 6, 12, 12), (2, 3, 4, 6, 6, 12, 12) and (2, 3, 3, 3, 4, 6, 12, 12);
+- order 20: (5, 10, 10, 20);
+- order 25, ℤ/5² on two blocks of 5: (5, 5, 5, 5, 25);
+- order 36: (2, 4, 6, 9, 12, 12);
+- order 192: (1, 12, 16, 16).
+
+Each is satisfiable alone at 20, and together they force e_max ≥ 22.
+
+**Independent check** (`forcing10_core_check.py`; `outputs/forcing10_core_check.txt`). The core is rebuilt using networkx monomorphism instead of `emb.c`, and decided with SciPy's HiGHS MILP instead of CP-SAT. Matching groups by order and orbit sizes picks up 14 classes; extra conditions only strengthen an infeasibility verdict, and only the ten exact-reading conditions are imposed. The result is infeasible at B = 21.

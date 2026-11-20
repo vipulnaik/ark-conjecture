@@ -1,0 +1,9 @@
+B=20 CAP=500: 967 groups, 1501 graph classes, 144317 embedding relations -> INFEASIBLE (0s)
+B=22 CAP=500: 856 groups, 1141 graph classes, 95933 embedding relations -> feasible (1s)
+B=25 CAP=500: 856 groups, 1444 graph classes, 164598 embedding relations -> feasible (3s)
+B=28 CAP=500: 856 groups, 1710 graph classes, 252798 embedding relations -> feasible (4s)
+B=30 CAP=500: 856 groups, 1877 graph classes, 330544 embedding relations -> feasible (6s)
+B=21 CAP=500: 961 groups, 1602 graph classes, 173519 embedding relations -> INFEASIBLE (2s)
+B=21 CAP=5000: 1154 groups, 5080 graph classes, 1298390 embedding relations -> INFEASIBLE (19s)
+B=22 CAP=5000: 1154 groups, 5630 graph classes, 1645179 embedding relations -> feasible (33s)
+B=21 CAP=500: 961 groups, 1602 graph classes, 173519 embedding relations -> INFEASIBLE (5s); minimal infeasible set of 7 groups: [(12, 'exact', [2, 2, 2, 3, 6, 6, 12, 12]), (12, 'exact', [2, 3, 4, 6, 6, 12, 12]), (12, 'exact', [2, 3, 3, 3, 4, 6, 12, 12]), (20, 'exact', [5, 10, 10, 20]), (25, 'exact', [5, 5, 5, 5, 25]), (36, 'exact', [2, 4, 6, 9, 12, 12]), (192, 'exact', [1, 12, 16, 16])]
