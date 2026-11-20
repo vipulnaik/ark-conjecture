@@ -74,3 +74,13 @@ So **M\*_OCR(10) ≥ 22 > 20 = μ\*_χ(10)**: the min–max separates from the m
 Each is satisfiable alone at 20, and together they force e_max ≥ 22.
 
 **Independent check** (`forcing10_core_check.py`; `outputs/forcing10_core_check.txt`). The core is rebuilt using networkx monomorphism instead of `emb.c`, and decided with SciPy's HiGHS MILP instead of CP-SAT. Matching groups by order and orbit sizes picks up 14 classes; extra conditions only strengthen an infeasibility verdict, and only the ten exact-reading conditions are imposed. The result is infeasible at B = 21.
+
+## 6. Forcing at n = 12 and n = 14
+
+The same program runs on group lists for S₁₂ and S₁₄ built by `oliver_tom_1214.g`. At n = 12 that is all 8,572 Oliver classes. At n = 14 it is the 29 soluble transitive groups and 1,607 direct products of soluble transitive groups on disjoint supports, with fixed points, so it is a partial list. Both lists are too large to commit; the script regenerates them. Embedding tests are capped (`FORCING_EMBLIMIT` = 200,000 steps), and an undecided test drops the relation, which is sound.
+
+Results (`outputs/forcing12.txt`, `outputs/forcing14.txt`):
+- **n = 12: infeasible at B = 18, 20, 22, 24 and 28** (CAP 500). So **M\*_OCR(12) ≥ 29**, against μ\*(12) = 18. B = 32 had not finished.
+- **n = 14: infeasible at B = 42, 46 and 48** (CAP 100) and at 47 (CAP 300); **feasible at 49 and 50** (CAP 100) and at 49 (CAP 300). So **M\*_OCR(14) ≥ 49**, against μ\*(14) = 42.
+
+μ\*_χ(12) and μ\*_χ(14) are not known, so these bounds separate M\*_OCR from μ\* only; the separation from μ\*_χ is shown at n = 6 and n = 10. No forcing core has been extracted at n = 12 or 14, and neither bound has been independently checked.

@@ -1,3 +1,5 @@
 B=6 CAP=100000: 50 groups, 53 graph classes, 504 embedding relations -> INFEASIBLE (0s)
 B=8 CAP=100000: 50 groups, 101 graph classes, 2106 embedding relations -> INFEASIBLE (0s)
 B=9 CAP=100000: 50 groups, 122 graph classes, 3353 embedding relations -> feasible (0s)
+B=8 CAP=100000: 50 groups, 101 graph classes, 2106 embedding relations -> INFEASIBLE (0s)
+B=9 CAP=100000: 50 groups, 122 graph classes, 3353 embedding relations -> feasible (0s)

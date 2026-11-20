@@ -1,0 +1,5 @@
+B=18 CAP=500: 6024 groups, 2303 graph classes, 193639 embedding relations -> INFEASIBLE (0s)
+B=20 CAP=500: 5505 groups, 2560 graph classes, 248619 embedding relations -> INFEASIBLE (0s)
+B=22 CAP=500: 5431 groups, 3340 graph classes, 421750 embedding relations -> INFEASIBLE (0s)
+B=24 CAP=500: 4855 groups, 3011 graph classes, 391088 embedding relations -> INFEASIBLE (0s)
+B=28 CAP=500: 4685 groups, 3858 graph classes, 694244 embedding relations -> INFEASIBLE (1s)

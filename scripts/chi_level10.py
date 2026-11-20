@@ -72,22 +72,31 @@ def count(sizes, B):
 
 # embedding test: emb.c (this directory), built once as a shared library
 import ctypes, os, subprocess
-_LIB = '/tmp/libemb.so'
+_EN = 10 if n <= 10 else 16                  # emb.c's vertex count (16-bit rows): 10, or 16 for n = 11..16
+_LIB = f'/tmp/libemb{_EN}.so'
 if not os.path.exists(_LIB):
-    subprocess.check_call(['gcc', '-O2', '-shared', '-fPIC', '-o', _LIB,
+    subprocess.check_call(['gcc', '-O2', '-shared', '-fPIC', f'-DN={_EN}', '-o', _LIB,
                            os.path.join(os.path.dirname(os.path.abspath(__file__)), 'emb.c')])
-_emb = ctypes.CDLL(_LIB).embeds
+_DLL = ctypes.CDLL(_LIB)
+_emb = _DLL.embeds
 _emb.argtypes = [ctypes.POINTER(ctypes.c_ushort), ctypes.POINTER(ctypes.c_ushort)]
-_Arr = ctypes.c_ushort * 10                  # emb.c is compiled for 10 vertices; smaller n is padded
+_emb_lim = _DLL.embeds_lim
+_emb_lim.argtypes = [ctypes.POINTER(ctypes.c_ushort), ctypes.POINTER(ctypes.c_ushort), ctypes.c_long]
+_Arr = ctypes.c_ushort * _EN                 # smaller n is padded with isolated vertices
 
 
 def adj_arr(g):
-    return _Arr(*([sum(1 << u for u in g[v]) for v in range(n)] + [0] * (10 - n)))
+    return _Arr(*([sum(1 << u for u in g[v]) for v in range(n)] + [0] * (_EN - n)))
 
 
 def embeds(ga, gb):
     """ga embeds in gb (an injective vertex map carrying edges to edges); emb.c"""
     return bool(_emb(adj_arr(ga), adj_arr(gb)))
+
+
+def embeds_lim(ga, gb, limit):
+    """as embeds, but False also when the search exceeds `limit` steps (sound only where a missed embedding is safe)"""
+    return bool(_emb_lim(adj_arr(ga), adj_arr(gb), limit))
 
 
 def degseq_ok(da, db):

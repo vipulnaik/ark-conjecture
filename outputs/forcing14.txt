@@ -1,0 +1,8 @@
+B=42 CAP=100 EMBLIMIT=200000: 770 groups, 564 graph classes, 25486 embedding relations -> INFEASIBLE (0s)
+B=46 CAP=100 EMBLIMIT=200000: 770 groups, 606 graph classes, 30221 embedding relations -> INFEASIBLE (0s)
+B=50 CAP=100 EMBLIMIT=200000: 770 groups, 671 graph classes, 37867 embedding relations -> feasible (2s)
+B=54 CAP=100 EMBLIMIT=200000: 770 groups, 724 graph classes, 44936 embedding relations -> feasible (2s)
+B=48 CAP=100 EMBLIMIT=200000: 770 groups, 634 graph classes, 33241 embedding relations -> INFEASIBLE (0s)
+B=49 CAP=100 EMBLIMIT=200000: 770 groups, 663 graph classes, 37262 embedding relations -> feasible (1s)
+B=47 CAP=300 EMBLIMIT=200000: 1041 groups, 1542 graph classes, 153096 embedding relations -> INFEASIBLE (0s)
+B=49 CAP=300 EMBLIMIT=200000: 1010 groups, 1515 graph classes, 151333 embedding relations -> feasible (4s)

@@ -1191,3 +1191,10 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **Independent check:** networkx monomorphism and the HiGHS MILP, with neither CP-SAT nor `emb.c`, on the exact conditions of the 14 classes matching the core's keys: infeasible.
 - **Error caught:** the first check imposed χ = 1 on four groups whose readings are only modular. Corrected to exact conditions only; still infeasible.
 - **Not known:** any upper bound on M\*_OCR(10).
+
+## Part 68: forcing at n = 12 and n = 14
+
+- **Group lists** (`oliver_tom_1214.g`): all 8,572 Oliver classes of S₁₂; at n = 14, the 29 soluble transitive groups plus 1,607 products on disjoint supports (partial). `emb.c` widened to 16 vertices (checked against networkx on 300 random pairs: 0 mismatches); embedding tests capped, undecided ones dropped.
+- **n = 12:** infeasible at B = 18 to 28, so **M\*_OCR(12) ≥ 29** (μ\*(12) = 18). B = 32 did not finish.
+- **n = 14:** infeasible at 42, 46, 47, 48; feasible at 49 and 50. So **M\*_OCR(14) ≥ 49** (μ\*(14) = 42).
+- **Not done:** cores at n = 12 and 14; an independent check of either bound; μ\*_χ at 12 and 14.

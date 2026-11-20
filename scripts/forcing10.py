@@ -11,18 +11,21 @@ With --core, an infeasible run also extracts a minimal infeasible set of groups 
 deletion), reported as (order, condition, sorted orbit sizes).
 (Feasible proves nothing: the solution need not extend to a property.)  Reuses chi_level10.py's nauty certificates
 and embedding test.  usage: [FORCING_N=6] python3 forcing10.py B [CAP=3000] [--core] -> appends to ../outputs/forcing<N>.txt
-(FORCING_N=6 is the check against M*_OCR(6) = 9.)"""
+(FORCING_N=6 is the check against M*_OCR(6) = 9.)  FORCING_TOM=path reads another group file, e.g. the n = 12
+table of marks or the n = 14 sample from oliver_tom_1214.g.  FORCING_EMBLIMIT=k caps each embedding search at k steps and
+drops the relation if the cap is hit: dropping relations only weakens the system, so INFEASIBLE stays valid."""
 import sys, os, json, time
 N = int(os.environ.get('FORCING_N', 10)); os.environ['CHI_N'] = str(N)
 sys.argv = [sys.argv[0]] + sys.argv[1:]
 B = int(sys.argv[1]); CAP = int(sys.argv[2]) if len(sys.argv) > 2 else 3000
+EMBLIM = int(os.environ['FORCING_EMBLIMIT']) if 'FORCING_EMBLIMIT' in os.environ else None
 sys_argv = sys.argv; sys.argv = ['x']
 import chi_level10 as C
 sys.argv = sys_argv
 import networkx as nx
 from ortools.sat.python import cp_model
 rows = []
-for line in open(f'../outputs/tom{N}.txt'):
+for line in open(os.environ.get('FORCING_TOM', f'../outputs/tom{N}.txt')):
     p = line.strip().split('|')
     if len(p) < 6: continue
     orbs = json.loads(p[5]); sizes = [len(o) for o in orbs]
@@ -44,10 +47,18 @@ for order, exact, qs, orbs in rows:
 K = len(graphs)
 M = cp_model.CpModel(); X = [M.NewBoolVar('') for _ in range(K)]
 order_ = sorted(range(K), key=lambda i: E[i]); nrel = 0
-for j in order_:
-    for i in range(K):
-        if E[i] < E[j] and C.degseq_ok(D[i], D[j]) and C.embeds(graphs[i], graphs[j]):
-            M.AddImplication(X[j], X[i]); nrel += 1
+down = [0] * K                     # bitset of classes embedding in each (transitivity: what lies below an embedded
+for j in order_:                   # class is inherited without a test; candidates are tried largest first)
+    got = 0
+    for i in sorted((i for i in range(K) if E[i] < E[j]), key=lambda i: -E[i]):
+        if got >> i & 1: continue
+        if C.degseq_ok(D[i], D[j]) and (C.embeds(graphs[i], graphs[j]) if EMBLIM is None else C.embeds_lim(graphs[i], graphs[j], EMBLIM)):
+            got |= (1 << i) | down[i]
+    down[j] = got
+    b = got
+    while b:
+        i = (b & -b).bit_length() - 1; b &= b - 1
+        M.AddImplication(X[j], X[i]); nrel += 1
 CORE = '--core' in sys_argv
 A = []
 for exact, qs, terms in conds:
@@ -62,7 +73,7 @@ if CORE: M.AddAssumptions(A)
 S = cp_model.CpSolver(); S.parameters.max_time_in_seconds = 1800; S.parameters.num_workers = 2
 t0 = time.time(); st = S.Solve(M)
 res = {cp_model.OPTIMAL: 'feasible', cp_model.FEASIBLE: 'feasible', cp_model.INFEASIBLE: 'INFEASIBLE'}.get(st, 'unknown')
-line = f"B={B} CAP={CAP}: {len(rows)} groups, {K} graph classes, {nrel} embedding relations -> {res} ({time.time()-t0:.0f}s)"
+line = f"B={B} CAP={CAP}{'' if EMBLIM is None else ' EMBLIMIT=' + str(EMBLIM)}: {len(rows)} groups, {K} graph classes, {nrel} embedding relations -> {res} ({time.time()-t0:.0f}s)"
 if CORE and res == 'INFEASIBLE':
     core = [A.index(l) if isinstance(l, int) is False else l for l in []]
     idx = [i for i, a in enumerate(A) if a.Index() in set(S.SufficientAssumptionsForInfeasibility())]
