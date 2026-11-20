@@ -1223,3 +1223,7 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 
 - **m\*_N(Γ)** (`threshold-beyond-mu.md` §1.4) now admits the full simplex, the fixed complex of the trivial property. So m\*_N(Γ) ≤ C(n,2), with C(n,2) the collapse, as at level 2. No computed value changes: every computed m\*_N is below C(n,2). The "proper complex" hypotheses elsewhere (the closure criterion in §1, the type and block arguments) are statements about nontrivial properties or about complexes on one type, and stay.
 - **One half:** the ℤ/2p star bound p² is p/(2p − 1) > 1/2 of C(2p, 2), against (p − 1)/(2p − 1) for μ\*(2p). This is recorded in `burnside-ring-view.md` §7.4. The p ≡ 3 (mod 4) pattern was first noticed by Vipul from the p = 3, 7 values; the N-level star supplies a mechanism, with a proof still to do.
+
+## Part 72: the one-half bound for μ* is a theorem
+
+- `burnside-ring-view.md` §7.4 cited the table (to 10⁵) for μ\*(n)/C(n,2) < 1/2 at non-prime-power n. As Vipul pointed out, it follows from `monotone-transitive-note.md` §5. Density 1/2 needs a group whose smallest orbital is half of C(n,2), so exactly two orbitals of equal size. The case analysis there (rank 3: solvable primitive is affine, so prime power; imprimitive valencies b − 1 and n − b are never equal; intransitive gives a star and a clique) compares sizes only, so it excludes equal sizes, not just isomorphic orbitals. The citation now says so.
