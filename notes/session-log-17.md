@@ -1240,3 +1240,10 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **Pairs.** Each pair of K₁, K₂, K₃ is passed at p(p − 1), by Sub(2K_p), Sub(pK₂), or their union. No N-level pair in the cyclic star is infeasible at p(p − 1) or p² − 1, for p = 3, 5, 7, 11, 13.
 - **The group K₂ here** has order p²(p − 1), which is 18 at p = 3. The n = 6 core of §4 has order 36; it is a different group with the same orbitals.
 - **Open:** M\*_OCR(2p) ≤ p² over all groups (Sub(K_{p,p}) is not resistant at n = 6; candidate: bipartite with two odd sides); an N-level proof for general p.
+
+## Part 74: the N-level proof of the n = 2p bound
+
+- **Reduction** (`burnside-ring-view.md` §7.6). At the N level the three-group system is infeasible below p² **iff L(k)** holds, for k = (p − 1)/2. L(k) says that no complex on k points, invariant under C_k acting regularly, with faces of at most (k − 1)/2 points, has χ = 1. Only step 2 (K₃ forcing M) needed isomorphism-closure; at the N level the multipliers make K₃'s complex on the C_δ's C_k-invariant. The converse direction holds because a counterexample X gives a feasible N-level system: K₃ ↦ X, K₁ and K₂ ↦ {A}.
+- **L(k) proved:** for prime powers (χ ≡ 0 mod ℓ, with no face bound needed), and by Smith reduction to V(m), m = k/ℓ^a, for m ≤ 11 (V(3), V(5), V(7), V(9), V(11) computed). Checked directly at k = 3, 5, 9, 15, 21; at k = 15 it holds even with faces of up to 14 points.
+- **Coverage:** every p ≡ 3 (mod 4) below 127, and 189 of 339 below 5,000. First open: p = 127 (k = 63).
+- **Open:** L(k) for all odd k, or an N-level proof with more groups where it fails. The χ-level Theorem of §7.5 is unaffected.

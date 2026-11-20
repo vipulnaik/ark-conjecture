@@ -172,7 +172,7 @@ So A, O and M partition the C(2p, 2) = p(2p − 1) pairs. Fix λ, a primitive ro
 2. **K₃ forces M.** Δ_P^{K₃} is nonempty, so P contains a nonempty K₃-invariant graph G. G is a union of K₃-orbitals, and each of them contains a perfect matching: M is one, and C_δ contains (0, x)(1, x + δ). So G contains a copy of pK₂. P is closed under isomorphism and subgraphs, so M ∈ P.
 3. **K₁ is overloaded.** A, O and M lie in P or not; A and M do. Every union of two of them has p², p² or 2p(p − 1) ≥ p² edges, so Δ_P^{K₁} has no edges. Its vertices include A and M, so χ(Δ_P^{K₁}) is 2 or 3. That contradicts χ = 1. ∎
 
-This holds at every n = 2p with p ≡ 3 (mod 4): 6, 14, 22, 38, 46, 62, … Step 2 uses closure under isomorphism, so this proof is at the χ level. At p = 3, 7 and 11 the N-level star computation of §7.3 reaches the same bound without that closure; an N-level proof for general p is not attempted. **Where p ≡ 3 (mod 4) is used:** in K₁ being p-by-cyclic, and in A (and O) being single orbitals of K₁ and K₂. At p ≡ 1 (mod 4) the analogue of K₁ is not p-by-cyclic, and A splits into two orbitals in both K₁ and K₂. The checks at p = 5 and 13 show this (`outputs/two_p_groups.txt`), and the cyclic stars at n = 10 and 26 give nothing above μ\*.
+This holds at every n = 2p with p ≡ 3 (mod 4): 6, 14, 22, 38, 46, 62, … Step 2 uses closure under isomorphism, so this proof is at the χ level. §7.6 gives the N-level version. **Where p ≡ 3 (mod 4) is used:** in K₁ being p-by-cyclic, and in A (and O) being single orbitals of K₁ and K₂. At p ≡ 1 (mod 4) the analogue of K₁ is not p-by-cyclic, and A splits into two orbitals in both K₁ and K₂. The checks at p = 5 and 13 show this (`outputs/two_p_groups.txt`), and the cyclic stars at n = 10 and 26 give nothing above μ\*.
 
 **Where it stops: the cyclic-star rung is exactly p².**
 
@@ -191,6 +191,38 @@ So no set of groups containing a 2p-cycle forces more than p², at any p. With t
 - {K₂, K₃} by Sub(2K_p) ∪ Sub(pK₂). K₂'s complex is {A}. K₃'s is {M}, since C_δ is connected on 2p vertices and so lies in neither family.
 
 So the obstruction needs all three groups, as at n = 6. At the N level, no pair of groups in the cyclic star is infeasible, either at p(p − 1) or at p² − 1, for p = 3, 5, 7, 11, 13 (`outputs/two_p_pairs.txt`).
+
+### 7.6 The N-level version
+
+At the N level (§7.2) the three groups are coupled only through the labelled graphs A and M. Each group keeps its own complex, closed downward, invariant under its normaliser, with χ = 1 and faces of at most B ≤ p² − 1 edges. Steps 1 and 3 of the proof never used isomorphism-closure, so only step 2 needs replacing.
+
+**K₃'s complex at the N level.** For u ∈ (ℤ/p)^×, the multiplier (e, x) ↦ (e, ux) normalises K₃ and carries C_δ to C_{uδ}. So (ℤ/p)^×/±1, which is cyclic of order k = (p − 1)/2, acts regularly on the k graphs C_δ, and k is odd. Suppose M is not in K₃'s complex. Then that complex lives on the C_δ's and is invariant under this C_k. A face of j of them has 4pj edges, so 4pj ≤ p² − 1, that is j ≤ (p − 3)/4 = (k − 1)/2. Define
+
+> **L(k):** no complex on k points that is invariant under C_k acting regularly, and has every face of at most (k − 1)/2 points, has χ = 1.
+
+> **Proposition.** Let p ≡ 3 (mod 4) and k = (p − 1)/2. The N-level system of K₁, K₂, K₃ is infeasible at every budget below p² **if and only if L(k) holds**. If L(k) holds, the N level alone proves M\*_OCR(2p) ≥ p².
+
+*Proof.* If L(k) holds, K₃'s complex must contain M, and steps 1 and 3 of §7.5 finish as before. Conversely, let X be a counterexample to L(k). Then the following is a feasible N-level system at budget (p − 3)/4 · 4p < p²:
+- K₃'s complex is X on the C_δ's, invariant under N(K₃), which acts on the C_δ's through (ℤ/p)^×/±1 alone;
+- K₂'s complex is {A}, and K₁'s is {A}.
+
+No labelled graph is shared inconsistently: M and O lie in no complex. ∎
+
+**Where L(k) is proved.**
+1. **k a prime power ℓ^a.** No face is C_k-invariant, since that would need all k points. So every orbit of faces has size divisible by ℓ, and χ ≡ 0 (mod ℓ). This needs no bound on face size.
+2. **By Smith reduction.** Let ℓ^a be the exact power of a prime ℓ dividing k, P the Sylow ℓ-subgroup and m = k/ℓ^a.
+   - Faces not invariant under P come in orbits of size divisible by ℓ, so χ(X) ≡ χ(X^P) (mod ℓ).
+   - X^P is the complex on the m cosets of P whose faces are the P-invariant faces of X. Its signs agree with those of X, since ℓ is odd. It is invariant under C_m acting regularly, and its faces have fewer than m/2 cosets.
+   - So χ(X^P) lies in **V(m)**, the set of χ values of such complexes on m points.
+   - If no element of V(m) is ≡ 1 (mod ℓ), then L(k) holds.
+   - `cyclic_small_face_chis.py` computes V(3) = {0, 3}, V(5) = {0, ±5}, V(7) = {−14, −7, 0, 7, 14, 21}, and V(9) (28 values). V(11) consists of multiples of 11, and is taken as all of them in its range, which only makes the test more conservative.
+3. **Directly.** `cyclic_chi_one_small_faces.py` gives L(k) for k = 3, 5, 9, 15 and 21. At k = 15 it holds even with faces of up to 14 points.
+
+**Coverage** (`two_p_nlevel_coverage.py`; `outputs/two_p_nlevel_coverage.txt`):
+- L((p − 1)/2) is proved for **every p ≡ 3 (mod 4) below 127**: p = 3, 7, 11, 19, 23, 31, 43, 47, 59, 67, 71, 79, 83, 103, 107.
+- Below 5,000 it is proved for 189 of the 339 such primes.
+- The first open case is p = 127, with k = 63 = 3² · 7. There V(9) contains 57 ≡ 1 (mod 7), and V(7) contains 7 ≡ 1 (mod 3), so neither reduction applies.
+- Whether L(k) holds for every odd k is open. If it fails at some k, the three-group system has an N-level solution there, and an N-level proof would need further groups.
 
 **What stays open:**
 - **M\*_OCR(2p) ≤ p² over all groups.** Sub(K_{p,p}) is not Oliver-χ-resistant in general: at n = 6 the resistant property also needs the odd-sided bipartitions (1 + 5) and a star residue (`orbital-evasiveness-notes.md` §7.9). "Bipartite with two odd sides", which also has e_max p² at n = 2p, is the natural candidate to try.

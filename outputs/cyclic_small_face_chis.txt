@@ -1,0 +1,11 @@
+# cyclic_chi_one_small_faces.py: L(k) checked directly (CP-SAT, all orbit classes of faces)
+k = 3: INFEASIBLE (no chi = 1)
+k = 5: INFEASIBLE (no chi = 1)
+k = 9: INFEASIBLE (no chi = 1)
+k = 15: INFEASIBLE (no chi = 1)
+k = 21: INFEASIBLE (no chi = 1)
+# cyclic_small_face_chis.py: V(m), all chi values
+V(3) = [0, 3]; V(5) = [-5, 0, 5]; V(7) = [-14, -7, 0, 7, 14, 21]
+V(9) = [-69, -60, -54, -51, -45, -42, -36, -33, -27, -24, -18, -15, -9, -6, 0, 3, 9, 12, 18, 21, 27, 30, 36, 39, 45, 48, 54, 57]
+V(11) = 43 values, all multiples of 11 from -209 to 253
+# also: k = 15 with faces of up to 8, 10 and 14 points: no chi = 1
