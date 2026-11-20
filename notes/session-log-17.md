@@ -1129,3 +1129,47 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **Organisation change.** Lemma 6 is stated once, as "no soluble transitive Y ≤ H with soc(H) ≤ Ŷ", and used both for N\* almost simple and for PA components. So the degree-≤ 1000 primitive-group scans are no longer needed by the proof; they stand as an independent check.
 - **Checked:** `check_doc_figures` reports 0 findings on both notes. The write-up was compared against Parts 52–60 for every case.
 - **Outstanding:** an independent read.
+
+## Part 62: option 1 (fixed points never win), first pass
+
+- **Reduction.** For Γ fixing a points and moving b, m\*_N(Γ) ≤ min(C(a, 2), a·b, μ\*_N^fpf(b), G\*(a)). The moved part is the same abstract group, fixed-point-free, and N\*(Γ) restricts into N\*(Γ').
+- **Scan** (`fixed_points_scan.py`, about a minute). Using only C(a, 2), a·b and the orbit-data bound on μ\*_N^fpf(b) (exact subset-sum over orbit classes, Conjecture P), some configuration stays open at 2,449 of 3,410 rows; typically a ≈ n/2.
+- **What closes them.** Mod-q readings are met cheaply on the fixed set by skeleta, using Lucas's theorem. Exact readings need G\*(a), and the known values (G\*(14) = 42, G\*(18) = 18) close the first cases.
+- **So option 1 is about upper bounds on G\*:** G\*(n) for the trivial group, and G\*(a) for fixed blocks. Values are known only at seven n. A χ = 1 graph property with small e_max is an arithmetic problem: class sizes are falling-factorial polynomials in a, and they must sum, with signs, to exactly 1. At prime powers no such property exists below C(a, 2) (Kahn–Saks–Sturtevant), so G\*(p^k) = C(p^k, 2). Prime-power fixed blocks then rely on the moved part or on mod-q readings.
+- **Not done:** the mod-q case written as a lemma; any general upper bound on G\*.
+
+## Part 63: G\* through component-closed properties
+
+- **Exact test.** For a component-closed family 𝒞, the property "every component lies in 𝒞" has χ = 1 − a![x^a]exp(W), where w_v is the signed count of connected v-vertex members. Connected labelled graphs by edges come from the standard recurrence.
+- **Search** (`gstar_component_families.py`, a few minutes): C(r, E) (r ≤ 7, a ≤ 40), and C(r, E) plus stars and paths (r ≤ 5, a ≤ 30). χ = 1 is reached only at a = 6, with e_max 6 = G\*(6). That recovers the known value, which checks the framework.
+- **Reading.** χ = 1 at small e_max is arithmetically rare. Uniform families do not produce it, and the known G\*(14) needs 74 hand-added classes. Option 1 therefore needs a new idea for upper bounds on G\*. This is a genuine open problem, not a matter of more computation.
+- **Not done:**
+  - the mod-q lemma for fixed blocks (sketched in Part 62: skeleta on the fixed set, using Lucas). Simultaneous readings at several primes need care;
+  - any general construction.
+
+## Part 64: option 2, the non-prime-power witnesses (first pass)
+
+- **Option 1 parked:** G\* upper bounds need a new idea (Parts 62–63).
+- **Structure of O,** from P's induction: a surviving non-prime-power orbit consists of m equivalent copies of a prime-power block of size b, with (a/b)·C(b, 2) > T.
+- **`nonpp_close.py`** (about 5 minutes): χ = 1 exactly, using in-block classes (merged-copies closers) and the prime-power block. All 1,156 modelled witnesses stay open, all at the all-2-homogeneous configuration. 10 shapes are not modelled, and 4 witnesses admit a non-prime-power b.
+- **Resolution path, not implemented:**
+  - readings pass to normal subgroups, so independent blocks inherit the merged-copies reading test, which kills n = 171's case (not Oliver);
+  - linked blocks have small cross orbitals (a 49-edge matching at n = 171), and a cone gives χ = 1.
+  
+  Needed: a lemma interpolating between independent and linked, through the block kernel's subdirect structure.
+- **Checked:** the normal-subgroup inheritance of readings (intersect the series with N); the n = 171 calculations (|M| ≥ 24 for 2-homogeneity on 49 points; O^q(M × M) is not cyclic).
+
+## Part 65: non-prime-power witnesses, Lemma H, two more rows
+
+- **Model corrected.** In-block classes of the transitive orbit O are single orbitals of weight m·w. `nonpp_close.py` had them as m classes, and is superseded by `nonpp_close2.py`.
+- **Lemma H.** Readings pass to normal subgroups. For an affine constituent with irreducible M and K ≠ 1, a reading with p ≠ p_X needs (q ≠ p_X, d = 1, M a q-group) or (q = p_X, M a p_X-group); an exact reading needs d = 1 and M = 1.
+- **Errors caught within this part:**
+  - a first version (nontrivial M ∩ GL(1) forces p = p_X) was wrong. It ignored M being a q-group, and it wrongly reported 17 witnesses closed;
+  - the irreducibility hypothesis was missing. Adding it moved the settled-row count from 8 to 2. Only the final run is quoted.
+- **Final run** (about 15 minutes):
+  - 351,376 configurations not Oliver, 301,666 closed, 189,419 open;
+  - rows 1395 and 3555 settled (within the model's assumptions), so 487 gap rows remain.
+- **Next:** the top-group condition in the independent case, and cross orbitals of at most a·(m − 1)! pairs in the linked case. This needs a type bound and the intermediate subdirect cases.
+- **Checked:**
+  - Lemma H's argument, including that K embeds in Q' because O_p(K^B) ≤ C(T_B) = T_B;
+  - the quotient step (O^q(Q') cyclic follows from a reading of Γ^X).

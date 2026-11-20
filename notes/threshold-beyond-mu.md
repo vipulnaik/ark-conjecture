@@ -611,6 +611,20 @@ What would close it is a bound that uses the moved points as well: for Γ fixing
 
 That is the Σ√F bookkeeping of Proposition U with the fixed block as one part, and it has not been worked out. Only with it in hand would Smith-tightness, Conjecture P and (BH-SW) give **μ\*_N μ\*_cyc's asymptotics outright**. This is an observation from seven values, not a conjecture with a mechanism behind it. The upper-bound side would need a general construction of χ = 1 properties sitting exactly at the Smith bound.
 
+**Fixed points beyond the trivial group: what is needed** (`fixed_points_scan.py`; `outputs/fixed_points_scan.txt`). Let Γ fix a ≥ 1 points and move b = n − a.
+- The moved part Γ' is the same abstract group (so it has the same Oliver readings) and is fixed-point-free on b points. N\*(Γ) restricted to the moved points lies in N\*(Γ'), as in `conjecture-p-proof.md` F5. So m\*_N(Γ) ≤ μ\*_N^fpf(b).
+- The pairs inside the fixed set form types of at most C(a, 2) pairs, and the fixed–moved pairs types of at most a·b.
+- So m\*_N(Γ) ≤ min(C(a, 2), a·b, μ\*_N^fpf(b)), and also ≤ G\*(a) via a χ = 1 property on the fixed set. With T = μ\*_cyc(n), the orbit-data bound for μ\*_N^fpf(b) (Conjecture P) and an exact subset-sum over orbit classes, the first three terms alone leave some fixed-point configuration open at 2,449 of the 3,410 rows to 4000. Typical cases have a ≈ n/2, e.g. n = 30 with (a, b) = (14, 16), where C(14, 2) = 91 > 78.
+- The fixed block does more than C(a, 2) suggests:
+  - for a mod-q reading, the "at most j edges" property on the fixed set has χ = 1 − (−1)^j C(C(a, 2) − 1, j), and Lucas's theorem makes this ≡ 1 (mod q) at small j;
+  - for an exact reading the fixed set needs a χ = 1 property, i.e. G\*(a). G\*(14) = 42 and G\*(18) = 18 close the cases above.
+  
+  **So the link μ\*_N^fpf ≤ μ\*_N turns on upper bounds for G\***: G\*(n) for the trivial group, and G\*(a) for a fixed block of about half the points.
+- **Component-closed properties, an exact test** (`gstar_component_families.py`; `outputs/gstar_component_families.txt`). If 𝒞 is a family of connected graphs closed under taking components of subgraphs, "every component lies in 𝒞" is a graph property with e_max linear in a when 𝒞's graphs are bounded. By the exponential formula, its χ is 1 − a!·[x^a] exp(W), with W = Σ_v w_v x^v/v! and w_v the signed count of v-vertex connected members. So **χ = 1 iff a!·[x^a] exp(W) = 0**. All connected graphs give W = log(1 + x), the trivial property.
+  - Searched: connected graphs with at most r vertices and at most E edges (r ≤ 7, a ≤ 40), and the same with stars and paths of any length added (r ≤ 5, a ≤ 30).
+  - The coefficient vanishes only at a = 6, with e_max 6 = G\*(6) (components on at most 3 vertices, and stars).
+  - So small-edge χ = 1 properties do not come from uniform families. The known G\*(14) = 42 property needs 74 extra classes on top of two families. A general upper bound on G\* needs a different idea.
+
 ### 6.2 Smith bounds
 
 **The Smith bound, and its size for translations of blocks.** For a p-subgroup Q ≤ S_n, let s_Q be the least B at which some N\*(Q)-invariant complex on Q's orbitals, every face of total at most B, has χ ≡ 1 (mod p). In other words, s_Q = m\*_N(Q) under Q's own condition. Write **S(n) = max over p-subgroups Q of s_Q**. Smith's theorem gives **G\*(n) ≥ S(n)**, and the observation above says equality has held at every n computed.
@@ -905,6 +919,26 @@ So **no n ≤ 46 separates μ\*_N^fpf from μ\*_cyc**, and at those n the type l
   - a prime block with χ = t for a chosen target t (`roomy_close.chi1_ok`).
 - **Result: all 1,174 merged witnesses and all 45 three-class witnesses close.** Seven rows have no other witness and are settled at level 1 with the budget, within this scope: n = 209, 225, 425, 437, 873, 891, 913.
 - **What is left:** the other 489 rows each have a witness with a non-prime-power block credited τ(a), 1,170 witnesses in all, mostly N + pp (1,160). Their block groups are soluble transitive and not 2-homogeneous, and the model above does not reach them.
+
+**Non-prime-power witnesses: structure, and a first pass** (`nonpp_close.py`; `outputs/nonpp_close.txt`). Almost all of these witnesses are one prime-power block plus one non-prime-power orbit O of size a.
+- **The structure of O.** Conjecture P's induction (`conjecture-p-proof.md`, Lemma 1) and N\*(Γ)^O ≤ N\*(Γ^O) say O has a type of total ≤ T unless N\*(Γ^O) has blocks of some size b | a with (a/b)·τ(b) > T. So a surviving O consists of m = a/b equivalent copies of a prime-power block, permuted transitively. At n = 171, (98, 1) forces two blocks of 49. Four witnesses also admit a non-prime-power b, and ten have shapes with several non-prime-power orbits; these are not modelled.
+- **In-block classes.** Since O is one Γ-orbit, a block class together with its images in the other blocks is **one** orbital of weight m·w. (`nonpp_close.py`, which treats them as m classes of weight w, is not used for any conclusion here.)
+- **Lemma H (affine constituents fix the reading's prime).** Let X be an orbit, or the blocks of one, of size b = p_X^d, with block action T ⋊ M and M ≤ ΓL(1, b) irreducible on T. Let K be the kernel on X's blocks, and suppose K ≠ 1 (which holds unless b·|M| ≤ (m − 1)!).
+  - Readings pass to normal subgroups and to quotients: intersect P ⊴ H ⊴ Γ with N, or take images. So K and K^B carry any reading (p, q) of Γ, and K^B ⊇ T_B, since a nontrivial normal subgroup of the primitive block action contains its socle.
+  - If p ≠ p_X, a normal p-subgroup of Γ^X meets K trivially, so K embeds in Q' = Γ^X/O_p(Γ^X). For g ∈ Γ_B inducing an element m ≠ 1 of M whose order is coprime to q and p_X, O^q(Q') contains g and [K, g], which projects onto [T_B, m]. g acts on that without fixed points, so O^q(Q') is non-abelian. If q ≠ p_X, T_B ⊆ O^q(K^B) must also be cyclic.
+  - So **a reading with p ≠ p_X needs (q ≠ p_X, d = 1 and M a q-group) or (q = p_X and M a p_X-group); an exact reading needs d = 1 and M = 1.**
+  
+  The irreducibility of M is needed: for d ≥ 2 and reducible M, K^B need not contain T_B, and such a constituent imposes no constraint.
+- **Second pass** (`nonpp_close2.py`; `outputs/nonpp_close2.txt`). With correct weights and Lemma H, each configuration is either not Oliver, or must reach χ = 1, or χ ≡ 1 modulo the product of all feasible q:
+  - 351,376 configurations have no reading;
+  - 301,666 close;
+  - 189,419 stay open;
+  - 17 witnesses close in full, and **2 more gap rows are settled: n = 1395 and 3555**, leaving 487.
+- **What the open configurations need: the top group, through linking.** At n = 175 a reading (3, 23) passes Lemma H. But O^{23} also contains the block swap, which permutes the translation factors, unless the blocks are linked.
+  - *Independent:* the pointwise stabiliser in K of a block acts on another block B_j as all of T_j. Then the B₁–B_j cross orbital is everything (≥ ab/2 > T, unusable), and the top group argument applies: m must be a power of q.
+  - *Linked:* K acts faithfully on each block. Then a point stabiliser in K is a complement of T in each K^{B_j}, so it fixes a point there (Schur–Zassenhaus, when |M| is prime to p_X). That gives cross orbitals of at most a·(m − 1)! pairs (94 at n = 175).
+  
+  Turning this into closures needs a bound on the N\*-type containing such an orbital, and the intermediate subdirect cases. That is the next step.
 
 **Two-class shapes at level 1: the pp+pp rows** (`ws_gapclose_pp.py`, `ws_blockdata.g`; `outputs/ws_gapclose_pp.txt`).
 - **Scope:** block groups Γ_X = T_X ⋊ M_X with M_X ≤ ΓL(1, ·), that is, semilinear twists ⟨ω^c, ω^d φ^t⟩ up to conjugacy by F\*. **Affine M_X outside ΓL(1) are not covered.**
