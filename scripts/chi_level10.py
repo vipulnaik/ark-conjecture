@@ -29,14 +29,14 @@ import pynauty, networkx as nx
 from ortools.sat.python import cp_model
 
 n = int(__import__('os').environ.get('CHI_N', 10))      # CHI_N=6 reruns the n = 6 check against type_levels6.py
-TOM = f'../outputs/tom{n}.txt'
+TOM = __import__('os').environ.get('CHI_TOM', f'../outputs/tom{n}.txt')
 LADDER = '--ladder' in sys.argv
 STEP = int(__import__('os').environ.get('CHI_STEP', 2))
 if LADDER:
     _a = sys.argv[sys.argv.index('--ladder') + 1:]
     CAP = int(_a[_a.index('--cap') + 1]) if '--cap' in _a else 10**6
     LINES = [int(x) for x in _a if x.isdigit() and (('--cap' not in _a) or x != _a[_a.index('--cap') + 1])]
-    B = 20
+    B = int(__import__('os').environ.get('CHI_B', 20))
 else:
     CAP = int(sys.argv[1]) if len(sys.argv) > 1 else 10**6
     B = int(sys.argv[2]) if len(sys.argv) > 2 else 20
@@ -147,6 +147,55 @@ def analyse(orbs, exact, qs, B=None):
                        cp_model.INFEASIBLE: 'INFEASIBLE'}.get(st, 'unknown')
 
 
+def analyse_lazy(orbs, exact, qs, B=None):
+    """as analyse, but embedding relations are added lazily: solve, test only the pairs
+    (chosen j, unchosen i, E_i < E_j) for an embedding, add any found, re-solve.  A
+    solution with no violated pair is a genuine family closed under embedding (among
+    classes of invariant graphs with at most B edges), so 'feasible' is exact; an
+    INFEASIBLE verdict uses only true relations, so it is exact too."""
+    B = B if B is not None else globals()['B']
+    sizes = [len(o) for o in orbs]
+    cls = {}
+    for F in subsets(sizes, B):
+        edges = [(a - 1, b - 1) for i in F for a, b in orbs[i]]
+        c = cert(edges)
+        s = 1 if len(F) % 2 else -1
+        if c in cls: cls[c][0] += s
+        else: cls[c] = [s, edges]
+    keys = list(cls)
+    G = []
+    for k in keys:
+        g = nx.Graph(); g.add_nodes_from(range(n)); g.add_edges_from(cls[k][1]); G.append(g)
+    E = [g.number_of_edges() for g in G]
+    D = [sorted((d for _, d in g.degree()), reverse=True) for g in G]
+    known = {}                                 # (i, j) -> embeds?
+    rel = []
+    while True:
+        M = cp_model.CpModel(); X = [M.NewBoolVar('') for _ in keys]
+        for i, j in rel: M.AddImplication(X[j], X[i])
+        chi = sum(cls[k][0] * X[i] for i, k in enumerate(keys))
+        if exact: M.Add(chi == 1)
+        else:
+            for q in qs:
+                z = M.NewIntVar(-10**6, 10**6, ''); M.Add(chi == 1 + q * z)
+        S = cp_model.CpSolver(); S.parameters.max_time_in_seconds = 600; S.parameters.num_workers = 2
+        st = S.Solve(M)
+        if st not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+            return len(keys), {cp_model.INFEASIBLE: 'INFEASIBLE'}.get(st, 'unknown')
+        on = [i for i in range(len(keys)) if S.Value(X[i])]
+        off = [i for i in range(len(keys)) if not S.Value(X[i])]
+        new = []
+        for j in on:
+            for i in off:
+                if E[i] >= E[j]: continue
+                if (i, j) not in known:
+                    known[(i, j)] = degseq_ok(D[i], D[j]) and embeds(G[i], G[j])
+                if known[(i, j)]: new.append((i, j))
+        if not new:
+            return len(keys), 'feasible'
+        rel += new
+
+
 if __name__ == '__main__':
     rows = []
     for idx, line in enumerate(open(TOM)):
@@ -156,7 +205,7 @@ if __name__ == '__main__':
         fixed = sum(1 for x in range(1, n + 1)
                     if all(all(x in e for e in o) for o in orbs if any(x in e for e in o)))
         rows.append((idx, int(p[0]), p[2] == 'true', json.loads(p[3]), orbs, fixed))
-    print(f"# n = 10, budget B = {B}, CAP = {CAP}; columns: line, order, fixed points, orbitals, "
+    print(f"# n = {n}, budget B = {B}, CAP = {CAP}; columns: line, order, fixed points, orbitals, "
           f"min orbital, invariant graphs <= B, iso classes, level-2 feasibility at B", flush=True)
     if LADDER:
         for idx, order, exact, qs, orbs, fixed in rows:
@@ -165,7 +214,7 @@ if __name__ == '__main__':
             for b in range(min(sizes), B + 1, STEP):
                 c = count(sizes, b)
                 if c > CAP: break
-                k, res = analyse(orbs, exact, [] if exact else qs, b)
+                k, res = (analyse_lazy if __import__('os').environ.get('CHI_LAZY') else analyse)(orbs, exact, [] if exact else qs, b)
                 if res == 'feasible': found = (b, c, k); break
             print(f"{idx} {order} {fixed} {len(orbs)} {min(sizes)} ladder: "
                   + (f"feasible at b = {found[0]} ({found[1]} graphs, {found[2]} classes)" if found
@@ -173,13 +222,17 @@ if __name__ == '__main__':
         sys.exit()
     tally = {}; skipped = []
     rows.sort(key=lambda r: count([len(o) for o in r[4]], B))      # cheapest first
+    _skip = set()
+    if __import__('os').environ.get('CHI_SKIP'):
+        _skip = {int(l.split()[0]) for l in open(__import__('os').environ['CHI_SKIP']) if l[0].isdigit()}
     for idx, order, exact, qs, orbs, fixed in rows:
+        if idx in _skip: continue
         sizes = [len(o) for o in orbs]
         c = count(sizes, B)
         if c > CAP:
             skipped.append((idx, order, fixed, c)); continue
         t0 = time.time()
-        k, res = analyse(orbs, exact, [] if exact else qs)
+        k, res = (analyse_lazy if __import__('os').environ.get('CHI_LAZY') else analyse)(orbs, exact, [] if exact else qs)
         tally[res] = tally.get(res, 0) + 1
         print(f"{idx} {order} {fixed} {len(orbs)} {min(sizes)} {c} {k} {res} {time.time() - t0:.1f}s", flush=True)
     print(f"# done: {tally}; skipped (more than CAP invariant graphs): {len(skipped)}")

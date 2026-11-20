@@ -1198,3 +1198,12 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **n = 12:** infeasible at B = 18 to 28, so **M\*_OCR(12) ≥ 29** (μ\*(12) = 18). B = 32 did not finish.
 - **n = 14:** infeasible at 42, 46, 47, 48; feasible at 49 and 50. So **M\*_OCR(14) ≥ 49** (μ\*(14) = 42).
 - **Not done:** cores at n = 12 and 14; an independent check of either bound; μ\*_χ at 12 and 14.
+
+## Part 69: μ*_χ(12) = 18
+
+- **Priorities set:** cold read of the Conjecture P proof first (outstanding); then μ\*_χ(12), an upper bound on M\*_OCR(10), firming the n = 12/14 forcing bounds, and only then theory of the gap's growth.
+- **Result:** every one of the 8,572 Oliver classes of S₁₂ has m\*_χ ≤ 18, so **μ\*_χ(12) = μ\*_N(12) = μ\*(12) = 18**, against M\*_OCR(12) ≥ 29. The max–min and min–max separate at n = 6, 10 and 12.
+- **How:** `chi_level10.py` (now with `CHI_TOM`, `CHI_B`, `CHI_SKIP`, `CHI_LAZY`) for 8,569 classes, lazily adding embedding relations (exact). The trivial group via G\*(12) = 11. ⟨(123)⟩ and Sym{1,2,3} fixing nine points via the new `chi12_fix9.py`: infeasible at 6 and 8, feasible at 9.
+- **Errors caught in `chi12_fix9.py`:** the empty graph was first counted as a face, giving χ off by one; it gave a spurious feasible verdict at b = 10, which the fix removed. CP-SAT and scipy's milp both failed on coefficients up to 9!: CP-SAT stalls, and milp returns solutions breaking the equality after rounding. Switched to highspy with tolerance 1e-10, plus an exact integer check of χ.
+- **Checked independently:** the b = 9 family's χ = 1 and its closure under embedding, by networkx (`chi12_fix9_check.py`).
+- **Not checked independently:** the 8,569 classes decided by `chi_level10.py` (they share `emb.c`, validated against networkx at 16 vertices on 300 random pairs).

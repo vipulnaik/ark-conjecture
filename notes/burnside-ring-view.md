@@ -83,4 +83,4 @@ Results (`outputs/forcing12.txt`, `outputs/forcing14.txt`):
 - **n = 12: infeasible at B = 18, 20, 22, 24 and 28** (CAP 500). So **M\*_OCR(12) ≥ 29**, against μ\*(12) = 18. B = 32 had not finished.
 - **n = 14: infeasible at B = 42, 46 and 48** (CAP 100) and at 47 (CAP 300); **feasible at 49 and 50** (CAP 100) and at 49 (CAP 300). So **M\*_OCR(14) ≥ 49**, against μ\*(14) = 42.
 
-μ\*_χ(12) and μ\*_χ(14) are not known, so these bounds separate M\*_OCR from μ\* only; the separation from μ\*_χ is shown at n = 6 and n = 10. No forcing core has been extracted at n = 12 or 14, and neither bound has been independently checked.
+μ\*_χ(12) = 18 (`threshold-beyond-mu.md` §1.4), so at n = 12 the min–max exceeds the max–min by at least 11. μ\*_χ(14) is not known, so at n = 14 the bound separates M\*_OCR from μ\* only. No forcing core has been extracted at n = 12 or 14, and neither bound has been independently checked.
