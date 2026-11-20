@@ -1207,3 +1207,14 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **Errors caught in `chi12_fix9.py`:** the empty graph was first counted as a face, giving χ off by one; it gave a spurious feasible verdict at b = 10, which the fix removed. CP-SAT and scipy's milp both failed on coefficients up to 9!: CP-SAT stalls, and milp returns solutions breaking the equality after rounding. Switched to highspy with tolerance 1e-10, plus an exact integer check of χ.
 - **Checked independently:** the b = 9 family's χ = 1 and its closure under embedding, by networkx (`chi12_fix9_check.py`).
 - **Not checked independently:** the 8,569 classes decided by `chi_level10.py` (they share `emb.c`, validated against networkx at 16 vertices on 300 random pairs).
+
+## Part 70: hierarchies between the rungs and M*_OCR; N-level stars
+
+- **k-ladder at n = 6** (`khier6.py`): M_1 = M_2 = 6, M_3 = 9; Helly number 3. Minimal triples: 190, 170, 169 at B = 6, 7, 8. At B = 7 and 8 each contains exactly one of two pivot classes; at B = 6 there are also a few with neither.
+- **N-level coupling** (`nlevel_coupled6.py`, `nlevel_coupled6_core.py`): labelled-graph variables shared between groups, with down-closure, normaliser invariance and χ per group. At n = 6 all 38 nontrivial classes give 9 = M\*_OCR(6), with a minimal set of three and no infeasible pair. Including the trivial group would make it M\*_OCR by definition.
+- **Stars** (`nlevel_star.py`, `star_export.g`): H and overgroups on 2^t(H) graphs.
+  - The star on ⟨(123)(456)⟩ reproduces the n = 6 forcing chain.
+  - The star on ℤ/2p is infeasible at p² − 1 for p = 3, 7, 11, so **M\*_OCR(22) ≥ 121** (new), and M\*_OCR(14) ≥ 49 from three groups. Its core has orders p(p − 1), p²(p − 1), 2^p · p.
+  - p = 5, 13 and n = 12, 18: nothing above μ\*. At n = 10 seven cyclic stars give nothing.
+- **Error caught:** the first `nlevel_coupled6.py` imposed normaliser invariance element by element and ran out of memory; it now uses generators.
+- **Not done:** a proof of the p ≡ 3 (mod 4) family; p = 19 (n = 38, 2^19 graphs); chains of stars at n = 10.

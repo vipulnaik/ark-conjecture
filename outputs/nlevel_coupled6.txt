@@ -1,0 +1,5 @@
+per class (least B, k = 1; max is mu*_N(6)): [(6, '9#28'), (6, '6#16'), (6, '36#47'), (6, '3#6'), (6, '18#36'), (6, '18#35'), (6, '1#1 (G*(6))'), (5, '5#14'), (5, '20#38'), (5, '10#29'), (3, '8#21'), (3, '6#19'), (3, '6#17'), (3, '6#15'), (3, '4#7'), (3, '4#12'), (3, '4#10'), (3, '3#5'), (3, '24#39'), (3, '2#4'), (3, '2#3'), (3, '2#2'), (3, '18#37'), (3, '12#31'), (1, '8#27'), (1, '8#26'), (1, '8#25'), (1, '8#24'), (1, '8#23'), (1, '8#22'), (1, '6#20'), (1, '6#18'), (1, '4#9'), (1, '4#8'), (1, '4#13'), (1, '4#11'), (1, '24#40'), (1, '16#34'), (1, '12#30')]
+all 38 nontrivial p-by-cyclic classes coupled (one representative each): least B = 9
+all 38 nontrivial p-by-cyclic classes coupled (all conjugates): least B = 9
+minimal infeasible set at B = 8 (one representative each): 3#6, 6#17, 24#39 (alone: 6, 3, 3)
+infeasible pairs (one representative each) at B = 6, 7, 8: none

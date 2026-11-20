@@ -1,0 +1,58 @@
+# nlevel_star.py runs (inputs: outputs/star_*.txt from star_export.g; star_c33_6.txt is H = <(1,2,3)(4,5,6)> with all overgroups in S_6)
+# ../outputs/star_c33_6.txt: H of order 3 with 5 orbitals; 21 groups (H and the p-by-cyclic overgroups supplied)
+# alone, least B: 3:6, 6T:6, 6T:3, 6T:3, 6T:3, 6:3, 6:3, 6:3, 9:6, 12T:3, 12T:3, 12T:3, 18:6, 18T:6, 18T:6, 18:3, 18:3, 24T:3, 24T:3, 24T:3, 36T:6
+B = 6: all together -> INFEASIBLE
+   minimal infeasible set: ['6T', '24T', '36T']
+B = 8: all together -> INFEASIBLE
+   minimal infeasible set: ['6T', '24T', '36T']
+B = 9: all together -> feasible
+# ../outputs/star_z10.txt: H of order 10 with 5 orbitals; 3 groups (H and the p-by-cyclic overgroups supplied)
+# alone, least B: 10T:5, 50T:20, 160T:5
+B = 20: all together -> feasible
+# ../outputs/star_z12.txt: H of order 12 with 6 orbitals; 19 groups (H and the p-by-cyclic overgroups supplied)
+# alone, least B: 12T:6, 24T:6, 36T:6, 48T:6, 96T:6, 108T:12, 192T:6, 192T:6, 192T:6, 192T:6, 192T:6, 324T:12, 384T:6, 384T:6, 384T:6, 384T:6, 384T:6, 768T:6, 1536T:6
+B = 18: all together -> feasible
+# ../outputs/star_z18.txt: H of order 18 with 9 orbitals; 32 groups (H and the p-by-cyclic overgroups supplied)
+# alone, least B: 18T:9, 54T:9, 54T:18, 72T:9, 162T:18, 162T:9, 162T:18, 162T:18, 162T:18, 162T:18, 486T:18, 486T:18, 486T:18, 486T:18, 486T:18, 486T:18, 486T:18, 486T:18, 486T:18, 1152T:9, 1458T:18, 1458T:18, 1458T:18, 1458T:18, 1458T:18, 4374T:18, 4374T:18, 4374T:18, 4374T:18, 4374T:18, 4608T:9, 13122T:18
+B = 72: all together -> feasible
+# ../outputs/star_z26.txt: H of order 26 with 13 orbitals; 5 groups (H and the p-by-cyclic overgroups supplied)
+# alone, least B: 26T:13, 78T:13, 338T:156, 1014T:156, 106496T:13
+B = 156: all together -> feasible
+# ../outputs/star_z14.txt: H of order 14 with 7 orbitals; 7 groups (H and the p-by-cyclic overgroups supplied)
+# alone, least B: 14T:7, 42T:7, 98T:42, 112T:7, 112T:7, 294T:42, 896T:7
+B = 42: all together -> INFEASIBLE
+   minimal infeasible set: ['42T', '294T', '896T']
+B = 48: all together -> INFEASIBLE
+   minimal infeasible set: ['42T', '294T', '896T']
+B = 49: all together -> feasible
+# ../outputs/star_z22.txt: H of order 22 with 11 orbitals; 5 groups (H and the p-by-cyclic overgroups supplied)
+# alone, least B: 22T:11, 110T:11, 242T:110, 1210T:110, 22528T:11
+B = 110: all together -> INFEASIBLE
+   minimal infeasible set: ['110T', '1210T', '22528T']
+B = 120: all together -> INFEASIBLE
+   minimal infeasible set: ['110T', '1210T', '22528T']
+B = 121: all together -> feasible
+# n = 10, H = <c9>
+# outputs/star10_c9.txt: H of order 9 with 5 orbitals; 4 groups (H and the p-by-cyclic overgroups supplied)
+B = 20: all together -> feasible
+B = 21: all together -> feasible
+# n = 10, H = <c7>
+# outputs/star10_c7.txt: H of order 7 with 9 orbitals; 23 groups (H and the p-by-cyclic overgroups supplied)
+B = 20: all together -> feasible
+B = 21: all together -> feasible
+# n = 10, H = <c82>
+# outputs/star10_c82.txt: H of order 8 with 7 orbitals; 20 groups (H and the p-by-cyclic overgroups supplied)
+B = 20: all together -> feasible
+B = 21: all together -> feasible
+# n = 10, H = <c63>
+# outputs/star10_c63.txt: H of order 6 with 9 orbitals; 2 groups (H and the p-by-cyclic overgroups supplied)
+B = 20: all together -> feasible
+B = 21: all together -> feasible
+# n = 10, H = <c442>
+# outputs/star10_c442.txt: H of order 4 with 13 orbitals; 124 groups (H and the p-by-cyclic overgroups supplied)
+B = 20: all together -> feasible
+B = 21: all together -> feasible
+# n = 10, H = <c333>
+# outputs/star10_c333.txt: H of order 3 with 15 orbitals; 132 groups (H and the p-by-cyclic overgroups supplied)
+B = 20: all together -> feasible
+B = 21: all together -> feasible

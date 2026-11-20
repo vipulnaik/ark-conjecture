@@ -84,3 +84,55 @@ Results (`outputs/forcing12.txt`, `outputs/forcing14.txt`):
 - **n = 14: infeasible at B = 42, 46 and 48** (CAP 100) and at 47 (CAP 300); **feasible at 49 and 50** (CAP 100) and at 49 (CAP 300). So **M\*_OCR(14) ≥ 49**, against μ\*(14) = 42.
 
 μ\*_χ(12) = 18 (`threshold-beyond-mu.md` §1.4), so at n = 12 the min–max exceeds the max–min by at least 11. μ\*_χ(14) is not known, so at n = 14 the bound separates M\*_OCR from μ\* only. No forcing core has been extracted at n = 12 or 14, and neither bound has been independently checked.
+
+## 7. Hierarchies between the rungs and M\*_OCR
+
+### 7.1 The k-ladder above μ\*_χ
+
+**M_k(n)** is the maximum, over sets of at most k Oliver classes, of the least e_max of a graph property meeting the χ condition at every class in the set.
+- M_1 = μ\*_χ, since one group's condition sees only the classes of its invariant graphs, and an embedding-closed family of those extends to a property by down-closure.
+- M_k is nondecreasing and reaches M\*_OCR at k = the number of classes.
+- The **Helly number h(n)** is the least k with M_k(n) = M\*_OCR(n).
+
+At n = 6 (`khier6.py`; `outputs/khier6.txt`), over the 39 p-by-cyclic classes:
+- **M_1 = M_2 = 6 and M_3 = 9, so h(6) = 3.** At no budget from 5 to 8 is any pair infeasible.
+- **Minimal infeasible triples:** 190 at B = 6, 170 at 7 and 169 at 8.
+- **Pivots at B = 7 and 8:** every minimal triple contains exactly one of two classes, an order-2 class (GAP index 3) and the transitive C₆ (index 17).
+- **At B = 6 only:** a few triples contain neither pivot; each contains the order-4 class of index 13.
+
+### 7.2 The same hierarchy at the N level
+
+At level 1 each group has its own complex: an N(Γ)-invariant complex on the Γ-orbits of edges. Coupling can be done without any isomorphism-closure. Take a variable per **labelled** graph, so that a graph invariant under several chosen groups is one variable for all of them. Then impose, for each chosen group H:
+- down-closure inside H's complex;
+- invariance under N(H);
+- H's χ condition.
+
+Two facts make this a hierarchy from μ\*_N to M\*_OCR that bypasses μ\*_χ:
+- **With one group it is μ\*_N.** The value is m\*_N(Γ) by definition.
+- **With the trivial group included it is the min–max.** The trivial group's complex is a whole graph property, so every other complex becomes its true fixed complex, and the system is M\*_OCR.
+
+**Restriction is the coupling.** If H ≤ K, the K-invariant graphs are H-invariant, and Δ^K is Δ^H restricted to K-invariant faces. So a system made of H and any overgroups of H (a *star* on H) lives on the 2^t(H) H-invariant labelled graphs, however large n is (`nlevel_star.py`). Infeasibility at B uses only necessary conditions, so it proves M\*_OCR(n) > B. Dropping overgroups, or normaliser elements, keeps that sound.
+
+### 7.3 What the N level reaches
+
+- **n = 6.** Over all 38 nontrivial p-by-cyclic classes, coupled at the N level, the least budget is **9 = M\*_OCR(6)**. This holds with one representative per class and with all conjugates (`nlevel_coupled6.py`). A minimal infeasible set at 8 has three classes, of orders 3, 6 and 24; no pair is infeasible.
+  - The star on H = ⟨(1 2 3)(4 5 6)⟩ alone, a system on 32 graphs, also gives 9. Its core is a transitive group of order 6, together with the transitive groups of orders 24 and 36.
+  - These are the C₆, C₂ × A₄ and (C₃ × C₃):C₄ of the forcing chain in §4. That chain is therefore an N-level phenomenon: the forced graphs 3K₂ and 2K₃ reach the third group as shared labelled graphs, not through isomorphism-closure.
+- **n = 2p with p ≡ 3 (mod 4).** Take the star on the cyclic group ℤ/2p. Its overgroups are the p-by-cyclic groups inside its normaliser, and every conjugate of a transitive p-by-cyclic group that contains the 2p-cycle (`star_export.g`). The star is **infeasible at p² − 1** at p = 3, 7 and 11:
+  - **M\*_OCR(14) ≥ 49 and M\*_OCR(22) ≥ 121**, against μ\* = 42 and 110.
+  - At n = 14 this reproduces the bound of §6, from 3 groups on 128 graphs instead of 1,041 groups.
+  - Each core has three transitive groups, of orders p(p − 1), p²(p − 1) and 2^p · p: 6, 36, 24 at p = 3; 42, 294, 896 at p = 7; 110, 1,210, 22,528 at p = 11.
+  - The star becomes feasible at p², so this method gives exactly p².
+- **Where the cyclic star gives nothing.** At p ≡ 1 (mod 4) (n = 10 and 26) the ℤ/2p star is feasible at μ\*, as it is at n = 12 and 18. At n = 10, stars on six further cyclic subgroups, of cycle types 9·1, 7·1³, 8·2, 6·3·1, 4²·2 and 3³·1, are also feasible at 20 (`outputs/nlevel_star.txt`).
+  - The χ-level core at n = 10 (§5) contains groups of coprime orders, 25 and 192, so it cannot lie in one star.
+  - Whether a chain of stars, with different subgroups linked through shared overgroups, reaches 22 at the N level is open.
+
+### 7.4 What the N level cannot see
+
+The N-level system differs from the true one in two ways only:
+1. **Isomorphisms outside normalisers.** A graph invariant under H may be isomorphic, by a permutation outside N(H), to one invariant under K. The N level does not identify the two unless both are invariant under one chosen group.
+2. **Embedding through graphs with no symmetry.** If G ⊂ G′ only through graphs invariant under no chosen group, the N level does not link them.
+
+Coupling therefore needs **coherent forcing**: one labelled copy of a forced graph that is invariant under the next group in the chain. Through a common subgroup H this is automatic, which is why stars work. Groups whose only common subgroup is trivial need either a chain of stars or the trivial group, and the trivial group is the whole χ level.
+
+**For the asymptotics,** the star bound at n = 2p, p ≡ 3 (mod 4), is μ\* + p. That raises the density by about 1/(2n), and its limit stays at 1/2. A larger gain would need forcing chains whose lengths or forced graphs grow with n.
