@@ -1227,3 +1227,16 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 ## Part 72: the one-half bound for μ* is a theorem
 
 - `burnside-ring-view.md` §7.4 cited the table (to 10⁵) for μ\*(n)/C(n,2) < 1/2 at non-prime-power n. As Vipul pointed out, it follows from `monotone-transitive-note.md` §5. Density 1/2 needs a group whose smallest orbital is half of C(n,2), so exactly two orbitals of equal size. The case analysis there (rank 3: solvable primitive is affine, so prime power; imprimitive valencies b − 1 and n − b are never equal; intransitive gives a star and a clique) compares sizes only, so it excludes equal sizes, not just isomorphic orbitals. The citation now says so.
+
+## Part 73: proof of M*_OCR(2p) ≥ p² for p ≡ 3 (mod 4); the cyclic-star rung is exactly p²
+
+- **Theorem** (`burnside-ring-view.md` §7.5). For p ≡ 3 (mod 4), three explicit p-by-cyclic groups on {0,1} × ℤ/p:
+  - K₁ = ℤ/2 × (ℤ/p ⋊ squares), with orbitals A = 2K_p, O and M = pK₂;
+  - K₂ = (ℤ/p)² ⋊ C_{p−1}, with orbitals A and K_{p,p};
+  - K₃ = C₂ ≀ C_p, with orbitals M and the C_δ.
+
+  K₂ forces A; K₃ forces M (each of its orbitals contains a perfect matching); then K₁'s complex has no edges and at least two vertices. So M\*_OCR(2p) ≥ p². p ≡ 3 (mod 4) is used for K₁ to be p-by-cyclic and for A and O to be single orbitals. `two_p_groups.g` checks the orbital structure at p = 3, 7, 11, 19, 23, and shows it failing at p = 5 and 13.
+- **Upper side, cyclic-star rung.** Sub(K_{p,p}) meets χ = 1 at every p-by-cyclic group containing a 2p-cycle, for every odd prime p. The proof: O_q's blocks are the parity classes or the antipodal pairs, so an all-odd orbital exists, and the fixed complex is a full simplex. So that rung is exactly p² at p ≡ 3 (mod 4). The all-odd orbital is also checked computationally on the star exports at n = 6, 10, 14, 22, 26 (`two_p_pairs.py`).
+- **Pairs.** Each pair of K₁, K₂, K₃ is passed at p(p − 1), by Sub(2K_p), Sub(pK₂), or their union. No N-level pair in the cyclic star is infeasible at p(p − 1) or p² − 1, for p = 3, 5, 7, 11, 13.
+- **The group K₂ here** has order p²(p − 1), which is 18 at p = 3. The n = 6 core of §4 has order 36; it is a different group with the same orbitals.
+- **Open:** M\*_OCR(2p) ≤ p² over all groups (Sub(K_{p,p}) is not resistant at n = 6; candidate: bipartite with two odd sides); an N-level proof for general p.

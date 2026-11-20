@@ -1,0 +1,15 @@
+../outputs/star_z6.txt groups 3 with no all-odd orbital: 0
+  B = 6 infeasible pairs: 0
+  B = 8 infeasible pairs: 0
+../outputs/star_z10.txt groups 3 with no all-odd orbital: 0
+  B = 20 infeasible pairs: 0
+  B = 24 infeasible pairs: 0
+../outputs/star_z14.txt groups 7 with no all-odd orbital: 0
+  B = 42 infeasible pairs: 0
+  B = 48 infeasible pairs: 0
+../outputs/star_z22.txt groups 5 with no all-odd orbital: 0
+  B = 110 infeasible pairs: 0
+  B = 120 infeasible pairs: 0
+../outputs/star_z26.txt groups 5 with no all-odd orbital: 0
+  B = 156 infeasible pairs: 0
+  B = 168 infeasible pairs: 0

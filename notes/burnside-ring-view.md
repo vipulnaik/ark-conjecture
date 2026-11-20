@@ -135,7 +135,63 @@ The N-level system differs from the true one in two ways only:
 
 Coupling therefore needs **coherent forcing**: one labelled copy of a forced graph that is invariant under the next group in the chain. Through a common subgroup H this is automatic, which is why stars work. Groups whose only common subgroup is trivial need either a chain of stars or the trivial group, and the trivial group is the whole χ level.
 
-**For the asymptotics,** the star bound at n = 2p, p ≡ 3 (mod 4), is p² = μ\* + p.
+**For the asymptotics,** the bound at n = 2p, p ≡ 3 (mod 4), is p² = μ\* + p (§7.5).
 - **It crosses one half.** As a fraction of C(2p, 2) it is p/(2p − 1) > 1/2, while μ\*(2p) = p(p − 1) gives (p − 1)/(2p − 1) < 1/2.
-- **What is new is the family.** μ\*(n)/C(n,2) < 1/2 at every non-prime-power n. Reaching 1/2 would need an Oliver group with exactly two orbitals of equal size, and `monotone-transitive-note.md` §5 rules that out: its argument against two isomorphic orbitals uses only their sizes. M\*_OCR was already above 1/2 at n = 6 and 14 individually, but this is a principled break above 1/2 on an infinite family of non-prime-power n, conditional on the pattern holding beyond p = 11.
+- **What is new is the family.** μ\*(n)/C(n,2) < 1/2 at every non-prime-power n. Reaching 1/2 would need an Oliver group with exactly two orbitals of equal size, and `monotone-transitive-note.md` §5 rules that out: its argument against two isomorphic orbitals uses only their sizes. M\*_OCR was already above 1/2 at n = 6 and 14 individually, but this is a principled break above 1/2 on an infinite family of non-prime-power n: every n = 2p with p ≡ 3 (mod 4), by the Theorem of §7.5.
 - **The limit is still 1/2.** The excess p is about 1/(2n) of C(n,2). A gain in the limit would need forcing chains whose lengths or forced graphs grow with n.
+
+### 7.5 The n = 2p family: proof, and where it stops
+
+Write the vertex set as [2p] = {0, 1} × ℤ/p, p an odd prime. Three graphs on it:
+- the two **classes** {0} × ℤ/p and {1} × ℤ/p, and **A** = the two cliques on them, a 2K_p with p(p − 1) edges;
+- **M** = the perfect matching (0, x)(1, x), a pK₂ with p edges;
+- **O** = the remaining cross edges (0, x)(1, y) with x ≠ y, a K_{p,p} minus M with p(p − 1) edges.
+
+So A, O and M partition the C(2p, 2) = p(2p − 1) pairs. Fix λ, a primitive root mod p. The three groups:
+- **K₁** = ⟨(e, x) ↦ (e, x + 1), (e, x) ↦ (e + 1, x), (e, x) ↦ (e, λ²x)⟩ ≅ ℤ/2 × (ℤ/p ⋊ C_{(p−1)/2}), of order p(p − 1).
+- **K₂** = ⟨translation of one class only, translation of the other class only, g⟩ with g(e, x) = (e + 1, λx). This is (ℤ/p)² ⋊ C_{p−1}, of order p²(p − 1).
+- **K₃** = ⟨(e, x) ↦ (e, x + 1), the swap of (0, 0) and (1, 0)⟩ ≅ C₂ ≀ C_p, of order 2^p · p.
+
+> **Lemma.** Let p ≡ 3 (mod 4). Then K₁, K₂ and K₃ are p-by-cyclic. Their orbitals on pairs are:
+> - K₁: **A, O and M**;
+> - K₂: **A and K_{p,p} = O ∪ M**;
+> - K₃: **M** and the (p − 1)/2 graphs C_δ, δ ∈ (ℤ/p)^×/±1. Here C_δ has all four edges between {0,1} × {x} and {0,1} × {x + δ}, for every x; it has 4p edges.
+
+*Proof.*
+- **p-by-cyclic.** For K₁ and K₂, O_p is the translation subgroup, ℤ/p or (ℤ/p)². The quotient is ℤ/2 × C_{(p−1)/2} for K₁, which is cyclic because (p − 1)/2 is odd, and C_{p−1} for K₂. For K₃, O₂ = (C₂)^p with quotient C_p.
+- **K₁'s orbitals.** Every generator preserves the classes. Within a class, the pair {x, x + δ} can be carried to {x, x + ε} when ε = ±λ^{2k}δ. The ± comes from the pair being unordered, the squares from K₁. Since −1 is a non-square for p ≡ 3 (mod 4), ± the squares is all of (ℤ/p)^×, so A is one orbital. Between the classes, the class swap identifies the difference δ with −δ, so the same reasoning makes O one orbital, and M = {δ = 0} is the third.
+- **K₂'s orbitals.** The two class translations are independent, so K₂ is transitive on the p² cross pairs. Within a class, g² multiplies by λ², and the same ± argument makes A one orbital.
+- **K₃'s orbitals.** The swaps fix each block {0,1} × {x} and act independently on the blocks. So K₃ is transitive on the pairs inside blocks, which form M, and on the four pairs between any two blocks. The translations then identify block pairs at the same distance ±δ. ∎
+
+`two_p_groups.g` checks the orders, the p-by-cyclic property and the orbital sizes at p = 3, 7, 11, 19 and 23 (`outputs/two_p_groups.txt`).
+
+> **Theorem.** Let n = 2p with p ≡ 3 (mod 4) prime. Every graph property P on [n] that is Oliver-χ-resistant has e_max(P) ≥ p². So **M\*_OCR(2p) ≥ p² = μ\*(2p) + p**.
+
+*Proof.* Suppose e_max(P) ≤ p² − 1. All three groups are p-by-cyclic, so χ(Δ_P^{K_i}) = 1 for each i. The vertices of Δ_P^{K_i} are K_i's orbitals that lie in P, and its faces are the sets of them whose union lies in P.
+1. **K₂ forces A.** K₂'s invariant graphs are A, K_{p,p} and K_n. K_{p,p} has p² edges, so only A can be a face. χ = 1 then forces A ∈ P.
+2. **K₃ forces M.** Δ_P^{K₃} is nonempty, so P contains a nonempty K₃-invariant graph G. G is a union of K₃-orbitals, and each of them contains a perfect matching: M is one, and C_δ contains (0, x)(1, x + δ). So G contains a copy of pK₂. P is closed under isomorphism and subgraphs, so M ∈ P.
+3. **K₁ is overloaded.** A, O and M lie in P or not; A and M do. Every union of two of them has p², p² or 2p(p − 1) ≥ p² edges, so Δ_P^{K₁} has no edges. Its vertices include A and M, so χ(Δ_P^{K₁}) is 2 or 3. That contradicts χ = 1. ∎
+
+This holds at every n = 2p with p ≡ 3 (mod 4): 6, 14, 22, 38, 46, 62, … Step 2 uses closure under isomorphism, so this proof is at the χ level. At p = 3, 7 and 11 the N-level star computation of §7.3 reaches the same bound without that closure; an N-level proof for general p is not attempted. **Where p ≡ 3 (mod 4) is used:** in K₁ being p-by-cyclic, and in A (and O) being single orbitals of K₁ and K₂. At p ≡ 1 (mod 4) the analogue of K₁ is not p-by-cyclic, and A splits into two orbitals in both K₁ and K₂. The checks at p = 5 and 13 show this (`outputs/two_p_groups.txt`), and the cyclic stars at n = 10 and 26 give nothing above μ\*.
+
+**Where it stops: the cyclic-star rung is exactly p².**
+
+> **Proposition.** For every odd prime p, the property **Sub(K_{p,p})**, the graphs embeddable in K_{p,p}, has e_max = p². It meets χ = 1 at every p-by-cyclic group K ≤ S_{2p} that contains a 2p-cycle.
+
+*Proof.* Label the vertices ℤ/2p, with the 2p-cycle as x ↦ x + 1. Then K's invariant graphs are circulants.
+- **Which circulants lie in Sub(K_{p,p}).** A circulant with only odd distances is bipartite between the even and odd residues, which are balanced. An even distance d gives, on the even residues, a cycle of odd length p. So a circulant lies in Sub(K_{p,p}) exactly when all its distances are odd.
+- **The fixed complex is a simplex.** Δ^K is therefore the full simplex on the K-orbitals made of odd distances, and χ = 1 provided there is one.
+- **There is one.** Let K/O_q(K) be cyclic. If O_q(K) = 1, then K is cyclic and transitive, so K = ℤ/2p, whose distance-1 orbital is odd. Otherwise the orbits of O_q(K) form a block system with blocks of size a power of q dividing 2p, and greater than 1. So the blocks have size p or 2. Blocks of size p are the parity classes, the only such block system of ℤ/2p. Then every orbital is all-odd or all-even, and the cross pairs are all-odd. Blocks of size 2 are the antipodal pairs {x, x + p}. Then the within-block pairs, all at distance p, are a union of K-orbitals. ∎
+
+So no set of groups containing a 2p-cycle forces more than p², at any p. With the Theorem, the value of the cyclic-star system at p ≡ 3 (mod 4) is exactly p².
+
+**The ladder below three.** Each pair of K₁, K₂, K₃ is passed at the budget μ\*(2p) = p(p − 1):
+- {K₁, K₂} by Sub(2K_p). K₂'s complex is {A}, and K₁'s is {A}, since 2K_p, with p odd, contains neither M nor O.
+- {K₁, K₃} by Sub(pK₂). Both complexes are {M}.
+- {K₂, K₃} by Sub(2K_p) ∪ Sub(pK₂). K₂'s complex is {A}. K₃'s is {M}, since C_δ is connected on 2p vertices and so lies in neither family.
+
+So the obstruction needs all three groups, as at n = 6. At the N level, no pair of groups in the cyclic star is infeasible, either at p(p − 1) or at p² − 1, for p = 3, 5, 7, 11, 13 (`outputs/two_p_pairs.txt`).
+
+**What stays open:**
+- **M\*_OCR(2p) ≤ p² over all groups.** Sub(K_{p,p}) is not Oliver-χ-resistant in general: at n = 6 the resistant property also needs the odd-sided bipartitions (1 + 5) and a star residue (`orbital-evasiveness-notes.md` §7.9). "Bipartite with two odd sides", which also has e_max p² at n = 2p, is the natural candidate to try.
+- **Other non-prime-power n.**
