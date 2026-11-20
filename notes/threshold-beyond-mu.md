@@ -124,6 +124,8 @@ the least budget at which some property passes Γ's own condition. It depends on
 
 **At n = 6 the two separate.** μ\*(6) = 6. The two Oliver-χ-resistant properties of `orbital-evasiveness-notes.md` §7.9 have e_max = 9 (largest member K₃,₃) and e_max = 12, and they are the only ones, so **M\*_OCR(6) = 9**. Computing m\*_χ(Γ) for each of the 50 Oliver classes (`type_levels6.py`) gives **μ\*_χ(6) = 6**: every group, taken alone, is passed by some property with at most 6 edges, and no property with fewer than 9 passes them all. *(At n = 10 the property the search currently holds, which passes every class with t ≤ 11 and part of t = 12, has e_max = 30; it was not minimised, so this bounds nothing.)*
 
+*A Burnside-ring formulation of these rungs, with the n = 6 forcing chain that separates 6 from 9, is in `burnside-ring-view.md`.*
+
 ### 1.4 Three levels of what a group's fixed complex can use
 
 The Proposition of §3 below uses one fact about Δ_P^Γ beyond Oliver's congruence. Stated without any particular group: let **N\*(Γ)** be the permutations of [n] that carry every orbital of Γ onto an orbital (`orbital-evasiveness-notes.md` §9.7; it contains Γ and its normaliser, and need not normalise Γ). S_n itself does not act on the orbitals; N\* does. Because P is S_n-invariant, **Δ_P^Γ is an N\*-invariant complex on the set of orbitals.** Call the N\*-orbits of orbitals *types*.

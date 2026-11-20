@@ -1173,3 +1173,12 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **Checked:**
   - Lemma H's argument, including that K embeds in Q' because O_p(K^B) ≤ C(T_B) = T_B;
   - the quotient step (O^q(Q') cyclic follows from a reading of Γ^X).
+
+## Part 66: the Burnside-ring view of the χ rungs
+
+- **Switch of focus** to the rungs above μ\*_N (μ\*_χ, M\*_OCR and above), starting with theory.
+- **`notes/burnside-ring-view.md`.** χ(Δ_P^H) is the mark at H of the equivariant Euler characteristic χ_{S_n}(Δ_P) ∈ B(S_n). Oliver-χ-resistance says the mark is 1 at every p-by-cyclic H. The lower rungs read the same marks with less information, Dress's congruences give the Smith–Oliver relations, and the min–max sees realisability coupling and integrality.
+- **Error caught:** the first version used the mark of Σ(−1)^{e−1}[C], i.e. the edge count, for the sign. The sign is (−1)^{orbits − 1}, the H-orbits of edges being the fixed complex's vertices. The wrong version still gave M\*_OCR(6) = 9 (by coincidence), but per-group values of 9 where the truth is 6; a hand check of regular S₃ (P = subgraphs of 2K₃, χ = 1 at e_max 6) exposed it.
+- **Computation at n = 6** (`burnside_marks.g`, `burnside_ocr.py`, under a minute): M\*_OCR(6) = 9 and max per-group = 6 = μ\*_χ(6), both matching §1.3.
+- **The forcing chain:** a minimal infeasible set at B = 8 is C₂ × A₄ (forces 3K₂), (C₃ × C₃):C₄ (forces 2K₃) and C₆ (its fixed complex is then overloaded).
+- **Not done:** n = 10 (about 1.2·10⁷ classes, beyond the direct program); the homology rung (Oliver's acyclicity of the fixed complexes).
