@@ -1274,3 +1274,17 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
   - The Burnside marks, the rungs and the forcing chains are all χ-level. ℚ-acyclicity reaches them only through Lefschetz: marks equal to 1 at every cyclic subgroup, which is the μ\*_cyc rung.
   - The n = 2p and n = 3p forcing groups are non-cyclic, so those bounds say nothing about ℚ-acyclic properties as such.
   - A group-indexed consequence of ℚ-acyclicity that the docs did not have: by transfer, H̃(Δ/H; ℚ) ≅ H̃(Δ; ℚ)^H, so every orbit complex Δ_P/H is ℚ-acyclic. Its χ-shadow is again only the cyclic marks.
+
+## Part 77: n = 3p for every prime p ≥ 5; two-part witnesses resist
+
+- **n = 3p extended to p ≡ 1 (mod 3)** (`burnside-ring-view.md` §7.7).
+  - K₁ becomes ℤ/3 × (ℤ/p ⋊ C_r) with r = (p − 1)/3^v, which is p-by-cyclic, with A and O each split into 3^v orbitals.
+  - K₂'s A splits into three orbitals cycled by a multiplier, so χ = 1 forces the whole triangle, i.e. A.
+  - K₁ then fails by Smith at 3: its multiplier-invariant faces are just A and T, so χ ≡ 2 (mod 3).
+  - Group facts checked at p = 5, 7, 13, 19, 31, 37, 43 (`three_p_groups.g`, now with 3^v).
+- **L₃ coverage** improved with Smith reduction plus CP-SAT residue tests (`cyclic_face_residue.py`): all primes 5–59, and 316 of 667 below 5,000. First open: p = 61.
+- **Two-part witnesses:** at n = 30 = 13 + 17, the block-preserving star (58 subgroups of AGL(1,13) × AGL(1,17), with readings) is exactly μ\* = 78. Infeasible at 77, feasible at 78: no gain. The cross orbital is too big ever to enter a face, so the blocks decouple.
+- **`nlevel_star.py`:**
+  - now takes an optional reading per group (exact, or χ ≡ 1 mod listed primes);
+  - `--noalone` skips the per-group scan;
+  - groups normal in N(H) take N(H)'s generators directly (the old element-by-element search was too slow at |N(H)| = 42,432).

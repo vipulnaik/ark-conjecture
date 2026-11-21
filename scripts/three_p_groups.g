@@ -1,16 +1,17 @@
 # three_p_groups.g -- the groups of burnside-ring-view.md §7.7 on [3p] = Z_3 x Z_p (point (i,x) -> 1 + i*p + x):
-# H = <(i,x) -> (i+1, x+1)> (cyclic of order 3p), K1 = Z_3 x AGL(1,p), K2 = (Z_p)^3 : <g>, g(i,x) = (i+1, lam x),
+# H = <(i,x) -> (i+1, x+1)> (cyclic of order 3p), K1 = Z_3 x (Z_p : <lam^(3^v)>), 3^v || p-1 (= Z_3 x AGL(1,p) when p = 2 mod 3), K2 = (Z_p)^3 : <g>, g(i,x) = (i+1, lam x),
 # K3 = Z_3 wr Z_p.  Prints order, p-by-cyclic, orbital sizes; with EXPORT := true also writes a star file for
 # nlevel_star.py (N = N(H), then H, K1, K2, K3).  usage: set P (and EXPORT, fname) then read this file.
 p := P;; n := 3*p;;
 pt := function(i, x) return 1 + (i mod 3)*p + (x mod p); end;;
 mk := f -> PermList(List([0..n-1], j -> f(QuoInt(j, p), j mod p)));;
 lam := PrimitiveRootMod(p);;
+v := 0;; while (p-1) mod 3^(v+1) = 0 do v := v + 1; od;;   # K1 uses multipliers <lam^(3^v)>, of order coprime to 3
 ptt := G -> ForAny(Set(Factors(Size(G))), q -> IsCyclic(G / PCore(G, q)));;
 orbsz := G -> SortedList(List(Orbits(G, Combinations([1..n], 2), OnSets), Length));;
 H := Group(mk(function(i,x) return pt(i+1, x+1); end));;
 K1 := Group(mk(function(i,x) return pt(i+1, x); end), mk(function(i,x) return pt(i, x+1); end),
-            mk(function(i,x) return pt(i, lam*x); end));;
+            mk(function(i,x) return pt(i, lam^(3^v)*x); end));;
 K2 := Group(mk(function(i,x) if i = 0 then return pt(i, x+1); else return pt(i, x); fi; end),
             mk(function(i,x) return pt(i+1, lam*x); end));;
 K3 := Group(mk(function(i,x) if x = 0 then return pt(i+1, x); else return pt(i, x); fi; end),

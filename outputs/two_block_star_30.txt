@@ -1,0 +1,7 @@
+# nlevel_star.py --noalone on outputs/two_block_star_13_17.txt (two_block_star.g, A = 13, B = 17; 58 groups, all with Oliver readings)
+B = 60: INFEASIBLE
+B = 77: INFEASIBLE
+B = 78: all together -> feasible
+B = 79: all together -> feasible
+B = 100: all together -> feasible
+B = 140: all together -> feasible
