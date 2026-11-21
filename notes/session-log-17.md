@@ -1261,3 +1261,16 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 
   L₃(p) holds at every such p up to 107, and at 162 of 337 below 5,000. Group facts are checked at p = 5 to 29 (`three_p_groups.g`). At n = 15 the three-group system is infeasible at 44 and feasible at 45.
 - **Not decided:** n = 33 with the explicit groups (the 2^16-graph run did not finish in 25 minutes); p ≡ 1 (mod 3) (n = 21 rises, by other groups); c ≥ 4 blocks; the two-part (foreign block) witnesses that carry positive density.
+
+## Part 76: Alexander-duality item updated; ℚ-acyclicity and the mark machinery
+
+- `orbital-evasiveness-notes.md` §7.2, structural fact 7 (Alexander duality) said collapsible and contractible were "not settled". It now gives §7.12's answers:
+  - neither is self-dual for complexes in general (the 8-vertex dunce-hat dual; Lutz's A\*);
+  - collapsibility is self-dual below eight vertices;
+  - for graph properties it is still open.
+
+  The ladder diagram's footnote already had this; only the prose lagged.
+- **ℚ-acyclicity versus the new machinery** (discussion only, no doc change):
+  - The Burnside marks, the rungs and the forcing chains are all χ-level. ℚ-acyclicity reaches them only through Lefschetz: marks equal to 1 at every cyclic subgroup, which is the μ\*_cyc rung.
+  - The n = 2p and n = 3p forcing groups are non-cyclic, so those bounds say nothing about ℚ-acyclic properties as such.
+  - A group-indexed consequence of ℚ-acyclicity that the docs did not have: by transfer, H̃(Δ/H; ℚ) ≅ H̃(Δ; ℚ)^H, so every orbit complex Δ_P/H is ℚ-acyclic. Its χ-shadow is again only the cyclic marks.
