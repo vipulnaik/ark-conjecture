@@ -1,0 +1,5 @@
+# nlevel_star.py on the cyclic stars of star_cyclic_export.g (inputs outputs/star_cyc{15,20,21}.txt); least infeasible-free budget
+n = 15 (3 x 5): mu* = 30; infeasible at 30, 37, 38..44; feasible at 45 = mu* + 15. Core: groups of orders 60, 1500, 2430.
+n = 21 (3 x 7): mu* = 63; infeasible at 63, 73, 74..83; feasible at 84 = mu* + 21. Core: groups of orders 42, 2058, 30618.
+n = 20 (4 x 5): mu* = 40; feasible at 40, 50, 60.
+(n = 28, 33, 35 exports exist but the star solver ran out of memory or time; not decided.)

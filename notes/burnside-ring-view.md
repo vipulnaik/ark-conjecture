@@ -224,6 +224,52 @@ No labelled graph is shared inconsistently: M and O lie in no complex. ∎
 - The first open case is p = 127, with k = 63 = 3² · 7. There V(9) contains 57 ≡ 1 (mod 7), and V(7) contains 7 ≡ 1 (mod 3), so neither reduction applies.
 - Whether L(k) holds for every odd k is open. If it fails at some k, the three-group system has an N-level solution there, and an N-level proof would need further groups.
 
+### 7.7 Beyond n = 2p: the family n = 3p
+
+The cyclic star of `star_cyclic_export.g` (all p-by-cyclic transitive groups containing an n-cycle, with every conjugate that contains it) goes above μ\* at n = 15 and n = 21. In both cases the excess is exactly n: 45 = 30 + 15 and 84 = 63 + 21. It stays at μ\* at n = 20 (`outputs/star_cyclic_scan.txt`). μ\*(3p) = 3·C(p,2), the witness being three blocks of p (the table, at every 3p checked). The mechanism is the n = 2p one with three blocks in place of two.
+
+Write [3p] = ℤ/3 × ℤ/p, with **blocks** {i} × ℤ/p and **fibres** ℤ/3 × {x}. Three graphs partition the pairs:
+- **A** = 3K_p, inside the blocks, with 3p(p − 1)/2 = μ\*(3p) edges;
+- **T** = pK₃, inside the fibres, with 3p edges;
+- **O**, everything else, with 3p(p − 1) edges.
+
+The three groups, for a primitive root λ mod p:
+- **K₁** = ℤ/3 × AGL(1, p), acting by (i, x) ↦ (i + s, ux + c).
+- **K₂** = (ℤ/p)³ ⋊ ⟨g⟩: independent translations of the three blocks, and g(i, x) = (i + 1, λx).
+- **K₃** = ℤ/3 ≀ ℤ/p: independent rotations of the fibres, and the translation x ↦ x + 1.
+
+> **Lemma.** Let p ≡ 2 (mod 3), p ≥ 5. Then K₁, K₂ and K₃ are p-by-cyclic. Their orbitals are:
+> - K₁: **A, T and O**;
+> - K₂: **A and K_{p,p,p}** (3p² edges);
+> - K₃: **T** and the (p − 1)/2 graphs C_δ, δ ∈ (ℤ/p)^×/±1. Here C_δ has all nine edges between fibres x and x + δ, for every x; it has 9p edges.
+
+*Proof.*
+- **p-by-cyclic.** K₁ has O_p = ℤ/p and quotient ℤ/3 × C_{p−1}, which is cyclic because 3 ∤ p − 1. K₂ has O_p = (ℤ/p)³ and cyclic quotient ⟨g⟩. K₃ has O₃ = (ℤ/3)^p and quotient ℤ/p.
+- **K₁'s orbitals.** ℤ/3 is transitive on the three unordered pairs of ℤ/3, which makes T one orbital. AGL(1, p) is 2-transitive, which makes A one orbital. For a cross pair, swapping the endpoints lets one normalise the block difference to 1. The full multiplier group (ℤ/p)^× is then transitive on the fibre difference, so O is one orbital.
+- **K₂'s orbitals.** The independent translations and g make the cross pairs one orbital. Inside a block the multipliers are ⟨λ³⟩ = (ℤ/p)^×, since 3 ∤ p − 1, so A is one orbital.
+- **K₃'s orbitals.** ℤ/3 on a fibre is transitive on its 3 pairs. On two fibres, (ℤ/3)² acts regularly on the 9 pairs between them, and the translation identifies fibre pairs at the same distance ±δ. ∎
+
+`three_p_groups.g` checks this at p = 5, 11, 17, 23, 29: the orders, the p-by-cyclic property, the orbital sizes, and that all three groups contain the 3p-cycle H. At p = 7 it shows the failure: K₁ is not p-by-cyclic, and A splits in K₂.
+
+> **Theorem.** Let p ≡ 2 (mod 3) be a prime, p ≥ 5, k = (p − 1)/2 and J = ⌊(3p(p + 1)/2 − 1)/(9p)⌋. Suppose **L₃(p)** holds: no complex on k points, invariant under C_k acting regularly, with every face of at most J points, has χ = 1. Then **M\*_OCR(3p) ≥ 3p(p + 1)/2 = μ\*(3p) + 3p**, already at the N level.
+
+*Proof.* Let B = e_max(P) < 3p(p + 1)/2 = |A| + |T|.
+1. **K₂ forces A.** Its other orbital has 3p² > B edges.
+2. **K₃ forces T.** Suppose T is not in P. K₃'s complex then lives on the C_δ's. The multipliers (i, x) ↦ (i, ux) normalise K₃ and act on the C_δ's as C_k acting regularly, so the complex is C_k-invariant. A face of j of them has 9pj ≤ B edges, so j ≤ J. By L₃(p), χ ≠ 1.
+3. **K₁ is overloaded.** Every union of two of A, T, O has at least |A| + |T| > B edges, so K₁'s complex is a set of vertices containing A and T, and χ ≥ 2. ∎
+
+**L₃(p) is easier than L(k) of §7.6,** because the faces are smaller: J is about k/3. It holds:
+- when J = 0, or k is a prime power;
+- when some ℓ^a exactly dividing k exceeds J. Then no face is invariant under the Sylow ℓ-subgroup P, so χ ≡ χ(X^P) = 0 (mod ℓ);
+- when 2ℓ^a > J and m = k/ℓ^a ≢ 1 (mod ℓ). Then X^P has vertices only, so χ(X^P) ∈ {0, m}.
+
+**Coverage** (`three_p_coverage.py`; `outputs/three_p_coverage.txt`): every p ≡ 2 (mod 3) from 5 to 107, and 162 of the 337 such primes below 5,000. The first open case is p = 113 (k = 56, J = 18). At n = 15 the three groups alone are infeasible at 44 and feasible at 45 (`outputs/three_p_star.txt`, `three_p_star_5.txt`).
+
+**Not covered:**
+- **p ≡ 1 (mod 3).** At n = 21 the cyclic star reaches 84 = μ\* + 21 through other groups, of orders 42, 2,058 and 30,618. Their orbitals are finer: A splits into three orbitals in the second, and the first has seven orbitals. No proof yet.
+- **c blocks with c ≥ 4.** T then splits into ⌊c/2⌋ orbitals under any cyclic fibre action, and for even c the K₂-type cross orbital at block distance c/2 has only (c/2)p² edges, under the budget. n = 20 gives nothing.
+- **Positive density.** Most n have a two-part witness, a block plus a foreign block. A forcing chain for that shape would need a hub with two cycles, ℤ/a × ℤ/b on the two orbits. Its overgroups are intransitive, and the cyclic stars do not see them.
+
 **What stays open:**
 - **M\*_OCR(2p) ≤ p² over all groups.** Sub(K_{p,p}) is not Oliver-χ-resistant in general: at n = 6 the resistant property also needs the odd-sided bipartitions (1 + 5) and a star residue (`orbital-evasiveness-notes.md` §7.9). "Bipartite with two odd sides", which also has e_max p² at n = 2p, is the natural candidate to try.
 - **Other non-prime-power n.**

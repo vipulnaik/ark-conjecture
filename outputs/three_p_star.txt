@@ -1,0 +1,7 @@
+# ../outputs/three_p_star_5.txt: H of order 15 with 7 orbitals; 4 groups (H and the p-by-cyclic overgroups supplied)
+# alone, least B: 15T:15, 60T:15, 1500T:30, 1215T:15
+B = 30: all together -> INFEASIBLE
+   minimal infeasible set: ['60T', '1500T', '1215T']
+B = 44: all together -> INFEASIBLE
+   minimal infeasible set: ['60T', '1500T', '1215T']
+B = 45: all together -> feasible

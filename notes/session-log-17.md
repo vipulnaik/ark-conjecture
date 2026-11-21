@@ -1247,3 +1247,17 @@ The question: can the part of μ\*_N that doesn't come from fixed points be isol
 - **L(k) proved:** for prime powers (χ ≡ 0 mod ℓ, with no face bound needed), and by Smith reduction to V(m), m = k/ℓ^a, for m ≤ 11 (V(3), V(5), V(7), V(9), V(11) computed). Checked directly at k = 3, 5, 9, 15, 21; at k = 15 it holds even with faces of up to 14 points.
 - **Coverage:** every p ≡ 3 (mod 4) below 127, and 189 of 339 below 5,000. First open: p = 127 (k = 63).
 - **Open:** L(k) for all odd k, or an N-level proof with more groups where it fails. The χ-level Theorem of §7.5 is unaffected.
+
+## Part 75: beyond n = 2p — the n = 3p family
+
+- **Cyclic stars, made complete** (`star_cyclic_export.g`): every conjugate of a transitive p-by-cyclic group containing the n-cycle.
+  - n = 15 and 21 rise to μ\* + n (45 and 84).
+  - n = 20 does not rise.
+  - n = 28, 33 and 35 ran out of memory or time in `nlevel_star.py` and are undecided.
+- **Theorem** (`burnside-ring-view.md` §7.7). For n = 3p with p ≡ 2 (mod 3), three groups give M\*_OCR(3p) ≥ μ\*(3p) + 3p, at the N level, subject to L₃(p):
+  - the pivot K₁ = ℤ/3 × AGL(1, p), with orbitals A = 3K_p, T = pK₃ and O;
+  - K₂ = (ℤ/p)³ ⋊ ⟨g⟩, which forces A;
+  - K₃ = ℤ/3 ≀ ℤ/p, which forces T through the C_k symmetry of its cross orbitals.
+
+  L₃(p) holds at every such p up to 107, and at 162 of 337 below 5,000. Group facts are checked at p = 5 to 29 (`three_p_groups.g`). At n = 15 the three-group system is infeasible at 44 and feasible at 45.
+- **Not decided:** n = 33 with the explicit groups (the 2^16-graph run did not finish in 25 minutes); p ≡ 1 (mod 3) (n = 21 rises, by other groups); c ≥ 4 blocks; the two-part (foreign block) witnesses that carry positive density.
