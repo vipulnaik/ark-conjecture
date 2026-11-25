@@ -16,7 +16,11 @@
 | `Step2.lean` | compiles | n/a — needs Mathlib | **zero** — D2 Step 2's change of origins: H¹ = 0 by averaging, for any finite Q with |Q| invertible |
 | `Glue.lean` | compiles | n/a — needs Mathlib | **zero** — Step 2 applied to Γ|_O/T\*: per-block origins giving the normal form (σi, a·x + s) |
 | `Rescale.lean` | compiles | n/a — needs Mathlib | **zero** — **Lemma D2's C(F,2)·r bound end to end** (r ∉ {p, q}), given Lemma B |
-| `LemmaB.lean` | compiles | n/a — needs Mathlib | **zero** — Lemma B for prime blocks: the three steps of an elementary route, not yet assembled |
+| `LemmaB.lean` | compiles | n/a — needs Mathlib | **zero** — **Lemma B for a prime block** (`lemmaB_block`), by an elementary route |
+| `D2Full.lean` | compiles | n/a — needs Mathlib | **zero** — **Lemma D2 (r ∉ {p, q}) from the chain alone, no Lemma B hypothesis** (`d2_noB`) |
+| `D2q.lean` | compiles | n/a — needs Mathlib | **zero** — **Lemma D2q (r = q) from the chain**, and `lemmaD2`: all three of D2's classes |
+| `FoBridge.lean` | compiles | n/a — needs Mathlib | **zero** — E.6's `fo` scores proved to bound real orbitals (from `lemmaD2`) |
+| `D1.lean` | compiles | n/a — needs Mathlib | **zero** — Lemma D1 (absorption) in the E.6 model |
 
 *Status reproduced 2026-11-24 in the working container, both columns, after the pin below. Compile status was per machine until then — the laptop had Mathlib and the container did not — and this header was wrong in both directions more than once while that was so. With the project pinned and the Mathlib cache reachable from the container, both columns are now checked in one place.*
 
@@ -203,12 +207,30 @@ Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E
   - **The rescaling: done.** `Rescale.lean` conjugates Γ|_O by the per-block rescaling ψ(i, x) = (i, vᵢx). In the new coordinates every element has one multiplier and T\* is diagonal (`conj_affine`, `conj_translation_scale`). [Γ|_O : T\*] is prime to r, because |T\*| is divisible by r and r² ∤ |Γ|_O|. Orbital sizes are preserved under conjugation (`orbit2_conj`). **`d2_full`** then assembles Step 1 → Step 2 → Step 3: Γ|_O with an Oliver chain, 2 ≤ F < r, r ∉ {p, q}, Lemma B's affine form and transitivity on O together give an orbital of at most C(F,2)·r pairs. With `D2.d2a`, that is Lemma D2's statement for r ∉ {p, q}.
   - **The bridge from these lemmas to `D2.lean`'s normal-form hypothesis.** It would assemble Step 1, Step 2 and Lemma B into "every element is (σi, a·x + s)".
 
-**Lemma B for prime blocks (`LemmaB.lean`, started 2026-11-25).** The text proves Lemma B from "a solvable primitive group is affine", a classical theorem not in Mathlib. For outside blocks of prime size r, which are all that D2 needs, there is an elementary three-step route, and each step is proved:
-1. **`normal_pgroup_trivial`.** A normal p-subgroup (p ≠ r) of a group acting transitively on r points acts trivially. The action is primitive (prime degree, Mathlib's `IsPreprimitive.of_prime_card`), so a normal subgroup is transitive or trivial, and transitivity would need r ∣ pᵏ.
-2. **`conj_mem_zpowers`.** In a cyclic normal subgroup, an element of order r is conjugated only to its own powers.
-3. **`affine_of_normalizes`.** A permutation of ZMod r that conjugates x ↦ x + 1 to x ↦ x + k is x ↦ kx + f(0).
+**Lemma B for prime blocks, and D2 without hypotheses (`LemmaB.lean`, `D2Full.lean`, 2026-11-25).** The text proves Lemma B from "a solvable primitive group is affine", a classical theorem not in Mathlib. For outside blocks of prime size r, which are all that D2 needs, an elementary route is now fully formalised.
+- **`LemmaB.lemmaB_block`.** Take a transitive group H on ZMod r with an Oliver chain, r ∉ {p, q}. Then:
+  - the bottom layer acts trivially (`normal_pgroup_trivial`), so the middle layer is cyclic;
+  - Cauchy gives z of order r, which lies in the middle layer (`rsub_le_N₁`), so every h conjugates z to a power of z (`conj_mem_zpowers`);
+  - z is an r-cycle (Mathlib's `isCycle_of_prime_order''`), and labelling points by k ↦ zᵏ(0) turns it into x ↦ x + 1;
+  - so every relabelled h is affine (`affine_of_normalizes`).
+- **`D2Full.d2_noB`.** This transports `lemmaB_block` from block 0 to every block:
+  - restrict the chain to the block stabiliser (`OliverChain.comap`) and push it to the block (`ρ`);
+  - relabel block j through a transversal gⱼ, Ψ(j, x) = gⱼ(0, E x);
+  - check every element is then affine block-to-block;
+  - conjugate by Ψ and apply `Rescale.d2_full`.
 
-**Not yet assembled.** Combining the steps per block, which needs Γ₁'s image on a block to be cyclic (step 1 plus faithfulness) and to contain an r-cycle; then choosing block coordinates from that r-cycle; then gluing the blocks into `Chain.Affine`.
+  **Result.** Take G preserving a block system of F blocks of prime size r, transitive, with an Oliver chain, 2 ≤ F < r and r ∉ {p, q}. Then some orbital has at most C(F,2)·r pairs. **No Lemma B hypothesis**, and no circularity: Step 1 is applied only after Lemma B has been derived.
+- **D2q (`D2q.lean`).**
+  - **Lemma B for q-blocks.** `LemmaB.lemmaB_block_any` handles a block of size q. If the middle layer acts trivially, H is a q-group of degree q, so H = ⟨z⟩.
+  - **The core, `d2q_fixed`.** There is a full-support v with aᵢ(g)·vᵢ = v_{σi} for every g.
+    - First, a v fixed by the middle layer. If N₁ contains a nonzero translation, its commutator with any n ∈ N₁ is a q-element in [N₁, N₁] ⊆ Γ₂ (step 5). Otherwise the commutator is a translation inside N₁, so trivial (step 6).
+    - Then every g fixes v: g^(qᵏ) ∈ N₁, g^(F!(q−1)) is a translation (`pow_is_translation`), and the two exponents are coprime.
+  - **`d2q_affine` / `d2q_noB`.** Rescaling by v makes every multiplier 1, and `D2.d2q` gives the F·q orbital.
+- **`D2q.lemmaD2`: Lemma D2 assembled.** F·C(r,2) always; C(F,2)·r when F < r and r ≠ q; F·r when F < r and r = q. All from the chain, a preserved block system and transitivity.
+
+**Closing two loops (`FoBridge.lean`, `D1.lean`, 2026-11-25).**
+- **`FoBridge.fo_terms_valid`.** Every SAFE term `E6.lean` assigns to a fused/repeated outside part (F·C(r,2), and max(C(F,2)·r, F·r) when F < r) is at least the size of some orbital of every group of that shape. So the E.6 model's D2 scores are theorems from the chain, block system and transitivity, not numbers copied from the text.
+- **`D1.lemmaD1`.** In the E.6 model, F = pᵏ copies of a p-block of size c read as one part of size F·c. That reading stays admissible, keeps n, and does not lower SAFE. This is the domination the text uses to drop bottom-layer block copies.
 
 ## The split that makes this tractable
 

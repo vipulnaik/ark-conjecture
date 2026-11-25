@@ -241,3 +241,51 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
   - Coordinatise the block by z.
   - Glue the blocks into `Chain.Affine`. This last step needs one element of order r acting as an r-cycle on every block. The chain makes Sylow-r of Γ|_O cyclic (`rsub_cyclic`), and transitivity should spread a nontrivial action to every block. **This must not reuse `Chain.step1_full`, which assumes Lemma B: that would be circular.** Not yet worked out.
 
+## 20. Lean: Lemma B for prime blocks, and D2 with no Lemma B hypothesis
+
+- **`LemmaB.lemmaB_block`**, assembled. For a transitive H on ZMod r with an Oliver chain and r ∉ {p, q}:
+  - the bottom layer is trivial on the block (`normal_pgroup_trivial` plus faithfulness), so the middle layer is cyclic;
+  - Cauchy gives z of order r in the middle layer, and every h conjugates z to a power of z;
+  - z is an r-cycle, and labelling k ↦ zᵏ(0) makes it x ↦ x + 1, so every relabelled h is affine.
+- **New `lean/D2Full.lean`.** Zero sorries.
+  - `OliverChain.comap`: chains restrict to subgroups.
+  - `Kstab`, `ρ`: the block stabiliser and its action on the block.
+  - `block_onto`.
+  - `conjBy` / `orbit2_conjBy`.
+  - **`d2_noB`**: Lemma D2 (r ∉ {p, q}) from the chain, a preserved block system and transitivity. No Lemma B hypothesis.
+- **The circularity is avoided.** Lemma B is derived per block from the chain directly, using only the block's own group, and is transported by a transversal. Step 1 (`Chain.step1_full`) is then applied to the relabelled group, which is affine by construction.
+- **Checked and clean.**
+  - The text's Lemma B, for prime blocks, follows from the chain without the classical solvable-primitive theorem.
+  - The transversal construction is the standard induced-action argument.
+  - Every hypothesis the text uses is now either a theorem or a stated input: chain, block system, transitivity, F < r, r ∉ {p, q}.
+- **Remaining.** D2q (r = q) end to end: steps (1)–(6) of its proof.
+
+## 21. Lean: Lemma D2q, and Lemma D2 complete
+
+- **`LemmaB.lemmaB_block_any`.** Lemma B for a prime block without r ≠ q. When the middle layer acts trivially, H is a q-group of degree r, so r = q, |H| = r (r² ∤ r!) and H is cyclic. `affine_of_normal_cycle` factors out the final step.
+- **`D2Full.exists_affine_relabel`.** The relabelling half of `d2_noB`, factored out and using `lemmaB_block_any`, so it serves r = q too.
+- **New `lean/D2q.lean`.** Zero sorries.
+  - `affine_mul_gen`, `affine_pow`.
+  - `pow_is_translation`: g^(F!(q−1)) is a translation.
+  - `centralizes_of_coprime`: Bezout on exponents.
+  - **`d2q_fixed`**, `d2q_affine`, **`d2q_noB`**.
+  - **`lemmaD2`**: all three classes.
+- **How the proof relates to the text's D2q.**
+  - Steps (1)–(4) are absorbed: q-elements are translations (`rElem_is_translation`), and commutators of translations with affine maps are translations (`conj_translation`).
+  - Step 5 (T₀ ≠ 0) and step 6 (T₀ = 0) are the two branches of `d2q_fixed`, each giving a v fixed by the middle layer.
+  - The extension from N₁ to all of Γ|_O uses g^(qᵏ) ∈ N₁ and g^(F!(q−1)) ∈ T\* with gcd = 1. This replaces the text's "Γ|_O = N·T\*" decomposition.
+  - Step 7 is `D2.d2q`.
+- **Checked and clean.** D2q holds as the text states it, for every 1 ≤ F < q. The text's principle, "a twist forced into the same abelian layer as the translations it scales must be trivial", is exactly the step-5 commutator argument.
+- **Lemma D2 is now formalised in full** from three inputs: the chain on Γ|_O, a preserved block system and transitivity. The chain passes from Γ to Γ|_O by `OliverChain.map`.
+
+## 22. Lean: tying D2 back to E.6; Lemma D1
+
+- **New `lean/FoBridge.lean`: `fo_terms_valid`.** For every group realising F ≥ 2 outside blocks of prime size r ≠ p (chain, block system, transitivity), each `fo` SAFE term of `E6.lean` bounds some orbital.
+  - F·C(r,2) comes from (a).
+  - For F < r, max(C(F,2)·r, F·r) comes from (b) when r ≠ q and from (c) when r = q.
+  - So the `max` the E.6 model takes, chosen to cover both cases without knowing q, is justified on both branches.
+- **New `lean/D1.lean`: `lemmaD1`.** Replacing `pc F c d` (F = pᵏ) by `pc 1 (F·c) (F·c − 1)` keeps GAdm and n, and SAFE does not drop. Each new term dominates an old one: C(F·c,2) ≥ F·C(c,2), the cross term disappears, and the between-part terms are unchanged.
+- **Checked and clean.**
+  - D1's proof is exactly the text's.
+  - The `fo` scores in E6 are now consistent with what Lemma D2 proves, rather than copied from the text.
+
