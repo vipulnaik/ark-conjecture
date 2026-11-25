@@ -1099,6 +1099,57 @@ if A.only in ("all", "scope"):
     if not i12:
         print("[ok] I12: no live pre-entanglement claim about cyclic-layer fusion.")
 
+    # (I13) COVERING-SYSTEM COUNTS ABOVE A FLOOR.  At a floor delta0 the
+    # covering set is n = F*c + r for F of the parity opposite to n's with
+    # cap_F(1) = 1/(1 + sqrt F)^2 above delta0, plus the two-foreign systems
+    # whose caps clear it (S6 at 1/9, even n only; S11 at 1/16).  A count that
+    # drops the two-foreign systems at a higher floor but keeps all sixteen
+    # F-values -- "8 at odd n and 9 at even n between 1/16 and 1/9" -- read as
+    # true for a long time; the F-systems are capped too.  Recomputed here.
+    i13 = 0
+    def _cover(lo, hi):          # floors strictly inside (lo, hi): counts (odd, even)
+        fs = [F for F in range(1, 64) if (1 + F ** 0.5) ** 2 < 1 / lo - 1e-12]
+        odd = sum(1 for F in fs if F % 2 == 0)
+        even = sum(1 for F in fs if F % 2 == 1)
+        if 1 / 9 > lo: even += 1                       # S6
+        if 1 / 16 > lo: odd += 1; even += 1            # S11 (one per parity)
+        return odd, even
+    CNT = [(re.compile(r"(?:strictly )?between 1/16 and 1/9[^.;]{0,40}?\b(\d+) at odd n and (\d+) at even n"), _cover(1/16, 1/9)),
+           (re.compile(r"(?:at or )?above 1/9[^.;]{0,40}?\b(\d+) at odd n and (\d+) at even n"), _cover(1/9, 1/4)),
+           (re.compile(r"(?:strictly )?above 1/16[^.;]{0,20}?\b(\d+) at odd n and (\d+) at even n"), _cover(1/16, 1/9))]
+    for d in LIVE:
+        try: txt = open(d).read()
+        except OSError: continue
+        for ln, line in enumerate(txt.split("\n"), 1):
+            for rx, want in CNT:
+                for m in rx.finditer(line):
+                    got = (int(m.group(1)), int(m.group(2)))
+                    if got != want:
+                        findings += 1; i13 += 1
+                        print(f"{d} L{ln}  *** INVARIANT I13 *** covering-system count "
+                              f"{got} (odd, even) disagrees with the cap_F(1) count {want}")
+                        print(f"   {line.strip()[:150]}\n")
+    if not i13:
+        print("[ok] I13: every quoted covering-system count above 1/16 matches cap_F(1).")
+
+    # (I14) THE WITHIN-CLASS CROSS COEFFICIENT IS NOT AN UPPER BOUND.  (F or
+    # F/2)*c^2 is exact for Part E's groups, whose block permuter is the regular
+    # C_F; a 2-homogeneous permuter exceeds it (AGL(1,5) on five blocks: 10c^2).
+    # The general bound is C(F,2)*c^2.  Flag a sentence bounding it above.
+    i14 = 0
+    UB_CROSS = re.compile(r"bounded above\*{0,2} by[^.]{0,120}\(F[ᵢi]? or F[ᵢi]?/2\)\s*·\s*c[ᵢi]?²")
+    for d in LIVE:
+        try: txt = open(d).read()
+        except OSError: continue
+        for ln, line in enumerate(txt.split("\n"), 1):
+            if UB_CROSS.search(line):
+                findings += 1; i14 += 1
+                print(f"{d} L{ln}  *** INVARIANT I14 *** (F or F/2)·c² stated as an upper "
+                      f"bound; it is exact only for a regular C_F block permuter")
+                print(f"   {line.strip()[:150]}\n")
+    if not i14:
+        print("[ok] I14: no sentence bounds the within-class cross term by (F or F/2)·c².")
+
 # --------------------------------------------------------------- PASS 7 tables
 #
 # A markdown table whose separator row has a different number of columns from
