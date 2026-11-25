@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # leancheck.sh -- compile Lean files from the command line and print only the
 # diagnostics that matter.  Run from the project root (the folder with
-# lakefile.toml / lean-toolchain).
+# lakefile.toml / lean-toolchain), i.e. this `lean/` directory.
 #
-#   ./leancheck.sh                    # check every .lean under Ark/
-#   ./leancheck.sh Ark/Note.lean      # check one file
+#   ./leancheck.sh                    # check every .lean here
+#   ./leancheck.sh Note.lean          # check one file
 #   SHOW_SORRY=1 ./leancheck.sh       # include the "uses 'sorry'" warnings
 #
 # Exit status is 1 if any file reported an error.

@@ -69,8 +69,8 @@ everything is 0. -/
 theorem orb_full (c : Nat) (b : Bool) : orb c (c - 1) b = pairs c := by
   unfold orb pairs
   by_cases h : b = true ∨ (c - 1) % 2 = 0
-  · rw [if_pos h]; exact Nat.min_self _
-  · rw [if_neg h]; exact Nat.min_eq_right (Nat.div_le_self _ _)
+  · simp only [h, ite_true]; exact Nat.min_self _
+  · simp only [h, ite_false]; exact Nat.min_eq_right (Nat.div_le_self _ _)
 
 /-! ## 3. Lemma D1 and the capacity bound (`Basic.lean` §§2–3, proved) -/
 
@@ -446,5 +446,59 @@ theorem ladder_values_16 :
 
 theorem ladder_values_25 :
     maxOK (fun k => kOK k 1 24) 20 = 4 ∧ maxOK (fun s => sOK s 1 24) 20 = 3 := by decide
+
+/-! ## Pending-checks A9: the self-pairing lemma and the fused-construction value -/
+
+/-- **Self-pairing.** On a block of odd size `c`, a twist of order `d` with `1 ≤ d ≤ c − 1`
+has intra-orbital `c·d/2` exactly when `d` is even: an affine block's orbital is self-paired iff
+the twist contains `−1`, i.e. iff `d` is even (`directed-graph-properties.md` §2).  `c` odd is
+needed: at even `c` and `d = c − 1` the cap `pairs c` equals `c·d/2` with `d` odd. -/
+theorem orb_self_pairing (c d : Nat) (hc : c % 2 = 1) (hd1 : 1 ≤ d) (hdc : d ≤ c - 1) :
+    orb c d false = c * d / 2 ↔ d % 2 = 0 := by
+  have hP : 2 * pairs c = c * (c - 1) := two_pairs c
+  have hx : c * d ≤ c * (c - 1) := Nat.mul_le_mul_left c hdc
+  have hpos : 1 * 1 ≤ c * d := Nat.mul_le_mul (by omega) hd1
+  rcases Nat.mod_two_eq_zero_or_one d with he | ho
+  · have h : orb c d false = c * d / 2 := by
+      unfold orb
+      have hcond : false = true ∨ d % 2 = 0 := Or.inr he
+      simp only [hcond, ite_true]
+      generalize hX : c * d = X at *
+      generalize hY : c * (c - 1) = Y at *
+      exact Nat.min_eq_left (by omega)
+    exact ⟨fun _ => he, fun _ => h⟩
+  · have hodd : (c * d) % 2 = 1 := by rw [Nat.mul_mod, hc, ho]
+    have hne : orb c d false ≠ c * d / 2 := by
+      unfold orb
+      have hcond : ¬ (false = true ∨ d % 2 = 0) := by
+        intro h
+        rcases h with h | h
+        · cases h
+        · omega
+      simp only [hcond, ite_false]
+      generalize hX : c * d = X at *
+      generalize hY : c * (c - 1) = Y at *
+      omega
+    exact ⟨fun h => absurd h hne, fun h => by omega⟩
+
+/-- **The fused construction's value at `c = Q`**, the arithmetic half of
+`μ*(n) ≥ n·(Q(n) − 1)/2`: `F = n/Q` fused blocks of size `Q`, each at full twist, give an
+intra class of `F · pairs Q = n(Q − 1)/2`.  That the construction is an Oliver group with this
+as its least orbital is group theory and is not claimed here. -/
+theorem fused_value (n Q : Nat) (hQ : Q ∣ n) : (n / Q) * pairs Q = n * (Q - 1) / 2 := by
+  obtain ⟨F, rfl⟩ := hQ
+  rcases Nat.eq_zero_or_pos Q with h0 | hpos
+  · subst h0; simp [pairs]
+  · rw [Nat.mul_div_cancel_left F hpos]
+    have h : Q * F * (Q - 1) = 2 * (F * pairs Q) := by
+      rw [← Nat.mul_assoc 2 F, Nat.mul_comm 2 F, Nat.mul_assoc F 2, two_pairs,
+          Nat.mul_comm Q F, Nat.mul_assoc]
+    rw [h, Nat.mul_div_cancel_left _ (by decide)]
+
+/-- The same value read through `orb`: a full twist makes each block one class
+(`orb_full`), so the fused class is `n(Q − 1)/2` whatever the characteristic flag. -/
+theorem fused_value_orb (n Q : Nat) (b : Bool) (hQ : Q ∣ n) :
+    (n / Q) * orb Q (Q - 1) b = n * (Q - 1) / 2 := by
+  rw [orb_full]; exact fused_value n Q hQ
 
 end ArkCore

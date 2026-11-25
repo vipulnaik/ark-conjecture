@@ -77,3 +77,12 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - **Bridge:** PD(1) clause no longer reads as making Shparlinski's rungs conditional; two-foreign systems: S11 drops out above 1/16, S6 only above 1/9; "four parameter choices each" with three listed.
 - **Checked clean:** admissible-d table cell by cell from the three mechanisms; S ≥ 4·(9/8)·C₀; 1/350 at n ≥ 29 and the 1/300 corner; both verification groups (orders and orbitals); n = 17 example; §4 family and the 1/2 ceiling; 0.0462 / 2183 against `mu_table_ladder.csv`; bridge balance-point tables, the 1/20, 1/30, 1/48 figures, the 25× ratio.
 - **Not edited:** the LaTeX version still has Unicode symbols and markdown bold outside math (≤, −, ×, **...**), which a pdflatex paste will reject; bridge §0's box labels ("A fourth", "Three further") are out of order.
+
+## 9. Lean: pinned build in the container, and the A9 items
+
+- **Environment.** With `cache.mathlib.org` allowlisted, the container fetches Mathlib's cache; `releases.lean-lang.org` (plural) is still blocked, so the toolchain is linked into elan from the GitHub tarball (recipe in `lean/README.md`).
+- **Pin.** `lean/` is now a lake project: `lean-toolchain` = v4.36.0, Mathlib tag v4.36.0, `lake-manifest.json` committed, `.lake/` ignored. Files stay at top level (`srcDir = "."`, explicit roots). `leancheck.sh`: 5 files, 0 errors, 0 sorry. The core files still compile against core 4.15.0.
+- **Drift fixed** (commit ba37f12): four core lemmas in `E5Core` reproved from lemmas stable across 4.15–4.36; `ArkCore`'s deprecated `if_pos`/`if_neg` replaced by `simp only [h, ite_true/ite_false]`.
+- **A9:** `orb_self_pairing` (hypothesis c odd is necessary — counterexample at even c, d = c − 1); `fused_value` / `fused_value_orb`; `Bridge.lean` (`IsPrimeN ↔ Nat.Prime`, i.e. `Nat.prime_def`).
+- **Proposal for Vipul:** SAFE model as a bundle of the inequalities E.5 consumes (Option A in the README), plus how to treat the 12 exceptions.
+- **README** rewritten at the top: status table for both toolchains, a Building section, the lemma-name lesson updated; the old laptop/container gotchas (LEAN_PATH, cache unreachable) removed as superseded.

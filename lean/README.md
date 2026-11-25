@@ -1,50 +1,43 @@
 # Formalising the ARK framework: what is worth doing, and in what order
 
-*Compile status, per file and per environment — kept explicit because "compiles" and "proves" have come apart here, and only the checker's sorry count separates them. **The plan for October 2026 and 2027 is its own section below**, agreed and vetted at the end of session 14.*
+*Compile status, per file. **The plan for October 2026 and 2027 is its own section below**, agreed and vetted at the end of session 14.*
 
-| file | laptop (Mathlib) | container (core 4.15.0) | sorries |
+| file | `lake build` (Mathlib v4.36.0, pinned here) | core 4.15.0 recipe (no Mathlib) | sorries |
 |---|---|---|---|
-| `Note.lean` | compiles | n/a — needs Mathlib | **zero — every proof complete** (six imported from `ArkCore`) |
-| | | | *hypothesis renamed `HypH` → `HypBCG`; see below* |
-| `Basic.lean` | compiles | n/a — needs Mathlib | **zero — every proof complete**, from 18 |
-| `ArkCore.lean` | compiles | compiles | **zero — every proof complete** |
-| `E5Core.lean` | not tried | compiles (2026-10-19) | **zero** — Theorem E.5's counting and congruence steps, Lemma E.2 (bases 2 and 3), the Mersenne and repunit windows, the odd-q leftover case end to end; imports `ArkCore` |
+| `ArkCore.lean` | compiles | compiles | **zero** |
+| `E5Core.lean` | compiles | compiles (imports `ArkCore`) | **zero** — E.5's counting and congruence steps; see Phase 1b |
+| `Note.lean` | compiles | n/a — needs Mathlib | **zero** (six proofs imported from `ArkCore`) |
+| `Basic.lean` | compiles | n/a — needs Mathlib | **zero** |
+| `Bridge.lean` | compiles | n/a — needs Mathlib | **zero** — `E5Core.IsPrimeN p ↔ Nat.Prime p` |
 
-*Container status re-reproduced 2026-10-19 from the recipe below: `ArkCore.lean` compiles silently in about 4 s, and a sorry-control copy warns as it should. Mathlib's cache hosts are still unreachable from the container, so `Note.lean` and `Basic.lean` remain laptop-only. To compile `E5Core.lean`: `lean -o <dir>/ArkCore.olean ArkCore.lean`, then `LEAN_PATH=<dir> lean E5Core.lean`.*
+*Status reproduced 2026-11-24 in the working container, both columns, after the pin below. Compile status was per machine until then — the laptop had Mathlib and the container did not — and this header was wrong in both directions more than once while that was so. With the project pinned and the Mathlib cache reachable from the container, both columns are now checked in one place.*
 
-**All three files are now sorry-free.** `Basic.lean` went 18 → 0 in one pass; what that pass actually bought is set out under *Phase 1* below, and it was not the proofs.
+*What a green build establishes, restated because it invites over-reading: **the arithmetic between the hypotheses and the conclusion is correct, and the units are consistent.** The note's theorem remains conditional on (BCG_{1/5}) and on Oliver's theorem, neither formalised here.*
 
-*So **phase 0 is done**: `Note.lean` and `ArkCore.lean` are both fully proved, and between them they cover the note's entire arithmetic layer — the construction inequality, the admissible-`d` table, the density and ceiling statements, `orb`, Lemma D1, the capacity bound, F.1. `Basic.lean` was the sketch until its 18 → 0 pass and is now proved too; `leancheck.sh` still reports the sorry count separately, and the thing to notice is now a count that RISES — a proof that has been reopened.* *(An earlier form of this sentence still called `Basic.lean` the sketch after the table above had recorded it sorry-free; the header contradicted itself for one paragraph.)*
+## Building
 
-*What this does and does not establish is worth restating, because a green checker invites over-reading: it verifies that **the arithmetic between the hypotheses and the conclusion is correct, and that the units are consistent**. The note's theorem remains conditional on (H) and on Oliver's theorem, neither of which is formalised or formalisable here. That is the check that was worth having before arXiv, and it is now had.* **`ArkCore.lean` is different: it is compiled and fully proved** — zero sorries against core Lean 4.15.0 — and covers the ℕ half of both files: the central inequality (`central_even`, `central_odd`), Lemma D1, the capacity bound, Proposition F.1 in squared form, `orb` with the full-twist collapse, and every `decide` table. All three were reviewed after the entangled-generator correction.*
-
-**The container build is reproduced, and the recipe below works as written.** `ArkCore.lean` compiles against core 4.15.0 with **no output at all** — no errors, no warnings, and no `declaration uses 'sorry'`, which is the actual evidence for the zero-sorry claim, a silent compile being the only thing that distinguishes a complete proof from a sketch. Total cost is a 265 MB download and a few minutes.
-
-**Toolchain, and how to get one in the working container.** elan cannot resolve any toolchain there — every lookup goes through `release.lean-lang.org`, which is off the network allowlist — but the toolchain tarball itself is on GitHub releases, which is on it:
+**This directory is a lake project.** `lean-toolchain` pins `leanprover/lean4:v4.36.0` and `lakefile.toml` pins Mathlib to the tag `v4.36.0`; `lake-manifest.json` records the exact dependency commits. The `.lean` files stay at the top level and import each other by bare module name (`import ArkCore`); the lakefile lists them as roots of one library with `srcDir = "."`. **Do not bump the pin mid-piece-of-work** — two of the project's first three Lean failures were name drift (see below).
 
 ```bash
-curl -sSfL https://github.com/leanprover/lean4/releases/download/v4.15.0/lean-4.15.0-linux.tar.zst -o lean.tar.zst
+cd lean
+lake exe cache get        # ~9,100 prebuilt Mathlib files; needs cache.mathlib.org
+lake build                # all five files, a few minutes once the cache is in place
+bash leancheck.sh         # per-file errors / warnings / sorry counts
+```
+
+`leancheck.sh` must run from this directory (it looks for `lean-toolchain`). The only expected warning is Mathlib's suggestion that files importing it adopt the module system; `leancheck.sh` does not count it.
+
+**Network, for a sandboxed container.** `lake exe cache get` needs `cache.mathlib.org`; cloning Mathlib needs GitHub. elan downloads toolchains from `releases.lean-lang.org` (plural). If that host is blocked, fetch the tarball from GitHub releases and register it by hand:
+
+```bash
+curl -sSfL https://github.com/leanprover/lean4/releases/download/v4.36.0/lean-4.36.0-linux.tar.zst -o lean.tar.zst
 python3 -c "import zstandard,tarfile; tarfile.open(fileobj=zstandard.ZstdDecompressor().stream_reader(open('lean.tar.zst','rb')),mode='r|').extractall('.')"   # no zstd binary in the image
-export PATH=$PWD/lean-4.15.0-linux/bin:$PATH
-lean ArkCore.lean        # bare invocation; no lakefile needed for the core file
+elan toolchain link leanprover/lean4:v4.36.0 $PWD/lean-4.36.0-linux
 ```
 
-**The hypothesis is the note's, and the name now says so.** `Note.lean` formalises `mu-theta-n2-note.md`, whose hypothesis is the **fixed `n/5` window, all large n** — in the framework's naming, **(BCG_{1/5}-AL)**. It is *not* the framework's (BCG-AL), and the two are **not nested in either direction**: at `n ≡ 11 (mod 12)` the framework's optimum is the `F = 4` shape with `c/n ≈ 0.134`, which the `n/5` window rejects outright, while the note's constant is far weaker. The structure was called `HypH`, which invited exactly that conflation and additionally collided with Schinzel's Hypothesis H; it is now `HypBCG`, with the non-nesting recorded at its docstring. Renamed and recompiled.
+**The core-only route still works and is kept as a second check.** `ArkCore.lean` and `E5Core.lean` use no Mathlib and also compile against core Lean 4.15.0 with nothing but the `lean` binary: `lean -o <dir>/ArkCore.olean ArkCore.lean`, then `LEAN_PATH=<dir> lean E5Core.lean` (the 4.15.0 tarball is at the same GitHub URL with `v4.15.0`). Two toolchains eleven months apart is a useful drift test, and both core files are written to pass it — see the next paragraph.
 
-**A note on lemma names, earned twice.** Two of this project's three Lean failures so far were **name drift, not wrong mathematics**: `List.mem_cons_self`'s explicit-vs-implicit arguments across toolchains, and `div_le_div_iff`, which 4.33's Mathlib no longer has under that name. Neither statement was false. The working rule that follows: **where a goal is trivial or routine, reach for a tactic or a decomposition into ancient lemmas rather than for a named iff-lemma.** The division inequalities are now proved by "difference is nonneg" — `div_nonneg`, `field_simp`, `ring`, `linarith`, `positivity`, all stable for years — instead of by whatever `div_le_div_*` is currently called. Ordering-and-division iff-lemmas are the highest-churn corner of Mathlib and worth routing around on sight.
-
-**Importing `ArkCore` from `Note.lean`.** Lean resolves imports through `LEAN_PATH` and lake's build directories, **not** through the filesystem beside the importing file, and it loads the compiled `.olean` rather than the source — so co-locating the two `.lean` files does nothing, and `PATH` is not consulted at all. Either build the olean and point `LEAN_PATH` at it:
-
-```bash
-lake env lean -o ArkCore.olean ArkCore.lean
-LEAN_PATH=$PWD ./leancheck.sh Note.lean
-```
-
-Three gotchas, all found the hard way: `leancheck.sh` already calls `lake env lean`, so don't wrap it again; **`LEAN_PATH` must be set on the same command line** — exporting it beforehand does not take, since the script's own environment handling drops it; and write `LEAN_PATH=$PWD`, not `LEAN_PATH=$PWD:$LEAN_PATH`, because when the variable is unset the trailing colon leaves an empty path entry that Lean rejects. Alternatively, move the files under the lake library's source directory and import by its module prefix, `import Ark.ArkCore` — the more durable option, and what `leancheck.sh` assumes when run bare from the project root.
-
-**Mathlib remains out of reach there** — `lake exe cache get` needs its cache host, and a source build is days — which is what makes the core/Mathlib split load-bearing rather than aesthetic: everything that is genuinely about ℕ lives in `ArkCore.lean` and is *proved*, while `Note.lean` / `Basic.lean` keep the real-number material (`Density`, `capF`, the surd table) as Mathlib sketches to be compiled wherever Mathlib exists. `leancheck.sh` is for the latter situation (a lake project root); the core file needs only `lean` itself.
-
-*(A drift note, since this header has now been wrong in both directions: it said "neither has been compiled" after `Note.lean` had compiled on the laptop — the header described the drafting container and was read as describing the project. Compile status is per-machine here, because the container and the laptop have different reach; this header now says which.)*
+**A note on lemma names, earned three times.** Every Lean failure in this project so far has been **name drift, not wrong mathematics**: `List.mem_cons_self`'s explicit-vs-implicit arguments, `div_le_div_iff` gone from Mathlib, and, on moving `E5Core.lean` from core 4.15 to 4.36, four core lemmas renamed or re-signed at once (`Nat.pos_pow_of_pos` removed, `Nat.gcd_mul_dvd_mul_gcd` removed, `Nat.dvd_sub` lost its `≤` argument, and the `Nat.Coprime` API that replaces them absent from 4.15). The fix in each case was to reprove the step from lemmas whose name and signature are the same in both toolchains (`Nat.gcd_mul_left`, `Nat.dvd_gcd`, `Nat.mul_sub_left_distrib`, `Nat.pow_pos`). The working rule: **where a goal is routine, reach for a tactic or a decomposition into old, stable lemmas rather than for a named iff-lemma or a convenience lemma**, and in the core files prefer what exists in both toolchains. `if_pos`/`if_neg` are deprecated in 4.36; `ArkCore` now uses `simp only [h, ite_true]` instead, which works in both.
 
 **What compiling immediately paid for.** The draft of the central inequality's block case split the region at `r ≥ 13`; the slack chain fails there — `r² − 7r − 84 < 0` at 13 — and the compiler refused it, forcing the split to 14 with the finite side `n ≤ 65` discharged by `decide`. The region's true numerical worst (`350·m*/pairs n = 1.0096`, at `n = 65, r = 13`) sits **on the finite side**, which is precisely why no uniform slack argument covers it and the `decide` is not decoration. One compile session caught exactly the class of error this project exists to catch, in its own draft.
 
@@ -119,27 +112,38 @@ This is **not** part of the ARK Lean plan and does not gate it. Vipul's mathchec
 
 Theorem E.5 did not exist when this list was drawn up and is now the most valuable target in it. `enumeration-proof.md` Part E‴'s Theorem E.5 caps the SAFE score of every fallback configuration below `C(n,2)/25`, and Corollary E.6 then gives `μ*(n) = B(n)` wherever `B(n) > C(n,2)/25` — which is what turned the per-n collapse certificate into a single theorem covering every `n ≤ 10⁶`. Three things make it the right next target. **It is arithmetic on stated quantities**: four counting sub-cases on SAFE terms, no Lemma C, no J0a — exactly the layer the table above says Lean catches. **It has had one human reading**, against three for Lemma B′, and it now carries more weight than anything else in the framework. **And its two boundary constants are the kind that drift**: the twelve exceptions all at `n ≤ 63`, and the `1/25` line coinciding with the floor conjecture's — a Lean statement fixes both by type. Proposition 1 of `ladder-completeness.md` (above `1/25` the optimum is a menu shape or S6/S11; `cap_F(1) > 1/25 ⟺ F ≤ 16`) is the companion and is the same kind of argument. Together they are perhaps the size of phase 1 again.
 
-### Phase 1b status, and how `E5Core.lean` reconciles with Mathlib
+### Phase 1b status, the A9 items, and the SAFE model
 
-**Status.** `E5Core.lean` is a **core-Lean, machine-checked draft** of E.5's arithmetic. It compiles in the container with zero sorries. It is not meant as the final, conventional form. It defines its own versions of standard notions because the container cannot reach Mathlib:
+**Status.** `E5Core.lean` proves E.5's counting and congruence steps with zero sorries (see its header). Added 2026-11-24, for `pending-checks.md` A9:
+
+- `ArkCore.orb_self_pairing` — on a block of odd size c, `orb c d false = c·d/2 ↔ d even` for `1 ≤ d ≤ c − 1`. **c odd is needed**: at even c and d = c − 1 the cap `pairs c` equals `c·d/2` with d odd.
+- `ArkCore.fused_value`, `ArkCore.fused_value_orb` — for `Q ∣ n`, `(n/Q)·pairs Q = (n/Q)·orb Q (Q−1) b = n(Q−1)/2`: the arithmetic half of `μ*(n) ≥ n·(Q(n) − 1)/2`. That the fused construction is an Oliver group with this as its least orbital is group theory and is not claimed.
+- `Bridge.lean` — `ArkBridge.isPrimeN_iff_prime : E5Core.IsPrimeN p ↔ Nat.Prime p`, which is Mathlib's `Nat.prime_def` reversed. This is route 1 of the reconciliation below, now done: Mathlib-side code can feed `Nat.Prime` hypotheses to `E5Core`'s lemmas.
+
+**Reconciling `E5Core` with Mathlib.** `E5Core`/`ArkCore` define their own versions of standard notions so that they compile without Mathlib:
 
 | `E5Core` / `ArkCore` | Mathlib equivalent |
 |---|---|
-| `IsPrimeN p` (`2 ≤ p ∧ ∀ d, d ∣ p → d = 1 ∨ d = p`) | `Nat.Prime p` — same content; Mathlib states this form as a characterisation lemma |
-| `prime_pow_dvd_coprime`, `dvd_of_dvd_mul_coprime`, `gcd_pow_eq_one`, `gcd_two_pow_pm`, `gcd_succ` | `Nat.Coprime` API (one-liners there) |
+| `IsPrimeN p` (`2 ≤ p ∧ ∀ d, d ∣ p → d = 1 ∨ d = p`) | `Nat.Prime p` — bridged in `Bridge.lean` |
+| `prime_pow_dvd_coprime`, `dvd_of_dvd_mul_coprime`, `dvd_sub_le`, `gcd_pow_eq_one`, `gcd_two_pow_pm`, `gcd_succ` | `Nat.Coprime` API (one-liners there) |
 | `isPrimeN_of_bounded`, `isPrimeN_three`, `isPrimeN_13` | `Nat.Prime` by `norm_num` / `decide` |
-| `pairs n` (`ArkCore`) | `n.choose 2`, already bridged in `Note.lean` |
+| `pairs n` (`ArkCore`) | `n.choose 2`, bridged in `Note.lean` |
 
-Mathlib convention is to use Mathlib's definitions wherever they exist. So this table lists the reconciliation work, which has two routes.
+Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E5Core`, is now cheap to try here but would cost the core-4.15 check, which has just caught four instances of drift; **keep route 1 unless there is a reason to drop the core build.** Until then: stay inside the namespaces, prefix any helper whose bare name could exist in Mathlib, and add any new home-made notion to the table in the same edit.
 
-1. **Import and bridge (minutes).** Keep `ArkCore.lean` and `E5Core.lean` as they are, imported by Mathlib-side files exactly as `Note.lean` already imports `ArkCore`. Add a short bridge file proving `E5Core.IsPrimeN p ↔ Nat.Prime p`, so Mathlib code can supply its own primes to `lemma_E2` and `e1_mersenne`. Everything stays checkable in the container. The cost is that the core files keep their own definitions.
-2. **Mathlib-native rewrite (an hour or two, laptop in the loop).** Restate the file against `Nat.Prime`, `Nat.Coprime` and `choose`, and delete the home-made coprimality lemmas, calling Mathlib's instead.
-   - **Carries over unchanged:** every proof's structure — inequality chains, case splits, witnesses — and the core tactics used (`omega`, `decide`, `rw`, `calc`).
-   - **Needs edits:** call sites of the deleted lemmas (Mathlib's argument order and form differ); the few places that unpack primality; and Mathlib name drift — see the lemma-names note above, which accounts for two of three build failures so far.
+**The SAFE model — a proposal, for agreement before building.** A9 calls the representation of configurations "a design decision … best made together". E.5's proof (`enumeration-proof.md` Part E‴) is *counting on SAFE terms*: it never evaluates SAFE, it only uses a handful of inequalities that SAFE satisfies. That suggests two options.
 
-   **This is not a find-and-replace.** The mathematics transfers; the mechanics need a compile-and-fix pass.
+- **Option A — SAFE as a bundle of the inequalities the proof consumes (recommended).** A structure recording, for a fallback configuration W at n with score B:
+  - the shape: `n = F·c + r + ΣL`, `c = p^a`, `r ∣ c − 1`, `r ≠ p`, s = (c−1)/r, the leftover parts L as a list of sizes, each tagged matching (a power of p) or foreign (a prime);
+  - the SAFE bounds: `B ≤ F·pairs c`, `B ≤ orb r t false` with t a power of q dividing r − 1, `B ≤ pairs m` for every part size m (this is ℓ(B));
+  - the branch caps E.5 imports rather than reproves: Cap(a) at s = 1 (E.1), Cap′(a) at s = 2, a ≥ 2 (E.3(iii)), and E.4's s = 3 pair;
+  - Lemma B′'s input that **every foreign twist is a power of the same q**, and the distinct-foreign-primes hypothesis the second reading asked to be made explicit (`r′ ≠ r`, justified by D2).
+  
+  E.5 is then `theorem e5 (W : SafeModel n B) (hbare : ¬ bare W) (hexc : n > 63) : 25 * B < pairs n`, assembled from the lemmas already in `E5Core`, with the n ≤ 63 table discharged by `decide` over the listed rows. Each field is one line of `enumeration-proof.md`'s SAFE definition, so the fidelity check is reading the structure against Part G.3, not a proof. Estimated size: a few hundred lines, most of it case dispatch.
+- **Option B — SAFE as a function.** Define configurations and their SAFE score by the Part G.3 formulas, and prove the bundle of Option A as lemmas. This is Phase 3's groundwork and checks more — that the inequalities really follow from the definition — but it is several times the size and fixes a representation of the whole shape space, not just the fallback branch.
 
-**Until that is decided, keep the drafts reconcilable.** Stay inside the two namespaces. Prefix any helper whose bare name could also exist in Mathlib (`isPrimeN_three`, not `prime_three`), so that opening both namespaces never gives an ambiguous name. And add any new home-made notion to the table above in the same edit.
+**Recommendation: A now, with the structure's fields named so that B can later prove them.** A delivers "E.5 is machine-checked given its stated inputs" and leaves the inputs visible as fields; B can replace the fields by proofs without changing E.5's statement. **One choice needs your view either way: whether the 12 exceptions are excluded by `n > 63` (simplest, and true) or listed row by row (closer to the text).**
+
 
 ## The split that makes this tractable
 

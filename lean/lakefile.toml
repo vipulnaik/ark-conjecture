@@ -1,0 +1,15 @@
+name = "Ark"
+defaultTargets = ["Ark"]
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4"
+rev = "v4.36.0"
+
+# The .lean files sit at this directory's top level and import each other by
+# bare module name (`import ArkCore`), so the library's source dir is "." and
+# its roots are listed explicitly.
+[[lean_lib]]
+name = "Ark"
+srcDir = "."
+roots = ["ArkCore", "E5Core", "Note", "Basic", "Bridge"]
