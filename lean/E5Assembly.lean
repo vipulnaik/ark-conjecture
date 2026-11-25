@@ -25,11 +25,17 @@ the text states it on:
 * `exceptions` — the 12 rows of the text's exception table, one configuration per row,
   with SAFE evaluated to the table's value and 25·SAFE ≥ C(n,2) checked by `decide`.
 
-**Not here (yet):** the s = 1, s = 3 and s = 2 with a ≥ 2 branches.  Their arithmetic is in
-`E5Core` (`e1_mersenne`, `e4_pair`, `e3_repunit`), but the classification steps that reduce
-an arbitrary configuration in those branches to the Mersenne / (16, 5) / repunit shapes
-(c − 1 = r forces c = 2^a and r Mersenne; and so on) are not yet formalised, nor is the
-claim that the table lists *every* exception (that is `fallback_sup.py`'s enumeration).
+* `e5_s1`, `e5_s3`, `e5_s2a2` — the remaining branches, each with its classification step
+  (E.1: s = 1 forces (3, 2) or c = 2^a with 2^a − 1 a Mersenne prime, a prime; E.4: s = 3
+  forces r = 2 or (16, 5); E.3(i): s = 2, a ≥ 2 forces p = 3, a odd) and `E5Core`'s caps.
+* `e5` — **Theorem E.5 assembled**: an admissible, non-bare fallback configuration has
+  25·SAFE < C(n,2), or (c, r) is one of the six pairs the exception table is built on.
+* `exceptions_more` — the table records one configuration per n: F = 2 and F = 3 at
+  (8, 7) are further exceptions at n = 23 and 31.
+
+**Not here (yet):** that the exceptions occur only at the table's 12 values of n (at most 63).
+`e5` bounds the exceptional (c, r) but not n; the per-n list remains `fallback_sup.py`'s
+enumeration.
 -/
 import Mathlib
 import E5Core
@@ -413,5 +419,225 @@ theorem ex28_admissible : Admissible ex28 2 3 3 := by
   simp at hx
   subst hx
   exact ⟨by norm_num, by decide, by decide, by decide, 1, by norm_num⟩
+
+/-! ### The other branches: s = 1, s = 3, s = 2 with a ≥ 2, and the assembly
+
+Each branch theorem concludes `25·SAFE < C(n,2)` **or** that (c, r) is one of the six pairs
+the exception table is built on.  The classification steps are E.1's (s = 1 forces c = 2^a and
+r Mersenne, or (3, 2)), E.3(i)'s (s = 2, a ≥ 2 forces p = 3 and a odd) and E.4's (s = 3 forces
+(16, 5) or r = 2); the caps are `E5Core`'s. -/
+
+/-- The six (c, r) pairs underlying the text's 12 exceptions. -/
+def excPairs : List (ℕ × ℕ) := [(3, 2), (4, 3), (8, 7), (16, 5), (27, 13), (32, 31)]
+
+theorem n_ge_c_add_r (W : Fallback) (hF : 1 ≤ W.F) : W.c + W.r ≤ W.n := by
+  rw [n_eq]; have : W.c ≤ W.F * W.c := Nat.le_mul_of_pos_left _ hF; omega
+
+theorem isPrimeN_of_prime' {p : ℕ} (hp : Nat.Prime p) : IsPrimeN p :=
+  ArkBridge.isPrimeN_of_prime hp
+
+/-- A prime power `p^a` that is even has p = 2. -/
+theorem prime_eq_two_of_even_pow {p a : ℕ} (hp : Nat.Prime p) (h : (p ^ a) % 2 = 0) : p = 2 := by
+  have : Even (p ^ a) := Nat.even_iff.mpr h
+  exact (hp.even_iff).mp (Nat.even_pow.mp this).1
+
+theorem pow_odd_of_odd {p a : ℕ} (hp : p % 2 = 1) : (p ^ a) % 2 = 1 :=
+  Nat.odd_iff.mp (Odd.pow (Nat.odd_iff.mpr hp))
+
+/-- **s = 1 (Theorem E.1).** c − 1 = r prime. -/
+theorem e5_s1 (W : Fallback) (p a q : ℕ) (hW : Admissible W p a q) (hs : W.c = W.r + 1) :
+    25 * W.safe < pairs W.n ∨ (W.c, W.r) ∈ excPairs := by
+  obtain ⟨hp, ha, hcp, hF, hr, -, -, hq, htd, ⟨e, he⟩, -, -⟩ := hW
+  have hnc := n_ge_c_add_r W hF
+  have hr2 := hr.two_le
+  rcases hp.eq_two_or_odd with rfl | hpo
+  · -- c = 2^a, r = 2^a − 1 a Mersenne prime
+    have hrm : W.r = 2 ^ a - 1 := by omega
+    have ha1 : a ≠ 1 := by rintro rfl; omega
+    obtain ⟨-, haP⟩ := Nat.prime_of_pow_sub_one_prime ha1 (hrm ▸ hr)
+    rcases haP.eq_two_or_odd with rfl | hao
+    · right; simp [excPairs]; omega
+    obtain ⟨m, rfl⟩ : ∃ m, a = 2 * m + 1 := ⟨a / 2, by omega⟩
+    by_cases hm : 3 ≤ m
+    · left
+      have hpow : 2 ^ (2 * m + 1) = 2 * 2 ^ (2 * m) := by rw [pow_succ]; ring
+      have hpos : 1 ≤ 2 ^ (2 * m) := Nat.one_le_two_pow
+      have hY : (2 ^ (2 * m) - 1) % 2 = 1 := by
+        have : 2 ^ (2 * m) % 2 = 0 := by
+          rw [show 2 * m = (2 * m - 1) + 1 by omega, pow_succ]; simp
+        omega
+      have hd : q ^ e ∣ 2 * (2 ^ (2 * m) - 1) := by
+        rw [← he]; convert htd using 1; omega
+      have ht := twist_split q e _ (isPrimeN_of_prime' hq) hY hd
+      have hn : 2 ^ (2 * m + 2) - 1 ≤ W.n := by
+        have : 2 ^ (2 * m + 2) = 2 * 2 ^ (2 * m + 1) := by rw [pow_succ]; ring
+        omega
+      have h := e1_mersenne m W.n q e hm (isPrimeN_of_prime' hq) ht hn false
+      rw [← hrm, ← he] at h
+      exact lt_of_le_of_lt (Nat.mul_le_mul_left 25 (safe_le_orb W)) h
+    · right
+      have : m = 1 ∨ m = 2 := by
+        rcases Nat.lt_or_ge m 1 with h | h
+        · exfalso; omega
+        · omega
+      rcases this with rfl | rfl <;> simp [excPairs] <;> omega
+  · -- p odd: c odd, so r = c − 1 is even, hence r = 2 and c = 3
+    have hco : W.c % 2 = 1 := by rw [hcp]; exact pow_odd_of_odd hpo
+    have : W.r = 2 := by
+      rcases hr.eq_one_or_self_of_dvd 2 (Nat.dvd_of_mod_eq_zero (by omega)) with h | h <;> omega
+    right; simp [excPairs]; omega
+
+/-- **s = 3 (Theorem E.4).** c − 1 = 3r: r = 2 (SAFE ≤ 1), or (c, r) = (16, 5). -/
+theorem e5_s3 (W : Fallback) (p a q : ℕ) (hW : Admissible W p a q) (hs : W.c = 3 * W.r + 1) :
+    25 * W.safe < pairs W.n ∨ (W.c, W.r) ∈ excPairs := by
+  obtain ⟨hp, ha, hcp, hF, hr, -, -, -, -, -, -, -⟩ := hW
+  have hnc := n_ge_c_add_r W hF
+  have hBr := safe_le_pairs_r W
+  have hr2 := hr.two_le
+  by_cases h2 : W.r = 2
+  · left
+    rw [h2] at hBr
+    have : pairs 9 ≤ pairs W.n := pairs_mono (by omega)
+    have : pairs 9 = 36 := by decide
+    have : pairs 2 = 1 := by decide
+    omega
+  have hro := prime_odd hr (by omega)
+  have hp2 : p = 2 := prime_eq_two_of_even_pow hp (by rw [← hcp]; omega)
+  subst hp2
+  obtain ⟨b, hb⟩ := Nat.even_or_odd' a
+  rcases hb with rfl | rfl
+  · -- a = 2b: (2^b − 1)(2^b + 1) = 3r
+    have hsq : 2 ^ (2 * b) = 2 ^ b * 2 ^ b := by rw [two_mul, pow_add]
+    have hx1 : 1 ≤ 2 ^ b := Nat.one_le_two_pow
+    have hXY : (2 ^ b - 1) * (2 ^ b + 1) = 3 * W.r := by
+      rw [sq_sub_one _ hx1, ← hsq]; omega
+    by_cases hb3 : 3 ≤ b
+    · exfalso
+      have h8 : 8 ≤ 2 ^ b := by
+        calc 8 = 2 ^ 3 := by norm_num
+          _ ≤ 2 ^ b := Nat.pow_le_pow_right (by norm_num) hb3
+      have hdvd : W.r ∣ (2 ^ b - 1) * (2 ^ b + 1) := ⟨3, by rw [hXY]; ring⟩
+      rcases (Nat.Prime.dvd_mul hr).mp hdvd with h | h
+      · have := Nat.le_of_dvd (by omega) h
+        have : W.r * 9 ≤ (2 ^ b - 1) * (2 ^ b + 1) := Nat.mul_le_mul this (by omega)
+        omega
+      · have := Nat.le_of_dvd (by omega) h
+        have : 7 * W.r ≤ (2 ^ b - 1) * (2 ^ b + 1) := by
+          exact Nat.mul_le_mul (by omega) this
+        omega
+    · interval_cases b <;> simp at hcp <;> (try omega)
+      right; simp [excPairs]; omega
+  · -- a odd: 2^a ≡ 2 (mod 3), but c = 3r + 1
+    exfalso
+    have : 2 ^ (2 * b + 1) % 3 = 2 := by
+      rw [pow_succ, pow_mul, Nat.mul_mod, Nat.pow_mod]; norm_num
+    omega
+
+/-- **s = 2, a ≥ 2 (Theorem E.3(i) and (iii)).** p = 3, a odd; a = 3 is (27, 13), a ≥ 5 is
+capped by `e3_repunit`. -/
+theorem e5_s2a2 (W : Fallback) (p a q : ℕ) (hW : Admissible W p a q) (ha2 : 2 ≤ a)
+    (hs : W.c = 2 * W.r + 1) : 25 * W.safe < pairs W.n ∨ (W.c, W.r) ∈ excPairs := by
+  obtain ⟨hp, -, hcp, hF, hr, -, -, hq, htd, ⟨e, he⟩, -, -⟩ := hW
+  have hnc := n_ge_c_add_r W hF
+  have hr2 := hr.two_le
+  have hp2 := hp.two_le
+  -- p = 3: (p − 1)/2 divides r, and is not r
+  have hpo : p % 2 = 1 := by
+    rcases hp.eq_two_or_odd with h | h
+    · subst h; exfalso
+      have : 2 ^ a % 2 = 0 := by
+        rw [show a = (a - 1) + 1 by omega, pow_succ]; simp
+      omega
+    · exact h
+  have hp3 : p = 3 := by
+    obtain ⟨d, hd⟩ : ∃ d, p - 1 = 2 * d := ⟨(p - 1) / 2, by omega⟩
+    have hdiv : p - 1 ∣ p ^ a - 1 := Nat.sub_one_dvd_pow_sub_one p a
+    rw [hd, show p ^ a - 1 = 2 * W.r by omega] at hdiv
+    have hdr : d ∣ W.r := Nat.dvd_of_mul_dvd_mul_left (by norm_num) hdiv
+    rcases hr.eq_one_or_self_of_dvd d hdr with h | h
+    · omega
+    · exfalso
+      have : p * p ≤ p ^ a := by
+        rw [← pow_two]; exact Nat.pow_le_pow_right (by omega) ha2
+      have : 2 * p ≤ p * p := Nat.mul_le_mul_right p hp2
+      omega
+  subst hp3
+  obtain ⟨m, hm⟩ := Nat.even_or_odd' a
+  rcases hm with rfl | rfl
+  · -- a even: 9^m ≡ 1 (mod 8), so 8 ∣ 2r and r is even, r = 2, c = 5 ≠ 3^a
+    exfalso
+    have h9 : 3 ^ (2 * m) % 8 = 1 := by
+      rw [pow_mul, Nat.pow_mod]; norm_num
+    have : W.r % 2 = 0 := by omega
+    have : W.r = 2 := by
+      rcases hr.eq_one_or_self_of_dvd 2 (Nat.dvd_of_mod_eq_zero this) with h | h <;> omega
+    omega
+  · rcases Nat.lt_or_ge m 2 with hm2 | hm2
+    · -- a = 3: (27, 13)
+      interval_cases m
+      · omega
+      · right; simp [excPairs]; norm_num at hcp; omega
+    · left
+      -- 3^m = 2A + 1, c = 3·(2A+1)², A ≥ 4
+      have h3m : (3 ^ m) % 2 = 1 := pow_odd_of_odd (by norm_num)
+      obtain ⟨A, hA⟩ : ∃ A, 3 ^ m = 2 * A + 1 := ⟨3 ^ m / 2, by omega⟩
+      have h9 : 9 ≤ 3 ^ m := by
+        calc 9 = 3 ^ 2 := by norm_num
+          _ ≤ 3 ^ m := Nat.pow_le_pow_right (by norm_num) hm2
+      have hA4 : 4 ≤ A := by omega
+      have hc3 : W.c = 3 * ((2 * A + 1) * (2 * A + 1)) := by
+        rw [hcp, pow_succ, show 3 ^ (2 * m) = 3 ^ m * 3 ^ m by rw [two_mul, pow_add], hA]; ring
+      have hr' : 2 * W.r + 1 = 3 * ((2 * A + 1) * (2 * A + 1)) := by omega
+      have hA3 : A % 3 = 1 := by
+        have : (3 ^ m) % 3 = 0 := by
+          rw [show m = (m - 1) + 1 by omega, pow_succ]; simp
+        omega
+      have hX : (2 * (A * (A + 1))) % 3 ≠ 0 := by
+        simp [Nat.mul_mod, Nat.add_mod, hA3]
+      have hrA : W.r = 6 * (A * A) + 6 * A + 1 := by nlinarith
+      have ht : q ^ e ∣ 3 * (2 * (A * (A + 1))) := by
+        rw [← he]; convert htd using 1; rw [hrA]; ring_nf; omega
+      have h := e3_repunit A W.r W.n q e hA4 (isPrimeN_of_prime' hq) hr' hX ht
+        (by rw [← hc3]; omega) false
+      rw [← he] at h
+      exact lt_of_le_of_lt (Nat.mul_le_mul_left 25 (safe_le_orb W)) h
+
+/-- **Theorem E.5, assembled.**  For an admissible fallback configuration W that is not the
+bare safe-prime pair: 25·SAFE(W) < C(n,2), or (c, r) is one of the six exception pairs. -/
+theorem e5 (W : Fallback) (p a q : ℕ) (hW : Admissible W p a q) (hnb : ¬ W.Bare) :
+    25 * W.safe < pairs W.n ∨ (W.c, W.r) ∈ excPairs := by
+  have hW' := hW
+  obtain ⟨hp, ha, hcp, hF, hr, -, hrd, -, -, -, -, -⟩ := hW'
+  obtain ⟨s, hs⟩ := hrd
+  have hc2 : 2 ≤ W.c := by
+    rw [hcp]; calc 2 ≤ p := hp.two_le
+      _ = p ^ 1 := (pow_one p).symm
+      _ ≤ p ^ a := Nat.pow_le_pow_right hp.pos ha
+  have hr1 := hr.two_le
+  have hcs : W.c = s * W.r + 1 := by rw [Nat.mul_comm]; omega
+  rcases Nat.lt_or_ge s 4 with h4 | h4
+  · interval_cases s
+    · omega
+    · exact e5_s1 W p a q hW (by omega)
+    · rcases Nat.lt_or_ge a 2 with ha1 | ha2
+      · have : a = 1 := by omega
+        subst this
+        exact Or.inl (e5_s2a1 W p q hW (by omega) hnb)
+      · exact e5_s2a2 W p a q hW ha2 (by omega)
+    · exact e5_s3 W p a q hW (by omega)
+  · exact Or.inl (e5_s_ge4 W s hF (by omega) h4 hcs)
+
+/-! ### The text's table records one configuration per n
+
+At n = 23 and n = 31 the table lists F = 1 with a leftover 8 or 2·8; the class (8, 7) with
+F = 2 or F = 3 and no leftover is another exception at the same n, with the same SAFE.  So the
+table's "12 exceptions" count values of n, not configurations. -/
+def ex23F2 : Fallback := ⟨2, 8, 7, 3, []⟩
+def ex31F3 : Fallback := ⟨3, 8, 7, 3, []⟩
+
+theorem exceptions_more :
+    (ex23F2.n = 23 ∧ ex23F2.safe = 21 ∧ pairs 23 ≤ 25 * ex23F2.safe) ∧
+    (ex31F3.n = 31 ∧ ex31F3.safe = 21 ∧ pairs 31 ≤ 25 * ex31F3.safe) := by
+  decide
 
 end E5Assembly

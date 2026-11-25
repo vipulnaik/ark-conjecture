@@ -96,3 +96,11 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - **Open for full E.5:** the s = 1, s = 3, s = 2 with a ≥ 2 classification steps; completeness of the exception list stays computational.
 - **Not checked (effort budget):** `Admissible` was proved for one exception row (n = 28), not all twelve; the Lean core-4.15 build was not rerun (no core file changed).
 
+## 11. Lean: E.5 assembled
+
+- **Added to `E5Assembly.lean`:** `e5_s1` (E.1 classification + `e1_mersenne`), `e5_s3` (E.4), `e5_s2a2` (E.3(i) + `e3_repunit`), and **`e5`**: admissible, non-bare W ⇒ 25·SAFE < C(n,2) or (c, r) is one of the six exception pairs. Zero sorries.
+- **Checked and clean.** E.1's step (p odd ⇒ (3, 2); p = 2 ⇒ Mersenne exponent prime), E.3(i)'s "(p−1)/2 divides r, so p = 3", E.4's "only (16, 5)" (now proved for every b, not just scanned to a = 200), and the reduction a = 2m + 1, A = (3^m − 1)/2 that feeds `e3_repunit`. E.3(i)'s "a prime" is not needed: the proof uses only that a is odd (a even fails mod 8).
+- **Text finding (wording).** The exception table gives one configuration per n. (F, c, r) = (2, 8, 7) at n = 23 and (3, 8, 7) at n = 31, with no leftover, are also exceptions, with SAFE 21 (`exceptions_more`). E.5's "exactly 12 exceptions" therefore counts n values. A one-line note is added under E.5; the table itself is unchanged.
+- **Open.** The exceptional n are not yet pinned to the table's 12 (crude bounds give n ≤ 62 for five pairs; (32, 31) is open between 64 and 88). Corollary E.6 not started.
+- **Not checked (effort budget):** I did not rerun `fallback_sup.py` to confirm it records the F = 2, 3 configurations as ties.
+

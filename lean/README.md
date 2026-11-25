@@ -9,7 +9,7 @@
 | `Note.lean` | compiles | n/a — needs Mathlib | **zero** (six proofs imported from `ArkCore`) |
 | `Basic.lean` | compiles | n/a — needs Mathlib | **zero** |
 | `Bridge.lean` | compiles | n/a — needs Mathlib | **zero** — `E5Core.IsPrimeN p ↔ Nat.Prime p` |
-| `E5Assembly.lean` | compiles | n/a — needs Mathlib | **zero** — SAFE as a function (Part G.3); E.5's s ≥ 4 and s = 2, a = 1 branches; the 12 exception rows |
+| `E5Assembly.lean` | compiles | n/a — needs Mathlib | **zero** — SAFE as a function (Part G.3); **Theorem E.5 assembled** (`e5`), all branches; the 12 exception rows |
 
 *Status reproduced 2026-11-24 in the working container, both columns, after the pin below. Compile status was per machine until then — the laptop had Mathlib and the container did not — and this header was wrong in both directions more than once while that was so. With the project pinned and the Mathlib cache reachable from the container, both columns are now checked in one place.*
 
@@ -138,7 +138,10 @@ Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E
 - **Proved from the definition.** `safe_le_pairs_r` (SAFE ≤ C(r,2)), `safe_le_pairs_part` (every part has C(size,2) ≥ SAFE — the text's ℓ(B)), `safe_le_orb`.
 - **Branches.** `e5_s_ge4`; `e5_s2a1`, the whole s = 2, a = 1 branch for any non-bare W, all four sub-cases. In the one-foreign-leftover sub-case the ratio window and the cofactor bounds (r−1)/t ≤ 3, (r′−1)/t′ ≤ 7 are now **derived from SAFE** (`cofactor_r`, `cofactor_r'`), where `E5Core.odd_q_leftover` took them as hypotheses; q = 2 is closed too (r ∈ {3, 5} via Mathlib's `Nat.pow_of_pow_add_prime` and `E5Core`'s divisibilities). The two-or-more-parts sub-case uses the exact count n ≥ c + r + 2ℓ (`two_part_leftover`) rather than the text's θ-estimate — same conclusion, simpler route.
 - **Exceptions.** `exceptions`: one configuration per table row, leftover composed as `fallback_sup.py` composes it, with n, SAFE (= the table's 1, 3, 3, 3, 21, 21, 18, 21, 21, 10, 39, 155) and 25·SAFE ≥ C(n,2) checked by `decide`. `ex28_admissible` checks `Admissible` on the row where every clause is non-vacuous.
-- **Still open for E.5 in full.** The s = 1, s = 3 and s = 2 with a ≥ 2 branches: their arithmetic is in `E5Core` (`e1_mersenne`, `e4_pair`, `e3_repunit`), but the classification steps that bring an arbitrary configuration in those branches to the Mersenne / (16, 5) / repunit shape — and the windows below a = 7 / a = 5 — are not yet formalised. "The table lists *every* exception" remains `fallback_sup.py`'s enumeration, not a Lean statement.
+- **The other branches (added the same day).** `e5_s1` (E.1's classification: p odd forces (3, 2); p = 2 forces r = 2^a − 1 Mersenne with a prime, via Mathlib's `Nat.prime_of_pow_sub_one_prime`; a ≥ 7 is `e1_mersenne`), `e5_s3` (E.4: r = 2, or 2^{2b} − 1 = 3r forces b = 2, i.e. (16, 5)), `e5_s2a2` (E.3(i): (p−1)/2 divides r, so p = 3; a even is impossible mod 8; a = 3 is (27, 13); a ≥ 5 is `e3_repunit`).
+- **`e5`, the assembly.** For `Admissible W p a q` and `¬ W.Bare`: `25 * W.safe < pairs W.n ∨ (W.c, W.r) ∈ excPairs`, the six pairs (3,2), (4,3), (8,7), (16,5), (27,13), (32,31). Inputs not proved in Lean: Lemma B′ (one q for all twists) and distinct foreign primes, both as hypotheses in `Admissible`, as in the text.
+- **Still open.** That the exceptional configurations occur only at the table's 12 values of n (all ≤ 63) — `e5` bounds (c, r), not n. Crude SAFE ≤ orb bounds give n ≤ 62 for every pair except (32, 31); closing (32, 31) between 64 and 88 needs a finite leftover enumeration. Until then the per-n list is `fallback_sup.py`'s.
+- **Text finding.** The table lists one configuration per n. At n = 23 and 31, (F, c, r) = (2, 8, 7) and (3, 8, 7) with no leftover are also exceptions with the same SAFE (`exceptions_more`). So "exactly 12 exceptions" counts values of n; the F column shows one representative.
 
 ## The split that makes this tractable
 
