@@ -1,29 +1,29 @@
 # Formalising the ARK framework: what is worth doing, and in what order
 
-*Compile status, per file. **The plan for October 2026 and 2027 is its own section below**, agreed and vetted at the end of session 14.*
+*Compile status, per file, as of 2026-11-25. The forward plan is in "The plan" below; most of its 2026-10 order of work is now done or superseded, and the status at the top of that section says which.*
 
-| file | `lake build` (Mathlib v4.36.0, pinned here) | core 4.15.0 recipe (no Mathlib) | sorries |
-|---|---|---|---|
-| `ArkCore.lean` | compiles | compiles | **zero** |
-| `E5Core.lean` | compiles | compiles (imports `ArkCore`) | **zero** — E.5's counting and congruence steps; see Phase 1b |
-| `Note.lean` | compiles | n/a — needs Mathlib | **zero** (six proofs imported from `ArkCore`) |
-| `Basic.lean` | compiles | n/a — needs Mathlib | **zero** |
-| `Bridge.lean` | compiles | n/a — needs Mathlib | **zero** — `E5Core.IsPrimeN p ↔ Nat.Prime p` |
-| `E5Assembly.lean` | compiles | n/a — needs Mathlib | **zero** — SAFE as a function (Part G.3); **Theorem E.5 in full**: `e5` (all branches) and `e5_exceptions` (exceptional n = the table's 12) |
-| `E6.lean` | compiles | n/a — needs Mathlib | **zero** — Corollary E.6 on a model of the shape space including D2's parts; μ\* abstract (sandwich halves as hypotheses) |
-| `D2.lean` | compiles | n/a — needs Mathlib | **zero** — Lemma D2's counting classes for a permutation group of the orbit; Steps 1–2's structure as hypothesis |
-| `Chain.lean` | compiles | n/a — needs Mathlib | **zero** — Oliver's chain; r-subgroups cyclic (r ∉ {p, q}); D2 Step 1 complete given Lemma B |
-| `Step2.lean` | compiles | n/a — needs Mathlib | **zero** — D2 Step 2's change of origins: H¹ = 0 by averaging, for any finite Q with |Q| invertible |
-| `Glue.lean` | compiles | n/a — needs Mathlib | **zero** — Step 2 applied to Γ|_O/T\*: per-block origins giving the normal form (σi, a·x + s) |
-| `Rescale.lean` | compiles | n/a — needs Mathlib | **zero** — **Lemma D2's C(F,2)·r bound end to end** (r ∉ {p, q}), given Lemma B |
-| `LemmaB.lean` | compiles | n/a — needs Mathlib | **zero** — **Lemma B for a prime block** (`lemmaB_block`), by an elementary route |
-| `D2Full.lean` | compiles | n/a — needs Mathlib | **zero** — **Lemma D2 (r ∉ {p, q}) from the chain alone, no Lemma B hypothesis** (`d2_noB`) |
-| `D2q.lean` | compiles | n/a — needs Mathlib | **zero** — **Lemma D2q (r = q) from the chain**, and `lemmaD2`: all three of D2's classes |
-| `FoBridge.lean` | compiles | n/a — needs Mathlib | **zero** — E.6's `fo` scores proved to bound real orbitals (from `lemmaD2`) |
-| `D1.lean` | compiles | n/a — needs Mathlib | **zero** — Lemma D1 (absorption) in the E.6 model |
-| `LemmaBprime.lean` | compiles | n/a — needs Mathlib | **zero** — **Lemma B′** from the chain and primitivity alone (`lemmaBprime_primitive`): an outside block has prime size, twist a q-group |
+| file | `lake build` (Mathlib v4.36.0, pinned here) | sorries |
+|---|---|---|
+| `ArkCore.lean` | compiles | **zero** |
+| `E5Core.lean` | compiles | **zero** — E.5's counting and congruence steps; see "Theorem E.5" below |
+| `Note.lean` | compiles | **zero** (six proofs imported from `ArkCore`) |
+| `Basic.lean` | compiles | **zero** |
+| `Bridge.lean` | compiles | **zero** — `E5Core.IsPrimeN p ↔ Nat.Prime p` |
+| `E5Assembly.lean` | compiles | **zero** — SAFE as a function (Part G.3); **Theorem E.5 in full**: `e5` (all branches) and `e5_exceptions` (exceptional n = the table's 12) |
+| `E6.lean` | compiles | **zero** — Corollary E.6 on a model of the shape space including D2's parts; μ\* abstract (sandwich halves as hypotheses) |
+| `D2.lean` | compiles | **zero** — Lemma D2's counting classes for a permutation group of the orbit; the normal form as hypothesis (discharged by `Glue`/`Rescale`/`D2Full`/`D2q`) |
+| `Chain.lean` | compiles | **zero** — Oliver's chain; r-subgroups cyclic (r ∉ {p, q}); D2 Step 1, given affine block actions (supplied by `LemmaB`) |
+| `Step2.lean` | compiles | **zero** — D2 Step 2's change of origins: H¹ = 0 by averaging, for any finite Q with |Q| invertible |
+| `Glue.lean` | compiles | **zero** — Step 2 applied to Γ|_O/T\*: per-block origins giving the normal form (σi, a·x + s) |
+| `Rescale.lean` | compiles | **zero** — **Lemma D2's C(F,2)·r bound end to end** (r ∉ {p, q}), given affine block actions (discharged in `D2Full`) |
+| `LemmaB.lean` | compiles | **zero** — **Lemma B for a prime block** (`lemmaB_block`), by an elementary route |
+| `D2Full.lean` | compiles | **zero** — **Lemma D2 (r ∉ {p, q}) from the chain alone, no Lemma B hypothesis** (`d2_noB`) |
+| `D2q.lean` | compiles | **zero** — **Lemma D2q (r = q) from the chain**, and `lemmaD2`: all three of D2's classes |
+| `FoBridge.lean` | compiles | **zero** — E.6's `fo` scores proved to bound real orbitals (from `lemmaD2`) |
+| `D1.lean` | compiles | **zero** — Lemma D1 (absorption) in the E.6 model |
+| `LemmaBprime.lean` | compiles | **zero** — **Lemma B′** from the chain and primitivity alone (`lemmaBprime_primitive`): an outside block has prime size, twist a q-group |
 
-*Status reproduced 2026-11-24 in the working container, both columns, after the pin below. Compile status was per machine until then — the laptop had Mathlib and the container did not — and this header was wrong in both directions more than once while that was so. With the project pinned and the Mathlib cache reachable from the container, both columns are now checked in one place.*
+*Last reproduced at commit 6d656ac (2026-11-25) in the working container: `lake build` clean, `leancheck.sh` 0 errors, 0 sorries.*
 
 *What a green build establishes, restated because it invites over-reading: **the arithmetic between the hypotheses and the conclusion is correct, and the units are consistent.** The note's theorem remains conditional on (BCG_{1/5}) and on Oliver's theorem, neither formalised here.*
 
@@ -34,7 +34,7 @@
 ```bash
 cd lean
 lake exe cache get        # ~9,100 prebuilt Mathlib files; needs cache.mathlib.org
-lake build                # all five files, a few minutes once the cache is in place
+lake build                # all eighteen files, a few minutes once the cache is in place
 bash leancheck.sh         # per-file errors / warnings / sorry counts
 ```
 
@@ -48,21 +48,20 @@ python3 -c "import zstandard,tarfile; tarfile.open(fileobj=zstandard.ZstdDecompr
 elan toolchain link leanprover/lean4:v4.36.0 $PWD/lean-4.36.0-linux
 ```
 
-**The core-only route still works and is kept as a second check.** `ArkCore.lean` and `E5Core.lean` use no Mathlib and also compile against core Lean 4.15.0 with nothing but the `lean` binary: `lean -o <dir>/ArkCore.olean ArkCore.lean`, then `LEAN_PATH=<dir> lean E5Core.lean` (the 4.15.0 tarball is at the same GitHub URL with `v4.15.0`). Two toolchains eleven months apart is a useful drift test, and both core files are written to pass it — see the next paragraph.
 
-**A note on lemma names, earned three times.** Every Lean failure in this project so far has been **name drift, not wrong mathematics**: `List.mem_cons_self`'s explicit-vs-implicit arguments, `div_le_div_iff` gone from Mathlib, and, on moving `E5Core.lean` from core 4.15 to 4.36, four core lemmas renamed or re-signed at once (`Nat.pos_pow_of_pos` removed, `Nat.gcd_mul_dvd_mul_gcd` removed, `Nat.dvd_sub` lost its `≤` argument, and the `Nat.Coprime` API that replaces them absent from 4.15). The fix in each case was to reprove the step from lemmas whose name and signature are the same in both toolchains (`Nat.gcd_mul_left`, `Nat.dvd_gcd`, `Nat.mul_sub_left_distrib`, `Nat.pow_pos`). The working rule: **where a goal is routine, reach for a tactic or a decomposition into old, stable lemmas rather than for a named iff-lemma or a convenience lemma**, and in the core files prefer what exists in both toolchains. `if_pos`/`if_neg` are deprecated in 4.36; `ArkCore` now uses `simp only [h, ite_true]` instead, which works in both.
+**A note on lemma names, earned three times.** Every Lean failure in this project so far has been **name drift, not wrong mathematics**: `List.mem_cons_self`'s explicit-vs-implicit arguments, `div_le_div_iff` gone from Mathlib, and, on moving `E5Core.lean` from core 4.15 to 4.36, four core lemmas renamed or re-signed at once (`Nat.pos_pow_of_pos` removed, `Nat.gcd_mul_dvd_mul_gcd` removed, `Nat.dvd_sub` lost its `≤` argument, and the `Nat.Coprime` API that replaces them absent from 4.15). The fix in each case was to reprove the step from lemmas whose name and signature are the same in both toolchains (`Nat.gcd_mul_left`, `Nat.dvd_gcd`, `Nat.mul_sub_left_distrib`, `Nat.pow_pos`). The working rule: **where a goal is routine, reach for a tactic or a decomposition into old, stable lemmas rather than for a named iff-lemma or a convenience lemma**. Known 4.36 deprecations met so far: `if_pos`/`if_neg` (use `simp only [h, ite_true]` or `↓reduceIte`) and `Set.mem_setOf_eq` (use `Set.mem_ofPred_eq`).
 
 **What compiling immediately paid for.** The draft of the central inequality's block case split the region at `r ≥ 13`; the slack chain fails there — `r² − 7r − 84 < 0` at 13 — and the compiler refused it, forcing the split to 14 with the finite side `n ≤ 65` discharged by `decide`. The region's true numerical worst (`350·m*/pairs n = 1.0096`, at `n = 65, r = 13`) sits **on the finite side**, which is precisely why no uniform slack argument covers it and the `decide` is not decoration. One compile session caught exactly the class of error this project exists to catch, in its own draft.
 
-## The plan for October 2026 and 2027
+## The plan (drawn up 2026-10; status as of 2026-11-25)
 
-*Agreed between Vipul and Claude at the end of session 14, and vetted by both. The planning-level version is `claude-understanding-of-project-plan.md` §9; this is the technical one — what to state, in what order, and what Mathlib does and does not supply.*
+**Status.** Step 1 below (Theorem E.5) is done, in `E5Assembly.lean` rather than `Basic.lean`; `ladder-completeness.md` Proposition 1 is not. Steps 2–6 (graph-property definitions, `HypKSSOliver`, the constructions as permutation groups, the conditional theorem, the BBKN replacement) are not started. Work went instead to group theory this plan had treated as out of reach: Lemma D2, Lemma B for prime blocks and Lemma B′ are now theorems from Oliver's chain (see the per-file sections below). What follows is kept as the forward plan for the note's conditional theorem; the planning-level version is `claude-understanding-of-project-plan.md` §9.
 
-### October: `Note.lean` from the arithmetic to the whole conditional argument
+### Next: `Note.lean` from the arithmetic to the whole conditional argument
 
-**The target.** The note's Theorem is: (BCG_{1/5}-AL), plus Oliver's theorem in the form KSS use it, implies μ\*(n) ≥ δ₀·C(n,2) for all large n. `Note.lean` currently proves the arithmetic half — from a configuration's parameters to its density. October adds everything between the literature and that: the graph-theoretic definitions, the constructions as actual permutation groups with their Oliver chains and pair-orbitals, and the assembly. **Assumed as a named hypothesis: the KSS–Oliver congruence. Not assumed: BBKN**, whose only contribution to the note is the Ω(n log n) bound, replaced by a three-line theorem.
+**The target.** The note's Theorem is: (BCG_{1/5}-AL), plus Oliver's theorem in the form KSS use it, implies μ\*(n) ≥ δ₀·C(n,2) for all large n. `Note.lean` proves the arithmetic half — from a configuration's parameters to its density. What remains is everything between the literature and that: the graph-theoretic definitions, the constructions as actual permutation groups with their Oliver chains and pair-orbitals, and the assembly. **Assumed as a named hypothesis: the KSS–Oliver congruence. Not assumed: BBKN**, whose only contribution to the note is the Ω(n log n) bound, replaced by a three-line theorem.
 
-**The assumed theorem is statable with no topology, and that is what makes this a one-month project rather than a research programme.** KSS + Oliver give, for every Oliver Γ ≤ S_n and every non-evasive nontrivial monotone P:
+**The assumed theorem is statable with no topology, and that is what makes this a bounded project rather than a research programme.** KSS + Oliver give, for every Oliver Γ ≤ S_n and every non-evasive nontrivial monotone P:
 
 > χ(Δ_P^Γ) ≡ 1 (mod q), with equality χ = 1 when the top is trivial,
 
@@ -71,7 +70,7 @@ where Δ_P^Γ is the complex of Γ-invariant graphs lying in P. Its Euler charac
 ```lean
 /-- The KSS–Oliver input, as one hypothesis.  A `structure`, never `axiom`:
     the project's claim that its files rest on Lean's three standard axioms
-    must survive October.  Stated for the trivial-top case `χ = 1` and the
+    must survive.  Stated for the trivial-top case `χ = 1` and the
     general case `χ ≡ 1 [MOD q]` separately, because the note uses the first. -/
 structure HypKSSOliver (n : ℕ) where
   congruence : ∀ (P : GraphProperty n), P.Monotone → P.Nontrivial → NonEvasive P →
@@ -93,9 +92,9 @@ The sparse-evasiveness theorem is then one line: if every graph in P has fewer t
 | `fixedComplexEuler P Γ` | `Finset.sum`, `Finset.powerset` | — |
 | `muLower n` — the constructions' minimum orbital | — | this is `mStarEven`/`mStarOdd`, already in `ArkCore` |
 
-**Order of work, by friction, agreed:**
+**Order of work, by friction:**
 
-1. **Theorem E.5 and `ladder-completeness.md` Proposition 1 first**, in `Basic.lean`. Arithmetic, Mathlib-only, days. E.5 has had one human reading and carries the "μ\* known exactly to 10⁶" claim; it is the highest-value undone piece in the project independently of the rest of this plan (Phase 1b below).
+1. **Theorem E.5 — done** (`E5Assembly.lean`, with E.6 in `E6.lean`). `ladder-completeness.md` Proposition 1 is still open and is arithmetic, a natural next small target.
 2. **The definitions above and `HypKSSOliver`.** No proofs yet; the point is that they typecheck against each other and against the theorem statement.
 3. **The unconditional family** n = 2m, m a prime power — two blocks of 𝔽_m with the entangled generator, orbitals {m(m−1), m²}, Oliver with trivial top. Smallest group, no foreign block, the note's Theorem 2.2 analogue.
 4. **The two-part construction** n = F·c + r, **with c prime first** (`ZMod p`, a field with no ceremony), the block group `AGL(1,c)` as a subgroup of `Equiv.Perm (ZMod p)`, the foreign block `ZMod r` with twist of order t, the chain, and the pair-orbitals. Then **c = p^a** via `GaloisField`, which costs more at every lemma.
@@ -104,28 +103,28 @@ The sparse-evasiveness theorem is then one line: if every graph in P has fewer t
 
 **What Mathlib is missing for step 4, and what to do about it.** Affine groups exist as `AffineGroup`-style structures but not as *permutation groups on the field*; the fused/entangled product and wreath-type products are absent; `IsMultiplyPretransitive` exists, k-*homogeneity* (transitivity on k-sets) does not. Each is a self-contained definition with a handful of lemmas, and each should be written **as a general Mathlib-style definition in its own file**, not inlined into the construction — that is what makes it a candidate contribution rather than project debris. **Keep a list of every definition wished for**, written against the proofs that needed it; the list is the output of the month for the Groupprops thread below.
 
-**Operational rules.** Pin `lean-toolchain` and the Mathlib commit on 1 October and **do not bump mid-month** — two of this project's three Lean failures were name drift, and the FLT run reports 26% of files changing on one bump. Route around Mathlib's ordering-and-division iff-lemmas as `Basic.lean` already does. **Lean follows the note, not the reverse**: names and statement order track the vetted human text, and a formalisation that wants to rename something files a note rather than doing it.
+**Operational rules.** Keep the pin and **do not bump mid-piece-of-work** — two of this project's three Lean failures were name drift, and the FLT run reports 26% of files changing on one bump. Route around Mathlib's ordering-and-division iff-lemmas as `Basic.lean` already does. **Lean follows the note, not the reverse**: names and statement order track the vetted human text, and a formalisation that wants to rename something files a note rather than doing it.
 
 ### The Groupprops / mathcheck thread — independent infrastructure, with ARK as a first application
 
-This is **not** part of the ARK Lean plan and does not gate it. Vipul's mathcheck framework (LLM-written *deterministic* scripts for the tedious parts of verbal math checking — undeclared variables, unit consistency — so that LLM and human effort goes to what needs judgement) already has GAP components. The Lean extension would be **scripts that take a Groupprops page and extract what a Lean formalisation needs as input**, applicable across Groupprops generally, with the LLM doing the steps deterministic scripts cannot. The ARK constructions give a first set of pages to try — the affine group `AGL(1,q)`, 2-homogeneity, the Oliver class, wreath and entangled products — and Groupprops may need those pages written or extended first, which needs no subscription. The "definitions wished for" list from October is the handoff between the two threads. **Neither depends on the other; this may or may not happen.**
+This is **not** part of the ARK Lean plan and does not gate it. Vipul's mathcheck framework (LLM-written *deterministic* scripts for the tedious parts of verbal math checking — undeclared variables, unit consistency — so that LLM and human effort goes to what needs judgement) already has GAP components. The Lean extension would be **scripts that take a Groupprops page and extract what a Lean formalisation needs as input**, applicable across Groupprops generally, with the LLM doing the steps deterministic scripts cannot. The ARK constructions give a first set of pages to try — the affine group `AGL(1,q)`, 2-homogeneity, the Oliver class, wreath and entangled products — and Groupprops may need those pages written or extended first, which needs no subscription. The "definitions wished for" list from the note's Lean work is the handoff between the two threads. **Neither depends on the other; this may or may not happen.**
 
 ### 2027: the fuller document, and the ceiling stated now
 
 **What is reachable in one to two months of Max**, and would be a complete honest artefact:
 
-- E.5 and Proposition 1 — done in October.
-- **Part E realisability in general**: μ\* ≥ B for the whole shape space — the October constructions generalised to any F, any foreign block, S6/S11.
+- E.5 — done (2026-11). Proposition 1 — open.
+- **Part E realisability in general**: μ\* ≥ B for the whole shape space — the note's constructions generalised to any F, any foreign block, S6/S11.
 - **Phase 3**: `B n` as a computable function — configurations, the Part G.3 score, the max — with `native_decide` on individual rows. Not the whole CSV.
 - **Part 0 stated as a named hypothesis** `HypShapeComplete`, so that `μ* = B` is a Lean theorem conditional on exactly one classification input.
 
 **What is not reachable, and the plan must not be read as aiming at it.** Part 0's completeness rests on Huppert's classification of solvable 2-transitive groups, and that is not going into Lean by one person in two months — nor should the corpus be built as if it were. **"Everything except the classification is machine-checked" is a strong statement and is available. "Everything is machine-checked" is not.** The FLT run shows the second is a matter of effort rather than possibility — Oliver's theorem is a short 1975 paper, "weeks of agent time" on that evidence — but that run was eleven days of parallel agents on a bespoke platform, not a chat window, and its output was by its own assessment not readable as mathematics. For a document whose purpose is exposition, the checked *statement* is the artefact worth having, and that is what the hypothesis-parameterised form delivers.
 
-### Phase 1b — Theorem E.5, added here because it postdates the phasing above
+### Theorem E.5 and Corollary E.6 — done
 
-Theorem E.5 did not exist when this list was drawn up and is now the most valuable target in it. `enumeration-proof.md` Part E‴'s Theorem E.5 caps the SAFE score of every fallback configuration below `C(n,2)/25`, and Corollary E.6 then gives `μ*(n) = B(n)` wherever `B(n) > C(n,2)/25` — which is what turned the per-n collapse certificate into a single theorem covering every `n ≤ 10⁶`. Three things make it the right next target. **It is arithmetic on stated quantities**: four counting sub-cases on SAFE terms, no Lemma C, no J0a — exactly the layer the table above says Lean catches. **It has had one human reading**, against three for Lemma B′, and it now carries more weight than anything else in the framework. **And its two boundary constants are the kind that drift**: the twelve exceptions all at `n ≤ 63`, and the `1/25` line coinciding with the floor conjecture's — a Lean statement fixes both by type. Proposition 1 of `ladder-completeness.md` (above `1/25` the optimum is a menu shape or S6/S11; `cap_F(1) > 1/25 ⟺ F ≤ 16`) is the companion and is the same kind of argument. Together they are perhaps the size of phase 1 again.
+Theorem E.5 (`enumeration-proof.md` Part E‴) caps the SAFE score of every fallback configuration below `C(n,2)/25`; Corollary E.6 then gives `μ*(n) = B(n)` wherever `B(n) > C(n,2)/25`, which is what covers every `n ≤ 10⁶`. Both are formalised; the details follow.
 
-### Phase 1b status, the A9 items, and the SAFE model
+### E.5: the A9 items and the SAFE model
 
 **Status.** `E5Core.lean` proves E.5's counting and congruence steps with zero sorries (see its header). Added 2026-11-24, for `pending-checks.md` A9:
 
@@ -142,7 +141,7 @@ Theorem E.5 did not exist when this list was drawn up and is now the most valuab
 | `isPrimeN_of_bounded`, `isPrimeN_three`, `isPrimeN_13` | `Nat.Prime` by `norm_num` / `decide` |
 | `pairs n` (`ArkCore`) | `n.choose 2`, bridged in `Note.lean` |
 
-Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E5Core`, is now cheap to try here but would cost the core-4.15 check, which has just caught four instances of drift; **keep route 1 unless there is a reason to drop the core build.** Until then: stay inside the namespaces, prefix any helper whose bare name could exist in Mathlib, and add any new home-made notion to the table in the same edit.
+Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E5Core`, is no longer blocked (the separate core-4.15 build has been dropped) but nothing requires it. Meanwhile: stay inside the namespaces, prefix any helper whose bare name could exist in Mathlib, and add any new home-made notion to the table in the same edit.
 
 **The SAFE model — decided 2026-11-24: Option B, exceptions row by row** (Vipul: "whatever most faithfully matches the text"). `E5Assembly.lean` defines configurations and SAFE from Part G.3/G.3a and *proves* the inequalities E.5's proof consumes, rather than taking them as fields:
 
@@ -178,7 +177,7 @@ Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E
   - **Twists.** A first version assumed "a twist below c − 1 needs a foreign r ∣ c − 1" (Lemma C's coupling). That assumption is gone: SAFE ignores twists, so a configuration with no fallback has the same SAFE as its full-twist version (`Config.full`), which is fallback-free. The model therefore allows any d ∣ c − 1, exactly as Theorem 3.1 does, and Lemma C is not used anywhere. That matches the text's claim that B_safe and E.6's proof are independent of Lemma C.
   - **F.** F is any integer. That is the permissive reading of F = F_mid·F_top that the certificates use. Since Theorem 3.1 imposes no coprimality on F_mid, it is at least as large as the true shape space.
   - **Fused foreign classes and repeated foreign primes** are now in the model as `fo` parts. Their domination above the line is a theorem here (`d2_case`), where the text relies on Corollary D2′ plus the computed table below n = 471. That supports the enumerator's choice to omit them, at least for the E.6 question.
-- **Not formalised.** Part E's constructions and Part 0's completeness, the group-theoretic halves of the sandwich. Also Lemma D2 itself: the existence of its two classes in every group of that shape is the source of the `fo` terms, not a theorem here.
+- **Not formalised.** Part E's constructions and Part 0's completeness, the group-theoretic halves of the sandwich. (Lemma D2, the source of the `fo` terms, is now a theorem; `FoBridge.fo_terms_valid` connects the two.)
 
 **Lemma D2 (`D2.lean`, 2026-11-24).** This file works on actual permutation groups: G ≤ Sym(Fin F × ZMod r), the image Γ|_O. Orbitals are G-orbits on unordered pairs (`orbit2`), and the generic fact is that an orbit inside a G-invariant set is no larger than the set (`orbit2_card_le`).
 - **Branch (a), `d2a`.** If G preserves the block system, some orbital has at most F·C(r,2) pairs. This is unconditional, as in the text.
@@ -187,14 +186,14 @@ Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E
 - **Step 1's order arguments.** `step1_sigma`: an element of r-power order in Sym(F) with F < r is trivial. `step1_mult`: an r-power multiplier is trivial.
 - **Step 2's first claim, `step2_mult_equal`.** If conjugation keeps the diagonal translation diagonal, all the multipliers are equal.
 - **Link to `E6`.** These bounds are exactly `E6`'s `fo` terms (`fo_terms_match`).
-- **Not formalised: the core of Steps 1–2.** The r-elements form one cyclic group of translations, made diagonal by rescaling; this uses Sylow-r of Γ being cyclic, from r ∉ {p, q} and the chain. Then the H¹(Q, V) = 0 change of per-block origins makes every translation part diagonal. Together these are the normal-form hypothesis of `d2b` and `d2q`. A route exists: Mathlib has Schur–Zassenhaus, and Γ's chain would have to be modelled.
+- **Steps 1–2, supplied by later files.** The normal-form hypothesis of `d2b` and `d2q` is discharged by `Chain`, `Step2`, `Glue`, `Rescale`, `LemmaB`, `D2Full` and `D2q`, described below.
 
 **Oliver's chain and D2's Step 1 (`Chain.lean`, 2026-11-24).**
 - **The chain.** `OliverChain H p q` is Γ₂ ⊴ Γ₁ ⊴ H with Γ₂ a p-group, Γ₁/Γ₂ cyclic and H/Γ₁ a q-group. `OliverChain.map` carries it to any surjective image, in particular Γ|_O.
 - **`rsub_cyclic`: every r-subgroup is cyclic when r ∉ {p, q}.** An r-subgroup lies in Γ₁, because its image in the q-group is trivial (`rsub_le_N₁`). It meets the p-group Γ₂ trivially (`rsub_inf_N₂`). So it embeds in the cyclic layer. This is the fact D2's Step 1 attributes to the chain.
 - **`step1_translations` / `step1_Gamma`.** For Γ with a chain acting on O = Fin F × ZMod r, the translations in Γ|_O form an r-group, hence a cyclic one, so they are the multiples k·v of a single vector. That is the text's "T\* ≅ C_r generated by one vector".
 - **`step1_full_support`, `step1_diagonal`.** If every block sees a nonzero translation, v has full support, and per-block rescaling sends v to the diagonal.
-- **`step1_full`: Step 1 complete, given Lemma B.** Assume every element acts affinely, (i, x) ↦ (σi, aᵢx + tᵢ) with aᵢ ≠ 0, and Γ|_O is transitive on O. Then:
+- **`step1_full`: Step 1 complete, given affine block actions (Lemma B, proved for prime blocks in `LemmaB.lean`).** Assume every element acts affinely, (i, x) ↦ (σi, aᵢx + tᵢ) with aᵢ ≠ 0, and Γ|_O is transitive on O. Then:
   - F·r divides |Γ|_O|, so by Cauchy there is an element of order r;
   - it is a pure translation (`rElem_is_translation`: σ = 1 by `D2.step1_sigma`, aᵢ = 1 by `D2.step1_mult`);
   - conjugating it to each block (`conj_translation`) shows the generator has every component nonzero.
@@ -203,10 +202,10 @@ Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E
 - **`not_rsq_dvd`: Sylow-r of Γ|_O is T\*.** r² doesn't divide |Γ|_O|, so |Γ|_O/T\*| is prime to r.
 - **`Step2.origin_change`: Step 2's second claim, the H¹ = 0 computation.** Take any finite group Q with |Q| invertible in K, a multiplier a : Q → K, a block action σ, and translation parts t forming a cocycle modulo constants. Then the origins o := −|Q|⁻¹ Σ_h a_h⁻¹ t_h make every element's translation part the same on all blocks. Multiplicativity of σ is not even needed.
 - **`step2_common_mult`: Step 2's first claim, for the group.** Every element's multipliers satisfy aᵢvᵢ = λ·v_{σi}, so they are all equal once v is rescaled to 𝟙.
-- **Still hypotheses:**
-  - **Lemma B** (block actions are affine).
+- **Completing D2 for r ∉ {p, q}:**
+  - **Lemma B** (block actions are affine): proved for prime blocks in `LemmaB.lean`, below.
   - **The rescaling: done.** `Rescale.lean` conjugates Γ|_O by the per-block rescaling ψ(i, x) = (i, vᵢx). In the new coordinates every element has one multiplier and T\* is diagonal (`conj_affine`, `conj_translation_scale`). [Γ|_O : T\*] is prime to r, because |T\*| is divisible by r and r² ∤ |Γ|_O|. Orbital sizes are preserved under conjugation (`orbit2_conj`). **`d2_full`** then assembles Step 1 → Step 2 → Step 3: Γ|_O with an Oliver chain, 2 ≤ F < r, r ∉ {p, q}, Lemma B's affine form and transitivity on O together give an orbital of at most C(F,2)·r pairs. With `D2.d2a`, that is Lemma D2's statement for r ∉ {p, q}.
-  - **The bridge from these lemmas to `D2.lean`'s normal-form hypothesis.** It would assemble Step 1, Step 2 and Lemma B into "every element is (σi, a·x + s)".
+  - **The bridge to `D2.lean`'s normal form:** `Glue.lean` assembles Step 1, Step 2 and the affine form into "every element is (σi, a·x + s)".
 
 **Lemma B for prime blocks, and D2 without hypotheses (`LemmaB.lean`, `D2Full.lean`, 2026-11-25).** The text proves Lemma B from "a solvable primitive group is affine", a classical theorem not in Mathlib. For outside blocks of prime size r, which are all that D2 needs, an elementary route is now fully formalised.
 - **`LemmaB.lemmaB_block`.** Take a transitive group H on ZMod r with an Oliver chain, r ∉ {p, q}. Then:
@@ -262,7 +261,7 @@ Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E
 
 The framework has two layers and they have completely different formalisation costs.
 
-**The group-theoretic layer is out of reach, and would be even with unlimited effort.** It rests on Oliver's fixed-point theorem, on the classification of primitive solvable permutation groups (Huppert), and on Smith theory. None is in Mathlib. Formalising Oliver's theorem alone is a serious research-level project — it needs equivariant Euler characteristics and the transfer machinery. This is not a "we could if we wanted" situation.
+**The group-theoretic layer splits further.** Its deep inputs — Oliver's fixed-point theorem, Smith theory, and Huppert's classification of solvable 2-transitive groups behind Part 0 — are out of reach: none is in Mathlib, and Oliver's theorem alone is a research-level formalisation. But the finite-group arguments *downstream of Oliver's chain* turned out to be ordinary Mathlib work: Lemma D2, Lemma B for prime blocks and Lemma B′ are proved with the chain (`OliverChain`) as a hypothesis. The boundary is the chain's derivation from Oliver's theorem, plus Part 0, Part E and Lemma C — not group theory as such.
 
 **The arithmetic layer is ordinary Mathlib material.** Everything from Part E′ onward — the inequalities, the counting bounds, the cap algebra, the singular-series definitions, the quadratic-residue step — depends on the group theory only through *stated numbers*: given that a block of size c under a twist of order t contributes `orb c t`, everything else is arithmetic. That layer can be formalised now, taking the value formula as a definition rather than a theorem.
 
@@ -274,7 +273,7 @@ The honest case is not "we doubt the theorems". It is that **every error found i
 |---|---|---|
 | E′ threshold ladder shifted by one (`δ > 1/25 → s ≤ 3`) | a paraphrase of an inequality that does not follow from it | **yes**, immediately — the statement would not typecheck against the bound |
 | within-class cross coefficient keyed on `q`'s parity instead of `F`'s | a rule stated in terms of the wrong variable | **yes** — the definition names its variable |
-| the `c mod 8` fusion mechanism | a claim about which layer a subgroup sits in | **no** — this is group theory, and it is the layer we cannot reach |
+| the `c mod 8` fusion mechanism | a claim about which layer a subgroup sits in | **no** — this is group theory, out of reach when this table was drawn up (chain-level group theory has since proved formalisable; see above) |
 | the `F_mid` coprimality clause: a **necessary** condition that was only sufficient | an object entering as a *quotient* treated as a *subgroup* | **no** — same layer, and the sharpest instance yet: it was consistent with every artefact because every artefact derived from it |
 | a bound stated in `n²` three lines from one stated in `binom n 2` | a units mismatch between two displays | **yes** — the two have different types, and nothing numerical separates them |
 | the worst case of a min-of-polynomials read at the interior balance point rather than the boundary corner (`1/48` for `1/300`) | an optimisation evaluated at the wrong point | **yes**, in phase 2 — this is exactly what the balance-point lemmas assert |
@@ -292,7 +291,7 @@ There is a second benefit that matters more in practice: **a definition forces t
 
 `mu-theta-n2-note.md` is self-contained, is the artefact that will be read by strangers, and — per the table above — its error record is **disproportionately of the kind Lean catches**: a units mismatch between two displays, a region whose worst case sits at a corner, an asymptotic class stated as `O` where the content is a fixed fraction. Formalising just the note is perhaps 200–400 lines and needs nothing outside Mathlib.
 
-`Note.lean` is a first pass at exactly this, drafted and likewise uncompiled. Every `decide`-able claim in it has been checked numerically first, so a failure to close one is an encoding problem rather than a false statement.
+`Note.lean` is this, and compiles sorry-free. Every `decide`-able claim in it was checked numerically before it was stated.
 
 **What is reachable.**
 

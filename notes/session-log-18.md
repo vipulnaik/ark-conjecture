@@ -313,3 +313,13 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
   - **So B′ is proved from the chain and primitivity outright.**
 - **README note added (at Vipul's request).** On a future Mathlib bump, check whether ready-made socle / solvable-primitive results exist and could replace the hand proofs. This needs a version bump and re-pin, so it is not to be done lightly.
 
+
+## 24. Lean README cleanup
+
+- **Readthrough of `lean/README.md`** (at Vipul's request), removing outdated material:
+  - **Core 4.15.0 build dropped.** The column is gone from the status table, the "core-only route" paragraph is deleted, and the reconciliation section no longer ties route 1 to the 4.15 check. The 4.15 history stays in the lemma-name note as history.
+  - **Plan section.** It now opens with a status line: E.5 is done (in `E5Assembly`, not `Basic.lean`); Proposition 1 of `ladder-completeness.md` is open; steps 2–6 of the October plan are not started; work went to D2, B and B′ instead. The rest is kept as the forward plan, with month references removed.
+  - **Superseded statements fixed.** "Phase 1b" became "Theorem E.5 and Corollary E.6 — done". The "not formalised" and "given Lemma B" statements in the E6, D2, Chain and Rescale entries now point to the files that discharge them. "The split" now says only the deep inputs (Oliver, Smith theory, Huppert) are out of reach, not chain-level group theory. Phase 0 no longer calls `Note.lean` uncompiled.
+- **`pending-checks.md` state line** updated to match: eighteen files, the core build dropped, and the current proved and conditional lists.
+- **Checked clean:** no remaining "five files", "October" or "given Lemma B" statements in the README, apart from history.
+- **Not run:** `lake build`, since no `.lean` file changed. Earlier session-log entries that mention the 4.15 build (§§ on the pin and drift) are left as they are, since they record what was true then.
