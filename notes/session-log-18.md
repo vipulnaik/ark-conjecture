@@ -118,3 +118,94 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - **Needed, not optional.** Dropping Lemma B′ ("one q") or the primality of r′ from the enumeration produces spurious exceptions, e.g. (8, 7) with a foreign 5 at t′ = 4, n = 20. So B′ carries weight in E.5's exception list, not just in the odd-q sub-case.
 - **Open:** Corollary E.6, which needs B_refined/μ\* (Phase 3).
 
+## 13. Lean: Corollary E.6
+
+- **New `lean/E6.lean`** (lakefile root). Zero sorries.
+  - The model: `Config`, `GAdm`, `safe` and `refined`.
+  - `e6_core`; **`e6_maxima`**: IsBsafe n B ∧ C(n,2) < 25B ⇒ IsBrefined n B.
+  - `e6`: μ = B, given the sandwich halves as hypotheses.
+  - `refined_le_safe`.
+  - Non-vacuity at prime powers.
+- **The model reconciled with Parts 0 and D.**
+  - The first draft assumed "a twist below c − 1 needs a foreign r ∣ c − 1". That assumption has been removed: a configuration with no fallback is raised to full twist, which changes no SAFE term. So any d ∣ c − 1 is allowed, as in Theorem 3.1, and Lemma C is used nowhere. This confirms the text's claim that B_safe and the collapse are independent of Lemma C.
+  - F is any integer (the certificates' permissive F_mid·F_top).
+  - Fused foreign classes and repeated foreign primes are omitted as D2-dominated, as the enumerator does.
+- **Checked and clean.**
+  - Every case of the text's proof goes through: fallback-free; bare safe-prime pair via the (r, r) re-reading; the twelve exceptions.
+  - Each exceptional n has a one-class full-twist configuration (5, 7, 11, 23, 27, 31 transitive; 12 = 3·4; 15 = 3·5; 21 = 3·7; 28 = 4·7; 40 = 5·8; 63 = 7·9) whose SAFE exceeds every fallback's bound there. So "checked directly" holds in the strong form: no exception is ever the optimum.
+  - (27, 13) at n = 40 is "bare" in Lean's sense, which does not require c prime. E.3(i) routes it to the exceptions. The text's "bare safe-prime pair" means c prime. No gap, but the definitions differ.
+- **D2's parts added to the model.** `fo F r t` stands for F ≥ 2 outside blocks of one prime r, fused or repeated. Its SAFE terms are D2's two classes: F·C(r,2), and for F < r the same-position class, taking max(C(F,2)·r, F·r) to cover D2q.
+  - `d2_case` proves D2's domination above the line inside the model.
+  - Above the line a D2 part forces F, r ≤ 25 and n < 614 (`d2_small`). Inside that region, `d2check` (kernel-checked, about 1 min) confirms that each of the 256 affected n has a one- or two-part fallback-free witness (`d2wits`) scoring at least the D2 bound, using the rest-part bound C(n − F·r, 2) as well.
+  - A single class suffices at all but two values of n: n = 140 (31 + 109) and n = 168 (37 + 131), each needing a class plus a foreign block.
+  - Admissibility of the witnesses is proved via `admB` → `GAdm`.
+- **Checked and clean.** D2's domination holds in the model at every n, not just over the computed range. The text's Corollary D2′ is range-scoped (n ≥ 471 by the floor, and the computed table below that). This is an independent route covering every n, though it still takes D2's two classes as given.
+- **Not checked (effort budget):** that the witness configurations are realised by actual Oliver groups. Most are S1/S2 shapes, but the two-part witnesses (two classes of one p, or a class plus a foreign block) rely on Part E's general construction. I also didn't check whether `d2check`'s region could be narrowed.
+
+## 14. Lean: Lemma D2's counting half
+
+- **New `lean/D2.lean`** (Mathlib; lakefile root). Zero sorries. G ≤ Sym(Fin F × ZMod r) stands for Γ|_O; orbitals are G-orbits on `Sym2`.
+  - `d2a`: branch (a), F·C(r,2), needing only that blocks are preserved.
+  - `d2b`: Step 3, C(F,2)·r, given the form (σi, a·x + s).
+  - `d2q`: D2q step (7), F·r, given trivial linear parts.
+  - `step1_sigma` / `step1_mult`: Step 1's order arguments.
+  - `step2_mult_equal`: Step 2's equal multipliers.
+  - `fo_terms_match`: the link to `E6`'s `fo` scores.
+- **Checked and clean.**
+  - Branch (a) is unconditional, as the text says ("needs only that the block system exists").
+  - Step 3's invariance: block maps keep equal positions, and one common multiplier and translation preserve "same position".
+  - D2q (7): with trivial linear parts the within-block difference is preserved, so (7) needs no uniform s, as the text notes.
+  - The counts: within-block pairs F·C(r,2), same-position C(F,2)·r, one difference ±δ at most F·r.
+- **Not formalised (and why):** the structural core of Steps 1–2. That the r-elements are one diagonal C_r needs Sylow-r of Γ cyclic, which comes from the chain (Γ₂ a p-group, cyclic layer, q-group top), so Γ's chain must be modelled first. The origin change is H¹(Q, V) = 0 with r ∤ |Q|; Mathlib's Schur–Zassenhaus gives conjugacy of complements, so this is reachable once the chain model exists.
+
+## 15. Lean: Oliver's chain and D2's Step 1
+
+- **New `lean/Chain.lean`** (Mathlib; lakefile root). Zero sorries.
+  - `OliverChain`, and `OliverChain.map`: the chain passes to surjective images such as Γ → Γ|_O.
+  - `rsub_le_N₁`, `rsub_inf_N₂`, and **`rsub_cyclic`**: every r-subgroup is cyclic for r ∉ {p, q}.
+  - `trHom`, `step1_translations` / **`step1_Gamma`**: Γ|_O's translations are k·v for one v.
+  - `step1_full_support`, `step1_diagonal`.
+- **Checked and clean.**
+  - The text's Step 1 derivation of cyclic Sylow-r is exactly right as stated: an r-element maps trivially to the q-group top, so it lies in Γ₁; it meets the p-group Γ₂ trivially; so it embeds in the cyclic layer.
+  - It needs r ∉ {p, q} both times, which is why D2q (r = q) needs a separate argument.
+  - Translations have order r, so the translation subgroup is an r-group without needing any Sylow theory.
+- **Step 1 completed (`step1_full`)** from Lemma B's affine form and transitivity:
+  - Cauchy gives an element of order r, since F·r divides |Γ|_O|;
+  - it is a pure translation (`rElem_is_translation`, with the iterate formulas `affine_pow_fst` / `affine_pow_one`);
+  - conjugation sends τ_t to τ_w with w_{σi} = aᵢtᵢ (`conj_translation`), so every component of the generator is nonzero.
+- **Checked and clean.** The text's "transitivity forces every component nonzero" is right, and it needs only point-transitivity plus the affine form. Lemma B is used exactly at the conjugation step and to make the r-element a translation.
+- **Step 2's first claim for the group** (`exists_translation`, `step2_common_mult`): a nonzero translation t = k₀v lies in Γ|_O; conjugating it by g gives aᵢvᵢ = (k/k₀)·v_{σi}. So the multipliers are equal once v = 𝟙. Checked and clean: this is the text's argument verbatim.
+- **Remaining for a full Lean D2.**
+  - Step 2's H¹ = 0 origin change (the second claim).
+  - The bridge into `D2.lean`'s normal-form hypothesis.
+  - Lemma B itself.
+
+## 16. Lean: D2's Step 2 (H¹ = 0) and Sylow-r = T\*
+
+- **New `lean/Step2.lean`.** Zero sorries.
+  - `origin_change`: for any finite group Q with |Q| invertible in a field K, and any cocycle t modulo constants with multiplier a, the origins o := −|Q|⁻¹ Σ a_h⁻¹ t_h make every translation part constant across blocks.
+  - This is the computation behind the text's H¹(Q, V) = 0.
+  - Byproduct: σ need not be multiplicative. Only the cocycle identity is used.
+- **`Chain.not_rsq_dvd`.** r² ∤ |Γ|_O|, because a subgroup of order r² would consist of r-elements, hence translations k·v, of which there are only r. So Sylow-r of Γ|_O is T\* and |Q| is prime to r, exactly the text's "r ∤ |Q|".
+- **Checked and clean.** The text's Step 2 holds as stated. The coprimality input it cites ("Sylow-r of Γ|_O is exactly T\*") follows from Step 1, as the text implies, and is now proved.
+- **Remaining for a full Lean D2.**
+  - Rescale to v = 𝟙, read (σ, a, t) off coset representatives of T\*, and check the cocycle identity modulo constants. The identity itself is the one-line composition formula t_{hg} = a_h t_g + t_h ∘ σ_g.
+  - Assemble everything into `D2.d2b`'s normal form.
+  - Lemma B.
+
+## 17. Lean: Step 2 applied to Γ|_O; Step 2 → Step 3
+
+- **New `lean/Glue.lean`.** Zero sorries.
+  - `affine_mul`, `affine_tr`, and `data_of_affine`, which shows the affine data is determined by g.
+  - `Tsub` and `Tsub_normal`: T\* is normal.
+  - **`step2_glue`**: in normalised coordinates (common multiplier, T\* diagonal) with [G : T\*] prime to r, there are origins o with every g ∈ G acting as (σi, a·(x − oᵢ) + s).
+  - Reading the data off coset representatives costs a diagonal translation, which shifts t by a constant and so leaves the cocycle modulo constants intact.
+- **`D2.d2b_shift`.** Step 3 in shifted coordinates, so `step2_glue`'s output gives the C(F,2)·r orbital directly.
+- **Checked and clean.**
+  - The text's Step 2 holds for the actual group, not only abstractly.
+  - The composition formula t_{hg} = a_h t_g + t_h∘σ_g is the right cocycle.
+  - T\*'s normality is what makes Γ|_O/T\* a group, as the text implicitly uses.
+- **Remaining for a full Lean D2.**
+  - Conjugate Γ|_O by the per-block rescaling x ↦ x/vᵢ, to connect `Chain.step1_full`/`step2_common_mult` (general coordinates) to `Glue.step2_glue` (normalised). Orbital sizes are invariant under conjugation.
+  - Lemma B.
+

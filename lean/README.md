@@ -10,6 +10,11 @@
 | `Basic.lean` | compiles | n/a — needs Mathlib | **zero** |
 | `Bridge.lean` | compiles | n/a — needs Mathlib | **zero** — `E5Core.IsPrimeN p ↔ Nat.Prime p` |
 | `E5Assembly.lean` | compiles | n/a — needs Mathlib | **zero** — SAFE as a function (Part G.3); **Theorem E.5 in full**: `e5` (all branches) and `e5_exceptions` (exceptional n = the table's 12) |
+| `E6.lean` | compiles | n/a — needs Mathlib | **zero** — Corollary E.6 on a model of the shape space including D2's parts; μ\* abstract (sandwich halves as hypotheses) |
+| `D2.lean` | compiles | n/a — needs Mathlib | **zero** — Lemma D2's counting classes for a permutation group of the orbit; Steps 1–2's structure as hypothesis |
+| `Chain.lean` | compiles | n/a — needs Mathlib | **zero** — Oliver's chain; r-subgroups cyclic (r ∉ {p, q}); D2 Step 1 complete given Lemma B |
+| `Step2.lean` | compiles | n/a — needs Mathlib | **zero** — D2 Step 2's change of origins: H¹ = 0 by averaging, for any finite Q with |Q| invertible |
+| `Glue.lean` | compiles | n/a — needs Mathlib | **zero** — Step 2 applied to Γ|_O/T\*: per-block origins giving the normal form (σi, a·x + s) |
 
 *Status reproduced 2026-11-24 in the working container, both columns, after the pin below. Compile status was per machine until then — the laptop had Mathlib and the container did not — and this header was wrong in both directions more than once while that was so. With the project pinned and the Mathlib cache reachable from the container, both columns are now checked in one place.*
 
@@ -142,6 +147,59 @@ Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E
 - **`e5`, the assembly.** For `Admissible W p a q` and `¬ W.Bare`: `25 * W.safe < pairs W.n ∨ (W.c, W.r) ∈ excPairs`, the six pairs (3,2), (4,3), (8,7), (16,5), (27,13), (32,31). Inputs not proved in Lean: Lemma B′ (one q for all twists) and distinct foreign primes, both as hypotheses in `Admissible`, as in the text.
 - **The exceptional n, pinned (`e5_exceptions`).** If 25·SAFE ≥ C(n,2) then n is one of the table's twelve values. Route: for each of the six pairs, SAFE ≤ orb(r, t), with t a prime power dividing r − 1, bounds n (≤ 88; ≤ 62 except at (32, 31)). A leftover part must hold B, which forces 5·size ≥ n + 3 (`n_add3_le`). So three leftover parts never fit, and two fit only at (8, 7). What remains is a finite list, enumerated by `chk` and checked by `decide +kernel` (about 30 s). The enumeration is a superset of the admissible parts: it drops "one q" when t = 1 and does not require the leftover's foreign primes to be distinct. `glue` and `mem_cands` prove that every admissible configuration appears in it. So E.5's exception statement, "exactly these twelve n", is now a theorem; it no longer rests on `fallback_sup.py`.
 - **Text finding.** The table lists one configuration per n. At n = 23 and 31, (F, c, r) = (2, 8, 7) and (3, 8, 7) with no leftover are also exceptions with the same SAFE (`exceptions_more`). So "exactly 12 exceptions" counts values of n; the F column shows one representative.
+
+**Corollary E.6 (`E6.lean`, 2026-11-24).**
+- **The model.** A `Config` is a list of parts:
+  - classes `pc F c d`, with c = p^b and *any* d ∣ c − 1;
+  - foreign blocks `fr r t`, with t a power of one q;
+  - **Lemma D2 parts** `fo F r t`: F ≥ 2 outside blocks of one prime, fused or simply repeated, scored by D2's two classes. Those are F·C(r,2), and for F < r the same-position class, C(F,2)·r or F·r at r = q (D2q); the model takes the larger.
+
+  This is Theorem 3.1's shape list with F any integer, *including* the D2 shapes the enumerator leaves out. `safe` values a class at F·C(c,2); `refined` values it at F·orb(c, d). A fallback configuration is, as in E.5, a class with a foreign prime r ∣ c − 1. No hypothesis about how twists are reduced is needed (see "Reconciliation" below).
+- **Pieces.**
+  - `refined_eq_safe` (fallback-free); `refined_le_safe` (everywhere).
+  - `safe_eq_view` / `view_admissible`: a fallback configuration *is* an E.5 `Fallback` with the same SAFE. This needs SAFE to be permutation-invariant (`crossTerms_perm`).
+  - `reread_*`: E.3(ii)'s (r, r) re-reading.
+  - `Config.full`: raise every twist to full.
+  - `exc_beaten`: at the twelve exceptional n, a one-class configuration beats every fallback.
+  - **`d2_case`: D2's domination, proved in the model.** A SAFE optimum above the line that contains a D2 part is matched by a fallback-free configuration. Above the line, a D2 part has F, r ≤ 25 and n < 614 (`d2_small`, by counting). In that region, a kernel-checked table (`d2check`, about a minute) gives at each of 256 values of n a one- or two-part fallback-free witness that scores at least D2's bound. The witnesses' admissibility is checked by `admB`, which is proved to imply `GAdm`.
+- **Results.**
+  - `e6_core`: a SAFE optimum above 1/25 is matched by an admissible fallback-free configuration with REFINED = SAFE.
+  - **`e6_maxima`**: `IsBsafe n B` with C(n,2) < 25·B implies `IsBrefined n B`. This is E.6's B_refined = B_safe, stated on the two maxima.
+  - `e6`: μ = B as well, given Part E (every REFINED score ≤ μ) and Part 0 (μ ≤ B_safe) as hypotheses.
+  - Non-vacuity: `isBsafe_primePow` / `isBrefined_primePow` give B_safe(p^b) = B_refined(p^b) = C(p^b, 2).
+- **Reconciliation with Parts 0 and D.**
+  - **Twists.** A first version assumed "a twist below c − 1 needs a foreign r ∣ c − 1" (Lemma C's coupling). That assumption is gone: SAFE ignores twists, so a configuration with no fallback has the same SAFE as its full-twist version (`Config.full`), which is fallback-free. The model therefore allows any d ∣ c − 1, exactly as Theorem 3.1 does, and Lemma C is not used anywhere. That matches the text's claim that B_safe and E.6's proof are independent of Lemma C.
+  - **F.** F is any integer. That is the permissive reading of F = F_mid·F_top that the certificates use. Since Theorem 3.1 imposes no coprimality on F_mid, it is at least as large as the true shape space.
+  - **Fused foreign classes and repeated foreign primes** are now in the model as `fo` parts. Their domination above the line is a theorem here (`d2_case`), where the text relies on Corollary D2′ plus the computed table below n = 471. That supports the enumerator's choice to omit them, at least for the E.6 question.
+- **Not formalised.** Part E's constructions and Part 0's completeness, the group-theoretic halves of the sandwich. Also Lemma D2 itself: the existence of its two classes in every group of that shape is the source of the `fo` terms, not a theorem here.
+
+**Lemma D2 (`D2.lean`, 2026-11-24).** This file works on actual permutation groups: G ≤ Sym(Fin F × ZMod r), the image Γ|_O. Orbitals are G-orbits on unordered pairs (`orbit2`), and the generic fact is that an orbit inside a G-invariant set is no larger than the set (`orbit2_card_le`).
+- **Branch (a), `d2a`.** If G preserves the block system, some orbital has at most F·C(r,2) pairs. This is unconditional, as in the text.
+- **Step 3, `d2b`.** If every element acts as (i, x) ↦ (σi, a·x + s), the same-position pairs are invariant, so some orbital has at most C(F,2)·r pairs.
+- **D2q step (7), `d2q`.** If every linear part is trivial, so (i, x) ↦ (σi, x + sᵢ), the pairs with within-block difference ±1 are invariant, giving an orbital of at most F·r pairs.
+- **Step 1's order arguments.** `step1_sigma`: an element of r-power order in Sym(F) with F < r is trivial. `step1_mult`: an r-power multiplier is trivial.
+- **Step 2's first claim, `step2_mult_equal`.** If conjugation keeps the diagonal translation diagonal, all the multipliers are equal.
+- **Link to `E6`.** These bounds are exactly `E6`'s `fo` terms (`fo_terms_match`).
+- **Not formalised: the core of Steps 1–2.** The r-elements form one cyclic group of translations, made diagonal by rescaling; this uses Sylow-r of Γ being cyclic, from r ∉ {p, q} and the chain. Then the H¹(Q, V) = 0 change of per-block origins makes every translation part diagonal. Together these are the normal-form hypothesis of `d2b` and `d2q`. A route exists: Mathlib has Schur–Zassenhaus, and Γ's chain would have to be modelled.
+
+**Oliver's chain and D2's Step 1 (`Chain.lean`, 2026-11-24).**
+- **The chain.** `OliverChain H p q` is Γ₂ ⊴ Γ₁ ⊴ H with Γ₂ a p-group, Γ₁/Γ₂ cyclic and H/Γ₁ a q-group. `OliverChain.map` carries it to any surjective image, in particular Γ|_O.
+- **`rsub_cyclic`: every r-subgroup is cyclic when r ∉ {p, q}.** An r-subgroup lies in Γ₁, because its image in the q-group is trivial (`rsub_le_N₁`). It meets the p-group Γ₂ trivially (`rsub_inf_N₂`). So it embeds in the cyclic layer. This is the fact D2's Step 1 attributes to the chain.
+- **`step1_translations` / `step1_Gamma`.** For Γ with a chain acting on O = Fin F × ZMod r, the translations in Γ|_O form an r-group, hence a cyclic one, so they are the multiples k·v of a single vector. That is the text's "T\* ≅ C_r generated by one vector".
+- **`step1_full_support`, `step1_diagonal`.** If every block sees a nonzero translation, v has full support, and per-block rescaling sends v to the diagonal.
+- **`step1_full`: Step 1 complete, given Lemma B.** Assume every element acts affinely, (i, x) ↦ (σi, aᵢx + tᵢ) with aᵢ ≠ 0, and Γ|_O is transitive on O. Then:
+  - F·r divides |Γ|_O|, so by Cauchy there is an element of order r;
+  - it is a pure translation (`rElem_is_translation`: σ = 1 by `D2.step1_sigma`, aᵢ = 1 by `D2.step1_mult`);
+  - conjugating it to each block (`conj_translation`) shows the generator has every component nonzero.
+
+  So T\* is the diagonal C_r after rescaling, which is the text's Step 1 in full.
+- **`not_rsq_dvd`: Sylow-r of Γ|_O is T\*.** r² doesn't divide |Γ|_O|, so |Γ|_O/T\*| is prime to r.
+- **`Step2.origin_change`: Step 2's second claim, the H¹ = 0 computation.** Take any finite group Q with |Q| invertible in K, a multiplier a : Q → K, a block action σ, and translation parts t forming a cocycle modulo constants. Then the origins o := −|Q|⁻¹ Σ_h a_h⁻¹ t_h make every element's translation part the same on all blocks. Multiplicativity of σ is not even needed.
+- **`step2_common_mult`: Step 2's first claim, for the group.** Every element's multipliers satisfy aᵢvᵢ = λ·v_{σi}, so they are all equal once v is rescaled to 𝟙.
+- **Still hypotheses:**
+  - **Lemma B** (block actions are affine).
+  - **The rescaling.** `Glue.step2_glue` proves Step 2 for Γ|_O itself: it applies `origin_change` to Γ|_O/T\*, reading (σ, a, t) off coset representatives and checking the cocycle. `D2.d2b_shift` takes its output to Step 3's bound. Both assume Step 1's *normalised* coordinates, in which the multiplier is common and T\* is diagonal. `Chain.lean` proves those hold after the per-block rescaling x ↦ x/vᵢ (`step1_diagonal`, `step2_common_mult`), but the conjugation of G by that rescaling is not yet carried out in Lean.
+  - **The bridge from these lemmas to `D2.lean`'s normal-form hypothesis.** It would assemble Step 1, Step 2 and Lemma B into "every element is (σi, a·x + s)".
 
 ## The split that makes this tractable
 

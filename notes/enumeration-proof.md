@@ -500,6 +500,18 @@ Finally min(F, r) ≤ √(Fr) ≤ √n. Adding further orbits only adds classes 
 >
 > The second instance is why the distinction matters rather than being pedantry: **an argument phrased in terms of 2-transitivity would not have found it**, since it would have looked for AGL(1,7) and correctly concluded that the chain rejects it. The chain-admissible 2-homogeneous permuters are a strictly larger family than the chain-admissible 2-transitive ones, and at F ≡ 3 (mod 4) they are cheaper, needing only (F−1)/2 to be a prime power. The bound C(F,2)·r is unaffected — 2-homogeneity is exactly what maximises the block-pair orbital — only the set of F at which the shape is buildable grows.
 
+> **Formalised in part, 2026-11-24:** `lean/D2.lean` proves the counting half for an actual permutation group of O = Fin F × ZMod r:
+> - branch (a), unconditionally (`d2a`: an orbital of at most F·C(r,2) pairs);
+> - Step 3 and D2q's step (7), given the normal form those steps derive (`d2b`: C(F,2)·r; `d2q`: F·r);
+> - Step 1's two order arguments, and Step 2's equal-multiplier claim.
+>
+> `lean/Chain.lean` models the chain and proves Step 1's group-theoretic core:
+> - every r-subgroup is cyclic for r ∉ {p, q};
+> - Γ|_O's translations are the multiples of one vector;
+> - given Lemma B's affine form and transitivity, that vector has full support (`step1_full`). So Step 1 is formalised in full, modulo Lemma B, and so is Step 2's common multiplier (`step2_common_mult`).
+>
+> `lean/Step2.lean` proves Step 2's H¹(Q, V) = 0 as the averaging computation, and `not_rsq_dvd` proves its input, that Sylow-r of Γ|_O is T\*. `lean/Glue.lean` applies it to Γ|_O/T\*, giving the normal form (σi, a·x + s), and `D2.d2b_shift` takes that to the C(F,2)·r bound. Still outside Lean: Lemma B itself, and the per-block rescaling that connects Step 1's coordinates to Step 2's. `lean/E6.lean` uses these bounds as its `fo` scores, and proves D2's domination above C(n,2)/25 at every n in its model.
+
 So the enumeration may restrict to unfused outside blocks without loss: **the block count of any class is F = F_mid · F_top**, with no contribution from Γ₂ for matching blocks (D1), and fused-outside configurations omitted because they are dominated (D2) rather than because they fail to exist. This is a domination argument and therefore carries a **range-scoped half**, which expires silently as the table grows — rerun `a18_verify.py` on every extension.
 
 > **The non-permuted case, since it is what the admissibility bullet in Part E rests on.** Read the proof with σ = 1 throughout. Step 1's "transitivity forces every component nonzero" needs only that each Oᵢ is an orbit, so its induced group is transitive on r points and its r-part comes from T\*; Step 2's conjugation argument is literally the same, with the multipliers aᵢ forced equal because one element z of the cyclic layer is being conjugated by one power map; Step 3 is unchanged. So **F distinct foreign orbits of one prime share a diagonal C_r and carry an invariant class of C(F,2)·r pairs** — at F = 2, exactly r. This is why the enumeration may take foreign primes pairwise distinct: not because two equal ones cannot be built (they can), but because a configuration containing them scores at most r. *(At r = q the diagonal step is unavailable — two unpermuted q-orbits can carry independent translations in the top group — and none is needed: each is a lone outside block with r = q, worth q by the F = 1 case of D2q.)* *The earlier justification — "C_r × C_r is not cyclic" — was the subgroup-versus-shared-element error one level up from the entangled generator, and it was stated as fact at three sites; all three now point here.*
@@ -803,6 +815,8 @@ Both die on the p-characteristic part, which needs S ≥ √(2B) — 207 at n = 
 > **B_refined(n) = μ\*(n) = B_safe(n).**
 >
 > *Proof.* Let W attain B_safe(n). If W is fallback-free the endpoints coincide, since orb(c, c−1) = C(c,2). If W is a fallback configuration then SAFE(W) = B_safe(n) > C(n,2)/25, so by E.5 it is either a bare safe-prime pair or one of the 12 listed instances. A bare pair is dominated by its own (r, r) re-reading, which is fallback-free and scores at least as much (E.3(ii)), so B_refined(n) ≥ B_safe(n); the 12 instances are checked directly. In each case the SAFE optimum is realised by a fallback-free configuration, which Part E constructs, and Part E′'s sandwich closes. ∎
+
+> **Formalised, 2026-11-24:** `lean/E6.lean` proves E.6's B_refined(n) = B_safe(n) above C(n,2)/25 (`e6_maxima`). It works on a model of Theorem 3.1's shape list that allows any d ∣ c − 1 and includes Lemma D2's fused or repeated outside parts, scored by D2's two classes. Their domination above the line is proved in the model (`d2_case`: such a part forces F, r ≤ 25 and n < 614, and a kernel-checked table supplies a fallback-free match at each of those n), so it no longer rests on Corollary D2′'s computed range. The proof follows the text: a configuration with no fallback is raised to full twist; a bare pair is replaced by its (r, r) re-reading; each of the twelve exceptions is beaten by a one-class configuration at the same n, so none is an optimum. Lemma C is not used. μ\* is abstract, with Part E and Part 0 as hypotheses (`e6`).
 
 **What this changes, stated carefully.**
 
