@@ -204,8 +204,8 @@ theorem odd_q_leftover (q e f j j' r r' n B : Nat) (hq3 : 3 ≤ q) (hq : q % 2 =
     (hj' : r' - 1 = j' * q ^ f) (hj7 : j' ≤ 7)
     (hlo : 3 * r < 4 * r') (hhi : r' < 2 * r) (hne : r' ≠ r)
     (hn : n = 3 * r + r' + 1) (hB : B ≤ pairs r) : 25 * B < pairs n := by
-  have ht : 1 ≤ q ^ e := Nat.pos_pow_of_pos e (by omega)
-  have ht' : 1 ≤ q ^ f := Nat.pos_pow_of_pos f (by omega)
+  have ht : 1 ≤ q ^ e := Nat.pow_pos (by omega)
+  have ht' : 1 ≤ q ^ f := Nat.pow_pos (by omega)
   have h2 := odd_twist_forces_two r (q ^ e) j (pow_odd q e hq) hro hr3 hj hj3 hj1
   have hjj := odd_twist_le7 r' (q ^ f) j' (pow_odd q f hq) hro' hr3' hj' hj7
   have hw := window_odd_q (q ^ e) (q ^ f) j' r r' ht ht' (powRel_of_pow q e f hq3 hq)
@@ -250,21 +250,38 @@ theorem e4_pair_sharp : ¬ (25 * orb 5 4 false < pairs 21) ∧ ¬ (25 * orb 5 4 
 /-- Primality, stated directly (core Lean has no `Nat.Prime`). -/
 def IsPrimeN (p : Nat) : Prop := 2 ≤ p ∧ ∀ d, d ∣ p → d = 1 ∨ d = p
 
+/-- If gcd(d, B) = 1 and d ∣ A·B then d ∣ A.  Proved from `Nat.gcd_mul_left` alone,
+    which has the same name and form in core 4.15 and 4.36 (the Coprime API does not). -/
+theorem dvd_of_dvd_mul_coprime (d A B : Nat) (h : Nat.gcd d B = 1) (hd : d ∣ A * B) : d ∣ A := by
+  have h1 : d ∣ Nat.gcd (A * d) (A * B) := Nat.dvd_gcd (Nat.dvd_mul_left d A) hd
+  rw [Nat.gcd_mul_left, h, Nat.mul_one] at h1
+  exact h1
+
+/-- Divisibility of a difference, under the 4.15 signature, proved from
+    `Nat.mul_sub_left_distrib` (stable across 4.15–4.36; `Nat.dvd_sub` is not). -/
+theorem dvd_sub_le {k m n : Nat} (h1 : k ∣ m) (h2 : k ∣ n) : k ∣ m - n := by
+  obtain ⟨a, rfl⟩ := h1
+  obtain ⟨b, rfl⟩ := h2
+  exact ⟨a - b, (Nat.mul_sub_left_distrib k a b).symm⟩
+
 /-- A prime coprime to B stays coprime to B in every power. -/
 theorem gcd_pow_eq_one (p B : Nat) (h : Nat.gcd B p = 1) : ∀ k, Nat.gcd B (p ^ k) = 1 := by
   intro k
   induction k with
   | zero => simp
   | succ k ih =>
-    have h1 := Nat.gcd_mul_dvd_mul_gcd B (p ^ k) p
-    rw [← Nat.pow_succ, ih, h, Nat.one_mul] at h1
-    exact Nat.eq_one_of_dvd_one h1
-
-/-- If gcd(d, B) = 1 and d ∣ A·B then d ∣ A. -/
-theorem dvd_of_dvd_mul_coprime (d A B : Nat) (h : Nat.gcd d B = 1) (hd : d ∣ A * B) : d ∣ A := by
-  have h1 := Nat.gcd_mul_dvd_mul_gcd d A B
-  rw [h, Nat.mul_one, Nat.gcd_eq_left hd] at h1
-  exact Nat.dvd_trans h1 (Nat.gcd_dvd_right d A)
+    rw [Nat.pow_succ]
+    generalize hg : Nat.gcd B (p ^ k * p) = g
+    have hgB : g ∣ B := hg ▸ Nat.gcd_dvd_left _ _
+    have hgm : g ∣ p ^ k * p := hg ▸ Nat.gcd_dvd_right _ _
+    have hgp : Nat.gcd g p = 1 := by
+      apply Nat.eq_one_of_dvd_one
+      rw [← h]
+      exact Nat.dvd_gcd (Nat.dvd_trans (Nat.gcd_dvd_left g p) hgB) (Nat.gcd_dvd_right g p)
+    have hgk : g ∣ p ^ k := dvd_of_dvd_mul_coprime g (p ^ k) p hgp hgm
+    apply Nat.eq_one_of_dvd_one
+    rw [← ih]
+    exact Nat.dvd_gcd hgB hgk
 
 /-- **A prime power dividing a product of coprime factors divides one of them.** -/
 theorem prime_pow_dvd_coprime (p k A B : Nat) (hp : IsPrimeN p) (hAB : Nat.gcd A B = 1)
@@ -305,7 +322,7 @@ theorem gcd_two_pow_pm (m : Nat) (hm : 1 ≤ m) : Nat.gcd (2 ^ m - 1) (2 ^ m + 1
   generalize hg : Nat.gcd (2 ^ m - 1) (2 ^ m + 1) = g
   have h1 : g ∣ 2 ^ m - 1 := hg ▸ Nat.gcd_dvd_left _ _
   have h2 : g ∣ 2 ^ m + 1 := hg ▸ Nat.gcd_dvd_right _ _
-  have h3 : g ∣ (2 ^ m + 1) - (2 ^ m - 1) := Nat.dvd_sub (by omega) h2 h1
+  have h3 : g ∣ (2 ^ m + 1) - (2 ^ m - 1) := dvd_sub_le h2 h1
   have h4 : (2 ^ m + 1) - (2 ^ m - 1) = 2 := by omega
   rw [h4] at h3
   have hle : g ≤ 2 := Nat.le_of_dvd (by omega) h3
@@ -428,7 +445,7 @@ theorem isPrimeN_three : IsPrimeN 3 := by
 theorem gcd_succ (A : Nat) : Nat.gcd A (A + 1) = 1 := by
   have h1 : Nat.gcd A (A + 1) ∣ A := Nat.gcd_dvd_left _ _
   have h2 : Nat.gcd A (A + 1) ∣ A + 1 := Nat.gcd_dvd_right _ _
-  have h3 : Nat.gcd A (A + 1) ∣ (A + 1) - A := Nat.dvd_sub (by omega) h2 h1
+  have h3 : Nat.gcd A (A + 1) ∣ (A + 1) - A := dvd_sub_le h2 h1
   rw [show A + 1 - A = 1 by omega] at h3
   exact Nat.eq_one_of_dvd_one h3
 
