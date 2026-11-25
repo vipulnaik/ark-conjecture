@@ -42,7 +42,7 @@ If N\* is primitive with abelian socle, it is affine and n is a prime power. So 
 
 *Proof.* Γ̂ ⊇ M is primitive, so Γ is primitive by F2. That contradicts F3. ∎
 
-Lemma 2 settles every N\* whose minimal normal subgroups contain one that is primitive. This includes every 2-homogeneous non-affine N\*, whose socle is 2-transitive. What remains are the O'Nan–Scott types whose minimal normal subgroups are all imprimitive:
+Lemma 2 settles every N\* whose minimal normal subgroups contain one that is primitive. This includes every 2-homogeneous non-affine N\*, whose socle is primitive (2-transitive, except PSL(2, 8) on 28 points, which is still primitive). What remains are the O'Nan–Scott types whose minimal normal subgroups are all imprimitive:
 - regular minimal normal subgroups: types HS, HC, TW;
 - simple diagonal (SD) with k ≥ 3, and compound diagonal (CD);
 - product action (PA), where the socle preserves the coordinate partitions;

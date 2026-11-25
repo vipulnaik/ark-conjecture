@@ -121,7 +121,7 @@ Two facts make this a hierarchy from μ\*_N to M\*_OCR that bypasses μ\*_χ:
 - **n = 2p with p ≡ 3 (mod 4).** Take the star on the cyclic group ℤ/2p. Its overgroups are the p-by-cyclic groups inside its normaliser, and every conjugate of a transitive p-by-cyclic group that contains the 2p-cycle (`star_export.g`). The star is **infeasible at p² − 1** at p = 3, 7 and 11:
   - **M\*_OCR(14) ≥ 49 and M\*_OCR(22) ≥ 121**, against μ\* = 42 and 110.
   - At n = 14 this reproduces the bound of §6, from 3 groups on 128 graphs instead of 1,041 groups.
-  - Each core has three transitive groups, of orders p(p − 1), p²(p − 1) and 2^p · p: 6, 36, 24 at p = 3; 42, 294, 896 at p = 7; 110, 1,210, 22,528 at p = 11.
+  - Each core has three transitive groups, of orders p(p − 1), p²(p − 1) and 2^p · p, except that at p = 3 the core found uses (C₃ × C₃):C₄ of order 36 in place of K₂'s 18: 6, 36, 24 at p = 3; 42, 294, 896 at p = 7; 110, 1,210, 22,528 at p = 11.
   - The star becomes feasible at p², so this method gives exactly p².
 - **Where the cyclic star gives nothing.** At p ≡ 1 (mod 4) (n = 10 and 26) the ℤ/2p star is feasible at μ\*, as it is at n = 12 and 18. At n = 10, stars on six further cyclic subgroups, of cycle types 9·1, 7·1³, 8·2, 6·3·1, 4²·2 and 3³·1, are also feasible at 20 (`outputs/nlevel_star.txt`).
   - The χ-level core at n = 10 (§5) contains groups of coprime orders, 25 and 192, so it cannot lie in one star.
@@ -138,7 +138,7 @@ Coupling therefore needs **coherent forcing**: one labelled copy of a forced gra
 **For the asymptotics,** the bound at n = 2p, p ≡ 3 (mod 4), is p² = μ\* + p (§7.5).
 - **It crosses one half.** As a fraction of C(2p, 2) it is p/(2p − 1) > 1/2, while μ\*(2p) = p(p − 1) gives (p − 1)/(2p − 1) < 1/2.
 - **What is new is the family.** μ\*(n)/C(n,2) < 1/2 at every non-prime-power n. Reaching 1/2 would need an Oliver group with exactly two orbitals of equal size, and `monotone-transitive-note.md` §5 rules that out: its argument against two isomorphic orbitals uses only their sizes. M\*_OCR was already above 1/2 at n = 6 and 14 individually, but this is a principled break above 1/2 on an infinite family of non-prime-power n: every n = 2p with p ≡ 3 (mod 4), by the Theorem of §7.5.
-- **The limit is still 1/2.** The excess p is about 1/(2n) of C(n,2). A gain in the limit would need forcing chains whose lengths or forced graphs grow with n.
+- **The limit is still 1/2.** The excess p is 1/(2p − 1), about 1/n, of C(n,2). A gain in the limit would need forcing chains whose lengths or forced graphs grow with n.
 
 ### 7.5 The n = 2p family: proof, and where it stops
 
@@ -202,7 +202,7 @@ At the N level (§7.2) the three groups are coupled only through the labelled gr
 
 > **Proposition.** Let p ≡ 3 (mod 4) and k = (p − 1)/2. The N-level system of K₁, K₂, K₃ is infeasible at every budget below p² **if and only if L(k) holds**. If L(k) holds, the N level alone proves M\*_OCR(2p) ≥ p².
 
-*Proof.* If L(k) holds, K₃'s complex must contain M, and steps 1 and 3 of §7.5 finish as before. Conversely, let X be a counterexample to L(k). Then the following is a feasible N-level system at budget (p − 3)/4 · 4p < p²:
+*Proof.* If L(k) holds, K₃'s complex must contain M, and steps 1 and 3 of §7.5 finish as before. Conversely, let X be a counterexample to L(k). Then the following is a feasible N-level system at budget p(p − 1) < p² (X's faces have at most (p − 3)/4 · 4p = p(p − 3) edges, and A has p(p − 1)):
 - K₃'s complex is X on the C_δ's, invariant under N(K₃), which acts on the C_δ's through (ℤ/p)^×/±1 alone;
 - K₂'s complex is {A}, and K₁'s is {A}.
 

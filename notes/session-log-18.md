@@ -41,3 +41,15 @@ Steps 1–5 of the q-pinning box re-derived and sound (gate t ≥ B/r ≥ δn/2;
 
 - **The "3.54√B, δ ≤ 0.16" comparison drops r ≥ √(2B).** With it, the pinned bound r_j ≥ B/r is always below r_j's own gate, so pinning adds nothing and the total is exactly F.1's 1/9. Reworded.
 - **The n = 1943 row of the pinned-position table is stale.** At the current B(1943) = 124,256, orb(823, 137) = 112,751 fails the gate. The 24,322 / 4 measurement used an earlier, lower B; requoting can only shrink it. n = 779 still sits exactly on its gate. Annotated.
+
+## 6. Fourth pass: threshold-beyond-mu.md and the new notes it cites
+
+Full read of all three. Fixes kept inside these files; no framework document touched.
+
+- **burnside-ring-view.md §7.6:** the converse's feasible system was stated at budget p(p − 3), below |A| = p(p − 1); corrected to p(p − 1) < p². The iff stands.
+- **Gap-row counts:** §2 and §10 of threshold-beyond-mu still had 488/489 after n = 1395 and 3555 were settled (session-log-17 Part 65). `nonpp_close2.py` checks faces against T (caps from `ws_budget_scan`, `chi1_ok` with faces ≤ T), so these are budgeted closures within its model; now 490 settled, 487 open, and §6.4 says so.
+- **§10:** dropped "subject to checking the cited statements against the memoir" for Li–Xia, contradicted by §6.3 and conjecture-p-proof Appendix B.
+- **Letter:** §1.4's n = 10 bullets moved under the n = 10 paragraph; "7,315 to degree 30" now "except 24" (two places); τ(a) formula a(q(a) − 1)/2; 803 added to the 18 open k; class-11 pull-back sentence; μ\*_χ = μ\* at 6, 10 and 12 in §10; §6.4 "fifteen remaining n ≤ 50" now notes μ\*_N^fpf is known there; burnside §7.4 excess 1/(2p − 1) ≈ 1/n (was 1/(2n)); burnside §7.3 p = 3 core order 36 explained; conjecture-p-proof Lemma 2's "socle 2-transitive" (PSL(2,8) on 28).
+- **Retracted:** 8,572 vs 7,115 at S₁₂ is classes vs hand-built rows, already reconciled in orbital-evasiveness-notes and small-degree-computation.
+- **Checked clean:** see the review reply (ceiling table, Props U/L, first separating rows, Smith Props B/B′/B″, Conjecture P lemmas, gap-row tallies, worked closures, burnside §§4–7.7 proofs and counts).
+- **Skipped:** §4's 1/26 claim; script reruns; LX against the memoir; Lemma G / Theorem G line check.
