@@ -289,3 +289,27 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
   - D1's proof is exactly the text's.
   - The `fo` scores in E6 are now consistent with what Lemma D2 proves, rather than copied from the text.
 
+## 23. Lean: Lemma B′
+
+- **New `lean/LemmaBprime.lean`.** Zero sorries.
+  - `step0`.
+  - `lemmaBprime`, abstract.
+  - `card_eq_prime`: cyclic of exponent p₀ means order p₀.
+  - `τ`, `Tsub`, `conj_τ`.
+  - `lemmaBprime_affine`: concrete, giving **a = 1** and a q-group twist.
+- **Checked and clean.**
+  - Step 0 holds exactly as written, needing both irreducibility and C_G(V) = V.
+  - Case 1: the middle layer contains V and is abelian, so it centralises V, so it lies in V, so it equals V.
+  - Case 2: G is a q-group, so its centre has an element of order q, which generates a normal subgroup containing V by Step 0. So V is cyclic and p₀ = q.
+  - The text's Case 2 detour through block systems and regularity is not needed once Step 0 is available. The central subgroup of order q is normal, so it contains V directly.
+- **The affine link.** In the concrete version, minimality of V is derived from irreducibility of the linear parts on additive subgroups, which equal subspaces over 𝔽_{p₀}. C_G(V) = V is derived from affineness: an element commuting with every translation has trivial linear part. So these are not extra assumptions beyond the affine form.
+- **B′ from primitivity alone (`lemmaBprime_primitive`), added the same day.**
+  - The classical "solvable primitive ⇒ affine" theorem is not in Mathlib. I checked: Mathlib has primitive and quasiprimitive actions, Jordan, Schur–Zassenhaus and solvable groups, but no socle or minimal-normal theory.
+  - The shorter route needs no solvability and no minimal normal subgroup either:
+    - nontrivial abelian normal subgroups of a primitive group are regular (`card_eq_of_abelian_normal`);
+    - Γ₂ = 1, since a transitive p-group would make |X| a p-power;
+    - Γ₁ is cyclic; if nontrivial it is regular, and its order-p₀ subgroup is regular, so |X| = p₀;
+    - if Γ₁ = 1, a central order-q subgroup is regular, so |X| = q.
+  - **So B′ is proved from the chain and primitivity outright.**
+- **README note added (at Vipul's request).** On a future Mathlib bump, check whether ready-made socle / solvable-primitive results exist and could replace the hand proofs. This needs a version bump and re-pin, so it is not to be done lightly.
+

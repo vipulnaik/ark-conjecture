@@ -21,6 +21,7 @@
 | `D2q.lean` | compiles | n/a — needs Mathlib | **zero** — **Lemma D2q (r = q) from the chain**, and `lemmaD2`: all three of D2's classes |
 | `FoBridge.lean` | compiles | n/a — needs Mathlib | **zero** — E.6's `fo` scores proved to bound real orbitals (from `lemmaD2`) |
 | `D1.lean` | compiles | n/a — needs Mathlib | **zero** — Lemma D1 (absorption) in the E.6 model |
+| `LemmaBprime.lean` | compiles | n/a — needs Mathlib | **zero** — **Lemma B′** from the chain and primitivity alone (`lemmaBprime_primitive`): an outside block has prime size, twist a q-group |
 
 *Status reproduced 2026-11-24 in the working container, both columns, after the pin below. Compile status was per machine until then — the laptop had Mathlib and the container did not — and this header was wrong in both directions more than once while that was so. With the project pinned and the Mathlib cache reachable from the container, both columns are now checked in one place.*
 
@@ -231,6 +232,31 @@ Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E
 **Closing two loops (`FoBridge.lean`, `D1.lean`, 2026-11-25).**
 - **`FoBridge.fo_terms_valid`.** Every SAFE term `E6.lean` assigns to a fused/repeated outside part (F·C(r,2), and max(C(F,2)·r, F·r) when F < r) is at least the size of some orbital of every group of that shape. So the E.6 model's D2 scores are theorems from the chain, block system and transitivity, not numbers copied from the text.
 - **`D1.lemmaD1`.** In the E.6 model, F = pᵏ copies of a p-block of size c read as one part of size F·c. That reading stays admissible, keeps n, and does not lower SAFE. This is the domination the text uses to drop bottom-layer block copies.
+
+**Lemma B′ (`LemmaBprime.lean`, 2026-11-25).**
+- **`step0`.** If V is minimal normal and C_G(V) ≤ V, every nontrivial normal subgroup contains V. This is the text's Step 0, and it uses both hypotheses, as the text's "two dependencies" note says.
+- **`lemmaBprime` (abstract).** Take G with an Oliver chain (p, q) and V a nontrivial normal abelian p₀-subgroup, p₀ ≠ p, minimal normal, with C_G(V) ≤ V. Then:
+  - V is cyclic;
+  - G/V is a q-group;
+  - if the middle layer is trivial, then p₀ = q.
+
+  Both of the text's cases appear. In **Case 1** the middle layer contains V, is cyclic and abelian, so it equals V. In **Case 2** G is a q-group, and a central subgroup of order q is normal, so by Step 0 it contains V.
+- **`lemmaBprime_affine` (concrete).** O = 𝔽_{p₀}^a, G ≤ Sym(O) containing all translations, every element affine, linear parts irreducible. The abstract hypotheses are derived: C_G(V) = V from affineness, and minimality from irreducibility. The conclusions are **a = 1**, and every element has a qᵏ-th power that is a translation, so the twist is a q-group.
+- **`lemmaBprime_primitive`: B′ with no affine-form input.** Take G ≤ Sym(X) primitive, with an Oliver chain (p, q), |X| ≥ 2 and p ∤ |X| (an outside block). Then |X| is prime, and there is a normal V of order |X| such that every element's qᵏ-th power lies in V, so the twist is a q-group. If the middle layer is trivial, |X| = q. The proof:
+  - a nontrivial abelian normal subgroup of a primitive group is regular (`card_eq_of_abelian_normal`);
+  - Γ₂ would be transitive, forcing |X| to be a p-power, so Γ₂ = 1 and Γ₁ is cyclic;
+  - if Γ₁ ≠ 1 it is regular, and so is its subgroup of elements of prime order p₀, which has order p₀;
+  - if Γ₁ = 1, G is a q-group, and a central subgroup of order q is regular.
+
+  So **Lemma B′ is proved outright** from the chain and primitivity. The classical "solvable primitive ⇒ affine" theorem, which the text cites and Mathlib lacks, is not needed for B′. (The affine-coordinates form of Lemma B is still unformalised for general primitive blocks, though it isn't needed for B′; for prime blocks it is `LemmaB.lemmaB_block_any`.)
+
+> **To check in future iterations: Mathlib coverage.** As of the pinned Mathlib (v4.36.0, checked 2026-11-25), Mathlib has primitive and quasiprimitive actions, Jordan's theorems, Schur–Zassenhaus and solvable groups. It has no minimal-normal-subgroup or socle theory, no O'Nan–Scott, and no "a solvable primitive group is affine". Several results here are hand-proved because of that gap: `card_eq_of_abelian_normal`, `LemmaB.lemmaB_block_any`, the Step 0 and Lemma B′ arguments, and `LemmaB.mem_zpowers_of_orderOf_eq`. **When Mathlib is next bumped, check whether ready-made versions now exist.** Candidates:
+> - socle / minimal normal subgroups;
+> - "solvable primitive ⇒ affine";
+> - normalisers of regular cyclic subgroups in Sym(p);
+> - uniqueness of subgroups of a given order in a cyclic group.
+>
+> Swapping one in would mean a toolchain and Mathlib version bump, a re-pin of `lean-toolchain` and the lakefile `rev`, a fresh `lake exe cache get`, and fixing the name drift such bumps bring (see the lemma-name lesson above). So it is not to be done lightly. But it would shorten the proofs and move trust onto Mathlib's reviewed library.
 
 ## The split that makes this tractable
 

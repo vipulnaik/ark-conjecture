@@ -371,6 +371,15 @@ The point stabiliser is then trivial, so the twist is trivial — a power of q v
 
 In both cases **s is prime and t is a power of q**. ∎
 
+> **Formalised, 2026-11-25:** `lean/LemmaBprime.lean`.
+> - Step 0 is `step0`.
+> - The lemma is `lemmaBprime`, abstract: chain, V minimal normal, C_G(V) ≤ V. Both cases are formalised, including Case 2's central subgroup of order q.
+> - The concrete affine version is `lemmaBprime_affine`. It derives the abstract hypotheses from "all translations present, every element affine, linear parts irreducible" and concludes a = 1 and a q-group twist.
+>
+> - `lemmaBprime_primitive` proves B′ from the chain and primitivity **alone**, with no affine-form input. A nontrivial abelian normal subgroup of a primitive group is regular. Γ₂ would be transitive of p-power order, so it is trivial. A nontrivial Γ₁ is then cyclic and regular, and its order-p₀ subgroup is regular too, so |X| = p₀. If Γ₁ is trivial, a central subgroup of order q is regular, so |X| = q. **So B′ does not need the classical "solvable primitive ⇒ affine" theorem.**
+>
+> The Lean proof confirms both dependencies below: `step0` takes irreducibility (`hmin`) and C_G(V) ≤ V (`hcent`) as separate hypotheses, and Case 1 uses `hcent` again to get "equals V".
+
 > **Two dependencies worth naming, since the compressed version hid them.** The proof uses *irreducibility* of H, which is part of Lemma B's conclusion, so B′ genuinely rests on B and not merely on primitivity. And it uses **C_G(V) = V** twice — once in Step 0 to kill the N ∩ V = 1 alternative, and once in Case 1 to upgrade "contains V" to "equals V". The earlier write-up invoked it only in the second place, which is part of why the first step read as a leap.
   > *One case the sketch skips, with the same conclusion.* The step "π_O(Γ₁) contains the socle" assumes π_O(Γ₁) ≠ 1. If instead π_O(Γ₁) = 1 then Γ|_O is a quotient of the q-group Γ/Γ₁, so a transitive q-group, so of q-power degree; and a transitive **q**-group acting primitively is regular of prime degree. Hence s = q is prime and the twist is trivial — a q-power. The lemma's conclusion holds in this branch too, but it needs saying rather than assuming.
   >
