@@ -1206,7 +1206,7 @@ So at level 1 a foreign block is worth its smallest orbit and no more: **μ\*_cy
 
 **The exception is where the normaliser is 3-homogeneous**, and Kantor's list (`three-uniform-note.md` §3.1) says where: degrees 5, 8 and 32. At c = 32 the group AGL(1, 32) has five orbits of 992 on triples, one type under AΓL(1, 32), cycled by the Frobenius; computed, the least budget is **4960 = C(32, 3)**, at q = 31 and at q = 5. So a block of 32 is worth full density *without the Frobenius in the group*, whenever 5 is a good index for the top prime (q ∉ {2, 3}). The Galois escape of `three-uniform-note.md` §6.1 pays for that factor 5 by pinning the top prime to 5, after which every foreign block needs 5 | r − 1; at c = 32 the device waives the pinning. At c = 128 it does not: AGL(1, 128) has 21 free orbits on triples in three types of 7. This is a finite effect, on configurations with a block of 32.
 
-**General k.** `general-k-note.md` §3 records that the full-density blocks are finite at k = 3, degenerate at k = 4 and absent from k = 5 (Livingstone–Wagner). The device's supply is that same list, so it has no infinite family at any k ≥ 3. The ceilings β_k = cap_F(η)/2, the mod-12 table and the arithmetic of `aod` §§3.5–3.6 are untouched at every arity.
+**General k.** `general-k-note.md` §3 records that the full-density blocks are finite at k = 3, degenerate at k = 4 and absent from k = 5 (Livingstone–Wagner). The device's supply is that same list, so it has no infinite family at any k ≥ 3. The generic-column values β_k = cap_F(η)/2 and the arithmetic of `aod` §§3.5–3.6 are untouched at every arity; which classes can use the generic column depends on k (`three-uniform-note.md` §5.7, `general-k-note.md` §4).
 
 **The barrier (§9.2 below) at arity k.** At k = 2 the barrier's mechanism has two parts: units are bounded by pair counts within classes of orbits, and crediting a whole orbit needs a 2-homogeneous normaliser. At arity k these become:
 - **Units.** A class of F orbits with share s holds at most about s^k/F^{k−1} of the k-sets.
@@ -1264,7 +1264,7 @@ At n ≡ 11 (mod 12) the undirected device uses k = 6. Directed, the same cell n
 
 *`chiral-graph-properties.md`: monotone A_n-invariant properties of E(K_n). Every group must consist of even permutations, and P is invariant only under A_n.*
 
-**What that note establishes for μ\*.** A factor of two at worst (`chiral-graph-properties.md` Theorem 1). Beyond that, a chirality efficiency ε(c) for matching blocks, with ε = 1/2 only for unfused blocks at prime powers c ≡ 1 (mod 4). And the foreign efficiency is halved only on the Fermat branch (q = 2). The mod-12 ceilings survive unscaled at odd n, and at even n subject to choosing c ≡ 3 (mod 4) (its §5).
+**What that note establishes for μ\*.** A factor of two at worst (`chiral-graph-properties.md` Theorem 1). Beyond that, a chirality efficiency ε(c) for matching blocks, with ε = 1/2 only for unfused blocks at prime powers c = p^a with p ≡ 1 (mod 4). And the foreign efficiency is halved only on the Fermat branch (q = 2). The mod-12 ceilings survive unscaled at odd n, and at even n subject to choosing c ≡ 3 (mod 4) (its §5).
 
 **The device.** Δ_P^Γ is invariant only under N\*(Γ) ∩ A_n. The multiplier that cycles a foreign block's classes is an (r − 1)-cycle, which is odd. It can be corrected by any odd element of Γ̂, which fixes every orbital: the product is even and acts on the classes as the multiplier does.
 

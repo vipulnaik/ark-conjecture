@@ -132,7 +132,7 @@ With a matching part of efficiency 1/(F·κ_c) and a foreign part of efficiency 
 
 > **β_k = 1 / (√(F·κ_c) + √(κ_r/η_k))²**,
 
-which is the k = 3 formula with no k in it. **The arity enters only through κ_c and κ_r**, and in the generic column — matching twist not divisible by any j with 2 < j ≤ k, foreign twist coprime to L_k, so κ_c = 2 and κ_r = 1 —
+which is the k = 3 formula with no k in it. **The arity enters only through κ_c and κ_r**, and in the generic column — matching twist not divisible by any j with 2 < j ≤ k, foreign twist with no q-power > 1 dividing k or k − 1 (q > k suffices), so κ_c = 2 and κ_r = 1 —
 
 > **β_k = cap_F(η)/2 for every k ≥ 3**, exactly, by the one-line identity 1/(√(2F) + √(2/η))² = ½·η/(1 + √(Fη))².
 

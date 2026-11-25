@@ -53,3 +53,16 @@ Full read of all three. Fixes kept inside these files; no framework document tou
 - **Retracted:** 8,572 vs 7,115 at S₁₂ is classes vs hand-built rows, already reconciled in orbital-evasiveness-notes and small-degree-computation.
 - **Checked clean:** see the review reply (ceiling table, Props U/L, first separating rows, Smith Props B/B′/B″, Conjecture P lemmas, gap-row tallies, worked closures, burnside §§4–7.7 proofs and counts).
 - **Skipped:** §4's 1/26 claim; script reruns; LX against the memoir; Lemma G / Theorem G line check.
+
+## 7. Fifth pass: the satellite notes
+
+Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-graph-properties, directed-graph-properties, ladder-completeness, bcp-to-floor, monotone-transitive-note, johnson-presentations, restriction-game, hardness-of-evasiveness, shparlinski-constants, approach-rate-note, entangled-generator-finding, small-degree-computation §§1–7. Archived notes (three-part-family-split, fusion-count-ceilings, t5-resolution, a18-resolution) read for their banners and current claims, not edited.
+
+- **three-uniform-note:** Lenstra–Pomerance–Wagstaff count is log log x, not log x; c ≡ 17 (mod 24) has v ≥ 3, not v = 4 (c = 41 has v = 3), so mod 24 does not pin v there; "a third of odd blocks" at k = 2 is half; ten (not nine) of the 24 cells fall short, by the note's own 10 + 2·2 count; "non-degenerate" for {8, 32} contradicted §3.1's treatment of 5, now "regular on triples"; the Mersenne paragraph now states the split criterion, and "proof below" is "above"; n = 32's comparison ceiling labelled as the largest class ceiling.
+- **solvable-relaxation:** the nilpotent-top probe's n include 63, so "all even" was wrong (two places).
+- **general-k-note:** generic-column condition on the foreign twist restated with the corrected θ (no q-power dividing k or k − 1), not L_k.
+- **chiral-graph-properties, threshold §8.4:** ε = 1/2 is for c = p^a with p ≡ 1 (mod 4), not every c ≡ 1 (mod 4) (c = 9, 49 are rescued).
+- **threshold §8.2:** "β_k = cap_F(η)/2 … untouched at every arity" overstated; only the generic-column values are, the usable columns depend on k.
+- **README:** broken link to note-to-framework-bridge.md.
+- **Flagged, not edited:** t5-resolution summary still says n ≥ 763 (old δ; ep Corollary C′ and the note's own §3 say 371); monotone-transitive §3 and §6 item 5 call 14T10 and 14T30 open "by these methods", while threshold §8.1 settles both (left alone to keep threshold content out until integration).
+- **Skipped:** small-degree-computation §§8–10, small-degree-verification, verification-lessons (operational/meta).

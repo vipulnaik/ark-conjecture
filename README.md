@@ -45,7 +45,7 @@ structure of the work.
     the arithmetic conjectures and empirical evidence around the
     number theory part.
 
-* [note-to-framework-bridge.md](notes/note-to-bridge-framework.md) is
+* [note-to-framework-bridge.md](notes/note-to-framework-bridge.md) is
   a bridge document between the short note (first bullet point above)
   and full notes (second bullet point above), explaining the
   translation between them as well as the aspects the short note
