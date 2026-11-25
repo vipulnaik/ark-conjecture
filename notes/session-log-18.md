@@ -86,3 +86,13 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - **A9:** `orb_self_pairing` (hypothesis c odd is necessary — counterexample at even c, d = c − 1); `fused_value` / `fused_value_orb`; `Bridge.lean` (`IsPrimeN ↔ Nat.Prime`, i.e. `Nat.prime_def`).
 - **Proposal for Vipul:** SAFE model as a bundle of the inequalities E.5 consumes (Option A in the README), plus how to treat the 12 exceptions.
 - **README** rewritten at the top: status table for both toolchains, a Building section, the lemma-name lesson updated; the old laptop/container gotchas (LEAN_PATH, cache unreachable) removed as superseded.
+
+## 10. Lean: E.5 on the text's SAFE (A9)
+
+- **Decision (Vipul):** whichever is most faithful to the text — so **Option B** (SAFE as a function, per Part G.3/G.3a) and the **12 exceptions row by row**.
+- **New file `lean/E5Assembly.lean`** (Mathlib; a `lakefile` root). Zero sorries. Contents: `Part`/`Fallback`/`safe`/`Admissible`; `safe_le_pairs_r`, `safe_le_pairs_part`; `e5_s_ge4`; `e5_s2a1` (all four a = 1, s = 2 sub-cases, cofactor bounds derived from SAFE, q odd and q = 2); `exceptions` (12 rows, SAFE values equal the table's); `ex28_admissible`.
+- **Checked and clean.** Every table row's SAFE value, recomputed from the G.3 definition (not from the script), matches the table, and each row fails 25·SAFE < C(n,2). The text's odd-q chain survives with its two cofactor bounds proved from SAFE instead of assumed. The q = 2 sub-case's r ∈ {3, 5} follows from c prime plus the Fermat-exponent lemma; with only SAFE ≤ C(r,2) (no need for the text's orb(7,2)) it still clears at n = 15 and 23.
+- **Observation (no error).** `fallback_sup.py` omits the within-part cross term for a *leftover* class with F₂ ≥ 2, which G.3 includes. Omitting a term can only raise the min, so the script's sup over-states SAFE — the safe direction for the "< 1/25" claim; at the one row where it matters (n = 31, leftover 2·8) the extra term is 64 > 21 and the value is unchanged.
+- **Open for full E.5:** the s = 1, s = 3, s = 2 with a ≥ 2 classification steps; completeness of the exception list stays computational.
+- **Not checked (effort budget):** `Admissible` was proved for one exception row (n = 28), not all twelve; the Lean core-4.15 build was not rerun (no core file changed).
+

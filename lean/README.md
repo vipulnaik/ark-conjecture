@@ -9,6 +9,7 @@
 | `Note.lean` | compiles | n/a — needs Mathlib | **zero** (six proofs imported from `ArkCore`) |
 | `Basic.lean` | compiles | n/a — needs Mathlib | **zero** |
 | `Bridge.lean` | compiles | n/a — needs Mathlib | **zero** — `E5Core.IsPrimeN p ↔ Nat.Prime p` |
+| `E5Assembly.lean` | compiles | n/a — needs Mathlib | **zero** — SAFE as a function (Part G.3); E.5's s ≥ 4 and s = 2, a = 1 branches; the 12 exception rows |
 
 *Status reproduced 2026-11-24 in the working container, both columns, after the pin below. Compile status was per machine until then — the laptop had Mathlib and the container did not — and this header was wrong in both directions more than once while that was so. With the project pinned and the Mathlib cache reachable from the container, both columns are now checked in one place.*
 
@@ -131,19 +132,13 @@ Theorem E.5 did not exist when this list was drawn up and is now the most valuab
 
 Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E5Core`, is now cheap to try here but would cost the core-4.15 check, which has just caught four instances of drift; **keep route 1 unless there is a reason to drop the core build.** Until then: stay inside the namespaces, prefix any helper whose bare name could exist in Mathlib, and add any new home-made notion to the table in the same edit.
 
-**The SAFE model — a proposal, for agreement before building.** A9 calls the representation of configurations "a design decision … best made together". E.5's proof (`enumeration-proof.md` Part E‴) is *counting on SAFE terms*: it never evaluates SAFE, it only uses a handful of inequalities that SAFE satisfies. That suggests two options.
+**The SAFE model — decided 2026-11-24: Option B, exceptions row by row** (Vipul: "whatever most faithfully matches the text"). `E5Assembly.lean` defines configurations and SAFE from Part G.3/G.3a and *proves* the inequalities E.5's proof consumes, rather than taking them as fields:
 
-- **Option A — SAFE as a bundle of the inequalities the proof consumes (recommended).** A structure recording, for a fallback configuration W at n with score B:
-  - the shape: `n = F·c + r + ΣL`, `c = p^a`, `r ∣ c − 1`, `r ≠ p`, s = (c−1)/r, the leftover parts L as a list of sizes, each tagged matching (a power of p) or foreign (a prime);
-  - the SAFE bounds: `B ≤ F·pairs c`, `B ≤ orb r t false` with t a power of q dividing r − 1, `B ≤ pairs m` for every part size m (this is ℓ(B));
-  - the branch caps E.5 imports rather than reproves: Cap(a) at s = 1 (E.1), Cap′(a) at s = 2, a ≥ 2 (E.3(iii)), and E.4's s = 3 pair;
-  - Lemma B′'s input that **every foreign twist is a power of the same q**, and the distinct-foreign-primes hypothesis the second reading asked to be made explicit (`r′ ≠ r`, justified by D2).
-  
-  E.5 is then `theorem e5 (W : SafeModel n B) (hbare : ¬ bare W) (hexc : n > 63) : 25 * B < pairs n`, assembled from the lemmas already in `E5Core`, with the n ≤ 63 table discharged by `decide` over the listed rows. Each field is one line of `enumeration-proof.md`'s SAFE definition, so the fidelity check is reading the structure against Part G.3, not a proof. Estimated size: a few hundred lines, most of it case dispatch.
-- **Option B — SAFE as a function.** Define configurations and their SAFE score by the Part G.3 formulas, and prove the bundle of Option A as lemmas. This is Phase 3's groundwork and checks more — that the inequalities really follow from the definition — but it is several times the size and fixes a representation of the whole shape space, not just the fallback branch.
-
-**Recommendation: A now, with the structure's fields named so that B can later prove them.** A delivers "E.5 is machine-checked given its stated inputs" and leaves the inputs visible as fields; B can replace the fields by proofs without changing E.5's statement. **One choice needs your view either way: whether the 12 exceptions are excluded by `n > 63` (simplest, and true) or listed row by row (closer to the text).**
-
+- **Model.** `Part` (`pc F c` a p-characteristic class, `fr r t` a foreign block), `Fallback` (class (F, c), foreign (r, t), leftover list), `Fallback.safe` = min over G.3's orbital types: intra (flat F·C(c,2) for a p-class, per B_safe; `orb r t false` for a foreign block), smallest within-part cross ((F or F/2)·c², F ≥ 2), and every between-parts sᵢsⱼ. `Admissible W p a q` carries the text's hypotheses: c = p^a, r prime ≠ p with r ∣ c − 1, leftover parts p-power classes or foreign primes, every foreign twist dividing r − 1 and a power of **one** prime q (Lemma B′ — group theory, an explicit hypothesis exactly as the text cites it), and **foreign primes distinct** (the second-reading fix).
+- **Proved from the definition.** `safe_le_pairs_r` (SAFE ≤ C(r,2)), `safe_le_pairs_part` (every part has C(size,2) ≥ SAFE — the text's ℓ(B)), `safe_le_orb`.
+- **Branches.** `e5_s_ge4`; `e5_s2a1`, the whole s = 2, a = 1 branch for any non-bare W, all four sub-cases. In the one-foreign-leftover sub-case the ratio window and the cofactor bounds (r−1)/t ≤ 3, (r′−1)/t′ ≤ 7 are now **derived from SAFE** (`cofactor_r`, `cofactor_r'`), where `E5Core.odd_q_leftover` took them as hypotheses; q = 2 is closed too (r ∈ {3, 5} via Mathlib's `Nat.pow_of_pow_add_prime` and `E5Core`'s divisibilities). The two-or-more-parts sub-case uses the exact count n ≥ c + r + 2ℓ (`two_part_leftover`) rather than the text's θ-estimate — same conclusion, simpler route.
+- **Exceptions.** `exceptions`: one configuration per table row, leftover composed as `fallback_sup.py` composes it, with n, SAFE (= the table's 1, 3, 3, 3, 21, 21, 18, 21, 21, 10, 39, 155) and 25·SAFE ≥ C(n,2) checked by `decide`. `ex28_admissible` checks `Admissible` on the row where every clause is non-vacuous.
+- **Still open for E.5 in full.** The s = 1, s = 3 and s = 2 with a ≥ 2 branches: their arithmetic is in `E5Core` (`e1_mersenne`, `e4_pair`, `e3_repunit`), but the classification steps that bring an arbitrary configuration in those branches to the Mersenne / (16, 5) / repunit shape — and the windows below a = 7 / a = 5 — are not yet formalised. "The table lists *every* exception" remains `fallback_sup.py`'s enumeration, not a Lean statement.
 
 ## The split that makes this tractable
 
