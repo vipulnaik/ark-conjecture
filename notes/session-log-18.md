@@ -66,3 +66,14 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - **README:** broken link to note-to-framework-bridge.md.
 - **Flagged, not edited:** t5-resolution summary still says n ≥ 763 (old δ; ep Corollary C′ and the note's own §3 say 371); monotone-transitive §3 and §6 item 5 call 14T10 and 14T30 open "by these methods", while threshold §8.1 settles both (left alone to keep threshold content out until integration).
 - **Skipped:** small-degree-computation §§8–10, small-degree-verification, verification-lessons (operational/meta).
+
+## 8. Sixth pass: the short note (both versions) and the bridge
+
+- **Note §5, quantifiers:** "1.677 and 3/2 both carry exceptional sets" contradicted the note's own §1 (BBKN's Chowla 3/2 for all large n) and `aod` §3.6; now 1.677 carries the exceptional set and 3/2 is conditional.
+- **Note §5, Li 0.679:** the parenthetical asserted the positive-proportion form; `aod` §3.6 and `pending-checks.md` record it as owed. Now says so.
+- **Note §5, "Goldbach rather than Bateman–Horn difficulty":** the wording item of A26, now "Goldbach and Sophie Germain difficulty rather than a fixed-system Bateman–Horn statement".
+- **Note §2:** "admissible set is precisely the pairs with ω(3) ≤ 2" is false (ℓ = 2 also excludes); now one direction plus "the ℓ = 3 half of admissibility".
+- All four applied identically to the LaTeX version.
+- **Bridge:** PD(1) clause no longer reads as making Shparlinski's rungs conditional; two-foreign systems: S11 drops out above 1/16, S6 only above 1/9; "four parameter choices each" with three listed.
+- **Checked clean:** admissible-d table cell by cell from the three mechanisms; S ≥ 4·(9/8)·C₀; 1/350 at n ≥ 29 and the 1/300 corner; both verification groups (orders and orbitals); n = 17 example; §4 family and the 1/2 ceiling; 0.0462 / 2183 against `mu_table_ladder.csv`; bridge balance-point tables, the 1/20, 1/30, 1/48 figures, the 25× ratio.
+- **Not edited:** the LaTeX version still has Unicode symbols and markdown bold outside math (≤, −, ×, **...**), which a pdflatex paste will reject; bridge §0's box labels ("A fourth", "Three further") are out of order.
