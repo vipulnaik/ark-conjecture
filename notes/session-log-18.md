@@ -104,3 +104,17 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - **Open.** The exceptional n are not yet pinned to the table's 12 (crude bounds give n ≤ 62 for five pairs; (32, 31) is open between 64 and 88). Corollary E.6 not started.
 - **Not checked (effort budget):** I did not rerun `fallback_sup.py` to confirm it records the F = 2, 3 configurations as ties.
 
+## 12. Lean: the exceptional n pinned; E.5 complete
+
+- **`e5_exceptions`**: an admissible, non-bare W with 25·SAFE ≥ C(n,2) has n ∈ {5, 7, 11, 12, 15, 21, 23, 27, 28, 31, 40, 63}. With `exceptions`, this is E.5's exception claim exactly. Zero sorries.
+- **Method.**
+  - n is bounded per pair through SAFE ≤ orb(r, t), with t a prime power dividing r − 1.
+  - Each leftover part satisfies 5·size ≥ n + 3, so there are at most two leftover parts, and two only at (8, 7).
+  - The remaining finite enumeration (`chk`) is checked by `decide +kernel`, about 30 s, against an over-approximation of the admissible parts.
+  - Soundness: `glue`, `mem_cands`, `twist_mem`.
+- **Checked and clean.**
+  - The table's n-list is complete, and stays complete under a looser model: t′ any divisor of r′ − 1 when t = 1, leftover foreign primes not required to be distinct.
+  - `fallback_sup.py` enumerates leftovers of at most 2 parts. That restriction is now justified, since 3 or more parts cannot reach the line at any exceptional pair.
+- **Needed, not optional.** Dropping Lemma B′ ("one q") or the primality of r′ from the enumeration produces spurious exceptions, e.g. (8, 7) with a foreign 5 at t′ = 4, n = 20. So B′ carries weight in E.5's exception list, not just in the odd-q sub-case.
+- **Open:** Corollary E.6, which needs B_refined/μ\* (Phase 3).
+

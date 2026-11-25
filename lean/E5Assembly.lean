@@ -33,9 +33,15 @@ the text states it on:
 * `exceptions_more` — the table records one configuration per n: F = 2 and F = 3 at
   (8, 7) are further exceptions at n = 23 and 31.
 
-**Not here (yet):** that the exceptions occur only at the table's 12 values of n (at most 63).
-`e5` bounds the exceptional (c, r) but not n; the per-n list remains `fallback_sup.py`'s
-enumeration.
+* `e5_exceptions` — **the exceptional n are exactly the table's**: an admissible, non-bare W
+  with 25·SAFE ≥ C(n,2) has n ∈ {5, 7, 11, 12, 15, 21, 23, 27, 28, 31, 40, 63}.  With
+  `exceptions` (each of the twelve is attained) this is E.5's exception statement in full.
+  The finite part is a kernel-checked enumeration (`chk`, `decide +kernel`), made sound by
+  `glue`: n is bounded through SAFE ≤ orb(r, t), every leftover part satisfies 5·size ≥ n + 3,
+  so at most two leftover parts occur (two only at (8, 7)), and every admissible part is in
+  the enumerated candidate list (`mem_cands`).
+
+**Not here:** Corollary E.6, which needs B_refined and μ\* — the whole shape space.
 -/
 import Mathlib
 import E5Core
@@ -639,5 +645,272 @@ theorem exceptions_more :
     (ex23F2.n = 23 ∧ ex23F2.safe = 21 ∧ pairs 23 ≤ 25 * ex23F2.safe) ∧
     (ex31F3.n = 31 ∧ ex31F3.safe = 21 ∧ pairs 31 ≤ 25 * ex31F3.safe) := by
   decide
+
+/-! ### The exceptional n: exactly the table's twelve values
+
+`e5` bounds the exceptional (c, r).  This section pins n.  For each of the six pairs:
+SAFE ≤ orb(r, t) bounds n; every leftover part has 5·size ≥ n + 3 (it must hold B), which
+rules out three leftover parts at every pair and two at every pair but (8, 7); and the
+remaining configurations — leftover of zero, one (or, at (8, 7), two) admissible parts — are
+enumerated by `chk` and evaluated by the kernel (`decide +kernel`).  The enumeration
+over-approximates the admissible parts (it drops nothing the text allows), so it is sound. -/
+
+def table12 : List ℕ := [5, 7, 11, 12, 15, 21, 23, 27, 28, 31, 40, 63]
+
+def pcParts (p L : ℕ) : List Part :=
+  (List.range (L + 1)).flatMap fun b => (List.range (L + 1)).filterMap fun F =>
+    if 1 ≤ b ∧ 1 ≤ F ∧ F * p ^ b ≤ L then some (.pc F (p ^ b)) else none
+
+def isPrimeB (n : ℕ) : Bool := 2 ≤ n && (List.range n).all fun d => d < 2 || n % d != 0
+
+def frParts (r qb L : ℕ) : List Part :=
+  (List.range (L + 1)).flatMap fun r' =>
+    if isPrimeB r' ∧ r' ≠ r then
+      ((List.range r').filter fun t' => 1 ≤ t' ∧ t' ∣ r' - 1 ∧
+        (qb = 0 ∨ (List.range r').any fun k => t' = qb ^ k)).map fun t' => .fr r' t'
+    else []
+
+def cands (p r qb L : ℕ) : List Part := pcParts p L ++ frParts r qb L
+
+def lefts (cs : List Part) (two : Bool) : List (List Part) :=
+  [] :: (cs.map fun x => [x]) ++ (if two then cs.flatMap fun x => cs.map fun y => [x, y] else [])
+
+def chk (c r p N : ℕ) (ts : List (ℕ × ℕ)) (two : Bool) : Bool :=
+  (List.range (N / c + 1)).all fun F => ts.all fun ⟨t, qb⟩ =>
+    (lefts (cands p r qb (N - c - r)) two).all fun left =>
+      decide (1 ≤ F → (Fallback.mk F c r t left).n ≤ N →
+        pairs (Fallback.mk F c r t left).n ≤ 25 * (Fallback.mk F c r t left).safe →
+        (Fallback.mk F c r t left).n ∈ table12)
+
+theorem isPrimeB_of_prime {n : ℕ} (h : Nat.Prime n) : isPrimeB n = true := by
+  unfold isPrimeB
+  simp only [Bool.and_eq_true, decide_eq_true_eq, List.all_eq_true, List.mem_range,
+    Bool.or_eq_true, bne_iff_ne, ne_eq]
+  refine ⟨h.two_le, fun d hd => ?_⟩
+  by_cases h2 : d < 2
+  · left; simpa using h2
+  · right; intro h0
+    rcases h.eq_one_or_self_of_dvd d (Nat.dvd_of_mod_eq_zero h0) with h1 | h1 <;> omega
+
+/-- A part holding B at an exceptional n is large: C(n,2) ≤ 25·C(m,2) forces 5m ≥ n + 3. -/
+theorem n_add3_le {n m : ℕ} (hm : 1 ≤ m) (h : pairs n ≤ 25 * pairs m) : n + 3 ≤ 5 * m := by
+  have h1 := two_pairs n
+  have h2 := two_pairs m
+  by_contra hc
+  push Not at hc
+  have h2n : 2 * pairs n ≤ 25 * (m * (m - 1)) := by omega
+  obtain ⟨m0, rfl⟩ : ∃ m0, m = m0 + 1 := ⟨m - 1, by omega⟩
+  simp only [Nat.add_sub_cancel] at h2n
+  rcases Nat.lt_or_ge n 1 with hn | hn
+  · omega
+  obtain ⟨n0, rfl⟩ : ∃ n0, n = n0 + 1 := ⟨n - 1, by omega⟩
+  simp only [Nat.add_sub_cancel] at h1
+  nlinarith
+
+theorem size_pos_of_adm {p q r : ℕ} (hp : Nat.Prime p) {x : Part}
+    (hx : match x with
+      | .pc F c => 1 ≤ F ∧ ∃ b, 1 ≤ b ∧ c = p ^ b
+      | .fr r' t => Nat.Prime r' ∧ r' ≠ p ∧ r' ≠ r ∧ t ∣ r' - 1 ∧ ∃ f, t = q ^ f) :
+    1 ≤ x.size := by
+  cases x with
+  | pc F c =>
+    obtain ⟨hF, b, -, rfl⟩ := hx
+    exact Nat.mul_pos hF (Nat.pow_pos hp.pos)
+  | fr r' t => exact hx.1.pos
+
+/-- Every admissible leftover part of size ≤ L is in the enumeration. -/
+theorem mem_cands {p q r t L : ℕ} (hp : Nat.Prime p) (hq : Nat.Prime q) {x : Part}
+    (hx : match x with
+      | .pc F c => 1 ≤ F ∧ ∃ b, 1 ≤ b ∧ c = p ^ b
+      | .fr r' t => Nat.Prime r' ∧ r' ≠ p ∧ r' ≠ r ∧ t ∣ r' - 1 ∧ ∃ f, t = q ^ f)
+    (hL : x.size ≤ L) : x ∈ cands p r (if t = 1 then 0 else q) L := by
+  unfold cands
+  cases x with
+  | pc F c =>
+    obtain ⟨hF, b, hb, rfl⟩ := hx
+    simp only [Part.size] at hL
+    apply List.mem_append_left
+    unfold pcParts
+    have hpb : b < p ^ b := Nat.lt_pow_self hp.one_lt
+    have : p ^ b ≤ F * p ^ b := Nat.le_mul_of_pos_left _ hF
+    have : F ≤ F * p ^ b := Nat.le_mul_of_pos_right _ (Nat.pow_pos hp.pos)
+    simp only [List.mem_flatMap, List.mem_range, List.mem_filterMap]
+    exact ⟨b, by omega, F, by omega, by simp [hb, hF, hL]⟩
+  | fr r' t' =>
+    obtain ⟨hr', -, hne, hdv, f, hf⟩ := hx
+    simp only [Part.size] at hL
+    apply List.mem_append_right
+    unfold frParts
+    have hr2 := hr'.two_le
+    have ht1 : 1 ≤ t' := by rw [hf]; exact Nat.pow_pos hq.pos
+    have htl : t' < r' := by have := Nat.le_of_dvd (by omega) hdv; omega
+    simp only [List.mem_flatMap, List.mem_range]
+    refine ⟨r', by omega, ?_⟩
+    simp only [isPrimeB_of_prime hr', ne_eq, hne, not_false_eq_true, and_self, ↓reduceIte]
+    simp only [List.mem_map, List.mem_filter, List.mem_range]
+    refine ⟨t', ⟨htl, ?_⟩, rfl⟩
+    by_cases h1 : t = 1
+    · simp [h1, ht1, hdv]
+    · simp only [h1, ite_false]
+      simp [ht1, hdv, hq.ne_zero]
+      exact ⟨f, by have := Nat.lt_pow_self (n := f) hq.one_lt; omega, hf⟩
+
+/-- **The glue.**  A decided `chk` plus the pair's twist list gives the n-statement. -/
+theorem glue (c r p N d : ℕ) (ts : List (ℕ × ℕ)) (two : Bool)
+    (hchk : chk c r p N ts two = true)
+    (hts : ∀ t, t ∣ d → ∀ q e, Nat.Prime q → t = q ^ e → (t, if t = 1 then 0 else q) ∈ ts)
+    (hNb : ∀ x ∈ ts, 25 * orb r x.1 false < pairs (N + 1))
+    (hthree : 2 * N < 5 * (c + r) + 9) (htwo : two = false → 3 * N < 5 * (c + r) + 6)
+    (hc1 : 1 ≤ c)
+    (W : Fallback) (pa a q : ℕ) (hW : Admissible W pa a q) (hpa : pa = p)
+    (hc : W.c = c) (hr : W.r = r) (hd : r - 1 = d)
+    (hexc : pairs W.n ≤ 25 * W.safe) : W.n ∈ table12 := by
+  rw [hpa] at hW
+  obtain ⟨hp, -, -, hF, -, -, -, hq, htd, ⟨e, he⟩, hleft, -⟩ := hW
+  have htm := hts W.t (by rw [← hd, ← hr]; exact htd) q e hq he
+  -- n ≤ N
+  have hN : W.n ≤ N := by
+    by_contra h
+    push Not at h
+    have h1 : 25 * orb r W.t false < pairs (N + 1) := hNb _ htm
+    have h2 : pairs (N + 1) ≤ pairs W.n := pairs_mono h
+    have h3 : 25 * W.safe ≤ 25 * orb r W.t false := by
+      rw [← hr]; exact Nat.mul_le_mul_left 25 (safe_le_orb W)
+    omega
+  have hnE := n_eq W
+  -- every leftover part is large
+  have hbig : ∀ x ∈ W.left, W.n + 3 ≤ 5 * x.size := fun x hx =>
+    n_add3_le (size_pos_of_adm hp (hleft x hx))
+      (le_trans hexc (Nat.mul_le_mul_left 25 (safe_le_pairs_part W (by
+        simp [Fallback.parts, hx]))))
+  have hcF : c ≤ W.F * W.c := by rw [← hc]; exact Nat.le_mul_of_pos_left _ hF
+  have hFc : W.F ≤ N / c := by
+    have h1 : W.F * W.c ≤ N := by omega
+    rw [hc] at h1
+    exact (Nat.le_div_iff_mul_le hc1).mpr h1
+  -- unpack chk at W's own data
+  obtain ⟨F, c', r', t, left⟩ := W
+  simp only at hc hr hF htm hnE hbig hcF hFc hleft
+  subst hc hr
+  unfold chk at hchk
+  simp only [List.all_eq_true, List.mem_range, decide_eq_true_eq] at hchk
+  have key := hchk F (by omega) _ htm
+  have hcs : ∀ x ∈ left, x ∈ cands p r' (if t = 1 then 0 else q) (N - c' - r') := by
+    intro x hx
+    apply mem_cands hp hq (hleft x hx)
+    have : x.size ≤ (left.map Part.size).sum :=
+      List.le_sum_of_mem (List.mem_map_of_mem hx)
+    omega
+  have hmem : left ∈ lefts (cands p r' (if t = 1 then 0 else q) (N - c' - r')) two := by
+    unfold lefts
+    match left, hcs, hbig, hnE with
+    | [], _, _, _ => exact List.mem_cons.mpr (Or.inl rfl)
+    | [x], hcs, _, _ =>
+      apply List.mem_cons_of_mem
+      apply List.mem_append_left
+      exact List.mem_map_of_mem (hcs x (by simp))
+    | [x, y], hcs, hbig, hnE =>
+      cases two with
+      | false =>
+        exfalso
+        have := htwo rfl
+        have hx := hbig x (by simp)
+        have hy := hbig y (by simp)
+        simp only [List.map_cons, List.map_nil, List.sum_cons, List.sum_nil] at hnE
+        omega
+      | true =>
+        apply List.mem_cons_of_mem
+        apply List.mem_append_right
+        simp only [ite_true, List.mem_flatMap, List.mem_map]
+        exact ⟨x, hcs x (by simp), y, hcs y (by simp), rfl⟩
+    | x :: y :: z :: rest, _, hbig, hnE =>
+      exfalso
+      have hx := hbig x (by simp)
+      have hy := hbig y (by simp)
+      have hz := hbig z (by simp)
+      simp only [List.map_cons, List.sum_cons] at hnE
+      omega
+  exact key left hmem hF hN hexc
+
+/-- A prime p with p^a = c, and a prime ℓ dividing c, is ℓ. -/
+theorem prime_of_pow_eq {p a c l : ℕ} (hp : Nat.Prime p) (hl : Nat.Prime l) (hc : c = p ^ a)
+    (hdv : l ∣ c) : p = l :=
+  ((Nat.prime_dvd_prime_iff_eq hl hp).mp (hl.dvd_of_dvd_pow (hc ▸ hdv))).symm
+
+/-- A prime power dividing d: generic step for the twist lists. -/
+theorem twist_mem (d : ℕ) (ts : List (ℕ × ℕ))
+    (hdec : ((List.range (d + 1)).all fun t => (List.range (d + 1)).all fun q =>
+      !(decide (t ∣ d) && isPrimeB q && decide (2 ≤ t) &&
+        (List.range (d + 1)).any fun e => decide (t = q ^ e)) || decide ((t, q) ∈ ts)) = true)
+    (h1 : (1, 0) ∈ ts) (hd : 1 ≤ d) :
+    ∀ t, t ∣ d → ∀ q e, Nat.Prime q → t = q ^ e → (t, if t = 1 then 0 else q) ∈ ts := by
+  intro t ht q e hq he
+  by_cases h : t = 1
+  · simpa [h] using h1
+  simp only [h, ↓reduceIte]
+  have htd := Nat.le_of_dvd (by omega) ht
+  have he0 : e ≠ 0 := by rintro rfl; simp at he; exact h he
+  have hqt : q ≤ t := by
+    rw [he]; exact Nat.le_self_pow he0 q
+  have het : e < t := by rw [he]; exact Nat.lt_pow_self hq.one_lt
+  have ht2 : 2 ≤ t := by have := Nat.pos_of_dvd_of_pos ht (by omega); omega
+  simp only [List.all_eq_true, List.mem_range] at hdec
+  have := hdec t (by omega) q (by omega)
+  simp only [Bool.or_eq_true, Bool.not_eq_true', Bool.and_eq_false_iff, decide_eq_true_eq,
+    decide_eq_false_iff_not, List.any_eq_false, List.mem_range] at this
+  rcases this with ((((h1 | h1) | h1) | h1) | h1)
+  · exact absurd ht h1
+  · exact absurd (isPrimeB_of_prime hq) (by simp [h1])
+  · omega
+  · exact absurd he (h1 e (by omega))
+  · exact h1
+
+set_option maxRecDepth 100000
+
+theorem chk3 : chk 3 2 3 7 [(1, 0)] false = true := by decide +kernel
+theorem chk4 : chk 4 3 2 12 [(1, 0), (2, 2)] false = true := by decide +kernel
+theorem chk8 : chk 8 7 2 32 [(1, 0), (2, 2), (3, 3)] true = true := by decide +kernel
+theorem chk16 : chk 16 5 2 22 [(1, 0), (2, 2), (4, 2)] false = true := by decide +kernel
+theorem chk27 : chk 27 13 3 44 [(1, 0), (2, 2), (3, 3), (4, 2)] false = true := by
+  decide +kernel
+theorem chk32 : chk 32 31 2 88 [(1, 0), (2, 2), (3, 3), (5, 5)] false = true := by
+  decide +kernel
+
+/-- **Theorem E.5 with the exceptional n pinned.**  An admissible, non-bare fallback
+configuration with 25·SAFE ≥ C(n,2) has n among the table's twelve values. -/
+theorem e5_exceptions (W : Fallback) (p a q : ℕ) (hW : Admissible W p a q) (hnb : ¬ W.Bare)
+    (hexc : pairs W.n ≤ 25 * W.safe) : W.n ∈ table12 := by
+  have hpair : (W.c, W.r) ∈ excPairs := by
+    rcases e5 W p a q hW hnb with h | h
+    · omega
+    · exact h
+  have hp := hW.1
+  have hcp := hW.2.2.1
+  simp only [excPairs, List.mem_cons, Prod.mk.injEq, List.not_mem_nil, or_false] at hpair
+  rcases hpair with ⟨hc, hr⟩ | ⟨hc, hr⟩ | ⟨hc, hr⟩ | ⟨hc, hr⟩ | ⟨hc, hr⟩ | ⟨hc, hr⟩
+  · exact glue 3 2 3 7 1 _ false chk3
+      (twist_mem 1 _ (by decide) (by decide) (by norm_num)) (by decide) (by norm_num)
+      (fun _ => by norm_num) (by norm_num) W p a q hW
+      (prime_of_pow_eq hp Nat.prime_three (hc ▸ hcp) (by norm_num)) hc hr rfl hexc
+  · exact glue 4 3 2 12 2 _ false chk4
+      (twist_mem 2 _ (by decide) (by decide) (by norm_num)) (by decide) (by norm_num)
+      (fun _ => by norm_num) (by norm_num) W p a q hW
+      (prime_of_pow_eq hp Nat.prime_two (hc ▸ hcp) (by norm_num)) hc hr rfl hexc
+  · exact glue 8 7 2 32 6 _ true chk8
+      (twist_mem 6 _ (by decide) (by decide) (by norm_num)) (by decide) (by norm_num)
+      (fun h => by cases h) (by norm_num) W p a q hW
+      (prime_of_pow_eq hp Nat.prime_two (hc ▸ hcp) (by norm_num)) hc hr rfl hexc
+  · exact glue 16 5 2 22 4 _ false chk16
+      (twist_mem 4 _ (by decide) (by decide) (by norm_num)) (by decide) (by norm_num)
+      (fun _ => by norm_num) (by norm_num) W p a q hW
+      (prime_of_pow_eq hp Nat.prime_two (hc ▸ hcp) (by norm_num)) hc hr rfl hexc
+  · exact glue 27 13 3 44 12 _ false chk27
+      (twist_mem 12 _ (by decide) (by decide) (by norm_num)) (by decide) (by norm_num)
+      (fun _ => by norm_num) (by norm_num) W p a q hW
+      (prime_of_pow_eq hp Nat.prime_three (hc ▸ hcp) (by norm_num)) hc hr rfl hexc
+  · exact glue 32 31 2 88 30 _ false chk32
+      (twist_mem 30 _ (by decide) (by decide) (by norm_num)) (by decide) (by norm_num)
+      (fun _ => by norm_num) (by norm_num) W p a q hW
+      (prime_of_pow_eq hp Nat.prime_two (hc ▸ hcp) (by norm_num)) hc hr rfl hexc
 
 end E5Assembly
