@@ -34,3 +34,10 @@ Theorems 2.1, 2.2 (108,709 / 140,364 recomputed), V recursion; Lemma B′; D2 th
 - **aod §3.6 and `literature-findings.md` item 2 file Runbo Li's 0.679 in the positive-relative-density row feeding Shparlinski's Theorem 2**, but Li's abstract states it for infinitely many p. Flagged in the table and in `pending-checks.md` T4; whether his lower bound is ≫ x/log x is owed.
 
 *Checked clean in this pass:* N(δ₀) = 24 / 65 / 83 / 112 / 164 and the foreign splits 9 (6/3), 25 (11/14), 30, 42 (22/20), 66 (37/29); t and t_eff distributions; 768,400 single-orbital minima; all G.3a builds sum to C(n,2); G.4 and Part H bounds; Part I's odd-n routes (58,844 / 6,187 / 307,070), η = 1 share 511,572, n = 12 tag counts; aod §3.1 ℓ = 3 roots, §3.2.4 worked instances (all four against the table), §3.2.5 c mod 8 split, §3.3.8's 19,665 and 7,950 of 52,038, §3.4 window identity, §3.5.4 admissible-d table (rederived cell by cell), §4.2 S6 table and n = 42, 56 values, §4.3 window ratios, §5 fraction factorisation, block and decade minima, low tail, §6.7 round-trip constants, §6.8(iv) exponents, §7–8 counts (39-row tail, 49,183 odd and the single even n = 1952 below 1/12); oen §7.4 R-reductions (H ◁ L case, (b) ⇔ (c) by Burnside, the local N_L(T) version).
+
+## 5. Third pass: the q-pinning argument of ep E″
+
+Steps 1–5 of the q-pinning box re-derived and sound (gate t ≥ B/r ≥ δn/2; cofactor ≤ 2/δ; q ≥ (δn/2)^{1/e}; Lemma B′ forcing q | r_j − 1 on any leftover foreign part that clears B; at most L/q ≤ 2/δ positions at e = 1; the e ≥ 2 degradation n^{1−1/e}), as is the conditionality at step 1 only. Two findings:
+
+- **The "3.54√B, δ ≤ 0.16" comparison drops r ≥ √(2B).** With it, the pinned bound r_j ≥ B/r is always below r_j's own gate, so pinning adds nothing and the total is exactly F.1's 1/9. Reworded.
+- **The n = 1943 row of the pinned-position table is stale.** At the current B(1943) = 124,256, orb(823, 137) = 112,751 fails the gate. The 24,322 / 4 measurement used an earlier, lower B; requoting can only shrink it. n = 779 still sits exactly on its gate. Annotated.

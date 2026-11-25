@@ -732,16 +732,18 @@ The survivors at 10⁴ before the multi-part check were themselves informative: 
 > - each foreign part r has orb(r, ·) ≤ C(r,2) < r²/2, so **r ≥ √(2B)**, and likewise r_j;
 > - with B = δ·C(n,2), √(2B) ≈ n√δ.
 >
-> Three parts each of size ≥ n√δ give 3n√δ ≤ n, i.e. **δ ≤ 1/9** — which is Proposition F.1 at k = 3 and nothing new. *Adding the pinning does not improve it:* r_j ≥ q + 1 with q ≥ B/r gives n ≥ √(2B) + r + max(√(2B), B/r) ≥ 3.54√B, hence δ ≤ 0.16, **weaker** than 1/9. So above density 1/9 the branch is empty for part-counting reasons already known, and below it **counting alone cannot close the branch**; what remains is the specific arithmetic of the pinned positions.
+> Three parts each of size ≥ n√δ give 3n√δ ≤ n, i.e. **δ ≤ 1/9** — which is Proposition F.1 at k = 3 and nothing new. *Adding the pinning does not improve it:* it gives r_j ≥ q + 1 with q ≥ B/r, and since r ≥ √(2B) that is B/r ≤ √(B/2) < √(2B), below r_j's own gate. So the pinned size bound is always dominated by the counting one, and the best total is still 3√(2B), i.e. δ ≤ 1/9. *(Using the pinning in place of r ≥ √(2B) — n ≥ √(2B) + r + max(√(2B), B/r) ≥ 3.54√B, δ ≤ 0.16 — is weaker still, not a separate route.)* So above density 1/9 the branch is empty for part-counting reasons already known, and below it **counting alone cannot close the branch**; what remains is the specific arithmetic of the pinned positions.
 >
 > **What that arithmetic gives, measured over the table.** Across every e = 1 odd-q foreign part passing the gate at n ≤ 2000, the leftover holds **24,322 candidate positions r_j ≡ 1 (mod q)**, of which exactly **4 are admissible** — prime, distinct from r, and passing their own gate — and those four are two configurations counted twice by symmetry:
 >
 > | n | δ | q | r | r_j | space left |
 > |---|---|---|---|---|---|
 > | 779 | 0.0706 | 73 | 293 | 439 | **47** |
-> | 1943 | 0.0659 | 137 | 823 | 1097 | **23** |
+> | 1943 | 0.0659 † | 137 | 823 | 1097 | **23** |
 >
-> Both die on the p-characteristic part, which needs S ≥ √(2B) — 207 at n = 779 and 499 at n = 1943 — against 47 and 23 of remaining space. The pinning forces r_j well above its own floor (439 against 207; 1097 against 499), and it is that excess, not the generic bound, that leaves no room.
+> † *Stale against the current table:* B(1943) = 124,256 there, and orb(823, 137) = 112,751 falls below it, so at the quoted δ this r no longer passes its own gate and the row is not a candidate at all. The measurement (24,322 positions, 4 admissible) was taken against an earlier, lower B, and requoting it can only shrink the admissible set. The n = 779 row survives the current table — B(779) = 21,389 = orb(293, 73) exactly.
+
+Both die on the p-characteristic part, which needs S ≥ √(2B) — 207 at n = 779 and 499 at n = 1943 — against 47 and 23 of remaining space. The pinning forces r_j well above its own floor (439 against 207; 1097 against 499), and it is that excess, not the generic bound, that leaves no room.
 >
 > **So the status of e = 1 is: empty over the computed range, by a finite check rather than by a theorem.** Above δ = 1/9 it is closed unconditionally by F.1. Below, it reduces to enumerating the ≤ 2/δ pinned positions at each n and testing each — which is what `fallback_cert.py` does, and which is why this branch has never produced a candidate. That is a reduction to a bounded search, not an elimination.
 
