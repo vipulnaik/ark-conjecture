@@ -209,3 +209,35 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
   - Conjugate Γ|_O by the per-block rescaling x ↦ x/vᵢ, to connect `Chain.step1_full`/`step2_common_mult` (general coordinates) to `Glue.step2_glue` (normalised). Orbital sizes are invariant under conjugation.
   - Lemma B.
 
+## 18. Lean: Lemma D2 end to end (r ∉ {p, q})
+
+- **New `lean/Rescale.lean`.** Zero sorries.
+  - `scale`, `conjG`, `mem_conjG`.
+  - `conj_affine`: after rescaling by v the multiplier is the common λ.
+  - `conj_translation_scale`: τ_{k·v} becomes τ_{k·𝟙}.
+  - `orbit2_conj`: conjugation preserves orbital sizes.
+  - **`d2_full`**: chain + 2 ≤ F < r + r ∉ {p, q} + Lemma B + transitivity ⇒ an orbital of at most C(F,2)·r pairs.
+- **The index step.** |T\*| is divisible by r, since it contains a nonzero translation of order r. Also |G'| = |G|, and r² ∤ |G| (`not_rsq_dvd`). So r ∤ [G' : T\*], which is the input `Glue.step2_glue` needs.
+- **`Chain.step2_common_mult`** now also returns the translation property of the same v, so Step 1 and Step 2 use one generator.
+- **Checked and clean.** The text's Steps 1–3 compose as written. The only external inputs are Lemma B's affine form, the chain on Γ|_O (proved to pass from Γ by `OliverChain.map`), and transitivity.
+- **Remaining.**
+  - **Lemma B for prime blocks.** A route without the classical "solvable primitive ⇒ affine" theorem:
+    - the block group's normal p-subgroup is trivial, because its orbits have p-power size dividing r;
+    - so its Γ₁-part is cyclic and its Sylow-r is characteristic in it, hence normal;
+    - and the normaliser of a regular C_r in Sym(r) is AGL(1, r), elementary: f(x + 1) = f(x) + c forces f(x) = cx + f(0).
+    The cost is coordinatising each block by its r-cycle.
+  - D2q (r = q) end to end.
+
+## 19. Lean: Lemma B for prime blocks — the three steps
+
+- **New `lean/LemmaB.lean`.** Zero sorries.
+  - `affine_of_shift` / `affine_of_normalizes` (with `addRight_zpow_apply`).
+  - `normal_pgroup_trivial`, via Mathlib's primitive/quasiprimitive results.
+  - `mem_zpowers_of_orderOf_eq` and `conj_mem_zpowers`: in a finite cyclic group, two elements of order r generate the same subgroup.
+- **Why this route.** The text's Lemma B cites "a solvable primitive group is affine", which is not in Mathlib. For prime blocks the chain gives a shortcut: Γ₂ dies on the block, Γ₁ acts through a cyclic group whose r-cycle every element normalises, and normalisers of a regular C_r are affine.
+- **Checked and clean.** Each step holds as stated. The route needs only the chain and r ∉ {p}, not solvability in general, and not q ≠ r for step 1.
+- **Remaining for Lemma B (prime blocks).**
+  - Per block: show Γ₁'s image is cyclic and contains an r-cycle z.
+  - Coordinatise the block by z.
+  - Glue the blocks into `Chain.Affine`. This last step needs one element of order r acting as an r-cycle on every block. The chain makes Sylow-r of Γ|_O cyclic (`rsub_cyclic`), and transitivity should spread a nontrivial action to every block. **This must not reuse `Chain.step1_full`, which assumes Lemma B: that would be circular.** Not yet worked out.
+

@@ -421,7 +421,10 @@ theorem step2_common_mult [Fact r.Prime] (G : Subgroup (Equiv.Perm (Pt F r)))
     (hFr : F < r) (hF : 0 < F)
     (hB : ∀ g ∈ G, ∃ σ a t, (∀ i, a i ≠ 0) ∧ Affine g σ a t)
     (htr : ∀ x y : Pt F r, ∃ g ∈ G, g x = y) :
-    ∃ v : Fin F → ZMod r, (∀ i, v i ≠ 0) ∧ ∀ g ∈ G, ∀ σ a t', Affine g σ a t' →
+    ∃ v : Fin F → ZMod r, (∀ i, v i ≠ 0) ∧
+      (∀ g ∈ G, g ∈ (trHom (F := F) (r := r)).range →
+        ∃ k : ℤ, g = trHom (Multiplicative.ofAdd (k • v))) ∧
+      ∀ g ∈ G, ∀ σ a t', Affine g σ a t' →
       ∃ c : ZMod r, ∀ i, a i * v i = c * v (σ i) := by
   obtain ⟨v, hvf, hv⟩ := step1_full G C hp hq hrp hrq hFr hF hB htr
   obtain ⟨t, ht0, htG⟩ := exists_translation G hFr hF hB htr
@@ -429,7 +432,7 @@ theorem step2_common_mult [Fact r.Prime] (G : Subgroup (Equiv.Perm (Pt F r)))
   have ht : t = k0 • v := congrArg Multiplicative.toAdd (trHom_injective hk0)
   have hc0 : (k0 : ZMod r) ≠ 0 := by
     intro h; apply ht0; rw [ht]; funext i; simp [zsmul_eq_mul, h]
-  refine ⟨v, hvf, fun g hg σ a t' hga => ?_⟩
+  refine ⟨v, hvf, hv, fun g hg σ a t' hga => ?_⟩
   have hmem : g * trHom (Multiplicative.ofAdd t) * g⁻¹ ∈ G :=
     G.mul_mem (G.mul_mem hg htG) (G.inv_mem hg)
   rw [conj_translation hga] at hmem

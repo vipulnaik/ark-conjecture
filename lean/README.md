@@ -15,6 +15,8 @@
 | `Chain.lean` | compiles | n/a — needs Mathlib | **zero** — Oliver's chain; r-subgroups cyclic (r ∉ {p, q}); D2 Step 1 complete given Lemma B |
 | `Step2.lean` | compiles | n/a — needs Mathlib | **zero** — D2 Step 2's change of origins: H¹ = 0 by averaging, for any finite Q with |Q| invertible |
 | `Glue.lean` | compiles | n/a — needs Mathlib | **zero** — Step 2 applied to Γ|_O/T\*: per-block origins giving the normal form (σi, a·x + s) |
+| `Rescale.lean` | compiles | n/a — needs Mathlib | **zero** — **Lemma D2's C(F,2)·r bound end to end** (r ∉ {p, q}), given Lemma B |
+| `LemmaB.lean` | compiles | n/a — needs Mathlib | **zero** — Lemma B for prime blocks: the three steps of an elementary route, not yet assembled |
 
 *Status reproduced 2026-11-24 in the working container, both columns, after the pin below. Compile status was per machine until then — the laptop had Mathlib and the container did not — and this header was wrong in both directions more than once while that was so. With the project pinned and the Mathlib cache reachable from the container, both columns are now checked in one place.*
 
@@ -198,8 +200,15 @@ Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E
 - **`step2_common_mult`: Step 2's first claim, for the group.** Every element's multipliers satisfy aᵢvᵢ = λ·v_{σi}, so they are all equal once v is rescaled to 𝟙.
 - **Still hypotheses:**
   - **Lemma B** (block actions are affine).
-  - **The rescaling.** `Glue.step2_glue` proves Step 2 for Γ|_O itself: it applies `origin_change` to Γ|_O/T\*, reading (σ, a, t) off coset representatives and checking the cocycle. `D2.d2b_shift` takes its output to Step 3's bound. Both assume Step 1's *normalised* coordinates, in which the multiplier is common and T\* is diagonal. `Chain.lean` proves those hold after the per-block rescaling x ↦ x/vᵢ (`step1_diagonal`, `step2_common_mult`), but the conjugation of G by that rescaling is not yet carried out in Lean.
+  - **The rescaling: done.** `Rescale.lean` conjugates Γ|_O by the per-block rescaling ψ(i, x) = (i, vᵢx). In the new coordinates every element has one multiplier and T\* is diagonal (`conj_affine`, `conj_translation_scale`). [Γ|_O : T\*] is prime to r, because |T\*| is divisible by r and r² ∤ |Γ|_O|. Orbital sizes are preserved under conjugation (`orbit2_conj`). **`d2_full`** then assembles Step 1 → Step 2 → Step 3: Γ|_O with an Oliver chain, 2 ≤ F < r, r ∉ {p, q}, Lemma B's affine form and transitivity on O together give an orbital of at most C(F,2)·r pairs. With `D2.d2a`, that is Lemma D2's statement for r ∉ {p, q}.
   - **The bridge from these lemmas to `D2.lean`'s normal-form hypothesis.** It would assemble Step 1, Step 2 and Lemma B into "every element is (σi, a·x + s)".
+
+**Lemma B for prime blocks (`LemmaB.lean`, started 2026-11-25).** The text proves Lemma B from "a solvable primitive group is affine", a classical theorem not in Mathlib. For outside blocks of prime size r, which are all that D2 needs, there is an elementary three-step route, and each step is proved:
+1. **`normal_pgroup_trivial`.** A normal p-subgroup (p ≠ r) of a group acting transitively on r points acts trivially. The action is primitive (prime degree, Mathlib's `IsPreprimitive.of_prime_card`), so a normal subgroup is transitive or trivial, and transitivity would need r ∣ pᵏ.
+2. **`conj_mem_zpowers`.** In a cyclic normal subgroup, an element of order r is conjugated only to its own powers.
+3. **`affine_of_normalizes`.** A permutation of ZMod r that conjugates x ↦ x + 1 to x ↦ x + k is x ↦ kx + f(0).
+
+**Not yet assembled.** Combining the steps per block, which needs Γ₁'s image on a block to be cyclic (step 1 plus faithfulness) and to contain an r-cycle; then choosing block coordinates from that r-cycle; then gluing the blocks into `Chain.Affine`.
 
 ## The split that makes this tractable
 
