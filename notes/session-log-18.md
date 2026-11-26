@@ -359,3 +359,13 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - **`scripts/lean_score_crosscheck.py`.** Random configurations; compares the **full sorted term lists** (the minimum alone hides non-binding mis-scores) of Lean's SAFE and REFINED against `mu_enumerate_v3.value` in both modes, and `validate_table_v3.score` against `mu_enumerate_v3`. Lemma C is passed to Lean as d = strip(c − 1, foreign primes), as the enumerator applies it; foreign twists as the full q-part (R2).
 - **Result.** 8,000 configurations, 0 mismatches (Lemma C changing a term in 2,750 of them); validator 20,000, 0 mismatches. Mutation control (no 2 | t halving in `orb`) caught in both comparisons.
 - **Not covered:** `mu_ladder_exact.py` (its own inline scorer; cross-checked against the exact table under R0), D2 parts (the scripts skip them), `Note.lean`'s note-specific values. Added to `pending-checks.md` R6's rerun recipe.
+
+## 29. Lean: Part E for F = 1
+
+- **`lean/PartE1.lean`.** Realisability for one unfused class 𝔽_c (full twist) beside one foreign block ℤ/r with twist of odd prime order q.
+  - The group: K's affine group alongside z ↦ u·z + v on ℤ/r, u in the order-q subgroup U of (ℤ/r)ˣ, built as a product of `Aff1` groups and mapped into Perm(K ⊕ ℤ/r).
+  - The Oliver chain, on the abstract group and then pushed to the permutation group: translations of K (p-group by characteristic p) ◁ trivial ℤ/r-multiplier (layer ≅ Kˣ × ℤ/r, cyclic by CRT on an explicit generator; this is exactly where r ∤ c − 1 is used) ◁ G (q-group on top).
+  - Orbitals: C(c,2) inside K, c·r mixed, ≥ q·r inside ℤ/r (−1 ∉ U since q is odd). So every pair-orbital is ≥ SAFE = REFINED.
+  - `sigma0_F1_realised`: Σ₀'s floor at the even classes, under either quantifier, with Part E proved.
+- **SigmaHalf refactor:** `cfg_half` (explicit-witness form of the pointwise half) and `spec0_eventually` split out so `PartE1` can reuse them; `pointwise_half` and `sigma0_half` unchanged in statement.
+- **Next.** F ≥ 2: the fused class (blocks permuted transitively) and, for F_mid > 1, the entangled generator; the binding class 11 is F = 4.

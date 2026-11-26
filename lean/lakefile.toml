@@ -12,4 +12,4 @@ rev = "v4.36.0"
 [[lean_lib]]
 name = "Ark"
 srcDir = "."
-roots = ["ArkCore", "E5Core", "Note", "Basic", "Bridge", "E5Assembly", "E6", "D2", "Chain", "Step2", "Glue", "Rescale", "LemmaB", "D2Full", "D2q", "FoBridge", "D1", "LemmaBprime", "Prop1", "ThreeForeign", "Prop1Final", "TwoForeign", "BCG", "Sigma", "SigmaHalf"]
+roots = ["ArkCore", "E5Core", "Note", "Basic", "Bridge", "E5Assembly", "E6", "D2", "Chain", "Step2", "Glue", "Rescale", "LemmaB", "D2Full", "D2q", "FoBridge", "D1", "LemmaBprime", "Prop1", "ThreeForeign", "Prop1Final", "TwoForeign", "BCG", "Sigma", "SigmaHalf", "PartE1"]

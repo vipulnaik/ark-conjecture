@@ -29,6 +29,7 @@
 | `BCG.lean` | compiles | **zero** — (BCG) as **specification × quantifier**: `Hyp W L`, filters `atTop` (AL) and `almostAll` (AA), AL ⇒ AA, AA non-vacuous; the note's arithmetic half proved pointwise and lifted to both |
 | `Sigma.lean` | compiles | **zero** — Σ₀ as data; (BH-SW) six-cell agreement by `decide`; balance point and window lemma for any (F, η, window); clause 2's window ↔ (1 − ε)δ₀; §3.3.5 caps as instances (`cap_table`) |
 | `SigmaHalf.lean` | compiles | **zero** — **the arithmetic half of (BCG) for any class specification** (`pointwise_half`), and for Σ₀ under (AL) or (AA) by one proof (`sigma0_half`) |
+| `PartE1.lean` | compiles | **zero** — **Part E for F = 1**: explicit group on 𝔽_c ⊔ ℤ/r with an Oliver chain and every pair-orbital ≥ SAFE (`partE_F1_exists`); Σ₀'s even-n floor with Part E proved (`sigma0_F1_realised`) |
 
 *Last reproduced at commit 6d656ac (2026-11-25) in the working container: `lake build` clean, `leancheck.sh` 0 errors, 0 sorries.*
 
@@ -41,7 +42,7 @@
 ```bash
 cd lean
 lake exe cache get        # ~9,100 prebuilt Mathlib files; needs cache.mathlib.org
-lake build                # all twenty-five files, a few minutes once the cache is in place
+lake build                # all twenty-six files, a few minutes once the cache is in place
 bash leancheck.sh         # per-file errors / warnings / sorry counts
 ```
 
@@ -294,7 +295,11 @@ Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E
   - `specEps_good`: every (F ≥ 1, d ≥ 2) at the ε-window is regular, side condition included.
   - `sigma0_half`: under `Hyp (W0 ε) L`, L = `atTop` or `almostAll`, L-eventually 2·SAFE ≥ ((1 − ε)·δ₀(n mod 12) − κ/n)·n(n − 1). One proof for both quantifiers; Σ₀ enters only through `spec0`.
   - `sigma0_mu`: with Part E as the single named hypothesis `PartE μ` (every admissible configuration's REFINED score is ≤ μ\*(n), as `E6.e6` takes it), L-eventually 2·μ\*(n) ≥ ((1 − ε)·δ₀(n mod 12) − κ/n)·n(n − 1). This is the conditional floor statement, in both quantifier strengths, from one proof.
-- **Still outside:** Part E itself (the construction).
+- **Part E for F = 1 (`PartE1.lean`).** The group is K's affine group alongside z ↦ u·z + v on ℤ/r, u in the order-q subgroup of (ℤ/r)ˣ.
+  - Oliver chain: translations of K (p-group, characteristic p) ◁ trivial ℤ/r-multiplier (layer ≅ Kˣ × ℤ/r, cyclic by CRT since r ∤ c − 1) ◁ G (q-group on top).
+  - Orbitals: C(c,2) inside K (2-homogeneity), c·r mixed, ≥ q·r inside ℤ/r (−1 ∉ U as q is odd). So every orbital is ≥ SAFE.
+  - `sigma0_F1_realised`: at n ≡ 0, 2, 4, 6, 8, 10 (mod 12), under (AL) or (AA), the floor holds with Part E **proved**: an Oliver group on n points all of whose pair-orbitals are ≥ m with 2m ≥ ((1 − ε)·δ₀ − κ/n)·n(n − 1).
+- **Still outside:** Part E for F ≥ 2 (the odd classes, including class 11), which needs the fused class and the entangled generator.
 
 **The Lean scoring model against the Python scorers (`../scripts/lean_score_crosscheck.py`, 2026-11-25).** The theorems here are about `E6.Config`'s SAFE and REFINED, so a drift between those definitions and the scripts that produced the table would make them true of the wrong thing. The script compares the **full sorted term lists**, not the minima (a mis-scored term that does not bind would hide behind the minimum), of random configurations: Lean against `mu_enumerate_v3.value` in SAFE and refined mode, and `validate_table_v3.score` against `mu_enumerate_v3`.
 - **Result:** 8,000 configurations (p ∈ {2,…,13}, q ∈ {2, 3, 5, 7}, F up to 7 both parities, c up to p³, r < 120, Lemma C changing a term in 2,750), 0 mismatches; 20,000 for the validator, 0 mismatches.

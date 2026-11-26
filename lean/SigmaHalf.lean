@@ -162,11 +162,13 @@ end ClassSpec
 
 /-- **The arithmetic half at a single n, for any class specification.**  A witness at n gives an
 admissible configuration on n points with 2·SAFE ≥ (target − κ/n)·n(n − 1). -/
-theorem pointwise_half (S : ClassSpec) (hS : S.Good) {n : ℕ} (hW : S.Witness n)
+theorem cfg_half (S : ClassSpec) (hS : S.Good) {n p b q r : ℕ} (hp : p.Prime) (hb : 1 ≤ b)
+    (hq : q.Prime) (hqo : q % 2 = 1) (hr : r.Prime) (hrp : r ≠ p) (hrd : r = S.d * q + 1)
+    (hn : n = S.F * p ^ b + r) (hlo : S.xlo * n ≤ ((p ^ b : ℕ) : ℝ))
+    (hhi : ((p ^ b : ℕ) : ℝ) ≤ S.xhi * n)
     (hx : 1 ≤ S.xlo * n) (hy : 1 ≤ S.ylo * n) :
-    ∃ C : Config, GAdm C ∧ C.FallbackFree ∧ C.n = n ∧
-      (S.tgt - S.kap / n) * (n * (n - 1)) ≤ 2 * (C.safe : ℝ) := by
-  obtain ⟨p, b, q, r, hp, hb, hq, hqo, hr, hrp, hrd, hn, hlo, hhi, -⟩ := hW
+    GAdm (cfg p q S.F (p ^ b) r) ∧
+      (S.tgt - S.kap / n) * (n * (n - 1)) ≤ 2 * ((cfg p q S.F (p ^ b) r).safe : ℝ) := by
   set c := p ^ b with hc
   have hnpos : (0 : ℝ) < n := by
     rcases Nat.eq_zero_or_pos n with h | h
@@ -198,7 +200,7 @@ theorem pointwise_half (S : ClassSpec) (hS : S.Good) {n : ℕ} (hW : S.Witness n
     have : S.tgt ≤ S.eta * (1 - S.F * S.xhi) ^ 2 := min_le_right _ _
     have : S.eta * (1 - S.F * S.xhi) / n ≤ S.kap / n := div_le_div_of_nonneg_right hkap2 hnpos.le
     linarith
-  refine ⟨cfg p q S.F c r, ?_, cfg_fallbackFree _ _ _ _ _, by rw [cfg_n]; exact hn.symm, ?_⟩
+  refine ⟨?_, ?_⟩
   · -- admissibility
     refine ⟨hp, hq, ?_, by simp [cfg, Config.foreign]⟩
     intro x hx'
@@ -244,6 +246,16 @@ theorem pointwise_half (S : ClassSpec) (hS : S.Good) {n : ℕ} (hW : S.Witness n
         nlinarith
       push_cast
       linarith
+
+/-- **The arithmetic half at a single n, for any class specification.**  A witness at n gives an
+admissible, fallback-free configuration on n points with 2·SAFE ≥ (target − κ/n)·n(n − 1). -/
+theorem pointwise_half (S : ClassSpec) (hS : S.Good) {n : ℕ} (hW : S.Witness n)
+    (hx : 1 ≤ S.xlo * n) (hy : 1 ≤ S.ylo * n) :
+    ∃ C : Config, GAdm C ∧ C.FallbackFree ∧ C.n = n ∧
+      (S.tgt - S.kap / n) * (n * (n - 1)) ≤ 2 * (C.safe : ℝ) := by
+  obtain ⟨p, b, q, r, hp, hb, hq, hqo, hr, hrp, hrd, hn, hlo, hhi, -⟩ := hW
+  obtain ⟨hC, hs⟩ := cfg_half S hS hp hb hq hqo hr hrp hrd hn hlo hhi hx hy
+  exact ⟨_, hC, cfg_fallbackFree _ _ _ _ _, by rw [cfg_n]; exact hn.symm, hs⟩
 
 /-! ## Σ₀: the window from ε, regularity, and the lifted arithmetic half -/
 
@@ -348,6 +360,21 @@ theorem spec0_pos (ε : ℝ) (hε : ε < 1) (a : Fin 12) :
     rw [specEps_ylo _ _ _ (by omega), one_sub_F_xstar _ _ (by omega) hη.le]
     positivity
 
+/-- For ε < 1, every class's window eventually contains a block of size ≥ 1 on both sides. -/
+theorem spec0_eventually {ε : ℝ} (hε1 : ε < 1) : ∀ᶠ n : ℕ in atTop, ∀ a : Fin 12,
+    1 ≤ (spec0 ε a).xlo * (n : ℝ) ∧ 1 ≤ (spec0 ε a).ylo * (n : ℝ) := by
+  rw [Filter.eventually_all]
+  intro a
+  obtain ⟨hx, hy⟩ := spec0_pos ε hε1 a
+  have h1 : ∀ᶠ n : ℕ in atTop, (1 / (spec0 ε a).xlo) ≤ (n : ℝ) :=
+    tendsto_natCast_atTop_atTop.eventually_ge_atTop _
+  have h2 : ∀ᶠ n : ℕ in atTop, (1 / (spec0 ε a).ylo) ≤ (n : ℝ) :=
+    tendsto_natCast_atTop_atTop.eventually_ge_atTop _
+  filter_upwards [h1, h2] with n hn1 hn2
+  constructor
+  · rw [div_le_iff₀ hx] at hn1; linarith
+  · rw [div_le_iff₀ hy] at hn2; linarith
+
 /-- **The arithmetic half of (BCG) for Σ₀, under either quantifier.**  If Σ₀'s witness holds
 L-eventually (L = `atTop` for (AL), `almostAll` for (AA)), then L-eventually n carries an
 admissible configuration with 2·SAFE ≥ ((1 − ε)·δ₀(n mod 12) − κ/n)·n(n − 1), δ₀ being §3.3.5's
@@ -356,21 +383,7 @@ theorem sigma0_half {ε : ℝ} (hε1 : ε < 1) {L : Filter ℕ} (hL : L ≤ atTo
     (H : BCG.Hyp (W0 ε) L) :
     ∀ᶠ n in L, ∃ C : Config, GAdm C ∧ C.FallbackFree ∧ C.n = n ∧
       ((1 - ε) * capCol (cls n) - (spec0 ε (cls n)).kap / n) * (n * (n - 1)) ≤ 2 * (C.safe : ℝ) := by
-  have hlarge : ∀ᶠ n : ℕ in L, ∀ a : Fin 12,
-      1 ≤ (spec0 ε a).xlo * (n : ℝ) ∧ 1 ≤ (spec0 ε a).ylo * (n : ℝ) := by
-    apply hL
-    show ∀ᶠ n : ℕ in atTop, ∀ a : Fin 12, _
-    rw [Filter.eventually_all]
-    intro a
-    obtain ⟨hx, hy⟩ := spec0_pos ε hε1 a
-    have h1 : ∀ᶠ n : ℕ in atTop, (1 / (spec0 ε a).xlo) ≤ (n : ℝ) :=
-      tendsto_natCast_atTop_atTop.eventually_ge_atTop _
-    have h2 : ∀ᶠ n : ℕ in atTop, (1 / (spec0 ε a).ylo) ≤ (n : ℝ) :=
-      tendsto_natCast_atTop_atTop.eventually_ge_atTop _
-    filter_upwards [h1, h2] with n hn1 hn2
-    constructor
-    · rw [div_le_iff₀ hx] at hn1; linarith
-    · rw [div_le_iff₀ hy] at hn2; linarith
+  have hlarge := hL (spec0_eventually hε1)
   filter_upwards [H, hlarge] with n hW hl
   obtain ⟨hx, hy⟩ := hl (cls n)
   have hg := specEps_good (F0 (cls n)) (d0 (cls n)) (ε := ε) (F0_pos _) (d0_ge _) hε1.le
