@@ -352,3 +352,10 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - **`lean/SigmaHalf.lean`.** The arithmetic half for any class specification (`pointwise_half`), and for Σ₀ under either quantifier (`sigma0_half`). The cross terms are handled: the within-class term never binds, and the between-parts term needs 2F·x₋·y₋ ≥ target, which holds for every (F ≥ 1, d ≥ 2) at the ε-window. ε ≥ 0 turned out not to be needed as a hypothesis (for ε < 0 the window is empty and the statement vacuous).
 - **`sigma0_mu`.** With Part E as one named hypothesis (`PartE μ`), the μ\* floor statement under either quantifier. So the conditional floor now has exactly three named inputs in Lean: the quantified witness hypothesis, Part E, and (for the upper side, elsewhere) Part 0.
 - **Next.** Part E itself, starting with F = 1.
+
+## 28. Cross-check: Lean scoring model against the Python scorers
+
+- **Why.** In the residual-risk assessment, risk 4 was that Lean's `E6.Config` SAFE/REFINED might not be the functions the table scripts compute, which would make the Lean theorems true of a different model.
+- **`scripts/lean_score_crosscheck.py`.** Random configurations; compares the **full sorted term lists** (the minimum alone hides non-binding mis-scores) of Lean's SAFE and REFINED against `mu_enumerate_v3.value` in both modes, and `validate_table_v3.score` against `mu_enumerate_v3`. Lemma C is passed to Lean as d = strip(c − 1, foreign primes), as the enumerator applies it; foreign twists as the full q-part (R2).
+- **Result.** 8,000 configurations, 0 mismatches (Lemma C changing a term in 2,750 of them); validator 20,000, 0 mismatches. Mutation control (no 2 | t halving in `orb`) caught in both comparisons.
+- **Not covered:** `mu_ladder_exact.py` (its own inline scorer; cross-checked against the exact table under R0), D2 parts (the scripts skip them), `Note.lean`'s note-specific values. Added to `pending-checks.md` R6's rerun recipe.

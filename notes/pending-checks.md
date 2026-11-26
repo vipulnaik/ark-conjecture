@@ -198,6 +198,8 @@ python3 check_doc_figures.py $TABLE *.md               # 8. documents against th
 
 ```bash
 python3 shape_realize.py --nmax 34              # expect 0 mismatches
+python3 lean_score_crosscheck.py                # Lean E6 SAFE/REFINED term lists vs mu_enumerate_v3, and validate_table_v3.score: expect 0 mismatches
+python3 lean_score_crosscheck.py --seed 2 --bias --validate 0   # Lemma C exercised in ~60% of configurations
 python3 shape_realize.py --nmax 22 --strip      # control: expect UNDER-SCOREs
 python3 shape_realize.py --foreign --nmax 200   # foreign blocks vs orb(r,t): expect 0 mismatches; add --strip for the control
 python3 shape_realize.py --interclass --nmax 40 # all four terms incl. F*c*r: expect 0 mismatches
@@ -210,6 +212,8 @@ gap -q -o 8g oliver_negative.g                  # the admissibility predicate's 
 ```
 
 **Last run 2026-10-17/18 — all clean** (session-log-15 §§31–33): 197 foreign blocks, 495 inter-class shapes, 3,248 sharing groups, and every control fired.
+
+**`lean_score_crosscheck.py`, first run 2026-11-25 — clean** (session-log-18 §28): 8,000 configurations, full sorted term lists for SAFE and REFINED, Lean against `mu_enumerate_v3` (2,750 with Lemma C changing a term); 20,000 for `validate_table_v3.score`. Control: dropping `orb`'s 2 | t halving gives 121/500 and 273/2,000 mismatches. *Not covered:* `mu_ladder_exact.py`'s inline scoring, D2 (`fo`) parts, which the Python scorers do not score, and `Note.lean`'s `mStarEven`/`mStarOdd`.
 
 - **Read the control before the green run.** Expect UNDER-SCORE at exactly the shapes where stripping **changes** orb(c,d) — check against that predictor, not a remembered count. It is *not* "wherever gcd(d, F) > 1", which names about twice as many rows.
 - **`lemma_c_share.py` reports refined under-credits, and they are expected.** `--refined` scores 257 sharing groups below what they realise (worst c = 32, r = 31: 16 against 155). The strip is not a necessary condition; Corollary C′'s licence covers it, and that is the column to read.

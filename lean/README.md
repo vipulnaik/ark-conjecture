@@ -296,6 +296,11 @@ Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E
   - `sigma0_mu`: with Part E as the single named hypothesis `PartE μ` (every admissible configuration's REFINED score is ≤ μ\*(n), as `E6.e6` takes it), L-eventually 2·μ\*(n) ≥ ((1 − ε)·δ₀(n mod 12) − κ/n)·n(n − 1). This is the conditional floor statement, in both quantifier strengths, from one proof.
 - **Still outside:** Part E itself (the construction).
 
+**The Lean scoring model against the Python scorers (`../scripts/lean_score_crosscheck.py`, 2026-11-25).** The theorems here are about `E6.Config`'s SAFE and REFINED, so a drift between those definitions and the scripts that produced the table would make them true of the wrong thing. The script compares the **full sorted term lists**, not the minima (a mis-scored term that does not bind would hide behind the minimum), of random configurations: Lean against `mu_enumerate_v3.value` in SAFE and refined mode, and `validate_table_v3.score` against `mu_enumerate_v3`.
+- **Result:** 8,000 configurations (p ∈ {2,…,13}, q ∈ {2, 3, 5, 7}, F up to 7 both parities, c up to p³, r < 120, Lemma C changing a term in 2,750), 0 mismatches; 20,000 for the validator, 0 mismatches.
+- **Control:** a mutant `orb` without the 2 | t halving is caught (121 of 500, 273 of 2,000).
+- **Not covered:** `mu_ladder_exact.py`'s inline scoring (cross-checked against the exact table in `pending-checks.md` R0), D2 parts, and `Note.lean`'s note-specific values.
+
 > **To check in future iterations: Mathlib coverage.** As of the pinned Mathlib (v4.36.0, checked 2026-11-25), Mathlib has primitive and quasiprimitive actions, Jordan's theorems, Schur–Zassenhaus and solvable groups. It has no minimal-normal-subgroup or socle theory, no O'Nan–Scott, and no "a solvable primitive group is affine". Several results here are hand-proved because of that gap: `card_eq_of_abelian_normal`, `LemmaB.lemmaB_block_any`, the Step 0 and Lemma B′ arguments, and `LemmaB.mem_zpowers_of_orderOf_eq`. **When Mathlib is next bumped, check whether ready-made versions now exist.** Candidates:
 > - socle / minimal normal subgroups;
 > - "solvable primitive ⇒ affine";
