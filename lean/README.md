@@ -25,6 +25,10 @@
 | `Prop1.lean` | compiles | **zero** — `ladder-completeness.md` Proposition 1's counting clauses: share > 1/5 and ≤ 4 parts, fusion count **sharpened to F ≤ 15**, foreign efficiency, the S12 merge, the three-foreign-prime reduction k ≤ 5/12/17 |
 | `ThreeForeign.lean` | compiles | **zero** — **Proposition 1: no configuration above 1/25 has three foreign primes**, every q and exponent (`no_three_foreign`) |
 | `Prop1Final.lean` | compiles | **zero** — **Proposition 1 assembled** (`prop1`): above the line, matched by ≤ 1 class + ≤ 2 foreign parts, F ≤ 15 |
+| `TwoForeign.lean` | compiles | **zero** — **Proposition 2**: S6 ≤ C(n,2)/9, S11 ≤ C(n,2)/16, every q, no exceptions (`s6_ceiling`, `s11_ceiling`) |
+| `BCG.lean` | compiles | **zero** — (BCG) as **specification × quantifier**: `Hyp W L`, filters `atTop` (AL) and `almostAll` (AA), AL ⇒ AA, AA non-vacuous; the note's arithmetic half proved pointwise and lifted to both |
+| `Sigma.lean` | compiles | **zero** — Σ₀ as data; (BH-SW) six-cell agreement by `decide`; balance point and window lemma for any (F, η, window); clause 2's window ↔ (1 − ε)δ₀; §3.3.5 caps as instances (`cap_table`) |
+| `SigmaHalf.lean` | compiles | **zero** — **the arithmetic half of (BCG) for any class specification** (`pointwise_half`), and for Σ₀ under (AL) or (AA) by one proof (`sigma0_half`) |
 
 *Last reproduced at commit 6d656ac (2026-11-25) in the working container: `lake build` clean, `leancheck.sh` 0 errors, 0 sorries.*
 
@@ -37,7 +41,7 @@
 ```bash
 cd lean
 lake exe cache get        # ~9,100 prebuilt Mathlib files; needs cache.mathlib.org
-lake build                # all twenty-one files, a few minutes once the cache is in place
+lake build                # all twenty-five files, a few minutes once the cache is in place
 bash leancheck.sh         # per-file errors / warnings / sorry counts
 ```
 
@@ -266,7 +270,31 @@ Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E
   - In every pattern some part has a bound whose leading coefficient is ≤ A² and linear coefficient ≤ 5A, so it fails at *every* T. A kernel check (one `decide` per q ≤ 31, one for q ≥ 32) confirms this; about two minutes.
   - Inputs used: orb ≤ c·r·t/2 (halving when q = 2 and t ≥ 2), orb ≤ C(r,2), share > 1/5, and the parity of a prime rⱼ = aⱼT + 1. The text's continuous worst case, 1/27 at q = 2, is consistent.
 - **`Prop1Final.prop1`: Proposition 1 assembled.** Every admissible configuration with no D2 part above the line is matched (same n, SAFE no lower, admissible) by one with at most one class and at most two foreign parts, and F ≤ 15 when the class has company. Classes are merged repeatedly (`merge_all`, larger block first); a third foreign part is excluded after sorting the primes (`fr_le_two`). The remaining clauses (shares, foreign efficiency, fallback-freeness via `E6.e6_core`) apply to the matched configuration as separate theorems; D2 parts are handled by `E6.d2_case`.
-- **Not yet formalised from `ladder-completeness.md`:** Proposition 2's ceilings for S6 and S11, and Proposition 3 (conditional on (BCG-AL), and not a target).
+- **`TwoForeign`: Proposition 2.** `s6_ceiling` (two foreign primes: 9·SAFE ≤ C(n,2)) and `s11_ceiling` (a class and two foreign primes: 16·SAFE ≤ C(n,2)), for every q and exponent.
+  - The key lemma `two_foreign`: for r₁ < r₂ and R = r₁ + r₂, one part has 18·orb ≤ R(R − 1). Same normalisation and per-q kernel check as `ThreeForeign` (A < 18).
+  - One family passes the coefficient test, q = 2 with r₁ = 2T + 1, r₂ = 3T + 1; primality kills it (T = 2 is {5, 7}, numerically fine; T = 2^m ≥ 4 makes one divisible by 3 or 5).
+  - S11 reduces to the same lemma: a class above 1/16 has 3s > R, so 9n(n − 1) ≥ 16R(R − 1).
+  - **Finding.** The text's exceptions {3, 5} and {5, 7} are not needed in the model: they exceed 1/9 only in the continuous ceilings. And "S6 has n even" fails at the edges {2, 3} and {2, 5} (n = 5, 7, SAFE = 1), which is harmless.
+- **Not formalised from `ladder-completeness.md`:** Proposition 3 (conditional on (BCG-AL), not a target).
+
+**(BCG) as a specification and a quantifier (`BCG.lean`, 2026-11-25).** Mirrors `arithmetic-of-density.md` §3.5.3's "specification and quantifier" paragraph.
+- **Shape.** A specification is a witness predicate `W : ℕ → Prop` (clauses 1–4 at one n). The quantifier is a filter: `atTop` for (AL), `almostAll` for (AA), whose sets are those with exceptional set ≤ C·x/(log x)^A + C up to x, for every A. `Hyp W L := ∀ᶠ n in L, W n`.
+- **Proved.** `almostAll` is a filter; `atTop_le_almostAll` (AL ⇒ AA, for every W); `almostAll_neBot` (AA is not vacuous); `Hyp.lift` / `Hyp.lift_large` (a pointwise result lifts to any quantifier below `atTop`).
+- **The note as an instance.** `noteWitness` is `Note.HypBCG`'s clause (`note_hyp_iff`). `note_pointwise` is the arithmetic half at one n; `note_arithmetic_half` lifts it, giving `Note.theorem_arithmetic_half` under (AL) and its (AA) counterpart from one proof.
+- **Σ₀ and the window lemma (`Sigma.lean`).**
+  - `F0`, `d0`: Σ₀'s table. `bhsw_agrees`: the (BH-SW) per-class (k, d) of `bcp-to-floor.md` is the same table (`decide`).
+  - `xstar`, `balance`: for any (F, η), both binding terms equal `capF F η` at the balance point.
+  - `target`, `window`, `target_le_cap`, `target_at_balance`: the window lemma for any (F, η, window).
+  - `window_of_eps`: the window x₋ = x\*√(1 − ε), 1 − F·x₊ = (1 − F·x\*)√(1 − ε) has target exactly (1 − ε)·cap, so clause 2's two readings correspond for every (F, η).
+  - `pointwise`: the exact single-n bound on the two binding terms, (target − κ/n)·n(n − 1).
+  - `cap_table`: §3.3.5's cap column is `capF (F0 a) (2 / d0 a)` at all twelve classes.
+- **The assembly (`SigmaHalf.lean`).**
+  - `ClassSpec` (F, d, window), its `Witness` (n = F·p^b + r in the window, r = dq + 1, q odd prime, r ≠ p, r ∤ p^b − 1) and regularity `Good` (including the one cross-term side condition 2F·x₋·y₋ ≥ target).
+  - `pointwise_half`: for any regular specification, a witness at n gives an admissible `E6` configuration with 2·SAFE ≥ (target − κ/n)·n(n − 1). Inputs: `orb_dq` (orb(r, q) = (2/d)·C(r,2)), `within_ge` (the within-class cross term never binds), `Sigma.pointwise`.
+  - `specEps_good`: every (F ≥ 1, d ≥ 2) at the ε-window is regular, side condition included.
+  - `sigma0_half`: under `Hyp (W0 ε) L`, L = `atTop` or `almostAll`, L-eventually 2·SAFE ≥ ((1 − ε)·δ₀(n mod 12) − κ/n)·n(n − 1). One proof for both quantifiers; Σ₀ enters only through `spec0`.
+  - `sigma0_mu`: with Part E as the single named hypothesis `PartE μ` (every admissible configuration's REFINED score is ≤ μ\*(n), as `E6.e6` takes it), L-eventually 2·μ\*(n) ≥ ((1 − ε)·δ₀(n mod 12) − κ/n)·n(n − 1). This is the conditional floor statement, in both quantifier strengths, from one proof.
+- **Still outside:** Part E itself (the construction).
 
 > **To check in future iterations: Mathlib coverage.** As of the pinned Mathlib (v4.36.0, checked 2026-11-25), Mathlib has primitive and quasiprimitive actions, Jordan's theorems, Schur–Zassenhaus and solvable groups. It has no minimal-normal-subgroup or socle theory, no O'Nan–Scott, and no "a solvable primitive group is affine". Several results here are hand-proved because of that gap: `card_eq_of_abelian_normal`, `LemmaB.lemmaB_block_any`, the Step 0 and Lemma B′ arguments, and `LemmaB.mem_zpowers_of_orderOf_eq`. **When Mathlib is next bumped, check whether ready-made versions now exist.** Candidates:
 > - socle / minimal normal subgroups;

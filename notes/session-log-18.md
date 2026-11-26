@@ -335,3 +335,20 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
   - A single `decide` over all q ran out of memory (7 GB container); splitting per q fixed it.
 - **Proposition 1 assembled (`Prop1Final.lean`, `prop1`).** Above the line, any admissible D2-free configuration is matched (same n, SAFE no lower) by one with ≤ 1 class and ≤ 2 foreign parts, and F ≤ 15 when the class has company. So Proposition 1 is now a theorem of the model, with the fusion bound one sharper than the text's.
 - **Next in `ladder-completeness.md`:** Proposition 2 (the S6 ≤ 1/9 and S11 ≤ 1/16 ceilings).
+
+## 26. Lean: Proposition 2 (S6 and S11 ceilings)
+
+- **`TwoForeign.lean`.** `s6_ceiling`: two foreign primes alone have 9·SAFE ≤ C(n,2). `s11_ceiling`: a class beside two foreign primes has 16·SAFE ≤ C(n,2). Every q and exponent.
+- **Method.** As for three primes: normalise by the least twist, bound A = a₁ + a₂ < 18, kernel check per q. One family passes the coefficient test (q = 2, r₁ = 2T + 1, r₂ = 3T + 1); primality removes it, using 2^m mod 15. S11 reduces to S6's lemma because a class above 1/16 forces 9n(n − 1) ≥ 16R(R − 1).
+- **Findings, recorded in `ladder-completeness.md` §3:** the text's exceptions {3, 5} and {5, 7} are unnecessary with actual orbit counts ({5, 7}: 9·7 = 63 ≤ 66); and "S6 has n even" fails at {2, 3} and {2, 5} (n = 5, 7), so the odd-n clause needs n ≥ 8.
+- **Checked numerically first:** actual prime pairs to 6,000, all q: max S6 density 0.11111, no violation of 1/9.
+
+## 27. (BCG) restructured: specification × quantifier
+
+- **Vipul's direction.** Restate (BCG) so that the framework docs and Lean agree, and so that a change of balance points or of quantifier is a change of parameters to one proof, not a new argument. The framework docs say nothing about other applications.
+- **`arithmetic-of-density.md` §3.5.3.** New paragraph, "How the statement is organised: a specification and a quantifier". (BCG) is Q n: W_Σ(n). Σ is the per-class table (F, d, window, target); Σ₀ is §3.3.5's table, and the note's (BCG_{1/5}) is another Σ. Q is AL or AA. Consequences: results are proved pointwise and then quantified; the arithmetic half is one argument with Σ as a parameter (minimum of the configuration's polynomials over the window), which is why clause 2 is a window and not "δ ≥ (1 − ε)δ₀"; route comparisons such as (BH-SW)'s are table comparisons.
+- **`lean/BCG.lean`.** `Hyp W L`, the filters `atTop` and `almostAll`, `atTop_le_almostAll`, `almostAll_neBot`, and the lift lemmas. The note's specification as `noteWitness`, equivalent to `Note.HypBCG`; its arithmetic half proved pointwise and lifted to both quantifiers.
+- **`lean/Sigma.lean`.** Σ₀ as data (`F0`, `d0`); the (BH-SW) six-cell agreement as `decide` on two tables, the second transcribed from `bcp-to-floor.md`'s grid; `xstar` and `balance` for any (F, η); the window lemma and `target` for any window; `window_of_eps` (clause 2's window and (1 − ε)δ₀ forms correspond, for every (F, η)); `pointwise` (exact at one n); `cap_table` (§3.3.5's caps at all twelve classes as the generic cap at Σ₀'s table).
+- **`lean/SigmaHalf.lean`.** The arithmetic half for any class specification (`pointwise_half`), and for Σ₀ under either quantifier (`sigma0_half`). The cross terms are handled: the within-class term never binds, and the between-parts term needs 2F·x₋·y₋ ≥ target, which holds for every (F ≥ 1, d ≥ 2) at the ε-window. ε ≥ 0 turned out not to be needed as a hypothesis (for ε < 0 the window is empty and the statement vacuous).
+- **`sigma0_mu`.** With Part E as one named hypothesis (`PartE μ`), the μ\* floor statement under either quantifier. So the conditional floor now has exactly three named inputs in Lean: the quantified witness hypothesis, Part E, and (for the upper side, elsewhere) Part 0.
+- **Next.** Part E itself, starting with F = 1.
