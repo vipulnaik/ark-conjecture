@@ -1,6 +1,6 @@
 # Formalising the ARK framework: what is worth doing, and in what order
 
-*Compile status, per file, as of 2026-11-25. The forward plan is in "The plan" below; most of its 2026-10 order of work is now done or superseded, and the status at the top of that section says which.*
+*Compile status, per file, as of 2026-11-26. The forward plan is in "The plan" below; most of its 2026-10 order of work is now done or superseded, and the status at the top of that section says which. **What is still open** is listed once, under "Open, as of 2026-11-26" at the end of the plan.*
 
 | file | `lake build` (Mathlib v4.36.0, pinned here) | sorries |
 |---|---|---|
@@ -40,7 +40,7 @@
 | `Upper.lean` | compiles | **zero beyond two named hypotheses** — **Proposition U_typ** (the ceiling on μ\*_N^fpf): m\*_N, m\*_typ, N\*; level 1 sound under `HypKSSOliver` (`evasive_below_mN`); Step 1 (`Nstar_orb`); Step 3 exactly, 2·m\*_N·W² < n(n − 1) (`mN_lt_intrans`); splitting halves (`mN_half`); given `HypStep2` (§6.3 Step 2) and `HypConjP` (Conjecture P): m\*_N(Γ) < δ_cyc(n)·C(n,2) for fixed-point-free Oliver Γ, n not a prime power, n ∉ E (`Utyp_even`, `Utyp_odd`); Step 4 proved (`step4`), so Conjecture P can be replaced by Step 5 alone plus Step 2 for blocks (`HypStep5`, `HypStep2Block`; `Utyp_even_steps`, `Utyp_odd_steps`) |
 | `UpperDensity.lean` | compiles | **zero** — E is O(x/log x): its first clause lies in `CoverDensity`'s escapes (`E1_count`), and its second clause at odd n is 2^j + (prime power ≤ 2^(j+2)), counted by a geometric sum (`E2_count`). **`ceiling_density`**: given the three named hypotheses, μ\*_N^fpf(n) < δ_cyc(n)·C(n,2) outside O(x/log x) exceptions |
 
-*Last reproduced at commit 6d656ac (2026-11-25) in the working container: `lake build` clean, `leancheck.sh` 0 errors, 0 sorries.*
+*Last reproduced at commit 59f38da (2026-11-26) in the working container: `lake build` clean, `leancheck.sh` 0 errors, 0 warnings, 0 sorries across all 35 files.*
 
 *What a green build establishes, restated because it invites over-reading: **the arithmetic between the hypotheses and the conclusion is correct, and the units are consistent.** The note's theorem remains conditional on (BCG_{1/5}) and on Oliver's theorem, neither formalised here.*
 
@@ -51,7 +51,7 @@
 ```bash
 cd lean
 lake exe cache get        # ~9,100 prebuilt Mathlib files; needs cache.mathlib.org
-lake build                # all twenty-seven files, a few minutes once the cache is in place
+lake build                # all 35 files; ~20 minutes from a cold build (TwoForeign, ThreeForeign and E5Assembly's kernel checks dominate)
 bash leancheck.sh         # per-file errors / warnings / sorry counts
 ```
 
@@ -72,7 +72,14 @@ elan toolchain link leanprover/lean4:v4.36.0 $PWD/lean-4.36.0-linux
 
 ## The plan (drawn up 2026-10; status as of 2026-11-25)
 
-**Status.** Step 1 below (Theorem E.5) is done, in `E5Assembly.lean` rather than `Basic.lean`; `ladder-completeness.md` Proposition 1 is not. Steps 2–6 (graph-property definitions, `HypKSSOliver`, the constructions as permutation groups, the conditional theorem, the BBKN replacement) are not started. Work went instead to group theory this plan had treated as out of reach: Lemma D2, Lemma B for prime blocks and Lemma B′ are now theorems from Oliver's chain (see the per-file sections below). What follows is kept as the forward plan for the note's conditional theorem; the planning-level version is `claude-understanding-of-project-plan.md` §9.
+**Status (2026-11-26).** The 2026-10 order of work below is kept as a record; its steps stand as follows.
+- Step 1, Theorem E.5: done (`E5Assembly.lean`), and so is `ladder-completeness.md` Proposition 1 (`Prop1Final.lean`).
+- Step 2, the definitions and `HypKSSOliver`: done in a different form from the sketch below. `Chain.OliverChain` is the Oliver group, and `Evasive.lean` has `orbitals`, `chiFix` (the fixed complex's χ) and `HypKSSOliver`. Evasiveness itself is an abstract predicate `Ev` on down-closed properties, constrained only by `HypKSSOliver`. `GraphProperty` and a decision-tree `NonEvasive` are not defined, so the KSS step "non-evasive ⇒ collapsible" lives inside the hypothesis.
+- Steps 3–4, the constructions as permutation groups: done for the two-part shapes (`PartE1.lean` for F = 1, `PartEF.lean` for F ≥ 2 with the entangled generator, c = p^a via `GaloisField`). The unfused family n = 2m of step 3 is not separately built.
+- Step 5, the conditional theorem: done as `SigmaHalf.sigma0_mu` / `PartEAll.sigma0_realised` (floor) and `Threshold.thr_realised` (evasiveness beyond μ\*), under (AL) or (AA).
+- Step 6, the BBKN replacement: not done (`ArkCore.fused_value` has its arithmetic half).
+
+Work also went to group theory this plan had treated as out of reach: Lemma D2, Lemma B for prime blocks and Lemma B′ are now theorems from Oliver's chain (see the per-file sections below). The planning-level version is `claude-understanding-of-project-plan.md` §9.
 
 ### Next: `Note.lean` from the arithmetic to the whole conditional argument
 
@@ -111,7 +118,7 @@ The sparse-evasiveness theorem is then one line: if every graph in P has fewer t
 
 **Order of work, by friction:**
 
-1. **Theorem E.5 — done** (`E5Assembly.lean`, with E.6 in `E6.lean`). `ladder-completeness.md` Proposition 1 is still open and is arithmetic, a natural next small target.
+1. **Theorem E.5 — done** (`E5Assembly.lean`, with E.6 in `E6.lean`). `ladder-completeness.md` Proposition 1 — done (`Prop1Final.lean`).
 2. **The definitions above and `HypKSSOliver`.** No proofs yet; the point is that they typecheck against each other and against the theorem statement.
 3. **The unconditional family** n = 2m, m a prime power — two blocks of 𝔽_m with the entangled generator, orbitals {m(m−1), m²}, Oliver with trivial top. Smallest group, no foreign block, the note's Theorem 2.2 analogue.
 4. **The two-part construction** n = F·c + r, **with c prime first** (`ZMod p`, a field with no ceremony), the block group `AGL(1,c)` as a subgroup of `Equiv.Perm (ZMod p)`, the foreign block `ZMod r` with twist of order t, the chain, and the pair-orbitals. Then **c = p^a** via `GaloisField`, which costs more at every lemma.
@@ -130,10 +137,10 @@ This is **not** part of the ARK Lean plan and does not gate it. Vipul's mathchec
 
 **What is reachable in one to two months of Max**, and would be a complete honest artefact:
 
-- E.5 — done (2026-11). Proposition 1 — open.
-- **Part E realisability in general**: μ\* ≥ B for the whole shape space — the note's constructions generalised to any F, any foreign block, S6/S11.
-- **Phase 3**: `B n` as a computable function — configurations, the Part G.3 score, the max — with `native_decide` on individual rows. Not the whole CSV.
-- **Part 0 stated as a named hypothesis** `HypShapeComplete`, so that `μ* = B` is a Lean theorem conditional on exactly one classification input.
+- E.5 — done (2026-11). Proposition 1 — done (2026-11).
+- **Part E realisability in general**: μ\* ≥ B for the whole shape space. *Done for the two-part shapes Σ₀ and the threshold use* (`PartE1`, `PartEF`); several classes, several foreign blocks, F_top > 1 and q = 2 remain.
+- **Phase 3**: `B n` as a computable function — configurations, the Part G.3 score, the max — with `native_decide` on individual rows. Not the whole CSV. *Not started.*
+- **Part 0 stated as a named hypothesis** `HypShapeComplete`, so that `μ* = B` is a Lean theorem conditional on exactly one classification input. *Not started; today `E6.e6` takes μ ≤ B_safe as a bare hypothesis.*
 
 **What is not reachable, and the plan must not be read as aiming at it.** Part 0's completeness rests on Huppert's classification of solvable 2-transitive groups, and that is not going into Lean by one person in two months — nor should the corpus be built as if it were. **"Everything except the classification is machine-checked" is a strong statement and is available. "Everything is machine-checked" is not.** The FLT run shows the second is a matter of effort rather than possibility — Oliver's theorem is a short 1975 paper, "weeks of agent time" on that evidence — but that run was eleven days of parallel agents on a bespoke platform, not a chat window, and its output was by its own assessment not readable as mathematics. For a document whose purpose is exposition, the checked *statement* is the artefact worth having, and that is what the hypothesis-parameterised form delivers.
 
@@ -194,7 +201,7 @@ Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E
   - **Twists.** A first version assumed "a twist below c − 1 needs a foreign r ∣ c − 1" (Lemma C's coupling). That assumption is gone: SAFE ignores twists, so a configuration with no fallback has the same SAFE as its full-twist version (`Config.full`), which is fallback-free. The model therefore allows any d ∣ c − 1, exactly as Theorem 3.1 does, and Lemma C is not used anywhere. That matches the text's claim that B_safe and E.6's proof are independent of Lemma C.
   - **F.** F is any integer. That is the permissive reading of F = F_mid·F_top that the certificates use. Since Theorem 3.1 imposes no coprimality on F_mid, it is at least as large as the true shape space.
   - **Fused foreign classes and repeated foreign primes** are now in the model as `fo` parts. Their domination above the line is a theorem here (`d2_case`), where the text relies on Corollary D2′ plus the computed table below n = 471. That supports the enumerator's choice to omit them, at least for the E.6 question.
-- **Not formalised.** Part E's constructions and Part 0's completeness, the group-theoretic halves of the sandwich. (Lemma D2, the source of the `fo` terms, is now a theorem; `FoBridge.fo_terms_valid` connects the two.)
+- **Not formalised.** Part 0's completeness (μ ≤ B_safe), and Part E beyond the two-part shapes (built in `PartE1`/`PartEF`). (Lemma D2, the source of the `fo` terms, is now a theorem; `FoBridge.fo_terms_valid` connects the two.)
 
 **Lemma D2 (`D2.lean`, 2026-11-24).** This file works on actual permutation groups: G ≤ Sym(Fin F × ZMod r), the image Γ|_O. Orbitals are G-orbits on unordered pairs (`orbit2`), and the generic fact is that an orbit inside a G-invariant set is no larger than the set (`orbit2_card_le`).
 - **Branch (a), `d2a`.** If G preserves the block system, some orbital has at most F·C(r,2) pairs. This is unconditional, as in the text.
@@ -331,11 +338,19 @@ Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E
 >
 > Swapping one in would mean a toolchain and Mathlib version bump, a re-pin of `lean-toolchain` and the lakefile `rev`, a fresh `lake exe cache get`, and fixing the name drift such bumps bring (see the lemma-name lesson above). So it is not to be done lightly. But it would shorten the proofs and move trust onto Mathlib's reviewed library.
 
+### Open, as of 2026-11-26 (the one list; per-section "not formalised" notes defer to it)
+
+- **Part 0: μ\* ≤ B_safe.** The bridge from an arbitrary Oliver group to an admissible `E6.Config` whose SAFE is at least the group's least orbital. In Lean today it is a bare hypothesis (`E6.e6`'s `hcap`; `Cover`/`CoverDensity` state their hypotheses on B_safe for this reason). Already available for it: `Chain.OliverChain`, Lemma B for prime blocks, Lemma B′, Lemma D1, Lemma D2 with `FoBridge`, and `Upper.lean`'s orbit/orbital/N\* machinery. Missing: the orbit decomposition into classes / foreign blocks / D2 parts (Part A), the flat cap F·C(c,2) and the cross terms as bounds on real orbitals, coherence (Parts C–D) giving `GAdm`, and Lemma B for prime-power blocks, which needs "solvable primitive ⇒ affine" (Huppert) and is planned as a named hypothesis.
+- **Part E beyond two-part shapes** (several classes or foreign blocks, F_top > 1, q = 2).
+- **The derivation of the chain from Oliver's theorem, KSS, and the analytic inputs** ((BH-SW)/(BCG) themselves; the circle-method reduction of `bcp-to-floor.md`). Out of scope; they enter as named hypotheses (`HypKSSOliver`, `WT`, `Hyp W L`).
+- **The upper side's named hypotheses** (`Upper.lean`): `HypStep2`, `HypStep2Block`, `HypStep5` (§6.3 Steps 2 and 5).
+- **Smaller:** δ₀ = 1/25 itself in the covering statement; the BBKN replacement (step 6); phase 3.
+
 ## The split that makes this tractable
 
 The framework has two layers and they have completely different formalisation costs.
 
-**The group-theoretic layer splits further.** Its deep inputs — Oliver's fixed-point theorem, Smith theory, and Huppert's classification of solvable 2-transitive groups behind Part 0 — are out of reach: none is in Mathlib, and Oliver's theorem alone is a research-level formalisation. But the finite-group arguments *downstream of Oliver's chain* turned out to be ordinary Mathlib work: Lemma D2, Lemma B for prime blocks and Lemma B′ are proved with the chain (`OliverChain`) as a hypothesis. The boundary is the chain's derivation from Oliver's theorem, plus Part 0, Part E and Lemma C — not group theory as such.
+**The group-theoretic layer splits further.** Its deep inputs — Oliver's fixed-point theorem, Smith theory, and Huppert's classification of solvable 2-transitive groups behind Part 0 — are out of reach: none is in Mathlib, and Oliver's theorem alone is a research-level formalisation. But the finite-group arguments *downstream of Oliver's chain* turned out to be ordinary Mathlib work: Lemma D2, Lemma B for prime blocks and Lemma B′ are proved with the chain (`OliverChain`) as a hypothesis. The boundary is the chain's derivation from Oliver's theorem, plus Part 0 and Part E beyond the two-part shapes (Lemma C is used by neither SAFE nor E.6) — not group theory as such.
 
 **The arithmetic layer is ordinary Mathlib material.** Everything from Part E′ onward — the inequalities, the counting bounds, the cap algebra, the singular-series definitions, the quadratic-residue step — depends on the group theory only through *stated numbers*: given that a block of size c under a twist of order t contributes `orb c t`, everything else is arithmetic. That layer can be formalised now, taking the value formula as a definition rather than a theorem.
 
@@ -386,7 +401,7 @@ There is a second benefit that matters more in practice: **a definition forces t
 
 **Phase 1 — the inequality core. DONE**, see below. `Basic.lean`: Lemma D1, Proposition F.1, the E′ s-bound with its threshold ladder, the cap algebra and its two identities, the quadratic-residue collapse. Self-contained, none of it needing the group theory, and covering the parts of the documents that have actually been wrong.
 
-**Phase 2 — the balance-point optimisations. Partly pre-empted:** the two-foreign closed form `1/(√m₁+√m₂)²` named below as its cleanest target is already proved in `Basic.lean`, and `capF_of_sqrt` is likely the lever for the rest, since a balance point is again a surd supplied once rather than computed repeatedly. Each family's ceiling is `max_x min(...)` of a few polynomials in `x`. These are real-analysis lemmas: routine in principle, fiddly in practice, and the payoff is that the mod-12 ceiling table becomes a checked computation rather than a table. A second payoff worth naming: the window identity `F · width = 1 − √λ` falls out of the same lemmas, and it is exact — the maximum is a *kink*, where an increasing branch meets a decreasing one, not a smooth turning point, which is why the cost of approaching the cap is `Θ(ε)` and not `Θ(√ε)`. The two-foreign closed form `1/(√m₁+√m₂)²` is the cleanest target here since it collapses an infinite family to one identity. Worth doing after phase 1, and only if phase 1 goes smoothly.
+**Phase 2 — the balance-point optimisations. Largely done (2026-11-25):** `Sigma.lean`'s `xstar`/`balance`/`window_of_eps` give the balance point and window for any (F, η), and `cap_table` is the mod-12 table as instances. Earlier note: the two-foreign closed form `1/(√m₁+√m₂)²` named below as its cleanest target is already proved in `Basic.lean`, and `capF_of_sqrt` is likely the lever for the rest, since a balance point is again a surd supplied once rather than computed repeatedly. Each family's ceiling is `max_x min(...)` of a few polynomials in `x`. These are real-analysis lemmas: routine in principle, fiddly in practice, and the payoff is that the mod-12 ceiling table becomes a checked computation rather than a table. A second payoff worth naming: the window identity `F · width = 1 − √λ` falls out of the same lemmas, and it is exact — the maximum is a *kink*, where an increasing branch meets a decreasing one, not a smooth turning point, which is why the cost of approaching the cap is `Θ(ε)` and not `Θ(√ε)`. The two-foreign closed form `1/(√m₁+√m₂)²` is the cleanest target here since it collapses an infinite family to one identity. Worth doing after phase 1, and only if phase 1 goes smoothly.
 
 **Phase 3 — the value formula as a definition, and the enumeration as a decision procedure.** Define a configuration, define its score by the Part G.3 formulas, define `B n` as the max over configurations, and prove the finiteness facts that make the search terminate (Prop F.1 bounding the part count, Part C bounding block sizes). This does *not* prove `μ* = B` — that needs the group theory — but it does turn `B` into a Lean-checkable function, and then `native_decide` could in principle verify individual table rows. **This is where I would stop.** Verifying the whole CSV is a real project and the payoff over `validate_table.py` plus `brute.py` is small.
 
@@ -422,7 +437,7 @@ These documents' claims are now theorems rather than assertions:
 - `arithmetic-of-density.md` §3.3's `cap_F(η) = cap₁(Fη)/F` and the `k = √F` reading; §3.3.5's **six** table entries as algebraic numbers, keyed **mod 12**, one of them supplied by the `F = 4` rung — the extremal `7 − 4√3` at `n ≡ 11 (mod 12)`; §4.2's two-foreign closed form; §3.2.3's quadratic-residue collapse. *(The list length is itself the check: a table that gains or loses a constant will not match a list of six.)*
 - The `orb` identities used silently throughout, in particular `orb c (c−1) = choose c 2`.
 
-**What is left is phases 2 and 3, and neither is owed.** Phase 2's remaining content is the balance-point maxima; phase 3 would make `B n` a Lean-checkable function, and the README's own judgement — *this is where I would stop* — still stands, since `validate_table_v3.py` already covers the rows.
+**What was left after phase 1 was phases 2 and 3, and neither is owed.** Phase 2 has since been largely done (`Sigma.lean`); phase 3 would make `B n` a Lean-checkable function, and the README's own judgement — *this is where I would stop* — still stands, since `validate_table_v3.py` already covers the rows.
 
 ## A caveat about what this does *not* buy
 
