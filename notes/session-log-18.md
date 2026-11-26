@@ -384,3 +384,25 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - **Statement.** `thr_realised`: under `BCG.Hyp (WT ε) L` with L ≤ atTop, L-eventually there is a vertex set of size n and m with 2m ≥ ((1 − ε)·δ_cyc − κ/n)·n(n − 1), δ_cyc = 1/4 (even n) or 3 − 2√2 (odd n), such that for every evasiveness predicate satisfying `HypKSSOliver`, every property with e_max < m is evasive.
 - **Design.** A parameter change, as planned: `specEps (FT a) 2 ε` reuses `specEps_good`, `window_of_eps`, `cap11`, `cap21`; the groups are Part E's. No framework document mentions it.
 - **Scope / not formalised.** KSS/Oliver itself; the witness hypothesis `WT` (r = 2kq + 1 prime, q > 7 prime, in the window — a (BH-SW)-type input); the upper half of Proposition L; Proposition U. The good-k table is used only for k ∈ {1, 2, 3, 6}.
+
+## 32. Skipped checks from §31, and Lean: the covering statement (§6's ⇒ direction)
+
+- **§31's skipped checks, now done.**
+  - The Lean k table (`kT`, `FT`) against `threshold-beyond-mu.md`'s ceilings table and cell list: all twelve classes agree (k = 1 at 0, 1, 4, 6, 9, 10; 2 at 3, 7; 3 at 2, 5, 8; 6 at 11; F = 1 even, F = 2 odd; d = 2k).
+  - `HypKSSOliver` read against KSS + Oliver: the fixed complex is the complex on orbitals whose unions lie in P (KSS's reduction), and χ ≡ 1 (mod q) for every Oliver chain; with a trivial top, every q is allowed, so it gives χ = 1 exactly, as Oliver's theorem says. The faithfulness looks right.
+  - The commit touched no framework document.
+  - One deliberate strengthening: `WT` asks for q > 7 where the text needs q ∉ {2, 5, 7}. This costs only q = 3, a density-zero restriction.
+- **`lean/Cover.lean`.** `cover_hyp`: SAFE floor δ > 1/25, L-eventually ⇒ `ShapeD δ (min 15 Fmax)` L-eventually, whenever cap_{Fmax+1}(1) < δ. Instances: `cover_25`, `cover_16` (F ≤ 8, no S11), `cover_9` (F ≤ 3, no S6/S11) — §6.4's counts 13/13, 4/5 and 1/2 once parity (`parity_one`, `parity_two`) is applied and the escapes are set aside.
+- **Findings.**
+  - The floors are strict in Lean. The text's "at or above 1/9 only F ≤ 3" claims the boundary too. `fbound` gives δ ≤ (n/(n−1))²·cap_F(1), so at δ₀ exactly cap_F the shape F is not excluded by this argument. *Checked numerically (Python, two-term bound min(F·C(c,2), C(r,2)) for n = F·c + r):* F = 4 never reaches C(n,2)/9 for c < 1500, nor F = 9 C(n,2)/16, nor F = 16 C(n,2)/25. So the boundary claims look right for the one-foreign shapes, but a proof at equality is not in Lean.
+  - The escapes drop only at density one. Their count, ≍ x/log x, exceeds (AA)'s O(x/(log x)^A), so §6.6's "for most n" must mean density one, not the (AA) rate, on the conclusion side.
+  - The hypothesis is on B_safe; reading it for μ\* needs Part 0.
+
+- **Follow-up: closed floors.** New lemma `fexact`: for F = s², s ≥ 1, a class F·c beside a part of size m in n ≥ 2 points cannot both be worth δ·C(n,2) once δ(1 + s)² ≥ 1. This is proved for all n (not just large n), with no numerics, and turns the Python check above into a theorem for the F-bounds. It gives `cover_16_closed` (δ ≥ 1/16: F ≤ 8) and `cover_9_closed` (δ ≥ 1/9: F ≤ 3, no S11). Still open at the boundary:
+  - δ₀ = 1/25 itself (Proposition 1 needs strict);
+  - S6 at exactly 1/9 and S11 at exactly 1/16: `TwoForeign`'s ceilings are non-strict, and the two-term min is not enough to decide equality there.
+- **Follow-up: the escapes counted (`lean/CoverDensity.lean`).**
+  - `ShapeD`'s S2 escape now carries F ≤ 25, from the class's own ceiling δ·C(Fc,2) ≤ F·C(c,2) with δ > 1/25.
+  - `esc_count`: the escapes (primes, and F·p^b with F ≤ 25) number O(x/log x) up to x. This uses Mathlib's `Chebyshev.pi_le_log4_mul_div`, plus an elementary count of the proper prime powers, ≤ (√x + 1)(log₂ x + 1).
+  - `cover_foreign`: a floor δ > 1/25 holding under (AL) or (AA) forces a system with a foreign part outside O(x/log x) exceptions.
+  - This makes §6.6's "for most n" precise on the conclusion side: the rate is x/log x, which is sharp for this route.
