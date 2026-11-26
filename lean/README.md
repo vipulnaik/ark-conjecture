@@ -22,6 +22,9 @@
 | `FoBridge.lean` | compiles | **zero** — E.6's `fo` scores proved to bound real orbitals (from `lemmaD2`) |
 | `D1.lean` | compiles | **zero** — Lemma D1 (absorption) in the E.6 model |
 | `LemmaBprime.lean` | compiles | **zero** — **Lemma B′** from the chain and primitivity alone (`lemmaBprime_primitive`): an outside block has prime size, twist a q-group |
+| `Prop1.lean` | compiles | **zero** — `ladder-completeness.md` Proposition 1's counting clauses: share > 1/5 and ≤ 4 parts, fusion count **sharpened to F ≤ 15**, foreign efficiency, the S12 merge, the three-foreign-prime reduction k ≤ 5/12/17 |
+| `ThreeForeign.lean` | compiles | **zero** — **Proposition 1: no configuration above 1/25 has three foreign primes**, every q and exponent (`no_three_foreign`) |
+| `Prop1Final.lean` | compiles | **zero** — **Proposition 1 assembled** (`prop1`): above the line, matched by ≤ 1 class + ≤ 2 foreign parts, F ≤ 15 |
 
 *Last reproduced at commit 6d656ac (2026-11-25) in the working container: `lake build` clean, `leancheck.sh` 0 errors, 0 sorries.*
 
@@ -34,7 +37,7 @@
 ```bash
 cd lean
 lake exe cache get        # ~9,100 prebuilt Mathlib files; needs cache.mathlib.org
-lake build                # all eighteen files, a few minutes once the cache is in place
+lake build                # all twenty-one files, a few minutes once the cache is in place
 bash leancheck.sh         # per-file errors / warnings / sorry counts
 ```
 
@@ -248,6 +251,22 @@ Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E
   - if Γ₁ = 1, G is a q-group, and a central subgroup of order q is regular.
 
   So **Lemma B′ is proved outright** from the chain and primitivity. The classical "solvable primitive ⇒ affine" theorem, which the text cites and Mathlib lacks, is not needed for B′. (The affine-coordinates form of Lemma B is still unformalised for general primitive blocks, though it isn't needed for B′; for prime blocks it is `LemmaB.lemmaB_block_any`.)
+
+**Proposition 1's counting clauses (`Prop1.lean`, 2026-11-25).** `ladder-completeness.md` Proposition 1 says a SAFE optimum above C(n,2)/25 has fusion count F ≤ 16 for a class beside other parts, because cap_F(1) = 1/(1 + √F)² < 1/25 for F ≥ 17.
+- **`cap16`.** Exactly in ℕ: for F ≥ 16, 25·min(F·C(c,2), C(s,2)) ≤ C(F·c + s, 2). Split on s ≤ 4c (then 25·C(s,2) ≤ C(5s,2)) or s > 4c (then (F + 4)² − 25F = (F − 1)(F − 16) ≥ 0).
+- **`fusion_cap`.** In the `E6` model: a class `pc F c d` beside any other part (any order) with 25·SAFE > C(n,2) has **F ≤ 15**. Every part has a SAFE term at most C(size, 2) (`exists_term_le`).
+- **Finding.** The text's F ≤ 16 is true but one loose: cap_16(1) = 1/25 exactly, so F = 16 also fails the strict inequality. The ladder's menu (F ≤ 16) is one wider than needed, which is harmless.
+- **`part_share`, `parts_le_four`.** Above the line every part has n + 3 ≤ 5·size, so at most four parts (Proposition F.1 in the model).
+- **`foreign_efficient`.** A foreign part `fr r t` with 2r < n has 2(r − 1) < 25t: the text's k ≤ 12 for r − 1 = k·t, from orb(r, t) ≤ r·t alone.
+- **`merge_classes`: no S12.** Classes `pc F₁ (m·c)` and `pc F₂ c` merge into `pc (F₁·m + F₂) c` with the same n and SAFE no lower. The within-class cross term of the merged class is at least F₂·C(c,2) (`within_ge`), which is the text's "never binds".
+- **`three_foreign`: the reduction for three foreign primes.** Three foreign parts r₁ ≤ r₂ ≤ r₃ above the line have 9r₁ < 50t₁ + 3, 2r₂ < 25t₂ + 1 and r₃ < 18t₃; with rⱼ − 1 = kⱼtⱼ, k₁ ≤ 5, k₂ ≤ 12, k₃ ≤ 17. The shares are ≤ 1/3, ≤ 1/2 and < 3/5, the last because the other two parts each have share > 1/5.
+- **`ThreeForeign.no_three_foreign`: three foreign primes excluded outright.** For every q and every exponent, not only the text's enumerated range.
+  - Normalise by the least twist T = q^m: rⱼ = aⱼT + 1, tⱼ = bⱼT with bⱼ = q^(eⱼ) ∣ aⱼ, one bⱼ = 1.
+  - The part with bⱼ = 1 bounds A = Σaⱼ ≤ 31, so the patterns are finite.
+  - In every pattern some part has a bound whose leading coefficient is ≤ A² and linear coefficient ≤ 5A, so it fails at *every* T. A kernel check (one `decide` per q ≤ 31, one for q ≥ 32) confirms this; about two minutes.
+  - Inputs used: orb ≤ c·r·t/2 (halving when q = 2 and t ≥ 2), orb ≤ C(r,2), share > 1/5, and the parity of a prime rⱼ = aⱼT + 1. The text's continuous worst case, 1/27 at q = 2, is consistent.
+- **`Prop1Final.prop1`: Proposition 1 assembled.** Every admissible configuration with no D2 part above the line is matched (same n, SAFE no lower, admissible) by one with at most one class and at most two foreign parts, and F ≤ 15 when the class has company. Classes are merged repeatedly (`merge_all`, larger block first); a third foreign part is excluded after sorting the primes (`fr_le_two`). The remaining clauses (shares, foreign efficiency, fallback-freeness via `E6.e6_core`) apply to the matched configuration as separate theorems; D2 parts are handled by `E6.d2_case`.
+- **Not yet formalised from `ladder-completeness.md`:** Proposition 2's ceilings for S6 and S11, and Proposition 3 (conditional on (BCG-AL), and not a target).
 
 > **To check in future iterations: Mathlib coverage.** As of the pinned Mathlib (v4.36.0, checked 2026-11-25), Mathlib has primitive and quasiprimitive actions, Jordan's theorems, Schur–Zassenhaus and solvable groups. It has no minimal-normal-subgroup or socle theory, no O'Nan–Scott, and no "a solvable primitive group is affine". Several results here are hand-proved because of that gap: `card_eq_of_abelian_normal`, `LemmaB.lemmaB_block_any`, the Step 0 and Lemma B′ arguments, and `LemmaB.mem_zpowers_of_orderOf_eq`. **When Mathlib is next bumped, check whether ready-made versions now exist.** Candidates:
 > - socle / minimal normal subgroups;

@@ -323,3 +323,15 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - **`pending-checks.md` state line** updated to match: eighteen files, the core build dropped, and the current proved and conditional lists.
 - **Checked clean:** no remaining "five files", "October" or "given Lemma B" statements in the README, apart from history.
 - **Not run:** `lake build`, since no `.lean` file changed. Earlier session-log entries that mention the 4.15 build (§§ on the pin and drift) are left as they are, since they record what was true then.
+
+## 25. Lean: Proposition 1's fusion-count clause
+
+- **`Prop1.lean`.** `ladder-completeness.md` Proposition 1 bounds the fusion count of a class beside other parts at F ≤ 16 above 1/25. Proved in the `E6` model as `fusion_cap`, via the exact ℕ inequality `cap16`: 25·min(F·C(c,2), C(s,2)) ≤ C(F·c + s, 2) for F ≥ 16.
+- **Finding:** the bound is one loose. cap_16(1) = 1/25 exactly, so the strict inequality forces F ≤ 15. Recorded in `ladder-completeness.md` beside the clause. The ladder's menu, which scans to F = 16, is unaffected.
+- **More of Proposition 1 in `Prop1.lean`:** every part has share > 1/5 and there are at most four parts (`part_share`, `parts_le_four`); a foreign part of share below 1/2 has 2(r − 1) < 25t (`foreign_efficient`, the k ≤ 12 clause); two matching classes merge without lowering SAFE (`merge_classes`, the S12 clause). The merge needs no "within-class cross never binds" assumption: the merged cross term is proved ≥ F₂·C(c,2).
+- **Three foreign primes, the reduction (`three_foreign`).** Sorted r₁ ≤ r₂ ≤ r₃ above the line give k₁ ≤ 5, k₂ ≤ 12, k₃ ≤ 17 (rⱼ − 1 = kⱼtⱼ), from orb ≤ r·t and the shares ≤ 1/3, ≤ 1/2, < 3/5.
+- **Three foreign primes excluded (`ThreeForeign.lean`, `no_three_foreign`).** Exact, for every q and exponent. Normalise by the least twist T: rⱼ = aⱼT + 1, tⱼ = bⱼT, bⱼ a power of q dividing aⱼ, one bⱼ = 1. The b = 1 part bounds A = Σaⱼ ≤ 31; in every remaining pattern some part's bound fails at every T (leading coefficient ≤ A², linear ≤ 5A). Kernel check, one `decide` per q; about two minutes, under 2 GB.
+  - Exploration on the way (scripts not kept): dropping the halving for q = 2 or the parity of rⱼ breaks the exclusion (continuous sup 1/18 at q = 3 without parity), so both inputs are needed. A direct scan of actual prime triples to 20,000 gives max density 0.0286.
+  - A single `decide` over all q ran out of memory (7 GB container); splitting per q fixed it.
+- **Proposition 1 assembled (`Prop1Final.lean`, `prop1`).** Above the line, any admissible D2-free configuration is matched (same n, SAFE no lower) by one with ≤ 1 class and ≤ 2 foreign parts, and F ≤ 15 when the class has company. So Proposition 1 is now a theorem of the model, with the fusion bound one sharper than the text's.
+- **Next in `ladder-completeness.md`:** Proposition 2 (the S6 ≤ 1/9 and S11 ≤ 1/16 ceilings).
