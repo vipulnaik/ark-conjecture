@@ -377,3 +377,10 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
   - Orbitals: F·C(c,2), ≥ K0·c² (rotation orbit of a block pair: F for odd F, F/2 for even F — the text's parity-of-F rule, here proved for this construction), F·c·r, ≥ q·r.
   - `PartEAll.sigma0_realised`: Σ₀'s floor at all twelve classes, under either quantifier, with Part E proved. Σ₀ uses only F ∈ {1, 2, 4} with r = dq + 1 ≥ 7, so r ∤ F is automatic.
 - **Scope.** Only the two-part shapes Σ₀ needs. Not formalised: several classes, several foreign parts, F_top > 1 (block permutation in the top q-group), q = 2.
+
+## 31. Lean: the threshold beyond μ\*, conditional on KSS/Oliver
+
+- **New files.** `CycGood.lean` (χ-tables for C_1, C_2, C_3, C_6 by `decide`, from Python-generated literals each checked in Lean), `Evasive.lean` (abstract down-closed properties, `HypKSSOliver` as a named structure hypothesis, the single-good-type Proposition), `RGlue.lean` (the ℤ/r block's C(r,2) pairs split into exactly k orbit types when r − 1 = 2qk), `Threshold.lean` (`thr_1`, `thr_F`, `thr_bound`, `thr_realised`).
+- **Statement.** `thr_realised`: under `BCG.Hyp (WT ε) L` with L ≤ atTop, L-eventually there is a vertex set of size n and m with 2m ≥ ((1 − ε)·δ_cyc − κ/n)·n(n − 1), δ_cyc = 1/4 (even n) or 3 − 2√2 (odd n), such that for every evasiveness predicate satisfying `HypKSSOliver`, every property with e_max < m is evasive.
+- **Design.** A parameter change, as planned: `specEps (FT a) 2 ε` reuses `specEps_good`, `window_of_eps`, `cap11`, `cap21`; the groups are Part E's. No framework document mentions it.
+- **Scope / not formalised.** KSS/Oliver itself; the witness hypothesis `WT` (r = 2kq + 1 prime, q > 7 prime, in the window — a (BH-SW)-type input); the upper half of Proposition L; Proposition U. The good-k table is used only for k ∈ {1, 2, 3, 6}.
