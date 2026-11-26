@@ -406,3 +406,38 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
   - `esc_count`: the escapes (primes, and F·p^b with F ≤ 25) number O(x/log x) up to x. This uses Mathlib's `Chebyshev.pi_le_log4_mul_div`, plus an elementary count of the proper prime powers, ≤ (√x + 1)(log₂ x + 1).
   - `cover_foreign`: a floor δ > 1/25 holding under (AL) or (AA) forces a system with a foreign part outside O(x/log x) exceptions.
   - This makes §6.6's "for most n" precise on the conclusion side: the rate is x/log x, which is sharp for this route.
+- **Follow-up: the two-foreign ceilings are strict.** `TwoForeign`'s check is now parametrised by the slack k in `PartH2`. With k = 1 it proves `two_foreign_lt` (one of the two primes has 18·orb < R(R − 1)), and hence `s6_ceiling_lt` (9·SAFE < C(n,2)) and `s11_ceiling_lt` (16·SAFE < C(n,2)). `ShapeD` now requires δ < 1/9 for S6 and δ < 1/16 for S11. So `cover_16_closed` (δ ≥ 1/16) excludes S11, and `cover_9_closed` (δ ≥ 1/9) excludes S6 and S11. The only boundary still open is δ₀ = 1/25 itself.
+
+## 33. Lean: toward Proposition U_typ (the upper side, up to μ\*_N^fpf)
+
+- **`lean/Upper.lean`.**
+  - Definitions, after `threshold-beyond-mu.md` §1.4: N\*(Γ) (permutations carrying orbitals onto orbitals), N\*-invariant complexes on the orbitals, Γ's χ condition (Oliver's congruence for every chain, as in `HypKSSOliver`), m\*_N(Γ) (level 1) and m\*_typ(Γ).
+  - `evasive_below_mN`: under `HypKSSOliver`, every property with e_max < m\*_N(Γ) is evasive. So μ\*_N^fpf is a certified threshold, and the ceiling question is an upper bound on m\*_N.
+  - `mN_le_total`, `mN_le_mtyp`: the full simplex on any nonempty N\*-invariant set of orbitals has χ = 1.
+  - **Step 1** (`Nstar_orb`): for fixed-point-free Γ, N\* permutes Γ's orbits; N\* is a group containing Γ. The proof goes through Γ̂, as in the text.
+  - **Step 3** (intransitive Γ):
+    - per-class bound m\*_N ≤ F·C(a,2) (`mN_le_class`);
+    - classes partition the points and W = Σ over classes of √F (`W_eq`);
+    - **exact** bound 2·m\*_N·W² < n(n − 1) at every n for intransitive Γ (`mN_lt_intrans`). This is stronger than the text's asymptotic form; the boundary W = 2 and W = 1 + √2 cases come out strict for free.
+  - Consequences: m\*_N ≥ C(n,2)/4 ⇒ one class of F ≤ 3 (`intrans_quarter`); m\*_N ≥ (3 − 2√2)C(n,2) ⇒ one class of F ≤ 5, or two classes each one orbit (`intrans_silver`).
+- **Plan for the rest.**
+  - Step 3's residuals: Step 2 (a 2-homogeneous type forces a prime-power orbit; the almost-simple half to enter as a named hypothesis), the halving when intra-orbit pairs split into two or more types, and E.
+  - Step 4: the block-system analysis for N\* imprimitive.
+  - Step 5: Conjecture P as a named hypothesis.
+  - The text's Step 3 bullet "single class (n = F·a, a a prime power, F ≤ 5)" includes F = 1, the transitive case, which Lean routes to Steps 4 and 5. With the exact Σ√F bound, an intransitive single class has F ≥ 2.
+- **Follow-up: Proposition U_typ, conditional.**
+  - `mN_half`: when the orbitals inside an N\*-invariant pair set are not a single type, the complement of a proper invariant subset is invariant too, so 2·m\*_N ≤ the set's size.
+  - Step 2 and Conjecture P enter as the named hypotheses `HypStep2` and `HypConjP`.
+  - `intrans_even` and `intrans_odd`: the intransitive case lands in E. The text's two-orbit argument maximises min(s₁²/2, s₂²) continuously. In Lean the discrete boundary is strict (`two_orbit_strict`), and the second clause's ">" comes from the irrationality of √2 (`silver_irr`).
+  - `Utyp_even` and `Utyp_odd`: m\*_N(Γ) < δ_cyc(n)·C(n,2) for every fixed-point-free Oliver Γ, for n not a prime power and n ∉ E.
+  - `UpperDensity.E1_count`: E's first clause lies in the escape set of `CoverDensity`, so it is O(x/log x).
+- **Notes for the text.**
+  - (i) §6.3 calls U_typ "unconditional for intransitive Γ". The intransitive argument does use Step 2 (a 2-homogeneous type forces a prime power), whose almost-simple half rests on the socle check. Lean makes that dependence explicit. *Not checked:* whether the intransitive case can avoid Step 2 by using solvability of Γ alone, as Proposition U does for μ\*_cyc (Huppert/Kantor). It may well, since there the 2-homogeneous group is a constituent of the soluble Γ itself, not of N\*.
+  - (ii) The statement needs n not a prime power: at a prime power, AGL(1, p)-type groups are 2-transitive.
+- **Follow-up: Step 4 proved.**
+  - `BlockSys` is an N\*-invariant partition into blocks of one size b ≥ 2. The intra-block pairs give m\*_N ≤ m·C(b,2) (`mN_le_blocks`).
+  - `step4`: either they split, and the halved bound falls below δ_cyc (at odd n, m is odd, so m ≥ 3); or they form a single type, and b is a prime power (`HypStep2Block`, "Step 2 with the block in place of an orbit"), which puts n in E's first clause.
+  - The text's first bullet (m ≥ 4 even, m ≥ 7 odd) isn't needed, since the single-type case lands in E for every m.
+  - `trans_E1_steps`, `Utyp_even_steps` and `Utyp_odd_steps` state U_typ with Conjecture P replaced by `HypStep5` (P for N\* primitive) and Step 2 for blocks.
+- **Follow-up: E counted.** `UpperDensity.E2_count`: at odd n, E's second clause has one summand even, hence 2^j. The window forces the other summand m ≤ 4·2^j (for δ ≥ 1/6). The count is at most Σ_{j ≤ log₂ x} #pp(2^{j+2}) ≤ Σ K·2^{j+2}/((j+2) log 2) + K. With Σ_{j≤J} 2^j/(j+2) ≤ 4·2^J/(J+2) (`geom_sum`, by induction), this is O(x/log x). Together with `E1_count`, E is O(x/log x), as §6.3 states. Nothing else is needed for U_typ's density-one form beyond the three named hypotheses.
+- **Follow-up: the density-one ceiling.** `UpperDensity.ceiling_density` assumes `HypStep2`, `HypStep2Block` and `HypStep5` at every degree, and concludes that `Ceiling n` holds outside O(x/log x) exceptions. `Ceiling n` says every fixed-point-free Oliver Γ on n points has m\*_N(Γ) < δ_cyc(n)·C(n,2), i.e. μ\*_N^fpf(n) < δ_cyc(n)·C(n,2). The failure set lies in the escapes (prime powers, and E1 at δ ≥ 1/6), E2 at odd n, and {0, 1}. With `thr_realised`, which gives the lower half at the level of evasiveness itself, this gives the upper and lower halves of μ\*_N^fpf/C(n,2) → δ_cyc(n) on a density-one set, conditional on the named hypotheses (KSS/Oliver and WT for the lower half; Steps 2 and 5 for the upper).

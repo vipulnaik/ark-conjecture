@@ -7,7 +7,7 @@ list of additive prime systems, the list shrinking as the floor rises.
 * `ShapeD δ Fmax n` — the systems left (`Prop1Final.prop1`, `TwoForeign`):
   - **escapes:** n = F·c with F ≤ 25 (S2, no foreign part) or n = r (a lone foreign prime);
   - n = F·c + r with F ≤ Fmax (S3/S4/S5/S7);
-  - n = r₁ + r₂, only if δ ≤ 1/9 (S6); n = F·c + r₁ + r₂ with F ≤ Fmax, only if δ ≤ 1/16 (S11);
+  - n = r₁ + r₂, only if δ < 1/9 (S6); n = F·c + r₁ + r₂ with F ≤ Fmax, only if δ < 1/16 (S11);
   with c = p^b (b ≥ 1, p prime), every r prime and ≠ p, the r's distinct.
 * `fbound` — the fusion ceiling as an inequality: √δ·(n − 1)·(1 + √F) ≤ n, i.e.
   δ ≤ (n/(n−1))²·cap_F(1).
@@ -17,7 +17,7 @@ list of additive prime systems, the list shrinking as the floor rises.
   (δ > 1/25: F ≤ 15), `cover_16` (δ > 1/16: F ≤ 8, no S11), `cover_9` (δ > 1/9: F ≤ 3, no S6, S11).
 * `fexact` — at a perfect square F = s² the ceiling 1/(1 + s)² is never reached at finite n;
   hence the closed floors `cover_hyp_closed`, `cover_16_closed` (δ ≥ 1/16: F ≤ 8) and
-  `cover_9_closed` (δ ≥ 1/9: F ≤ 3, no S11).
+  `cover_9_closed` (δ ≥ 1/9: F ≤ 3, no S6, no S11).
 * `parity_one`, `parity_two` — §6.4's parity rule, for odd p and odd foreign primes.
 
 **Not included.**  The hypothesis is on SAFE (B_safe), not on μ\*: μ\* ≤ B_safe is the
@@ -25,8 +25,8 @@ enumeration proof (Part 0), unformalised.  The escapes stay as disjuncts here; `
 counts them, O(x/log x), and drops them at that rate — not at (AA)'s O(x/(log x)^A), since the
 primes alone are ≍ x/log x.  Local obstructions
 (§6.3(c)) are not applied.  Boundaries: δ₀ = 1/16 and 1/9 are covered for the F-bounds
-(`fexact`); δ₀ = 1/25 is not (Proposition 1 is strict); S6 at δ₀ = 1/9 and S11 at δ₀ = 1/16 are
-kept, since `TwoForeign`'s ceilings are non-strict.
+(`fexact`) and for S6/S11 (`TwoForeign.s6_ceiling_lt`, `s11_ceiling_lt`); δ₀ = 1/25 is not
+(Proposition 1 is strict).
 -/
 import Prop1Final
 import TwoForeign
@@ -37,7 +37,7 @@ open E6 ArkCore Prop1Final TwoForeign Filter Real
 
 /-- The systems left at a floor δ above C(n,2)/25, with fusion bound `Fmax` on a class that has
 company (Propositions 1 and 2).  The two-foreign systems carry their ceilings as side conditions:
-S6 only if δ ≤ 1/9, S11 only if δ ≤ 1/16. -/
+S6 only if δ < 1/9, S11 only if δ < 1/16 (`TwoForeign`'s strict ceilings). -/
 def ShapeD (δ : ℝ) (Fmax n : ℕ) : Prop :=
   -- S2: one class, no foreign part (escape); F ≤ 25 by the class's own ceiling
   (∃ F p b, 1 ≤ F ∧ F ≤ 25 ∧ p.Prime ∧ 1 ≤ b ∧ n = F * p ^ b) ∨
@@ -46,9 +46,9 @@ def ShapeD (δ : ℝ) (Fmax n : ℕ) : Prop :=
   -- S3/S4/S5/S7: a class and one foreign prime
   (∃ F p b r, 1 ≤ F ∧ F ≤ Fmax ∧ p.Prime ∧ 1 ≤ b ∧ r.Prime ∧ r ≠ p ∧ n = F * p ^ b + r) ∨
   -- S6: two foreign primes
-  (δ ≤ 1 / 9 ∧ ∃ r₁ r₂, r₁.Prime ∧ r₂.Prime ∧ r₁ ≠ r₂ ∧ n = r₁ + r₂) ∨
+  (δ < 1 / 9 ∧ ∃ r₁ r₂, r₁.Prime ∧ r₂.Prime ∧ r₁ ≠ r₂ ∧ n = r₁ + r₂) ∨
   -- S11: a class and two foreign primes
-  (δ ≤ 1 / 16 ∧ ∃ F p b r₁ r₂, 1 ≤ F ∧ F ≤ Fmax ∧ p.Prime ∧ 1 ≤ b ∧ r₁.Prime ∧ r₂.Prime ∧
+  (δ < 1 / 16 ∧ ∃ F p b r₁ r₂, 1 ≤ F ∧ F ≤ Fmax ∧ p.Prime ∧ 1 ≤ b ∧ r₁.Prime ∧ r₂.Prime ∧
     r₁ ≠ p ∧ r₂ ≠ p ∧ r₁ ≠ r₂ ∧ n = F * p ^ b + r₁ + r₂)
 
 /-- The systems left above C(n,2)/25 (Proposition 1): `ShapeD` with no floor condition and F ≤ 15. -/
@@ -223,14 +223,14 @@ theorem shape_of_small (δ : ℝ) (Fmax : ℕ) (C : Config) (hC : GAdm C) (hfo :
     fun r t hm => let h := hadm _ hm; ⟨h.1, h.2.1⟩
   have hPR : (0 : ℝ) < pairs C.n := by exact_mod_cast hpos
   -- a ceiling k·SAFE ≤ C(n,2) caps the floor at 1/k
-  have hcap : ∀ k : ℕ, 0 < k → k * C.safe ≤ pairs C.n → δ ≤ 1 / k := by
+  have hcap : ∀ k : ℕ, 0 < k → k * C.safe < pairs C.n → δ < 1 / k := by
     intro k hk hks
-    have hks' : (k : ℝ) * C.safe ≤ pairs C.n := by exact_mod_cast hks
+    have hks' : (k : ℝ) * C.safe < pairs C.n := by exact_mod_cast hks
     have hkR : (0 : ℝ) < k := by exact_mod_cast hk
-    rw [le_div_iff₀ hkR]
+    rw [lt_div_iff₀ hkR]
     by_contra hcon
     push Not at hcon
-    have : (pairs C.n : ℝ) < δ * k * pairs C.n := by nlinarith
+    have : (pairs C.n : ℝ) ≤ δ * k * pairs C.n := by nlinarith
     nlinarith
   generalize hP : C.parts.filter isPc = P at *
   generalize hR : C.parts.filter isFr = R at *
@@ -292,11 +292,11 @@ theorem shape_of_small (δ : ℝ) (Fmax : ℕ) (C : Config) (hC : GAdm C) (hfo :
     obtain ⟨r, t, rfl, hm⟩ := hRm y (by simp)
     obtain ⟨r', t', rfl, hm'⟩ := hRm z (by simp)
     have hne : r ≠ r' := by simpa using hsub
-    have h9 : δ ≤ 1 / 9 := by
+    have h9 : δ < 1 / 9 := by
       rcases Nat.lt_or_gt_of_ne hne with hlt | hlt
-      · exact_mod_cast hcap 9 (by norm_num) (s6_ceiling C hC0 (by simpa using hperm) hlt)
+      · exact_mod_cast hcap 9 (by norm_num) (s6_ceiling_lt C hC0 (by simpa using hperm) hlt)
       · exact_mod_cast hcap 9 (by norm_num)
-          (s6_ceiling C hC0 (hperm.trans (by simpa using List.Perm.swap _ _ _)) hlt)
+          (s6_ceiling_lt C hC0 (hperm.trans (by simpa using List.Perm.swap _ _ _)) hlt)
     exact Or.inr (Or.inr (Or.inr (Or.inl ⟨by exact_mod_cast h9, r, r', (hfr _ _ hm).1,
       (hfr _ _ hm').1, hne, by simpa [CPart.sizeC] using hn⟩)))
   | [x], [y, z], _, _, hPm, hRm, hlen, hn, hsub, hperm =>
@@ -304,13 +304,13 @@ theorem shape_of_small (δ : ℝ) (Fmax : ℕ) (C : Config) (hC : GAdm C) (hfo :
     obtain ⟨r, t, rfl, hm1⟩ := hRm y (by simp)
     obtain ⟨r', t', rfl, hm2⟩ := hRm z (by simp)
     have hne : r ≠ r' := by simpa using hsub
-    have h16 : δ ≤ 1 / 16 := by
+    have h16 : δ < 1 / 16 := by
       rcases Nat.lt_or_gt_of_ne hne with hlt | hlt
-      · exact_mod_cast hcap 16 (by norm_num) (s11_ceiling C hC0 (by simpa using hperm) hlt)
+      · exact_mod_cast hcap 16 (by norm_num) (s11_ceiling_lt C hC0 (by simpa using hperm) hlt)
       · have hsw : ([CPart.pc F c d] ++ [CPart.fr r t, CPart.fr r' t']).Perm
             [CPart.pc F c d, CPart.fr r' t', CPart.fr r t] :=
           (List.Perm.swap (CPart.fr r' t') (CPart.fr r t) []).cons (CPart.pc F c d)
-        exact_mod_cast hcap 16 (by norm_num) (s11_ceiling C hC0 (hperm.trans hsw) hlt)
+        exact_mod_cast hcap 16 (by norm_num) (s11_ceiling_lt C hC0 (hperm.trans hsw) hlt)
     obtain ⟨hF1, b, hb, rfl⟩ := hcls _ _ _ hm
     exact Or.inr (Or.inr (Or.inr (Or.inr ⟨by exact_mod_cast h16, F, C.p, b, r, r', hF1,
       hF _ _ _ hm (by simp at hlen; omega), hp, hb, (hfr _ _ hm1).1, (hfr _ _ hm2).1,
@@ -430,7 +430,7 @@ theorem cover_25 {L : Filter ℕ} (hL : L ≤ atTop) {δ : ℝ} (hδ : 1 / 25 < 
 /-- **Above 1/16**: F ≤ 8 and S11 gone (§6.4: four systems at odd n, five at even n). -/
 theorem cover_16 {L : Filter ℕ} (hL : L ≤ atTop) {δ : ℝ} (hδ : 1 / 16 < δ)
     (H : BCG.Hyp (Floor δ) L) :
-    BCG.Hyp (fun n => ShapeD δ 8 n ∧ ¬ δ ≤ 1 / 16) L := by
+    BCG.Hyp (fun n => ShapeD δ 8 n ∧ ¬ δ < 1 / 16) L := by
   have h25 : (1 : ℝ) / 25 < δ := by linarith
   have := cover_hyp hL h25 8 ?_ H
   · filter_upwards [this] with n h
@@ -447,7 +447,7 @@ theorem cover_16 {L : Filter ℕ} (hL : L ≤ atTop) {δ : ℝ} (hδ : 1 / 16 < 
 /-- **Above 1/9**: F ≤ 3, S6 and S11 gone (§6.4: one system at odd n, two at even n). -/
 theorem cover_9 {L : Filter ℕ} (hL : L ≤ atTop) {δ : ℝ} (hδ : 1 / 9 < δ)
     (H : BCG.Hyp (Floor δ) L) :
-    BCG.Hyp (fun n => ShapeD δ 3 n ∧ ¬ δ ≤ 1 / 9 ∧ ¬ δ ≤ 1 / 16) L := by
+    BCG.Hyp (fun n => ShapeD δ 3 n ∧ ¬ δ < 1 / 9 ∧ ¬ δ < 1 / 16) L := by
   have h25 : (1 : ℝ) / 25 < δ := by linarith
   have := cover_hyp hL h25 3 ?_ H
   · filter_upwards [this] with n h
@@ -494,11 +494,12 @@ theorem cover_hyp_closed {L : Filter ℕ} (hL : L ≤ atTop) {δ : ℝ} (hδ : 1
   · omega
   · exact h
 
-/-- **At or above 1/16**: F ≤ 8 (S11 survives only at δ = 1/16 exactly, by its ceiling). -/
+/-- **At or above 1/16**: F ≤ 8 and no S11. -/
 theorem cover_16_closed {L : Filter ℕ} (hL : L ≤ atTop) {δ : ℝ} (hδ : 1 / 16 ≤ δ)
-    (H : BCG.Hyp (Floor δ) L) : BCG.Hyp (ShapeD δ 8) L := by
+    (H : BCG.Hyp (Floor δ) L) : BCG.Hyp (fun n => ShapeD δ 8 n ∧ ¬ δ < 1 / 16) L := by
   have := cover_hyp_closed hL (by linarith) 8 3 (by norm_num) (by norm_num) (by push_cast; linarith) ?_ H
-  · simpa using this
+  · filter_upwards [this] with n h
+    exact ⟨by simpa using h, by linarith⟩
   have h4 : (1 / 4 : ℝ) ≤ √δ := by
     rw [show (1 / 4 : ℝ) = √(1 / 16) by
       rw [show (1 / 16 : ℝ) = (1 / 4) ^ 2 by norm_num]; exact (sqrt_sq (by norm_num)).symm]
@@ -508,12 +509,13 @@ theorem cover_16_closed {L : Filter ℕ} (hL : L ≤ atTop) {δ : ℝ} (hδ : 1 
     exact sqrt_lt_sqrt (by norm_num) (by norm_num)
   nlinarith
 
-/-- **At or above 1/9**: F ≤ 3, S11 gone (S6 survives only at δ = 1/9 exactly, by its ceiling). -/
+/-- **At or above 1/9**: F ≤ 3, no S6, no S11. -/
 theorem cover_9_closed {L : Filter ℕ} (hL : L ≤ atTop) {δ : ℝ} (hδ : 1 / 9 ≤ δ)
-    (H : BCG.Hyp (Floor δ) L) : BCG.Hyp (fun n => ShapeD δ 3 n ∧ ¬ δ ≤ 1 / 16) L := by
+    (H : BCG.Hyp (Floor δ) L) :
+    BCG.Hyp (fun n => ShapeD δ 3 n ∧ ¬ δ < 1 / 9 ∧ ¬ δ < 1 / 16) L := by
   have := cover_hyp_closed hL (by linarith) 3 2 (by norm_num) (by norm_num) (by push_cast; linarith) ?_ H
   · filter_upwards [this] with n h
-    exact ⟨by simpa using h, by linarith⟩
+    exact ⟨by simpa using h, by linarith, by linarith⟩
   have h4 : (1 / 3 : ℝ) ≤ √δ := by
     rw [show (1 / 3 : ℝ) = √(1 / 9) by
       rw [show (1 / 9 : ℝ) = (1 / 3) ^ 2 by norm_num]; exact (sqrt_sq (by norm_num)).symm]

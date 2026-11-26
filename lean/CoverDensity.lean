@@ -23,8 +23,8 @@ def Escape (n : ℕ) : Prop :=
 /-- The systems of `ShapeD` with a foreign part. -/
 def ShapeFr (δ : ℝ) (Fmax n : ℕ) : Prop :=
   (∃ F p b r, 1 ≤ F ∧ F ≤ Fmax ∧ p.Prime ∧ 1 ≤ b ∧ r.Prime ∧ r ≠ p ∧ n = F * p ^ b + r) ∨
-  (δ ≤ 1 / 9 ∧ ∃ r₁ r₂, r₁.Prime ∧ r₂.Prime ∧ r₁ ≠ r₂ ∧ n = r₁ + r₂) ∨
-  (δ ≤ 1 / 16 ∧ ∃ F p b r₁ r₂, 1 ≤ F ∧ F ≤ Fmax ∧ p.Prime ∧ 1 ≤ b ∧ r₁.Prime ∧ r₂.Prime ∧
+  (δ < 1 / 9 ∧ ∃ r₁ r₂, r₁.Prime ∧ r₂.Prime ∧ r₁ ≠ r₂ ∧ n = r₁ + r₂) ∨
+  (δ < 1 / 16 ∧ ∃ F p b r₁ r₂, 1 ≤ F ∧ F ≤ Fmax ∧ p.Prime ∧ 1 ≤ b ∧ r₁.Prime ∧ r₂.Prime ∧
     r₁ ≠ p ∧ r₂ ≠ p ∧ r₁ ≠ r₂ ∧ n = F * p ^ b + r₁ + r₂)
 
 theorem shapeD_split {δ : ℝ} {Fmax n : ℕ} (h : ShapeD δ Fmax n) : Escape n ∨ ShapeFr δ Fmax n := by
