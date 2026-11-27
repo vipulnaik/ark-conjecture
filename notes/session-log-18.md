@@ -487,4 +487,13 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
   - the class term is the flat cap F·C(c,2);
   - the within-class cross term is never needed beyond F·C(c,2);
   - Lemma C is not used anywhere.
-- **Not done:** the fixed-point disjunct's domination (B_safe(n) ≥ n − 1 except at tiny n); a Lean definition of μ\*(n) to state μ\* ≤ B_safe as an inequality of numbers.
+- **Not done (done in §35):** the fixed-point disjunct's domination; a Lean definition of μ\*(n).
+
+## 35. Lean: μ\* as a number, and Part 0 wired into E6 and Cover (`Part0Mu.lean`)
+
+- **The fixed-point disjunct is dominated at every n ≥ 2, not just "except at tiny n"** (`Bsafe_ge`). For n = 2 take any admissible configuration; otherwise n has a prime-power divisor c = p^b ≥ 3, and the one-class configuration ⟨p, 2, [pc F c (c − 1)]⟩ with F = n/c is admissible with SAFE ≥ n − 1. So `part0'`: every Oliver group on n ≥ 2 points has an orbital ≤ SAFE(C) for some admissible C on n points.
+- **μ\*(n)** (`muStar`): sSup over Oliver Γ ≤ Sym(Fin n) of the least orbital (`minOrb`, an sInf; bounded by C(n,2), `minOrb_le_pairs`; attained once positive, `muStar_attained`).
+- **μ\*(n) ≤ B_safe(n)** (`muStar_le`, given `HypHuppert`).
+- **Wiring:** `e6_mu` (E.6 with μ\* in place of the abstract μ); `floor_of_mu` (a floor δ·C(n,2) ≤ μ\*(n) is a SAFE floor `Cover.Floor δ n`; when μ\*(n) = 0 the floor is vacuous and `Bsafe_ge` supplies C); `cover_mu`, `cover_foreign_mu` (`Cover.cover_25` and `CoverDensity.cover_foreign` with hypothesis on μ\*).
+- **Checked:** full `lake build` clean; no `sorry`/`axiom` in the new file; the only hypothesis is `HypHuppert` (a structure).
+- **Still open on Part 0:** only (optionally) proving `HypHuppert`.
