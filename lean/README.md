@@ -1,6 +1,6 @@
 # Lean formalisation of the ARK framework
 
-This directory machine-checks the arithmetic of the ARK framework and the finite-group arguments downstream of Oliver's chain. The deep inputs it does not formalise (Oliver's theorem, KSS, the analytic hypotheses, one classical group-theory fact) enter as **named hypotheses**, always as `structure`s and never as `axiom`s, so every file rests on Lean's three standard axioms.
+This directory machine-checks the arithmetic of the ARK framework and the finite-group arguments downstream of Oliver's chain. The deep inputs it does not formalise (Oliver's theorem, KSS, the analytic hypotheses, one classical group-theory fact, and the upper side's group-theoretic steps) enter as **named hypotheses**, always as `structure`s and never as `axiom`s, so every file rests on Lean's three standard axioms.
 
 **What a green build establishes:** the arguments between the named hypotheses and the conclusions are correct, and the units are consistent. It does not verify the hypotheses themselves.
 
@@ -17,9 +17,10 @@ Every file compiles with zero `sorry`. The named hypotheses:
 |---|---|---|
 | `HypKSSOliver` | the KSS–Oliver congruence for non-evasive properties | `Evasive`, `Threshold`, `Upper` |
 | `HypHuppert` | a primitive Oliver group whose degree p divides has p-power degree ("solvable primitive ⇒ affine") | `Part0Fr`, `Part0Main`, `Part0Mu`, `PartEMu`, `VertexTransitive` |
-| `Hyp W L`, `WT` | (BCG)/(BH-SW) witness hypotheses, under (AL) or (AA) | `BCG`, `SigmaHalf`, `PartE*`, `Threshold`, `Cover` |
+| `Hyp W L`, `WT` | (BCG)/(BH-SW) witness hypotheses, under (AL) or (AA) | `BCG`, `SigmaHalf`, `PartE1`, `PartEF`, `PartEMu`, `Threshold`, `Cover`, `CoverDensity`, `Part0Mu` |
 | `HypBCG`, `OliverAnnihilation` | the short note's own two inputs | `Note` |
-| `HypStep2`, `HypStep2Block`, `HypStep5`, `HypConjP` | §6.3 Steps 2 and 5 / Conjecture P of the upper side | `Upper`, `UpperDensity` |
+| `HypStep2`, `HypStep2Block`, `HypStep5` | §6.3 Steps 2 and 5 of the upper side | `Upper`, `UpperDensity` (the ceiling theorems use exactly these three) |
+| `HypConjP` | Conjecture P, for transitive Oliver groups | `Upper` only (`Utyp_even`/`Utyp_odd`); the `_steps` versions replace it by the weaker `HypStep2Block` + `HypStep5` |
 
 What is proved, by area:
 
@@ -73,7 +74,7 @@ elan toolchain link leanprover/lean4:v4.36.0 $PWD/lean-4.36.0-linux
 
 - **Named hypotheses are `structure`s, never `axiom`s.**
 - **Lean follows the text, not the reverse.** Names and statement order track the vetted documents; a formalisation that wants to rename something files a note instead.
-- **Keep the pin; don't bump in the middle of a piece of work.** Most Lean failures here have been name drift, not wrong mathematics. Where a goal is routine, prefer a tactic or old, stable lemmas over a named iff-lemma or convenience lemma. Known deprecations at this pin: `if_pos`/`if_neg` (use `simp only [h, ite_true]` or `↓reduceIte`), `Set.mem_setOf_eq` (use `Set.mem_ofPred_eq`).
+- **Keep the pin; don't bump in the middle of a piece of work.** Most Lean failures here have been name drift, not wrong mathematics. Where a goal is routine, prefer a tactic or old, stable lemmas over a named iff-lemma or convenience lemma. Known deprecations at this pin: `if_pos`/`if_neg` (use `simp only [h, ite_true]`, `↓reduceIte` or `split_ifs`), `Set.mem_setOf_eq` (use `Set.mem_ofPred_eq`), `push_neg` (use `push Not`).
 - **On a Mathlib bump, recheck the gaps** listed in `file-notes.md` ("Mathlib coverage"): several results here are hand-proved only because Mathlib lacked them.
 - **Home-made notions** in `E5Core`/`ArkCore` (`IsPrimeN`, `pairs`, …) have their Mathlib bridges tabled in `file-notes.md`; add any new one there in the same edit.
 - **A new file** gets a root in `lakefile.toml` and a row in `file-notes.md`'s index; `check_doc_figures.py --pass lean` checks both against this README's area table.
