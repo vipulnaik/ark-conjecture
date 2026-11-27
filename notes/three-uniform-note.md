@@ -11,10 +11,10 @@
 | section | standing |
 |---|---|
 | §1 what transfers | a reading of the k = 2 proofs |
-| §2.1 the orbit law | **proved** modulo one routine step; verified exhaustively over 32 (c, d) pairs |
+| §2.1 the orbit law | **proved**, and checked in Lean at every k (`KUniform.orbit_law`); verified exhaustively over 32 (c, d) pairs |
 | §2.2.1 the 3 \| c failure | measured, with the mechanism identified |
 | §2.2.2 the semilinear criterion | **proved**, necessity included; two clauses out of computational reach. The Oliver-constrained corollary rests on a layer split, whose branches are enumerated |
-| §2.2.3 the Mersenne family | **proved**, and verified at both computable cases |
+| §2.2.3 the c = 2^p family | **proved** for every prime p ≥ 5, with no Mersenne condition; freeness checked in Lean (`Mersenne.free`); verified at c = 32, 128 |
 | §3.1 full density at k = 3 | **classified** — Kantor 1972; the list is c ∈ {5, 8, 32} and is complete. *The consequence the framework uses is independently swept in `khomog_verify.py`: every prime power in [6, 63] tested, only 8 and 32 are 3-homogeneous, and the order bound closes [64, 4096]* |
 | §3.2–3.3 why density → 0 | **proved**, from an order bound plus that classification |
 | §4 the shape ranking | **measured only, no systematic search** — the least reliable section |
@@ -59,11 +59,11 @@ Everything k-specific lives in the analogue of `orb(c, d)` — the minimum size 
 
 **Why c > 3 is needed.** At c = 3 the only 3-subset is the whole block, fixed by every group element; the formula returns 1, but through the C(c,3) cap rather than because the argument applies — the free-translation step fails outright. At c = 2 there are no 3-subsets at all.
 
-**Where the cap binds.** Only for c ≤ 7: since d ≤ c − 1, one has c·d ≤ c(c−1) ≤ C(c,3) as soon as c ≥ 8.
+**The cap never binds.** An orbit cannot exceed C(c,3), so c·d/κ ≤ C(c,3) is automatic and the min is redundant. The closest case is c = 5, d = 4, where c·d/κ = 10 = C(5,3) and the orbit is all 3-sets.
 
-**Verified exhaustively** over every (c, d) with c ∈ {5, 7, 11, 13, 17, 19, 23} and d | c − 1 — **32 of 32 agree**, covering the cap and all three κ regimes.
+**Verified exhaustively** over every (c, d) with c ∈ {5, 7, 11, 13, 17, 19, 23} and d | c − 1 — **32 of 32 agree**, covering all three κ regimes. *(Lean, `lean/KUniform.lean`, for **every** k with 1 ≤ k < c and any twist W ≤ 𝔽_c^× of order d: every k-set has orbit at least c·d/θ_k(d) under {x ↦ ux + v : u ∈ W} (`orbit_lower`) and some k-set has exactly that orbit (`orbit_attained`; together `orbit_law`), with θ_k as in `general-k-note.md` §2.2. No hypotheses. Since an orbit never exceeds C(c,k), the min with C(c,k) is automatic: c·d/θ_k(d) ≤ C(c,k) always holds.)*
 
-> **The general shape, which is the useful statement.** Writing κ_k(d) = max{ m ≤ k : m | d }, one gets **orb_k(c, d, 1) = min(c·d/κ_k(d), C(c,k))**, and the familiar k = 2 law orb(c, d) = min(cd/2 if 2 | d else cd, C(c,2)) is the case k = 2. The twist buys a factor d, and the *only* thing k changes is how much of that factor the stabiliser can give back — at most a factor k, and only when k | d.
+> **The general shape, which is the useful statement.** For 1 ≤ k < c, **orb_k(c, d, 1) = c·d/θ_k(d)**, with θ_k(d) the largest j dividing d and dividing k or k − 1 (`general-k-note.md` §2.2; Lean `KUniform.orbit_law`). The familiar k = 2 law, cd/2 if 2 | d else cd, is the case k = 2. The twist buys a factor d, and the *only* thing k changes is how much of that factor the stabiliser can give back — at most a factor k. *(The naive max{m ≤ k : m | d} agrees with θ_k for k ≤ 4 and fails from k = 5, `general-k-note.md` §2.2. No min with C(c,k) is needed, for the reason above.)*
 >
 > **This is the whole reason the density collapses.** orb_k ≤ c·d/κ ≤ c(c−1)/k is Θ(c²) whatever k is, while C(c,k) ~ c^k/k!. The numerator does not grow with k; the denominator does.
 
@@ -159,33 +159,33 @@ Passing from Γ(d, 1) to Γ(d, m) multiplies the group order by m, and a larger 
 >
 > **Two clauses are proved but out of computational reach:** that the factor is the *least prime divisor* of a rather than a itself (the testable cases a = 5, 7 are prime, so the two agree; the first distinguishing case is a = 25, c = 2²⁵), and that m < a never gains (first distinguishing case a = 10, c = 2¹⁰, where C(c,3) ≈ 1.8 × 10⁸).
 
-#### 2.2.3 The Mersenne family: the extreme member, where both subgroups are everything
+#### 2.2.3 The c = 2^p family: the extreme member, where both subgroups are everything
 
 The Oliver-constrained criterion has a clean family satisfying it at once — and it is the case where **both** subgroups in Γ(d, m) are the whole thing, d = c − 1 and m = a. That is what makes it extreme rather than typical, and worth stating separately from the general criterion.
 
-> **Proposition.** Let p ≥ 5 be prime with M = 2^p − 1 also prime, and set c = 2^p. Then **Γ(M, p) = AΓL(1, c) acts freely on 3-subsets of 𝔽_c**, so every orbit has size c·M·p and
+> **Proposition.** Let p ≥ 5 be prime, and set c = 2^p and M = 2^p − 1 (M need **not** be prime). Then **Γ(M, p) = AΓL(1, c) acts freely on 3-subsets of 𝔽_c**, so every orbit has size c·M·p and
 >
 > **min₃(Γ(M, p)) = 2^p(2^p − 1)p = p · min₃(Γ(M, 1))** — the Galois part is worth exactly the factor p.
 
-*Direct proof.* |AΓL(1,c)| = c·M·p with c = 2^p, and the three prime divisors are 2, M and p. It suffices to show no element of prime order stabilises a 3-set, since any element with a stable 3-set has a prime-order power with the same property.
+*Direct proof.* |AΓL(1,c)| = c·M·p with c = 2^p. Since p is odd, 2^p ≡ 2 (mod 3), so 3 ∤ M; and p ≥ 5, so 3 divides none of the three factors. It suffices to show no element of prime order stabilises a 3-set, since any element with a stable 3-set has a prime-order power with the same property.
 *Order 2:* the point stabiliser C_M ⋊ C_p has odd order, so every involution is a translation, with cycle type 2^{p−1} transpositions. A stable 3-set would be a union of transpositions — impossible, 3 being odd.
-*Order M:* these are the multiplications by a generator, fixing 0 and M-cycling the rest; a stable 3-set would be a union of a fixed point and M-cycles, and M = 2^p − 1 > 3.
-*Order p:* by Sylow, these are conjugates of Frobenius, whose fixed field is 𝔽₂; so the cycle type is two fixed points and (c − 2)/p cycles of length p. A stable 3-set needs 1+1+1 (only two fixed points are available) or a single p-cycle (p ≠ 3). Both fail. ∎
+*Order ℓ, a prime dividing M:* these are conjugate to multiplications by an element of order ℓ, fixing one point and ℓ-cycling the rest; a stable 3-set would be a union of that fixed point and ℓ-cycles, and ℓ ≠ 2, 3.
+*Order p:* by Sylow, these are conjugates of Frobenius, whose fixed field is 𝔽₂; so the cycle type is two fixed points and (c − 2)/p cycles of length p. A stable 3-set needs 1+1+1 (only two fixed points are available) or a single p-cycle (p ≠ 3). Both fail. ∎ *(Lean, `lean/Mersenne.lean`: for any finite field K of characteristic 2 with 2^p elements, p prime and p ≥ 5, a map x ↦ u·x^(2^i) + v (u ≠ 0) that stabilises a 3-subset is the identity (`free`; `free_galois` for `GaloisField 2 p`). No hypotheses. The Lean proof never uses that M is prime: an element with a stable 3-set has its 6th power fixing three points, hence trivial; 3 ∤ |AΓL(1, 2^p)| for odd p ≠ 3, so its square is trivial; an element of order 2 is a translation, and a translation stabilising an odd set is trivial. So **freeness holds for every prime p ≥ 5, Mersenne or not**, and the proposition is stated that way.)*
 
-**This is the Oliver-constrained criterion of §2.2.2 at e = 1.** It asks for p = 2, gcd(a, 6) = gcd(d, 6) = 1 and a layer split, here the a′ = 1 branch a = q^e with q ≥ 5: here p = 2, a = p′ is itself a prime ≥ 5, and M = 2^{p′} − 1 is odd with 3 ∤ M because p′ is odd. Γ₂ = 𝔽_c, Γ₁/Γ₂ = C_M, Γ/Γ₁ = C_{p′} — a genuine Oliver chain with top prime p′. The gain factor is the smallest prime divisor of a = p′, namely p′ itself. **What the Mersenne condition adds** is that the *maximal* twist d = c − 1 is itself coprime to 6, so the gain lands on the strongest configuration rather than only on a weak one — at a general c = 2^{p′} the criterion is still met, but only for the divisors d of c − 1 that are coprime to 6.
+**This is the Oliver-constrained criterion of §2.2.2 at e = 1.** It asks for p = 2, gcd(a, 6) = gcd(d, 6) = 1 and a layer split, here the a′ = 1 branch a = q^e with q ≥ 5: here p = 2, a = p′ is itself a prime ≥ 5, and M = 2^{p′} − 1 is odd with 3 ∤ M because p′ is odd. Γ₂ = 𝔽_c, Γ₁/Γ₂ = C_M, Γ/Γ₁ = C_{p′} — a genuine Oliver chain with top prime p′. The gain factor is the smallest prime divisor of a = p′, namely p′ itself. **No Mersenne condition is needed.** 2^{p′} − 1 is odd and ≡ 1 (mod 3) for every odd p′, so d = c − 1 is coprime to 6 at every c = 2^{p′} with p′ an odd prime, and so is every divisor of it. The criterion, and the freeness, hold at c = 2^{p′} for every prime p′ ≥ 5 (c = 32, 128, 2048, 8192, …). The one thing primality of M changes is that the middle layer C_M has prime order, which nothing in this section uses.
 
 The direct proof above is self-contained and exhibits the freeness explicitly, which the general argument only implies.
 
 **Verified at both available cases.** c = 32 (p = 5): 992 → **4960**, factor 5. c = 128 (p = 7): the orbit of {0, 1, 3} has size **113,792 = 128·127·7** under Γ(127, 7) and 16,256 = 128·127 under Γ(127, 1) — free, factor 7 exactly, with C(128,3) = 341,376 splitting into exactly 3 orbits.
 
-**Why the extremity matters for reading these numbers.** Both d and m are maximal here, so the family cannot show what happens at intermediate subgroups — and §2.2.2 says the intermediate cases behave *differently*, since m < a never gains at all. A general block chooses one divisor of c − 1 and one divisor of a; the Mersenne family is the corner of that lattice where both choices are forced.
+**Why the extremity matters for reading these numbers.** Both d and m are maximal here, so the family cannot show what happens at intermediate subgroups — and §2.2.2 says the intermediate cases behave *differently*, since m < a never gains at all. A general block chooses one divisor of c − 1 and one divisor of a; the c = 2^p family is the corner of that lattice where both choices are forced.
 
 > **A nontriviality condition, and it bites at p = 5.** The gain is capped by C(c,3), so it is genuine only when c(c−1)a ≤ C(c,3), i.e. **a ≤ (c−2)/6**. At c = 32 this is 5 ≤ 5 — equality, so AΓL(1,32) is *sharply transitive* on 3-sets and the minimum has been pushed as far as it can go. At c = 128 it is 7 ≤ 21, comfortably slack. So p = 5 is the extremal member of the family, not a typical one.
 
-**Connection to the projective primes of Jones–Zvonkin.** Their object is (q^n − 1)/(q − 1) prime; at q = 2 that is 2^n − 1, so **their projective primes at q = 2 are exactly the Mersenne primes**, and this family is the same arithmetic condition met from a different direction. Two consequences worth carrying:
+**Connection to the projective primes of Jones–Zvonkin — a shared degree, not a shared condition.** Their projective primes at q = 2 are exactly the Mersenne primes. The contact is only that both families sit at 2-power degrees: this family needs no primality of 2^p − 1. What survives:
 
-- **The supply is outside Bateman–Horn**, for the reason they state — 2^p − 1 is exponential in p, not a polynomial value, so the conjecture does not apply. The relevant heuristic is Lenstra–Pomerance–Wagstaff, giving ~(e^γ/log 2)·log log x Mersenne primes below x: conjecturally infinite, but a density-zero and very thin supply.
-- **So this is the k = 3 instance of the exponential regime** already isolated at k = 2 in `arithmetic-of-density.md` §3.5.6 and `literature-findings.md` item 14. The same boundary — polynomial families inside Bateman–Horn, 2-power families outside it — reappears here as the boundary between blocks where semilinearity is worth a factor and blocks where it is worth nothing.
+- **The supply is not thin in the Mersenne sense.** The members are c = 2^p for p prime ≥ 5, one per prime exponent, so there is no Lenstra–Pomerance–Wagstaff count to invoke. As degrees they are still a density-zero set of block sizes, being powers of 2.
+- **It is still the k = 3 instance of the exponential regime** isolated at k = 2 in `arithmetic-of-density.md` §3.5.6 and `literature-findings.md` item 14, because the block sizes are 2-powers rather than values of a polynomial. The boundary between blocks where semilinearity is worth a factor and blocks where it is worth nothing is still drawn by powers of 2; it is not drawn by Mersenne primality.
 
 > **Consequence for the GL-versus-ΓL reading — and J0a is a different question, which this note has elsewhere conflated with it.** Two distinct issues share the neighbourhood:
 >
@@ -200,7 +200,7 @@ The block group is Γ(d, m), so the orbit function should carry the same two par
 
 > **orb₃(c, d, m)** := the minimum size of a Γ(d, m)-orbit on 3-subsets of a block of size c = p^a,
 
-so that §2.1's law is orb₃(c, d, 1), and the Mersenne case of §2.2.3 reads **orb₃(32, 31, 5) = 4960** against orb₃(32, 31, 1) = 992.
+so that §2.1's law is orb₃(c, d, 1), and the c = 32 case of §2.2.3 reads **orb₃(32, 31, 5) = 4960** against orb₃(32, 31, 1) = 992.
 
 **Everything above is one formula.** The orbit is |Γ(d, m)| divided by the largest setwise stabiliser of a 3-set, capped by the number of 3-sets:
 
@@ -238,7 +238,7 @@ PSL(2, q) is not solvable and Oliver chain groups are, so within this framework:
 
 and nothing else in range. Adjoining Frobenius at c = 8 gives AΓL(1,8) of order 168 with stabiliser 3 — still one orbit, so the same δ₃ = 1 by a different route.
 
-**This is where §2.2.3's nontriviality condition comes from.** The Mersenne family gains a factor q at every member, but the gain is capped by C(c,3), and a ≤ (c−2)/6 holds with *equality* at a = 5 and strictly thereafter. So **c = 32 is the last block at which this framework reaches full density at k = 3**; c = 128 already sits at 1/3.
+**This is where §2.2.3's nontriviality condition comes from.** The c = 2^p family gains a factor q at every member, but the gain is capped by C(c,3), and a ≤ (c−2)/6 holds with *equality* at a = 5 and strictly thereafter. So **c = 32 is the last block at which this framework reaches full density at k = 3**; c = 128 already sits at 1/3.
 
 ### 3.2 Why the density nevertheless goes to zero
 
@@ -596,7 +596,7 @@ the k = 3 analogue of δ. (At k = 2, δ = m\*/C(n,2) ≈ 2m\*/n², so β₂ = δ
 
 **The move.** Hold the partition fixed and turn on the Galois part: replace Γ(d, 1) by Γ(d, a) on a matching block. By §2.2.2 this multiplies that block's value by q = the least prime divisor of a, and by §5.2 it multiplies the block's efficiency by the same factor — so the block can be made *smaller* and the rest of n reallocated.
 
-**Why it is an escape rather than a routine improvement.** It is available only when p = 2, gcd(d, 6) = 1 and a admits §2.2.2's layer split, so the matching block must be 2^a with gcd(a, 6) = 1 and a admitting §2.2.2's split — the blocks 32, 128, 2048, 8192, … together with the composite-a blocks the split admits (a = 35 among them), a set of density zero and, being Mersenne-adjacent in the twist condition, thin even among those. And it comes with the coupling of §4.3: taking it fixes the top prime at q, and every foreign block in the configuration then needs q | r − 1.
+**Why it is an escape rather than a routine improvement.** It is available only when p = 2, gcd(d, 6) = 1 and a admits §2.2.2's layer split, so the matching block must be 2^a with gcd(a, 6) = 1 and a admitting §2.2.2's split — the blocks 32, 128, 2048, 8192, … together with the composite-a blocks the split admits (a = 35 among them), a set of density zero. The twist condition gcd(d, 6) = 1 is automatic for d | 2^a − 1 with a odd, so it thins nothing further. And it comes with the coupling of §4.3: taking it fixes the top prime at q, and every foreign block in the configuration then needs q | r − 1.
 
 **So it is a trade, and the congruence decides it.** With only q | r − 1 the foreign twist is generically t = q and the block contributes q·r, linear in n — the Galois gain on one part is paid for by crippling the other. With **q² | r − 1** the twist is q² and the trade comes out positive. §6.2 works the smallest case.
 

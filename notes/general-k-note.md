@@ -7,7 +7,7 @@
 | section | standing |
 |---|---|
 | §1 the completeness theorem | **proved as a bound, conditional on J0a′** (the semilinearity of the block group, stated and reduced in §1's box — it is an assumption, not a consequence of Lemma B); the product form κ_k = τθγ needs joint attainment of the three maxima, verified at k = 3, 4 and open at k ≥ 5 |
-| §2 the three factors at general k | τ **derived and now verified at k = 4**; θ **derived**, in a form that departs from the naive one from k = 5 (verified both ways); γ's criterion **proved at k = 3, 4** — confirmed computationally at k = 4's first distinguishing case — with the exact k ≥ 5 escape conditions open |
+| §2 the three factors at general k | τ **derived and now verified at k = 4**; θ **derived and checked in Lean for prime blocks** (`KUniform.orbit_law`), in a form that departs from the naive one from k = 5 (verified both ways); γ's criterion **proved at k = 3, 4** — confirmed computationally at k = 4's first distinguishing case — with the exact k ≥ 5 escape conditions open |
 | §3 the escape ledger | **derived** from §§1–2 plus Livingstone–Wagner |
 | §4 the ceiling table is k-independent | **proved** for k ≥ 3, in the generic column |
 | §5 what degrades with k | derived |
@@ -67,7 +67,7 @@ A twist subgroup ⟨ζ′⟩ of order j acts **freely** on 𝔽_c^× and fixes 0
 
 *The j | k − 1 branch is not a technicality — it is already load-bearing at k = 3*, where the θ = 2 case is realised by {x, −x, 0}: an antipodal pair **plus the origin**, with 2 | k − 1 doing the work. The k = 3 documents caught that set in a parenthetical without isolating the mechanism.
 
-**For k ≤ 4 this agrees with the naive "largest j ≤ k dividing d"**, because the divisors of k and k − 1 jointly cover {1, …, k} there. **From k = 5 they part company**, first at j = 3: a 5-set cannot be a union of 3-orbits (3 ∤ 5) nor 3-orbits plus 0 (3 ∤ 4), so an order-3 twist stabilises no 5-set at all. *Verified: at c = 13, k = 5 the computed minimum is 39 at both d = 3 and d = 6 — i.e. cd/1 and cd/2 — where the naive formula predicts 13 and 26. The corrected formula reproduces both.*
+**For k ≤ 4 this agrees with the naive "largest j ≤ k dividing d"**, because the divisors of k and k − 1 jointly cover {1, …, k} there. **From k = 5 they part company**, first at j = 3: a 5-set cannot be a union of 3-orbits (3 ∤ 5) nor 3-orbits plus 0 (3 ∤ 4), so an order-3 twist stabilises no 5-set at all. *Verified: at c = 13, k = 5 the computed minimum is 39 at both d = 3 and d = 6 — i.e. cd/1 and cd/2 — where the naive formula predicts 13 and 26. The corrected formula reproduces both.* *(Lean, `lean/KUniform.lean`, for **every** k with 1 ≤ k < c and any twist W ≤ 𝔽_c^× of order d: every k-set has orbit at least c·d/θ_k(d) under {x ↦ ux + v : u ∈ W} (`orbit_lower`) and some k-set has exactly that orbit (`orbit_attained`; together `orbit_law`), with θ_k as above. No hypotheses. Since an orbit never exceeds C(c,k), the min with C(c,k) is automatic: c·d/θ_k(d) ≤ C(c,k) always holds.)*
 
 For a **foreign** block the twist t is a q-power (Lemma B′, which is k-independent), so:
 

@@ -525,3 +525,22 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - **Out-of-date items updated** (status, not history): "the two tables" now names `PartEMu.e6_mu` as the Lean form of "each value is μ\*(n)"; gap inventory items 1 (Part 0, proved given `HypHuppert`), 4 (E.5), 6 (Lemma B′) and 7 (Proposition 1, whose owed second reading the Lean proof discharges) record their machine checks; residual risk 1 (GAP stages) is now "the only *unconditional* non-circular check", and risk 2 (Part E realisability) is superseded by a proof at every n above 1/25; R8 is now described as a cross-system GAP build rather than "the only leg with no per-n check"; T2 and A34 item 1 point to the Lean results.
 - **New R0d, `scripts/lean_model_max.py`:** the Lean model's B_safe(n), maximised directly over the family Proposition 1 reduces to above the line with the Lean scoring, against the ladder table's `mu_bound`. `lean_score_crosscheck.py` compared scorers term by term; this compares the maxima row by row, so `e6_mu` is shown to be a statement about the table's numbers. **All 17,671 rows n ≤ 20,000 agree**, and windows [10000, 10500] and [100000, 100100]. Control: dropping the q = 2 halving in `orb` gives 17 mismatches to n = 1000 (dropping K0·c² changes nothing, correctly: it never binds). A 21-row window near 10⁶ did not finish in 50 minutes; reaching 10⁶ needs the ladder's pruning (optional, noted in R0d).
 - **Lean:** `PartEMu.Bsafe_le_mu` — μ\*(n) ≥ B_safe(n) above 1/25 with no hypothesis; `e6_mu` uses it, so `HypHuppert` is needed only for the upper bound.
+
+## 40. Lean: the k-uniform orbit law for prime blocks
+
+- `KUniform.lean`: for c prime, 1 ≤ k < c and a twist W ≤ 𝔽_c^× of order d, the least orbit of a k-set under {x ↦ ux + v : u ∈ W} is exactly c·d/θ_k(d), where θ_k(d) is the largest j dividing d and dividing k or k − 1 (`orbit_law`). This is `three-uniform-note.md` §2.1 at every k, with `general-k-note.md` §2.2's corrected θ. No hypotheses; axioms are the standard three.
+- The lower bound goes through the stabiliser (no translation, so it embeds in W, it fixes a point, and it acts freely off that point) and orbit–stabiliser. Attainment takes t cosets of the order-θ subgroup of W, with 0 added when θ ∤ k.
+- Side observation: the C(c,k) cap in the §2.1 statement is never needed, since an orbit is at most C(c,k) anyway.
+
+## 41. Lean: AΓL(1, 2^p) is free on 3-sets, and the Mersenne condition is not needed for that
+
+- `Mersenne.lean`: for a finite field of characteristic 2 with 2^p elements, p prime ≥ 5, a semilinear affine map x ↦ u·x^(2^i) + v that stabilises a 3-set is the identity (`free`, `free_galois`). This is the freeness half of `three-uniform-note.md` §2.2.3's proposition. No hypotheses; axioms are the standard three.
+- The proof does not use primality of 2^p − 1. It works through g⁶ (fixes the 3-set pointwise, hence trivial), the absence of order 3 (3 ∤ 2^p − 1 for odd p), and order 2 being a translation. So freeness, and the orbit size 2^p(2^p − 1)p, hold at every prime p ≥ 5.
+
+## 42. Satellite-note corrections prompted by `KUniform` and `Mersenne`
+
+- **`three-uniform-note.md` §2.1.** The C(c,3) cap never binds: an orbit is at most C(c,3), so c·d/κ ≤ C(c,3) automatically. The old claim that it binds for c ≤ 7 compared C(c,3) with c·d rather than c·d/κ. The "general shape" box used κ_k(d) = max{m ≤ k : m | d} and a min with C(c,k). It now states orb_k = c·d/θ_k(d) with `general-k-note.md`'s θ_k, which is what `KUniform.orbit_law` proves. The naive κ_k is wrong from k = 5.
+- **§2.2.3.** The proposition now asks only that p ≥ 5 be prime. The direct proof's order-M step now covers any prime ℓ | M, and the "three prime divisors" claim is replaced by 3 ∤ |AΓL(1, 2^p)|. "What the Mersenne condition adds" said the condition makes d = c − 1 coprime to 6. That is false as a distinction: 2^p − 1 is coprime to 6 for every odd p. The paragraph now says the condition adds nothing here. The Jones–Zvonkin paragraph is weakened to match: both families sit at 2-power degrees, outside Bateman–Horn, but no Mersenne primes and no Lenstra–Pomerance–Wagstaff count are involved. Name-dependent references now say "the c = 2^p family".
+- **§6.1** dropped "Mersenne-adjacent in the twist condition, thin even among those"; for odd a the twist condition is automatic. Its block list (32, 128, 2048, 8192, …) already included non-Mersenne exponents.
+- **`literature-findings.md` item 20** has its §2.2.3 cross-reference corrected the same way.
+
