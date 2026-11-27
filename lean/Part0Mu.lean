@@ -6,8 +6,8 @@
   dominated **at every n ≥ 2** (`part0'`), not only "except at tiny n".
 * `muStar n`: the largest least orbital of an Oliver group on `Fin n` — μ\*(n).
 * **`muStar_le`**: μ\*(n) ≤ B_safe(n) for n ≥ 2, given `HypHuppert`.
-* `e6_mu`: Corollary E.6 for μ\* with the Part 0 half discharged; `floor_of_mu`, `cover_mu`,
-  `cover_foreign_mu`: the covering statement with its floor on μ\* itself.
+* `floor_of_mu`, `cover_mu`, `cover_foreign_mu`: the covering statement with its floor on μ\*
+  itself.  (Corollary E.6 for μ\*, with Part E proved too, is `PartEMu.e6_mu`.)
 -/
 import Part0Main
 import CoverDensity
@@ -174,13 +174,6 @@ theorem muStar_attained {n : ℕ} (h : 0 < muStar n) :
   exact Nat.sSup_mem hne hbdd
 
 /-! ## The wiring -/
-
-/-- **Corollary E.6 for μ\***: above the 1/25 line, μ\*(n) = B_safe(n) = B_refined(n), given Part E
-(every REFINED score is realised, `hconstr`) and `HypHuppert` (Part 0, now proved from it). -/
-theorem e6_mu (HH : HypHuppert) (n B : ℕ) (hn : 2 ≤ n) (hB : IsBsafe n B)
-    (hhi : pairs n < 25 * B) (hconstr : ∀ C, GAdm C → C.n = n → C.refined ≤ muStar n) :
-    IsBrefined n B ∧ muStar n = B :=
-  e6 n B (muStar n) hB hhi hconstr (muStar_le HH hn hB)
 
 /-- **A floor on μ\* is a floor on SAFE**: δ·C(n,2) ≤ μ\*(n) gives `Cover.Floor δ n`. -/
 theorem floor_of_mu (HH : HypHuppert) {n : ℕ} (hn : 2 ≤ n) {δ : ℝ}

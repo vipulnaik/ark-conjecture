@@ -42,10 +42,12 @@ configuration* is, as in E.5, one with a class (F, c) and a foreign prime r ∣ 
 * `isBsafe_primePow`, `isBrefined_primePow` — non-vacuity: at n = p^b, B_safe = B_refined =
   C(n,2).
 
-**Not formalised:** Part E's constructions and Part 0's completeness — the two halves of the
-sandwich, which are group theory — enter `e6` as hypotheses; and Lemma D2 itself (that the two
-classes exist in every group of that shape) is the source of the `fo` terms, not a theorem
-here.
+**Where the two halves are proved.**  `e6`'s `hconstr` (every admissible configuration's REFINED
+score is realised) is stronger than any construction gives — fallback configurations, `fo` parts
+and a foreign prime dividing F·(c − 1) are not realised at their REFINED score.  What E.6 needs is
+one realisable optimum: `PartEMu.e6_real` supplies it (using `d2_case`, which also returns a D2-free
+witness, and `e6_of_view`, which returns the bare-pair re-reading), and `PartEMu.e6_mu` proves
+μ\*(n) = B_safe(n) above the line given only `HypHuppert`.
 -/
 import E5Assembly
 
@@ -455,7 +457,8 @@ theorem e6_of_view (C : Config)
     (hopt : ∀ C', GAdm C' → C'.n = C.n → C'.safe ≤ C.safe)
     (hhi : pairs C.n < 25 * C.safe) (W : Fallback) (a : ℕ)
     (hW : Admissible W C.p a C.q) (hs : C.safe = W.safe) (hn : C.n = W.n) :
-    ∃ C', GAdm C' ∧ C'.n = C.n ∧ C'.FallbackFree ∧ C'.refined = C.safe ∧ C'.safe = C.safe := by
+    ∃ c r, Nat.Prime c ∧ Nat.Prime r ∧ c = 2 * r + 1 ∧ (reread c r).n = C.n ∧
+      (reread c r).safe = C.safe := by
   have hhiW : pairs W.n < 25 * W.safe := by rw [← hs, ← hn]; exact hhi
   have hexc : (W.c, W.r) ∈ excPairs → W.n ∈ table12 → False := by
     intro hpair hnt
@@ -479,7 +482,7 @@ theorem e6_of_view (C : Config)
       have hle : C.safe ≤ (reread W.c W.r).safe := by
         rw [hs]; exact le_trans (safe_le_pairs_r W) (reread_safe hc)
       have heq := le_antisymm (hopt _ hC' hn') hle
-      exact ⟨_, hC', hn', reread_ff _ _, by rw [refined_eq_safe _ (reread_ff _ _), heq], heq⟩
+      exact ⟨W.c, W.r, hcP, hr, hc, hn', heq⟩
     · -- c = 2r + 1 a proper prime power: E.3(i) forces (27, 13), n = 40
       exfalso
       rcases e5_s2a2 W C.p a C.q hW ha hc with h | h
@@ -983,8 +986,19 @@ theorem ff_of_ffB {C : Config} (h : ffB C = true) : C.FallbackFree := by
   simp only [List.all_eq_true] at h
   simpa using h _ hx
 
+def foB (C : Config) : Bool :=
+  C.parts.all fun x => match x with | .fo _ _ _ => false | _ => true
+
+theorem fo_of_foB {C : Config} (h : foB C = true) : C.FoFree := by
+  intro F r t hx
+  unfold foB at h
+  simp only [List.all_eq_true] at h
+  have := h _ hx
+  simp at this
+
 set_option maxRecDepth 100000 in
-theorem d2wits_ok : d2wits.all (fun w => admB w.2 && ffB w.2 && w.2.n == w.1) = true := by
+theorem d2wits_ok :
+    d2wits.all (fun w => admB w.2 && ffB w.2 && foB w.2 && w.2.n == w.1) = true := by
   decide +kernel
 
 def d2check : Bool :=
@@ -1001,7 +1015,8 @@ is matched by an admissible fallback-free configuration. -/
 theorem d2_case (C : Config) (hC : GAdm C)
     (hopt : ∀ C', GAdm C' → C'.n = C.n → C'.safe ≤ C.safe)
     (hhi : pairs C.n < 25 * C.safe) {F r t : ℕ} (hx : CPart.fo F r t ∈ C.parts) :
-    ∃ C', GAdm C' ∧ C'.n = C.n ∧ C'.FallbackFree ∧ C'.refined = C.safe ∧ C'.safe = C.safe := by
+    ∃ C', GAdm C' ∧ C'.n = C.n ∧ C'.FallbackFree ∧ C'.refined = C.safe ∧ C'.safe = C.safe ∧
+      C'.FoFree := by
   obtain ⟨hb, hFr⟩ := safe_le_bnd C hx
   obtain ⟨hF2, hrP, -, -, -⟩ := hC.2.2.1 _ hx
   have hlt : pairs C.n < 25 * bnd F r C.n := lt_of_lt_of_le hhi (Nat.mul_le_mul_left 25 hb)
@@ -1024,12 +1039,12 @@ theorem d2_case (C : Config) (hC : GAdm C)
   · omega
   have hok := d2wits_ok
   simp only [List.all_eq_true, Bool.and_eq_true, beq_iff_eq] at hok
-  obtain ⟨⟨had, hff⟩, hn⟩ := hok w hw
+  obtain ⟨⟨⟨had, hff⟩, hfoB⟩, hn⟩ := hok w hw
   have hC' := gadm_of_admB had
   have hff' := ff_of_ffB hff
   have hn' : w.2.n = C.n := by rw [hn, hwn]
   have heq : w.2.safe = C.safe := le_antisymm (hopt _ hC' hn') (le_trans hb hwb)
-  exact ⟨w.2, hC', hn', hff', by rw [refined_eq_safe _ hff', heq], heq⟩
+  exact ⟨w.2, hC', hn', hff', by rw [refined_eq_safe _ hff', heq], heq, fo_of_foB hfoB⟩
 
 /-- **E.6, combinatorial core.**  If C attains the SAFE maximum at n and lies above the
 1/25 line, then an admissible fallback-free configuration at n has REFINED = SAFE = SAFE(C).
@@ -1045,13 +1060,16 @@ theorem e6_core (C : Config) (hC : GAdm C)
   swap
   · simp only [Config.FoFree, not_forall, not_not] at hfo
     obtain ⟨F, r, t, hx⟩ := hfo
-    exact d2_case C hC hopt hhi hx
+    obtain ⟨C', h1, h2, h3, h4, h5, -⟩ := d2_case C hC hopt hhi hx
+    exact ⟨C', h1, h2, h3, h4, h5⟩
   by_cases hfb : ∃ F c d r t, CPart.pc F c d ∈ C.parts ∧ CPart.fr r t ∈ C.parts ∧ r ∣ c - 1
   · obtain ⟨F, c, d, r, t, hx, hy, hrc⟩ := hfb
     obtain ⟨rest, hperm⟩ := exists_view C hx hy
     obtain ⟨hs, hn⟩ := safe_eq_view C hfo hperm
     obtain ⟨a, hW⟩ := view_admissible C hC hfo hperm hrc
-    exact e6_of_view C hopt hhi _ a hW hs hn
+    obtain ⟨c, r, hc, hr, hcr, hn', hs'⟩ := e6_of_view C hopt hhi _ a hW hs hn
+    exact ⟨_, reread_adm hr hc hcr, hn', reread_ff _ _,
+      by rw [refined_eq_safe _ (reread_ff _ _), hs'], hs'⟩
   · obtain ⟨hs, hn⟩ := full_safe_n C
     exact ⟨C.full, full_adm C hC, hn, full_ff C,
       by rw [refined_eq_safe _ (full_ff C), hs], hs⟩

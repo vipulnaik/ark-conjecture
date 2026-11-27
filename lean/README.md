@@ -16,9 +16,9 @@ Every file compiles with zero `sorry`. The named hypotheses:
 | hypothesis | stands for | used by |
 |---|---|---|
 | `HypKSSOliver` | the KSS–Oliver congruence for non-evasive properties | `Evasive`, `Threshold`, `Upper` |
-| `HypHuppert` | a primitive Oliver group whose degree p divides has p-power degree ("solvable primitive ⇒ affine") | `Part0Fr`, `Part0Main`, `Part0Mu` |
+| `HypHuppert` | a primitive Oliver group whose degree p divides has p-power degree ("solvable primitive ⇒ affine") | `Part0Fr`, `Part0Main`, `Part0Mu`, `PartEMu` |
 | `Hyp W L`, `WT` | (BCG)/(BH-SW) witness hypotheses, under (AL) or (AA) | `BCG`, `SigmaHalf`, `PartE*`, `Threshold`, `Cover` |
-| `PartE μ` | Part E for shapes beyond the two-part ones | `SigmaHalf.sigma0_mu`; `E6.e6` and `Part0Mu.e6_mu` take it as `hconstr` |
+| `PartE μ` | every admissible configuration realised at its REFINED score — stronger than any construction gives (see `file-notes.md`, Part E) | `SigmaHalf.sigma0_mu`; `E6.e6` takes it as `hconstr`. `PartEMu.e6_mu` does not need it |
 | `HypBCG`, `OliverAnnihilation` | the short note's own two inputs | `Note` |
 | `HypStep2`, `HypStep2Block`, `HypStep5`, `HypConjP` | §6.3 Steps 2 and 5 / Conjecture P of the upper side | `Upper`, `UpperDensity` |
 
@@ -28,19 +28,20 @@ What is proved, by area:
 |---|---|---|
 | inequality core and the short note | `ArkCore`, `Basic`, `Note` | the note's arithmetic half; caps, ladders, ceiling constants |
 | Theorem E.5, Corollary E.6 | `E5Core`, `Bridge`, `E5Assembly`, `E6`, `D1` | E.5 in full with its 12 exceptional n; B_refined = B_safe above 1/25 |
+| Part E (realisability) | `PartE1`, `PartEF`, `PartEG`, `PartEMu` | Oliver groups realising one class beside any foreign blocks; **μ\*(n) = B_safe(n) above 1/25, given only `HypHuppert`** |
 | Lemmas B, B′, D2 from Oliver's chain | `Chain`, `Step2`, `Glue`, `Rescale`, `LemmaB`, `LemmaBprime`, `D2`, `D2Full`, `D2q`, `FoBridge` | all three D2 classes, no Lemma B hypothesis |
 | `ladder-completeness.md` Propositions 1–2 | `Prop1`, `ThreeForeign`, `Prop1Final`, `TwoForeign` | ≤ 1 class + ≤ 2 foreign parts, F ≤ 15; strict S6/S11 ceilings |
-| the conditional floor | `BCG`, `Sigma`, `SigmaHalf`, `PartE1`, `PartEF` | Σ₀'s floor at every class, Part E proved for its shapes |
+| the conditional floor | `BCG`, `Sigma`, `SigmaHalf` | Σ₀'s floor at every class, Part E proved for its shapes |
 | threshold beyond μ\* | `CycGood`, `Evasive`, `RGlue`, `Threshold` | evasiveness below (1 − ε)·δ_cyc·C(n,2) |
 | covering statement (§6 ⇒) | `Cover`, `CoverDensity` | a floor δ > 1/25 forces Proposition 1's systems, O(x/log x) exceptions |
 | upper side | `Upper`, `UpperDensity` | the ceiling on μ\*_N^fpf, outside O(x/log x) exceptions |
-| Part 0 | `Part0`, `Part0Fr`, `Part0Fo`, `Part0Main`, `Part0Mu` | μ\*(n) ≤ B_safe(n); E.6 and the covering statement restated on μ\* |
+| Part 0 | `Part0`, `Part0Fr`, `Part0Fo`, `Part0Main`, `Part0Mu` | μ\*(n) ≤ B_safe(n); the covering statement restated on μ\* |
 
 The per-file index, with the main theorem names, is the first section of `file-notes.md`.
 
 ## What is open
 
-- **Part E beyond two-part shapes** (several classes or foreign blocks, F_top > 1, q = 2). Discharging it would remove `PartE μ`.
+- **Part E for several classes**: the text's realisability claim for every admitted configuration. E.6 does not need it (`PartEMu.e6_mu`); `SigmaHalf.sigma0_mu` and `E6.e6` still take the over-strong `PartE μ`, and could be restated on realisable configurations.
 - **The upper side's hypotheses** `HypStep2`, `HypStep2Block`, `HypStep5`.
 - **δ₀ = 1/25 itself** in the covering statement (Proposition 1 is strict there).
 - **The BBKN replacement**: μ\*(n) ≥ n·(Q(n) − 1)/2 from the fused construction at c = Q(n). The arithmetic half is `ArkCore.fused_value`; the group is not built.
