@@ -514,3 +514,8 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - **Second scope note in the same box:** the construction needs foreign primes coprime to every Fᵢ·(cᵢ − 1). The enumerator admits r ∣ F_mid by a counting argument; above 1/25 (every computed n) the SAFE optimum can be taken realisable regardless (`PartEMu.e6_real`, `badOK_all`).
 - **Lean:** `PartEG.lean` now builds any number of classes beside any foreign blocks (`partE_M`, `cfgM`, `orbit_CC`); `PartEMu.RealCfg` and `real_le_mu` are multi-class. The blanket Part E hypothesis is gone: `E6.e6` and `SigmaHalf.PartE`/`sigma0_mu` deleted; `PartEMu.sigma0_muStar` gives Σ₀'s floor on μ\* itself from the explicit groups (no hypothesis beyond the witness hypothesis).
 - **Still open on Part E:** reduced twists (REFINED below SAFE) and configurations with a foreign prime dividing some Fᵢ·(cᵢ − 1); neither affects a computed n.
+
+## 38. Lean: the vertex-transitive Oliver-resistance threshold (and the BBKN-type bound)
+
+- `VertexTransitive.lean`: μ\*_vt(n) (largest least orbital of a transitive Oliver group, the threshold of vertex-transitive Oliver-resistance) = n(q(n) − 1)/2 (`muVT_eq`). Upper half via a least nontrivial block, which is a prime power by `Part0Fr.block_kind` (`HypHuppert`); lower half unconditional, from the transitive fused class of `PartEG`. Then μ\*_vt ≤ μ\* gives μ\*(n) ≥ n(q(n) − 1)/2 unconditionally (`muStar_ge_qmax`). This was the README's "BBKN replacement" item.
+- Framework text: `orbital-evasiveness-notes.md` §7.2 fact 8 now records the Lean status.

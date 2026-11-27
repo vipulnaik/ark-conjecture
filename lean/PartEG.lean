@@ -996,6 +996,8 @@ theorem partE_M (p q : ℕ) (b : Fin m → ℕ) [Fact p.Prime] [∀ i, CharP (K 
     (hcoh : ∀ j i, ¬ r j ∣ F i * (p ^ b i - 1)) :
     ∃ (ω : ∀ i, (K i)ˣ) (U : Subgroup (∀ j, (ZMod (r j))ˣ)),
       Nonempty (Chain.OliverChain (G (F := F) (K := K) (r := r) ω U) p q) ∧
+      (∀ (i : Fin m) (a a' : ZMod (F i)) (x x' : K i), ∃ g ∈ G (F := F) (K := K) (r := r) ω U,
+        g (Sum.inl ⟨i, a, x⟩) = Sum.inl ⟨i, a', x'⟩) ∧
       ∀ e : Sym2 (Pt F K r), ¬ e.IsDiag →
         (cfgM p q F b r t).refined ≤ (D2.orbit2 (G (F := F) (K := K) ω U) e).card := by
   classical
@@ -1047,7 +1049,9 @@ theorem partE_M (p q : ℕ) (b : Fin m → ℕ) [Fact p.Prime] [∀ i, CharP (K 
     simp only [Pi.pow_apply, Pi.one_apply]
     rw [← hz, ← zpow_natCast, ← zpow_mul, mul_comm, zpow_mul, zpow_natCast, he, pow_mul, h1,
       one_pow, one_zpow]
-  refine ⟨ω, U, ⟨chain ω U p q hN hinj hco hU⟩, fun e he => ?_⟩
+  refine ⟨ω, U, ⟨chain ω U p q hN hinj hco hU⟩, fun i a a' x x' => ?_, fun e he => ?_⟩
+  · obtain ⟨g, hg, hgl, -⟩ := block_map ω U hN hinj hco hω i a a' 1 (x' - x)
+    exact ⟨g, hg, by rw [hgl]; simp⟩
   have hcardW : ∀ j, Fintype.card (W j) = t j := fun j => by
     rw [Fintype.card_zpowers, hgo j]
   -- the terms of the configuration
@@ -1151,16 +1155,25 @@ theorem partE_M_exists (p q : ℕ) (b : Fin m → ℕ) [Fact p.Prime] (hb : ∀ 
     (hcoh : ∀ j i, ¬ r j ∣ F i * (p ^ b i - 1)) :
     ∃ (X : Type) (_ : Fintype X) (_ : DecidableEq X) (G : Subgroup (Perm X)),
       Fintype.card X = (cfgM p q F b r t).n ∧ Nonempty (Chain.OliverChain G p q) ∧
+      (k = 0 → m = 1 → ∀ x y : X, ∃ g ∈ G, g x = y) ∧
       ∀ e : Sym2 X, ¬ e.IsDiag → (cfgM p q F b r t).refined ≤ (D2.orbit2 G e).card := by
   classical
   let K : Fin m → Type := fun i => GaloisField p (b i)
   let _ : ∀ i, Fintype (K i) := fun i => Fintype.ofFinite _
   have hK : ∀ i, Fintype.card (K i) = p ^ b i := fun i => by
     rw [← Nat.card_eq_fintype_card]; exact GaloisField.card p (b i) (hb i)
-  obtain ⟨ω, U, hch, horb⟩ := partE_M (F := F) (K := K) (r := r) p q b hK t ht hinj hcoh
-  refine ⟨Pt F K r, inferInstance, inferInstance, G (F := F) (K := K) ω U, ?_, hch, ?_⟩
+  obtain ⟨ω, U, hch, htr, horb⟩ := partE_M (F := F) (K := K) (r := r) p q b hK t ht hinj hcoh
+  refine ⟨Pt F K r, inferInstance, inferInstance, G (F := F) (K := K) ω U, ?_, hch, ?_, ?_⟩
   · rw [cfgM_n, Fintype.card_sum, Fintype.card_sigma, Fintype.card_sigma]
     simp [ZMod.card, hK]
+  · intro hk hm x y
+    subst hk hm
+    rcases x with ⟨i, a, x⟩ | ⟨j, _⟩
+    · rcases y with ⟨i', a', y⟩ | ⟨j, _⟩
+      · obtain rfl : i = i' := Subsingleton.elim _ _
+        exact htr i a a' x y
+      · exact j.elim0
+    · exact j.elim0
   · intro e he
     convert horb e he using 2
 

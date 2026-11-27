@@ -483,8 +483,8 @@ theorem orb_self_pairing (c d : Nat) (hc : c % 2 = 1) (hd1 : 1 ≤ d) (hdc : d �
 
 /-- **The fused construction's value at `c = Q`**, the arithmetic half of
 `μ*(n) ≥ n·(Q(n) − 1)/2`: `F = n/Q` fused blocks of size `Q`, each at full twist, give an
-intra class of `F · pairs Q = n(Q − 1)/2`.  That the construction is an Oliver group with this
-as its least orbital is group theory and is not claimed here. -/
+intra class of `F · pairs Q = n(Q − 1)/2`.  The group half is `VertexTransitive.muVT_ge` (at Q = q(n), the
+vertex-transitive Oliver-resistance threshold). -/
 theorem fused_value (n Q : Nat) (hQ : Q ∣ n) : (n / Q) * pairs Q = n * (Q - 1) / 2 := by
   obtain ⟨F, rfl⟩ := hQ
   rcases Nat.eq_zero_or_pos Q with h0 | hpos

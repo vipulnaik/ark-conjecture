@@ -90,7 +90,7 @@ Every property with e_max(P) < M\*_R(n) fails R; if R is implied by non-evasiven
 
 | rung R | M\*_R(n) | standing |
 |---|---|---|
-| vertex-transitive Oliver-resistant | **n(q(n) − 1)/2**, q(n) the largest prime-power divisor of n | exact and unconditional — `orbital-evasiveness-notes.md` §7.2 fact 8, which calls it "the exact threshold" |
+| vertex-transitive Oliver-resistant | **n(q(n) − 1)/2**, q(n) the largest prime-power divisor of n | exact and unconditional — `orbital-evasiveness-notes.md` §7.2 fact 8, which calls it "the exact threshold"; Lean `VertexTransitive.muVT_eq` (lower half unconditional, upper half given `HypHuppert`) |
 | Oliver-resistant | **μ\*(n)** | exact; Θ(n²) under the bounded-cofactor hypothesis, with the six mod-12 ceilings |
 | bi-resistant (`orbital-evasiveness-notes.md` §7.13) | **μ\*(n)** again | below |
 | Oliver-χ-resistant | ≥ **μ\*_χ(n)** (§1.3 below) ≥ the bound of §3 below; **9 at n = 6**; C(n,2) at prime powers | this note; otherwise open |

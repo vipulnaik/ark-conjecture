@@ -16,7 +16,7 @@ Every file compiles with zero `sorry`. The named hypotheses:
 | hypothesis | stands for | used by |
 |---|---|---|
 | `HypKSSOliver` | the KSS–Oliver congruence for non-evasive properties | `Evasive`, `Threshold`, `Upper` |
-| `HypHuppert` | a primitive Oliver group whose degree p divides has p-power degree ("solvable primitive ⇒ affine") | `Part0Fr`, `Part0Main`, `Part0Mu`, `PartEMu` |
+| `HypHuppert` | a primitive Oliver group whose degree p divides has p-power degree ("solvable primitive ⇒ affine") | `Part0Fr`, `Part0Main`, `Part0Mu`, `PartEMu`, `VertexTransitive` |
 | `Hyp W L`, `WT` | (BCG)/(BH-SW) witness hypotheses, under (AL) or (AA) | `BCG`, `SigmaHalf`, `PartE*`, `Threshold`, `Cover` |
 | `HypBCG`, `OliverAnnihilation` | the short note's own two inputs | `Note` |
 | `HypStep2`, `HypStep2Block`, `HypStep5`, `HypConjP` | §6.3 Steps 2 and 5 / Conjecture P of the upper side | `Upper`, `UpperDensity` |
@@ -28,6 +28,7 @@ What is proved, by area:
 | inequality core and the short note | `ArkCore`, `Basic`, `Note` | the note's arithmetic half; caps, ladders, ceiling constants |
 | Theorem E.5, Corollary E.6 | `E5Core`, `Bridge`, `E5Assembly`, `E6`, `D1` | E.5 in full with its 12 exceptional n; B_refined = B_safe above 1/25 |
 | Part E (realisability) | `PartE1`, `PartEF`, `PartEG`, `PartEMu` | Oliver groups realising any classes beside any foreign blocks (coherent, full twist); **μ\*(n) = B_safe(n) above 1/25, given only `HypHuppert`**; Σ₀'s floor on μ\* |
+| vertex-transitive Oliver-resistance | `VertexTransitive` | its threshold μ\*_vt(n) = n(q(n) − 1)/2 (lower half unconditional), and μ\*(n) ≥ it |
 | Lemmas B, B′, D2 from Oliver's chain | `Chain`, `Step2`, `Glue`, `Rescale`, `LemmaB`, `LemmaBprime`, `D2`, `D2Full`, `D2q`, `FoBridge` | all three D2 classes, no Lemma B hypothesis |
 | `ladder-completeness.md` Propositions 1–2 | `Prop1`, `ThreeForeign`, `Prop1Final`, `TwoForeign` | ≤ 1 class + ≤ 2 foreign parts, F ≤ 15; strict S6/S11 ceilings |
 | the conditional floor | `BCG`, `Sigma`, `SigmaHalf` | Σ₀'s floor at every class, Part E proved for its shapes |
@@ -43,7 +44,6 @@ The per-file index, with the main theorem names, is the first section of `file-n
 - **Part E outside the realisable shapes**: configurations with a reduced twist (REFINED below SAFE), or with a foreign prime dividing some Fᵢ·(cᵢ − 1). No computed n needs them (every one is above 1/25, where `PartEMu.e6_real` applies); a statement below 1/25 would.
 - **The upper side's hypotheses** `HypStep2`, `HypStep2Block`, `HypStep5`.
 - **δ₀ = 1/25 itself** in the covering statement (Proposition 1 is strict there).
-- **The BBKN replacement**: μ\*(n) ≥ n·(Q(n) − 1)/2 from the fused construction at c = Q(n). The arithmetic half is `ArkCore.fused_value`; the group is not built.
 - **Phase 3**: `B n` as a computable function, so `native_decide` can check individual table rows. Optional; the table's own validators already cover the rows.
 - **Optionally, `HypHuppert`**: Mathlib has no "solvable primitive ⇒ affine", so this is a sizeable project.
 - **Out of scope:** deriving the chain from Oliver's theorem, KSS, and the analytic inputs ((BH-SW)/(BCG), the circle-method reduction in `bcp-to-floor.md`). They stay named hypotheses.

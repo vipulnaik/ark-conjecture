@@ -41,19 +41,28 @@ theorem orbit2_transport {X Y : Type} [Fintype X] [DecidableEq X] [Fintype Y] [D
       congr 1; funext a; simp [Equiv.permCongrHom, Equiv.permCongr_apply]
   rw [hset, card_image_of_injective _ (Sym2.map.injective e.injective)]
 
-/-- **An Oliver group on n points with every orbital ≥ m gives μ\*(n) ≥ m** (n ≥ 2). -/
-theorem mu_ge {X : Type} [Fintype X] [DecidableEq X] (G : Subgroup (Equiv.Perm X)) {p q : ℕ}
+/-- Each Oliver group's least orbital is at most μ\*. -/
+theorem le_muStar {n : ℕ} {Γ : Subgroup (Equiv.Perm (Fin n))} (hΓ : OliverG Γ) :
+    minOrb Γ ≤ muStar n := by
+  have hbdd : BddAbove {m | ∃ Γ : Subgroup (Equiv.Perm (Fin n)), OliverG Γ ∧ minOrb Γ = m} :=
+    ⟨pairs n, by rintro m ⟨Γ, -, rfl⟩; have := minOrb_le_pairs Γ; rwa [Fintype.card_fin] at this⟩
+  exact le_csSup hbdd ⟨Γ, hΓ, rfl⟩
+
+/-- **Transport to `Fin n`**: an Oliver group on X with every orbital ≥ m becomes an Oliver group
+on `Fin |X|` with least orbital ≥ m, transitive if the original was. -/
+theorem transport {X : Type} [Fintype X] [DecidableEq X] (G : Subgroup (Equiv.Perm X)) {p q : ℕ}
     (hp : p.Prime) (hq : q.Prime) (C : OliverChain G p q) {m : ℕ} (hX : 2 ≤ Fintype.card X)
     (horb : ∀ e : Sym2 X, ¬ e.IsDiag → m ≤ (D2.orbit2 G e).card) :
-    m ≤ muStar (Fintype.card X) := by
+    ∃ Γ : Subgroup (Equiv.Perm (Fin (Fintype.card X))), OliverG Γ ∧ m ≤ minOrb Γ ∧
+      ((∀ x y : X, ∃ g ∈ G, g x = y) → ∀ x y, ∃ g ∈ Γ, g x = y) := by
   classical
   set n := Fintype.card X
   let e : X ≃ Fin n := Fintype.equivFin X
   set Γ : Subgroup (Equiv.Perm (Fin n)) := G.map e.permCongrHom.toMonoidHom
   have hΓ : OliverG Γ := ⟨p, q, hp, hq, ⟨C.map (e.permCongrHom.toMonoidHom.subgroupMap G)
     (MonoidHom.subgroupMap_surjective _ _)⟩⟩
-  have hmin : m ≤ minOrb Γ := by
-    unfold minOrb
+  refine ⟨Γ, hΓ, ?_, fun htr x y => ?_⟩
+  · unfold minOrb
     apply le_csInf
     · obtain ⟨a, b, hab⟩ : ∃ a b : Fin n, a ≠ b := ⟨⟨0, by omega⟩, ⟨1, by omega⟩, by simp⟩
       refine ⟨_, D2.orbit2 Γ s(a, b), ?_, rfl⟩
@@ -71,9 +80,17 @@ theorem mu_ge {X : Type} [Fintype X] [DecidableEq X] (G : Subgroup (Equiv.Perm X
       | h a b =>
         simp only [Sym2.map_mk, Sym2.mk_isDiag_iff] at hd ⊢
         rw [hd]
-  have hbdd : BddAbove {m | ∃ Γ : Subgroup (Equiv.Perm (Fin n)), OliverG Γ ∧ minOrb Γ = m} :=
-    ⟨pairs n, by rintro m ⟨Γ, -, rfl⟩; have := minOrb_le_pairs Γ; rwa [Fintype.card_fin] at this⟩
-  exact hmin.trans (le_csSup hbdd ⟨Γ, hΓ, rfl⟩)
+  · obtain ⟨g, hg, hgxy⟩ := htr (e.symm x) (e.symm y)
+    refine ⟨e.permCongrHom.toMonoidHom g, ⟨g, hg, rfl⟩, ?_⟩
+    simp [Equiv.permCongrHom, Equiv.permCongr_apply, hgxy]
+
+/-- **An Oliver group on n points with every orbital ≥ m gives μ\*(n) ≥ m** (n ≥ 2). -/
+theorem mu_ge {X : Type} [Fintype X] [DecidableEq X] (G : Subgroup (Equiv.Perm X)) {p q : ℕ}
+    (hp : p.Prime) (hq : q.Prime) (C : OliverChain G p q) {m : ℕ} (hX : 2 ≤ Fintype.card X)
+    (horb : ∀ e : Sym2 X, ¬ e.IsDiag → m ≤ (D2.orbit2 G e).card) :
+    m ≤ muStar (Fintype.card X) := by
+  obtain ⟨Γ, hΓ, hmin, -⟩ := transport G hp hq C hX horb
+  exact hmin.trans (le_muStar hΓ)
 
 /-! ## Realisable configurations -/
 
@@ -93,7 +110,7 @@ theorem real_le_mu {C : Config} (hp : C.p.Prime) (hq : C.q.Prime) (hR : RealCfg 
   have : Fact C.p.Prime := ⟨hp⟩
   have : ∀ j, Fact (r j).Prime := fun j => ⟨hr j⟩
   have : ∀ i, NeZero (F i) := fun i => ⟨by have := (hFb i).1; omega⟩
-  obtain ⟨X, i1, i2, G, hX, ⟨ch⟩, horb⟩ :=
+  obtain ⟨X, i1, i2, G, hX, ⟨ch⟩, -, horb⟩ :=
     PartEG.partE_M_exists (F := F) (r := r) C.p C.q b (fun i => by have := (hFb i).2; omega) t ht
       hinj hcoh
   rw [← hC] at hX horb
@@ -471,5 +488,41 @@ theorem sigma0_muStar {ε : ℝ} (hε1 : ε < 1) {L : Filter ℕ} (hL : L ≤ Fi
   rw [hX] at this
   have : (m : ℝ) ≤ muStar n := by exact_mod_cast this
   linarith
+
+/-! ## The fused class (used by `VertexTransitive`) -/
+
+/-- One fused class of F blocks of 𝔽_Q at full twist scores at least F·Q·(Q − 1)/2 = F·C(Q,2):
+the within-class cross term K0·Q² never undercuts it. -/
+theorem fused_safe (p q F b : ℕ) (hF1 : 1 ≤ F) (hQ2 : 2 ≤ p ^ b) :
+    F * p ^ b * (p ^ b - 1) / 2 ≤ (⟨p, q, [.pc F (p ^ b) (p ^ b - 1)]⟩ : Config).safe := by
+  have hval : F * p ^ b * (p ^ b - 1) / 2 = F * pairs (p ^ b) := by
+    have := fused_value (p ^ b * F) (p ^ b) (Dvd.intro F rfl)
+    rw [Nat.mul_div_cancel_left _ (by omega)] at this
+    rw [Nat.mul_comm F, this]
+  rw [hval]
+  have hK0 : F * pairs (p ^ b) ≤ (if F % 2 = 1 then F else F / 2) * p ^ b * p ^ b := by
+    unfold pairs
+    have h1 : p ^ b * (p ^ b - 1) / 2 ≤ p ^ b * p ^ b / 2 :=
+      Nat.div_le_div_right (Nat.mul_le_mul_left _ (by omega))
+    split_ifs with hodd
+    · calc F * (p ^ b * (p ^ b - 1) / 2) ≤ F * (p ^ b * p ^ b) :=
+            Nat.mul_le_mul_left _ (le_trans h1 (Nat.div_le_self _ _))
+        _ = F * p ^ b * p ^ b := by ring
+    · obtain ⟨G, rfl⟩ : 2 ∣ F := Nat.dvd_of_mod_eq_zero (by omega)
+      rw [Nat.mul_div_cancel_left _ (by norm_num)]
+      calc 2 * G * (p ^ b * (p ^ b - 1) / 2) ≤ 2 * G * (p ^ b * p ^ b / 2) :=
+            Nat.mul_le_mul_left _ h1
+        _ ≤ G * (p ^ b * p ^ b) := by
+            rw [Nat.mul_comm 2 G, Nat.mul_assoc]
+            exact Nat.mul_le_mul_left _ (by rw [Nat.mul_comm]; exact Nat.div_mul_le_self _ _)
+        _ = G * p ^ b * p ^ b := by ring
+  refine le_minL (fun y hy => ?_) (by simp [CPart.safeTerms, Part.terms])
+  by_cases h2 : 2 ≤ F
+  · simp [Config.sizes, CPart.safeTerms, Part.terms, crossN, h2] at hy
+    rcases hy with rfl | rfl
+    · exact le_rfl
+    · split_ifs at hK0 ⊢ <;> exact hK0
+  · simp [Config.sizes, CPart.safeTerms, Part.terms, crossN, h2] at hy
+    rw [hy]
 
 end PartEMu
