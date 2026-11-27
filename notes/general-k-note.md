@@ -6,7 +6,7 @@
 
 | section | standing |
 |---|---|
-| §1 the completeness theorem | **proved as a bound, conditional on J0a′** (the semilinearity of the block group, stated and reduced in §1's box — it is an assumption, not a consequence of Lemma B); the product form κ_k = τθγ needs joint attainment of the three maxima, verified at k = 3, 4 and open at k ≥ 5 |
+| §1 the completeness theorem | **proved as a bound, conditional on J0a′**; the AGL part of the bound checked in Lean (`KUniformPP.orbit_lower`) (the semilinearity of the block group, stated and reduced in §1's box — it is an assumption, not a consequence of Lemma B); the product form κ_k = τθγ needs joint attainment of the three maxima, verified at k = 3, 4 and open at k ≥ 5 |
 | §2 the three factors at general k | τ **derived and now verified at k = 4**; θ **derived and checked in Lean for prime blocks** (`KUniform.orbit_law`), in a form that departs from the naive one from k = 5 (verified both ways); γ's criterion **proved at k = 3, 4** — confirmed computationally at k = 4's first distinguishing case — with the exact k ≥ 5 escape conditions open |
 | §3 the escape ledger | **derived** from §§1–2 plus Livingstone–Wagner |
 | §4 the ceiling table is k-independent | **proved** for k ≥ 3, in the generic column |
@@ -26,6 +26,8 @@ So the question "are there new escapes at higher k" is the question "are there n
 > **orb_k(c, d, m) ≥ min( c·d·m / (τ_k·θ_k·γ_k) , C(c,k) )**,
 >
 > **with equality — so κ_k = τ_k·θ_k·γ_k — exactly when some single k-set realises all three maxima at once.**
+
+*(Lean, `lean/KUniformPP.lean`, for the split group without the Galois layer, at any finite field of characteristic p: every k-set stabiliser in {x ↦ ux + v : u ∈ W} has order at most τ_k·θ_k(d), with τ_k the p-part of k (`card_stab_le`). So every orbit is at least q·d/(τ_k·θ_k(d)) (`orbit_lower`). Since a Galois layer of order m can raise a stabiliser by at most m, this is the inequality above in the generic case γ_k = m. Joint attainment is not claimed. As a check, c = 16, k = 4, d = 15 gives 16·15/(4·3) = 20, the computed value in §2.1.)*
 
 *Proof sketch.* **Assume the block's group lies in AΓL(1, c)** — see the box below, which is where the real content sits — namely AΓL(1, c) = 𝔽_c ⋊ (𝔽_c^× ⋊ Gal), and this is a chain of subgroups each normal in the next with the displayed quotients. A stabiliser of S therefore has a filtration by its intersections with the three layers, and its order is the product of the three layer contributions **for that S**. **k enters only through which subsets of a given layer can fix a k-set**, never through the layer structure itself, because the layers are a property of the group and not of the arity. ∎
 

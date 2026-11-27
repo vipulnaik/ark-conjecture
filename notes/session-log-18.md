@@ -544,3 +544,13 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - **§6.1** dropped "Mersenne-adjacent in the twist condition, thin even among those"; for odd a the twist condition is automatic. Its block list (32, 128, 2048, 8192, …) already included non-Mersenne exponents.
 - **`literature-findings.md` item 20** has its §2.2.3 cross-reference corrected the same way.
 
+## 43. Lean: the AGL part of Proposition 1 for prime-power blocks, and the cross-orbit fibre bound; §4.1 corrected
+
+- `KUniformPP.lean`: over any finite field of characteristic p, a k-set stabiliser in {x ↦ ux + v : u ∈ W} has order ≤ τ_k·θ_k(d) (`card_stab_le`). Hence orbits are ≥ q·d/(τ_k·θ_k(d)) (`orbit_lower`). This is `general-k-note.md` Proposition 1's bound in the generic case γ_k = m. Joint attainment stays open.
+- `CrossOrbit.lean`: #(G·S) ≥ #(G·(S ∩ A))·#(N·S) for G-invariant A and N fixing A pointwise (`cross_orbit`).
+- **`three-uniform-note.md` §4.1's three-line proof was flawed in two places.**
+  - It counted s′ (the third point's whole part) choices of the third point, which needs the pair's pointwise stabiliser to be transitive on that part. The fibre that is guaranteed is the third point's block c′, through that block's own translations.
+  - It closed κ₃ = 1 with "s′ ≥ r ≥ 5 > a", which is false for every Galois block (a ≥ 5), and compared against m rather than the gain ℓ = lpf(a).
+  - Redone: the comparison needs c′ ≥ 2ℓ/κ₃. That holds for foreign blocks (r ≥ 2q + 1 with q | a) and for blocks of the same class. It is **open** for a third point in a different matching class of small 2-power blocks next to a Galois block.
+- **The claim fails for Oliver groups in general**: diagonal AΓL(1, 32) plus the swap on 64 points has intra term 9920 but cross orbit 1984 (`scripts/diag_cross_orbit.py`). It is excluded from the note's configurations only because its translations are diagonal.
+

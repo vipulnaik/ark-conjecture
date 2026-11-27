@@ -31,6 +31,8 @@ What is proved, by area:
 | Part E (realisability) | `PartE1`, `PartEF`, `PartEG`, `PartEMu` | Oliver groups realising any classes beside any foreign blocks (coherent, full twist); **μ\*(n) = B_safe(n) above 1/25, given only `HypHuppert`** (the ≥ half unconditional); Σ₀'s floor on μ\* |
 | k-uniform orbit law, prime blocks | `KUniform` | for 1 ≤ k < c, the least k-set orbit of x ↦ ux + v (u in a twist of order d) is exactly c·d/θ_k(d) |
 | AΓL(1, 2^p) free on 3-sets | `Mersenne` | for p prime ≥ 5, only the identity of AΓL(1, 2^p) stabilises a 3-set; the Mersenne condition is not needed |
+| k-set stabilisers, prime-power blocks | `KUniformPP` | over any finite field, a k-set stabiliser in the split affine group has order ≤ τ_k·θ_k(d), so orbits are ≥ q·d/(τ_k·θ_k(d)) |
+| cross orbits at k = 3 | `CrossOrbit` | the fibre bound #(G·S) ≥ #(G·(S ∩ A))·#(N·S) behind "only intra terms bind" |
 | vertex-transitive Oliver-resistance | `VertexTransitive` | its threshold μ\*_vt(n) = n(q(n) − 1)/2 (lower half unconditional), and μ\*(n) ≥ it |
 | Lemmas B, B′, D2 from Oliver's chain | `Chain`, `Step2`, `Glue`, `Rescale`, `LemmaB`, `LemmaBprime`, `D2`, `D2Full`, `D2q`, `FoBridge` | all three D2 classes, no Lemma B hypothesis |
 | `ladder-completeness.md` Propositions 1–2 | `Prop1`, `ThreeForeign`, `Prop1Final`, `TwoForeign` | ≤ 1 class + ≤ 2 foreign parts, F ≤ 15; strict S6/S11 ceilings |

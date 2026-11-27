@@ -286,11 +286,20 @@ The reason is a degree count and it is decisive:
 
 **This is the single largest structural difference from k = 2**, where cross terms routinely bind and most of `arithmetic-of-density.md` §3 is the comparison between intra, within-class-cross and between-orbit terms. At k = 3 that comparison collapses:
 
-> **min₃(configuration) = min over classes of the class's intra term** = min(F_i·orb₃(c_i, d_i, m_i)).
+> **min₃(configuration) = min over classes of the class's intra term** = min(F_i·orb₃(c_i, d_i, m_i)). *(Proved below except in one configuration type, flagged there.)*
 
 So the optimisation is no longer a balance between competing term types. It is: **partition n into parts and maximise the smallest part's F·orb₃(c, d, m)**. Since F·orb₃(c, d, m) ≈ s·c·m/κ₃ with s = F·c the part size, a part's value is its *size times its block size* — so the whole problem is to keep the block sizes large, and the parts few.
 
-> **In fact the degree count can be replaced by a proof, and it is three lines.** Take a cross orbit of the 2 + 1 type: two points in a class of block size c and one in another part of size s′. Its orbit contains, for each pair in the two-point block's own pair-orbit, at least s′ ≥ 2 choices of the third point, so it has size at least 2·orb₂(c, d) ≥ c·d/2 ≥ c·d/κ₃ whenever κ₃ ≥ 2 — and when κ₃ = 1 the intra term is c·d·m, while the cross orbit is at least 2·orb₂ ≥ c·d, so the comparison needs only s′ ≥ m, which holds since s′ ≥ r ≥ 5 > a for every block in range. The 1 + 1 + 1 type is larger still, being a product of three part sizes. For a cross orbit **within** one class the F blocks are permuted transitively, which multiplies by a further F. **So the minimum is an intra term at every configuration, with no appeal to asymptotics** — the degree count says the margin is a factor of order n, and this says the sign of the comparison never turns over at small n either.
+> **The degree count can be replaced by a fibre bound, with one case left open.** Let A be the part holding two of the three points, and N the elements acting trivially on A. Then **|orbit of S| ≥ |orbit of S ∩ A| · |N-orbit of S|** (Lean, `CrossOrbit.cross_orbit`). In the configurations of this note every block's translations act on that block alone: matching blocks' translations lie in the p-group Γ₂, and foreign blocks' in the cyclic Γ₁. So N moves the third point through at least its block size c′, and a 2 + 1 cross orbit has size at least c′·F·orb₂(c, d) ≥ c′·F·c·d/2. Against this, the pair's class has intra term F·orb₃(c, d, m) ≤ F·c·d·ℓ/κ₃, where ℓ is the Galois gain of §2.2.2: ℓ = lpf(a) when the gain occurs, else 1. So the comparison needs **c′ ≥ 2ℓ/κ₃**:
+>
+> - **ℓ = 1**: c′ ≥ 2 suffices.
+> - **ℓ > 1, third point in a foreign block**: the top prime q divides a and r ≡ 1 (mod q), so c′ = r ≥ 2q + 1 ≥ 2ℓ + 1.
+> - **Third point in another block of the same class**: c′ = c is far larger.
+> - **ℓ > 1, third point in a different matching class of small 2-power blocks** (c′ ≤ 2ℓ): **not covered by this argument**. Whether such a configuration is admissible has not been checked.
+>
+> The 1 + 1 + 1 type is a product of three such factors. *(Two shortcuts do not work here. Counting the third point's whole part s′ instead of its block c′ needs N transitive on that part. And a bound of the form "r ≥ 5 > a" fails for every Galois block, since those have a ≥ 5.)*
+>
+> **The independence of translations is load-bearing.** For an arbitrary Oliver group the statement fails: diagonal AΓL(1, 32) on two copies of 𝔽₃₂, together with the swap, is a transitive Oliver group on 64 points (2-group 𝔽₃₂ × C₂, then C₃₁, then C₅). Its intra term is 9920 = 2·4960, but the cross set {0, 1} ∪ {0′} is fixed by the diagonal Frobenius and has orbit **1984** (`scripts/diag_cross_orbit.py`). It is not a configuration of this note, because its translations are diagonal.
 
 *Caveat on the census, not on the binding.* The statement above is about which term binds within a configuration; that the census of §4.2 lists every admissible configuration is a separate claim, and is the measured one (§10 item 1).
 
