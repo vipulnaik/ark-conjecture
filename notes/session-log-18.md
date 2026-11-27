@@ -441,3 +441,50 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
   - `trans_E1_steps`, `Utyp_even_steps` and `Utyp_odd_steps` state U_typ with Conjecture P replaced by `HypStep5` (P for N\* primitive) and Step 2 for blocks.
 - **Follow-up: E counted.** `UpperDensity.E2_count`: at odd n, E's second clause has one summand even, hence 2^j. The window forces the other summand m ≤ 4·2^j (for δ ≥ 1/6). The count is at most Σ_{j ≤ log₂ x} #pp(2^{j+2}) ≤ Σ K·2^{j+2}/((j+2) log 2) + K. With Σ_{j≤J} 2^j/(j+2) ≤ 4·2^J/(J+2) (`geom_sum`, by induction), this is O(x/log x). Together with `E1_count`, E is O(x/log x), as §6.3 states. Nothing else is needed for U_typ's density-one form beyond the three named hypotheses.
 - **Follow-up: the density-one ceiling.** `UpperDensity.ceiling_density` assumes `HypStep2`, `HypStep2Block` and `HypStep5` at every degree, and concludes that `Ceiling n` holds outside O(x/log x) exceptions. `Ceiling n` says every fixed-point-free Oliver Γ on n points has m\*_N(Γ) < δ_cyc(n)·C(n,2), i.e. μ\*_N^fpf(n) < δ_cyc(n)·C(n,2). The failure set lies in the escapes (prime powers, and E1 at δ ≥ 1/6), E2 at odd n, and {0, 1}. With `thr_realised`, which gives the lower half at the level of evasiveness itself, this gives the upper and lower halves of μ\*_N^fpf/C(n,2) → δ_cyc(n) on a density-one set, conditional on the named hypotheses (KSS/Oliver and WT for the lower half; Steps 2 and 5 for the upper).
+
+## 34. Lean README cleanup, and Part 0 begun
+
+- **README pass** (commit a6268a4): statuses brought up to date. The open items are now in one list ("Open, as of 2026-11-26").
+- **`lean/Part0.lean`**, toward μ\* ≤ B_safe.
+  - `orbLe_safe` (Part A's assembly): if Γ realises a configuration, some orbital of Γ is at most SAFE. "Realises" means: Γ-invariant, pairwise disjoint, nonempty point sets of the parts' sizes, each part's own SAFE terms bounded below by orbitals. Cross terms come for free (`cross_orbLe`).
+  - `blocks_orbLe`, `pc_terms`: a class's terms from its block system (the flat cap F·C(c,2), and the within-class cross term ≥ F·C(c,2)).
+- **Interface finding.** `GAdm` requires distinct foreign primes. A real Oliver group may have several orbits with outside blocks of the same prime r. The text handles this by Lemma D2's non-permuted case (Part D2, the remark after the proof; Part E's admissibility bullet): they share a diagonal C_r, and the same-position class has C(F,2)·r pairs. In Lean, `FoBridge` covers only a single transitive fused orbit. So Part 0 needs D2 for a union of orbits of one prime, permuted or not, with r = q handled by D2q per orbit. The remaining Part 0 steps are listed in the README's "Open" list.
+- **Part 0, step 2 done (`lean/Part0Fr.lean`).** `fr_orbit`: an orbit of prime size r ≠ p of an Oliver group has an orbital of at most orb(r, q^f) pairs, for some q^f ∣ r − 1. It is proved from the chain alone, with no hypothesis.
+  - Lemma B for prime blocks gives the affine form.
+  - The multipliers form a subgroup `mulGp` of (ℤ/r)ˣ, of order t ∣ r − 1. By Lemma B′, every element has a q-power power in the order-r normal subgroup, whose multipliers are 1 by Fermat; so t = q^f.
+  - The orbital of {0, 1} lies in {s(b, b + u)}, at most r·t pairs. At even t, −1 is a multiplier, so each pair is hit twice and the bound is r·t/2. The cap C(r,2) is counted separately.
+  - Transport from an invariant set of Γ to a model type (`resHom`, `orbit2_res_le`, `res_transitive`) is in place for the remaining steps.
+- **Part 0, more pieces (`Part0.lean`).** `fixed_orbLe`: a fixed point gives an orbital of at most n − 1. `exists_least_block`: a least block of size ≥ 2 exists in any invariant set of size ≥ 2. `blockSys`: its images, of one size, permuted by Γ, pairwise equal or disjoint. `pc_terms_of_set`: a class's SAFE terms from that block system.
+- **Part 0, step 1 done.**
+  - `blockSys_card`: a least block's images tile a transitive orbit, so |O| = F·|B|.
+  - `stab_primitive`: the setwise stabiliser of a least block acts primitively on it. A nontrivial block of the stabiliser on B lifts to a block of Γ strictly inside B, contradicting leastness.
+  - `chainSub`: the chain passes to the stabiliser.
+  - These are the inputs Lemma B′ and the Huppert hypothesis take.
+- **Part 0, step 4 done.** `block_kind`: a least block of an orbit has size a power of p, or a prime r ≠ p. The second branch is Lemma B′, applied to the primitive block stabiliser; the first takes `HypHuppert` (p ∣ degree of a primitive Oliver group ⇒ the degree is a power of p), a named hypothesis standing for "a solvable primitive group is affine".
+- **Plan for step 3, simpler than re-running D2.**
+  - A fused outside orbit is covered by `FoBridge`, after transport.
+  - At r = q, each orbit is worth q by `fr_orbit`.
+  - The new case is two unfused orbits of one prime r ≠ q. The stabiliser Γ_x of x ∈ O₁ acts on O₂ through a q-group: the q-power power of each element is trivial on O₁ and a translation on O₂, and a nonzero translation there would make a non-cyclic r-subgroup. So Γ_x fixes some y ∈ O₂, since r ≢ 0 (mod q). Then g·x determines g·y, and the orbital of {x, y} has at most r pairs.
+  - This is the text's same-position class, reached by a fixed-point count instead of Step 2's change of origins.
+- **Part 0, step 3's new case done (`two_orbits`), from the chain alone.** For O₁, O₂ orbits of one prime r ∉ {p, q}:
+  - Take g fixing x ∈ O₁, and h := g^(q^K). Then h is trivial on O₁ (its multiplier has q-power order, and it fixes a point), and h^r is trivial on O₂ (a translation).
+  - If h were nontrivial on O₂: its r-part h₁ lies in a Sylow-r subgroup P, which is cyclic (`rsub_cyclic`). P's generator w moves O₁, since otherwise r would divide [Γ : P]. So h₁ = w^j with r ∣ j, and w^r is trivial on O₂, so h₁ is trivial on O₂; hence h is too, a contradiction.
+  - So the stabiliser of x acts on O₂ as a q-group, and fixes some y, since r ≢ 0 (mod q). The orbital of {x, y} then has at most r pairs.
+  - Helper lemmas: `orbit_coords` (affine coordinates on a prime orbit, multipliers of q-power order), `mul_qpow`, `affine_rpow`, `hasMul_one_pow`, `hasMul_one_fix`.
+- **Part 0 assembled (`lean/Part0Fo.lean`, `lean/Part0Main.lean`).**
+  - `fused_orbit`: a fused outside orbit is relabelled as Fin F × ℤ/r with blocks {i} × ℤ/r (`fusedEquiv`), and `FoBridge` gives D2's `fo` terms.
+  - `part0`: for an Oliver group Γ on n ≥ 2 points, either Γ has a fixed point (then an orbital ≤ n − 1), or the configuration read off Γ is admissible, has n points, and has SAFE ≥ one of Γ's orbitals. The configuration is:
+    - a class `pc F c (c − 1)` for each orbit whose least block has p-power size c;
+    - for each outside prime r, one part over all orbits with r-blocks: `fr r t` when that is a single unfused orbit, else `fo F r 1` with F the total number of r-blocks.
+  - The `fo` part's same-position term is bounded by:
+    - `fused_orbit` when some orbit is fused;
+    - `two_orbits` when there are ≥ 2 unfused orbits and r ≠ q;
+    - `fr_orbit` with t = 1 when r = q.
+  - Distinct foreign primes hold by construction, which is the text's justification made formal. `part0_Bsafe` is `E6.e6`'s `hcap` (μ ≤ B_safe) wherever B_safe(n) ≥ n − 1.
+  - **The only input beyond the chain is `HypHuppert`.**
+- **Checked against the text (Part 0, steps 1–3):**
+  - the copy count is unrestricted (F any integer, as the n = 308 gotcha requires; no coprimality is used);
+  - the class term is the flat cap F·C(c,2);
+  - the within-class cross term is never needed beyond F·C(c,2);
+  - Lemma C is not used anywhere.
+- **Not done:** the fixed-point disjunct's domination (B_safe(n) ≥ n − 1 except at tiny n); a Lean definition of μ\*(n) to state μ\* ≤ B_safe as an inequality of numbers.
