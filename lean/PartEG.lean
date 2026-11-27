@@ -1,20 +1,24 @@
 /-
-# `PartEG.lean` — Part E (realisability) for one class beside any number of foreign blocks
+# `PartEG.lean` — Part E (realisability) for any number of classes beside any foreign blocks
 
-`enumeration-proof.md` Part E's construction for one p-characteristic class of F ≥ 1 blocks of
-𝔽_c at full twist, beside foreign blocks ℤ/r₁, …, ℤ/r_k of distinct primes, each with a twist
-group U_j of q-power order (any q, including q = 2).  It generalises `PartE1` (F = 1, one block)
-and `PartEF` (F ≥ 2, one block, odd prime twist).
+`enumeration-proof.md` Part E's construction for p-characteristic classes (class i: Fᵢ ≥ 1 blocks
+of 𝔽_{cᵢ}, full twist) beside foreign blocks ℤ/r₁, …, ℤ/r_k of distinct primes, each with a twist
+group of q-power order (any q, including q = 2).  It generalises `PartE1` (F = 1, one foreign
+block) and `PartEF` (one class, one foreign block, odd prime twist).
 
-* **The group** G = ⟨T, γ, μ(U)⟩ on (ℤ/F × K) ⊔ Σⱼ ℤ/rⱼ: T the translations of the F blocks,
-  γ = the entangled rotation `zc` on the blocks and z ↦ z + 1 on every ℤ/rⱼ, μ_u = z ↦ uⱼ·z on
-  each ℤ/rⱼ for u in a subgroup U of Πⱼ (ℤ/rⱼ)ˣ.
+* **The group** G = ⟨T, γ, μ(U)⟩ on (Σᵢ ℤ/Fᵢ × Kᵢ) ⊔ Σⱼ ℤ/rⱼ: T the translations of all blocks,
+  γ = the entangled rotation `zc` on every class at once and z ↦ z + 1 on every ℤ/rⱼ (the text's
+  single diagonal carrier), μ_u = z ↦ uⱼ·z on each ℤ/rⱼ for u in a subgroup U of Πⱼ (ℤ/rⱼ)ˣ.
 * **The Oliver chain** (`chain`): T (a p-group) ◁ ⟨T, γ⟩ (cyclic over T) ◁ G (a q-group over
-  ⟨T, γ⟩, given every u ∈ U has q-power order).  The one arithmetic input is **coherence**:
-  no rⱼ divides F·(c − 1), so that by the Chinese remainder theorem every translation vector
-  ρ_v of the foreign blocks is a power of γ (`ρ_mem`).
-* **The orbitals** (`orbit_*`): within a block, F·C(c,2); across two blocks, ≥ K0·c²; block–ℤ/rⱼ,
-  F·c·rⱼ; ℤ/rⱼ–ℤ/rₗ, rⱼ·rₗ; inside ℤ/rⱼ, ≥ orb(rⱼ, |Uⱼ|) — exactly the SAFE terms.
+  ⟨T, γ⟩).  The one arithmetic input is **coherence**: no rⱼ divides any Fᵢ·(cᵢ − 1), so that by
+  the Chinese remainder theorem every translation vector ρ_v of the foreign blocks is a power of γ
+  (`ρ_mem`).
+* **The orbitals** (`orbit_*`): within a block of class i, Fᵢ·C(cᵢ,2); across two blocks of class
+  i, ≥ K0·cᵢ²; class i – ℤ/rⱼ, Fᵢ·cᵢ·rⱼ; ℤ/rⱼ–ℤ/rₗ, rⱼ·rₗ; inside ℤ/rⱼ, ≥ orb(rⱼ, |Uⱼ|).
+* **Two classes (`orbit_CC`)**: ≥ Fᵢ·cᵢ·cᵢ'.  Because one γ rotates both classes together, the
+  between-class orbital is lcm(Fᵢ, Fᵢ')·cᵢ·cᵢ', **not** the product of the class sizes when the
+  block counts share a factor.  It is nonetheless always at least the smaller-block class's intra
+  term, so the configuration's REFINED score is still realised (`partE_M`).
 -/
 import PartEF
 import Mathlib.Data.ZMod.QuotientRing
@@ -122,13 +126,20 @@ theorem zc_apply (ω : Kˣ) (i : ZMod F) (x : K) : zc ω (i, x) = (i + 1, wrap �
 
 end zc
 
-/-! ## The points and the generators -/
+/-! ## The points and the generators
 
-variable {F : ℕ} [NeZero F] {K : Type*} [Field K] {k : ℕ} {r : Fin k → ℕ} [∀ j, Fact (r j).Prime]
+m classes, class i being F i blocks of a field K i; k foreign blocks ℤ/rⱼ. -/
+
+variable {m : ℕ} {F : Fin m → ℕ} [∀ i, NeZero (F i)] {K : Fin m → Type*} [∀ i, Field (K i)]
+  {k : ℕ} {r : Fin k → ℕ} [∀ j, Fact (r j).Prime]
 
 variable (F K) in
-/-- The points: F blocks of K, and the foreign blocks ℤ/rⱼ. -/
-abbrev Pt (r : Fin k → ℕ) := (ZMod F × K) ⊕ (Σ j, ZMod (r j))
+/-- The class points: block a of class i is {i} × {a} × K i. -/
+abbrev Cl := Σ i, ZMod (F i) × K i
+
+variable (F K) in
+/-- The points: the classes, and the foreign blocks ℤ/rⱼ. -/
+abbrev Pt (r : Fin k → ℕ) := Cl F K ⊕ (Σ j, ZMod (r j))
 
 /-- Translation by v on the foreign blocks. -/
 def fadd (v : ∀ j, ZMod (r j)) : Perm (Σ j, ZMod (r j)) where
@@ -150,26 +161,33 @@ def fmul (u : ∀ j, (ZMod (r j))ˣ) : Perm (Σ j, ZMod (r j)) where
     show (⟨j, _⟩ : Σ j, ZMod (r j)) = ⟨j, z⟩
     rw [← mul_assoc, ← Units.val_mul, mul_inv_cancel, Units.val_one, one_mul]
 
-/-- Translation by t on the blocks (identity on the foreign blocks). -/
-def trE (t : ZMod F → K) : Perm (ZMod F × K) where
-  toFun p := (p.1, p.2 + t p.1)
-  invFun p := (p.1, p.2 - t p.1)
-  left_inv p := by simp
-  right_inv p := by simp
+/-- The entangled rotation on every class at once. -/
+def czc (ω : ∀ i, (K i)ˣ) : Perm (Cl F K) where
+  toFun x := ⟨x.1, zc (ω x.1) x.2⟩
+  invFun x := ⟨x.1, (zc (ω x.1)).symm x.2⟩
+  left_inv x := by simp
+  right_inv x := by simp
 
-def trHom : Multiplicative (ZMod F → K) →* Perm (Pt F K r) where
+/-- Translation by t on the class blocks (identity on the foreign blocks). -/
+def trE (t : ∀ i, ZMod (F i) → K i) : Perm (Cl F K) where
+  toFun x := ⟨x.1, (x.2.1, x.2.2 + t x.1 x.2.1)⟩
+  invFun x := ⟨x.1, (x.2.1, x.2.2 - t x.1 x.2.1)⟩
+  left_inv x := by simp
+  right_inv x := by simp
+
+def trHom : Multiplicative (∀ i, ZMod (F i) → K i) →* Perm (Pt F K r) where
   toFun t := Perm.sumCongr (trE (Multiplicative.toAdd t)) 1
-  map_one' := by ext (⟨i, x⟩ | z) <;> simp [trE]
+  map_one' := by ext (⟨i, a, x⟩ | z) <;> simp [trE]
   map_mul' s t := by
-    ext (⟨i, x⟩ | z)
+    ext (⟨i, a, x⟩ | z)
     · simp [trE]; ring
     · simp
 
 /-- The translation subgroup: N₂. -/
 def T : Subgroup (Perm (Pt F K r)) := (trHom (F := F) (K := K) (r := r)).range
 
-/-- The cyclic-layer generator: the entangled rotation on the blocks, z ↦ z + 1 on each ℤ/rⱼ. -/
-def γ (ω : Kˣ) : Perm (Pt F K r) := Perm.sumCongr (zc ω) (fadd fun _ => 1)
+/-- The cyclic-layer generator: the entangled rotation on every class, z ↦ z + 1 on each ℤ/rⱼ. -/
+def γ (ω : ∀ i, (K i)ˣ) : Perm (Pt F K r) := Perm.sumCongr (czc ω) (fadd fun _ => 1)
 
 /-- Translation by v on the foreign blocks only. -/
 def ρ (v : ∀ j, ZMod (r j)) : Perm (Pt F K r) := Perm.sumCongr 1 (fadd v)
@@ -177,61 +195,62 @@ def ρ (v : ∀ j, ZMod (r j)) : Perm (Pt F K r) := Perm.sumCongr 1 (fadd v)
 /-- The top: z ↦ uⱼ·z on each ℤ/rⱼ. -/
 def μ (u : ∀ j, (ZMod (r j))ˣ) : Perm (Pt F K r) := Perm.sumCongr 1 (fmul u)
 
-@[simp] theorem trHom_inl (t : Multiplicative (ZMod F → K)) (i : ZMod F) (x : K) :
-    trHom (r := r) t (Sum.inl (i, x)) = Sum.inl (i, x + Multiplicative.toAdd t i) := rfl
-@[simp] theorem trHom_inr (t : Multiplicative (ZMod F → K)) (z : Σ j, ZMod (r j)) :
+@[simp] theorem trHom_inl (t : Multiplicative (∀ i, ZMod (F i) → K i)) (i : Fin m) (a : ZMod (F i))
+    (x : K i) : trHom (r := r) t (Sum.inl ⟨i, a, x⟩) =
+      Sum.inl ⟨i, a, x + Multiplicative.toAdd t i a⟩ := rfl
+@[simp] theorem trHom_inr (t : Multiplicative (∀ i, ZMod (F i) → K i)) (z : Σ j, ZMod (r j)) :
     trHom (F := F) (K := K) t (Sum.inr z) = Sum.inr z := rfl
-@[simp] theorem ρ_inl (v : ∀ j, ZMod (r j)) (p : ZMod F × K) :
+@[simp] theorem ρ_inl (v : ∀ j, ZMod (r j)) (p : Cl F K) :
     ρ (F := F) (K := K) v (Sum.inl p) = Sum.inl p := rfl
 @[simp] theorem ρ_inr (v : ∀ j, ZMod (r j)) (j : Fin k) (z : ZMod (r j)) :
     ρ (F := F) (K := K) v (Sum.inr ⟨j, z⟩) = Sum.inr ⟨j, z + v j⟩ := rfl
-@[simp] theorem μ_inl (u : ∀ j, (ZMod (r j))ˣ) (p : ZMod F × K) :
+@[simp] theorem μ_inl (u : ∀ j, (ZMod (r j))ˣ) (p : Cl F K) :
     μ (F := F) (K := K) u (Sum.inl p) = Sum.inl p := rfl
 @[simp] theorem μ_inr (u : ∀ j, (ZMod (r j))ˣ) (j : Fin k) (z : ZMod (r j)) :
     μ (F := F) (K := K) u (Sum.inr ⟨j, z⟩) = Sum.inr ⟨j, (u j : ZMod (r j)) * z⟩ := rfl
-@[simp] theorem γ_inl (ω : Kˣ) (p : ZMod F × K) :
-    γ (r := r) ω (Sum.inl p) = Sum.inl (zc ω p) := rfl
-@[simp] theorem γ_inr (ω : Kˣ) (j : Fin k) (z : ZMod (r j)) :
+@[simp] theorem γ_inl (ω : ∀ i, (K i)ˣ) (i : Fin m) (p : ZMod (F i) × K i) :
+    γ (r := r) ω (Sum.inl ⟨i, p⟩) = Sum.inl ⟨i, zc (ω i) p⟩ := rfl
+@[simp] theorem γ_inr (ω : ∀ i, (K i)ˣ) (j : Fin k) (z : ZMod (r j)) :
     γ (F := F) (K := K) ω (Sum.inr ⟨j, z⟩) = Sum.inr ⟨j, z + 1⟩ := rfl
 
-theorem γ_pow_inl (ω : Kˣ) (n : ℕ) (p : ZMod F × K) :
-    (γ (r := r) ω ^ n) (Sum.inl p) = Sum.inl ((zc ω ^ n) p) := by
+theorem γ_pow_inl (ω : ∀ i, (K i)ˣ) (n : ℕ) (i : Fin m) (p : ZMod (F i) × K i) :
+    (γ (r := r) ω ^ n) (Sum.inl ⟨i, p⟩) = Sum.inl ⟨i, (zc (ω i) ^ n) p⟩ := by
   induction n generalizing p with
   | zero => rfl
   | succ n ih => rw [pow_succ, Perm.mul_apply, γ_inl, ih, pow_succ, Perm.mul_apply]
 
-theorem γ_pow_inr (ω : Kˣ) (n : ℕ) (j : Fin k) (z : ZMod (r j)) :
+theorem γ_pow_inr (ω : ∀ i, (K i)ˣ) (n : ℕ) (j : Fin k) (z : ZMod (r j)) :
     (γ (F := F) (K := K) ω ^ n) (Sum.inr ⟨j, z⟩) = Sum.inr ⟨j, z + n⟩ := by
   induction n generalizing z with
   | zero => simp
   | succ n ih => rw [pow_succ, Perm.mul_apply, γ_inr, ih]; push_cast; ring_nf
 
 /-- **γ normalises the translations**. -/
-theorem γ_conj_tr (ω : Kˣ) (t : Multiplicative (ZMod F → K)) :
+theorem γ_conj_tr (ω : ∀ i, (K i)ˣ) (t : Multiplicative (∀ i, ZMod (F i) → K i)) :
     γ (r := r) ω * trHom t * (γ ω)⁻¹ =
-      trHom (Multiplicative.ofAdd fun j => wrap ω (j - 1) * Multiplicative.toAdd t (j - 1)) := by
+      trHom (Multiplicative.ofAdd fun i a => wrap (ω i) (a - 1) * Multiplicative.toAdd t i (a - 1)) := by
   rw [mul_inv_eq_iff_eq_mul]
-  ext (⟨i, x⟩ | ⟨j, z⟩)
+  ext (⟨i, a, x⟩ | ⟨j, z⟩)
   · simp only [Perm.mul_apply, trHom_inl, γ_inl, zc_apply, toAdd_ofAdd, add_sub_cancel_right]
-    simp only [Sum.inl.injEq, Prod.mk.injEq, true_and]; ring
+    simp only [Sum.inl.injEq, Sigma.mk.injEq, heq_eq_eq, true_and, Prod.mk.injEq]; ring
   · simp [Perm.mul_apply]
 
-theorem μ_conj_tr (u : ∀ j, (ZMod (r j))ˣ) (t : Multiplicative (ZMod F → K)) :
+theorem μ_conj_tr (u : ∀ j, (ZMod (r j))ˣ) (t : Multiplicative (∀ i, ZMod (F i) → K i)) :
     μ u * trHom t * (μ u)⁻¹ = trHom t := by
   rw [mul_inv_eq_iff_eq_mul]
-  ext (⟨i, x⟩ | ⟨j, z⟩) <;> simp [Perm.mul_apply]
+  ext (⟨i, a, x⟩ | ⟨j, z⟩) <;> simp [Perm.mul_apply]
 
-theorem μ_conj_γ (ω : Kˣ) (u : ∀ j, (ZMod (r j))ˣ) :
+theorem μ_conj_γ (ω : ∀ i, (K i)ˣ) (u : ∀ j, (ZMod (r j))ˣ) :
     μ u * γ (F := F) (K := K) ω * (μ u)⁻¹ = γ ω * ρ (fun j => (u j : ZMod (r j)) - 1) := by
   rw [mul_inv_eq_iff_eq_mul]
-  ext (⟨i, x⟩ | ⟨j, z⟩)
+  ext (⟨i, a, x⟩ | ⟨j, z⟩)
   · simp [Perm.mul_apply]
   · simp [Perm.mul_apply]; ring
 
 theorem μ_mul (u v : ∀ j, (ZMod (r j))ˣ) : μ (F := F) (K := K) (u * v) = μ u * μ v := by
-  ext (⟨i, x⟩ | ⟨j, z⟩) <;> simp [Perm.mul_apply, mul_assoc]
+  ext (⟨i, a, x⟩ | ⟨j, z⟩) <;> simp [Perm.mul_apply, mul_assoc]
 theorem μ_one : μ (F := F) (K := K) (1 : ∀ j, (ZMod (r j))ˣ) = 1 := by
-  ext (⟨i, x⟩ | ⟨j, z⟩) <;> simp
+  ext (⟨i, a, x⟩ | ⟨j, z⟩) <;> simp
 theorem μ_inv (u : ∀ j, (ZMod (r j))ˣ) : μ (F := F) (K := K) u⁻¹ = (μ u)⁻¹ := by
   rw [eq_inv_iff_mul_eq_one, ← μ_mul, inv_mul_cancel, μ_one]
 theorem μ_pow (u : ∀ j, (ZMod (r j))ˣ) (n : ℕ) : μ (F := F) (K := K) (u ^ n) = μ u ^ n := by
@@ -239,30 +258,26 @@ theorem μ_pow (u : ∀ j, (ZMod (r j))ˣ) (n : ℕ) : μ (F := F) (K := K) (u ^
   | zero => simp [μ_one]
   | succ n ih => rw [pow_succ, μ_mul, ih, pow_succ]
 
-theorem ρ_add (v w : ∀ j, ZMod (r j)) : ρ (F := F) (K := K) (v + w) = ρ v * ρ w := by
-  ext (⟨i, x⟩ | ⟨j, z⟩)
-  · simp [Perm.mul_apply]
-  · simp [Perm.mul_apply]; ring
-
 /-! ## The subgroups -/
 
 /-- N₁ = ⟨T, γ⟩. -/
-def N1 (ω : Kˣ) : Subgroup (Perm (Pt F K r)) :=
+def N1 (ω : ∀ i, (K i)ˣ) : Subgroup (Perm (Pt F K r)) :=
   Subgroup.closure (((T (F := F) (K := K) (r := r) : Subgroup _) : Set (Perm (Pt F K r))) ∪ {γ ω})
 
 /-- G = ⟨T, γ, μ(U)⟩. -/
-def G (ω : Kˣ) (U : Subgroup (∀ j, (ZMod (r j))ˣ)) : Subgroup (Perm (Pt F K r)) :=
+def G (ω : ∀ i, (K i)ˣ) (U : Subgroup (∀ j, (ZMod (r j))ˣ)) : Subgroup (Perm (Pt F K r)) :=
   Subgroup.closure (((T (F := F) (K := K) (r := r) : Subgroup _) : Set (Perm (Pt F K r))) ∪ {γ ω} ∪
     (μ '' (U : Set (∀ j, (ZMod (r j))ˣ))))
 
-theorem T_le_N1 (ω : Kˣ) : (T (F := F) (K := K) (r := r)) ≤ N1 ω :=
+theorem T_le_N1 (ω : ∀ i, (K i)ˣ) : (T (F := F) (K := K) (r := r)) ≤ N1 ω :=
   fun _ hx => Subgroup.subset_closure (Or.inl hx)
-theorem γ_mem_N1 (ω : Kˣ) : γ ω ∈ N1 (F := F) (K := K) (r := r) ω :=
+theorem γ_mem_N1 (ω : ∀ i, (K i)ˣ) : γ ω ∈ N1 (F := F) (K := K) (r := r) ω :=
   Subgroup.subset_closure (Or.inr rfl)
-theorem N1_le_G (ω : Kˣ) (U : Subgroup (∀ j, (ZMod (r j))ˣ)) : N1 (F := F) (K := K) ω ≤ G ω U :=
+theorem N1_le_G (ω : ∀ i, (K i)ˣ) (U : Subgroup (∀ j, (ZMod (r j))ˣ)) :
+    N1 (F := F) (K := K) ω ≤ G ω U :=
   Subgroup.closure_mono (fun _ hx => Or.inl hx)
-theorem μ_mem_G (ω : Kˣ) {U : Subgroup (∀ j, (ZMod (r j))ˣ)} {u : ∀ j, (ZMod (r j))ˣ} (hu : u ∈ U) :
-    μ u ∈ G (F := F) (K := K) ω U :=
+theorem μ_mem_G (ω : ∀ i, (K i)ˣ) {U : Subgroup (∀ j, (ZMod (r j))ˣ)} {u : ∀ j, (ZMod (r j))ˣ}
+    (hu : u ∈ U) : μ u ∈ G (F := F) (K := K) ω U :=
   Subgroup.subset_closure (Or.inr ⟨u, hu, rfl⟩)
 
 /-- Distinct primes are pairwise coprime. -/
@@ -270,25 +285,35 @@ theorem coprime_of_inj (hinj : Function.Injective r) : Pairwise (Function.onFun 
   intro i j hij
   exact (Nat.coprime_primes (Fact.out) (Fact.out)).mpr (fun h => hij (hinj h))
 
-/-- **ρ_v ∈ N₁ for every v**, when no rⱼ divides F·N (N with ω^N = 1) and the rⱼ are distinct:
-by the Chinese remainder theorem ρ_v is a power of γ with exponent ≡ 0 mod F·N.  This is where
-coherence rⱼ ∤ F·(c − 1) is used. -/
-theorem ρ_mem (ω : Kˣ) {N : ℕ} (hN : ω ^ N = 1) (hinj : Function.Injective r)
-    (hco : ∀ j, ((F * N : ℕ) : ZMod (r j)) ≠ 0) (v : ∀ j, ZMod (r j)) :
+/-- A power of γ with exponent a multiple of (∏ F)·N is trivial on the classes. -/
+theorem γ_pow_inl_one (ω : ∀ i, (K i)ˣ) {N : ℕ} (hN : ∀ i, ω i ^ N = 1) (y : ℕ) (i : Fin m)
+    (p : ZMod (F i) × K i) :
+    (γ (r := r) ω ^ ((∏ i, F i) * (N * y))) (Sum.inl ⟨i, p⟩) = Sum.inl ⟨i, p⟩ := by
+  obtain ⟨a, ha⟩ : F i ∣ ∏ i, F i := Finset.dvd_prod_of_mem _ (Finset.mem_univ i)
+  rw [γ_pow_inl, ha, mul_assoc, zc_pow_eq_one (ω i) (a * (N * y))
+    (by rw [← mul_assoc, mul_comm a N, mul_assoc, pow_mul, hN, one_pow])]
+  rfl
+
+/-- **ρ_v ∈ N₁ for every v**, when no rⱼ divides (∏ F)·N (N with ωᵢ^N = 1) and the rⱼ are
+distinct: by the Chinese remainder theorem ρ_v is a power of γ.  This is where coherence is
+used. -/
+theorem ρ_mem (ω : ∀ i, (K i)ˣ) {N : ℕ} (hN : ∀ i, ω i ^ N = 1) (hinj : Function.Injective r)
+    (hco : ∀ j, (((∏ i, F i) * N : ℕ) : ZMod (r j)) ≠ 0) (v : ∀ j, ZMod (r j)) :
     ρ v ∈ N1 (F := F) (K := K) ω := by
   have : NeZero (∏ j, r j) := ⟨Finset.prod_ne_zero_iff.mpr fun j _ => (Fact.out : (r j).Prime).ne_zero⟩
+  set P := ∏ i, F i
   set e := ZMod.prodEquivPi r (coprime_of_inj hinj)
-  set y := e.symm (fun j => v j * ((F * N : ℕ) : ZMod (r j))⁻¹)
-  have hy : ∀ j, ((y.val : ℕ) : ZMod (r j)) = v j * ((F * N : ℕ) : ZMod (r j))⁻¹ := by
+  set y := e.symm (fun j => v j * ((P * N : ℕ) : ZMod (r j))⁻¹)
+  have hy : ∀ j, ((y.val : ℕ) : ZMod (r j)) = v j * ((P * N : ℕ) : ZMod (r j))⁻¹ := by
     intro j
-    have h1 := congrFun (e.apply_symm_apply (fun j => v j * ((F * N : ℕ) : ZMod (r j))⁻¹)) j
+    have h1 := congrFun (e.apply_symm_apply (fun j => v j * ((P * N : ℕ) : ZMod (r j))⁻¹)) j
     rw [← h1, ZMod.prodEquivPi_apply, ZMod.castHom_apply, ZMod.natCast_val]
-  have : ρ v = γ (F := F) (K := K) (r := r) ω ^ (F * (N * y.val)) := by
-    ext (⟨i, x⟩ | ⟨j, z⟩)
-    · rw [γ_pow_inl, zc_pow_eq_one ω (N * y.val) (by rw [pow_mul, hN, one_pow])]; rfl
-    · have key : ((F * (N * y.val) : ℕ) : ZMod (r j)) = v j := by
+  have : ρ v = γ (F := F) (K := K) (r := r) ω ^ (P * (N * y.val)) := by
+    ext (⟨i, p⟩ | ⟨j, z⟩)
+    · rw [γ_pow_inl_one ω hN]; rfl
+    · have key : ((P * (N * y.val) : ℕ) : ZMod (r j)) = v j := by
         have h1 := hco j
-        have e1 : ((F * (N * y.val) : ℕ) : ZMod (r j)) = ((F * N : ℕ) : ZMod (r j)) * (y.val : ℕ) := by
+        have e1 : ((P * (N * y.val) : ℕ) : ZMod (r j)) = ((P * N : ℕ) : ZMod (r j)) * (y.val : ℕ) := by
           push_cast; ring
         rw [e1, hy j, mul_comm (v j), ← mul_assoc, mul_inv_cancel₀ h1, one_mul]
       rw [γ_pow_inr, ρ_inr, key]
@@ -296,8 +321,8 @@ theorem ρ_mem (ω : Kˣ) {N : ℕ} (hN : ω ^ N = 1) (hinj : Function.Injective
   exact Subgroup.pow_mem _ (γ_mem_N1 ω) _
 
 section coh
-variable (ω : Kˣ) {N : ℕ} (hN : ω ^ N = 1) (hinj : Function.Injective r)
-  (hco : ∀ j, ((F * N : ℕ) : ZMod (r j)) ≠ 0)
+variable (ω : ∀ i, (K i)ˣ) {N : ℕ} (hN : ∀ i, ω i ^ N = 1) (hinj : Function.Injective r)
+  (hco : ∀ j, (((∏ i, F i) * N : ℕ) : ZMod (r j)) ≠ 0)
 include hN hinj hco
 
 /-- μ_u normalises N₁. -/
@@ -320,12 +345,13 @@ theorem μ_conj_N1 (u : ∀ j, (ZMod (r j))ˣ) {n : Perm (Pt F K r)} (hn : n ∈
 
 end coh
 
-variable [Fintype K] [DecidableEq K]
+variable [∀ i, Fintype (K i)] [∀ i, DecidableEq (K i)]
 
-theorem T_le_G (ω : Kˣ) (U : Subgroup (∀ j, (ZMod (r j))ˣ)) : (T (F := F) (K := K) (r := r)) ≤ G ω U :=
+theorem T_le_G (ω : ∀ i, (K i)ˣ) (U : Subgroup (∀ j, (ZMod (r j))ˣ)) :
+    (T (F := F) (K := K) (r := r)) ≤ G ω U :=
   le_trans (T_le_N1 ω) (N1_le_G ω U)
 
-instance T_normal (ω : Kˣ) (U : Subgroup (∀ j, (ZMod (r j))ˣ)) :
+instance T_normal (ω : ∀ i, (K i)ˣ) (U : Subgroup (∀ j, (ZMod (r j))ˣ)) :
     ((T (F := F) (K := K) (r := r)).subgroupOf (G ω U)).Normal := by
   rw [Subgroup.normal_subgroupOf_iff_le_normalizer (T_le_G ω U)]
   apply Subgroup.closure_le _ |>.mpr
@@ -339,10 +365,10 @@ instance T_normal (ω : Kˣ) (U : Subgroup (∀ j, (ZMod (r j))ˣ)) :
   · rw [μ_conj_tr]; exact ⟨_, rfl⟩
 
 section chain
-variable (ω : Kˣ) (U : Subgroup (∀ j, (ZMod (r j))ˣ))
+variable (ω : ∀ i, (K i)ˣ) (U : Subgroup (∀ j, (ZMod (r j))ˣ))
 
-theorem N1_normal {N : ℕ} (hN : ω ^ N = 1) (hinj : Function.Injective r)
-    (hco : ∀ j, ((F * N : ℕ) : ZMod (r j)) ≠ 0) :
+theorem N1_normal {N : ℕ} (hN : ∀ i, ω i ^ N = 1) (hinj : Function.Injective r)
+    (hco : ∀ j, (((∏ i, F i) * N : ℕ) : ZMod (r j)) ≠ 0) :
     ((N1 (F := F) (K := K) (r := r) ω).subgroupOf (G ω U)).Normal := by
   rw [Subgroup.normal_subgroupOf_iff_le_normalizer (N1_le_G ω U)]
   apply Subgroup.closure_le _ |>.mpr
@@ -359,14 +385,16 @@ theorem T_le_N1' : (T (F := F) (K := K) (r := r)).subgroupOf (G ω U) ≤
   fun _ hx => by rw [Subgroup.mem_subgroupOf] at hx ⊢; exact T_le_N1 ω hx
 
 abbrev N1G : Subgroup (G (F := F) (K := K) (r := r) ω U) := (N1 ω).subgroupOf (G ω U)
-abbrev TG : Subgroup (G (F := F) (K := K) (r := r) ω U) := (T (F := F) (K := K) (r := r)).subgroupOf (G ω U)
+abbrev TG : Subgroup (G (F := F) (K := K) (r := r) ω U) :=
+  (T (F := F) (K := K) (r := r)).subgroupOf (G ω U)
 abbrev LayerQ := (N1G (F := F) (K := K) (r := r) ω U) ⧸ (TG ω U).subgroupOf (N1G ω U)
 
 /-- The class in the layer of an element of N₁. -/
 def lcls (y : Perm (Pt F K r)) (hyN : y ∈ N1 (F := F) (K := K) ω) : LayerQ (F := F) (K := K) ω U :=
   QuotientGroup.mk ⟨⟨y, N1_le_G ω U hyN⟩, Subgroup.mem_subgroupOf.mpr hyN⟩
 
-theorem lcls_mul (x y : Perm (Pt F K r)) (hx : x ∈ N1 (F := F) (K := K) ω) (hy : y ∈ N1 (F := F) (K := K) ω) :
+theorem lcls_mul (x y : Perm (Pt F K r)) (hx : x ∈ N1 (F := F) (K := K) ω)
+    (hy : y ∈ N1 (F := F) (K := K) ω) :
     lcls ω U (x * y) (Subgroup.mul_mem _ hx hy) = lcls ω U x hx * lcls ω U y hy := rfl
 
 theorem lcls_inv (x : Perm (Pt F K r)) (hx : x ∈ N1 (F := F) (K := K) ω) :
@@ -398,8 +426,8 @@ theorem layer_cyclic : IsCyclic (LayerQ (F := F) (K := K) (r := r) ω U) := by
       rw [lcls_inv ω U x hx]; exact Subgroup.inv_mem _ ihx
 
 /-- Every element of G is μ_u times an element of N₁. -/
-theorem decomp {N : ℕ} (hN : ω ^ N = 1) (hinj : Function.Injective r)
-    (hco : ∀ j, ((F * N : ℕ) : ZMod (r j)) ≠ 0)
+theorem decomp {N : ℕ} (hN : ∀ i, ω i ^ N = 1) (hinj : Function.Injective r)
+    (hco : ∀ j, (((∏ i, F i) * N : ℕ) : ZMod (r j)) ≠ 0)
     {g : Perm (Pt F K r)} (hg : g ∈ G (F := F) (K := K) ω U) :
     ∃ u ∈ U, (μ u)⁻¹ * g ∈ N1 (F := F) (K := K) ω := by
   induction hg using Subgroup.closure_induction with
@@ -426,8 +454,8 @@ theorem decomp {N : ℕ} (hN : ω ^ N = 1) (hinj : Function.Injective r)
     exact μ_conj_N1 ω hN hinj hco u (Subgroup.inv_mem _ hxn)
 
 /-- **The top is a q-group**: modulo N₁ every element is some μ_u, and u has q-power order. -/
-theorem top_pgroup (q : ℕ) {N : ℕ} (hN : ω ^ N = 1) (hinj : Function.Injective r)
-    (hco : ∀ j, ((F * N : ℕ) : ZMod (r j)) ≠ 0)
+theorem top_pgroup (q : ℕ) {N : ℕ} (hN : ∀ i, ω i ^ N = 1) (hinj : Function.Injective r)
+    (hco : ∀ j, (((∏ i, F i) * N : ℕ) : ZMod (r j)) ≠ 0)
     (hU : ∀ u ∈ U, ∃ m : ℕ, u ^ q ^ m = 1) [(N1G (F := F) (K := K) (r := r) ω U).Normal] :
     IsPGroup q ((G (F := F) (K := K) (r := r) ω U) ⧸ N1G ω U) := by
   intro x
@@ -435,8 +463,8 @@ theorem top_pgroup (q : ℕ) {N : ℕ} (hN : ω ^ N = 1) (hinj : Function.Inject
   | H g =>
     obtain ⟨g, hg⟩ := g
     obtain ⟨u, hu, hn⟩ := decomp ω U hN hinj hco hg
-    obtain ⟨m, hm⟩ := hU u hu
-    refine ⟨m, ?_⟩
+    obtain ⟨e, he⟩ := hU u hu
+    refine ⟨e, ?_⟩
     have hμG : μ u ∈ G (F := F) (K := K) ω U := μ_mem_G ω hu
     have h1 : (QuotientGroup.mk (⟨g, hg⟩ : G (F := F) (K := K) ω U) :
         (G (F := F) (K := K) (r := r) ω U) ⧸ N1G ω U) = QuotientGroup.mk ⟨μ u, hμG⟩ := by
@@ -445,11 +473,11 @@ theorem top_pgroup (q : ℕ) {N : ℕ} (hN : ω ^ N = 1) (hinj : Function.Inject
           ((μ u)⁻¹ * g)⁻¹ := by simp
       rw [this]; exact Subgroup.inv_mem _ hn
     rw [h1, ← QuotientGroup.mk_pow, QuotientGroup.eq_one_iff, Subgroup.mem_subgroupOf]
-    have : ((⟨μ u, hμG⟩ : G (F := F) (K := K) ω U) ^ q ^ m).1 = 1 := by
-      rw [Subgroup.coe_pow, ← μ_pow, hm, μ_one]
+    have : ((⟨μ u, hμG⟩ : G (F := F) (K := K) ω U) ^ q ^ e).1 = 1 := by
+      rw [Subgroup.coe_pow, ← μ_pow, he, μ_one]
     rw [this]; exact Subgroup.one_mem _
 
-theorem T_pgroup (p : ℕ) [Fact p.Prime] [CharP K p] :
+theorem T_pgroup (p : ℕ) [Fact p.Prime] [∀ i, CharP (K i) p] :
     IsPGroup p (TG (F := F) (K := K) (r := r) ω U) := by
   intro x
   refine ⟨1, ?_⟩
@@ -461,13 +489,13 @@ theorem T_pgroup (p : ℕ) [Fact p.Prime] [CharP K p] :
   rw [← ht', ← map_pow]
   have : t ^ p = 1 := by
     apply Multiplicative.toAdd.injective
-    funext i
+    funext i a
     simp
   rw [this, map_one]
 
 /-- **The Oliver chain** on G: N₂ = T ◁ N₁ = ⟨T, γ⟩ (cyclic over T) ◁ G (a q-group over N₁). -/
-def chain (p q : ℕ) [Fact p.Prime] [CharP K p] {N : ℕ} (hN : ω ^ N = 1)
-    (hinj : Function.Injective r) (hco : ∀ j, ((F * N : ℕ) : ZMod (r j)) ≠ 0)
+def chain (p q : ℕ) [Fact p.Prime] [∀ i, CharP (K i) p] {N : ℕ} (hN : ∀ i, ω i ^ N = 1)
+    (hinj : Function.Injective r) (hco : ∀ j, (((∏ i, F i) * N : ℕ) : ZMod (r j)) ≠ 0)
     (hU : ∀ u ∈ U, ∃ m : ℕ, u ^ q ^ m = 1) :
     Chain.OliverChain (G (F := F) (K := K) (r := r) ω U) p q :=
   haveI := N1_normal ω U hN hinj hco
@@ -485,13 +513,14 @@ end chain
 /-! ## Elements of G, and how they move points -/
 
 section elements
-variable (ω : Kˣ) (U : Subgroup (∀ j, (ZMod (r j))ˣ)) {N : ℕ} (hN : ω ^ N = 1)
-  (hinj : Function.Injective r) (hco : ∀ j, ((F * N : ℕ) : ZMod (r j)) ≠ 0)
+variable (ω : ∀ i, (K i)ˣ) (U : Subgroup (∀ j, (ZMod (r j))ˣ)) {N : ℕ} (hN : ∀ i, ω i ^ N = 1)
+  (hinj : Function.Injective r) (hco : ∀ j, (((∏ i, F i) * N : ℕ) : ZMod (r j)) ≠ 0)
 
 /-- The constant translation vector n on every foreign block. -/
 def cst (n : ℕ) : ∀ j, ZMod (r j) := fun j => (n : ZMod (r j))
 
-theorem trHom_mem (t : Multiplicative (ZMod F → K)) : trHom t ∈ G (F := F) (K := K) (r := r) ω U :=
+theorem trHom_mem (t : Multiplicative (∀ i, ZMod (F i) → K i)) :
+    trHom t ∈ G (F := F) (K := K) (r := r) ω U :=
   T_le_G ω U ⟨t, rfl⟩
 theorem γpow_mem (n : ℕ) : γ ω ^ n ∈ G (F := F) (K := K) (r := r) ω U :=
   Subgroup.pow_mem _ (N1_le_G ω U (γ_mem_N1 ω)) n
@@ -499,32 +528,41 @@ include hN hinj hco in
 theorem ρ_memG (v : ∀ j, ZMod (r j)) : ρ v ∈ G (F := F) (K := K) ω U :=
   N1_le_G ω U (ρ_mem ω hN hinj hco v)
 
+/-- The translation by the constant b on every block of class i (zero elsewhere). -/
+def tconst (i : Fin m) (b : K i) : Multiplicative (∀ i, ZMod (F i) → K i) :=
+  Multiplicative.ofAdd (Pi.single i (fun _ => b))
+
+@[simp] theorem tconst_same (i : Fin m) (b : K i) (a : ZMod (F i)) :
+    Multiplicative.toAdd (tconst (F := F) i b) i a = b := by simp [tconst]
+
 include hN hinj hco in
-/-- **Move a block onto any block by any affine map**, fixing the foreign blocks. -/
-theorem block_map (hω : ∀ a : Kˣ, a ∈ Subgroup.zpowers ω) (i i' : ZMod F) (a : Kˣ) (b : K) :
-    ∃ g ∈ G (F := F) (K := K) (r := r) ω U, (∀ v, g (Sum.inl (i, v)) = Sum.inl (i', a * v + b)) ∧
+/-- **Move a block of class i onto any block of class i by any affine map**, fixing the foreign
+blocks. -/
+theorem block_map (hω : ∀ i (a : (K i)ˣ), a ∈ Subgroup.zpowers (ω i)) (i : Fin m)
+    (a0 a1 : ZMod (F i)) (α : (K i)ˣ) (b : K i) :
+    ∃ g ∈ G (F := F) (K := K) (r := r) ω U,
+      (∀ v, g (Sum.inl ⟨i, a0, v⟩) = Sum.inl ⟨i, a1, α * v + b⟩) ∧
       ∀ z, g (Sum.inr z) = Sum.inr z := by
-  set m0 := (i' - i).val
-  set e := (i.val + m0) / F
-  obtain ⟨m, hm⟩ : ∃ m : ℕ, ω ^ m = a * (ω ^ e)⁻¹ := by
-    have := hω (a * (ω ^ e)⁻¹)
+  set m0 := (a1 - a0).val
+  set e := (a0.val + m0) / F i
+  obtain ⟨n, hn⟩ : ∃ n : ℕ, ω i ^ n = α * (ω i ^ e)⁻¹ := by
+    have := hω i (α * (ω i ^ e)⁻¹)
     rw [← mem_powers_iff_mem_zpowers] at this
     exact this
-  let t : Multiplicative (ZMod F → K) := Multiplicative.ofAdd (fun _ => b)
-  refine ⟨ρ (-cst m0) * trHom t * (γ ω ^ (F * m) * ρ (-cst (F * m))) * γ ω ^ m0,
+  refine ⟨ρ (-cst m0) * trHom (tconst i b) * (γ ω ^ (F i * n) * ρ (-cst (F i * n))) * γ ω ^ m0,
     ?_, ?_, ?_⟩
   · refine Subgroup.mul_mem _ (Subgroup.mul_mem _ (Subgroup.mul_mem _ (ρ_memG ω U hN hinj hco _)
-      (trHom_mem ω U t)) (Subgroup.mul_mem _ (γpow_mem ω U _) (ρ_memG ω U hN hinj hco _))) (γpow_mem ω U _)
+      (trHom_mem ω U _)) (Subgroup.mul_mem _ (γpow_mem ω U _) (ρ_memG ω U hN hinj hco _)))
+      (γpow_mem ω U _)
   · intro v
-    have hik : i + (m0 : ZMod F) = i' := by simp [m0]
-    simp only [Perm.mul_apply, γ_pow_inl, zc_pow, ρ_inl, trHom_inl, hik]
-    simp only [Sum.inl.injEq, Prod.mk.injEq]
-    have hF : 0 < F := Nat.pos_of_ne_zero (NeZero.ne F)
-    have h2 : (i'.val + F * m) / F = m := by
-      rw [Nat.add_mul_div_left _ _ hF, Nat.div_eq_of_lt (ZMod.val_lt i'), zero_add]
+    have hik : a0 + (m0 : ZMod (F i)) = a1 := by simp [m0]
+    simp only [Perm.mul_apply, γ_pow_inl, zc_pow, ρ_inl, trHom_inl, hik, tconst_same]
+    simp only [Sum.inl.injEq, Sigma.mk.injEq, heq_eq_eq, true_and, Prod.mk.injEq]
+    have hF : 0 < F i := Nat.pos_of_ne_zero (NeZero.ne (F i))
+    have h2 : (a1.val + F i * n) / F i = n := by
+      rw [Nat.add_mul_div_left _ _ hF, Nat.div_eq_of_lt (ZMod.val_lt a1), zero_add]
     refine ⟨by push_cast; simp, ?_⟩
-    rw [h2, hm]
-    simp only [t, toAdd_ofAdd]
+    rw [h2, hn]
     rw [← mul_assoc, ← Units.val_mul, inv_mul_cancel_right]
   · rintro ⟨j, z⟩
     simp only [Perm.mul_apply, γ_pow_inr, ρ_inr, trHom_inr, cst, Pi.neg_apply]
@@ -535,9 +573,9 @@ end elements
 /-! ## The orbitals -/
 
 section orbitals
-variable (ω : Kˣ) (U : Subgroup (∀ j, (ZMod (r j))ˣ)) {N : ℕ} (hN : ω ^ N = 1)
-  (hinj : Function.Injective r) (hco : ∀ j, ((F * N : ℕ) : ZMod (r j)) ≠ 0)
-  (hω : ∀ a : Kˣ, a ∈ Subgroup.zpowers ω)
+variable (ω : ∀ i, (K i)ˣ) (U : Subgroup (∀ j, (ZMod (r j))ˣ)) {N : ℕ} (hN : ∀ i, ω i ^ N = 1)
+  (hinj : Function.Injective r) (hco : ∀ j, (((∏ i, F i) * N : ℕ) : ZMod (r j)) ≠ 0)
+  (hω : ∀ i (a : (K i)ˣ), a ∈ Subgroup.zpowers (ω i))
 
 theorem map_mem {g : Perm (Pt F K r)} (hg : g ∈ G (F := F) (K := K) ω U) (e : Sym2 (Pt F K r)) :
     Sym2.map g e ∈ D2.orbit2 (G (F := F) (K := K) ω U) e := by
@@ -546,22 +584,23 @@ theorem map_mem {g : Perm (Pt F K r)} (hg : g ∈ G (F := F) (K := K) ω U) (e :
   exact ⟨g, by simp only [Finset.mem_filter, Finset.mem_univ, true_and]; exact hg, rfl⟩
 
 include hN hinj hco hω in
-/-- **Within-block pairs: one orbital of size F·C(c,2).** -/
-theorem orbit_KK (i : ZMod F) {x y : K} (hxy : x ≠ y) :
-    F * (Fintype.card K).choose 2 ≤
-      (D2.orbit2 (G (F := F) (K := K) ω U) s(Sum.inl (i, x), Sum.inl (i, y))).card := by
-  set T0 : Finset (Sym2 K) := (Finset.univ.offDiag).image Sym2.mk.uncurry
-  have hT : T0.card = (Fintype.card K).choose 2 := Sym2.card_image_offDiag _
-  set S : Finset (Sym2 (Pt F K r)) := ((Finset.univ : Finset (ZMod F)) ×ˢ T0).image
-    (fun w => Sym2.map (fun v => (Sum.inl (w.1, v) : Pt F K r)) w.2)
-  have hS : S.card = F * (Fintype.card K).choose 2 := by
+/-- **Within-block pairs of class i: one orbital of size Fᵢ·C(cᵢ,2).** -/
+theorem orbit_KK (i : Fin m) (a : ZMod (F i)) {x y : K i} (hxy : x ≠ y) :
+    F i * (Fintype.card (K i)).choose 2 ≤
+      (D2.orbit2 (G (F := F) (K := K) ω U) s(Sum.inl ⟨i, a, x⟩, Sum.inl ⟨i, a, y⟩)).card := by
+  set T0 : Finset (Sym2 (K i)) := (Finset.univ.offDiag).image Sym2.mk.uncurry
+  have hT : T0.card = (Fintype.card (K i)).choose 2 := Sym2.card_image_offDiag _
+  set S : Finset (Sym2 (Pt F K r)) := ((Finset.univ : Finset (ZMod (F i))) ×ˢ T0).image
+    (fun w => Sym2.map (fun v => (Sum.inl ⟨i, w.1, v⟩ : Pt F K r)) w.2)
+  have hS : S.card = F i * (Fintype.card (K i)).choose 2 := by
     rw [Finset.card_image_of_injective, Finset.card_product, hT, Finset.card_univ, ZMod.card]
     rintro ⟨i1, e1⟩ ⟨i2, e2⟩ h
     induction e1 using Sym2.ind with
     | h a1 b1 =>
     induction e2 using Sym2.ind with
     | h a2 b2 =>
-    simp only [Sym2.map_mk, Sym2.eq_iff, Sum.inl.injEq, Prod.mk.injEq] at h
+    simp only [Sym2.map_mk, Sym2.eq_iff, Sum.inl.injEq, Sigma.mk.injEq, heq_eq_eq, true_and,
+      Prod.mk.injEq] at h
     rcases h with ⟨⟨h1, h2⟩, -, h3⟩ | ⟨⟨h1, h2⟩, -, h3⟩
     · subst h1 h2 h3; rfl
     · subst h1 h2 h3; simp [Sym2.eq_swap]
@@ -570,29 +609,29 @@ theorem orbit_KK (i : ZMod F) {x y : K} (hxy : x ≠ y) :
   intro f hf
   simp only [S, T0, Finset.mem_image, Finset.mem_product, Finset.mem_univ, true_and,
     Finset.mem_offDiag, Prod.exists] at hf
-  obtain ⟨i', g, ⟨x', y', hne, rfl⟩, rfl⟩ := hf
+  obtain ⟨a', g, ⟨x', y', hne, rfl⟩, rfl⟩ := hf
   have hd : y - x ≠ 0 := sub_ne_zero.mpr (Ne.symm hxy)
-  set a : K := (y' - x') / (y - x)
-  have ha : a ≠ 0 := div_ne_zero (sub_ne_zero.mpr (Ne.symm hne)) hd
-  obtain ⟨g, hg, hgl, -⟩ := block_map ω U hN hinj hco hω i i' (Units.mk0 a ha) (x' - a * x)
-  have := map_mem ω U hg s(Sum.inl (i, x), Sum.inl (i, y))
+  set α : K i := (y' - x') / (y - x)
+  have hα : α ≠ 0 := div_ne_zero (sub_ne_zero.mpr (Ne.symm hne)) hd
+  obtain ⟨g, hg, hgl, -⟩ := block_map ω U hN hinj hco hω i a a' (Units.mk0 α hα) (x' - α * x)
+  have := map_mem ω U hg s(Sum.inl ⟨i, a, x⟩, Sum.inl ⟨i, a, y⟩)
   convert this using 1
   simp only [Function.uncurry_apply_pair, Sym2.map_mk, hgl, Units.val_mk0]
-  have e1 : a * x + (x' - a * x) = x' := by ring
-  have e2 : a * y + (x' - a * x) = y' := by
-    have : a * (y - x) = y' - x' := by simp only [a]; field_simp
+  have e1 : α * x + (x' - α * x) = x' := by ring
+  have e2 : α * y + (x' - α * x) = y' := by
+    have : α * (y - x) = y' - x' := by simp only [α]; field_simp
     linear_combination this
   rw [e1, e2]
 
 include hN hinj hco hω in
-/-- **Block–ℤ/rⱼ pairs: one orbital of size F·c·rⱼ.** -/
-theorem orbit_KR (i : ZMod F) (x : K) (j : Fin k) (z : ZMod (r j)) :
-    F * Fintype.card K * r j ≤
-      (D2.orbit2 (G (F := F) (K := K) ω U) s(Sum.inl (i, x), Sum.inr ⟨j, z⟩)).card := by
+/-- **Class i – ℤ/rⱼ pairs: one orbital of size Fᵢ·cᵢ·rⱼ.** -/
+theorem orbit_KR (i : Fin m) (a : ZMod (F i)) (x : K i) (j : Fin k) (z : ZMod (r j)) :
+    F i * Fintype.card (K i) * r j ≤
+      (D2.orbit2 (G (F := F) (K := K) ω U) s(Sum.inl ⟨i, a, x⟩, Sum.inr ⟨j, z⟩)).card := by
   set S : Finset (Sym2 (Pt F K r)) :=
-    (Finset.univ : Finset ((ZMod F × K) × ZMod (r j))).image
-      (fun w => s(Sum.inl w.1, Sum.inr ⟨j, w.2⟩))
-  have hS : S.card = F * Fintype.card K * r j := by
+    (Finset.univ : Finset ((ZMod (F i) × K i) × ZMod (r j))).image
+      (fun w => s(Sum.inl ⟨i, w.1⟩, Sum.inr ⟨j, w.2⟩))
+  have hS : S.card = F i * Fintype.card (K i) * r j := by
     rw [Finset.card_image_of_injective]
     · simp [ZMod.card, Fintype.card_prod]
     · intro w w' h
@@ -603,10 +642,10 @@ theorem orbit_KR (i : ZMod F) (x : K) (j : Fin k) (z : ZMod (r j)) :
   apply Finset.card_le_card
   intro f hf
   simp only [S, Finset.mem_image, Finset.mem_univ, true_and] at hf
-  obtain ⟨⟨⟨i', x'⟩, z'⟩, rfl⟩ := hf
-  obtain ⟨g, hg, hgl, hgr⟩ := block_map ω U hN hinj hco hω i i' 1 (x' - x)
+  obtain ⟨⟨⟨a', x'⟩, z'⟩, rfl⟩ := hf
+  obtain ⟨g, hg, hgl, hgr⟩ := block_map ω U hN hinj hco hω i a a' 1 (x' - x)
   have hm := map_mem ω U (Subgroup.mul_mem _ (ρ_memG ω U hN hinj hco (Pi.single j (z' - z))) hg)
-    s(Sum.inl (i, x), Sum.inr ⟨j, z⟩)
+    s(Sum.inl ⟨i, a, x⟩, Sum.inr ⟨j, z⟩)
   convert hm using 1
   simp [Sym2.map_mk, Perm.mul_apply, hgl, hgr]
 
@@ -635,51 +674,93 @@ theorem orbit_RR' {j l : Fin k} (hjl : j ≠ l) (z : ZMod (r j)) (w : ZMod (r l)
   convert hm using 1
   simp [Sym2.map_mk, hjl, hjl.symm]
 
-include hN hinj hco in
-/-- **Pairs across two blocks: orbitals of size ≥ K0·c²** (K0 = F for odd F, F/2 for even F). -/
-theorem orbit_cross [Fact (1 < F)] {i i2 : ZMod F} (hij : i ≠ i2) (x y : K) :
-    PartEF.K0 F * Fintype.card K * Fintype.card K ≤
-      (D2.orbit2 (G (F := F) (K := K) ω U) s(Sum.inl (i, x), Sum.inl (i2, y))).card := by
+/-- **Pairs across two blocks of class i: orbitals of size ≥ K0·cᵢ².** -/
+theorem orbit_cross (i : Fin m) [Fact (1 < F i)] {a1 a2 : ZMod (F i)} (hij : a1 ≠ a2) (x y : K i) :
+    PartEF.K0 (F i) * Fintype.card (K i) * Fintype.card (K i) ≤
+      (D2.orbit2 (G (F := F) (K := K) ω U) s(Sum.inl ⟨i, a1, x⟩, Sum.inl ⟨i, a2, y⟩)).card := by
   set S : Finset (Sym2 (Pt F K r)) :=
-    (Finset.range (PartEF.K0 F) ×ˢ (Finset.univ : Finset (K × K))).image
-      (fun w => s(Sum.inl (i + (w.1 : ZMod F), w.2.1), Sum.inl (i2 + (w.1 : ZMod F), w.2.2)))
-  have hval : ∀ m : ℕ, m < PartEF.K0 F → ((m : ZMod F)).val = m := fun m hm => by
-    rw [ZMod.val_natCast, Nat.mod_eq_of_lt (lt_of_lt_of_le hm PartEF.K0_le)]
-  have hS : S.card = PartEF.K0 F * Fintype.card K * Fintype.card K := by
+    (Finset.range (PartEF.K0 (F i)) ×ˢ (Finset.univ : Finset (K i × K i))).image
+      (fun w => s(Sum.inl ⟨i, a1 + (w.1 : ZMod (F i)), w.2.1⟩, Sum.inl ⟨i, a2 + (w.1 : ZMod (F i)), w.2.2⟩))
+  have hval : ∀ n : ℕ, n < PartEF.K0 (F i) → ((n : ZMod (F i))).val = n := fun n hn => by
+    rw [ZMod.val_natCast, Nat.mod_eq_of_lt (lt_of_lt_of_le hn PartEF.K0_le)]
+  have hS : S.card = PartEF.K0 (F i) * Fintype.card (K i) * Fintype.card (K i) := by
     rw [Finset.card_image_of_injOn, Finset.card_product, Finset.card_range, Finset.card_univ,
       Fintype.card_prod, mul_assoc]
-    rintro ⟨m, a, b⟩ hw ⟨m', a', b'⟩ hw' h
+    rintro ⟨n, a, b⟩ hw ⟨n', a', b'⟩ hw' h
     simp only [Finset.coe_product, Set.mem_prod, Finset.coe_range, Set.mem_Iio] at hw hw'
-    simp only [Sym2.eq_iff, Sum.inl.injEq, Prod.mk.injEq] at h
+    simp only [Sym2.eq_iff, Sum.inl.injEq, Sigma.mk.injEq, heq_eq_eq, true_and,
+      Prod.mk.injEq] at h
     rcases h with ⟨⟨h1, h2⟩, h3, h4⟩ | ⟨⟨h1, h2⟩, h3, h4⟩
-    · have : (m : ZMod F) = m' := by linear_combination h1
-      have hmm : m = m' := by rw [← hval m hw.1, ← hval m' hw'.1, this]
-      subst hmm h2 h4; rfl
+    · have : (n : ZMod (F i)) = n' := by linear_combination h1
+      have hnn : n = n' := by rw [← hval n hw.1, ← hval n' hw'.1, this]
+      subst hnn h2 h4; rfl
     · exfalso
-      have h5 : (2 : ZMod F) * ((m' : ZMod F) - m) = 0 := by linear_combination -h1 - h3
-      have hmm := PartEF.no_swap hw.1 hw'.1 h5
-      subst hmm
+      have h5 : (2 : ZMod (F i)) * ((n' : ZMod (F i)) - n) = 0 := by linear_combination -h1 - h3
+      have hnn := PartEF.no_swap hw.1 hw'.1 h5
+      subst hnn
       exact hij (by linear_combination h1)
   rw [← hS]
   apply Finset.card_le_card
   intro f hf
   simp only [S, Finset.mem_image, Finset.mem_product, Finset.mem_range, Finset.mem_univ,
     and_true] at hf
-  obtain ⟨⟨m, x', y'⟩, -, rfl⟩ := hf
-  have hne : i + (m : ZMod F) ≠ i2 + m := fun h => hij (by linear_combination h)
-  set e1 := (i.val + m) / F
-  set e2 := (i2.val + m) / F
-  let t : Multiplicative (ZMod F → K) := Multiplicative.ofAdd (fun l =>
-    if l = i + m then x' - ((ω ^ e1 : Kˣ) : K) * x else y' - ((ω ^ e2 : Kˣ) : K) * y)
-  have hm := map_mem ω U (Subgroup.mul_mem _ (trHom_mem ω U t) (γpow_mem ω U m))
-    s(Sum.inl (i, x), Sum.inl (i2, y))
+  obtain ⟨⟨n, x', y'⟩, -, rfl⟩ := hf
+  have hne : a1 + (n : ZMod (F i)) ≠ a2 + n := fun h => hij (by linear_combination h)
+  set e1 := (a1.val + n) / F i
+  set e2 := (a2.val + n) / F i
+  let t : Multiplicative (∀ i, ZMod (F i) → K i) := Multiplicative.ofAdd (Pi.single i (fun l =>
+    if l = a1 + n then x' - ((ω i ^ e1 : (K i)ˣ) : K i) * x else y' - ((ω i ^ e2 : (K i)ˣ) : K i) * y))
+  have hm := map_mem ω U (Subgroup.mul_mem _ (trHom_mem ω U t) (γpow_mem ω U n))
+    s(Sum.inl ⟨i, a1, x⟩, Sum.inl ⟨i, a2, y⟩)
   convert hm using 1
-  have q1 : ((ω ^ e1 : Kˣ) : K) * x + (x' - ((ω ^ e1 : Kˣ) : K) * x) = x' := by ring
-  have q2 : ((ω ^ e2 : Kˣ) : K) * y + (y' - ((ω ^ e2 : Kˣ) : K) * y) = y' := by ring
-  have hne' : (i2 + (m : ZMod F) = i + m) = False := eq_false (Ne.symm hne)
+  have q1 : ((ω i ^ e1 : (K i)ˣ) : K i) * x + (x' - ((ω i ^ e1 : (K i)ˣ) : K i) * x) = x' := by ring
+  have q2 : ((ω i ^ e2 : (K i)ˣ) : K i) * y + (y' - ((ω i ^ e2 : (K i)ˣ) : K i) * y) = y' := by ring
+  have hne' : (a2 + (n : ZMod (F i)) = a1 + n) = False := eq_false (Ne.symm hne)
   simp only [Sym2.map_mk, Perm.mul_apply, γ_pow_inl, zc_pow, trHom_inl, t, toAdd_ofAdd,
-    hne', ↓reduceIte]
+    Pi.single_eq_same, hne', ↓reduceIte]
   rw [q1, q2]
+
+/-- **Class i – class i' pairs (i ≠ i'): orbitals of size ≥ Fᵢ·cᵢ·cᵢ'.**  The common rotation γ
+moves the two classes together, so this is not Fᵢcᵢ·Fᵢ'cᵢ' when the block counts share a
+factor; it is always at least one of the two classes' intra terms (`cfgM_refined_le`). -/
+theorem orbit_CC {i i' : Fin m} (hii : i ≠ i') (a : ZMod (F i)) (a' : ZMod (F i')) (x : K i)
+    (y : K i') :
+    F i * Fintype.card (K i) * Fintype.card (K i') ≤
+      (D2.orbit2 (G (F := F) (K := K) ω U) s(Sum.inl ⟨i, a, x⟩, Sum.inl ⟨i', a', y⟩)).card := by
+  set S : Finset (Sym2 (Pt F K r)) :=
+    (Finset.range (F i) ×ˢ (Finset.univ : Finset (K i × K i'))).image
+      (fun w => s(Sum.inl ⟨i, a + (w.1 : ZMod (F i)), w.2.1⟩,
+        Sum.inl ⟨i', a' + (w.1 : ZMod (F i')), w.2.2⟩))
+  have hval : ∀ n : ℕ, n < F i → ((n : ZMod (F i))).val = n := fun n hn => by
+    rw [ZMod.val_natCast, Nat.mod_eq_of_lt hn]
+  have hS : S.card = F i * Fintype.card (K i) * Fintype.card (K i') := by
+    rw [Finset.card_image_of_injOn, Finset.card_product, Finset.card_range, Finset.card_univ,
+      Fintype.card_prod, mul_assoc]
+    rintro ⟨n, b, c⟩ hw ⟨n', b', c'⟩ hw' h
+    simp only [Finset.coe_product, Set.mem_prod, Finset.coe_range, Set.mem_Iio] at hw hw'
+    simp only [Sym2.eq_iff, Sum.inl.injEq, Sigma.mk.injEq] at h
+    rcases h with ⟨⟨-, h1⟩, ⟨-, h2⟩⟩ | ⟨⟨h1, -⟩, -⟩
+    · simp only [heq_eq_eq, Prod.mk.injEq] at h1 h2
+      have : (n : ZMod (F i)) = n' := by linear_combination h1.1
+      have hnn : n = n' := by rw [← hval n hw.1, ← hval n' hw'.1, this]
+      rw [hnn, h1.2, h2.2]
+    · exact absurd h1 hii
+  rw [← hS]
+  apply Finset.card_le_card
+  intro f hf
+  simp only [S, Finset.mem_image, Finset.mem_product, Finset.mem_range, Finset.mem_univ,
+    and_true] at hf
+  obtain ⟨⟨n, x', y'⟩, -, rfl⟩ := hf
+  let t : Multiplicative (∀ i, ZMod (F i) → K i) := Multiplicative.ofAdd
+    (Pi.single i (fun _ => x' - ((ω i ^ ((a.val + n) / F i) : (K i)ˣ) : K i) * x) +
+      Pi.single i' (fun _ => y' - ((ω i' ^ ((a'.val + n) / F i') : (K i')ˣ) : K i') * y))
+  have hm := map_mem ω U (Subgroup.mul_mem _ (trHom_mem ω U t) (γpow_mem ω U n))
+    s(Sum.inl ⟨i, a, x⟩, Sum.inl ⟨i', a', y⟩)
+  convert hm using 1
+  simp only [Sym2.map_mk, Perm.mul_apply, γ_pow_inl, zc_pow, trHom_inl, t, toAdd_ofAdd,
+    Pi.add_apply, Pi.single_eq_same, Pi.single_eq_of_ne hii, Pi.single_eq_of_ne hii.symm,
+    Pi.zero_apply, add_zero, zero_add]
+  congr 3 <;> ring
 
 /-- Two affine images of a pair {z₁, z₂} in ℤ/r coincide only for the same map, or for the
 "swapped" one u' = −u. -/
@@ -883,35 +964,55 @@ theorem crossN_mem : ∀ (xs : List ℕ) {i l : ℕ} (hi : i < l) (hl : l < xs.l
       simp only [List.length_cons] at hl
       exact crossN_mem xs (by omega) (by omega)
 
-/-- The configuration realised: one class of F blocks of size c at full twist, and foreign
-blocks (rⱼ, tⱼ). -/
-def cfgG (p q F c : ℕ) {k : ℕ} (r t : Fin k → ℕ) : Config :=
-  ⟨p, q, .pc F c (c - 1) :: List.ofFn (fun j => CPart.fr (r j) (t j))⟩
+/-- The configuration realised: classes (Fᵢ, p^bᵢ) at full twist, and foreign blocks (rⱼ, tⱼ). -/
+def cfgM (p q : ℕ) (F b : Fin m → ℕ) {k : ℕ} (r t : Fin k → ℕ) : Config :=
+  ⟨p, q, List.ofFn (fun i => CPart.pc (F i) (p ^ b i) (p ^ b i - 1)) ++
+    List.ofFn (fun j => CPart.fr (r j) (t j))⟩
 
-theorem cfgG_n (p q F c : ℕ) {k : ℕ} (r t : Fin k → ℕ) :
-    (cfgG p q F c r t).n = F * c + ∑ j, r j := by
-  simp [cfgG, Config.n, Config.sizes, CPart.sizeC, List.sum_ofFn]
+theorem cfgM_sizes (p q : ℕ) (F b : Fin m → ℕ) {k : ℕ} (r t : Fin k → ℕ) :
+    (cfgM p q F b r t).sizes = List.ofFn (fun i => F i * p ^ b i) ++ List.ofFn r := by
+  simp [cfgM, Config.sizes, CPart.sizeC, List.map_ofFn, Function.comp_def]
 
-/-- **Part E for one class beside any foreign blocks.**  F ≥ 1 blocks of 𝔽_c (c = |K| = p^b) at
-full twist, and foreign blocks of distinct primes rⱼ with q-power twists tⱼ ∣ rⱼ − 1, coherent
-(rⱼ ∤ F·(c − 1)): the group G = ⟨T, γ, μ(U)⟩ carries an Oliver chain (p, q), and every orbital on
-unordered pairs has size at least REFINED of the configuration. -/
-theorem partE_G (p q b : ℕ) [Fact p.Prime] [CharP K p]
-    (hK : Fintype.card K = p ^ b) (t : Fin k → ℕ)
+theorem cfgM_n (p q : ℕ) (F b : Fin m → ℕ) {k : ℕ} (r t : Fin k → ℕ) :
+    (cfgM p q F b r t).n = ∑ i, F i * p ^ b i + ∑ j, r j := by
+  simp [Config.n, cfgM_sizes, List.sum_ofFn]
+
+/-- Two parts' product is a term, by position. -/
+theorem cross_mem (xs ys : List ℕ) {i l : ℕ} (hil : i ≠ l) (hi : i < (xs ++ ys).length)
+    (hl : l < (xs ++ ys).length) : (xs ++ ys)[i] * (xs ++ ys)[l] ∈ crossN (xs ++ ys) := by
+  rcases lt_or_gt_of_ne hil with h | h
+  · exact crossN_mem _ h hl
+  · rw [Nat.mul_comm]; exact crossN_mem _ h hi
+
+
+/-- **Part E for any number of classes beside any foreign blocks.**  Classes of Fᵢ ≥ 1 blocks of
+𝔽_{cᵢ} (cᵢ = |Kᵢ| = p^bᵢ) at full twist, and foreign blocks of distinct primes rⱼ with q-power
+twists tⱼ ∣ rⱼ − 1, coherent (no rⱼ divides Fᵢ·(cᵢ − 1)): the group G = ⟨T, γ, μ(U)⟩ carries an
+Oliver chain (p, q), and every orbital on unordered pairs has size at least REFINED of the
+configuration. -/
+theorem partE_M (p q : ℕ) (b : Fin m → ℕ) [Fact p.Prime] [∀ i, CharP (K i) p]
+    (hK : ∀ i, Fintype.card (K i) = p ^ b i) (t : Fin k → ℕ)
     (ht : ∀ j, t j ∣ r j - 1 ∧ ∃ f, t j = q ^ f) (hinj : Function.Injective r)
-    (hcoh : ∀ j, ¬ r j ∣ F * (p ^ b - 1)) :
-    ∃ (ω : Kˣ) (U : Subgroup (∀ j, (ZMod (r j))ˣ)),
+    (hcoh : ∀ j i, ¬ r j ∣ F i * (p ^ b i - 1)) :
+    ∃ (ω : ∀ i, (K i)ˣ) (U : Subgroup (∀ j, (ZMod (r j))ˣ)),
       Nonempty (Chain.OliverChain (G (F := F) (K := K) (r := r) ω U) p q) ∧
       ∀ e : Sym2 (Pt F K r), ¬ e.IsDiag →
-        (cfgG p q F (p ^ b) r t).refined ≤ (D2.orbit2 (G (F := F) (K := K) ω U) e).card := by
+        (cfgM p q F b r t).refined ≤ (D2.orbit2 (G (F := F) (K := K) ω U) e).card := by
   classical
-  obtain ⟨ω, hω⟩ := IsCyclic.exists_generator (α := Kˣ)
-  have hN : ω ^ (p ^ b - 1) = 1 := by
-    have : orderOf ω = p ^ b - 1 := by
-      rw [orderOf_eq_card_of_forall_mem_zpowers hω, Nat.card_eq_fintype_card, Fintype.card_units, hK]
-    rw [← this]; exact pow_orderOf_eq_one ω
-  have hco : ∀ j, ((F * (p ^ b - 1) : ℕ) : ZMod (r j)) ≠ 0 := fun j h =>
-    hcoh j ((ZMod.natCast_eq_zero_iff _ _).mp h)
+  have hgen : ∀ i, ∃ w : (K i)ˣ, ∀ a, a ∈ Subgroup.zpowers w := fun i => IsCyclic.exists_generator
+  choose ω hω using hgen
+  set N := ∏ i, (p ^ b i - 1)
+  have hord : ∀ i, orderOf (ω i) = p ^ b i - 1 := fun i => by
+    rw [orderOf_eq_card_of_forall_mem_zpowers (hω i), Nat.card_eq_fintype_card, Fintype.card_units,
+      hK]
+  have hN : ∀ i, ω i ^ N = 1 := fun i => by
+    obtain ⟨a, ha⟩ : p ^ b i - 1 ∣ N := Finset.dvd_prod_of_mem _ (Finset.mem_univ i)
+    rw [ha, pow_mul, ← hord, pow_orderOf_eq_one, one_pow]
+  have hco : ∀ j, (((∏ i, F i) * N : ℕ) : ZMod (r j)) ≠ 0 := by
+    intro j h
+    rw [ZMod.natCast_eq_zero_iff, ← Finset.prod_mul_distrib] at h
+    obtain ⟨i, -, hi⟩ := (Prime.dvd_finsetProd_iff (Nat.prime_iff.mp Fact.out) _).mp h
+    exact hcoh j i hi
   -- the twist groups
   have hg : ∀ j, ∃ g : (ZMod (r j))ˣ, orderOf g = t j := by
     intro j
@@ -933,7 +1034,7 @@ theorem partE_G (p q b : ℕ) [Fact p.Prime] [CharP K p]
     · subst hij; simpa using hw
     · rw [Pi.mulSingle_eq_of_ne hij]; exact Subgroup.one_mem _
   choose f hf using fun j => (ht j).2
-  have hU : ∀ u ∈ U, ∃ m : ℕ, u ^ q ^ m = 1 := by
+  have hU : ∀ u ∈ U, ∃ e : ℕ, u ^ q ^ e = 1 := by
     intro u hu
     refine ⟨∑ j, f j, ?_⟩
     funext j
@@ -942,58 +1043,91 @@ theorem partE_G (p q b : ℕ) [Fact p.Prime] [CharP K p]
     have h1 : (g j) ^ (q ^ f j) = 1 := by rw [← hf j, ← hgo j]; exact pow_orderOf_eq_one _
     have hdvd : q ^ f j ∣ q ^ ∑ j, f j :=
       pow_dvd_pow q (Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ j))
-    obtain ⟨m, hm⟩ := hdvd
+    obtain ⟨e, he⟩ := hdvd
     simp only [Pi.pow_apply, Pi.one_apply]
-    rw [← hz, ← zpow_natCast, ← zpow_mul, mul_comm, zpow_mul, zpow_natCast, hm, pow_mul, h1, one_pow,
-      one_zpow]
+    rw [← hz, ← zpow_natCast, ← zpow_mul, mul_comm, zpow_mul, zpow_natCast, he, pow_mul, h1,
+      one_pow, one_zpow]
   refine ⟨ω, U, ⟨chain ω U p q hN hinj hco hU⟩, fun e he => ?_⟩
   have hcardW : ∀ j, Fintype.card (W j) = t j := fun j => by
     rw [Fintype.card_zpowers, hgo j]
   -- the terms of the configuration
-  set C := cfgG p q F (p ^ b) r t
-  have hpc : F * pairs (p ^ b) ∈ C.parts.flatMap (CPart.refinedTerms (decide (C.p = 2))) ++
-      crossN C.sizes := by
+  set C := cfgM p q F b r t
+  have hpc : ∀ i, F i * pairs (p ^ b i) ∈
+      C.parts.flatMap (CPart.refinedTerms (decide (C.p = 2))) ++ crossN C.sizes := by
+    intro i
     apply List.mem_append_left
     apply List.mem_flatMap.mpr
-    refine ⟨.pc F (p ^ b) (p ^ b - 1), List.mem_cons_self .., ?_⟩
+    refine ⟨.pc (F i) (p ^ b i) (p ^ b i - 1), List.mem_append_left _ (List.mem_ofFn.mpr ⟨i, rfl⟩), ?_⟩
     simp [CPart.refinedTerms, orb_full]
-  have hsz : C.sizes = F * p ^ b :: List.ofFn r := by
-    simp [C, cfgG, Config.sizes, CPart.sizeC, List.map_ofFn, Function.comp_def]
-  have hKR : ∀ l, F * p ^ b * r l ∈ crossN C.sizes := by
-    intro l
-    rw [hsz]
-    simp only [crossN, List.mem_append, List.mem_map, List.mem_ofFn]
-    left; exact ⟨r l, ⟨l, rfl⟩, rfl⟩
+  have hsz := cfgM_sizes p q F b r t
+  set xs := List.ofFn (fun i => F i * p ^ b i)
+  set ys := List.ofFn r
+  have hxs : ∀ i : Fin m, (xs ++ ys)[i.val]'(by simp [xs]; omega) = F i * p ^ b i := by
+    intro i; simp [xs, List.getElem_append_left]
+  have hys : ∀ j : Fin k, (xs ++ ys)[m + j.val]'(by simp [xs, ys]) = r j := by
+    intro j; simp [xs, ys, List.getElem_append_right]
+  have hcross : ∀ (u v : ℕ) (hu : u < (xs ++ ys).length) (hv : v < (xs ++ ys).length), u ≠ v →
+      (xs ++ ys)[u] * (xs ++ ys)[v] ∈ C.parts.flatMap (CPart.refinedTerms (decide (C.p = 2))) ++
+        crossN C.sizes := fun u v hu hv huv =>
+    List.mem_append_right _ (by rw [hsz]; exact cross_mem xs ys huv hu hv)
   induction e using Sym2.ind with
   | h x y =>
     rw [Sym2.mk_isDiag_iff] at he
-    rcases x with ⟨i, x⟩ | ⟨j, z⟩ <;> rcases y with ⟨i2, y⟩ | ⟨l, w⟩
+    rcases x with ⟨i, a, x⟩ | ⟨j, z⟩ <;> rcases y with ⟨i2, a2, y⟩ | ⟨l, w⟩
     · by_cases hii : i = i2
       · subst hii
-        have hxy : x ≠ y := fun h => he (by rw [h])
-        have := orbit_KK ω U hN hinj hco hω i hxy
-        rw [hK, ← Ark.pairs_eq_choose] at this
-        exact le_trans (minL_le hpc) this
-      · have hF : 1 < F := by
-          by_contra h
-          have : F = 1 := by have := NeZero.ne F; omega
-          subst this
-          exact hii (Subsingleton.elim _ _)
-        have : Fact (1 < F) := ⟨hF⟩
-        have := orbit_cross ω U hN hinj hco hii x y
-        rw [hK] at this
-        refine le_trans (minL_le ?_) this
-        apply List.mem_append_left
-        apply List.mem_flatMap.mpr
-        refine ⟨.pc F (p ^ b) (p ^ b - 1), List.mem_cons_self .., ?_⟩
-        simp [CPart.refinedTerms, show 2 ≤ F by omega, PartEF.K0]
-    · have := orbit_KR ω U hN hinj hco hω i x l w
+        by_cases haa : a = a2
+        · subst haa
+          have hxy : x ≠ y := fun h => he (by rw [h])
+          have := orbit_KK ω U hN hinj hco hω i a hxy
+          rw [hK, ← Ark.pairs_eq_choose] at this
+          exact le_trans (minL_le (hpc i)) this
+        · have hF : 1 < F i := by
+            by_contra h
+            have : F i = 1 := by have := NeZero.ne (F i); omega
+            have : Subsingleton (ZMod (F i)) := by rw [this]; infer_instance
+            exact haa (Subsingleton.elim _ _)
+          have : Fact (1 < F i) := ⟨hF⟩
+          have := orbit_cross ω U i haa x y
+          rw [hK] at this
+          refine le_trans (minL_le ?_) this
+          apply List.mem_append_left
+          apply List.mem_flatMap.mpr
+          refine ⟨.pc (F i) (p ^ b i) (p ^ b i - 1),
+            List.mem_append_left _ (List.mem_ofFn.mpr ⟨i, rfl⟩), ?_⟩
+          simp [CPart.refinedTerms, show 2 ≤ F i by omega, PartEF.K0]
+      · -- two classes: at least the smaller-block class's intra term
+        rcases le_total (p ^ b i) (p ^ b i2) with hc | hc
+        · have := orbit_CC ω U hii a a2 x y
+          rw [hK, hK] at this
+          refine le_trans (minL_le (hpc i)) (le_trans ?_ this)
+          rw [mul_assoc]
+          apply Nat.mul_le_mul_left
+          unfold pairs
+          calc p ^ b i * (p ^ b i - 1) / 2 ≤ p ^ b i * (p ^ b i - 1) := Nat.div_le_self _ _
+            _ ≤ p ^ b i * p ^ b i2 := Nat.mul_le_mul_left _ (by omega)
+        · rw [Sym2.eq_swap]
+          have := orbit_CC ω U (Ne.symm hii) a2 a y x
+          rw [hK, hK] at this
+          refine le_trans (minL_le (hpc i2)) (le_trans ?_ this)
+          rw [mul_assoc]
+          apply Nat.mul_le_mul_left
+          unfold pairs
+          calc p ^ b i2 * (p ^ b i2 - 1) / 2 ≤ p ^ b i2 * (p ^ b i2 - 1) := Nat.div_le_self _ _
+            _ ≤ p ^ b i2 * p ^ b i := Nat.mul_le_mul_left _ (by omega)
+    · have := orbit_KR ω U hN hinj hco hω i a x l w
       rw [hK] at this
-      exact le_trans (minL_le (List.mem_append_right _ (hKR _))) this
+      refine le_trans (minL_le ?_) this
+      have h := hcross i.val (m + l.val) (by simp [xs, ys]; omega) (by simp [xs, ys])
+        (by omega)
+      rwa [hxs, hys] at h
     · rw [Sym2.eq_swap]
-      have := orbit_KR ω U hN hinj hco hω i2 y j z
+      have := orbit_KR ω U hN hinj hco hω i2 a2 y j z
       rw [hK] at this
-      exact le_trans (minL_le (List.mem_append_right _ (hKR _))) this
+      refine le_trans (minL_le ?_) this
+      have h := hcross i2.val (m + j.val) (by simp [xs, ys]; omega) (by simp [xs, ys])
+        (by omega)
+      rwa [hxs, hys] at h
     · by_cases hjl : j = l
       · subst hjl
         have hzw : z ≠ w := fun h => he (by rw [h])
@@ -1002,37 +1136,31 @@ theorem partE_G (p q b : ℕ) [Fact p.Prime] [CharP K p]
         refine le_trans (minL_le ?_) this
         apply List.mem_append_left
         apply List.mem_flatMap.mpr
-        exact ⟨.fr (r j) (t j), List.mem_cons_of_mem _ (List.mem_ofFn.mpr ⟨j, rfl⟩),
+        exact ⟨.fr (r j) (t j), List.mem_append_right _ (List.mem_ofFn.mpr ⟨j, rfl⟩),
           by simp [CPart.refinedTerms]⟩
       · have := orbit_RR' ω U hN hinj hco hjl z w
         refine le_trans (minL_le ?_) this
-        apply List.mem_append_right
-        rw [hsz]
-        simp only [crossN, List.mem_append]
-        right
-        rcases lt_or_gt_of_ne (Fin.val_ne_of_ne hjl) with h | h
-        · have := crossN_mem (List.ofFn r) h (by simp)
-          simpa using this
-        · have := crossN_mem (List.ofFn r) h (by simp)
-          simpa [Nat.mul_comm] using this
+        have h := hcross (m + j.val) (m + l.val) (by simp [xs, ys]) (by simp [xs, ys])
+          (fun h => hjl (Fin.ext (by omega)))
+        rwa [hys, hys] at h
 
-/-- **Packaged with `GaloisField p b`**: an Oliver group on F·c + Σ rⱼ points all of whose
+/-- **Packaged with `GaloisField p bᵢ`**: an Oliver group on Σ Fᵢcᵢ + Σ rⱼ points all of whose
 pair-orbitals are at least REFINED of the configuration. -/
-theorem partE_G_exists (p q b : ℕ) [Fact p.Prime] (hb : b ≠ 0) (t : Fin k → ℕ)
-    (ht : ∀ j, t j ∣ r j - 1 ∧ ∃ f, t j = q ^ f) (hinj : Function.Injective r)
-    (hcoh : ∀ j, ¬ r j ∣ F * (p ^ b - 1)) :
+theorem partE_M_exists (p q : ℕ) (b : Fin m → ℕ) [Fact p.Prime] (hb : ∀ i, b i ≠ 0)
+    (t : Fin k → ℕ) (ht : ∀ j, t j ∣ r j - 1 ∧ ∃ f, t j = q ^ f) (hinj : Function.Injective r)
+    (hcoh : ∀ j i, ¬ r j ∣ F i * (p ^ b i - 1)) :
     ∃ (X : Type) (_ : Fintype X) (_ : DecidableEq X) (G : Subgroup (Perm X)),
-      Fintype.card X = (cfgG p q F (p ^ b) r t).n ∧ Nonempty (Chain.OliverChain G p q) ∧
-      ∀ e : Sym2 X, ¬ e.IsDiag → (cfgG p q F (p ^ b) r t).refined ≤ (D2.orbit2 G e).card := by
+      Fintype.card X = (cfgM p q F b r t).n ∧ Nonempty (Chain.OliverChain G p q) ∧
+      ∀ e : Sym2 X, ¬ e.IsDiag → (cfgM p q F b r t).refined ≤ (D2.orbit2 G e).card := by
   classical
-  let K := GaloisField p b
-  let _ : Fintype K := Fintype.ofFinite K
-  have hK : Fintype.card K = p ^ b := by
-    rw [← Nat.card_eq_fintype_card]; exact GaloisField.card p b hb
-  obtain ⟨ω, U, hch, horb⟩ := partE_G (F := F) (K := K) (r := r) p q b hK t ht hinj hcoh
+  let K : Fin m → Type := fun i => GaloisField p (b i)
+  let _ : ∀ i, Fintype (K i) := fun i => Fintype.ofFinite _
+  have hK : ∀ i, Fintype.card (K i) = p ^ b i := fun i => by
+    rw [← Nat.card_eq_fintype_card]; exact GaloisField.card p (b i) (hb i)
+  obtain ⟨ω, U, hch, horb⟩ := partE_M (F := F) (K := K) (r := r) p q b hK t ht hinj hcoh
   refine ⟨Pt F K r, inferInstance, inferInstance, G (F := F) (K := K) ω U, ?_, hch, ?_⟩
-  · rw [cfgG_n, Fintype.card_sum, Fintype.card_prod, ZMod.card, hK, Fintype.card_sigma]
-    simp [ZMod.card]
+  · rw [cfgM_n, Fintype.card_sum, Fintype.card_sigma, Fintype.card_sigma]
+    simp [ZMod.card, hK]
   · intro e he
     convert horb e he using 2
 

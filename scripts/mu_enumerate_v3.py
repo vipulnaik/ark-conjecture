@@ -280,7 +280,10 @@ def value(sel, p, spf, q=None):
     # arguments cover the three ways they could have mattered:
     #
     #   F_mid vs F_mid (two fused classes whose block counts share a prime):
-    #     realisable -- a diagonal cyclic-layer rotation supplies both -- and in
+    #     realisable at its SCORE -- a diagonal cyclic-layer rotation supplies
+    #     both; the between-class orbital is then lcm(F1,F2)*c1*c2, below s1*s2,
+    #     but never below the smaller class's intra term (enumeration-proof.md,
+    #     Part E; lean/PartEG.lean orbit_CC) -- and in
     #     any case screened empirically by audit_fmid.py, whose optimistic
     #     scoring never beats B(n) in range.  A measured fact, not a theorem.
     #   F_mid vs another class's twist:

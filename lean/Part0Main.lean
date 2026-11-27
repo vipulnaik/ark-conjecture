@@ -439,8 +439,8 @@ theorem part0 (HH : HypHuppert) (Γ : Subgroup (Equiv.Perm V)) {p q : ℕ} (C : 
     rw [hRL.1] at this; simp at this
 
 /-- **Part 0 against B_safe.**  If B_safe(n) = B, every Oliver group on n ≥ 2 points has an orbital
-of at most max(B, n − 1) pairs — at most B unless it has a fixed point.  This is the hypothesis
-`hcap : μ ≤ B` of `E6.e6`, for μ the least orbital of any Oliver group, wherever B ≥ n − 1. -/
+of at most max(B, n − 1) pairs — at most B unless it has a fixed point (and `Part0Mu.Bsafe_ge`
+shows B ≥ n − 1, giving `Part0Mu.muStar_le`). -/
 theorem part0_Bsafe (HH : HypHuppert) (Γ : Subgroup (Equiv.Perm V)) {p q : ℕ}
     (C : OliverChain Γ p q) (hp : p.Prime) (hq : q.Prime) (hn : 2 ≤ Fintype.card V) {B : ℕ}
     (hB : IsBsafe (Fintype.card V) B) : OrbLe Γ (max B (Fintype.card V - 1)) := by

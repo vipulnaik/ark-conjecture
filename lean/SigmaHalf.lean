@@ -21,12 +21,8 @@
   specification enters only through `spec0`: a different table of (F, d, window) is a different
   argument to the same theorems.
 
-* **`sigma0_mu`** — with Part E as one named hypothesis (`PartE μ`: every admissible
-  configuration's REFINED score is ≤ μ\*(n), the input `E6.e6` already takes), the same
-  statement for μ\*: L-eventually 2·μ\*(n) ≥ ((1 − ε)·δ₀(n mod 12) − κ/n)·n(n − 1).  The
-  configuration is fallback-free, so REFINED = SAFE.
-
-What is still outside: Part E itself, the construction of the Oliver group.
+The same statement for μ\* itself, with Part E proved, is `PartEMu.sigma0_muStar` (via the
+explicit groups of `PartE1`/`PartEF`).
 -/
 import Sigma
 import E6
@@ -391,25 +387,5 @@ theorem sigma0_half {ε : ℝ} (hε1 : ε < 1) {L : Filter ℕ} (hL : L ≤ atTo
   refine ⟨C, hC, hff, hn, ?_⟩
   rw [← spec0_tgt ε hε1.le]
   exact hs
-
-/-! ## From SAFE to μ\*, with Part E as the one named input -/
-
-/-- **Part E (realisability), as a hypothesis**: every admissible configuration's REFINED score
-is attained by an Oliver group on its n points, so μ\*(n) is at least it.  Exactly the input
-`E6.e6` takes; stated once here so that every μ\* consequence names it. -/
-def PartE (μ : ℕ → ℕ) : Prop := ∀ C : Config, GAdm C → C.refined ≤ μ C.n
-
-/-- **The conditional μ\* bound for Σ₀, under either quantifier.**  Given Part E and Σ₀'s
-witness L-eventually, L-eventually 2·μ\*(n) ≥ ((1 − ε)·δ₀(n mod 12) − κ/n)·n(n − 1).  With
-L = `atTop` this is the (AL) floor statement; with L = `almostAll` the (AA) one. -/
-theorem sigma0_mu {ε : ℝ} (hε1 : ε < 1) {L : Filter ℕ} (hL : L ≤ atTop) (μ : ℕ → ℕ)
-    (hE : PartE μ) (H : BCG.Hyp (W0 ε) L) :
-    ∀ᶠ n in L, ((1 - ε) * capCol (cls n) - (spec0 ε (cls n)).kap / n) * (n * (n - 1)) ≤
-      2 * (μ n : ℝ) := by
-  filter_upwards [sigma0_half hε1 hL H] with n ⟨C, hC, hff, hn, hs⟩
-  have h1 := hE C hC
-  rw [refined_eq_safe C hff, hn] at h1
-  have : (C.safe : ℝ) ≤ μ n := by exact_mod_cast h1
-  linarith
 
 end SigmaHalf

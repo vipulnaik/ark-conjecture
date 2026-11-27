@@ -2,7 +2,7 @@
 # `Part0.lean` — toward μ\* ≤ B_safe (`enumeration-proof.md` Part 0 and Part A)
 
 The inequality μ\*(n) ≤ B_safe(n) says: every Oliver group Γ on n points has an orbital no larger
-than the SAFE score of some admissible configuration.  `E6.e6` takes it as a hypothesis.  This file
+than the SAFE score of some admissible configuration (`Part0Mu.muStar_le`).  This file
 builds it in two layers.
 
 * **Part A, the assembly (this file, so far).**  A *realisation* of a configuration C by Γ assigns

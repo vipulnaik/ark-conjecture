@@ -37,17 +37,15 @@ configuration* is, as in E.5, one with a class (F, c) and a foreign prime r ∣ 
   contradicting optimality.
 * `e6_maxima` — **Corollary E.6 on the maxima**: `IsBsafe n B` and C(n,2) < 25·B give
   `IsBrefined n B`, i.e. B_refined(n) = B_safe(n).
-* `e6` — with μ\* abstract: given Part E's lower bound (every REFINED score ≤ μ) and Part
-  0's upper bound (μ ≤ B_safe), μ = B_safe as well.
 * `isBsafe_primePow`, `isBrefined_primePow` — non-vacuity: at n = p^b, B_safe = B_refined =
   C(n,2).
 
-**Where the two halves are proved.**  `e6`'s `hconstr` (every admissible configuration's REFINED
-score is realised) is stronger than any construction gives — fallback configurations, `fo` parts
-and a foreign prime dividing F·(c − 1) are not realised at their REFINED score.  What E.6 needs is
-one realisable optimum: `PartEMu.e6_real` supplies it (using `d2_case`, which also returns a D2-free
-witness, and `e6_of_view`, which returns the bare-pair re-reading), and `PartEMu.e6_mu` proves
-μ\*(n) = B_safe(n) above the line given only `HypHuppert`.
+**Where the two halves are proved.**  The sandwich B_refined ≤ μ\* ≤ B_safe is not assumed here.
+Part E is not true in the blanket form "every admissible configuration is realised at its REFINED
+score" (fallback configurations, `fo` parts and a foreign prime dividing F·(c − 1) are not); what
+E.6 needs is one realisable optimum, which `PartEMu.e6_real` supplies (using `d2_case`, whose
+witnesses are D2-free, and `e6_of_view`, which returns the bare-pair re-reading).
+`PartEMu.e6_mu` then proves μ\*(n) = B_safe(n) above the line given only `HypHuppert`.
 -/
 import E5Assembly
 
@@ -1139,19 +1137,6 @@ theorem e6_maxima (n B : ℕ) (hB : IsBsafe n B) (hhi : pairs n < 25 * B) : IsBr
   obtain ⟨C', hC', hn', -, href, -⟩ :=
     e6_core C hC (fun C' h1 h2 => hmax C' h1 h2) hhi
   exact ⟨⟨C', hC', hn', href⟩, fun D hD hDn => le_trans (refined_le_safe D) (hmax D hD hDn)⟩
-
-/-- **Corollary E.6, with μ\*.**  μ abstract: Part E constructs, for every admissible
-configuration, a group realising its REFINED score (`hconstr`, μ ≥ every REFINED score), and
-Part 0's completeness with the flat cap gives μ ≤ B_safe (`hcap`).  Above the 1/25 line,
-B_refined = μ = B_safe. -/
-theorem e6 (n B μ : ℕ) (hB : IsBsafe n B) (hhi : pairs n < 25 * B)
-    (hconstr : ∀ C, GAdm C → C.n = n → C.refined ≤ μ) (hcap : μ ≤ B) :
-    IsBrefined n B ∧ μ = B := by
-  have hR := e6_maxima n B hB hhi
-  refine ⟨hR, ?_⟩
-  obtain ⟨⟨C, hC, hn, href⟩, -⟩ := hR
-  have := hconstr C hC hn
-  omega
 
 /-! ### Non-vacuity: B_safe at a prime power -/
 

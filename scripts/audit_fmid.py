@@ -6,7 +6,9 @@ WHY THE QUESTION EXISTS.  The enumerator does not require the block counts of
 two fused classes to be coprime, because no argument makes that a necessary
 condition: a block-permutation image is a QUOTIENT of the cyclic layer rather
 than a subgroup of it, so two classes' rotations need not compete for orders
-there, and a diagonal cyclic-layer rotation realises the shared reading.  This
+there, and a diagonal cyclic-layer rotation realises the shared reading at its
+score (the between-class orbital drops to lcm(F1,F2)*c1*c2, but never below the
+smaller class's intra term; enumeration-proof.md Part E).  This
 script is the empirical half of that: it checks that admitting such
 configurations changes no value in range.
 

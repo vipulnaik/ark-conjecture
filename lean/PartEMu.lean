@@ -77,51 +77,71 @@ theorem mu_ge {X : Type} [Fintype X] [DecidableEq X] (G : Subgroup (Equiv.Perm X
 
 /-! ## Realisable configurations -/
 
-/-- **Realisable**: one class of F ≥ 1 blocks of size p^b at full twist, then foreign blocks of
-distinct primes rⱼ with q-power twists tⱼ ∣ rⱼ − 1, coherent: no rⱼ divides F·(p^b − 1). -/
+/-- **Realisable**: classes (Fᵢ ≥ 1 blocks of size p^bᵢ, bᵢ ≥ 1) at full twist, then foreign
+blocks of distinct primes rⱼ with q-power twists tⱼ ∣ rⱼ − 1, coherent: no rⱼ divides any
+Fᵢ·(p^bᵢ − 1). -/
 def RealCfg (C : Config) : Prop :=
-  ∃ (F b k : ℕ) (r t : Fin k → ℕ), 1 ≤ F ∧ 1 ≤ b ∧ C = PartEG.cfgG C.p C.q F (C.p ^ b) r t ∧
+  ∃ (m : ℕ) (F b : Fin m → ℕ) (k : ℕ) (r t : Fin k → ℕ), (∀ i, 1 ≤ F i ∧ 1 ≤ b i) ∧
+    C = PartEG.cfgM C.p C.q F b r t ∧
     Function.Injective r ∧ (∀ j, (r j).Prime) ∧ (∀ j, t j ∣ r j - 1 ∧ ∃ f, t j = C.q ^ f) ∧
-    ∀ j, ¬ r j ∣ F * (C.p ^ b - 1)
+    ∀ j i, ¬ r j ∣ F i * (C.p ^ b i - 1)
 
-/-- **Part E for realisable configurations**: REFINED(C) ≤ μ\*(n). -/
-theorem real_le_mu {C : Config} (hp : C.p.Prime) (hq : C.q.Prime) (hR : RealCfg C) :
-    C.refined ≤ muStar C.n := by
-  obtain ⟨F, b, k, r, t, hF, hb, hC, hinj, hr, ht, hcoh⟩ := hR
+/-- **Part E for realisable configurations**: REFINED(C) ≤ μ\*(n), once n ≥ 2. -/
+theorem real_le_mu {C : Config} (hp : C.p.Prime) (hq : C.q.Prime) (hR : RealCfg C)
+    (hn : 2 ≤ C.n) : C.refined ≤ muStar C.n := by
+  obtain ⟨m, F, b, k, r, t, hFb, hC, hinj, hr, ht, hcoh⟩ := hR
   have : Fact C.p.Prime := ⟨hp⟩
   have : ∀ j, Fact (r j).Prime := fun j => ⟨hr j⟩
-  have : NeZero F := ⟨by omega⟩
+  have : ∀ i, NeZero (F i) := fun i => ⟨by have := (hFb i).1; omega⟩
   obtain ⟨X, i1, i2, G, hX, ⟨ch⟩, horb⟩ :=
-    PartEG.partE_G_exists (F := F) (r := r) C.p C.q b (by omega) t ht hinj hcoh
+    PartEG.partE_M_exists (F := F) (r := r) C.p C.q b (fun i => by have := (hFb i).2; omega) t ht
+      hinj hcoh
   rw [← hC] at hX horb
-  have hn2 : 2 ≤ Fintype.card X := by
-    rw [hX, hC, PartEG.cfgG_n]
-    have : 2 ≤ C.p ^ b := le_trans hp.two_le (Nat.le_self_pow (by omega) _)
-    have : 2 ≤ F * C.p ^ b := le_trans this (Nat.le_mul_of_pos_left _ (by omega))
-    omega
-  have := mu_ge G hp hq ch hn2 horb
+  have := mu_ge G hp hq ch (by rw [hX]; exact hn) horb
   rwa [hX] at this
 
 theorem refined_real {C : Config} (hR : RealCfg C) : C.refined = C.safe := by
-  obtain ⟨F, b, k, r, t, -, -, hC, -⟩ := hR
+  obtain ⟨m, F, b, k, r, t, -, hC, -⟩ := hR
   apply refined_eq_safe
   intro F' c d hx
   rw [hC] at hx
-  simp only [PartEG.cfgG, List.mem_cons, List.mem_ofFn, CPart.pc.injEq] at hx
-  rcases hx with ⟨-, rfl, rfl⟩ | ⟨j, hj⟩
-  · rfl
+  simp only [PartEG.cfgM, List.mem_append, List.mem_ofFn] at hx
+  rcases hx with ⟨i, hi⟩ | ⟨j, hj⟩
+  · simp only [CPart.pc.injEq] at hi
+    obtain ⟨-, rfl, rfl⟩ := hi; rfl
   · cases hj
 
-/-- A list of foreign parts as a `cfgG`. -/
+theorem real_two_le {C : Config} (hp : C.p.Prime) (hR : RealCfg C) (h : C.parts ≠ []) :
+    2 ≤ C.n := by
+  obtain ⟨m, F, b, k, r, t, hFb, hC, -, hr, -⟩ := hR
+  rw [hC, PartEG.cfgM_n]
+  rcases Nat.eq_zero_or_pos m with hm | hm
+  · subst hm
+    rcases Nat.eq_zero_or_pos k with hk | hk
+    · subst hk; exfalso; apply h; rw [hC]; simp [PartEG.cfgM]
+    · have := Finset.single_le_sum (f := r) (fun _ _ => Nat.zero_le _)
+        (Finset.mem_univ ⟨0, hk⟩)
+      have := (hr ⟨0, hk⟩).two_le
+      omega
+  · have h1 := Finset.single_le_sum (f := fun i => F i * C.p ^ b i) (fun _ _ => Nat.zero_le _)
+      (Finset.mem_univ ⟨0, hm⟩)
+    have : 2 ≤ C.p ^ b ⟨0, hm⟩ := le_trans hp.two_le (Nat.le_self_pow (by have := (hFb ⟨0, hm⟩).2; omega) _)
+    have : 2 ≤ F ⟨0, hm⟩ * C.p ^ b ⟨0, hm⟩ :=
+      le_trans this (Nat.le_mul_of_pos_left _ (by have := (hFb ⟨0, hm⟩).1; omega))
+    omega
+
+/-- One class and a list of foreign parts, as a `cfgM`. -/
 theorem real_mk (p q F b : ℕ) (Q : List (ℕ × ℕ)) (hF : 1 ≤ F) (hb : 1 ≤ b)
     (hnd : (Q.map Prod.fst).Nodup)
     (hQ : ∀ x ∈ Q, x.1.Prime ∧ x.2 ∣ x.1 - 1 ∧ ∃ f, x.2 = q ^ f)
     (hcoh : ∀ x ∈ Q, ¬ x.1 ∣ F * (p ^ b - 1)) :
     RealCfg ⟨p, q, .pc F (p ^ b) (p ^ b - 1) :: Q.map (fun x => .fr x.1 x.2)⟩ := by
-  refine ⟨F, b, Q.length, fun j => (Q.get j).1, fun j => (Q.get j).2, hF, hb, ?_, ?_,
+  refine ⟨1, fun _ => F, fun _ => b, Q.length, fun j => (Q.get j).1, fun j => (Q.get j).2,
+    fun _ => ⟨hF, hb⟩, ?_, ?_,
     fun j => (hQ _ (List.get_mem _ _)).1, fun j => (hQ _ (List.get_mem _ _)).2,
-    fun j => hcoh _ (List.get_mem _ _)⟩
-  · simp only [PartEG.cfgG, Config.mk.injEq, true_and, List.cons.injEq]
+    fun j _ => hcoh _ (List.get_mem _ _)⟩
+  · simp only [PartEG.cfgM, Config.mk.injEq, true_and, List.ofFn_succ, List.ofFn_zero,
+      List.singleton_append, List.cons.injEq]
     apply List.ext_getElem (by simp)
     intro i h1 h2
     simp
@@ -433,8 +453,23 @@ theorem e6_mu (HH : Part0Fr.HypHuppert) (n B : ℕ) (hn : 2 ≤ n) (hB : IsBsafe
   obtain ⟨⟨C, hC, hCn, hCs⟩, hmax⟩ := hB
   subst hCn hCs
   obtain ⟨C', hR, hp, hq, hn', hle⟩ := e6_real C hC (fun C' h1 h2 => hmax C' h1 h2) hhi
-  have := real_le_mu hp hq hR
+  have := real_le_mu hp hq hR (by rw [hn']; exact hn)
   rw [refined_real hR, hn'] at this
   exact hle.trans this
+
+/-! ## Σ₀'s floor on μ\* itself -/
+
+/-- **The Σ₀ floor on μ\*, with Part E proved**: under Σ₀'s witness hypothesis with either
+quantifier, L-eventually 2·μ\*(n) ≥ ((1 − ε)·δ₀(n mod 12) − κ/n)·n(n − 1). -/
+theorem sigma0_muStar {ε : ℝ} (hε1 : ε < 1) {L : Filter ℕ} (hL : L ≤ Filter.atTop)
+    (H : BCG.Hyp (SigmaHalf.W0 ε) L) :
+    ∀ᶠ n in L, ((1 - ε) * Sigma.capCol (SigmaHalf.cls n) -
+      (SigmaHalf.spec0 ε (SigmaHalf.cls n)).kap / n) * (n * (n - 1)) ≤ 2 * (muStar n : ℝ) := by
+  filter_upwards [PartEAll.sigma0_realised hε1 hL H, hL (Filter.eventually_ge_atTop 2)] with
+    n ⟨m, ⟨X, i1, i2, G, p, q, hp, hq, hX, ⟨ch⟩, horb⟩, hm⟩ hn2
+  have := mu_ge G hp hq ch (by rw [hX]; exact hn2) horb
+  rw [hX] at this
+  have : (m : ℝ) ≤ muStar n := by exact_mod_cast this
+  linarith
 
 end PartEMu
