@@ -108,7 +108,7 @@ The generalisations belong in that document as instances of one pattern, not as 
 
 ## 9. Lean integration
 
-*Vipul's plan, as stated, then the scoping agreed after critique. The technical detail — what to state, in what order, with what Mathlib is missing — is in the Lean project's `README.md` under "The plan for October and 2027"; this section is the version for planning meetings.*
+*Vipul's plan, as stated, then the scoping agreed after critique. The technical detail — what to state, in what order, with what Mathlib is missing — is in the Lean project's `README.md` (what is open) and `formalisation-rationale.md` (phasing); this section is the version for planning meetings.*
 
 ### 9.1 The plan, as stated
 
@@ -132,7 +132,7 @@ So the October target decomposes into: (a) definitions — monotone graph proper
 
 ### 9.4 The 2027 ceiling, stated now so the ambition is honest
 
-The exactness result μ\* = B rests on Part 0's completeness of the shape space, which rests on Huppert's classification of solvable 2-transitive groups. **That is not going into Lean by one person in two months**, and the plan should not be read as aiming at it. What is reachable, and would be a complete honest artefact: E.5 and Proposition 1 (done by then); Part E realisability in general — μ\* ≥ B for the whole shape space, the October constructions generalised; **B(n) as a computable function** with `native_decide` on individual rows (the README's Phase 3); and **Part 0 stated as a named hypothesis**, so that μ\* = B is a Lean theorem conditional on exactly one classification input. *"Everything except the classification is checked"* is a strong statement and is available. *"Everything is checked"* is not.
+The exactness result μ\* = B rests on Part 0's completeness of the shape space, which rests on Huppert's classification of solvable 2-transitive groups. **That is not going into Lean by one person in two months**, and the plan should not be read as aiming at it. What is reachable, and would be a complete honest artefact: E.5 and Proposition 1 (done by then); Part E realisability in general — μ\* ≥ B for the whole shape space, the October constructions generalised; **B(n) as a computable function** with `native_decide` on individual rows (Phase 3 in `formalisation-rationale.md`); and **Part 0 stated as a named hypothesis**, so that μ\* = B is a Lean theorem conditional on exactly one classification input. *"Everything except the classification is checked"* is a strong statement and is available. *"Everything is checked"* is not.
 
 ### 9.5 What the FLT formalisation does and does not change
 

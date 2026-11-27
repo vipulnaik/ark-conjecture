@@ -1191,7 +1191,7 @@ Read this way η = 2/d is not an efficiency knob but **the price of using blocks
 
 #### 6.6 The covering statement, and when it collapses to a single system
 
-*Lean (2026-11-26): the covering statement, with the F-bounds and two-foreign ceilings of §6.4, is `lean/Cover.lean` (`cover_hyp`, `cover_25`, `cover_16`, `cover_9`), stated for B_safe, with closed floors at 1/16 and 1/9. `lean/CoverDensity.lean` drops the no-foreign-part escapes outside O(x/log x) exceptions. See `lean/README.md`.*
+*Lean: the covering statement, with the F-bounds and two-foreign ceilings of §6.4, is `lean/Cover.lean` (`cover_hyp`, `cover_25`, `cover_16`, `cover_9`), stated for B_safe, with closed floors at 1/16 and 1/9; `lean/Part0Mu.lean` restates it with the floor on μ\* itself (`cover_mu`, `cover_foreign_mu`). `lean/CoverDensity.lean` drops the no-foreign-part escapes outside O(x/log x) exceptions. See `lean/README.md`.*
 
 > **μ\*(n) ≥ δ₀·C(n,2) for most n  ⟹  for most n, at least one of a finite explicit set of Bateman–Horn systems is solvable at n** — the set being the feasible shapes **with a foreign part** (Σ√F_i ≤ δ₀^{−1/2}), of the parity of n, not locally obstructed at n's residue class; and, for δ₀ ≥ 1/25, the far shorter list Proposition 1 of `ladder-completeness.md` leaves: n = F·c + r for F ≤ 16 of the parity opposite to n's (F even at odd n), plus the two-foreign systems wherever they reach δ₀ (S6 up to 1/9 at even n, S11 up to 1/16).
 

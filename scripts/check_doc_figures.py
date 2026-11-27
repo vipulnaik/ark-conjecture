@@ -72,6 +72,15 @@ which nothing else notices.  So this script runs five passes.
           labels on measurements and the literature's own history are exempt
           by subject, since both look identical to a regex and are load-bearing.
 
+  PASS 13 LEAN.  The Lean project's orientation documents (`lean/README.md`,
+          `lean/file-notes.md`, found relative to this script, whatever docs are
+          passed).  (L1) the README carries no dates or commit hashes -- status
+          history belongs to git, and an inlined date is debt that goes stale;
+          (L2) every `lakefile.toml` root has a `.lean` file, appears in the
+          README's area table and in file-notes.md's index, and neither names a
+          file that is not a root; (L3) every companion document the README
+          names exists; (L4) the README's tables are well-formed.
+
   PASS 4  HYGIENE.  Doubled sentence fragments and doubled bold runs, which
           ad-hoc string replacement produces and which no reader catches.
 
@@ -89,7 +98,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("table")
 ap.add_argument("docs", nargs="+")
 ap.add_argument("--pass", dest="only", default="all",
-                choices=["all", "figures", "scope", "prose", "hygiene", "census", "refs", "tables", "history", "s2", "witness", "pending", "bounds"])
+                choices=["all", "figures", "scope", "prose", "hygiene", "census", "refs", "tables", "history", "s2", "witness", "pending", "bounds", "lean"])
 ap.add_argument("--quiet", action="store_true", help="findings only")
 A = ap.parse_args()
 DOCS = [d for d in A.docs if d.endswith(".md")]
@@ -2234,6 +2243,69 @@ if A.only in ("all", "bounds"):
         print("[ok] no rounded floor after >=, no unlabelled sub-floor density, "
               "per-parity constant counts, n-keyed δ table rows and quoted cap "
               "values agree.")
+
+
+if A.only in ("all", "lean"):
+    print("\n" + "=" * 72); print("PASS 13 LEAN"); print("=" * 72)
+    LD = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "lean")
+    nl = 0
+    def _rd(name):
+        try: return open(os.path.join(LD, name)).read()
+        except OSError: return None
+    rd, fnotes, lake = _rd("README.md"), _rd("file-notes.md"), _rd("lakefile.toml")
+    if rd is None or lake is None:
+        print("[skip] lean/README.md or lean/lakefile.toml not found")
+    else:
+        DATE = re.compile(r"\b20\d\d-\d\d(?:-\d\d)?\b|\b(?:January|February|March|April|May|June|July|"
+                          r"August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|"
+                          r"Sep|Sept|Oct|Nov|Dec)\.? (?:\d{1,2}, )?20\d\d\b|\b20[2-3]\d\b")
+        HASH = re.compile(r"(?:commit\s+|`)([0-9a-f]{7,40})\b")
+        for ln, line in enumerate(rd.split("\n"), 1):
+            for m in DATE.finditer(line):
+                nl += 1; print(f"lean/README.md L{ln}  L1 date '{m.group(0)}': status history belongs to git")
+            for m in HASH.finditer(line):
+                if re.search(r"\d", m.group(1)) and re.search(r"[a-f]", m.group(1)):
+                    nl += 1; print(f"lean/README.md L{ln}  L1 commit hash '{m.group(1)}'")
+        mroots = re.search(r"roots\s*=\s*\[([^\]]*)\]", lake)
+        roots = set(re.findall(r'"([^"]+)"', mroots.group(1))) if mroots else set()
+        for r in sorted(roots):
+            if not os.path.exists(os.path.join(LD, r + ".lean")):
+                nl += 1; print(f"lean/lakefile.toml  L2 root {r} has no {r}.lean")
+        # README: the area table's "files" column lists bare module names in backticks
+        area = set()
+        for line in rd.split("\n"):
+            if line.startswith("|") and line.count("|") >= 4:
+                cells = line.strip().strip("|").split("|")
+                if len(cells) >= 3:
+                    area |= {x for x in re.findall(r"`([A-Za-z0-9]+)`", cells[1])}
+        for r in sorted(roots - area):
+            nl += 1; print(f"lean/README.md  L2 root {r} missing from the area table")
+        for r in sorted(area - roots):
+            nl += 1; print(f"lean/README.md  L2 area table names {r}, not a lakefile root")
+        if fnotes is None:
+            nl += 1; print("lean/file-notes.md  L2 missing")
+        else:
+            idx = set(re.findall(r"^\| `([A-Za-z0-9]+)\.lean` \|", fnotes, re.M))
+            for r in sorted(roots - idx):
+                nl += 1; print(f"lean/file-notes.md  L2 root {r} missing from the file index")
+            for r in sorted(idx - roots):
+                nl += 1; print(f"lean/file-notes.md  L2 index names {r}.lean, not a lakefile root")
+        for m in set(re.findall(r"`((?:\.\./)?[\w./-]+\.md)`", rd)):
+            if not os.path.exists(os.path.join(LD, m)) and not os.path.exists(
+                    os.path.join(LD, "..", "notes", m)):
+                nl += 1; print(f"lean/README.md  L3 names `{m}`, which does not exist")
+        lines = rd.split("\n")
+        for i, line in enumerate(lines):
+            if i and SEPROW.match(line) and lines[i - 1].strip().startswith("|"):
+                h, j = _ncols(lines[i - 1]), i + 1
+                while j < len(lines) and lines[j].strip().startswith("|"):
+                    if _ncols(lines[j]) != h:
+                        nl += 1; print(f"lean/README.md L{j+1}  L4 row has {_ncols(lines[j])} columns, header {h}")
+                    j += 1
+        findings += nl
+        if not nl:
+            print(f"[ok] lean/README.md: no dates or hashes; {len(roots)} lakefile roots match the "
+                  "area table and file-notes.md's index; companion documents exist; tables well-formed.")
 
 
 print("\n" + "=" * 72)

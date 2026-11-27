@@ -1,0 +1,7 @@
+# The Groupprops / mathcheck thread
+
+Independent infrastructure, with ARK as a possible first application.
+
+This is **not** part of the ARK Lean plan and does not gate it. Vipul's mathcheck framework (LLM-written *deterministic* scripts for the tedious parts of verbal math checking — undeclared variables, unit consistency — so that LLM and human effort goes to what needs judgement) already has GAP components. The Lean extension would be **scripts that take a Groupprops page and extract what a Lean formalisation needs as input**, applicable across Groupprops generally, with the LLM doing the steps deterministic scripts cannot. The ARK constructions give a first set of pages to try — the affine group `AGL(1,q)`, 2-homogeneity, the Oliver class, wreath and entangled products — and Groupprops may need those pages written or extended first, which needs no subscription. The "definitions wished for" list from the note's Lean work is the handoff between the two threads. **Neither depends on the other; this may or may not happen.**
+
+**What Mathlib lacks for the constructions.** Affine groups exist as structures but not as *permutation groups on the field*; the fused/entangled product and wreath-type products are absent; `IsMultiplyPretransitive` exists, k-*homogeneity* does not. Each is a self-contained definition with a handful of lemmas and would be a candidate Mathlib contribution if written as a general definition in its own file.

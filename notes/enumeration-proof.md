@@ -371,7 +371,7 @@ The point stabiliser is then trivial, so the twist is trivial — a power of q v
 
 In both cases **s is prime and t is a power of q**. ∎
 
-> **Formalised, 2026-11-25:** `lean/LemmaBprime.lean`.
+> **Formalised:** `lean/LemmaBprime.lean`.
 > - Step 0 is `step0`.
 > - The lemma is `lemmaBprime`, abstract: chain, V minimal normal, C_G(V) ≤ V. Both cases are formalised, including Case 2's central subgroup of order q.
 > - The concrete affine version is `lemmaBprime_affine`. It derives the abstract hypotheses from "all translations present, every element affine, linear parts irreducible" and concludes a = 1 and a q-group twist.
@@ -484,7 +484,7 @@ Twists on distinct p-characteristic parts carry **no** mutual constraint: a sing
 
 *Worked instance.* Home prime 2, two copies of a 4-block: 2 × C(4,2) = 12, against the same chunk read as one 8-block, C(8,2) = 28.
 
-> **Formalised, 2026-11-25:** `lean/D1.lean` proves D1's domination in the E.6 model of the shape space (`lemmaD1`): reading F = pᵏ copies as one part of size F·c keeps admissibility and n, and does not lower SAFE. The strict inequality F·C(c,2) < C(F·c,2) is `E5Assembly.mul_pairs_le` (non-strict there).
+> **Formalised:** `lean/D1.lean` proves D1's domination in the E.6 model of the shape space (`lemmaD1`): reading F = pᵏ copies as one part of size F·c keeps admissibility and n, and does not lower SAFE. The strict inequality F·C(c,2) < C(F·c,2) is `E5Assembly.mul_pairs_le` (non-strict there).
 
 > **Lemma D2 (fused outside blocks are dominated).** Let O be an orbit whose finest block is an outside block of prime size r, with F ≥ 2 copies permuted transitively by some subgroup of Γ — **or, equally, let O₁, …, O_F be F ≥ 2 distinct foreign orbits of the same prime r, not permuted at all**; the proof below never uses the permutation, only that each block is a foreign orbit of Γ₁. Then
 >
@@ -511,7 +511,7 @@ Finally min(F, r) ≤ √(Fr) ≤ √n. Adding further orbits only adds classes 
 >
 > The second instance is why the distinction matters rather than being pedantry: **an argument phrased in terms of 2-transitivity would not have found it**, since it would have looked for AGL(1,7) and correctly concluded that the chain rejects it. The chain-admissible 2-homogeneous permuters are a strictly larger family than the chain-admissible 2-transitive ones, and at F ≡ 3 (mod 4) they are cheaper, needing only (F−1)/2 to be a prime power. The bound C(F,2)·r is unaffected — 2-homogeneity is exactly what maximises the block-pair orbital — only the set of F at which the shape is buildable grows.
 
-> **Formalised in part, 2026-11-24:** `lean/D2.lean` proves the counting half for an actual permutation group of O = Fin F × ZMod r:
+> **Formalised in part:** `lean/D2.lean` proves the counting half for an actual permutation group of O = Fin F × ZMod r:
 > - branch (a), unconditionally (`d2a`: an orbital of at most F·C(r,2) pairs);
 > - Step 3 and D2q's step (7), given the normal form those steps derive (`d2b`: C(F,2)·r; `d2q`: F·r);
 > - Step 1's two order arguments, and Step 2's equal-multiplier claim.
@@ -799,9 +799,9 @@ Both die on the p-characteristic part, which needs S ≥ √(2B) — 207 at n = 
 
   In every sub-case δ < 1/25, strictly. ∎
 
-> **Formalised in part, 2026-10-19:** `lean/E5Core.lean` proves the counting and congruence steps over ℕ in core Lean, with zero sorries — the s-ladder, every a = 1, s = 2 sub-case's count, the odd-q window, the q = 2 divisibilities, Lemma E.2 in bases 2 and 3, both absolute-cap windows (Mersenne from a = 7, repunit from a = 5), and the odd-q one-foreign-leftover sub-case end to end, from the cofactor bounds to SAFE < C(n,2)/25.
+> **Formalised in part:** `lean/E5Core.lean` proves the counting and congruence steps over ℕ in core Lean, with zero sorries — the s-ladder, every a = 1, s = 2 sub-case's count, the odd-q window, the q = 2 divisibilities, Lemma E.2 in bases 2 and 3, both absolute-cap windows (Mersenne from a = 7, repunit from a = 5), and the odd-q one-foreign-leftover sub-case end to end, from the cofactor bounds to SAFE < C(n,2)/25.
 >
-> **SAFE model and assembly, 2026-11-24:** `lean/E5Assembly.lean` (Mathlib) defines fallback configurations and SAFE from Part G.3 and proves E.5 *on that definition*, every branch, including E.1's, E.3(i)'s and E.4's classification steps: an admissible non-bare W has 25·SAFE < C(n,2) or (c, r) ∈ {(3,2), (4,3), (8,7), (16,5), (27,13), (32,31)} (`e5`). Lemma B′ and "foreign primes distinct" enter as hypotheses. `e5_exceptions` then pins the exceptional n to the table's twelve values by a kernel-checked enumeration, so the exception list is now a theorem, not only `fallback_sup.py`'s output. **On the table:** it shows one configuration per n; at n = 23 and 31 the class (8, 7) with F = 2 or 3 and no leftover is also an exception, so "12 exceptions" counts values of n.
+> **SAFE model and assembly:** `lean/E5Assembly.lean` (Mathlib) defines fallback configurations and SAFE from Part G.3 and proves E.5 *on that definition*, every branch, including E.1's, E.3(i)'s and E.4's classification steps: an admissible non-bare W has 25·SAFE < C(n,2) or (c, r) ∈ {(3,2), (4,3), (8,7), (16,5), (27,13), (32,31)} (`e5`). Lemma B′ and "foreign primes distinct" enter as hypotheses. `e5_exceptions` then pins the exceptional n to the table's twelve values by a kernel-checked enumeration, so the exception list is now a theorem, not only `fallback_sup.py`'s output. **On the table:** it shows one configuration per n; at n = 23 and 31 the class (8, 7) with F = 2 or 3 and no leftover is also an exception, so "12 exceptions" counts values of n.
 >
 > **Second reading, 2026-10-19 (session-log-15 §45): sound, with one hypothesis to make explicit.** Every sub-case's arithmetic re-checks, and so do the exhaustiveness of the four a = 1, s = 2 sub-cases, the ratio window, the q = 2 divisibility (Fermat r ≥ 17 gives r ≡ 2 (mod 5), so 5 | c) and `fallback_sup.py`'s 12 exceptions (rerun to n = 3000, identical).
 > - **The hypothesis.** The last sub-case uses **r′ ≠ r**. With r′ = r allowed, the twist analysis also admits r′ = r: for odd q, 6·3^{e−1} + 1 = 2·3^e + 1. Then n = 4r + 1 and the counting bound gives only about 1/16.
@@ -827,7 +827,7 @@ Both die on the p-characteristic part, which needs S ≥ √(2B) — 207 at n = 
 >
 > *Proof.* Let W attain B_safe(n). If W is fallback-free the endpoints coincide, since orb(c, c−1) = C(c,2). If W is a fallback configuration then SAFE(W) = B_safe(n) > C(n,2)/25, so by E.5 it is either a bare safe-prime pair or one of the 12 listed instances. A bare pair is dominated by its own (r, r) re-reading, which is fallback-free and scores at least as much (E.3(ii)), so B_refined(n) ≥ B_safe(n); the 12 instances are checked directly. In each case the SAFE optimum is realised by a fallback-free configuration, which Part E constructs, and Part E′'s sandwich closes. ∎
 
-> **Formalised, 2026-11-24:** `lean/E6.lean` proves E.6's B_refined(n) = B_safe(n) above C(n,2)/25 (`e6_maxima`). It works on a model of Theorem 3.1's shape list that allows any d ∣ c − 1 and includes Lemma D2's fused or repeated outside parts, scored by D2's two classes. Their domination above the line is proved in the model (`d2_case`: such a part forces F, r ≤ 25 and n < 614, and a kernel-checked table supplies a fallback-free match at each of those n), so it no longer rests on Corollary D2′'s computed range. The proof follows the text: a configuration with no fallback is raised to full twist; a bare pair is replaced by its (r, r) re-reading; each of the twelve exceptions is beaten by a one-class configuration at the same n, so none is an optimum. Lemma C is not used. μ\* is abstract, with Part E and Part 0 as hypotheses (`e6`).
+> **Formalised:** `lean/E6.lean` proves E.6's B_refined(n) = B_safe(n) above C(n,2)/25 (`e6_maxima`). It works on a model of Theorem 3.1's shape list that allows any d ∣ c − 1 and includes Lemma D2's fused or repeated outside parts, scored by D2's two classes. Their domination above the line is proved in the model (`d2_case`: such a part forces F, r ≤ 25 and n < 614, and a kernel-checked table supplies a fallback-free match at each of those n), so it no longer rests on Corollary D2′'s computed range. The proof follows the text: a configuration with no fallback is raised to full twist; a bare pair is replaced by its (r, r) re-reading; each of the twelve exceptions is beaten by a one-class configuration at the same n, so none is an optimum. Lemma C is not used. `e6` takes μ\* abstractly, with Part E and Part 0 as hypotheses; `lean/Part0Mu.lean` defines μ\*(n), proves Part 0 (μ\*(n) ≤ B_safe(n)) given `HypHuppert`, and restates E.6 on it (`e6_mu`).
 
 **What this changes, stated carefully.**
 
