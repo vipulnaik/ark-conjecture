@@ -251,6 +251,7 @@ Route 1 (import and bridge) is in place. Route 2, a Mathlib-native rewrite of `E
 - **Result:** 8,000 configurations (p ∈ {2,…,13}, q ∈ {2, 3, 5, 7}, F up to 7 both parities, c up to p³, r < 120, Lemma C changing a term in 2,750), 0 mismatches; 20,000 for the validator, 0 mismatches.
 - **Control:** a mutant `orb` without the 2 | t halving is caught (121 of 500, 273 of 2,000).
 - **Not covered:** `mu_ladder_exact.py`'s inline scoring (cross-checked against the exact table in `pending-checks.md` R0), D2 parts, and `Note.lean`'s note-specific values.
+- **The maxima, not just the terms (`../scripts/lean_model_max.py`, `pending-checks.md` R0d):** the Lean model's B_safe(n), maximised directly over the family `Prop1Final.prop1` reduces to above the line, equals the ladder table's value at every n ≤ 20,000 and on a window at 10⁵.
 
 > **Mathlib coverage, to recheck on every bump.** In the pinned Mathlib (v4.36.0), Mathlib has primitive and quasiprimitive actions, Jordan's theorems, Schur–Zassenhaus and solvable groups. It has no minimal-normal-subgroup or socle theory, no O'Nan–Scott, and no "a solvable primitive group is affine". Several results here are hand-proved because of that gap: `card_eq_of_abelian_normal`, `LemmaB.lemmaB_block_any`, the Step 0 and Lemma B′ arguments, and `LemmaB.mem_zpowers_of_orderOf_eq`. **When Mathlib is next bumped, check whether ready-made versions now exist.** Candidates:
 > - socle / minimal normal subgroups;

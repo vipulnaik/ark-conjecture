@@ -9,7 +9,7 @@
 | `mu_table_ladder.csv` | `mu_ladder_exact.py` | **10⁶ — complete** | 921,265 | exact B(n), certified above C(n,2)/25 by Theorem E.5 + `ladder-completeness.md` Prop 1 |
 | `mu_table_exact.csv` | `mu_exact.py` | **10⁵ — COMPLETE** | 90,299 | exhaustive search — the arbiter |
 
-Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804661 = 0.046210 at n = 2759** (the only other value below 0.05 anywhere is 0.048039 at n = 2183). Since every row clears 1/25, **Corollary E.6 makes each value μ\*(n), not a bound on it** — so μ\* is known exactly at every composite non-prime-power n ≤ 10⁶.
+Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804661 = 0.046210 at n = 2759** (the only other value below 0.05 anywhere is 0.048039 at n = 2183). Since every row clears 1/25, **Corollary E.6 makes each value μ\*(n), not a bound on it** — so μ\* is known exactly at every composite non-prime-power n ≤ 10⁶. **In Lean** this is `PartEMu.e6_mu`: above the line μ\*(n) = B_safe(n), given only `HypHuppert` ("solvable primitive ⇒ affine"), with the lower half `Bsafe_le_mu` unconditional. It is a theorem about the Lean model's B_safe; that the table's values are that model's maxima is **R0d**.
 
 ## Six standing rules
 
@@ -58,20 +58,20 @@ Both contiguous, no worklist tail, **0 uncertified rows**, minimum **175813/3804
 
 *The daylight between what `enumeration-proof.md` proves and what it verifies. Seven items; the document's Part J carries the full statement of each and this is the index.*
 
-1. **Part 0 completeness** — a shape missing from the space fails silently. Three independent tests could see one; none has.
+1. **Part 0 completeness** — a shape missing from the space fails silently. Three independent tests could see one; none has. **Machine-proved** (`lean/Part0Mu.lean`, `muStar_le`) given `HypHuppert`, a classical theorem taken as a named hypothesis; what is left is that input and the model's faithfulness to the table (R0d).
 2. **The two-part reduction of Theorem 2.3** — verified to n = 1200, Goldbach-tier to prove. Nothing rests on it but B₀'s O(n) cost claim.
 3. **Minimality k ≤ 3 below δ = 1/16** — free above 1/16 by F.3; any proof is arithmetic and must *produce* a configuration.
-4. **The collapse's theorem-side residue** — **narrowed to δ ≤ 1/25 only**, by Theorem E.5. No row of either table is in that regime, so this is now a statement about hypothetical n rather than about the tables.
+4. **The collapse's theorem-side residue** — **narrowed to δ ≤ 1/25 only**, by Theorem E.5 (machine-checked, `lean/E5Assembly.lean`). No row of either table is in that regime, so this is now a statement about hypothetical n rather than about the tables.
 5. **J0a's non-semilinear stabilisers** — discharged for every computed value; one theorem-side clause remains.
-6. **Lemma B′** — proved, and read three times independently, the third in 2026-09 with no prior exposure.
-7. **`ladder-completeness.md` Proposition 1** — proved by counting on SAFE terms, single-read. Between 10⁵ and 10⁶ it is the only route from the ladder table to B(n), so the claim "μ\* known exactly to 10⁶" is exactly as strong as it. A second, independent reading is owed. *A numeric spot check, 2026-11-10, which is not that reading:* `mu_exact.py` — the full shape-space enumeration, with no ladder — run on four windows, n = 100001–100051, 250000–250050, 500000–500012 and 999990–1000000, gives the ladder table's value at every one of the 114 values it produces there (47, 44, 12 and 11; 0 differences).
+6. **Lemma B′** — proved, read three times independently, and machine-checked (`lean/LemmaBprime.lean`).
+7. **`ladder-completeness.md` Proposition 1** — proved by counting on SAFE terms, and **machine-checked** (`lean/Prop1Final.lean`, `prop1`), which discharges the second reading this item used to owe. Between 10⁵ and 10⁶ it is the only route from the ladder table to B(n); what the claim "μ\* known exactly to 10⁶" now rests on there is that `mu_ladder_exact.py` computes the Lean model's maximum, which R0d checks directly. *A numeric spot check, 2026-11-10, which is not that reading:* `mu_exact.py` — the full shape-space enumeration, with no ladder — run on four windows, n = 100001–100051, 250000–250050, 500000–500012 and 999990–1000000, gives the ladder table's value at every one of the 114 values it produces there (47, 44, 12 and 11; 0 differences).
 
 ## Where the residual risk sits
 
 *Ranked. The taxonomy behind the ranking is `verification-lessons.md`.*
 
-1. **Exhaustiveness of the GAP stages** — the only non-circular check in the framework. Closed at degrees 10 and 12 by the TOM stage; the subdirect-product hole remains at other degrees. → `small-degree-verification.md`
-2. **Part E's realisability** — the GAP battery builds 13 configurations, n ≤ 2759, including the range minimiser, three entangled-generator regressions and F = 4 at n ≡ 11 (mod 12); all pass. What remains is that the battery samples configurations rather than covering every winner. → **R8**
+1. **Exhaustiveness of the GAP stages** — the only *unconditional* non-circular check in the framework. Closed at degrees 10 and 12 by the TOM stage; the subdirect-product hole remains at other degrees. → `small-degree-verification.md`. The Lean proof of Part 0 is a second non-circular argument at every n, conditional only on `HypHuppert`.
+2. **Part E's realisability** — **machine-proved at every n above 1/25, unconditionally** (`PartEMu.Bsafe_le_mu`: some configuration attaining B_safe is built as an Oliver group in `PartEG`). The GAP battery (13 configurations, n ≤ 2759) remains as an independent build in another system. What remains is R0d's faithfulness question. → **R0d**, **R8**
 3. **§3.3.5's ceilings** — exposure is the shared supply hypothesis. → **T6**
 4. **Proposition F.4's reliance on Lemma B′** — branch (b) is vacuous unless a foreign twist is a prime power. → **T8**
 5. **The κ parameters at k = 3** — no risk to k = 2. → **T7**
@@ -143,6 +143,22 @@ python3 mu_ladder_exact.py 2755 2762 --cert-threshold 0.05     # exercises the u
 **When the two runs land:** rerun `check_doc_figures.py <table> *.md`, requote every ⟦REQUOTE-ON-EXTENSION⟧ site, and rerun `solvable_relaxation.py <table>`. The certificate and own-run tags stay put.
 
 > **`CHECKPOINTS` is already primed.** 36848, 55814, 71288 and 159027 have been added, so a figure correctly scoped to any of those frontiers is reported as *matching an old checkpoint* — a historical citation to leave alone — rather than as unexplained staleness. Add the new maxima on the next extension too; it takes a minute and skipping it turns every correctly-scoped historical figure into noise in PASS 1. Expect the old-checkpoint counts to be large and mostly benign: 16 in `aod` on the current run, which is what a document with a long recorded history should look like.
+
+## R0d. The table against the Lean model — `lean_model_max.py`
+
+**What a pass shows:** the table's `mu_bound` at n is the Lean model's B_safe(n) — the maximum of `E6.Config.safe` over admissible configurations — so `PartEMu.e6_mu` is a statement about the table's numbers. Above C(n,2)/25 that maximum lies in the family "no D2 part, ≤ 1 class, ≤ 2 foreign parts, each part ≥ (n + 3)/5" (`E6.d2_case`, `Prop1Final.prop1`, `Prop1.part_share`), and the script maximises over exactly that family with the Lean scoring. `lean_score_crosscheck.py` compares the scorers term by term; this compares the maxima row by row.
+
+```bash
+cd scripts
+python3 lean_model_max.py ../outputs/mu_table_ladder.csv --nmax 20000          # contiguous, ~21 min
+python3 lean_model_max.py ../outputs/mu_table_ladder.csv --window 100000 100100 # ~9 min
+```
+
+- **Cost grows with n**: about 0.06 s per row near 10⁴, 5 s near 10⁵, and over two minutes near 10⁶ (a 21-row window there did not finish in 50 minutes). Beyond 10⁵ the search needs the ladder's pruning to be practical; as written it covers the low range and windows.
+- **Control:** dropping the q = 2 halving in `orb` (as `lean_score_crosscheck.py`'s mutant does) gives 17 differences to n = 1000. Dropping the within-class cross term K0·c² changes nothing, correctly: it never undercuts F·C(c,2) (`PartEMu.fused_safe`).
+- Rows at or below the line are reported and skipped; the table has none.
+
+**Last run:** [6, 20000] contiguous, 17,671 rows, **all agree**; windows [10000, 10500] (445 rows) and [100000, 100100] (95 rows), all agree. *Open, optional:* a faster version (reuse `mu_ladder_exact.py`'s pruning) to reach 10⁶.
 
 ## R1. Routine, after any new batch of table values
 
@@ -231,9 +247,9 @@ python3 ceiling_rederive.py --nmax 16000 --no-filter # control: expect exceedanc
 
 **`--no-filter` must exceed, and its witnesses must be prime powers.** A composite c in that column means the candidate list is admitting block sizes no Oliver group has, and the escapes it reports are partly phantom.
 
-## R8. The Part E realisability battery — the only leg of μ\* = B with no per-n check
+## R8. The Part E realisability battery — an independent GAP build
 
-**What a pass settles:** that the enumeration's score at that n is *attained*, i.e. μ\*(n) ≥ B(n). Not completeness. This is the only artefact that builds a group; everything else re-derives a value.
+**What a pass settles:** that the enumeration's score at that n is *attained*, i.e. μ\*(n) ≥ B(n), checked in GAP on the actual group. Not completeness. Lean proves the same attainment at every n above 1/25 (`PartEMu.Bsafe_le_mu`); this battery is the cross-system check on it, and the one that exercises GAP's own orbit computation.
 
 ```bash
 cd scripts   # required: launched elsewhere, GAP prints "Could not read file" and exits 0
@@ -361,15 +377,17 @@ python3 cyc_floor_scan.py 1000000 0.15 ../outputs/cyc_floor_1000000.csv   # not 
 
 **Where to look, in order.** Part E's realisability (T2) — reading a construction is not building one, so the read pass could not close it. Part 0's completeness — the worst record, the sole support for μ\* ≤ B_safe, and the place a missing shape hides. Then Parts D2q and E″, which carry the most intricate case analysis per line.
 
-### T2. Part E's realisability: preconditions are checked, construction is not
+### T2. Part E's realisability: preconditions are checked, and the construction is machine-checked
 
 The preconditions check is **built and passing**: `validate_table_v3.py` group A asserts per winner row that the Part E build's ingredients exist — F_top a q-power, every foreign block scored above r having q | r − 1. The carrier's order must be coprime to every **foreign prime**; it need not be coprime to any block count, a fused class being carried by an entangled generator whose F_mid-th power is the full twist. *A precondition stricter than the construction requires does not err on the safe side here — it rejects rows the construction realises, and the check's purpose is attainment.*
 
 Part E's construction has been read and found sound as written, with E.3(ii)'s (c, r) = (11, 5) group rebuilt independently returning orbitals {10, 55, 55}. **Reading a construction establishes that it would work if assembled, not that assembling it at the table's actual configurations yields the predicted multiset** — only R8 does that.
 
+**The construction is now machine-checked** (`lean/PartEG.lean`): for any classes at full twist beside any coherent foreign blocks, the group, its Oliver chain and the lower bound on every pair-orbital; `PartEMu.e6_real` shows the SAFE optimum above 1/25 can always be taken of that shape. Two findings from it are in `enumeration-proof.md` Part E's box (between-class orbitals are lcm·cᵢcⱼ; foreign primes must avoid every Fᵢ·(cᵢ − 1)).
+
 **What is owed, and it is what a check cannot reach.**
 
-- **Whether to build groups at all, and how often.** R8 now builds 13 configurations in seconds, including F = 4 and n = 2759, so adding rows is cheap. What a check cannot decide is which further winners are worth adding.
+- **Whether to build further groups in GAP.** Lean covers attainment at every n above the line; R8's rows are now a cross-system check, and adding rows is optional.
 - **J0a, the stabiliser assumption** (item 5 of the enumeration-proof gap inventory above)**. Discharged for every computed value by the flat cap, and without loss at a fixed twist order by the orbit-counting argument below.** *(The flat cap is the stronger of the two and the one to quote: B_safe credits F·C(c,2) and sᵢsⱼ, both counting bounds on the pair set rather than statements about the group, so μ\* ≤ B_safe holds whatever the stabiliser is. The argument below is what additionally rules out a non-field stabiliser **at the same order**; a larger-order one is the residue, and it reaches only E.3(i).)* The construction takes a matching block's twist inside the field's multiplicative group, whereas the stabiliser of a primitive affine group of degree p^a may be any irreducible subgroup H ≤ GL(a, p). The worry was that some non-field H realises a block orbital the field cannot. It cannot:
 
   > **At a fixed order t, the field subgroup is optimal.** Any orbit of H on the c − 1 nonzero vectors has size at most |H| = t, by orbit–stabiliser. The multiplicative subgroup of 𝔽_c^× of order t acts **semiregularly** — its orbits are the cosets, every one of size exactly t — so it attains that bound at every vector simultaneously. Hence **no subgroup of GL(a, p) of order t has a larger minimum orbit than the field subgroup of order t**, and the same holds for the ± version that governs pair orbitals, replacing H by ⟨H, −1⟩. Since the block's contribution is decided by its minimum orbit, a construction that reaches for a non-field stabiliser can never beat the field one at the same order.
@@ -587,7 +605,7 @@ The ceiling table is a theorem about the Oliver-admissible family **as currently
 
 **What is still owed** (Lemmas 1–3 were read independently and refereed 2026-10-17, with a written-out repair for intermediate P at a ≥ 2; `johnson-presentations.md` §5a box):
 
-1. **The claim that every alternative configuration costs at least as much at generic n** — the lower bounds are per-shape, and the minimum over shapes rests on the census being complete, i.e. on **Part 0**.
+1. **The claim that every alternative configuration costs at least as much at generic n** — the lower bounds are per-shape, and the minimum over shapes rests on the census being complete, i.e. on **Part 0** (machine-proved given `HypHuppert`, `lean/Part0Mu.lean`; the per-shape order bounds themselves are not formalised).
 2. **The exceptional-set density argument** — that twist-sharing needs a large prime-power divisor on n − 2 or n − 3 from a prime whose powers reach [δn, n], with probability about |log δ|/log n per exponent window. Heuristic in its current form.
 
 The upper bounds for generic n are conditional on the same bounded-cofactor supply as μ\*(n) itself.

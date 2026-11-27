@@ -461,18 +461,23 @@ theorem e6_real (C : Config) (hC : GAdm C)
 
 /-! ## Corollary E.6 for μ\*, with Part E proved -/
 
-/-- **μ\*(n) = B_safe(n) = B_refined(n) above the 1/25 line**, given only `HypHuppert`: Part E
-(the lower bound) is proved for the realisable optimum `e6_real` supplies, and Part 0 (the upper
-bound) is `Part0Mu.muStar_le`. -/
-theorem e6_mu (HH : Part0Fr.HypHuppert) (n B : ℕ) (hn : 2 ≤ n) (hB : IsBsafe n B)
-    (hhi : pairs n < 25 * B) : IsBrefined n B ∧ muStar n = B := by
-  refine ⟨e6_maxima n B hB hhi, le_antisymm (muStar_le HH hn hB) ?_⟩
+/-- **Realisability above the line, unconditionally: B_safe(n) ≤ μ\*(n)** wherever
+B_safe(n) > C(n,2)/25.  No `HypHuppert`: this half is the explicit groups of `PartEG`. -/
+theorem Bsafe_le_mu (n B : ℕ) (hn : 2 ≤ n) (hB : IsBsafe n B) (hhi : pairs n < 25 * B) :
+    B ≤ muStar n := by
   obtain ⟨⟨C, hC, hCn, hCs⟩, hmax⟩ := hB
   subst hCn hCs
   obtain ⟨C', hR, hp, hq, hn', hle⟩ := e6_real C hC (fun C' h1 h2 => hmax C' h1 h2) hhi
   have := real_le_mu hp hq hR (by rw [hn']; exact hn)
   rw [refined_real hR, hn'] at this
   exact hle.trans this
+
+/-- **μ\*(n) = B_safe(n) = B_refined(n) above the 1/25 line**, given only `HypHuppert`: Part E
+(the lower bound, `Bsafe_le_mu`, unconditional) and Part 0 (the upper bound,
+`Part0Mu.muStar_le`). -/
+theorem e6_mu (HH : Part0Fr.HypHuppert) (n B : ℕ) (hn : 2 ≤ n) (hB : IsBsafe n B)
+    (hhi : pairs n < 25 * B) : IsBrefined n B ∧ muStar n = B :=
+  ⟨e6_maxima n B hB hhi, le_antisymm (muStar_le HH hn hB) (Bsafe_le_mu n B hn hB hhi)⟩
 
 /-! ## Σ₀'s floor on μ\* itself -/
 

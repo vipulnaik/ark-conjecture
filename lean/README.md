@@ -28,7 +28,7 @@ What is proved, by area:
 |---|---|---|
 | inequality core and the short note | `ArkCore`, `Basic`, `Note` | the note's arithmetic half; caps, ladders, ceiling constants |
 | Theorem E.5, Corollary E.6 | `E5Core`, `Bridge`, `E5Assembly`, `E6`, `D1` | E.5 in full with its 12 exceptional n; B_refined = B_safe above 1/25 |
-| Part E (realisability) | `PartE1`, `PartEF`, `PartEG`, `PartEMu` | Oliver groups realising any classes beside any foreign blocks (coherent, full twist); **μ\*(n) = B_safe(n) above 1/25, given only `HypHuppert`**; Σ₀'s floor on μ\* |
+| Part E (realisability) | `PartE1`, `PartEF`, `PartEG`, `PartEMu` | Oliver groups realising any classes beside any foreign blocks (coherent, full twist); **μ\*(n) = B_safe(n) above 1/25, given only `HypHuppert`** (the ≥ half unconditional); Σ₀'s floor on μ\* |
 | vertex-transitive Oliver-resistance | `VertexTransitive` | its threshold μ\*_vt(n) = n(q(n) − 1)/2 (lower half unconditional), and μ\*(n) ≥ it |
 | Lemmas B, B′, D2 from Oliver's chain | `Chain`, `Step2`, `Glue`, `Rescale`, `LemmaB`, `LemmaBprime`, `D2`, `D2Full`, `D2q`, `FoBridge` | all three D2 classes, no Lemma B hypothesis |
 | `ladder-completeness.md` Propositions 1–2 | `Prop1`, `ThreeForeign`, `Prop1Final`, `TwoForeign` | ≤ 1 class + ≤ 2 foreign parts, F ≤ 15; strict S6/S11 ceilings |
