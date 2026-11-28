@@ -185,26 +185,58 @@ def best3(n, spf, pp, primes):
     # C_d x C_r x C_2 stays cyclic) or in the top (then q = 2).  The foreign twist t is
     # the q-part of r - 1, diagonal; the matching twist d is the largest divisor of
     # c - 1 coprime to r (and to 2 when the swap is in the cyclic layer).
+    #
+    # Placements scored: F*c + 2r*  (F >= 1), F*c + 2r1* + r2*  (the pair beside a
+    # single foreign block), F*c + 2r1* + 2r2*  (two pairs, swapped by one joint
+    # involution, so a single C_2 in the layer).  The common top prime q divides
+    # every r - 1; the matching twist loses every foreign prime and, when q != 2
+    # (swap in the cyclic layer), its 2-part.  The matching fusion F is credited
+    # as in S7 above.
     if INCLUDE_S9:
         for c, (p, a) in pp.items():
-            r2 = n - c
-            if r2 % 2 or r2 // 2 < 5:
-                continue
-            r = r2 // 2
-            if spf[r] != r or r == p:
-                continue
-            for q in sorted(_prime_factors(r - 1, spf)):
-                t = qpart(r - 1, q)
-                d = c - 1
-                while d % r == 0:
-                    d //= r
-                if q != 2:
-                    while d % 2 == 0:
-                        d //= 2
-                for m in [x for x in range(1, a + 1)
-                          if a % x == 0 and _is_q_power(x, q)]:
-                    offer(min(orb3(c, d, m, p, a), 2 * orb3(r, t, 1, r, 1)),
-                          f"1x{c} + 2x{r}* (S9, m={m}, q={q}, t={t}, d={d})")
+            for F in range(1, n // c + 1):
+                rest = n - F * c
+                if rest < 10:
+                    break
+                if F * orb3(c, c - 1, a, p, a) <= best:
+                    continue
+                splits = []
+                if rest % 2 == 0:
+                    splits.append(((rest // 2,), ()))
+                for r1 in primes:
+                    if 2 * r1 + 5 > rest:
+                        break
+                    if r1 < 5:
+                        continue
+                    r2 = rest - 2 * r1
+                    if spf[r2] == r2 and r2 != r1:
+                        splits.append(((r1,), (r2,)))
+                    if r2 % 2 == 0 and r2 // 2 > r1 and spf[r2 // 2] == r2 // 2:
+                        splits.append(((r1, r2 // 2), ()))
+                for pairs, singles in splits:
+                    rs = pairs + singles
+                    if any(r < 5 or spf[r] != r or r == p for r in rs):
+                        continue
+                    common = set(_prime_factors(rs[0] - 1, spf))
+                    for r in rs[1:]:
+                        common &= set(_prime_factors(r - 1, spf))
+                    for q in sorted(common):
+                        d = c - 1
+                        for r in rs:
+                            while d % r == 0:
+                                d //= r
+                        if q != 2:
+                            while d % 2 == 0:
+                                d //= 2
+                        foreign = min([2 * orb3(r, qpart(r - 1, q), 1, r, 1) for r in pairs] +
+                                      [orb3(r, qpart(r - 1, q), 1, r, 1) for r in singles])
+                        if foreign <= best:
+                            continue
+                        for m in [x for x in range(1, a + 1)
+                                  if a % x == 0 and _is_q_power(x, q)]:
+                            desc = " + ".join([f"2x{r}*" for r in pairs] + [f"1x{r}*" for r in singles])
+                            offer(min(F * orb3(c, d, m, p, a), foreign),
+                                  f"{F}x{c} + {desc} (S9, m={m}, q={q}, d={d})")
     return best, wit
 
 
