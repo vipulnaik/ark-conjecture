@@ -33,6 +33,8 @@ What is proved, by area:
 | AΓL(1, 2^p) free on 3-sets | `Mersenne` | for p prime ≥ 5, only the identity of AΓL(1, 2^p) stabilises a 3-set; the Mersenne condition is not needed |
 | k-set stabilisers, prime-power blocks | `KUniformPP` | over any finite field, a k-set stabiliser in the split affine group has order ≤ τ_k·θ_k(d), so orbits are ≥ q·d/(τ_k·θ_k(d)) |
 | cross orbits at k = 3 | `CrossOrbit` | the fibre bound #(G·S) ≥ #(G·(S ∩ A))·#(N·S) behind "only intra terms bind" |
+| Sylow transitivity at prime-power degree | `SylowTransitive` | a Sylow p-subgroup of a transitive group of degree p^a is transitive (Rivest–Vuillemin) |
+| chiral and directed thresholds | `Chiral`, `Directed` | μ\*(n) ≤ 2·μ\*_chi(n) and μ\*(n) ≤ μ\*_dir(n) |
 | vertex-transitive Oliver-resistance | `VertexTransitive` | its threshold μ\*_vt(n) = n(q(n) − 1)/2 (lower half unconditional), and μ\*(n) ≥ it |
 | Lemmas B, B′, D2 from Oliver's chain | `Chain`, `Step2`, `Glue`, `Rescale`, `LemmaB`, `LemmaBprime`, `D2`, `D2Full`, `D2q`, `FoBridge` | all three D2 classes, no Lemma B hypothesis |
 | `ladder-completeness.md` Propositions 1–2 | `Prop1`, `ThreeForeign`, `Prop1Final`, `TwoForeign` | ≤ 1 class + ≤ 2 foreign parts, F ≤ 15; strict S6/S11 ceilings |

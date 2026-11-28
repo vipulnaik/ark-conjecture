@@ -554,3 +554,14 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
   - Redone: the comparison needs c′ ≥ 2ℓ/κ₃. That holds for foreign blocks (r ≥ 2q + 1 with q | a) and for blocks of the same class. It is **open** for a third point in a different matching class of small 2-power blocks next to a Galois block.
 - **The claim fails for Oliver groups in general**: diagonal AΓL(1, 32) plus the swap on 64 points has intra term 9920 but cross orbit 1984 (`scripts/diag_cross_orbit.py`). It is excluded from the note's configurations only because its translations are diagonal.
 
+## 44. §4.1's open case closed
+
+- The case left open in §43 is a pair in a Galois 2^a block with the third point in a separate matching class of 2-power blocks c′ ≤ 2ℓ. Such a configuration is admissible (S12-type). It is closed by applying `CrossOrbit.cross_orbit` with A the small class's part: the pair's block translations fix that part, so the cross orbit is ≥ F′·c′·c/2. That is at least the small class's intra term F′·C(c′, 3) when c/2 ≥ (c′ − 1)(c′ − 2)/6, which holds for every a ≥ 5 with c′ ≤ 2a a power of 2. So min₃ is an intra term in every configuration of the note.
+
+## 45. Lean: three short satellite results
+
+- `SylowTransitive.lean`: `monotone-transitive-note.md` Proposition 2, a Sylow p-subgroup of a transitive group of degree p^a is transitive.
+- `Chiral.lean`: `chiral-graph-properties.md` Theorem 1, μ\*(n) ≤ 2·μ\*_chi(n), using `Part0Mu`'s `minOrb` and the subgroup chain restriction `D2Full.OliverChain.comap`.
+- `Directed.lean`: `directed-graph-properties.md` Theorem D1, μ\*(n) ≤ μ\*_dir(n).
+- All three are hypothesis-free. Each proof matched the note's argument, so no text corrections were needed.
+

@@ -286,16 +286,16 @@ The reason is a degree count and it is decisive:
 
 **This is the single largest structural difference from k = 2**, where cross terms routinely bind and most of `arithmetic-of-density.md` §3 is the comparison between intra, within-class-cross and between-orbit terms. At k = 3 that comparison collapses:
 
-> **min₃(configuration) = min over classes of the class's intra term** = min(F_i·orb₃(c_i, d_i, m_i)). *(Proved below except in one configuration type, flagged there.)*
+> **min₃(configuration) = min over classes of the class's intra term** = min(F_i·orb₃(c_i, d_i, m_i)). *(Proved below, case by case.)*
 
 So the optimisation is no longer a balance between competing term types. It is: **partition n into parts and maximise the smallest part's F·orb₃(c, d, m)**. Since F·orb₃(c, d, m) ≈ s·c·m/κ₃ with s = F·c the part size, a part's value is its *size times its block size* — so the whole problem is to keep the block sizes large, and the parts few.
 
-> **The degree count can be replaced by a fibre bound, with one case left open.** Let A be the part holding two of the three points, and N the elements acting trivially on A. Then **|orbit of S| ≥ |orbit of S ∩ A| · |N-orbit of S|** (Lean, `CrossOrbit.cross_orbit`). In the configurations of this note every block's translations act on that block alone: matching blocks' translations lie in the p-group Γ₂, and foreign blocks' in the cyclic Γ₁. So N moves the third point through at least its block size c′, and a 2 + 1 cross orbit has size at least c′·F·orb₂(c, d) ≥ c′·F·c·d/2. Against this, the pair's class has intra term F·orb₃(c, d, m) ≤ F·c·d·ℓ/κ₃, where ℓ is the Galois gain of §2.2.2: ℓ = lpf(a) when the gain occurs, else 1. So the comparison needs **c′ ≥ 2ℓ/κ₃**:
+> **The degree count can be replaced by a fibre bound.** Let A be the part holding two of the three points, and N the elements acting trivially on A. Then **|orbit of S| ≥ |orbit of S ∩ A| · |N-orbit of S|** (Lean, `CrossOrbit.cross_orbit`). In the configurations of this note every block's translations act on that block alone: matching blocks' translations lie in the p-group Γ₂, and foreign blocks' in the cyclic Γ₁. So N moves the third point through at least its block size c′, and a 2 + 1 cross orbit has size at least c′·F·orb₂(c, d) ≥ c′·F·c·d/2. Against this, the pair's class has intra term F·orb₃(c, d, m) ≤ F·c·d·ℓ/κ₃, where ℓ is the Galois gain of §2.2.2: ℓ = lpf(a) when the gain occurs, else 1. So the comparison needs **c′ ≥ 2ℓ/κ₃**:
 >
 > - **ℓ = 1**: c′ ≥ 2 suffices.
 > - **ℓ > 1, third point in a foreign block**: the top prime q divides a and r ≡ 1 (mod q), so c′ = r ≥ 2q + 1 ≥ 2ℓ + 1.
 > - **Third point in another block of the same class**: c′ = c is far larger.
-> - **ℓ > 1, third point in a different matching class of small 2-power blocks** (c′ ≤ 2ℓ): **not covered by this argument**. Whether such a configuration is admissible has not been checked.
+> - **ℓ > 1, third point in a different matching class of small 2-power blocks** (c′ ≤ 2ℓ; admissible, cf. `enumeration-proof.md`'s S12): apply the fibre bound the other way round, with A the small class's part. The elements fixing that part pointwise include the translations of the pair's block, which move a pair through c/2 positions in characteristic 2. So the cross orbit is at least s′·c/2 = F′·c′·c/2. That exceeds the small class's own intra term, F′·orb₃(c′, d′, m′) ≤ F′·C(c′, 3), as soon as c/2 ≥ (c′ − 1)(c′ − 2)/6. With c = 2^a, a ≥ 5 and c′ a power of 2 at most 2a, this always holds: at a = 5, c′ ≤ 8 and 7 ≤ 16. The minimum is still an intra term, just not the pair's class's.
 >
 > The 1 + 1 + 1 type is a product of three such factors. *(Two shortcuts do not work here. Counting the third point's whole part s′ instead of its block c′ needs N transitive on that part. And a bound of the form "r ≥ 5 > a" fails for every Galois block, since those have a ≥ 5.)*
 >

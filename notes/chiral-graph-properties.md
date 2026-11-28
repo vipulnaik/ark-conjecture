@@ -34,7 +34,7 @@ Throughout, μ\*_chi(n) is the maximum over Oliver groups **Γ ≤ A_n** of the 
 
 > **Theorem 1.** For every n, **μ\*_chi(n) ≥ μ\*(n)/2**, hence δ_chi ≥ δ/2.
 
-*Proof.* Let Γ realise μ\*(n). The sign map Γ → {±1} is a homomorphism, so Γ⁺ := Γ ∩ A_n has index 1 or 2 in Γ. Γ⁺ is again an Oliver group — the chain conditions are inherited by subgroups with the same p and q, since Γ₂ ∩ Γ⁺ is a p-group, the middle quotient embeds in a cyclic group hence is cyclic, and the top quotient embeds in a q-group. Each Γ-orbital is a union of Γ⁺-orbitals, and the number of pieces is the index of the stabiliser's image, hence at most 2. So every Γ⁺-orbital has size at least half a Γ-orbital. ∎
+*Proof.* Let Γ realise μ\*(n). The sign map Γ → {±1} is a homomorphism, so Γ⁺ := Γ ∩ A_n has index 1 or 2 in Γ. Γ⁺ is again an Oliver group — the chain conditions are inherited by subgroups with the same p and q, since Γ₂ ∩ Γ⁺ is a p-group, the middle quotient embeds in a cyclic group hence is cyclic, and the top quotient embeds in a q-group. Each Γ-orbital is a union of Γ⁺-orbitals, and the number of pieces is the index of the stabiliser's image, hence at most 2. So every Γ⁺-orbital has size at least half a Γ-orbital. ∎ *(Lean, `lean/Chiral.lean`: μ\*(n) ≤ 2·μ\*_chi(n) (`muStar_le_two_muChi`), with μ\*_chi the same supremum over Oliver groups inside A_n and the same `minOrb` as `Part0Mu.muStar`. No hypotheses.)*
 
 **So the whole framework transfers with a constant, and Θ(n²) is untouched.** In particular the asymptotic constant 7 − 4√3 becomes at worst (7 − 4√3)/2 ≈ 0.0359, and §5 of `arithmetic-of-density.md`'s conjectural floor 1/25 becomes at worst **1/50**. Those are the worst cases the theorem allows; §5 finds that at odd n the factor is not paid at all.
 

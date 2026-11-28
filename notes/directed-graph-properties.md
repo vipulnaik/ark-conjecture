@@ -39,7 +39,7 @@ Write μ\*_dir(n) for the maximum over Oliver groups Γ ≤ S_n of the minimum �
 
 > **Theorem D1.** For every n, **μ\*_dir(n) ≥ μ\*(n)**, and hence **δ_dir(n) ≥ δ(n)/2**.
 >
-> *Proof.* Fix Γ realising μ\*(n). Each Γ-orbit O on unordered pairs is the image of either one or two orbits on ordered pairs: the pair-orbit {x,y} ↦ {(x,y), (y,x)} is **self-paired** when some g ∈ Γ has g(x) = y and g(y) = x, in which case the ordered orbital above it has size 2|O|, and otherwise it splits into two ordered orbitals of size |O| each. Either way every ordered orbital has size **at least |O| ≥ μ\*(n)**. The ambient doubles, giving the density statement. ∎
+> *Proof.* Fix Γ realising μ\*(n). Each Γ-orbit O on unordered pairs is the image of either one or two orbits on ordered pairs: the pair-orbit {x,y} ↦ {(x,y), (y,x)} is **self-paired** when some g ∈ Γ has g(x) = y and g(y) = x, in which case the ordered orbital above it has size 2|O|, and otherwise it splits into two ordered orbitals of size |O| each. Either way every ordered orbital has size **at least |O| ≥ μ\*(n)**. The ambient doubles, giving the density statement. ∎ *(Lean, `lean/Directed.lean`: μ\*(n) ≤ μ\*_dir(n) (`muStar_le_muDir`), the least orbit on ordered pairs of distinct points against `Part0Mu.minOrb`. No hypotheses.)*
 
 So the whole apparatus transfers with a factor two, exactly as `chiral-graph-properties.md` Theorem 1 does — Θ(n²) is untouched, the conjectural floor 1/25 becomes 1/50, and the asymptotic constant 7 − 4√3 becomes at worst half of it.
 

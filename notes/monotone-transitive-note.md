@@ -62,7 +62,7 @@ One whole family of degrees is settled outright.
 >
 > |P·G_x| = |P|·|G_x| / |P ∩ G_x| ≥ p^b·|G_x| / p^{b−a} = p^a·|G_x| = |G|,
 >
-> so **P·G_x = G** and the P-orbit of x has size [P : P ∩ G_x] = p^a — all of it. A p-group is Oliver with Γ₂ = itself and both quotients trivial, so Proposition 1 applies. ∎
+> so **P·G_x = G** and the P-orbit of x has size [P : P ∩ G_x] = p^a — all of it. A p-group is Oliver with Γ₂ = itself and both quotients trivial, so Proposition 1 applies. ∎ *(Lean, `lean/SylowTransitive.lean`: a Sylow p-subgroup of a group acting transitively on p^a points acts transitively (`sylow_transitive`). No hypotheses.)*
 >
 > **At prime degree this is just Cauchy's theorem**: transitivity forces p | |G|, Cauchy gives an element of order p, and on p points such an element is a single p-cycle — regular, transitive, cyclic, Oliver. *Attribution*: the prime-power case is due to **Rivest and Vuillemin**, by exactly this Sylow counting. They had no need of Oliver groups: at a prime power the p-group layer alone is transitive, so the cyclic and q-layers that KSS added are not needed.
 
