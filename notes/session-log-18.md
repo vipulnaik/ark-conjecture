@@ -637,3 +637,8 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - The L-primitive case (b odd) closes by an order count. By the primitive-solvable structure theorem (Suprunenko; checked against arXiv:2204.13375 and arXiv:1612.05959), F = E·U with E extraspecial q^{1+2n}. Here q ≥ 7, because odd-degree fields exclude 3 and 5, and even degree goes to the equilateral argument over 𝔽₂[U]. This gives |H| ≤ c^{1/q^n}·q^{n²+2n}·a ≤ (c − 1)/3 from c = 2²¹ up. So min₃ ≤ c|H| ≤ the semilinear value.
 - J0a′ at k = 3 is now proved for every p against the stand-alone semilinear block, modulo Huppert (odd p) and Suprunenko (p = 2), both cited. Open: configurations that cut the twist, and k ≥ 4.
 
+## 56. Readthrough of `general-k-note.md` and `three-uniform-note.md`
+
+- `general-k-note.md` §1's J0a′ box rewritten as current state: statement (primitive blocks, "no larger", configuration comparator), status, the k = 3 proof organised by invariant families and order counts, the p = 2 near-counterexample excluded by primitivity, and a compact list of computational corroboration. The superseded component sketch and its review are removed from the note; they are recorded in §§48–55 here. §6 gains an item for J0a′ beyond the stand-alone k = 3 case.
+- `three-uniform-note.md`: the status-table §4 row (S9 found missing; §4.1 proved); §4.1's degree count relabelled a heuristic; the S9 row counts the wider placements; §6.2's soundness remark (orbit law now in Lean; §4.1 by the fibre bound); §7's J0a′ remarks (proved at k = 3, stand-alone); §8's Part D row (D2 only partly transfers).
+
