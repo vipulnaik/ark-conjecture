@@ -612,3 +612,28 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - **It is reducible, hence imprimitive.** It is the fused class of two 2^{a−1}-blocks (`enumeration-proof.md` B2), which the census already credits with the same value. Scoring it as a separate block in `mu3_menu.py` changed no row to n = 2000 (3×64: 29760 = 6×32), so that change was not kept.
 - So J0a′ is about irreducible H (primitive blocks, B1). With `--irreducible` the c = 16 sample has no Oliver-admissible non-semilinear H. The notes now say this; an earlier draft in this session had called J0a′ false.
 - Open: irreducible H at p = 2. Huppert says it is intransitive, and an argument is owed.
+
+## 52. J0a′ at p = 2 reduced to one case
+
+- For irreducible H: O₂(H) = 1, so K is odd cyclic; enlarge it by a central C_q so that K ≠ 1.
+  - K irreducible: semilinear.
+  - K not homogeneous: the 3-sets in component cosets number at most c(c − 1)/3, so H never wins (this also works for odd p).
+  - K homogeneous with |L| = 4: 3-sets in L-line cosets number c(c − 1)/3, so H never wins.
+- Open: |L| ≥ 8. At c = 64 (𝔽₈²) every 3-subgroup configuration in ΓL(2, 8) was checked (`scripts/j0a_p2_c64.py`), and every irreducible one is semilinear; q = 2 and q = 7 are excluded by hand. So J0a′ at k = 3, p = 2 holds for every prime a and every c ≤ 128. The owed case is |L| = 2^b ≥ 8 with b a proper divisor of a, first at c = 256.
+
+## 53. Status consolidation
+
+- `general-k-note.md` status table, §1 row: J0a′ is now described as for primitive blocks, proved at k = 3 for odd p, and for p = 2 when a is prime or c ≤ 128; open otherwise and at k ≥ 4.
+- `three-uniform-note.md` §10: item 2 (the orbit law's stabiliser step) is marked done via `KUniform` / `KUniformPP`. A new item 7 records J0a′'s k = 3 status, and k ≥ 4 becomes item 8. Item 1 already carries the S9 census findings.
+
+## 54. J0a′ at p = 2 pushed to c = 2²¹
+
+- With |L| = 2^b and b even, the equilateral triples {v, v + x, v + ωx} form an invariant family of exactly c(c − 1)/3. This closes c = 256 and every even b.
+- H imprimitive over L: the component count again. e = 2: odd-order irreducible groups mod scalars are not absolutely irreducible, so they are semilinear.
+- Left: b odd, H primitive over L. Via Suprunenko's structure theory (cited, not proved), the Fitting subgroup is scalars times an extraspecial q^{1+2n} with q | 2^b − 1. First at c = 2²¹ (b = 3, q = 7). The notes' status lines now say "proved below c = 2²¹".
+
+## 55. J0a′ at k = 3, p = 2 closed
+
+- The L-primitive case (b odd) closes by an order count. By the primitive-solvable structure theorem (Suprunenko; checked against arXiv:2204.13375 and arXiv:1612.05959), F = E·U with E extraspecial q^{1+2n}. Here q ≥ 7, because odd-degree fields exclude 3 and 5, and even degree goes to the equilateral argument over 𝔽₂[U]. This gives |H| ≤ c^{1/q^n}·q^{n²+2n}·a ≤ (c − 1)/3 from c = 2²¹ up. So min₃ ≤ c|H| ≤ the semilinear value.
+- J0a′ at k = 3 is now proved for every p against the stand-alone semilinear block, modulo Huppert (odd p) and Suprunenko (p = 2), both cited. Open: configurations that cut the twist, and k ≥ 4.
+
