@@ -575,3 +575,15 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - Notes updated: the §4.2 S9 row, §4.1 (fused pairs inside the fibre argument) and §10 item 1 in `three-uniform-note.md`, plus `pending-checks.md` R12.
 - **Still open:** other placements of a fused foreign pair, and whether S9 moves any §5 class ceiling (`ceiling_rederive3.py` doesn't enumerate it).
 
+## 47. S9 and the k = 3 class ceilings
+
+- `ceiling_rederive3.py --s9` adds c + 2r\* to the generic-family scan. To n = 6000 S9 stays below the tabled ceiling in every class. It approaches it in classes 3, 5 and 9 (ratios 0.997, 0.998, 0.999), so it ties the existing ceilings asymptotically there but never beats them. §5's table stands.
+
+## 48. J0a′: statement corrected, one data point
+
+- `general-k-note.md` §1's J0a′ said non-semilinear blocks have minimum k-orbit "no smaller" than AΓL(1, c)'s, which is the wrong direction for "never win". It now says "no larger". The comparator is also now the best semilinear block admissible in the same configuration, since Oliver constraints can cut the semilinear twist.
+- Data point: c = 25, k = 3, C₄ ≀ C₂ ≤ GL(2, 5) (order 32, not semilinear) has least 3-orbit 100 against AΓL(1, 25)'s 200.
+- The component argument itself is not yet checked. Its reducible branch needs a bound on |H| for Oliver-admissible H, a cyclic normal subgroup with q-group quotient. Wreath-type q-groups such as C₄ ≀ C₂ show |H| can exceed the semilinear q-part, so the argument must bound orbits, not orders.
+- **Probe at a = 2, k = 3** (`scripts/j0a_gl2_search.py`): every 2-generated subgroup of GL(2, p) (with or without scalars), p = 3, 5, 7. Oliver-admissibility is tested with chain prime p: O_p(H), plus the q′-generated subgroup cyclic modulo it. Semilinearity is tested as lying in a Singer normaliser. Per top prime q, the best non-semilinear least 3-orbit never beats the best semilinear one: 3/12, 100/200 and 50/200, then 196, 98, 98 against 784. Coverage gaps: 3-generated subgroups, and a ≥ 3.- **a = 3** (`scripts/j0a_a3_probe.py`): every 2-generated subgroup of GL(3, 2) gives at most 24 against 56. Built directly at c = 343 (AΓL(1, 343): 39102): C₃ ≀ C₃ (order 81) gives 1029; 3^{1+2} gives 1029, or 2058 with scalars; ΓL(1, 49) × C₂ (order 192, reducible) gives 343. C₆ ≀ C₃, C₂ ≀ C₃ and ΓL(1, 49) × C₆ are not admissible. No counterexample to J0a′, and the margins are large. A proof remains owed.
+- **The note's component sketch for J0a′ was reviewed against these examples, and it has three gaps.** (1) It omits O_p(H) ≠ 1, which occurs (unitriangular). (2) The m > 1 count of k-sets in component translates is about c²/3 at k = 3, level with the target, and exceeds c² at k ≥ 4, so it is not arity-free. (3) The m = 1 branch assumes Q primitive (C₃ ≀ C₃ is monomial) and compares |Γ_B| with c² log c, where the right test is |H| ≤ (c − 1)·m/κ_k. The note now says J0a′ remains open, with a corrected route: irreducible gives semilinear, else an order test or an invariant-subspace stabiliser.
+

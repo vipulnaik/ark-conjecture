@@ -117,6 +117,8 @@ def main():
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--nmax", type=int, default=20000)
+    ap.add_argument("--s9", action="store_true",
+                    help="also score S9 at F = 2 (c + 2r*), reported per class as kc = s9/theta")
     ap.add_argument("--no-filter", action="store_true",
                     help="include section 6's escapes (expect exceedances)")
     a = ap.parse_args()
@@ -149,6 +151,32 @@ def main():
                     if k not in best or b3 > best[k][0]:
                         best[k] = (b3, F, c, r, t, n)
 
+        # S9 at F = 2 (three-uniform-note.md §4.2): c + 2r*, the r-blocks fused.  In
+        # the generic family q >= 5, so the swap sits in the cyclic layer and the
+        # matching twist is cut to its odd part, coprime to r.
+        if a.s9 and n % 1 == 0:
+            for c in cand:
+                if c >= n or (n - c) % 2:
+                    continue
+                r = (n - c) // 2
+                if r < 5 or not sieve[r] or r == c:
+                    continue
+                d = c - 1
+                while d % 2 == 0:
+                    d //= 2
+                while d % r == 0:
+                    d //= r
+                for q, t in prime_power_parts(r - 1).items():
+                    if generic and q < 5:
+                        continue
+                    kr = 3 if t % 3 == 0 else (2 if t % 2 == 0 else 1)
+                    mine, kc = orb3_prime(c, d)
+                    m3 = min(mine, 2 * r * t // kr)
+                    b3 = m3 / (n * n)
+                    k = (n % 12, ('s9', kc))
+                    if k not in best or b3 > best[k][0]:
+                        best[k] = (b3, 2, c, r, t, n)
+
     mode = "generic family" if generic else "UNFILTERED (escapes included)"
     print(f"ceiling_rederive3.py -- {mode}, n in [{N//2}, {N}]\n")
     print(f"{'cls':>4} {'kc':>3} {'emp sup':>9} {'tabled':>9} {'ratio':>7} "
@@ -167,6 +195,15 @@ def main():
                     rc = 1
             print(f"{cls:>4} {kc:>3} {b3:9.5f} {cf:9.5f} {b3/cf:7.4f} {F:>2}  "
                   f"n={n} {F}x{c} + {r}* (t={t}){flag}")
+    if a.s9:
+        print("\nS9 (c + 2r*, generic family), best per class -- compare with the tabled ceilings above:")
+        for cls in range(12):
+            for kc in (1, 2, 3):
+                if (cls, ('s9', kc)) in best:
+                    b3, F, c, r, t, n = best[(cls, ('s9', kc))]
+                    top = max(CEIL2[cls], CEIL3[cls])
+                    flag = "  <-- EXCEEDS both columns" if b3 > top * (1 + 2e-3) else ""
+                    print(f"{cls:>4} th={kc} {b3:9.5f} (max tabled {top:.5f}) n={n} {c} + 2x{r}* (t={t}){flag}")
     if not generic:
         print("\nExceedances here are section 6's escapes, not counterexamples:"
               "\nrerun without --no-filter and they should disappear.")
