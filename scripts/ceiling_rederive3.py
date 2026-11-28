@@ -119,6 +119,8 @@ def main():
     ap.add_argument("--nmax", type=int, default=20000)
     ap.add_argument("--s9", action="store_true",
                     help="also score S9 at F = 2 (c + 2r*), reported per class as kc = s9/theta")
+    ap.add_argument("--s9-wide", action="store_true",
+                    help="with --s9, also the placements with two foreign parts (slow)")
     ap.add_argument("--no-filter", action="store_true",
                     help="include section 6's escapes (expect exceedances)")
     a = ap.parse_args()
@@ -154,28 +156,56 @@ def main():
         # S9 at F = 2 (three-uniform-note.md §4.2): c + 2r*, the r-blocks fused.  In
         # the generic family q >= 5, so the swap sits in the cyclic layer and the
         # matching twist is cut to its odd part, coprime to r.
-        if a.s9 and n % 1 == 0:
-            for c in cand:
-                if c >= n or (n - c) % 2:
-                    continue
-                r = (n - c) // 2
-                if r < 5 or not sieve[r] or r == c:
-                    continue
-                d = c - 1
-                while d % 2 == 0:
-                    d //= 2
-                while d % r == 0:
-                    d //= r
-                for q, t in prime_power_parts(r - 1).items():
-                    if generic and q < 5:
-                        continue
-                    kr = 3 if t % 3 == 0 else (2 if t % 2 == 0 else 1)
-                    mine, kc = orb3_prime(c, d)
-                    m3 = min(mine, 2 * r * t // kr)
-                    b3 = m3 / (n * n)
-                    k = (n % 12, ('s9', kc))
-                    if k not in best or b3 > best[k][0]:
-                        best[k] = (b3, 2, c, r, t, n)
+        if a.s9:
+            # S9 placements (three-uniform-note.md §4.2): F*c + 2r*, F*c + 2r1* + r2*,
+            # F*c + 2r1* + 2r2* (one joint swap).  Generic family: q >= 5, so the swap
+            # is in the cyclic layer and the matching twist is cut to its odd part,
+            # coprime to every foreign prime.
+            for F in range(1, 9):
+                for c in cand:
+                    rest = n - F * c
+                    if rest < 10:
+                        break
+                    splits = []
+                    if rest % 2 == 0 and rest // 2 >= 5 and sieve[rest // 2]:
+                        splits.append(((rest // 2,), ()))
+                    if a.s9_wide:
+                        for r1 in primes:
+                            if r1 < 5:
+                                continue
+                            if 2 * r1 + 5 > rest:
+                                break
+                            r2 = rest - 2 * r1
+                            if sieve[r2] and r2 != r1:
+                                splits.append(((r1,), (r2,)))
+                            if r2 % 2 == 0 and r2 // 2 > r1 and sieve[r2 // 2]:
+                                splits.append(((r1, r2 // 2), ()))
+                    for pairs, singles in splits:
+                        rs = pairs + singles
+                        if c in rs:
+                            continue
+                        d = c - 1
+                        while d % 2 == 0:
+                            d //= 2
+                        for r in rs:
+                            while d % r == 0:
+                                d //= r
+                        mine, kc = orb3_prime(c, d)
+                        common = set(prime_power_parts(rs[0] - 1))
+                        for r in rs[1:]:
+                            common &= set(prime_power_parts(r - 1))
+                        for q in common:
+                            if generic and q < 5:
+                                continue
+                            def fo(r, mult):
+                                t = prime_power_parts(r - 1)[q]
+                                kr = 3 if t % 3 == 0 else (2 if t % 2 == 0 else 1)
+                                return mult * min(r * t // kr, comb(r, 3))
+                            m3 = min([F * mine] + [fo(r, 2) for r in pairs] + [fo(r, 1) for r in singles])
+                            b3 = m3 / (n * n)
+                            k = (n % 12, ('s9', kc))
+                            if k not in best or b3 > best[k][0]:
+                                best[k] = (b3, F, c, rs, 0, n)
 
     mode = "generic family" if generic else "UNFILTERED (escapes included)"
     print(f"ceiling_rederive3.py -- {mode}, n in [{N//2}, {N}]\n")
@@ -203,7 +233,7 @@ def main():
                     b3, F, c, r, t, n = best[(cls, ('s9', kc))]
                     top = max(CEIL2[cls], CEIL3[cls])
                     flag = "  <-- EXCEEDS both columns" if b3 > top * (1 + 2e-3) else ""
-                    print(f"{cls:>4} th={kc} {b3:9.5f} (max tabled {top:.5f}) n={n} {c} + 2x{r}* (t={t}){flag}")
+                    print(f"{cls:>4} th={kc} {b3:9.5f} (max tabled {top:.5f}) n={n} {F}x{c} + foreign {r}{flag}")
     if not generic:
         print("\nExceedances here are section 6's escapes, not counterexamples:"
               "\nrerun without --no-filter and they should disappear.")

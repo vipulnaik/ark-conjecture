@@ -59,6 +59,27 @@ So the question "are there new escapes at higher k" is the question "are there n
 > 3. **The m = 1 branch assumes Q is primitive, and compares the wrong quantities.** With C scalar (possibly trivial) Q need not be primitive. C₃ ≀ C₃ ≤ GL(3, 7) is monomial and has order 81. Also, "|Γ_B| below c² log c" is not the needed inequality. A minimum orbit is at most c·|H|, and the semilinear comparator is about c(c − 1)·m/κ_k, so the order test that works is **|H| ≤ (c − 1)·m/κ_k**. C₃ ≀ C₃ passes it (81 ≤ 342·3/9 = 114), but ΓL(1, 49) × C₂ (192) does not and needs the stabiliser argument.
 >
 > So the valid route is: (a) irreducible C gives semilinear; (b) otherwise, either |H| ≤ (c − 1)·m/κ_k, or exhibit an invariant subspace or frame whose pointwise-scalar elements fix a k-set. Step (b) is not yet proved for general k, and J0a′ stays open.
+>
+> **Progress at k = 3, odd p: the reducible case is closed.** *Lemma (arithmetic progressions).* For p odd, every affine map sends a 3-term progression {v, v + x, v + 2x} to another. So for a nonzero x the progressions with step in H·x form a union of orbits of V ⋊ H, of size at most c·|H·x ∪ −H·x|/2. Hence **min₃(V ⋊ H) ≤ c·|H·x ∪ −H·x|/2 for every x ≠ 0.** *Corollary.* If H preserves a proper nonzero subspace U, of dimension b < a, take x ∈ U. Then min₃ ≤ c(p^b − 1)/2 ≤ c(c/p − 1)/2. Compare the best semilinear block standing alone, c(c − 1)/θ₃ with θ₃ ≤ 3 when p ≥ 5, and c(c − 1)/6 when p = 3 (τ₃ = 3, θ₃ = 2, γ₃ = a). The bound is below it: at most c(c − 1)/10 when p ≥ 5, and c(c − 3)/6 when p = 3. This covers O_p(H) ≠ 1, via C_V(O_p(H)), and every H with an invariant subspace, uniformly. It agrees with the data: ΓL(1, 49) × C₂ ≤ GL(3, 7) has the invariant line, a bound of 1029, and a computed value of 343.
+>
+> **J0a′ holds at k = 3 for every odd p** (against the semilinear block standing alone). Let O be a smallest orbit of ±H on V ∖ {0}.
+>
+> - **p = 3.** A progression is an affine line, counted three times by its base point, so the lines form a union of orbits of size c(c − 1)/6. This equals AΓL(1, 3^a)'s least 3-orbit, so no block group exceeds it.
+> - **p ≥ 5, ±H intransitive on V ∖ {0}.** Then |O| ≤ (c − 1)/2, and the lemma gives min₃ ≤ c(c − 1)/4. That is below c(c − 1)/θ₃(c − 1) ≥ c(c − 1)/3, the semilinear value (τ₃ = 1 and γ₃ = m, since p ≥ k).
+> - **p ≥ 5, ±H transitive on V ∖ {0}.** Oliver-admissible groups are solvable, so ±H is a solvable transitive linear group. By **Huppert's theorem** (solvable 2-transitive affine groups; Huppert 1957, cf. Huppert–Blackburn XII.7.3, and the exceptional degrees as listed by Passman, *Pacific J. Math.* 26 (1968)) either ±H ≤ ΓL(1, c), and then H is semilinear, or c ∈ {5², 7², 11², 23², 3², 3⁴} and ±H normalises a Q₈ ≤ GL(2, p), which is unique up to conjugacy. For c = 25 and 49 every subgroup of N(Q₈) was enumerated; for c = 121 and 529, every subgroup containing Q₈. Since H ≤ HQ₈, min₃(H) ≤ min₃(HQ₈). Every ±-transitive case ties AΓL(1, c) exactly: 200, 784, 4840, 93104. The one exceeding value, 300 at c = 25, comes from groups that are not Oliver-admissible (`scripts/j0a_c49_exceptional.py`).
+>
+> **p = 2: a near-counterexample, and why it is not one.** Take V = 𝔽₂ ⊕ 𝔽_{2^{a−1}}, so c = 2^a, and let H = AΓL(1, 2^{a−1}) act linearly by (t, x) ↦ (t, α·σ(x) + β·t). It is Oliver, it is not semilinear, and its least 3-orbit 2·min₃(AΓL(1, 2^{a−1})) beats AΓL(1, c) at some sizes (`scripts/j0a_counterexample16.py`, `scripts/j0a_p2_family.py`):
+>
+> | c | this block | AΓL(1, c) |
+> |---|---|---|
+> | 16 | 112 | 80 |
+> | 32 | 160 | 4960 |
+> | 64 | 9920 | 1344 |
+> | 128 | 2688 | 113792 |
+>
+> **But H is reducible, so the action is imprimitive.** The two cosets of t = 0 form a block system with AΓL(1, 2^{a−1}) on each block. In the framework this is a **fused class of two 2^{a−1}-blocks** (`enumeration-proof.md` B2), not a 2^a-block: blocks are taken primitive (B1), so H ≤ GL(a, p) is irreducible. The census already credits the fused class with exactly this value, and scoring the "block" separately in `mu3_menu.py` changed no row to n = 2000 (for example 3×64 gives 29760, the same as 6×32). **J0a′ is to be read for irreducible H.** Restricted that way, the sampled search over GL(4, 2) (`scripts/j0a_gl42_probe.py --irreducible`) finds no Oliver-admissible non-semilinear H at all. In characteristic 2 Huppert's list has no exceptions, so an irreducible non-semilinear H is intransitive on V ∖ {0}, and a proof for that case is still owed.
+>
+> **Still open:** irreducible H at p = 2, where progressions degenerate and the extra Galois gain sits exactly in the semilinear comparator. Also configurations that cut the semilinear twist; there the comparator is smaller than the stand-alone value, so the intransitive margin (a factor 4/3 at θ₃ = 3) may not survive.
 
 **That is the answer, modulo J0a′, and it is unaffected by the attainment caveat**, since the caveat concerns how the three factors combine and not whether a fourth exists. The k = 2 → 3 step was not the discovery of a new mechanism but the *switching on* of two factors that were inert at k = 2: τ became nontrivial in characteristic 3, and γ became nontrivial in characteristic 2. Both were already present in the decomposition. Beyond k = 3 the same three factors take a wider range of values, and no fourth term can appear, because AΓL(1, c) has exactly three layers.
 

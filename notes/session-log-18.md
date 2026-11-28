@@ -592,4 +592,23 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - `mu3_menu.py` now scores a fused foreign pair beside a fused matching class (F×c + 2r\*), beside a further single foreign block (+ r₂\*), and two pairs under one joint swap (+ 2r₂\*). The common top prime divides every r − 1. The matching twist loses the foreign primes, and loses its 2-part when q ≠ 2. Fusion F is credited as in S7.
 - 24 more rows rise to n = 2000, by up to 1.38×, and none fall. n = 182 = 2×32 + 2×59\* (q = 29) goes from 1751 to 1984, built and confirmed exactly (`scripts/s9_witness_182.py`). `b3_census_2000.csv` is regenerated.
 - Unchecked: the §5 ceilings against these placements, and combinations with three or more foreign parts.
+- **Ceilings:** `ceiling_rederive3.py --s9 --s9-wide` (all three placements, generic family, n ≤ 4000): no class exceeds its tabled ceiling.
 
+## 50. J0a′ at k = 3: the reducible case for odd p
+
+- Lemma: for odd p, 3-term progressions are preserved by affine maps, so min₃(V ⋊ H) ≤ c·|H·x ∪ −H·x|/2 for any x ≠ 0.
+- With x in a proper invariant subspace this gives at most c(c/p − 1)/2, below the stand-alone semilinear value: c(c − 1)/θ₃ for p ≥ 5, c(c − 1)/6 for p = 3. So reducible H, including O_p(H) ≠ 1, never wins at k = 3 for odd p.
+- Open: irreducible non-semilinear H (imprimitive or extraspecial type) at odd p; all of p = 2; configurations where the semilinear twist is cut.
+- **Odd p closed.**
+  - p = 3: affine lines give c(c − 1)/6 for every block group, equal to AΓL(1, 3^a).
+  - p ≥ 5, ±H intransitive on V ∖ 0: a ±-orbit of size ≤ (c − 1)/2 gives min₃ ≤ c(c − 1)/4 < c(c − 1)/3.
+  - p ≥ 5, ±H transitive: Huppert's solvable 2-transitive theorem leaves c ∈ {25, 49, 121, 529} with ±H ≤ N(Q₈). Enumeration (`scripts/j0a_c49_exceptional.py`, all subgroups of N(Q₈) at 25 and 49, those containing Q₈ at 121 and 529) gives only ties with AΓL(1, c). The single larger value, 300 at c = 25, is not Oliver-admissible.
+  - So J0a′ at k = 3 holds for odd p against the stand-alone semilinear block. Open: p = 2, and cut twists.- Huppert's exceptional list (3², 5², 7², 11², 23², 3⁴) checked against the literature: Passman 1968, Huppert–Blackburn XII.7.3, and recent papers citing it. The citation is now in the note.
+- p = 2: Huppert has no exceptions there, so non-semilinear means intransitive on nonzero vectors. The plane-orbit count, c·|𝒫| out of (c − 1)(c − 2)/6 planes, is too weak unless H has about c/2 plane orbits. A stabiliser argument is needed; still open.
+
+## 51. A p = 2 near-counterexample to J0a′, and why it is not one
+
+- `scripts/j0a_gl42_probe.py` (sampled subgroups of GL(4, 2)) found an Oliver non-semilinear H of order 168 with least 3-orbit 112, against AΓL(1, 16)'s 80. It is AΓL(1, 8) acting on 𝔽₂ ⊕ 𝔽₈ by (t, x) ↦ (t, αx^σ + βt). The family 𝔽₂ ⊕ 𝔽_{2^{a−1}} scores 2·min₃(AΓL(1, 2^{a−1})): 112, 160, 9920, 2688 at c = 16, 32, 64, 128.
+- **It is reducible, hence imprimitive.** It is the fused class of two 2^{a−1}-blocks (`enumeration-proof.md` B2), which the census already credits with the same value. Scoring it as a separate block in `mu3_menu.py` changed no row to n = 2000 (3×64: 29760 = 6×32), so that change was not kept.
+- So J0a′ is about irreducible H (primitive blocks, B1). With `--irreducible` the c = 16 sample has no Oliver-admissible non-semilinear H. The notes now say this; an earlier draft in this session had called J0a′ false.
+- Open: irreducible H at p = 2. Huppert says it is intransitive, and an argument is owed.
