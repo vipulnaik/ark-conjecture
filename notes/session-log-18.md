@@ -565,3 +565,13 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - `Directed.lean`: `directed-graph-properties.md` Theorem D1, μ\*(n) ≤ μ\*_dir(n).
 - All three are hypothesis-free. Each proof matched the note's argument, so no text corrections were needed.
 
+## 46. S9 at k = 3: dominated for F ≥ 3, not at F = 2 — the census was incomplete
+
+- **F ≥ 3.** Lemma D2's diagonal coordinates (k-independent) make same-position triples a class of C(F,3)·r. So a fused foreign class scores at most min(C(F,3)·r, F·r(r − 1)) = O(n^{5/3}), which is below `b3_census` at every n ≤ 2000.
+- **F = 2 is not dominated.** Two blocks have no same-position triples, so the pair scores 2·orb₃(r, t, 1).
+  - Construction: diagonal translations of the r-blocks in the cyclic layer. The swap goes in the cyclic layer when the matching twist is odd, otherwise in the top with q = 2.
+  - Built as permutation groups with exact least 3-orbits: n = 78 = 32 + 2×23\* (q = 11) gives **506**, against `b3_census` 312. Likewise n = 63 and 65 (2×17\*, q = 2) give 272, and n = 221 (127 + 2×47\*) gives 2162.
+- **`mu3_menu.py`** scores the shape `1xc + 2xr*`. It raises 77 of 1,666 rows to n = 2000, by up to 1.94×, and `b3_census_2000.csv` is regenerated.
+- Notes updated: the §4.2 S9 row, §4.1 (fused pairs inside the fibre argument) and §10 item 1 in `three-uniform-note.md`, plus `pending-checks.md` R12.
+- **Still open:** other placements of a fused foreign pair, and whether S9 moves any §5 class ceiling (`ceiling_rederive3.py` doesn't enumerate it).
+

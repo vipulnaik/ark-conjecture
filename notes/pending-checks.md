@@ -292,6 +292,8 @@ python3 mu3_menu.py 130 136              # lookup
 
 **Verified on writing:** every value in §6.2's table including all seven r-rows; the full-density degrees of §3.1 (5, 8, 32 attain C(c,3), 16 does not — Kantor's classification appearing in the arithmetic); and the n = 133 row reproduces the note's witness `1x32 + 1x101*` at δ₃ = 0.006587.
 
+**The census was incomplete, and one missing shape is now scored.** S9 at F = 2 (one matching block plus a fused pair of foreign r-blocks, `1xc + 2xr*`) is dominated at k = 2 by D2's same-position class but not at k = 3, which has no same-position class on two blocks. Adding it raises `b3_census` at **77 of 1,666 rows** to n = 2000, by up to 1.94×. The first is n = 63; n = 78 goes from 312 to 506. The witnesses at n = 63, 65, 78 and 221 were built as permutation groups and their least 3-orbits computed exactly. S9 at F ≥ 3 is dominated at every n ≤ 2000 (`s9_k3_check.py`). `b3_census_2000.csv` is regenerated. *`ceiling_rederive3.py` enumerates its own generic family and does not yet include the S9 shape, so whether S9 moves any §5 class ceiling is unchecked.*
+
 **What is still owed here** is §10 item 1 proper: a completeness argument for the k = 3 census, whose concrete first step the note names — locating the crossover between the quadratic intra term and the cubic cross terms, which §4.1's degree count makes unlikely to bind but does not exclude at small n.
 
 ## R12a. `ceiling_rederive3.py` — the k = 3 ceiling table, measured

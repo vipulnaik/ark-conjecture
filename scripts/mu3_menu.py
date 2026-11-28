@@ -30,10 +30,13 @@ WHAT IS SOUND HERE, AND IT IS THE MAJORITY.  The scoring is not in doubt:
   * the orbit law orb_3(c, d, m) = min(c*d*m/kappa_3, C(c,3)) with
     kappa_3 = tau * theta * gamma is PROVED (modulo one routine stabiliser step)
     and verified exhaustively on 104 (c, d, m) triples (§2.2);
-  * ONLY INTRA TERMS BIND, which at k = 2 is false and here is proved in three
-    lines by a degree count -- cross terms are cubic in n, intra terms quadratic
-    (§4.1).  So the score of a configuration is min over its classes of
-    F * orb_3(c, d, m), with no term-type comparison at all.
+  * ONLY INTRA TERMS BIND, which at k = 2 is false; at k = 3 it follows from
+    the fibre bound of §4.1 (Lean `CrossOrbit.cross_orbit`), case by case.  So
+    the score of a configuration is min over its classes of F * orb_3(c, d, m),
+    with no term-type comparison at all.
+
+  * THE CENSUS WAS INCOMPLETE: S9 at F = 2 (a fused pair of foreign blocks) is
+    dominated at k = 2 but not at k = 3, and is scored below (`INCLUDE_S9`).
 
 That second point is why this file is short.  At k = 2 the analogous enumerator
 must compare intra, within-class-cross and between-orbit terms; here there is
@@ -172,7 +175,40 @@ def best3(n, spf, pp, primes):
                     theirs = orb3(r, t, 1, r, 1)
                     offer(min(mine, theirs),
                           f"{F}x{c} + 1x{r}* (m={m}, q={q}, t={t})")
+    # ---- S9 at F = 2: c + 2*r*, a fused pair of foreign r-blocks
+    #
+    # Dominated at k = 2 (Lemma D2: diagonal translations make the same-position
+    # pairs a class of r), but at k = 3 there is no same-position class with two
+    # blocks, and the pair scores 2 * orb3(r, t, 1) (§4.2's S9 row).  Construction:
+    # translations of the r-blocks are diagonal in the cyclic layer; the swap sits
+    # either in the cyclic layer (then the matching twist must be odd, so the layer
+    # C_d x C_r x C_2 stays cyclic) or in the top (then q = 2).  The foreign twist t is
+    # the q-part of r - 1, diagonal; the matching twist d is the largest divisor of
+    # c - 1 coprime to r (and to 2 when the swap is in the cyclic layer).
+    if INCLUDE_S9:
+        for c, (p, a) in pp.items():
+            r2 = n - c
+            if r2 % 2 or r2 // 2 < 5:
+                continue
+            r = r2 // 2
+            if spf[r] != r or r == p:
+                continue
+            for q in sorted(_prime_factors(r - 1, spf)):
+                t = qpart(r - 1, q)
+                d = c - 1
+                while d % r == 0:
+                    d //= r
+                if q != 2:
+                    while d % 2 == 0:
+                        d //= 2
+                for m in [x for x in range(1, a + 1)
+                          if a % x == 0 and _is_q_power(x, q)]:
+                    offer(min(orb3(c, d, m, p, a), 2 * orb3(r, t, 1, r, 1)),
+                          f"1x{c} + 2x{r}* (S9, m={m}, q={q}, t={t}, d={d})")
     return best, wit
+
+
+INCLUDE_S9 = True
 
 
 def _prime_factors(x, spf):
