@@ -642,3 +642,12 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
 - `general-k-note.md` §1's J0a′ box rewritten as current state: statement (primitive blocks, "no larger", configuration comparator), status, the k = 3 proof organised by invariant families and order counts, the p = 2 near-counterexample excluded by primitivity, and a compact list of computational corroboration. The superseded component sketch and its review are removed from the note; they are recorded in §§48–55 here. §6 gains an item for J0a′ beyond the stand-alone k = 3 case.
 - `three-uniform-note.md`: the status-table §4 row (S9 found missing; §4.1 proved); §4.1's degree count relabelled a heuristic; the S9 row counts the wider placements; §6.2's soundness remark (orbit law now in Lean; §4.1 by the fibre bound); §7's J0a′ remarks (proved at k = 3, stand-alone); §8's Part D row (D2 only partly transfers).
 
+## 57. E.3(i)'s J0a residue closed for primitive blocks
+
+- The last theorem-side use of J0a at k = 2 is E.3(i)'s reading of orb(c, 2) as an upper bound on the c-block, with c = 3^a = 2r + 1, cyclic-layer image ≤ C₂, and q ≠ r.
+  - For a primitive block, H is irreducible, so the order-≤ 2 normal K is central and hence ±1.
+  - For q odd, a q-group's orbits on the 2r nonzero vectors force a fixed vector, since q ∉ {2, r}.
+  - For q = 2, a ±H-orbit of size 2 exists, since 2r ≡ 2 (mod 4).
+  - Either way there is a pair orbital of size c, with no semilinearity needed.
+- The gap inventory's item 5 and the J0a bullet in §2a are updated. One reading is owed: that an imprimitive action on the 3^a-orbit is a fused class covered by the shape analysis.
+
