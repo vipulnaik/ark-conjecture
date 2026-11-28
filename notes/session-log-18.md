@@ -651,3 +651,8 @@ Read in full: solvable-relaxation, three-uniform-note, general-k-note, chiral-gr
   - Either way there is a pair orbital of size c, with no semilinearity needed.
 - The gap inventory's item 5 and the J0a bullet in §2a are updated. One reading is owed: that an imprimitive action on the 3^a-orbit is a fused class covered by the shape analysis.
 
+## 58. `check_doc_figures.py`: the 17 findings were a wrong-table artefact
+
+- Every `check_doc_figures` run quoted in §§40–57 used `outputs/mu_table_safe_v2.csv` (n ≤ 3239), a superseded table. Those runs' "17 findings" were its EXPIRED thresholds, old-checkpoint matches, witness disagreements and S2-identity rows, all correct for the current table. Against `outputs/mu_table_ladder.csv` (n ≤ 10⁶) the result is **0 findings**, and against `mu_table_exact.csv` (n ≤ 10⁵) it is one row-count line that is a 10⁶ figure. The structural passes those runs relied on (tables, refs, history, Lean, census) do not read the table, so their verdicts this session stand.
+- The script now warns when a sibling `mu_table*.csv` reaches further than the table it was given, and `pending-checks.md` R1 names the current table.
+

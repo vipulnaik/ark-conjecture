@@ -152,6 +152,30 @@ for r in rows:
     r["n"] = int(r["n"]); r["density"] = float(r["density"])
     r["parts"] = int(r["parts"]); r["certified_K"] = int(r["certified_K"])
 NMAX = max(r["n"] for r in rows)   # file maximum; see CONTIG below for the computed frontier
+# A superseded table makes every pass fire on figures that are correct for the
+# current one (EXPIRED thresholds, OLD-checkpoint matches, witness and S2-identity
+# disagreements), and the findings look like document errors.  Warn loudly if any
+# sibling mu_table*.csv reaches further than the one given.
+_dir = os.path.dirname(os.path.abspath(A.table))
+_longer = []
+for _f in sorted(os.listdir(_dir)):
+    if _f.startswith("mu_table") and _f.endswith(".csv") and os.path.join(_dir, _f) != os.path.abspath(A.table):
+        try:
+            with open(os.path.join(_dir, _f)) as _h:
+                _last = None
+                _h.seek(max(0, os.path.getsize(os.path.join(_dir, _f)) - 4096))
+                for _line in _h:
+                    _last = _line
+                _nn = int(_last.split(",")[0])
+            if _nn > NMAX:
+                _longer.append((_nn, _f))
+        except (ValueError, IndexError, TypeError, OSError):
+            pass
+if _longer:
+    _nn, _f = max(_longer)
+    print(f"*** WARNING: {os.path.basename(A.table)} reaches n = {NMAX:,}, but {_f} in the same "
+          f"directory reaches n = {_nn:,}.\n*** If that is the current table, rerun against it: "
+          f"findings below may be artefacts of a superseded table.\n")
 
 spf = list(range(NMAX + 2)); i = 2
 while i * i <= NMAX + 1:
